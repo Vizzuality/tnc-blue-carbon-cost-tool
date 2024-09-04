@@ -117,9 +117,18 @@ module "dev" {
   rds_instance_class = "db.t3.micro"
   rds_engine_version = "15.5"
   rds_backup_retention_period = 3
-  # repo_name                                     = var.project_name
-  #   github_owner = var.github_owner
-  #   github_token = var.github_token
+  repo_name                                     = var.project_name
+  github_owner                                  = var.github_owner
+  github_token                                  = var.github_token
 }
+
+module "github" {
+  source       = "./modules/github"
+  repo_name    = var.project_name
+  github_owner = var.github_owner
+  github_token = var.github_token
+  global_secret_map = {}
+}
+
 
 
