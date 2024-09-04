@@ -101,14 +101,13 @@ module "dev" {
   beanstalk_tier                                = "WebServer"
   ec2_instance_type                             = "t3.medium"
   elasticbeanstalk_iam_service_linked_role_name = aws_iam_service_linked_role.elasticbeanstalk.name
-  # repo_name                                     = var.project_name
   cname_prefix                                  = "blue-carbon-cost-tool-dev-environment"
-#   rds_instance_class = "db.t3.micro"
-#   rds_engine_version = "15.5"
-#   rds_backup_retention_period = 3
-#   github_owner = var.github_owner
-#   github_token = var.github_token
-#   contact_email = var.contact_email
+  rds_instance_class = "db.t3.micro"
+  rds_engine_version = "15.5"
+  rds_backup_retention_period = 3
+  # repo_name                                     = var.project_name
+  #   github_owner = var.github_owner
+  #   github_token = var.github_token
 }
 
 
