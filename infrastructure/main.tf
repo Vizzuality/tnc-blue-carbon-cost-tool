@@ -131,7 +131,14 @@ module "github" {
   repo_name    = var.project_name
   github_owner = var.github_owner
   github_token = var.github_token
-  global_secret_map = {}
+  global_secret_map = {
+    PROJECT_NAME                    = var.project_name
+    PIPELINE_USER_ACCESS_KEY_ID     = module.iam.pipeline_user_access_key_id
+    PIPELINE_USER_SECRET_ACCESS_KEY = module.iam.pipeline_user_access_key_secret
+    CLIENT_REPOSITORY_NAME          = module.client_ecr.repository_name
+    API_REPOSITORY_NAME             = module.api_ecr.repository_name
+    AWS_REGION                      = var.aws_region
+  }
 }
 
 
