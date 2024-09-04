@@ -84,6 +84,18 @@ module state {
   state_aws_profile = var.aws_profile
 }
 
+module client_ecr {
+  source = "./modules/ecr"
+  project_name = var.project_name
+  ecr_repo_name = "client"
+}
+
+module api_ecr {
+  source = "./modules/ecr"
+  project_name = var.project_name
+  ecr_repo_name = "api"
+}
+
 resource "aws_iam_service_linked_role" "elasticbeanstalk" {
   aws_service_name = "elasticbeanstalk.amazonaws.com"
 }
