@@ -55,26 +55,28 @@ variable "elasticbeanstalk_iam_service_linked_role_name" {
 }
 
 
-# TODO: Check if these are needed
-# variable "repo_name" {
-#   type        = string
-#   description = "Name of the Github repository where the code is hosted"
-# }
+variable "repo_name" {
+  type        = string
+  description = "Name of the Github repository where the code is hosted"
+}
 
 variable "cname_prefix" {
     type        = string
     description = "The CNAME prefix to use for the environment"
     default = null
 }
-# variable "github_owner" {
-#   type        = string
-#   description = "Owner of the Github repository where the code is hosted"
-# }
-#
-# variable "github_token" {
-#   type        = string
-#   description = "Github token to access the repository"
-# }
+
+
+# REPO
+variable "github_owner" {
+  type        = string
+  description = "Owner of the Github repository where the code is hosted"
+}
+
+variable "github_token" {
+  type        = string
+  description = "Github token to access the repository"
+}
 
 # RDS
 
@@ -112,5 +114,17 @@ variable "contact_email" {
   type        = string
   description = "Email address where contact form submissions will be sent"
   default = null
+}
+
+variable "github_additional_environment_secrets" {
+  type        = map(string)
+  description = "Github additional environment-specific secrets"
+  default     = {}
+}
+
+variable "github_additional_environment_variables" {
+  type        = map(string)
+  description = "Github additional environment-specific variables"
+  default     = {}
 }
 
