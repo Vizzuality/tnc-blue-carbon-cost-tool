@@ -96,6 +96,10 @@ module api_ecr {
   ecr_repo_name = "api"
 }
 
+module "iam" {
+  source = "./modules/iam"
+}
+
 resource "aws_iam_service_linked_role" "elasticbeanstalk" {
   aws_service_name = "elasticbeanstalk.amazonaws.com"
 }
