@@ -17,7 +17,7 @@ ENV JWT_SECRET $JWT_SECRET
 
 WORKDIR /app
 
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json .npmrc ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json ./
 COPY api ./api
 COPY shared ./shared
 
