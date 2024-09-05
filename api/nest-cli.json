@@ -3,6 +3,5 @@
   "collection": "@nestjs/schematics",
   "compilerOptions": {
     "deleteOutDir": true
-  },
-  "entryFile": "api/src/main"
+  }
 }
