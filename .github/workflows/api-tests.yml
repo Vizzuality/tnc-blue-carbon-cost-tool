@@ -1,5 +1,6 @@
 name: API Tests
 
+
 on:
   push:
     paths:
@@ -19,6 +20,16 @@ jobs:
   api-tests-integration:
     name: API Integration Tests
     runs-on: ubuntu-22.04
+
+    services:
+      database:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: blue-carbon-cost
+          POSTGRES_PASSWORD: blue-carbon-cost
+          POSTGRES_DB: blc
 
     steps:
       - name: Checkout code
