@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   api:
+    container_name: blue-carbon-cost-api
     environment:
       DB_HOST: database
     build:
@@ -9,8 +10,13 @@ services:
       dockerfile: api/Dockerfile
     ports:
       - "4000:4000"
+    env_file:
+      - ./shared/config/.env
+    command: ["pnpm", "api:dev"]
     networks:
       - 4-growth-docker-network
+    depends_on:
+      - database
 
   client:
     build:
@@ -26,11 +32,12 @@ services:
       - 4-growth-docker-network
 
   database:
-    image: postgres:13
+    image: postgres:16
+    container_name: blue-carbon-cost-db
     environment:
-      POSTGRES_USER: blue-carbon-coast
-      POSTGRES_PASSWORD: blue-carbon-coast
-      POSTGRES_DB: blue-carbon-coast
+      POSTGRES_USER: blue-carbon-cost
+      POSTGRES_PASSWORD: blue-carbon-cost
+      POSTGRES_DB: blc
     ports:
       - "5432:5432"
     networks:
