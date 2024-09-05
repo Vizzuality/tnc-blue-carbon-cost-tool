@@ -10,7 +10,7 @@ ENV NEXTAUTH_URL $NEXTAUTH_URL
 
 WORKDIR /app
 
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json .npmrc ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json ./
 COPY client ./client
 COPY shared ./shared
 

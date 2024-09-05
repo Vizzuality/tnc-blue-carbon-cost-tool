@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  api:
+    environment:
+      DB_HOST: database
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - 4-growth-docker-network
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: "http://api:4000"
+        NEXTAUTH_SECRET: "mysupersecret"
+        NEXTAUTH_URL: "http://client:3000/auth/api"
+    ports:
+      - "3000:3000"
+    networks:
+      - 4-growth-docker-network
+
+  database:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: blue-carbon-coast
+      POSTGRES_PASSWORD: blue-carbon-coast
+      POSTGRES_DB: blue-carbon-coast
+    ports:
+      - "5432:5432"
+    networks:
+      - 4-growth-docker-network
+
+
+networks:
+  4-growth-docker-network:
+    driver: bridge
