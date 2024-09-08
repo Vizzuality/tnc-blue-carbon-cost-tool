@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DATABASE_ENTITIES } from '@shared/entities/database.entities';
+import { readdirSync } from 'fs';
+import { join } from 'path';
 
 export type JWTConfig = {
   secret: string;
@@ -18,6 +20,9 @@ export class ApiConfigService {
    * @note: Maybe it's a good idea to move the datasource config to shared folder, to be used potentially for a e2e test agent
    */
   getDatabaseConfig() {
+    console.log('ALL ENVSSS');
+    console.log(readdirSync(join(__dirname, '../../../../shared/config')));
+
     return {
       host: this.configService.get('DB_HOST'),
       port: this.configService.get('DB_PORT'),

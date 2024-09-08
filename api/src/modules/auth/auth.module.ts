@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AuthenticationModule } from '@auth/authentication/authentication.module';
-import { AuthorisationModule } from '@auth/authorisation/authorisation.module';
+import { AuthenticationModule } from '@api/modules/auth/authentication/authentication.module';
+import { AuthorisationModule } from '@api/modules/auth/authorisation/authorisation.module';
 
 @Module({
   imports: [AuthenticationModule, AuthorisationModule],

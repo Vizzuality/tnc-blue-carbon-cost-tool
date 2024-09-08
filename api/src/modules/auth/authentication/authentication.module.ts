@@ -5,9 +5,10 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ApiConfigModule } from '@api/modules/config/app-config.module';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
-import { JwtStrategy } from '@auth/strategies/jwt.strategy';
 import { UsersService } from '@api/modules/users/users.service';
 import { UsersModule } from '@api/modules/users/users.module';
+import { LocalStrategy } from '@api/modules/auth/strategies/local.strategy';
+import { JwtStrategy } from '@api/modules/auth/strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UsersModule } from '@api/modules/users/users.module';
   ],
   providers: [
     AuthenticationService,
+    LocalStrategy,
     {
       provide: JwtStrategy,
       useFactory: (users: UsersService, config: ApiConfigService) => {
