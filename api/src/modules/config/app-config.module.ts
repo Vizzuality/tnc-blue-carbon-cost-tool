@@ -14,12 +14,13 @@ import { DatabaseModule } from '@api/modules/config/database/database.module';
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
+      // TODO: This is a bit ugly, we should find a way to make this more elegant
       envFilePath: [
         join(
           __dirname,
-          `../../../../shared/config/.env.${process.env.NODE_ENV}`,
+          `../../../../../../shared/config/.env.${process.env.NODE_ENV}`,
         ),
-        join(__dirname, '../../../../shared/config/.env'),
+        join(__dirname, '../../../../../../shared/config/.env'),
       ],
     }),
   ],
