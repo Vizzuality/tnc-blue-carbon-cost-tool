@@ -3,8 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApiConfigModule } from '@api/modules/config/app-config.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from '@auth/guards/jwt-auth.guard';
-import { AuthModule } from '@auth/auth.module';
+import { AuthModule } from '@api/modules/auth/auth.module';
+import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [ApiConfigModule, AuthModule],

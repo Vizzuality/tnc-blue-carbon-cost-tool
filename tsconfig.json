@@ -14,7 +14,6 @@
       "@api/*": ["./api/src/*"],
       "@client/*": ["./client/*"],
       "@shared/*": ["./shared/*"],
-      "@auth/*": ["./api/src/modules/auth/*"],
     }
   }
 }

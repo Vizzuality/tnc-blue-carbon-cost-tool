@@ -1,13 +1,13 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { DatabaseModule } from '@api/modules/config/database/database.module';
+import { resolveConfigPath } from '@api/modules/config/path-resolver';
 
 @Global()
 @Module({
   imports: [
-    DatabaseModule,
     /**
      * @note: Check if we can abstract the conf to ApiConfigService
      */
@@ -16,15 +16,13 @@ import { DatabaseModule } from '@api/modules/config/database/database.module';
       cache: true,
       // TODO: This is a bit ugly, we should find a way to make this more elegant
       envFilePath: [
-        join(
-          __dirname,
-          `../../../../../../shared/config/.env.${process.env.NODE_ENV}`,
-        ),
-        join(__dirname, '../../../../../../shared/config/.env'),
+        resolveConfigPath(`shared/config/.env.${process.env.NODE_ENV}`),
+        resolveConfigPath(`shared/config/.env`),
       ],
     }),
+    DatabaseModule,
   ],
   providers: [ConfigService, ApiConfigService],
-  exports: [ApiConfigService, DatabaseModule],
+  exports: [ApiConfigService],
 })
 export class ApiConfigModule {}
