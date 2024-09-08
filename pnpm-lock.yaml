@@ -4,6 +4,18 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    pg:
+      specifier: ^8.12.0
+      version: 8.12.0
+    typeorm:
+      specifier: ^0.3.20
+      version: 0.3.20
+    zod:
+      specifier: ^3.23.8
+      version: 3.23.8
+
 importers:
 
   .: {}
@@ -139,7 +151,17 @@ importers:
         specifier: ^5
         version: 5.5.4
 
-  shared: {}
+  shared:
+    devDependencies:
+      pg:
+        specifier: 'catalog:'
+        version: 8.12.0
+      typeorm:
+        specifier: 'catalog:'
+        version: 0.3.20(pg@8.12.0)(ts-node@10.9.2(@types/node@20.16.5)(typescript@5.5.4))
+      zod:
+        specifier: 'catalog:'
+        version: 3.23.8
 
 packages:
 
@@ -3801,6 +3823,9 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
 snapshots:
 
@@ -8168,3 +8193,5 @@ snapshots:
   yn@3.1.1: {}
 
   yocto-queue@0.1.0: {}
+
+  zod@3.23.8: {}

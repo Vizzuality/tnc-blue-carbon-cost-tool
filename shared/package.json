@@ -1,8 +1,9 @@
 {
   "name": "shared",
   "private": true,
-  "dependencies": {
-  },
   "devDependencies": {
+    "pg": "catalog:",
+    "typeorm": "catalog:",
+    "zod": "catalog:"
   }
 }
