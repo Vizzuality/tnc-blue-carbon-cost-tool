@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { join } from 'path';
+import { DATABASE_ENTITIES } from '@shared/entities/database.entities';
 
 @Injectable()
 export class ApiConfigService {
@@ -9,6 +9,8 @@ export class ApiConfigService {
   /**
    * @note We could abstract this to a data layer access config specific class within database module, as well for other configs when the thing gets more complex.
    * we could also abstract the underlying engine type, which is now set in the main app module
+   *
+   * @note: Maybe it's a good idea to move the datasource config to shared folder, to be used potentially for a e2e test agent
    */
   getDatabaseConfig() {
     return {
@@ -17,7 +19,7 @@ export class ApiConfigService {
       username: this.configService.get('DB_USERNAME'),
       password: this.configService.get('DB_PASSWORD'),
       database: this.configService.get('DB_NAME'),
-      entities: [join(__dirname, '**', '*.entity.{ts,js}')],
+      entities: DATABASE_ENTITIES,
       synchronize: true,
       ssl: this.isProduction()
         ? { require: true, rejectUnauthorized: false }

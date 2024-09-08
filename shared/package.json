@@ -5,5 +5,8 @@
     "pg": "catalog:",
     "typeorm": "catalog:",
     "zod": "catalog:"
+  },
+  "dependencies": {
+    "class-transformer": "catalog:"
   }
 }
