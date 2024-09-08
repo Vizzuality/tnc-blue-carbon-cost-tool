@@ -2,6 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DATABASE_ENTITIES } from '@shared/entities/database.entities';
 
+export type JWTConfig = {
+  secret: string;
+  expiresIn: string;
+};
+
 @Injectable()
 export class ApiConfigService {
   constructor(private configService: ConfigService) {}
@@ -29,5 +34,12 @@ export class ApiConfigService {
 
   private isProduction(): boolean {
     return this.configService.get('NODE_ENV') === 'production';
+  }
+
+  getJWTConfig(): JWTConfig {
+    return {
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: this.configService.get('JWT_EXPIRES_IN'),
+    };
   }
 }
