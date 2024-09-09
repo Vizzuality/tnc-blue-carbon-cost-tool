@@ -80,7 +80,7 @@ export class TestManager {
 
   mocks() {
     return {
-      createUser: (additionalData: Partial<User>) =>
+      createUser: (additionalData?: Partial<User>) =>
         createUser(this.getDataSource(), additionalData),
     };
   }
