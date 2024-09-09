@@ -124,6 +124,9 @@ module "dev" {
   repo_name                                     = var.project_name
   github_owner                                  = var.github_owner
   github_token                                  = var.github_token
+  github_additional_environment_variables = {
+    JWT_EXPIRES_IN = "1d"
+  }
 }
 
 module "github" {
