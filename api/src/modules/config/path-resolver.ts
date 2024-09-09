@@ -1,5 +1,4 @@
 import { join } from 'path';
-import { readdirSync } from 'fs';
 
 // TODO: Workaround: This should be prob fixed in the jest conf
 

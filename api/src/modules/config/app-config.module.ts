@@ -1,6 +1,5 @@
-import { Global, Module, OnModuleInit } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { join } from 'path';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { DatabaseModule } from '@api/modules/config/database/database.module';
 import { resolveConfigPath } from '@api/modules/config/path-resolver';

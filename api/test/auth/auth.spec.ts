@@ -6,7 +6,6 @@ describe('Authentication', () => {
   let testManager: TestManager;
 
   beforeAll(async () => {
-    console.log('ENV', process.env.NODE_ENV);
     testManager = await TestManager.createTestManager();
   });
 
@@ -32,17 +31,13 @@ describe('Authentication', () => {
       expect(response.body.message).toEqual(
         `Email ${user.email} already exists`,
       );
-      console.log('RESPONSE', response.body);
     });
     test(`it should sign up a new user`, async () => {
       const newUser = { email: 'test@test.com', password: '12345678' };
-      const response = await testManager
-        .request()
-        .post('/authentication/signup')
-        .send({
-          email: newUser.email,
-          password: newUser.password,
-        });
+      await testManager.request().post('/authentication/signup').send({
+        email: newUser.email,
+        password: newUser.password,
+      });
       const user = await testManager
         .getDataSource()
         .getRepository(User)
@@ -54,8 +49,40 @@ describe('Authentication', () => {
     });
   });
   describe('Sign In', () => {
-    test(`it should throw an error if no user exists with provided credentials`, async () => {});
-    test(`it should throw an error if password is incorrect`, async () => {});
-    test(`it should sign in a user`, async () => {});
+    test(`it should throw an error if no user exists with provided credentials`, async () => {
+      const response = await testManager
+        .request()
+        .post('/authentication/login')
+        .send({
+          email: 'non-existing@user.com',
+          password: '12345567',
+        });
+      expect(response.status).toBe(401);
+      expect(response.body.message).toEqual('Invalid credentials');
+    });
+    test(`it should throw an error if password is incorrect`, async () => {
+      const user = await testManager.mocks().createUser({});
+      const response = await testManager
+        .request()
+        .post('/authentication/login')
+        .send({
+          email: user.email,
+          password: 'wrongpassword',
+        });
+      expect(response.status).toBe(401);
+      expect(response.body.message).toEqual('Invalid credentials');
+    });
+    test(`it should sign in a user`, async () => {
+      const user = await testManager.mocks().createUser({});
+      const response = await testManager
+        .request()
+        .post('/authentication/login')
+        .send({
+          email: user.email,
+          password: user.password,
+        });
+      expect(response.status).toBe(201);
+      expect(response.body.accessToken).toBeDefined();
+    });
   });
 });

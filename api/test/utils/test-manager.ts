@@ -1,6 +1,6 @@
 import { AppModule } from '@api/app.module';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
 import { logUserIn } from './user.auth';
@@ -11,8 +11,6 @@ import { getDataSourceToken } from '@nestjs/typeorm';
 import { clearTestDataFromDatabase } from './db-helpers';
 import { createUser } from './mocks/entity-mocks';
 import { User } from '@shared/entities/users/user.entity';
-import { ApiConfigModule } from '@api/modules/config/app-config.module';
-import { ApiConfigService } from '@api/modules/config/app-config.service';
 
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate
@@ -33,9 +31,7 @@ export class TestManager {
     this.moduleFixture = moduleFixture;
   }
 
-  static async createTestManager<FixtureType>(options?: {
-    fixtures: FixtureType;
-  }) {
+  static async createTestManager() {
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
