@@ -202,12 +202,6 @@ jobs:
         run: |
           zip -r deploy.zip * .[^.]*
 
-      - name: Upload Zip File as Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: deploy-zip
-          path: infrastructure/source_bundle/deploy.zip
-
       - name: Deploy to Amazon EB
         uses: einaregilsson/beanstalk-deploy@v21
         with:
