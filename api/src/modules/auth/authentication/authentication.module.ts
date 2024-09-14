@@ -9,6 +9,7 @@ import { UsersService } from '@api/modules/users/users.service';
 import { UsersModule } from '@api/modules/users/users.module';
 import { LocalStrategy } from '@api/modules/auth/strategies/local.strategy';
 import { JwtStrategy } from '@api/modules/auth/strategies/jwt.strategy';
+import { NotificationsModule } from '@api/modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { JwtStrategy } from '@api/modules/auth/strategies/jwt.strategy';
       }),
     }),
     UsersModule,
+    NotificationsModule,
   ],
   providers: [
     AuthenticationService,

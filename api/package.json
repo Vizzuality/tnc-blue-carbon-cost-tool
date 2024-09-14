@@ -16,6 +16,7 @@
     "test": "jest --config ./test/jest-config.json -i --detectOpenHandles"
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.651.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
@@ -26,6 +27,7 @@
     "bcrypt": "catalog:",
     "class-transformer": "catalog:",
     "lodash": "^4.17.21",
+    "nodemailer": "^6.9.15",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
@@ -43,6 +45,7 @@
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.7",
     "@types/node": "^20.3.1",
+    "@types/nodemailer": "^6.4.15",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
     "@types/supertest": "^6.0.0",
