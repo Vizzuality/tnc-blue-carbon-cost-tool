@@ -49,6 +49,12 @@ module "github" {
   environment_variable_map = merge(local.api_env_vars, local.client_env_vars, var.github_additional_environment_variables)
 }
 
+module "email" {
+  source = "../email"
+  domain = var.domain
+  region = var.aws_region
+}
+
 
 
 
