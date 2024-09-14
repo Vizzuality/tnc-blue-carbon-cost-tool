@@ -68,7 +68,7 @@ jobs:
 
       - name: Build, tag, and push Client image to Amazon ECR
         if: ${{ github.event_name == 'workflow_dispatch' || steps.client-changes.outputs.client == 'true' }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           build-args: |
             NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
@@ -122,7 +122,7 @@ jobs:
 
       - name: Build, tag, and push API image to Amazon ECR
         if: ${{ github.event_name == 'workflow_dispatch' || steps.api-changes.outputs.api == 'true' }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           build-args: |
             DB_HOST=${{ secrets.DB_HOST }}
@@ -203,7 +203,7 @@ jobs:
           zip -r deploy.zip * .[^.]*
 
       - name: Deploy to Amazon EB
-        uses: einaregilsson/beanstalk-deploy@v21
+        uses: einaregilsson/beanstalk-deploy@v22
         with:
           aws_access_key: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.PIPELINE_USER_SECRET_ACCESS_KEY }}
