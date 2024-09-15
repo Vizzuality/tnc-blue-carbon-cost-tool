@@ -11,6 +11,8 @@ import { getDataSourceToken } from '@nestjs/typeorm';
 import { clearTestDataFromDatabase } from './db-helpers';
 import { createUser } from './mocks/entity-mocks';
 import { User } from '@shared/entities/users/user.entity';
+import { IEmailServiceToken } from '@api/modules/notifications/email/email-service.interface';
+import { MockEmailService } from './mocks/mock-email.service';
 
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate
@@ -34,7 +36,10 @@ export class TestManager {
   static async createTestManager() {
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(IEmailServiceToken)
+      .useClass(MockEmailService)
+      .compile();
     const dataSource = moduleFixture.get<DataSource>(getDataSourceToken());
     const testApp = moduleFixture.createNestApplication();
     // TODO: Add global validation or App level Zod when decided what to use
@@ -60,6 +65,7 @@ export class TestManager {
   }
 
   getModule<TInput = any, TResult = TInput>(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     typeOrToken: Type<TInput> | Function | string | symbol,
   ): TResult {
     return this.moduleFixture.get(typeOrToken);

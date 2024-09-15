@@ -20,7 +20,7 @@ export class AuthenticationService {
     throw new UnauthorizedException(`Invalid credentials`);
   }
 
-  async signup(signupDto: LoginDto): Promise<void> {
+  async signUp(signupDto: LoginDto): Promise<void> {
     const passwordHash = await bcrypt.hash(signupDto.password, 10);
     await this.usersService.createUser({
       email: signupDto.email,
@@ -28,13 +28,7 @@ export class AuthenticationService {
     });
   }
 
-  async login(loginDto: LoginDto): Promise<{ access_token: string }> {
-    const user = await this.validateUser(loginDto.email, loginDto.password);
-    return {
-      access_token: this.jwt.sign({ id: user.id }),
-    };
-  }
-  async signIn(user: User): Promise<{ user: User; accessToken: string }> {
+  async logIn(user: User): Promise<{ user: User; accessToken: string }> {
     const payload: JwtPayload = { id: user.id };
     const accessToken: string = this.jwt.sign(payload);
     return { user, accessToken };

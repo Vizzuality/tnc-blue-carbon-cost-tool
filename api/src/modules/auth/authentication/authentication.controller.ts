@@ -13,13 +13,13 @@ export class AuthenticationController {
   @Public()
   @Post('signup')
   async signup(@Body() signupDto: LoginDto) {
-    return this.authService.signup(signupDto);
+    return this.authService.signUp(signupDto);
   }
 
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@GetUser() user: User) {
-    return this.authService.signIn(user);
+    return this.authService.logIn(user);
   }
 }
