@@ -15,8 +15,6 @@ export class PasswordRecoveryService {
   async recoverPassword(email: string, origin: string): Promise<void> {
     const user = await this.users.findByEmail(email);
     if (!user) {
-      // TODO: We don't want to expose this info back, but we probably want to log and save this event internally, plus
-      //       maybe sent an email to admin
       this.logger.warn(
         `Email ${email} not found when trying to recover password`,
       );
