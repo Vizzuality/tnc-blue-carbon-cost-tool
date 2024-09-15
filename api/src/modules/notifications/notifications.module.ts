@@ -3,5 +3,6 @@ import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [EmailModule],
+  exports: [EmailModule],
 })
 export class NotificationsModule {}

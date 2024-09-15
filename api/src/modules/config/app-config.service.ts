@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DATABASE_ENTITIES } from '@shared/entities/database.entities';
-import { readdirSync } from 'fs';
-import { join } from 'path';
 
 export type JWTConfig = {
   secret: string;
@@ -43,5 +41,9 @@ export class ApiConfigService {
       secret: this.configService.get('JWT_SECRET'),
       expiresIn: this.configService.get('JWT_EXPIRES_IN'),
     };
+  }
+
+  get(envVarName: string): ConfigService {
+    return this.configService.get(envVarName);
   }
 }
