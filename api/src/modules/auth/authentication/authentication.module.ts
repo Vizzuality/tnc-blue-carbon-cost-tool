@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { AuthenticationController } from './authentication.controller';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ApiConfigModule } from '@api/modules/config/app-config.module';
@@ -9,7 +8,6 @@ import { UsersService } from '@api/modules/users/users.service';
 import { UsersModule } from '@api/modules/users/users.module';
 import { LocalStrategy } from '@api/modules/auth/strategies/local.strategy';
 import { JwtStrategy } from '@api/modules/auth/strategies/jwt.strategy';
-import { NotificationsModule } from '@api/modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -23,7 +21,6 @@ import { NotificationsModule } from '@api/modules/notifications/notifications.mo
       }),
     }),
     UsersModule,
-    NotificationsModule,
   ],
   providers: [
     AuthenticationService,
@@ -36,6 +33,6 @@ import { NotificationsModule } from '@api/modules/notifications/notifications.mo
       inject: [UsersService, ApiConfigService],
     },
   ],
-  controllers: [AuthenticationController],
+  exports: [JwtModule, UsersModule, AuthenticationService],
 })
 export class AuthenticationModule {}
