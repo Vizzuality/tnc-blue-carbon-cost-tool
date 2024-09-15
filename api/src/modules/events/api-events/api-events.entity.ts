@@ -14,6 +14,8 @@ export class ApiEventsEntity {
   @Column({
     type: 'enum',
     enum: API_EVENT_TYPES,
+    name: 'event_type',
+    enumName: 'api_event_types',
   })
   eventType: API_EVENT_TYPES;
 

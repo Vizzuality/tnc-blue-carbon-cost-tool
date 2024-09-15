@@ -2,6 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { UsersService } from '@api/modules/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthMailer } from '@api/modules/auth/services/auth.mailer';
+import { EventBus } from '@nestjs/cqrs';
+import { PasswordRecoveryRequestedEvent } from '@api/modules/events/user-events/password-recovery-requested.event';
 
 @Injectable()
 export class PasswordRecoveryService {
@@ -10,6 +12,7 @@ export class PasswordRecoveryService {
     private readonly users: UsersService,
     private readonly jwt: JwtService,
     private readonly authMailer: AuthMailer,
+    private readonly eventBus: EventBus,
   ) {}
 
   async recoverPassword(email: string, origin: string): Promise<void> {
@@ -18,6 +21,7 @@ export class PasswordRecoveryService {
       this.logger.warn(
         `Email ${email} not found when trying to recover password`,
       );
+      this.eventBus.publish(new PasswordRecoveryRequestedEvent(email, null));
       return;
     }
     const token = this.jwt.sign({ id: user.id });
@@ -26,5 +30,6 @@ export class PasswordRecoveryService {
       token,
       origin,
     });
+    this.eventBus.publish(new PasswordRecoveryRequestedEvent(email, user.id));
   }
 }

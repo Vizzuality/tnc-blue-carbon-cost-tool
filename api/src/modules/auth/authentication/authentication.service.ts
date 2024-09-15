@@ -5,12 +5,15 @@ import { User } from '@shared/entities/users/user.entity';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from '@api/modules/auth/dtos/login.dto';
 import { JwtPayload } from '@api/modules/auth/strategies/jwt.strategy';
+import { EventBus } from '@nestjs/cqrs';
+import { UserSignedUpEvent } from '@api/modules/events/user-events/user-signed-up.event';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwt: JwtService,
+    private readonly eventBus: EventBus,
   ) {}
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
@@ -22,10 +25,11 @@ export class AuthenticationService {
 
   async signUp(signupDto: LoginDto): Promise<void> {
     const passwordHash = await bcrypt.hash(signupDto.password, 10);
-    await this.usersService.createUser({
+    const newUser = await this.usersService.createUser({
       email: signupDto.email,
       password: passwordHash,
     });
+    this.eventBus.publish(new UserSignedUpEvent(newUser.id, newUser.email));
   }
 
   async logIn(user: User): Promise<{ user: User; accessToken: string }> {
