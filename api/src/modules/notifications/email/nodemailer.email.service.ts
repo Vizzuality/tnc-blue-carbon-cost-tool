@@ -11,6 +11,9 @@ import {
   SendMailDTO,
 } from '@api/modules/notifications/email/email-service.interface';
 import { ConfigService } from '@nestjs/config';
+import { EventBus } from '@nestjs/cqrs';
+import { EmailFailedEventHandler } from '@api/modules/events/api-events/handlers/emai-failed-event.handler';
+import { EmailFailedEvent } from '@api/modules/events/api-events/email-failed.event';
 
 @Injectable()
 export class NodemailerEmailService implements IEmailServiceInterface {
@@ -18,7 +21,10 @@ export class NodemailerEmailService implements IEmailServiceInterface {
   private transporter: nodemailer.Transporter;
   private readonly domain: string;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly eventBus: EventBus,
+  ) {
     const { accessKeyId, secretAccessKey, region, domain } =
       this.getMailConfig();
     const ses = new aws.SESClient({
@@ -40,6 +46,7 @@ export class NodemailerEmailService implements IEmailServiceInterface {
       });
     } catch (e) {
       this.logger.error(`Error sending email: ${JSON.stringify(e)}`);
+      this.eventBus.publish(new EmailFailedEvent(sendMailDTO.to, e.message));
       throw new ServiceUnavailableException('Could not send email');
     }
   }

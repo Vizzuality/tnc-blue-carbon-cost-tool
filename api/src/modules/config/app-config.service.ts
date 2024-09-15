@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DATABASE_ENTITIES } from '@shared/entities/database.entities';
+import { COMMON_DATABASE_ENTITIES } from '@shared/entities/database.entities';
+import { ApiEventsEntity } from '@api/modules/events/api-events/api-events.entity';
 
 export type JWTConfig = {
   secret: string;
@@ -24,7 +25,7 @@ export class ApiConfigService {
       username: this.configService.get('DB_USERNAME'),
       password: this.configService.get('DB_PASSWORD'),
       database: this.configService.get('DB_NAME'),
-      entities: DATABASE_ENTITIES,
+      entities: [...COMMON_DATABASE_ENTITIES, ApiEventsEntity],
       synchronize: true,
       ssl: this.isProduction()
         ? { require: true, rejectUnauthorized: false }
