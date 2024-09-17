@@ -120,6 +120,7 @@ dist
 .tern-port
 
 # Stores VSCode versions used for testing VSCode extensions
+.vscode
 .vscode-test
 
 # yarn v2
@@ -133,3 +134,5 @@ dist
 /infrastructure/vars/local.tfvars
 /infrastructure/.terraform/
 
+# MacOs
+.DS_Store
