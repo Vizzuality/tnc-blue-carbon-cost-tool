@@ -40,7 +40,7 @@ export class AuthenticationController {
 
   // TODO: Wrap this in a ts-rest handler
   @Public()
-  @Post('recover-password')
+  @Post('authentication/recover-password')
   async recoverPassword(
     @Headers('origin') origin: string,
     @Body() body: { email: string },
