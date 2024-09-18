@@ -15,12 +15,6 @@ export class AuthenticationController {
   ) {}
 
   @Public()
-  @Post('signup')
-  async signup(@Body() signupDto: LoginDto) {
-    return this.authService.signUp(signupDto);
-  }
-
-  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@GetUser() user: User) {
