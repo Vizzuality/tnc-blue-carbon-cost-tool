@@ -7,6 +7,7 @@ import { LoginDto } from '@api/modules/auth/dtos/login.dto';
 import { JwtPayload } from '@api/modules/auth/strategies/jwt.strategy';
 import { EventBus } from '@nestjs/cqrs';
 import { UserSignedUpEvent } from '@api/modules/events/user-events/user-signed-up.event';
+import { UserWithAccessToken } from '@shared/dtos/user.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -32,7 +33,7 @@ export class AuthenticationService {
     this.eventBus.publish(new UserSignedUpEvent(newUser.id, newUser.email));
   }
 
-  async logIn(user: User): Promise<{ user: User; accessToken: string }> {
+  async logIn(user: User): Promise<UserWithAccessToken> {
     const payload: JwtPayload = { id: user.id };
     const accessToken: string = this.jwt.sign(payload);
     return { user, accessToken };
