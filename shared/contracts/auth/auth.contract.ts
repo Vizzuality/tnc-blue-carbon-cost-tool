@@ -21,6 +21,7 @@ export const authContract = contract.router({
   validateToken: {
     method: "GET",
     path: "/authentication/validate-token",
+    headers: z.object({ authorization: z.string() }),
     responses: {
       200: null,
       401: null,

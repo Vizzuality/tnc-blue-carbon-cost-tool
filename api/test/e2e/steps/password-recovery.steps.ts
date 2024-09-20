@@ -5,7 +5,9 @@ import { IEmailServiceToken } from '@api/modules/notifications/email/email-servi
 import { MockEmailService } from 'api/test/utils/mocks/mock-email.service';
 import { TestManager } from 'api/test/utils/test-manager';
 
-const feature = loadFeature('./test/e2e/features/password-recovery.feature');
+const feature = loadFeature(
+  './test/e2e/features/password-recovery-send-email.feature',
+);
 
 defineFeature(feature, (test) => {
   let testManager: TestManager;
