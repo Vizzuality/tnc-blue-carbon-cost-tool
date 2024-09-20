@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { DatabaseModule } from '@api/modules/config/database/database.module';
 import { resolveConfigPath } from '@api/modules/config/path-resolver';
+import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
 
 @Global()
 @Module({
@@ -21,7 +22,7 @@ import { resolveConfigPath } from '@api/modules/config/path-resolver';
     }),
     DatabaseModule,
   ],
-  providers: [ConfigService, ApiConfigService],
+  providers: [ConfigService, ApiConfigService, JwtConfigHandler],
   exports: [ApiConfigService],
 })
 export class ApiConfigModule {}
