@@ -7,13 +7,20 @@ import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 
 export type JwtPayload = { id: string };
 
+const ResetPasswordStrategyName = 'reset-password';
+
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class ResetPasswordJwtStrategy extends PassportStrategy(
+  Strategy,
+  ResetPasswordStrategyName,
+) {
   constructor(
     private readonly userService: UsersService,
     private readonly config: ApiConfigService,
   ) {
-    const { secret } = config.getJWTConfigByType(TOKEN_TYPE_ENUM.ACCESS);
+    const { secret } = config.getJWTConfigByType(
+      TOKEN_TYPE_ENUM.RESET_PASSWORD,
+    );
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: secret,

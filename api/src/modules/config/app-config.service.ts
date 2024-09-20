@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { COMMON_DATABASE_ENTITIES } from '@shared/entities/database.entities';
 import { ApiEventsEntity } from '@api/modules/events/api-events/api-events.entity';
+import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
+import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
 
 export type JWTConfig = {
   secret: string;
@@ -10,7 +12,10 @@ export type JWTConfig = {
 
 @Injectable()
 export class ApiConfigService {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    private readonly jwtConfigHandler: JwtConfigHandler,
+  ) {}
 
   /**
    * @note We could abstract this to a data layer access config specific class within database module, as well for other configs when the thing gets more complex.
@@ -37,11 +42,8 @@ export class ApiConfigService {
     return this.configService.get('NODE_ENV') === 'production';
   }
 
-  getJWTConfig(): JWTConfig {
-    return {
-      secret: this.configService.get('JWT_SECRET'),
-      expiresIn: this.configService.get('JWT_EXPIRES_IN'),
-    };
+  getJWTConfigByType(type: TOKEN_TYPE_ENUM): JWTConfig {
+    return this.jwtConfigHandler.getJwtConfigByType(type);
   }
 
   get(envVarName: string): ConfigService {
