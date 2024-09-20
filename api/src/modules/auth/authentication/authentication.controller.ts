@@ -1,11 +1,10 @@
 import {
-  Body,
   Controller,
-  Post,
   UseGuards,
   Headers,
   UseInterceptors,
   ClassSerializerInterceptor,
+  HttpStatus,
 } from '@nestjs/common';
 import { User } from '@shared/entities/users/user.entity';
 import { AuthenticationService } from '@api/modules/auth/authentication/authentication.service';
@@ -16,6 +15,8 @@ import { PasswordRecoveryService } from '@api/modules/auth/services/password-rec
 import { authContract } from '@shared/contracts/auth/auth.contract';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
+import { AuthGuard } from '@nestjs/passport';
+import { ResetPassword } from '@api/modules/auth/strategies/reset-password.strategy';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -38,13 +39,33 @@ export class AuthenticationController {
     });
   }
 
-  // TODO: Wrap this in a ts-rest handler
-  @Public()
-  @Post('authentication/recover-password')
-  async recoverPassword(
+  @UseGuards(AuthGuard(ResetPassword))
+  @TsRestHandler(authContract.resetPassword)
+  async resetPassword(@GetUser() user: User): Promise<ControllerResponse> {
+    return tsRestHandler(authContract.resetPassword, async () => {
+      const userWithAccessToken =
+        await this.passwordRecovery.resetPassword(user);
+      return {
+        body: userWithAccessToken,
+        status: 201,
+      };
+    });
+  }
+
+  @TsRestHandler(authContract.requestPasswordRecovery)
+  async requestPasswordRecovery(
     @Headers('origin') origin: string,
-    @Body() body: { email: string },
-  ) {
-    await this.passwordRecovery.recoverPassword(body.email, origin);
+  ): Promise<ControllerResponse> {
+    return tsRestHandler(
+      authContract.requestPasswordRecovery,
+      async ({ body }) => {
+        const { email } = body;
+        await this.passwordRecovery.requestPasswordRecovery(email, origin);
+        return {
+          body: null,
+          status: HttpStatus.OK,
+        };
+      },
+    );
   }
 }

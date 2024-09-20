@@ -7,12 +7,12 @@ import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 
 export type JwtPayload = { id: string };
 
-const ResetPasswordStrategyName = 'reset-password';
+export const ResetPassword = 'reset-password';
 
 @Injectable()
 export class ResetPasswordJwtStrategy extends PassportStrategy(
   Strategy,
-  ResetPasswordStrategyName,
+  ResetPassword,
 ) {
   constructor(
     private readonly userService: UsersService,
