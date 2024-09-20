@@ -58,9 +58,23 @@ export class AuthenticationController {
   ): Promise<ControllerResponse> {
     return tsRestHandler(
       authContract.requestPasswordRecovery,
-      async ({ body }) => {
-        const { email } = body;
+      async ({ body: { email } }) => {
         await this.passwordRecovery.requestPasswordRecovery(email, origin);
+        return {
+          body: null,
+          status: HttpStatus.CREATED,
+        };
+      },
+    );
+  }
+
+  @Public()
+  @TsRestHandler(authContract.validateToken)
+  async validateToken(): Promise<ControllerResponse> {
+    return tsRestHandler(
+      authContract.validateToken,
+      async ({ headers: { authorization }, query: { tokenType } }) => {
+        await this.authService.verifyToken(authorization, tokenType);
         return {
           body: null,
           status: HttpStatus.OK,

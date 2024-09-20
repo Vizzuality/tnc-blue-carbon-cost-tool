@@ -8,12 +8,15 @@ import { JwtPayload } from '@api/modules/auth/strategies/jwt.strategy';
 import { EventBus } from '@nestjs/cqrs';
 import { UserSignedUpEvent } from '@api/modules/events/user-events/user-signed-up.event';
 import { UserWithAccessToken } from '@shared/dtos/user.dto';
+import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
+import { ApiConfigService } from '@api/modules/config/app-config.service';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwt: JwtService,
+    private readonly apiConfig: ApiConfigService,
     private readonly eventBus: EventBus,
   ) {}
   async validateUser(email: string, password: string): Promise<User> {
@@ -24,6 +27,7 @@ export class AuthenticationService {
     throw new UnauthorizedException(`Invalid credentials`);
   }
 
+  // TODO: Move logic to createUser service
   async signUp(signupDto: LoginDto): Promise<void> {
     const passwordHash = await bcrypt.hash(signupDto.password, 10);
     const newUser = await this.usersService.createUser({
@@ -37,5 +41,15 @@ export class AuthenticationService {
     const payload: JwtPayload = { id: user.id };
     const accessToken: string = this.jwt.sign(payload);
     return { user, accessToken };
+  }
+
+  async verifyToken(token: string, type: TOKEN_TYPE_ENUM): Promise<boolean> {
+    const { secret } = this.apiConfig.getJWTConfigByType(type);
+    try {
+      this.jwt.verify(token, { secret });
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }
