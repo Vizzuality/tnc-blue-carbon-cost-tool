@@ -4,6 +4,7 @@ import {
   IEmailServiceToken,
 } from '@api/modules/notifications/email/email-service.interface';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
+import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 
 export type PasswordRecovery = {
   email: string;
@@ -25,7 +26,9 @@ export class AuthMailer {
     // TODO: Investigate if it's worth using a template engine to generate the email content, the mail service provider allows it
     // TODO: Use a different expiration time, or different secret altogether for password recovery
 
-    const { expiresIn } = this.apiConfig.getJWTConfig();
+    const { expiresIn } = this.apiConfig.getJWTConfigByType(
+      TOKEN_TYPE_ENUM.RESET_PASSWORD,
+    );
 
     const resetPasswordUrl = `${passwordRecovery.origin}/auth/forgot-password/${passwordRecovery.token}`;
 

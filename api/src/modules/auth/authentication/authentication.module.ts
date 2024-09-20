@@ -8,6 +8,7 @@ import { UsersService } from '@api/modules/users/users.service';
 import { UsersModule } from '@api/modules/users/users.module';
 import { LocalStrategy } from '@api/modules/auth/strategies/local.strategy';
 import { JwtStrategy } from '@api/modules/auth/strategies/jwt.strategy';
+import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 
 @Module({
   imports: [
@@ -16,8 +17,11 @@ import { JwtStrategy } from '@api/modules/auth/strategies/jwt.strategy';
       imports: [ApiConfigModule],
       inject: [ApiConfigService],
       useFactory: (config: ApiConfigService) => ({
-        secret: config.getJWTConfig().secret,
-        signOptions: { expiresIn: config.getJWTConfig().expiresIn },
+        secret: config.getJWTConfigByType(TOKEN_TYPE_ENUM.ACCESS).secret,
+        signOptions: {
+          expiresIn: config.getJWTConfigByType(TOKEN_TYPE_ENUM.ACCESS)
+            .expiresIn,
+        },
       }),
     }),
     UsersModule,
