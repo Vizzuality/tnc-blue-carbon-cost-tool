@@ -9,6 +9,7 @@ import { UsersModule } from '@api/modules/users/users.module';
 import { LocalStrategy } from '@api/modules/auth/strategies/local.strategy';
 import { JwtStrategy } from '@api/modules/auth/strategies/jwt.strategy';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
+import { ResetPasswordJwtStrategy } from '@api/modules/auth/strategies/reset-password.strategy';
 
 @Module({
   imports: [
@@ -33,6 +34,13 @@ import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
       provide: JwtStrategy,
       useFactory: (users: UsersService, config: ApiConfigService) => {
         return new JwtStrategy(users, config);
+      },
+      inject: [UsersService, ApiConfigService],
+    },
+    {
+      provide: ResetPasswordJwtStrategy,
+      useFactory: (users: UsersService, config: ApiConfigService) => {
+        return new ResetPasswordJwtStrategy(users, config);
       },
       inject: [UsersService, ApiConfigService],
     },
