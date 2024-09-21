@@ -1,9 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import {
-  ROLES,
-  ROLES_HIERARCHY,
-} from '@api/modules/auth/authorisation/roles.enum';
+import { ROLES } from '@api/modules/auth/authorisation/roles.enum';
 import { ROLES_KEY } from '@api/modules/auth/decorators/roles.decorator';
 
 @Injectable()
@@ -24,10 +21,6 @@ export class RolesGuard implements CanActivate {
   }
 
   private hasRequiredRole(userRole: ROLES, requiredRoles: ROLES[]): boolean {
-    return requiredRoles.some(
-      (requiredRole) =>
-        userRole === requiredRole ||
-        ROLES_HIERARCHY[userRole]?.includes(requiredRole),
-    );
+    return requiredRoles.some((role) => userRole === role);
   }
 }
