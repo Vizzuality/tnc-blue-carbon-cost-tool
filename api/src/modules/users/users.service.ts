@@ -26,4 +26,9 @@ export class UsersService {
     }
     return this.repo.save(createUserDto);
   }
+
+  async updatePassword(user: User, newPassword: string) {
+    user.password = newPassword;
+    return this.repo.save(user);
+  }
 }
