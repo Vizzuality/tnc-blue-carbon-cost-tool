@@ -36,7 +36,7 @@ export const authContract = contract.router({
       201: null,
       401: null,
     },
-    body: LogInSchema,
+    body: z.object({ password: z.string() }),
   },
   requestPasswordRecovery: {
     method: "POST",

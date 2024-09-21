@@ -42,14 +42,19 @@ export class AuthenticationController {
   @UseGuards(AuthGuard(ResetPassword))
   @TsRestHandler(authContract.resetPassword)
   async resetPassword(@GetUser() user: User): Promise<ControllerResponse> {
-    return tsRestHandler(authContract.resetPassword, async () => {
-      const userWithAccessToken =
-        await this.passwordRecovery.resetPassword(user);
-      return {
-        body: userWithAccessToken,
-        status: 201,
-      };
-    });
+    return tsRestHandler(
+      authContract.resetPassword,
+      async ({ body: { password } }) => {
+        const userWithAccessToken = await this.passwordRecovery.resetPassword(
+          user,
+          password,
+        );
+        return {
+          body: userWithAccessToken,
+          status: 201,
+        };
+      },
+    );
   }
 
   @TsRestHandler(authContract.requestPasswordRecovery)

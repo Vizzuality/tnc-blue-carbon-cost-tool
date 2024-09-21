@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotImplementedException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UsersService } from '@api/modules/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthMailer } from '@api/modules/auth/services/auth.mailer';
@@ -7,6 +7,7 @@ import { PasswordRecoveryRequestedEvent } from '@api/modules/events/user-events/
 import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { User } from '@shared/entities/users/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class PasswordRecoveryService {
@@ -40,7 +41,8 @@ export class PasswordRecoveryService {
     this.eventBus.publish(new PasswordRecoveryRequestedEvent(email, user.id));
   }
 
-  async resetPassword(user: User): Promise<void> {
-    throw new NotImplementedException();
+  async resetPassword(user: User, newPassword: string): Promise<void> {
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+    await this.users.updatePassword(user, newHashedPassword);
   }
 }
