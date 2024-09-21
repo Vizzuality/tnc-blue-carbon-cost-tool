@@ -119,7 +119,7 @@ module "dev" {
   elasticbeanstalk_iam_service_linked_role_name = aws_iam_service_linked_role.elasticbeanstalk.name
   cname_prefix                                  = "blue-carbon-cost-tool-dev-environment"
   rds_instance_class = "db.t3.micro"
-  rds_engine_version = "15.5"
+  rds_engine_version = "15.7"
   rds_backup_retention_period = 3
   repo_name                                     = var.project_name
   github_owner                                  = var.github_owner

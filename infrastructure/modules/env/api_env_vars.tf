@@ -1,5 +1,15 @@
+resource "random_password" "access_token_secret" {
+  length           = 32
+  special          = true
+  override_special = "!#%&*()-_=+[]{}<>:?"
+}
 
-resource "random_password" "jwt_secret" {
+resource "random_password" "reset_password_token_secret" {
+  length           = 32
+  special          = true
+  override_special = "!#%&*()-_=+[]{}<>:?"
+}
+resource "random_password" "email_confirmation_token_secret" {
   length           = 32
   special          = true
   override_special = "!#%&*()-_=+[]{}<>:?"
@@ -16,7 +26,12 @@ locals {
     DB_PASSWORD = module.postgresql.password
     DB_USERNAME = module.postgresql.username
     DB_PORT = module.postgresql.port
-    JWT_SECRET = random_password.jwt_secret.result
+    ACCESS_TOKEN_SECRET = random_password.access_token_secret.result
+    ACCESS_TOKEN_EXPIRES_IN = "24h"
+    RESET_PASSWORD_TOKEN_SECRET = random_password.reset_password_token_secret.result
+    RESET_PASSWORD_TOKEN_EXPIRES_IN = "24h"
+    EMAIL_CONFIRMATION_TOKEN_SECRET = random_password.email_confirmation_token_secret.result
+    EMAIL_CONFIRMATION_TOKEN_EXPIRES_IN = "24h"
     AWS_SES_ACCESS_KEY_ID = aws_iam_access_key.email_user_access_key.id
     AWS_SES_ACCESS_KEY_SECRET = aws_iam_access_key.email_user_access_key.secret
     AWS_SES_DOMAIN = module.email.mail_from_domain
