@@ -4,6 +4,7 @@ import { UserWithAccessToken } from "@shared/dtos/user.dto";
 import { JSONAPIError } from "@shared/dtos/json-api.error";
 import { TokenTypeSchema } from "@shared/schemas/auth/token-type.schema";
 import { z } from "zod";
+import { BearerTokenSchema } from "@shared/schemas/auth/bearer-token.schema";
 
 // TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 
@@ -21,7 +22,7 @@ export const authContract = contract.router({
   validateToken: {
     method: "GET",
     path: "/authentication/validate-token",
-    headers: z.object({ authorization: z.string() }),
+    headers: BearerTokenSchema,
     responses: {
       200: null,
       401: null,
