@@ -9,7 +9,7 @@ const feature = loadFeature(
   './test/e2e/features/password-recovery-send-email.feature',
 );
 
-describe('test', () => {
+describe('Password Recovery - Send Email', () => {
   defineFeature(feature, (test) => {
     let testManager: TestManager;
     let testUser: User;

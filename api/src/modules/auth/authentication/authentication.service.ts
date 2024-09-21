@@ -46,10 +46,10 @@ export class AuthenticationService {
   async verifyToken(token: string, type: TOKEN_TYPE_ENUM): Promise<boolean> {
     const { secret } = this.apiConfig.getJWTConfigByType(type);
     try {
-      this.jwt.verify(token, { secret });
+      await this.jwt.verify(token, { secret });
       return true;
     } catch (error) {
-      return false;
+      throw new UnauthorizedException();
     }
   }
 }
