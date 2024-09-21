@@ -15,6 +15,15 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({ nullable: true })
+  name: string;
+
+  @Column({ default: "default_partner", name: "partner_name" })
+  partnerName: string;
+
+  @Column({ type: "boolean", default: false, name: "is_active" })
+  isActive: boolean;
+
   @Column()
   @Exclude()
   password: string;
