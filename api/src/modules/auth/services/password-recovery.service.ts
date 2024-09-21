@@ -14,10 +14,8 @@ export class PasswordRecoveryService {
   logger: Logger = new Logger(PasswordRecoveryService.name);
   constructor(
     private readonly users: UsersService,
-    private readonly jwt: JwtService,
     private readonly authMailer: AuthMailer,
     private readonly eventBus: EventBus,
-    private readonly apiConfig: ApiConfigService,
   ) {}
 
   async requestPasswordRecovery(email: string, origin: string): Promise<void> {
@@ -29,13 +27,8 @@ export class PasswordRecoveryService {
       this.eventBus.publish(new PasswordRecoveryRequestedEvent(email, null));
       return;
     }
-    const { secret, expiresIn } = this.apiConfig.getJWTConfigByType(
-      TOKEN_TYPE_ENUM.RESET_PASSWORD,
-    );
-    const token = this.jwt.sign({ id: user.id }, { secret, expiresIn });
     await this.authMailer.sendPasswordRecoveryEmail({
-      email: user.email,
-      token,
+      user,
       origin,
     });
     this.eventBus.publish(new PasswordRecoveryRequestedEvent(email, user.id));

@@ -4,13 +4,14 @@ import { UsersService } from '@api/modules/users/users.service';
 import { User } from '@shared/entities/users/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtPayload } from '@api/modules/auth/strategies/jwt.strategy';
-import { EventBus } from '@nestjs/cqrs';
+import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { UserSignedUpEvent } from '@api/modules/events/user-events/user-signed-up.event';
 import { UserWithAccessToken } from '@shared/dtos/user.dto';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { CreateUserDto } from '@shared/schemas/users/create-user.schema';
 import { randomBytes } from 'node:crypto';
+import { SendWelcomeEmailCommand } from '@api/modules/notifications/email/commands/send-welcome-email.command';
 
 @Injectable()
 export class AuthenticationService {
@@ -19,6 +20,7 @@ export class AuthenticationService {
     private readonly jwt: JwtService,
     private readonly apiConfig: ApiConfigService,
     private readonly eventBus: EventBus,
+    private readonly commandBus: CommandBus,
   ) {}
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
@@ -38,8 +40,11 @@ export class AuthenticationService {
       email,
       password: passwordHash,
       partnerName,
+      isActive: false,
     });
-    this.eventBus.publish(new UserSignedUpEvent(newUser.id, newUser.email));
+    void this.commandBus.execute(
+      new SendWelcomeEmailCommand(newUser, plainTextPassword),
+    );
   }
 
   async logIn(user: User): Promise<UserWithAccessToken> {
