@@ -3,13 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '@api/modules/users/users.service';
 import { User } from '@shared/entities/users/user.entity';
 import * as bcrypt from 'bcrypt';
-import { LoginDto } from '@api/modules/auth/dtos/login.dto';
 import { JwtPayload } from '@api/modules/auth/strategies/jwt.strategy';
 import { EventBus } from '@nestjs/cqrs';
 import { UserSignedUpEvent } from '@api/modules/events/user-events/user-signed-up.event';
 import { UserWithAccessToken } from '@shared/dtos/user.dto';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
+import { CreateUserDto } from '@shared/schemas/users/create-user.schema';
+import { randomBytes } from 'node:crypto';
 
 @Injectable()
 export class AuthenticationService {
@@ -27,12 +28,16 @@ export class AuthenticationService {
     throw new UnauthorizedException(`Invalid credentials`);
   }
 
-  // TODO: Move logic to createUser service
-  async signUp(signupDto: LoginDto): Promise<void> {
-    const passwordHash = await bcrypt.hash(signupDto.password, 10);
+  async createUser(createUser: CreateUserDto): Promise<void> {
+    // TODO: This is sync, check how to improve it
+    const { email, name, partnerName } = createUser;
+    const plainTextPassword = randomBytes(8).toString('hex');
+    const passwordHash = await bcrypt.hash(plainTextPassword, 10);
     const newUser = await this.usersService.createUser({
-      email: signupDto.email,
+      name,
+      email,
       password: passwordHash,
+      partnerName,
     });
     this.eventBus.publish(new UserSignedUpEvent(newUser.id, newUser.email));
   }

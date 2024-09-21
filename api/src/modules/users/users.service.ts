@@ -17,14 +17,12 @@ export class UsersService {
     return this.repo.findOne({ where: { email } });
   }
 
-  async createUser(createUserDto: { email: string; password: string }) {
-    const existingUser = await this.findByEmail(createUserDto.email);
+  async createUser(newUser: Partial<User>) {
+    const existingUser = await this.findByEmail(newUser.email);
     if (existingUser) {
-      throw new ConflictException(
-        `Email ${createUserDto.email} already exists`,
-      );
+      throw new ConflictException(`Email ${newUser.email} already exists`);
     }
-    return this.repo.save(createUserDto);
+    return this.repo.save(newUser);
   }
 
   async updatePassword(user: User, newPassword: string) {
