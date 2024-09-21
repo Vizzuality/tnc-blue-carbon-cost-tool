@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
 
 @Controller('admin')
-@UseGuards(AuthGuard)
-@UseGuards(RolesGuard)
-export class AdminController {}
+@UseGuards(AuthGuard, RolesGuard)
+export class AdminController {
+  constructor() {}
+}
