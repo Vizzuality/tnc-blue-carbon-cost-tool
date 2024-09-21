@@ -4,7 +4,9 @@
   "devDependencies": {
     "pg": "catalog:",
     "typeorm": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
     "@nestjs/mapped-types": "^2.0.5",

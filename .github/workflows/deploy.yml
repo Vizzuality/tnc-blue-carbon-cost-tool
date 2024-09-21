@@ -20,6 +20,7 @@ on:
 jobs:
 
   set_environment_name:
+    name: Set Environment
     runs-on: ubuntu-latest
     outputs:
       env_name: ${{ steps.set_env.outputs.env_name }}
