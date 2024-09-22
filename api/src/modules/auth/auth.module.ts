@@ -10,5 +10,6 @@ import { AuthenticationController } from '@api/modules/auth/authentication/authe
   imports: [AuthenticationModule, AuthorisationModule, NotificationsModule],
   controllers: [AuthenticationController],
   providers: [PasswordRecoveryService, AuthMailer],
+  exports: [AuthenticationModule, AuthMailer],
 })
 export class AuthModule {}
