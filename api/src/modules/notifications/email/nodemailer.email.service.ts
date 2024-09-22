@@ -12,7 +12,6 @@ import {
 } from '@api/modules/notifications/email/email-service.interface';
 import { ConfigService } from '@nestjs/config';
 import { EventBus } from '@nestjs/cqrs';
-import { EmailFailedEventHandler } from '@api/modules/events/api-events/handlers/emai-failed-event.handler';
 import { EmailFailedEvent } from '@api/modules/events/api-events/email-failed.event';
 
 @Injectable()
@@ -54,11 +53,10 @@ export class NodemailerEmailService implements IEmailServiceInterface {
   private getMailConfig() {
     const accessKeyId = this.configService.get<string>('AWS_SES_ACCESS_KEY_ID');
     const secretAccessKey = this.configService.get<string>(
-      'AWS_SES_SECRET_ACCESS_KEY',
+      'AWS_SES_ACCESS_KEY_SECRET',
     );
     const region = this.configService.get<string>('AWS_SES_REGION');
     const domain = this.configService.get<string>('AWS_SES_DOMAIN');
-    console.log(accessKeyId, secretAccessKey, region, domain);
     if (!accessKeyId || !secretAccessKey || !region || !domain) {
       this.logger.error(
         'Variables for Email Service not set. Email not available',
