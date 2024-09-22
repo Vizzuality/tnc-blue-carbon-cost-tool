@@ -29,4 +29,8 @@ export class UsersService {
     user.password = newPassword;
     return this.repo.save(user);
   }
+
+  async delete(user: User) {
+    return this.repo.remove(user);
+  }
 }

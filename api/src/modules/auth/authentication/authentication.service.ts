@@ -3,9 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '@api/modules/users/users.service';
 import { User } from '@shared/entities/users/user.entity';
 import * as bcrypt from 'bcrypt';
-import { JwtPayload } from '@api/modules/auth/strategies/jwt.strategy';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
-import { UserSignedUpEvent } from '@api/modules/events/user-events/user-signed-up.event';
 import { UserWithAccessToken } from '@shared/dtos/user.dto';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
@@ -42,14 +40,16 @@ export class AuthenticationService {
       partnerName,
       isActive: false,
     });
-    void this.commandBus.execute(
-      new SendWelcomeEmailCommand(newUser, plainTextPassword),
-    );
+    await this.commandBus
+      .execute(new SendWelcomeEmailCommand(newUser, plainTextPassword))
+      .catch(() => this.usersService.delete(newUser));
   }
 
   async logIn(user: User): Promise<UserWithAccessToken> {
-    const payload: JwtPayload = { id: user.id };
-    const accessToken: string = this.jwt.sign(payload);
+    const { token: accessToken } = await this.signTokenByType(
+      TOKEN_TYPE_ENUM.ACCESS,
+      user.id,
+    );
     return { user, accessToken };
   }
 
@@ -61,5 +61,20 @@ export class AuthenticationService {
     } catch (error) {
       throw new UnauthorizedException();
     }
+  }
+
+  private async signTokenByType(
+    tokenType: TOKEN_TYPE_ENUM,
+    userId: string,
+  ): Promise<{ token: string; expiresIn: string }> {
+    const { secret, expiresIn } = this.apiConfig.getJWTConfigByType(tokenType);
+    const token = await this.jwt.signAsync(
+      { id: userId },
+      {
+        secret,
+        expiresIn,
+      },
+    );
+    return { token, expiresIn };
   }
 }
