@@ -15,11 +15,14 @@ describe('Create Users', () => {
 
   beforeAll(async () => {
     testManager = await TestManager.createTestManager();
+
+    mockEmailService =
+      testManager.getModule<MockEmailService>(IEmailServiceToken);
+  });
+  beforeEach(async () => {
     const { user, jwtToken: token } = await testManager.setUpTestUser();
     testUser = user;
     jwtToken = token;
-    mockEmailService =
-      testManager.getModule<MockEmailService>(IEmailServiceToken);
   });
 
   afterEach(async () => {
@@ -34,7 +37,9 @@ describe('Create Users', () => {
     // Given a user exists with valid credentials
     // But the user has the role partner
 
-    const user = await testManager.mocks().createUser({ role: ROLES.PARTNER });
+    const user = await testManager
+      .mocks()
+      .createUser({ role: ROLES.PARTNER, email: 'random@test.com' });
     const { jwtToken } = await testManager.logUserIn(user);
 
     // When the user creates a new user
@@ -57,7 +62,7 @@ describe('Create Users', () => {
       .request()
       .post('/admin/users')
       .set('Authorization', `Bearer ${jwtToken}`)
-      .send({ email: testUser.email, password: '12345678' });
+      .send({ email: testUser.email, partnerName: 'test' });
 
     // Then the user should receive a 409 status code
     expect(response.status).toBe(HttpStatus.CONFLICT);
@@ -72,7 +77,6 @@ describe('Create Users', () => {
     // beforeAll
     const newUser = {
       email: 'test@test.com',
-      password: '12345678',
       partnerName: 'test',
     };
 
