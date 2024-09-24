@@ -33,4 +33,9 @@ export class UsersService {
   async delete(user: User) {
     return this.repo.remove(user);
   }
+
+  async isUserActive(id: string) {
+    const user = await this.repo.findOneBy({ id });
+    return user.isActive;
+  }
 }

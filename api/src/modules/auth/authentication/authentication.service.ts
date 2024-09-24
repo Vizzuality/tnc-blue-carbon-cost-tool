@@ -53,13 +53,19 @@ export class AuthenticationService {
     return { user, accessToken };
   }
 
-  async verifyToken(token: string, type: TOKEN_TYPE_ENUM): Promise<boolean> {
+  async isTokenValid(token: string, type: TOKEN_TYPE_ENUM): Promise<boolean> {
     const { secret } = this.apiConfig.getJWTConfigByType(type);
     try {
-      await this.jwt.verify(token, { secret });
+      const { id } = await this.jwt.verify(token, { secret });
+      switch (type) {
+        case TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION:
+          return !(await this.usersService.isUserActive(id));
+        default:
+          break;
+      }
       return true;
     } catch (error) {
-      throw new UnauthorizedException();
+      return false;
     }
   }
 
