@@ -5,6 +5,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   HttpStatus,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { User } from '@shared/entities/users/user.entity';
 import { AuthenticationService } from '@api/modules/auth/authentication/authentication.service';
@@ -80,7 +81,9 @@ export class AuthenticationController {
     return tsRestHandler(
       authContract.validateToken,
       async ({ headers: { authorization }, query: { tokenType } }) => {
-        await this.authService.verifyToken(authorization, tokenType);
+        if (!(await this.authService.isTokenValid(authorization, tokenType))) {
+          throw new UnauthorizedException();
+        }
         return {
           body: null,
           status: HttpStatus.OK,
