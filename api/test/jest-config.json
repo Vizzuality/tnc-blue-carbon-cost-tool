@@ -3,7 +3,7 @@
   "rootDir": "../",
   "roots": ["<rootDir>/src/", "<rootDir>/test/"],
   "testEnvironment": "node",
-  "testRegex": ".steps.ts$",
+  "testRegex": "(.steps.ts|.spec.ts)$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
