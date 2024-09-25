@@ -1,12 +1,12 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
-import { AuthenticationService } from '@api/modules/auth/authentication/authentication.service';
 import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
-import { ROLES } from '@api/modules/auth/authorisation/roles.enum';
 import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { adminContract } from '@shared/contracts/admin.contract';
+import { AuthenticationService } from '@api/modules/auth/authentication.service';
+import { ROLES } from '@api/modules/auth/roles.enum';
 
 @Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)

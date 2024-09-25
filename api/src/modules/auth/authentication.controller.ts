@@ -8,17 +8,16 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { User } from '@shared/entities/users/user.entity';
-import { AuthenticationService } from '@api/modules/auth/authentication/authentication.service';
 import { LocalAuthGuard } from '@api/modules/auth/guards/local-auth.guard';
 import { GetUser } from '@api/modules/auth/decorators/get-user.decorator';
 import { Public } from '@api/modules/auth/decorators/is-public.decorator';
 import { PasswordRecoveryService } from '@api/modules/auth/services/password-recovery.service';
-
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { AuthGuard } from '@nestjs/passport';
 import { ResetPassword } from '@api/modules/auth/strategies/reset-password.strategy';
 import { authContract } from '@shared/contracts/auth.contract';
+import { AuthenticationService } from '@api/modules/auth/authentication.service';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
