@@ -10,6 +10,7 @@ import { LocalStrategy } from '@api/modules/auth/strategies/local.strategy';
 import { JwtStrategy } from '@api/modules/auth/strategies/jwt.strategy';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { ResetPasswordJwtStrategy } from '@api/modules/auth/strategies/reset-password.strategy';
+import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ResetPasswordJwtStrategy } from '@api/modules/auth/strategies/reset-pas
   providers: [
     AuthenticationService,
     LocalStrategy,
+    JwtManager,
     {
       provide: JwtStrategy,
       useFactory: (users: UsersService, config: ApiConfigService) => {
@@ -45,6 +47,7 @@ import { ResetPasswordJwtStrategy } from '@api/modules/auth/strategies/reset-pas
       inject: [UsersService, ApiConfigService],
     },
   ],
-  exports: [JwtModule, UsersModule, AuthenticationService],
+  exports: [JwtModule, UsersModule, AuthenticationService, JwtManager],
+  // TODO: Remove JwtModule from exports
 })
 export class AuthenticationModule {}

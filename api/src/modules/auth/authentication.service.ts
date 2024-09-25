@@ -3,21 +3,22 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '@api/modules/users/users.service';
 import { User } from '@shared/entities/users/user.entity';
 import * as bcrypt from 'bcrypt';
-import { CommandBus, EventBus } from '@nestjs/cqrs';
+import { CommandBus } from '@nestjs/cqrs';
 import { UserWithAccessToken } from '@shared/dtos/user.dto';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { CreateUserDto } from '@shared/schemas/users/create-user.schema';
 import { randomBytes } from 'node:crypto';
 import { SendWelcomeEmailCommand } from '@api/modules/notifications/email/commands/send-welcome-email.command';
+import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwt: JwtService,
+    private readonly jwtManager: JwtManager,
     private readonly apiConfig: ApiConfigService,
-    private readonly eventBus: EventBus,
     private readonly commandBus: CommandBus,
   ) {}
   async validateUser(email: string, password: string): Promise<User> {
@@ -46,17 +47,14 @@ export class AuthenticationService {
   }
 
   async logIn(user: User): Promise<UserWithAccessToken> {
-    const { token: accessToken } = await this.signTokenByType(
-      TOKEN_TYPE_ENUM.ACCESS,
-      user.id,
-    );
+    const { accessToken } = await this.jwtManager.signAccessToken(user.id);
     return { user, accessToken };
   }
 
   async isTokenValid(token: string, type: TOKEN_TYPE_ENUM): Promise<boolean> {
     const { secret } = this.apiConfig.getJWTConfigByType(type);
     try {
-      const { id } = await this.jwt.verify(token, { secret });
+      const { id } = await this.jwt.verifyAsync(token, { secret });
       switch (type) {
         case TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION:
           return !(await this.usersService.isUserActive(id));
@@ -67,20 +65,5 @@ export class AuthenticationService {
     } catch (error) {
       return false;
     }
-  }
-
-  private async signTokenByType(
-    tokenType: TOKEN_TYPE_ENUM,
-    userId: string,
-  ): Promise<{ token: string; expiresIn: string }> {
-    const { secret, expiresIn } = this.apiConfig.getJWTConfigByType(tokenType);
-    const token = await this.jwt.signAsync(
-      { id: userId },
-      {
-        secret,
-        expiresIn,
-      },
-    );
-    return { token, expiresIn };
   }
 }

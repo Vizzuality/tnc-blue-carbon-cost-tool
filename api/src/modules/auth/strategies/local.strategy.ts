@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 
 import { Strategy } from 'passport-local';
 import { User } from '@shared/entities/users/user.entity';
-import { AuthenticationService } from '@api/modules/auth/authentication/authentication.service';
+import { AuthenticationService } from '@api/modules/auth/authentication.service';
 
 /**
  * @description: LocalStrategy is used by passport to authenticate by email and password rather than a token.
