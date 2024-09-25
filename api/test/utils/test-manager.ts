@@ -13,7 +13,7 @@ import { createUser } from './mocks/entity-mocks';
 import { User } from '@shared/entities/users/user.entity';
 import { IEmailServiceToken } from '@api/modules/notifications/email/email-service.interface';
 import { MockEmailService } from './mocks/mock-email.service';
-import { ROLES } from '@api/modules/auth/authorisation/roles.enum';
+import { ROLES } from '@api/modules/auth/roles.enum';
 
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate

@@ -1,10 +1,10 @@
-import { ROLES } from '@api/modules/auth/authorisation/roles.enum';
 import { TestManager } from '../../utils/test-manager';
 import { HttpStatus } from '@nestjs/common';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { JwtService } from '@nestjs/jwt';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { authContract } from '@shared/contracts/auth.contract';
+import { ROLES } from '@api/modules/auth/roles.enum';
 
 //create-user.feature
 

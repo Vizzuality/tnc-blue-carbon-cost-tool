@@ -47,7 +47,6 @@ import { JwtManager } from '@api/modules/auth/services/jwt.manager';
       inject: [UsersService, ApiConfigService],
     },
   ],
-  exports: [JwtModule, UsersModule, AuthenticationService, JwtManager],
-  // TODO: Remove JwtModule from exports
+  exports: [UsersModule, AuthenticationService, JwtManager],
 })
 export class AuthenticationModule {}

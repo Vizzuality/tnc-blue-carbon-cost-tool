@@ -3,10 +3,8 @@ import {
   IEmailServiceInterface,
   IEmailServiceToken,
 } from '@api/modules/notifications/email/email-service.interface';
-import { ApiConfigService } from '@api/modules/config/app-config.service';
-import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
-import { JwtService } from '@nestjs/jwt';
 import { User } from '@shared/entities/users/user.entity';
+import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 
 export type PasswordRecoveryDto = {
   user: User;
@@ -18,18 +16,15 @@ export class AuthMailer {
   constructor(
     @Inject(IEmailServiceToken)
     private readonly emailService: IEmailServiceInterface,
-    private readonly apiConfig: ApiConfigService,
-    private readonly jwt: JwtService,
+    private readonly jwt: JwtManager,
   ) {}
 
   async sendPasswordRecoveryEmail(
     passwordRecovery: PasswordRecoveryDto,
   ): Promise<void> {
-    const { token, expiresIn } = await this.signTokenByType(
-      TOKEN_TYPE_ENUM.RESET_PASSWORD,
-      passwordRecovery.user.id,
-    );
-    const resetPasswordUrl = `${passwordRecovery.origin}/auth/forgot-password/${token}`;
+    const { resetPasswordToken, expiresIn } =
+      await this.jwt.signResetPasswordToken(passwordRecovery.user.id);
+    const resetPasswordUrl = `${passwordRecovery.origin}/auth/forgot-password/${resetPasswordToken}`;
 
     const htmlContent: string = `
     <h1>Dear User,</h1>
@@ -56,14 +51,12 @@ export class AuthMailer {
     user: User;
     defaultPassword: string;
   }) {
-    const { token, expiresIn } = await this.signTokenByType(
-      TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION,
-      welcomeEmailDto.user.id,
-    );
+    const { emailConfirmationToken, expiresIn } =
+      await this.jwt.signEmailConfirmationToken(welcomeEmailDto.user.id);
 
     // TODO: We need to know the URL to confirm the email, we could rely on origin but we would need to pass it through a lot of code.
     //       probably better to have a config value for this.
-    const resetPasswordUrl = `TODO/auth/sign-up/${token}`;
+    const resetPasswordUrl = `TODO/auth/sign-up/${emailConfirmationToken}`;
 
     const htmlContent: string = `
     <h1>Dear User,</h1>
@@ -85,18 +78,6 @@ export class AuthMailer {
       subject: 'Welcome to TNC Blue Carbon Cost Tool Platform',
       html: htmlContent,
     });
-  }
-
-  private async signTokenByType(
-    tokenType: TOKEN_TYPE_ENUM,
-    userId: string,
-  ): Promise<{ token: string; expiresIn: string }> {
-    const { secret, expiresIn } = this.apiConfig.getJWTConfigByType(tokenType);
-    const token = await this.jwt.signAsync(
-      { id: userId },
-      { secret, expiresIn },
-    );
-    return { token, expiresIn };
   }
 }
 
