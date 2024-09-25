@@ -1,12 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '@api/modules/users/users.service';
 import { User } from '@shared/entities/users/user.entity';
 import * as bcrypt from 'bcrypt';
 import { CommandBus } from '@nestjs/cqrs';
 import { UserWithAccessToken } from '@shared/dtos/user.dto';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
-import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { CreateUserDto } from '@shared/schemas/users/create-user.schema';
 import { randomBytes } from 'node:crypto';
 import { SendWelcomeEmailCommand } from '@api/modules/notifications/email/commands/send-welcome-email.command';
@@ -16,9 +14,7 @@ import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 export class AuthenticationService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwt: JwtService,
     private readonly jwtManager: JwtManager,
-    private readonly apiConfig: ApiConfigService,
     private readonly commandBus: CommandBus,
   ) {}
   async validateUser(email: string, password: string): Promise<User> {
@@ -51,19 +47,10 @@ export class AuthenticationService {
     return { user, accessToken };
   }
 
-  async isTokenValid(token: string, type: TOKEN_TYPE_ENUM): Promise<boolean> {
-    const { secret } = this.apiConfig.getJWTConfigByType(type);
-    try {
-      const { id } = await this.jwt.verifyAsync(token, { secret });
-      switch (type) {
-        case TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION:
-          return !(await this.usersService.isUserActive(id));
-        default:
-          break;
-      }
+  async verifyToken(token: string, type: TOKEN_TYPE_ENUM): Promise<boolean> {
+    if (await this.jwtManager.isTokenValid(token, type)) {
       return true;
-    } catch (error) {
-      return false;
     }
+    throw new UnauthorizedException();
   }
 }

@@ -80,9 +80,7 @@ export class AuthenticationController {
     return tsRestHandler(
       authContract.validateToken,
       async ({ headers: { authorization }, query: { tokenType } }) => {
-        if (!(await this.authService.isTokenValid(authorization, tokenType))) {
-          throw new UnauthorizedException();
-        }
+        await this.authService.verifyToken(authorization, tokenType);
         return {
           body: null,
           status: HttpStatus.OK,

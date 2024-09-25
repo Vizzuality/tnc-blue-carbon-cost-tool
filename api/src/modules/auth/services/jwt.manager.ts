@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
-import { JwtPayload } from '@api/modules/auth/strategies/jwt.strategy';
 import { UsersService } from '@api/modules/users/users.service';
 
 @Injectable()
@@ -13,59 +12,76 @@ export class JwtManager {
     private readonly users: UsersService,
   ) {}
 
-  private sign(userId: string, tokenType: TOKEN_TYPE_ENUM): Promise<string> {
-    const { secret, expiresIn } = this.config.getJWTConfigByType(tokenType);
-    return this.jwt.signAsync({ id: userId }, { secret, expiresIn });
-  }
-
-  private decode(
-    token: string,
+  private async sign(
+    userId: string,
     tokenType: TOKEN_TYPE_ENUM,
-  ): Promise<JwtPayload> {
-    const { secret } = this.config.getJWTConfigByType(tokenType);
-    return this.jwt.verifyAsync(token, { secret });
+  ): Promise<{ token: string; expiresIn: string }> {
+    const { secret, expiresIn } = this.config.getJWTConfigByType(tokenType);
+    const token = await this.jwt.signAsync(
+      { id: userId },
+      { secret, expiresIn },
+    );
+    return {
+      token,
+      expiresIn,
+    };
   }
 
-  async signAccessToken(userId: string): Promise<{ accessToken: string }> {
-    const accessToken = await this.sign(userId, TOKEN_TYPE_ENUM.ACCESS);
+  async signAccessToken(
+    userId: string,
+  ): Promise<{ accessToken: string; expiresIn: string }> {
+    const { token: accessToken, expiresIn } = await this.sign(
+      userId,
+      TOKEN_TYPE_ENUM.ACCESS,
+    );
     return {
       accessToken,
+      expiresIn,
     };
   }
 
   async signResetPasswordToken(
     userId: string,
-  ): Promise<{ resetPasswordToken: string }> {
-    const resetPasswordToken = await this.sign(
+  ): Promise<{ resetPasswordToken: string; expiresIn: string }> {
+    const { token: resetPasswordToken, expiresIn } = await this.sign(
       userId,
       TOKEN_TYPE_ENUM.RESET_PASSWORD,
     );
     return {
       resetPasswordToken,
+      expiresIn,
     };
   }
 
   async signEmailConfirmationToken(
     userId: string,
-  ): Promise<{ emailConfirmationToken: string }> {
-    const emailConfirmationToken = await this.sign(
+  ): Promise<{ emailConfirmationToken: string; expiresIn: string }> {
+    const { token: emailConfirmationToken, expiresIn } = await this.sign(
       userId,
       TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION,
     );
     return {
       emailConfirmationToken,
+      expiresIn,
     };
   }
 
-  async decodeAccessToken(token: string): Promise<JwtPayload> {
-    return this.decode(token, TOKEN_TYPE_ENUM.ACCESS);
-  }
-
-  async decodeResetPasswordToken(token: string): Promise<JwtPayload> {
-    return this.decode(token, TOKEN_TYPE_ENUM.RESET_PASSWORD);
-  }
-
-  async decodeEmailConfirmationToken(token: string): Promise<JwtPayload> {
-    return this.decode(token, TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION);
+  async isTokenValid(token: string, type: TOKEN_TYPE_ENUM): Promise<boolean> {
+    const { secret } = this.config.getJWTConfigByType(type);
+    try {
+      const { id } = await this.jwt.verifyAsync(token, { secret });
+      switch (type) {
+        case TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION:
+          /**
+           * If the user is already active, we don't want to allow them to confirm their email again.
+           */
+          return !(await this.users.isUserActive(id));
+        default:
+          break;
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }

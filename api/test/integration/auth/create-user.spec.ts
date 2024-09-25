@@ -1,9 +1,9 @@
-import { ROLES } from '@api/modules/auth/authorisation/roles.enum';
 import { TestManager } from '../../utils/test-manager';
 import { User } from '@shared/entities/users/user.entity';
 import { HttpStatus } from '@nestjs/common';
 import { MockEmailService } from '../../utils/mocks/mock-email.service';
 import { IEmailServiceToken } from '@api/modules/notifications/email/email-service.interface';
+import { ROLES } from '@api/modules/auth/roles.enum';
 
 //create-user.feature
 
