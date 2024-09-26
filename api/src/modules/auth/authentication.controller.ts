@@ -5,7 +5,6 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   HttpStatus,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { User } from '@shared/entities/users/user.entity';
 import { LocalAuthGuard } from '@api/modules/auth/guards/local-auth.guard';
@@ -18,6 +17,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { ResetPassword } from '@api/modules/auth/strategies/reset-password.strategy';
 import { authContract } from '@shared/contracts/auth.contract';
 import { AuthenticationService } from '@api/modules/auth/authentication.service';
+import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
+import { SignUp } from '@api/modules/auth/strategies/sign-up.strategy';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -35,6 +36,18 @@ export class AuthenticationController {
       const userWithAccessToken = await this.authService.logIn(user);
       return {
         body: userWithAccessToken,
+        status: 201,
+      };
+    });
+  }
+
+  @UseGuards(JwtAuthGuard, AuthGuard(SignUp))
+  @TsRestHandler(authContract.signUp)
+  async signUp(@GetUser() user: User): Promise<ControllerResponse> {
+    return tsRestHandler(authContract.login, async ({ body }) => {
+      await this.authService.signUp(user, body);
+      return {
+        body: null,
         status: 201,
       };
     });

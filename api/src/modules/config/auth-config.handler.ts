@@ -25,7 +25,7 @@ export class JwtConfigHandler {
           ),
         };
 
-      case TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION:
+      case TOKEN_TYPE_ENUM.SIGN_UP:
         return {
           secret: this.configService.get<string>(
             'EMAIL_CONFIRMATION_TOKEN_SECRET',
