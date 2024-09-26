@@ -73,7 +73,10 @@ export class TestManager {
   }
 
   async setUpTestUser() {
-    const user = await createUser(this.getDataSource(), { role: ROLES.ADMIN });
+    const user = await createUser(this.getDataSource(), {
+      role: ROLES.ADMIN,
+      isActive: true,
+    });
     return logUserIn(this, user);
   }
 

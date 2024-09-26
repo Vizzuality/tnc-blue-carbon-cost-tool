@@ -1,22 +1,20 @@
 import { TestManager } from '../../utils/test-manager';
 import { HttpStatus } from '@nestjs/common';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
-import { JwtService } from '@nestjs/jwt';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { authContract } from '@shared/contracts/auth.contract';
 import { ROLES } from '@api/modules/auth/roles.enum';
+import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 
 //create-user.feature
 
 describe('Create Users', () => {
   let testManager: TestManager;
-  let apiConfig: ApiConfigService;
-  let jwtService: JwtService;
+  let jwtManager: JwtManager;
 
   beforeAll(async () => {
     testManager = await TestManager.createTestManager();
-    apiConfig = testManager.getModule<ApiConfigService>(ApiConfigService);
-    jwtService = testManager.getModule<JwtService>(JwtService);
+    jwtManager = testManager.getModule<JwtManager>(JwtManager);
   });
 
   afterEach(async () => {
@@ -30,17 +28,12 @@ describe('Create Users', () => {
   test('A sign-up token should not be valid if the user bound to that token has already been activated', async () => {
     // Given a user exists with valid credentials
     // But the user has the role partner
-
     const user = await testManager.mocks().createUser({
       role: ROLES.PARTNER,
       email: 'random@test.com',
-      isActive: true,
     });
-    const { secret, expiresIn } = apiConfig.getJWTConfigByType(
-      TOKEN_TYPE_ENUM.SIGN_UP,
-    );
 
-    const token = jwtService.sign({ id: user.id }, { secret, expiresIn });
+    const token = jwtManager.signSignUpToken(user.id);
 
     // When the user creates a new user
 
@@ -51,5 +44,14 @@ describe('Create Users', () => {
       .query({ tokenType: TOKEN_TYPE_ENUM.SIGN_UP });
 
     expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+  });
+
+  test('Sign up should fail if the current password is incorrect', async () => {
+    const user = await testManager.mocks().createUser({
+      role: ROLES.PARTNER,
+      email: 'random@test.com',
+      isActive: true,
+    });
+    const token = await jwtManager.signSignUpToken(user.id);
   });
 });

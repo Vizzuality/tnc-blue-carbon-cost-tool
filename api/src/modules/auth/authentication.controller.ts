@@ -19,6 +19,8 @@ import { authContract } from '@shared/contracts/auth.contract';
 import { AuthenticationService } from '@api/modules/auth/authentication.service';
 import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
 import { SignUp } from '@api/modules/auth/strategies/sign-up.strategy';
+import { CommandBus } from '@nestjs/cqrs';
+import { RequestPasswordRecoveryCommand } from '@api/modules/auth/commands/request-password-recovery.command';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -26,6 +28,7 @@ export class AuthenticationController {
   constructor(
     private authService: AuthenticationService,
     private readonly passwordRecovery: PasswordRecoveryService,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @Public()
@@ -59,12 +62,9 @@ export class AuthenticationController {
     return tsRestHandler(
       authContract.resetPassword,
       async ({ body: { password } }) => {
-        const userWithAccessToken = await this.passwordRecovery.resetPassword(
-          user,
-          password,
-        );
+        await this.authService.updatePassword(user, password);
         return {
-          body: userWithAccessToken,
+          body: null,
           status: 201,
         };
       },
@@ -78,7 +78,9 @@ export class AuthenticationController {
     return tsRestHandler(
       authContract.requestPasswordRecovery,
       async ({ body: { email } }) => {
-        await this.passwordRecovery.requestPasswordRecovery(email, origin);
+        await this.commandBus.execute(
+          new RequestPasswordRecoveryCommand(email),
+        );
         return {
           body: null,
           status: HttpStatus.CREATED,

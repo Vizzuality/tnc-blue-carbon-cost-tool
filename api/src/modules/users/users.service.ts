@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@shared/entities/users/user.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -26,7 +27,7 @@ export class UsersService {
   }
 
   async updatePassword(user: User, newPassword: string) {
-    user.password = newPassword;
+    user.password = await bcrypt.hash(newPassword, 10);
     return this.repo.save(user);
   }
 
