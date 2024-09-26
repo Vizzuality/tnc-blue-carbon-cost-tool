@@ -51,12 +51,13 @@ export class AuthMailer {
     user: User;
     defaultPassword: string;
   }) {
-    const { emailConfirmationToken, expiresIn } =
-      await this.jwt.signEmailConfirmationToken(welcomeEmailDto.user.id);
+    const { signUpToken, expiresIn } = await this.jwt.signSignUpToken(
+      welcomeEmailDto.user.id,
+    );
 
     // TODO: We need to know the URL to confirm the email, we could rely on origin but we would need to pass it through a lot of code.
     //       probably better to have a config value for this.
-    const resetPasswordUrl = `TODO/auth/sign-up/${emailConfirmationToken}`;
+    const resetPasswordUrl = `TODO/auth/sign-up/${signUpToken}`;
 
     const htmlContent: string = `
     <h1>Dear User,</h1>

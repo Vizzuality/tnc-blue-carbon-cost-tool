@@ -53,15 +53,15 @@ export class JwtManager {
     };
   }
 
-  async signEmailConfirmationToken(
+  async signSignUpToken(
     userId: string,
-  ): Promise<{ emailConfirmationToken: string; expiresIn: string }> {
-    const { token: emailConfirmationToken, expiresIn } = await this.sign(
+  ): Promise<{ signUpToken: string; expiresIn: string }> {
+    const { token: signUpToken, expiresIn } = await this.sign(
       userId,
       TOKEN_TYPE_ENUM.SIGN_UP,
     );
     return {
-      emailConfirmationToken,
+      signUpToken: signUpToken,
       expiresIn,
     };
   }

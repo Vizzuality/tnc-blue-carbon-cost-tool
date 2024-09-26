@@ -12,6 +12,7 @@ export const createUser = async (
     email: 'test@user.com',
     ...additionalData,
     password: await hash(usedPassword, salt),
+    isActive: true,
   };
 
   await dataSource.getRepository(User).save(user);

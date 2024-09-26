@@ -66,4 +66,8 @@ export class AuthenticationService {
     }
     throw new UnauthorizedException();
   }
+
+  async updatePassword(user: User, newPassword: string): Promise<void> {
+    await this.usersService.updatePassword(user, newPassword);
+  }
 }

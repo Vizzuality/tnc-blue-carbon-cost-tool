@@ -28,6 +28,9 @@ describe('Reset Password', () => {
       resetPasswordSecret = apiConfigService.getJWTConfigByType(
         TOKEN_TYPE_ENUM.RESET_PASSWORD,
       ).secret;
+    });
+
+    afterEach(async () => {
       await testManager.clearDatabase();
     });
 

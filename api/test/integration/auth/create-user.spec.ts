@@ -37,9 +37,10 @@ describe('Create Users', () => {
     // Given a user exists with valid credentials
     // But the user has the role partner
 
-    const user = await testManager
-      .mocks()
-      .createUser({ role: ROLES.PARTNER, email: 'random@test.com' });
+    const user = await testManager.mocks().createUser({
+      role: ROLES.PARTNER,
+      email: 'random@test.com',
+    });
     const { jwtToken } = await testManager.logUserIn(user);
 
     // When the user creates a new user
@@ -72,7 +73,7 @@ describe('Create Users', () => {
     );
   });
 
-  test('An Admin registers a new user', async () => {
+  test('An Admin registers a new user ', async () => {
     // Given a admin user exists with valid credentials
     // beforeAll
     const newUser = {

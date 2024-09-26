@@ -8,5 +8,5 @@ Feature: Password Recovery
 
   Scenario: No email should be sent if the user is not found
     When the user requests password recovery with an invalid email
-    Then the user should receive a 201 status code
+    Then the user should receive a 404 status code
     And no email should be sent
