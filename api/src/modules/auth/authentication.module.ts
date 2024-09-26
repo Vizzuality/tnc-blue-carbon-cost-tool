@@ -11,6 +11,7 @@ import { JwtStrategy } from '@api/modules/auth/strategies/jwt.strategy';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { ResetPasswordJwtStrategy } from '@api/modules/auth/strategies/reset-password.strategy';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
+import { SignUpStrategy } from '@api/modules/auth/strategies/sign-up.strategy';
 
 @Module({
   imports: [
@@ -43,6 +44,13 @@ import { JwtManager } from '@api/modules/auth/services/jwt.manager';
       provide: ResetPasswordJwtStrategy,
       useFactory: (users: UsersService, config: ApiConfigService) => {
         return new ResetPasswordJwtStrategy(users, config);
+      },
+      inject: [UsersService, ApiConfigService],
+    },
+    {
+      provide: SignUpStrategy,
+      useFactory: (users: UsersService, config: ApiConfigService) => {
+        return new SignUpStrategy(users, config);
       },
       inject: [UsersService, ApiConfigService],
     },
