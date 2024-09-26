@@ -5,6 +5,7 @@ import { JSONAPIError } from "@shared/dtos/json-api.error";
 import { TokenTypeSchema } from "@shared/schemas/auth/token-type.schema";
 import { z } from "zod";
 import { BearerTokenSchema } from "@shared/schemas/auth/bearer-token.schema";
+import { SignUpSchema } from "@shared/schemas/auth/sign-up.schema";
 
 // TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 
@@ -18,6 +19,15 @@ export const authContract = contract.router({
       401: contract.type<JSONAPIError>(),
     },
     body: LogInSchema,
+  },
+  signUp: {
+    method: "POST",
+    path: "/authentication/sign-up",
+    responses: {
+      201: contract.type<null>(),
+      401: contract.type<JSONAPIError>(),
+    },
+    body: SignUpSchema,
   },
   validateToken: {
     method: "GET",

@@ -37,7 +37,7 @@ describe('Create Users', () => {
       isActive: true,
     });
     const { secret, expiresIn } = apiConfig.getJWTConfigByType(
-      TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION,
+      TOKEN_TYPE_ENUM.SIGN_UP,
     );
 
     const token = jwtService.sign({ id: user.id }, { secret, expiresIn });
@@ -48,7 +48,7 @@ describe('Create Users', () => {
       .request()
       .get(authContract.validateToken.path)
       .set('Authorization', `Bearer ${token}`)
-      .query({ tokenType: TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION });
+      .query({ tokenType: TOKEN_TYPE_ENUM.SIGN_UP });
 
     expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
   });
