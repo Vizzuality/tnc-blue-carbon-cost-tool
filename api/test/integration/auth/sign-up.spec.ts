@@ -1,10 +1,10 @@
 import { TestManager } from '../../utils/test-manager';
 import { HttpStatus } from '@nestjs/common';
-import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { authContract } from '@shared/contracts/auth.contract';
 import { ROLES } from '@api/modules/auth/roles.enum';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
+import { User } from '@shared/entities/users/user.entity';
 
 //create-user.feature
 
@@ -33,25 +33,64 @@ describe('Create Users', () => {
       email: 'random@test.com',
     });
 
-    const token = jwtManager.signSignUpToken(user.id);
+    const { signUpToken } = await jwtManager.signSignUpToken(user.id);
 
     // When the user creates a new user
 
     const response = await testManager
       .request()
       .get(authContract.validateToken.path)
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${signUpToken}`)
       .query({ tokenType: TOKEN_TYPE_ENUM.SIGN_UP });
 
     expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
   });
 
-  test('Sign up should fail if the current password is incorrect', async () => {
+  test('Sign up should fail if the auto-generated password is incorrect', async () => {
     const user = await testManager.mocks().createUser({
       role: ROLES.PARTNER,
       email: 'random@test.com',
-      isActive: true,
+      isActive: false,
     });
-    const token = await jwtManager.signSignUpToken(user.id);
+    const { signUpToken } = await jwtManager.signSignUpToken(user.id);
+
+    const response = await testManager
+      .request()
+      .post(authContract.signUp.path)
+      .set('Authorization', `Bearer ${signUpToken}`)
+      .query({ tokenType: TOKEN_TYPE_ENUM.SIGN_UP })
+      .send({ password: 'wrongpassword', newPassword: 'newpassword' });
+
+    expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+  });
+
+  test('Sign up should succeed if the auto-generated password is correct and the user should be activated and allowed to get a access token', async () => {
+    const user = await testManager.mocks().createUser({
+      role: ROLES.PARTNER,
+      email: 'test@test.com',
+      isActive: false,
+    });
+    const { signUpToken } = await jwtManager.signSignUpToken(user.id);
+
+    const response = await testManager
+      .request()
+      .post(authContract.signUp.path)
+      .set('Authorization', `Bearer ${signUpToken}`)
+      .send({ password: user.password, newPassword: 'newpassword' });
+
+    expect(response.status).toBe(HttpStatus.CREATED);
+    const foundUser = await testManager
+      .getDataSource()
+      .getRepository(User)
+      .findOneBy({ id: user.id });
+
+    expect(foundUser.isActive).toBe(true);
+
+    const login = await testManager
+      .request()
+      .post(authContract.login.path)
+      .send({ email: user.email, password: 'newpassword' });
+
+    expect(login.body.accessToken).toBeDefined();
   });
 });

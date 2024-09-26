@@ -10,14 +10,12 @@ import { User } from '@shared/entities/users/user.entity';
 import { LocalAuthGuard } from '@api/modules/auth/guards/local-auth.guard';
 import { GetUser } from '@api/modules/auth/decorators/get-user.decorator';
 import { Public } from '@api/modules/auth/decorators/is-public.decorator';
-import { PasswordRecoveryService } from '@api/modules/auth/services/password-recovery.service';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { AuthGuard } from '@nestjs/passport';
 import { ResetPassword } from '@api/modules/auth/strategies/reset-password.strategy';
 import { authContract } from '@shared/contracts/auth.contract';
 import { AuthenticationService } from '@api/modules/auth/authentication.service';
-import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
 import { SignUp } from '@api/modules/auth/strategies/sign-up.strategy';
 import { CommandBus } from '@nestjs/cqrs';
 import { RequestPasswordRecoveryCommand } from '@api/modules/auth/commands/request-password-recovery.command';
@@ -27,7 +25,6 @@ import { RequestPasswordRecoveryCommand } from '@api/modules/auth/commands/reque
 export class AuthenticationController {
   constructor(
     private authService: AuthenticationService,
-    private readonly passwordRecovery: PasswordRecoveryService,
     private readonly commandBus: CommandBus,
   ) {}
 
@@ -44,10 +41,10 @@ export class AuthenticationController {
     });
   }
 
-  @UseGuards(JwtAuthGuard, AuthGuard(SignUp))
+  @UseGuards(AuthGuard(SignUp))
   @TsRestHandler(authContract.signUp)
   async signUp(@GetUser() user: User): Promise<ControllerResponse> {
-    return tsRestHandler(authContract.login, async ({ body }) => {
+    return tsRestHandler(authContract.signUp, async ({ body }) => {
       await this.authService.signUp(user, body);
       return {
         body: null,
