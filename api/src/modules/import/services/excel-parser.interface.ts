@@ -1,3 +1,5 @@
+export const ExcelParserToken = Symbol('ExcelParserInterface');
+
 export interface ExcelParserInterface {
-  parseExcel(file: Express.Multer.File): Promise<any>;
+  parseExcel(data: Buffer): Promise<any>;
 }
