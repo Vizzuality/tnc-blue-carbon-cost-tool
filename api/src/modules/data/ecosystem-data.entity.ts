@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('ecosystem_projects')
 export class EcosystemProject {
+  // TODO: We could use a integer value as primary to match the excel rows so that we know if there are new values or something is being updated
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -14,26 +15,32 @@ export class EcosystemProject {
   @Column({ name: 'activity', length: 50 })
   activity: string;
 
-  @Column({ name: 'country_code', length: 3 })
+  @Column({ name: 'country_code', length: 3, nullable: true })
   countryCode: string;
 
   @Column({ name: 'continent', length: 20 })
   continent: string;
 
-  @Column('decimal', { name: 'hdi', precision: 3, scale: 2 })
+  @Column('decimal', { name: 'hdi', precision: 3, scale: 2, nullable: true })
   hdi: number;
 
-  @Column('int', { name: 'project_size_ha' })
+  @Column('int', { name: 'project_size_ha', nullable: true })
   projectSizeHa: number;
 
   // TODO: There is a typo in the excel, update both
-  @Column('decimal', { name: 'feseability_analysis', precision: 10, scale: 2 })
+  @Column('decimal', {
+    name: 'feseability_analysis',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
   feseabilityAnalysis: number;
 
   @Column('decimal', {
     name: 'conservation_planning_and_admin',
     precision: 10,
     scale: 2,
+    nullable: true,
   })
   conservationPlanningAndAdmin: number;
 
@@ -41,6 +48,7 @@ export class EcosystemProject {
     name: 'data_collection_and_field_costs',
     precision: 10,
     scale: 2,
+    nullable: true,
   })
   dataCollectionAndFieldCosts: number;
 
@@ -48,29 +56,47 @@ export class EcosystemProject {
     name: 'community_representation',
     precision: 10,
     scale: 2,
+    nullable: true,
   })
   communityRepresentation: number;
 
-  @Column('decimal', { name: 'blue_carbon_planning', precision: 10, scale: 2 })
+  @Column('decimal', {
+    name: 'blue_carbon_planning',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
   blueCarbonPlanning: number;
 
   @Column('decimal', {
     name: 'establishing_carbon_rights',
     precision: 10,
     scale: 2,
+    nullable: true,
   })
   establishingCarbonRights: number;
 
-  @Column('decimal', { name: 'financing_cost', precision: 5, scale: 4 })
+  @Column('decimal', {
+    name: 'financing_cost',
+    precision: 5,
+    scale: 4,
+    nullable: true,
+  })
   financingCost: number;
 
-  @Column('decimal', { name: 'validation', precision: 10, scale: 2 })
+  @Column('decimal', {
+    name: 'validation',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
   validation: number;
 
   @Column('decimal', {
     name: 'implementation_labor_planting',
     precision: 10,
     scale: 2,
+    nullable: true,
   })
   implementationLaborPlanting: number;
 
@@ -78,6 +104,7 @@ export class EcosystemProject {
     name: 'implementation_labor_hybrid',
     precision: 10,
     scale: 2,
+    nullable: true,
   })
   implementationLaborHybrid: number;
 
@@ -85,69 +112,127 @@ export class EcosystemProject {
     name: 'implementation_labor_hydrology',
     precision: 10,
     scale: 2,
+    nullable: true,
   })
   implementationLaborHydrology: number;
 
-  @Column('decimal', { name: 'monitoring', precision: 10, scale: 2 })
+  @Column('decimal', {
+    name: 'monitoring',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
   monitoring: number;
 
-  @Column('decimal', { name: 'maintenance', precision: 5, scale: 4 })
+  @Column('decimal', {
+    name: 'maintenance',
+    precision: 5,
+    scale: 4,
+    nullable: true,
+  })
   maintenance: number;
 
-  @Column('smallint', { name: 'maintenance_duration' })
+  @Column('smallint', { name: 'maintenance_duration', nullable: true })
   maintenanceDuration: number;
 
-  @Column('decimal', { name: 'carbon_standard_fees', precision: 5, scale: 4 })
+  @Column('decimal', {
+    name: 'carbon_standard_fees',
+    precision: 5,
+    scale: 4,
+    nullable: true,
+  })
   carbonStandardFees: number;
 
   @Column('decimal', {
     name: 'community_benefit_sharing_fund',
     precision: 5,
     scale: 4,
+    nullable: true,
   })
   communityBenefitSharingFund: number;
 
-  @Column('decimal', { name: 'baseline_reassessment', precision: 10, scale: 2 })
+  @Column('decimal', {
+    name: 'baseline_reassessment',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
   baselineReassessment: number;
 
-  @Column('decimal', { name: 'MRV', precision: 10, scale: 2 })
+  @Column('decimal', { name: 'MRV', precision: 10, scale: 2, nullable: true })
   mrv: number;
 
   @Column('decimal', {
     name: 'long_term_project_operating_cost',
     precision: 10,
     scale: 2,
+    nullable: true,
   })
   longTermProjectOperatingCost: number;
 
-  @Column('decimal', { name: 'ecosystem_extent', precision: 12, scale: 4 })
+  @Column('decimal', {
+    name: 'ecosystem_extent',
+    precision: 12,
+    scale: 4,
+    nullable: true,
+  })
   ecosystemExtent: number;
 
   @Column('decimal', {
     name: 'ecosystem_extent_historic',
     precision: 12,
     scale: 4,
+    nullable: true,
   })
   ecosystemExtentHistoric: number;
 
-  @Column('decimal', { name: 'ecosystem_loss_rate', precision: 10, scale: 9 })
+  @Column('decimal', {
+    name: 'ecosystem_loss_rate',
+    precision: 10,
+    scale: 9,
+    nullable: true,
+  })
   ecosystemLossRate: number;
 
-  @Column('decimal', { name: 'restorable_land', precision: 10, scale: 4 })
+  @Column('decimal', {
+    name: 'restorable_land',
+    precision: 10,
+    scale: 4,
+    nullable: true,
+  })
   restorableLand: number;
 
-  @Column({ name: 'tier_1_emission_factor', length: 50, nullable: true })
+  @Column({
+    name: 'tier_1_emission_factor',
+    length: 50,
+    nullable: true,
+  })
   tier1EmissionFactor: string;
 
-  @Column('decimal', { name: 'emission_factor_AGB', precision: 10, scale: 8 })
+  @Column('decimal', {
+    name: 'emission_factor_AGB',
+    precision: 10,
+    scale: 8,
+    nullable: true,
+  })
   emissionFactorAgb: number;
 
-  @Column('decimal', { name: 'emission_factor_SOC', precision: 10, scale: 8 })
+  @Column('decimal', {
+    name: 'emission_factor_SOC',
+    precision: 10,
+    scale: 8,
+    nullable: true,
+  })
   emissionFactorSoc: number;
 
-  @Column('decimal', { name: 'sequestration_rate', precision: 8, scale: 4 })
+  @Column('decimal', {
+    name: 'sequestration_rate',
+    precision: 8,
+    scale: 4,
+    nullable: true,
+  })
   sequestrationRate: number;
 
-  @Column({ name: 'other_community_cash_flow', length: 50 })
+  @Column({ name: 'other_community_cash_flow', length: 50, nullable: true })
   otherCommunityCashFlow: string;
 }

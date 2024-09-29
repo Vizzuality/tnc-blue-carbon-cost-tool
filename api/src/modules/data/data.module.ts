@@ -6,5 +6,6 @@ import { EcoSystemDataRepository } from '@api/modules/data/ecosystem-data.reposi
 @Module({
   imports: [TypeOrmModule.forFeature([EcosystemProject])],
   providers: [EcoSystemDataRepository],
+  exports: [EcoSystemDataRepository],
 })
 export class DataModule {}
