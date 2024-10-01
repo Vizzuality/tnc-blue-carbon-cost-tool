@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('ecosystem_projects')
-export class EcosystemProject {
+@Entity('base_data')
+export class BaseData {
   // TODO: We could use a integer value as primary to match the excel rows so that we know if there are new values or something is being updated
   @PrimaryGeneratedColumn('uuid')
   id: string;
