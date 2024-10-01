@@ -2,6 +2,7 @@ packages:
   - 'api/**'
   - 'client/**'
   - 'shared/**'
+  - 'data/**'
 
 
 catalog:
