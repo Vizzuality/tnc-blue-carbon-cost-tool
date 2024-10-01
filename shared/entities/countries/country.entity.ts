@@ -11,8 +11,8 @@ export enum CONTINENTS {
 
 @Entity("countries")
 export class Country {
-  @PrimaryColumn({ length: 3 })
-  code: string;
+  @PrimaryColumn({ name: "country_code", length: 3 })
+  countryCode: string;
 
   @Column({ length: 100 })
   country: string;
