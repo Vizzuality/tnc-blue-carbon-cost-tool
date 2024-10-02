@@ -1,0 +1,23 @@
+{
+  "Countries": {
+    "header": 1,
+    "country_code": "country_code",
+    "country": "country",
+    "numeric": "numeric_code",
+    "region_1": "region_1",
+    "region_2": "region_2",
+    "continent_id": "continent",
+    "hdi": "hdi"
+  },
+  "Project size": {
+    "header": 7,
+    "Country code": "country_code",
+    "Mangrove restored area": "mangrove_restored_area",
+    "Seagrass restored area": "seagrass_restored_area",
+    "Salt marsh restored area": "salt_marsh_restored_area",
+    "Mangrove conserved area": "mangrove_conserved_area",
+    "Seagrass conserved area": "seagrass_conserved_area",
+    "Salt marsh conserved area": "salt_marsh_conserved_area"
+  }
+
+}
