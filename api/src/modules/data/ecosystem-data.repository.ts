@@ -1,21 +1,21 @@
-import { EcosystemProject } from '@api/modules/data/ecosystem-data.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { BaseData } from '@api/modules/data/ecosystem-data.entity';
 
 @Injectable()
-export class EcoSystemDataRepository extends Repository<EcosystemProject> {
+export class BaseDataRepository extends Repository<BaseData> {
   constructor(private datasource: DataSource) {
-    super(EcosystemProject, datasource.createEntityManager());
+    super(BaseData, datasource.createEntityManager());
   }
 
   /**
    * @description Insert data into the database and performs an upsert if the data already exists
    */
-  async insertData(data: EcosystemProject[]): Promise<any> {
+  async insertData(data: BaseData[]): Promise<any> {
     return (
       this.createQueryBuilder()
         .insert()
-        .into(EcosystemProject)
+        .into(BaseData)
         .useTransaction(true)
         .values(data)
         // TODO: define what combination of columns might determine if its an update or a new record
