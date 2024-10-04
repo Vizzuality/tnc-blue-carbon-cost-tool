@@ -1,6 +1,8 @@
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { BaseData } from '@api/modules/data/ecosystem-data.entity';
+import { Country } from '@shared/entities/countries/country.entity';
+import { BaseData } from '@api/modules/base-data/base-data.entity';
+import { ProjectSize } from '@api/modules/base-data/project-size.entity';
 
 @Injectable()
 export class BaseDataRepository extends Repository<BaseData> {
@@ -25,5 +27,15 @@ export class BaseDataRepository extends Repository<BaseData> {
         //.orUpdate(this.columns)
         .execute()
     );
+  }
+
+  async insertData2(data: {
+    countries: Country[];
+    projects: ProjectSize[];
+    baseData: BaseData[];
+  }): Promise<any> {
+    await this.datasource.transaction(async (manager) => {
+      // await baseDataRepo.save(master_table);
+    });
   }
 }

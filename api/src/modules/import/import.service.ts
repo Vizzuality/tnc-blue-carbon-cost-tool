@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { XlsxParser } from '@api/modules/import/services/xlsx.parser';
-import { BaseDataRepository } from '@api/modules/data/ecosystem-data.repository';
-import { BaseData } from '@api/modules/data/ecosystem-data.entity';
+import { Country } from '@shared/entities/countries/country.entity';
+import { BaseDataRepository } from '@api/modules/base-data/base-data.repository';
 
 @Injectable()
 export class ImportService {
@@ -13,8 +13,8 @@ export class ImportService {
   async import(file: Express.Multer.File) {
     let data;
     try {
-      data = data = await this.xlsxParser.parseExcel<BaseData>(file.buffer);
-      await this.repo.insertData(data);
+      data = await this.xlsxParser.parseExcel<any>(file.buffer);
+      await this.repo.insertData2(data);
     } catch (e) {
       console.log(e);
     } finally {
