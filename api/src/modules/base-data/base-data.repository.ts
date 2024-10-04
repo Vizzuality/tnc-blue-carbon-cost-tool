@@ -1,8 +1,9 @@
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, IsNull, Not, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { Country } from '@shared/entities/countries/country.entity';
 import { BaseData } from '@api/modules/base-data/base-data.entity';
 import { ParsedDBEntities } from '@api/modules/import/services/entity.preprocessor';
+import { ProjectSize } from '@api/modules/base-data/project-size.entity';
 
 @Injectable()
 export class BaseDataRepository extends Repository<BaseData> {
@@ -33,8 +34,50 @@ export class BaseDataRepository extends Repository<BaseData> {
     return await this.datasource.transaction(async (manager) => {
       const countryRepo = manager.getRepository(Country);
       const baseDataRepo = manager.getRepository(BaseData);
+      const projectSizeRepo = manager.getRepository(ProjectSize);
       await countryRepo.insert(data.countries);
       await baseDataRepo.insert(data.baseData);
+
+      const result = await baseDataRepo.find({
+        where: { projectSizeHa: Not(IsNull()) },
+      });
+      // Prepare a Map to accumulate updates per country_code
+      const updatesMap = new Map<string, any>();
+
+      result.forEach((record) => {
+        const columnToUpdate = getProjectSizeColumn(
+          record.ecosystem,
+          record.activity,
+        );
+        const countryCode = record.countryCode;
+
+        if (!updatesMap.has(countryCode)) {
+          updatesMap.set(countryCode, { country_code: countryCode });
+        }
+        const updateObj = updatesMap.get(countryCode);
+        updateObj[columnToUpdate] = record.projectSizeHa;
+      });
+
+      // Convert the updatesMap to an array
+      const updates = Array.from(updatesMap.values());
+      await projectSizeRepo.upsert(updates, ['country_code']);
     });
   }
+}
+
+function getProjectSizeColumn(ecosystem: string, activity: string): string {
+  if (ecosystem === 'Mangrove' && activity === 'Restoration') {
+    return 'mangrove_restored_area';
+  } else if (ecosystem === 'Mangrove' && activity === 'Conservation') {
+    return 'mangrove_conserved_area';
+  } else if (ecosystem === 'Seagrass' && activity === 'Restoration') {
+    return 'seagrass_restored_area';
+  } else if (ecosystem === 'Seagrass' && activity === 'Conservation') {
+    return 'seagrass_conserved_area';
+  } else if (ecosystem === 'Salt marsh' && activity === 'Restoration') {
+    return 'salt_marsh_restored_area';
+  } else if (ecosystem === 'Salt marsh' && activity === 'Conservation') {
+    return 'salt_marsh_conserved_area';
+  }
+  throw new Error('Invalid combination of ecosystem and activity');
 }
