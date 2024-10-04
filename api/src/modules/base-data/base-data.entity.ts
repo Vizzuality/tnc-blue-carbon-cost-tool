@@ -10,7 +10,7 @@ import { Country } from '@shared/entities/countries/country.entity';
 export enum ECOSYSTEM {
   MANGROVE = 'Mangrove',
   SEAGRASS = 'Seagrass',
-  SALT_MARSH = 'Salt Marsh',
+  SALT_MARSH = 'Salt marsh',
 }
 
 export enum ACTIVITY {
