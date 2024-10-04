@@ -4,8 +4,8 @@ import { COMMON_DATABASE_ENTITIES } from '@shared/entities/database.entities';
 import { ApiEventsEntity } from '@api/modules/events/api-events/api-events.entity';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
-import { BaseData } from '@api/modules/data/ecosystem-data.entity';
-import { ProjectSize } from '@api/modules/data/project-size.entity';
+import { BaseData } from '@api/modules/base-data/base-data.entity';
+import { ProjectSize } from '@api/modules/base-data/project-size.entity';
 
 export type JWTConfig = {
   secret: string;

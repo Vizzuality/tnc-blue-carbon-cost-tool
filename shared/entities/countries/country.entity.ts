@@ -7,6 +7,7 @@ export enum CONTINENTS {
   NORTH_AMERICA = "North America",
   OCEANIA = "Oceania",
   SOUTH_AMERICA = "South America",
+  ANTARCTICA = "Antarctica",
 }
 
 @Entity("countries")
