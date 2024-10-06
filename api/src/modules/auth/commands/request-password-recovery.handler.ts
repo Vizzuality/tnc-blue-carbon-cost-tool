@@ -2,8 +2,8 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { AuthMailer } from '@api/modules/auth/services/auth.mailer';
 import { RequestPasswordRecoveryCommand } from '@api/modules/auth/commands/request-password-recovery.command';
 import { UsersService } from '@api/modules/users/users.service';
-import { PasswordRecoveryRequestedEvent } from '@api/modules/events/user-events/password-recovery-requested.event';
 import { NotFoundException } from '@nestjs/common';
+import { PasswordRecoveryRequestedEvent } from '@api/modules/admin/events/password-recovery-requested.event';
 
 @CommandHandler(RequestPasswordRecoveryCommand)
 export class RequestPasswordRecoveryHandler

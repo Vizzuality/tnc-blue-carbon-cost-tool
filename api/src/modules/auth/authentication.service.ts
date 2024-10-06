@@ -10,7 +10,7 @@ import { randomBytes } from 'node:crypto';
 import { SendWelcomeEmailCommand } from '@api/modules/notifications/email/commands/send-welcome-email.command';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 import { SignUpDto } from '@shared/schemas/auth/sign-up.schema';
-import { UserSignedUpEvent } from '@api/modules/events/user-events/user-signed-up.event';
+import { UserSignedUpEvent } from '@api/modules/admin/events/user-signed-up.event';
 
 @Injectable()
 export class AuthenticationService {

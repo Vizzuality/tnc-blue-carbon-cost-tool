@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { XlsxParser } from '@api/modules/import/services/xlsx.parser';
-import { BaseDataRepository } from '@api/modules/base-data/base-data.repository';
 import { EntityPreprocessor } from '@api/modules/import/services/entity.preprocessor';
+import { BaseDataRepository } from '@api/modules/model/base-data.repository';
 
 @Injectable()
 export class ImportService {
@@ -17,7 +17,7 @@ export class ImportService {
       data = await this.xlsxParser.parseExcel<any>(file.buffer);
       const dbEntities = this.preprocessor.toDbEntities(data);
 
-      const dbResult = await this.repo.insertData2(dbEntities);
+      const dbResult = await this.repo.insertData(dbEntities);
       return dbResult;
     } catch (e) {
       console.log(e);

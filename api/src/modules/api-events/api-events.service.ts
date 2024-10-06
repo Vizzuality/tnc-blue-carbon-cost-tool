@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApiEventsEntity } from './api-events.entity';
-import { API_EVENT_TYPES } from '@api/modules/events/events.enum';
+import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 
 type CreateApiEvent = {
   eventType: API_EVENT_TYPES;
