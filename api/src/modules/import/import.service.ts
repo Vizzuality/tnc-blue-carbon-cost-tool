@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Multer } from 'multer';
 import { XlsxParser } from '@api/modules/import/services/xlsx.parser';
 import { EntityPreprocessor } from '@api/modules/import/services/entity.preprocessor';
 import { BaseDataRepository } from '@api/modules/model/base-data.repository';
