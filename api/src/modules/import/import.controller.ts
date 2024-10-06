@@ -6,6 +6,7 @@ import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
 import { ROLES } from '@api/modules/auth/roles.enum';
 import { UploadXlsm } from '@api/modules/import/decorators/xlsm-upload.decorator';
 import { ImportService } from '@api/modules/import/import.service';
+import { Multer } from 'multer';
 
 @Controller()
 @UseInterceptors(JwtAuthGuard, RolesGuard)
