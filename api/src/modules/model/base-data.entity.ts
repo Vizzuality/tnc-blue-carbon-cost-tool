@@ -41,23 +41,23 @@ export class BaseData {
   @Column('int', { name: 'project_size_ha', nullable: true })
   projectSizeHa: number;
 
-  // // TODO: There is a typo in the excel, update both
-  // @Column('decimal', {
-  //   name: 'feseability_analysis',
-  //   precision: 10,
-  //   scale: 2,
-  //   nullable: true,
-  // })
-  // feseabilityAnalysis: number;
-  //
-  // @Column('decimal', {
-  //   name: 'conservation_planning_and_admin',
-  //   precision: 10,
-  //   scale: 2,
-  //   nullable: true,
-  // })
-  // conservationPlanningAndAdmin: number;
-  //
+  // TODO: There is a typo in the excel, update both
+  @Column('decimal', {
+    name: 'feasibility_analysis',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
+  feasibilityAnalysis: number;
+
+  @Column('decimal', {
+    name: 'conservation_planning_and_admin',
+    precision: 10,
+    scale: 2,
+    nullable: true,
+  })
+  conservationPlanningAndAdmin: number;
+
   // @Column('decimal', {
   //   name: 'data_collection_and_field_costs',
   //   precision: 10,
