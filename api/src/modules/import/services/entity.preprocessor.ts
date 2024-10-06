@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Country } from '@shared/entities/countries/country.entity';
-import { BaseData } from '@api/modules/base-data/base-data.entity';
+import { BaseData } from '@api/modules/model/base-data.entity';
 
 export type ParsedDBEntities = {
   countries: Country[];
@@ -29,8 +29,8 @@ export class EntityPreprocessor {
       const country = new Country();
       country.country = rawCountry.country;
       country.countryCode = rawCountry.country_code;
-      country.continent = this.emptyStringToNull(rawCountry.continent_id);
       country.numericCode = rawCountry.numeric;
+      country.continent = this.emptyStringToNull(rawCountry.continent_id);
       country.hdi = this.emptyStringToNull(rawCountry.hdi_id);
       country.region1 = this.emptyStringToNull(rawCountry.region_1);
       country.region2 = this.emptyStringToNull(rawCountry.region_2);

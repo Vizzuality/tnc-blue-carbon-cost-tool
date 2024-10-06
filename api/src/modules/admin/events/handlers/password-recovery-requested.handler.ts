@@ -1,7 +1,7 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { PasswordRecoveryRequestedEvent } from '../password-recovery-requested.event';
-import { ApiEventsService } from '@api/modules/events/api-events/api-events.service';
-import { API_EVENT_TYPES } from '@api/modules/events/events.enum';
+import { ApiEventsService } from '@api/modules/api-events/api-events.service';
+import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 
 @EventsHandler(PasswordRecoveryRequestedEvent)
 export class PasswordRecoveryRequestedEventHandler

@@ -4,7 +4,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { API_EVENT_TYPES } from '@api/modules/events/events.enum';
+import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 
 @Entity('api_events')
 export class ApiEventsEntity {

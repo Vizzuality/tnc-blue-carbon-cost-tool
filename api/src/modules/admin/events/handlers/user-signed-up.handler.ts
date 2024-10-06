@@ -1,7 +1,7 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { UserSignedUpEvent } from '../user-signed-up.event';
-import { ApiEventsService } from '@api/modules/events/api-events/api-events.service';
-import { API_EVENT_TYPES } from '@api/modules/events/events.enum';
+import { ApiEventsService } from '@api/modules/api-events/api-events.service';
+import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 
 @EventsHandler(UserSignedUpEvent)
 export class UserSignedUpEventHandler
@@ -10,12 +10,18 @@ export class UserSignedUpEventHandler
   constructor(private readonly apiEventsService: ApiEventsService) {}
 
   async handle(event: UserSignedUpEvent): Promise<void> {
+    const { userId, email } = event;
+    await this.registerUserSignedUpEvent(userId, { email });
+  }
+
+  private async registerUserSignedUpEvent(
+    userId: string,
+    payload: { email: string },
+  ) {
     await this.apiEventsService.create({
       eventType: API_EVENT_TYPES.USER_SIGNED_UP,
-      resourceId: event.userId,
-      payload: {
-        email: event.email,
-      },
+      resourceId: userId,
+      payload,
     });
   }
 }
