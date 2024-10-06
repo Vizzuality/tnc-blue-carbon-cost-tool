@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-//import { Multer } from 'multer';
 import { XlsxParser } from '@api/modules/import/services/xlsx.parser';
 import { EntityPreprocessor } from '@api/modules/import/services/entity.preprocessor';
 import { BaseDataRepository } from '@api/modules/model/base-data.repository';
@@ -12,10 +11,10 @@ export class ImportService {
     private readonly preprocessor: EntityPreprocessor,
   ) {}
 
-  async import(file: Express.Multer.File) {
+  async import(fileBuffer: Buffer) {
     let data;
     try {
-      data = await this.xlsxParser.parseExcel<any>(file.buffer);
+      data = await this.xlsxParser.parseExcel<any>(fileBuffer);
       const dbEntities = this.preprocessor.toDbEntities(data);
 
       const dbResult = await this.repo.insertData(dbEntities);
