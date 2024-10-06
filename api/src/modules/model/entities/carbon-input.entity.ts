@@ -9,19 +9,19 @@ import {
 import { ACTIVITY, ECOSYSTEM } from '@api/modules/model/base-data.entity';
 import { Country } from '@api/modules/model/entities/country.entity';
 
-export enum COST_INPUT_TYPE {
-  PROJECT_SIZE_HA = 'project_size_ha',
-  FEASIBILITY_ANALYSIS = 'feasibility_analysis',
-  CONSERVATION_PLANNING_AND_ADMIN = 'conservation_planning_and_admin',
+export enum CARBON_INPUT_TYPE {
+  ECOSYSTEM_EXTENT = 'ecosystem_extent',
+  ECOSYSTEM_LOSS = 'ecoystem_loss',
+  RESTORABLE_LAND = 'restorable_land',
 }
 
-@Index('idx_country_activity_ecosystem', [
+@Index('idx_carbon_input_country_activity_ecosystem', [
   'countryCode',
   'activity',
   'ecosystem',
 ])
-@Entity('cost_input')
-export class CostInput {
+@Entity('carbon_input')
+export class CarbonInputEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -39,8 +39,8 @@ export class CostInput {
   country: Country;
 
   // TODO: Probably this column shoudl not be editable
-  @Column({ type: 'enum', enum: COST_INPUT_TYPE })
-  type: COST_INPUT_TYPE;
+  @Column({ type: 'enum', enum: CARBON_INPUT_TYPE })
+  type: CARBON_INPUT_TYPE;
 
   @Column('decimal', { precision: 10, scale: 2 })
   value: number;

@@ -38,6 +38,7 @@ export class EntityPreprocessor {
     });
   }
 
+  // TODO: type raw base data shape (excel)
   private processBaseData(rawBaseData: any[]): BaseData[] {
     return rawBaseData.map((rawData) => {
       const baseData = new BaseData();
@@ -45,6 +46,18 @@ export class EntityPreprocessor {
       baseData.activity = rawData.activity;
       baseData.countryCode = rawData.country_code;
       baseData.projectSizeHa = this.emptyStringToNull(rawData.project_size_ha);
+      baseData.feasibilityAnalysis = this.emptyStringToNull(
+        rawData.feseability_analysis,
+      );
+      baseData.conservationPlanningAndAdmin = this.emptyStringToNull(
+        rawData.conservation_planning_and_admin,
+      );
+      baseData.ecosystemExtent = this.emptyStringToNull(
+        rawData.ecosystem_extent,
+      );
+      baseData.ecosystemLoss = this.emptyStringToNull(rawData.ecosystem_loss);
+      baseData.restorableLand = this.emptyStringToNull(rawData.restorable_land);
+
       return baseData;
     });
   }

@@ -6,6 +6,8 @@ import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
 import { ApiEventsEntity } from '@api/modules/api-events/api-events.entity';
 import { BaseData } from '@api/modules/model/base-data.entity';
 import { Country } from '@api/modules/model/entities/country.entity';
+import { CostInput } from '@api/modules/model/entities/cost-input.entity';
+import { CarbonInputEntity } from '@api/modules/model/entities/carbon-input.entity';
 
 export type JWTConfig = {
   secret: string;
@@ -37,6 +39,8 @@ export class ApiConfigService {
         ApiEventsEntity,
         Country,
         BaseData,
+        CostInput,
+        CarbonInputEntity,
       ],
       synchronize: true,
       ssl: this.isProduction()
