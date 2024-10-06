@@ -58,6 +58,30 @@ export class BaseData {
   })
   conservationPlanningAndAdmin: number;
 
+  @Column('decimal', {
+    name: 'ecosystem_extent',
+    precision: 12,
+    scale: 4,
+    nullable: true,
+  })
+  ecosystemExtent: number;
+
+  @Column('decimal', {
+    name: 'ecosystem_loss',
+    precision: 10,
+    scale: 9,
+    nullable: true,
+  })
+  ecosystemLoss: number;
+
+  @Column('decimal', {
+    name: 'restorable_land',
+    precision: 10,
+    scale: 4,
+    nullable: true,
+  })
+  restorableLand: number;
+
   // @Column('decimal', {
   //   name: 'data_collection_and_field_costs',
   //   precision: 10,
