@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["node", "jest", "Multer"],
+    "types": ["node", "jest"],
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
