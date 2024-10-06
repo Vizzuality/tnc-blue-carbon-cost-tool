@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Country } from '@shared/entities/countries/country.entity';
+import { Country } from '@api/modules/model/entities/country.entity';
 
 export enum ECOSYSTEM {
   MANGROVE = 'Mangrove',

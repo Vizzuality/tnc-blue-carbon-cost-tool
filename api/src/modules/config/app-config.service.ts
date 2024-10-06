@@ -4,6 +4,8 @@ import { COMMON_DATABASE_ENTITIES } from '@shared/entities/database.entities';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
 import { ApiEventsEntity } from '@api/modules/api-events/api-events.entity';
+import { BaseData } from '@api/modules/model/base-data.entity';
+import { Country } from '@api/modules/model/entities/country.entity';
 
 export type JWTConfig = {
   secret: string;
@@ -30,7 +32,12 @@ export class ApiConfigService {
       username: this.configService.get('DB_USERNAME'),
       password: this.configService.get('DB_PASSWORD'),
       database: this.configService.get('DB_NAME'),
-      entities: [...COMMON_DATABASE_ENTITIES, ApiEventsEntity],
+      entities: [
+        ...COMMON_DATABASE_ENTITIES,
+        ApiEventsEntity,
+        Country,
+        BaseData,
+      ],
       synchronize: true,
       ssl: this.isProduction()
         ? { require: true, rejectUnauthorized: false }

@@ -18,6 +18,6 @@ export class ImportController {
   @RequiredRoles(ROLES.ADMIN)
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadXlsm() file: Express.Multer.File): Promise<any> {
-    return this.service.import(file);
+    return this.service.import(file.buffer);
   }
 }

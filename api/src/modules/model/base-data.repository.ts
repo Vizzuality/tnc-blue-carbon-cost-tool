@@ -1,9 +1,9 @@
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { Country } from '@shared/entities/countries/country.entity';
 
 import { ParsedDBEntities } from '@api/modules/import/services/entity.preprocessor';
 import { BaseData } from '@api/modules/model/base-data.entity';
+import { Country } from '@api/modules/model/entities/country.entity';
 
 @Injectable()
 export class BaseDataRepository extends Repository<BaseData> {
