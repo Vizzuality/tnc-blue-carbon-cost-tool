@@ -3,28 +3,29 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  BaseEntity,
 } from "typeorm";
 import { Exclude } from "class-transformer";
 import { ROLES } from "@shared/entities/users/roles.enum";
 
 @Entity({ name: "users" })
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, type: "varchar" })
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: "varchar" })
   name: string;
 
-  @Column({ default: "default_partner", name: "partner_name" })
+  @Column({ default: "default_partner", name: "partner_name", type: "varchar" })
   partnerName: string;
 
   @Column({ type: "boolean", default: false, name: "is_active" })
   isActive: boolean;
 
-  @Column()
+  @Column({ type: "varchar" })
   @Exclude()
   password: string;
 
