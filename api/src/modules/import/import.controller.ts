@@ -3,9 +3,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
 import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
-import { ROLES } from '@api/modules/auth/roles.enum';
+import { ROLES } from '@shared/entities/users/roles.enum';
 import { UploadXlsm } from '@api/modules/import/decorators/xlsm-upload.decorator';
 import { ImportService } from '@api/modules/import/import.service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Multer } from 'multer';
 
 @Controller()

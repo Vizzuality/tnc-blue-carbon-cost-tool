@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Exclude } from "class-transformer";
-import { ROLES } from "@api/modules/auth/roles.enum";
+import { ROLES } from "@shared/entities/users/roles.enum";
 
 @Entity({ name: "users" })
 export class User {

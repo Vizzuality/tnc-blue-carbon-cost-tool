@@ -2,7 +2,7 @@ import { TestManager } from '../../utils/test-manager';
 import { HttpStatus } from '@nestjs/common';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { authContract } from '@shared/contracts/auth.contract';
-import { ROLES } from '@api/modules/auth/roles.enum';
+import { ROLES } from '@shared/entities/users/roles.enum';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 import { User } from '@shared/entities/users/user.entity';
 

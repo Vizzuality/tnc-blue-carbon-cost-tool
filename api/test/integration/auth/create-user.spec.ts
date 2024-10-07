@@ -3,7 +3,7 @@ import { User } from '@shared/entities/users/user.entity';
 import { HttpStatus } from '@nestjs/common';
 import { MockEmailService } from '../../utils/mocks/mock-email.service';
 import { IEmailServiceToken } from '@api/modules/notifications/email/email-service.interface';
-import { ROLES } from '@api/modules/auth/roles.enum';
+import { ROLES } from '@shared/entities/users/roles.enum';
 
 //create-user.feature
 
