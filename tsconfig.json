@@ -14,7 +14,8 @@
       "@api/*": ["./api/src/*"],
       "@client/*": ["./client/*"],
       "@shared/*": ["./shared/*"],
-      "@data/*": ["./data/*"],
-    }
+      "@data/*": ["./data/*"]
+    },
+    "allowSyntheticDefaultImports": true
   }
 }
