@@ -21,7 +21,7 @@ function makeQueryClient() {
 
 const client = initQueryClient(router, {
   validateResponse: true,
-  baseUrl: "http://localhost:4000",
+  baseUrl: process.env.NEXT_PUBLIC_API_URL as string,
 });
 
 export { client, makeQueryClient };
