@@ -8,6 +8,9 @@ import {
 import { Exclude } from "class-transformer";
 import { ROLES } from "@shared/entities/users/roles.enum";
 
+// TODO: For future reference:
+// https://github.com/typeorm/typeorm/issues/2897
+
 @Entity({ name: "users" })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")

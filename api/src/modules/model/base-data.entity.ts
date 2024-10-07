@@ -30,7 +30,7 @@ export class BaseData {
   @Column({ name: 'activity', enum: ACTIVITY, type: 'enum' })
   activity: ACTIVITY;
 
-  @Column({ name: 'country_code', length: 3, nullable: true })
+  @Column({ name: 'country_code', length: 3, nullable: true, type: 'char' })
   countryCode: string;
 
   // Unidirectional relation

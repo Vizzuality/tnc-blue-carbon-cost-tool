@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, BaseEntity } from 'typeorm';
 
 export enum CONTINENTS {
   AFRICA = 'Africa',
@@ -12,24 +12,24 @@ export enum CONTINENTS {
 }
 
 @Entity('countries')
-export class Country {
-  @PrimaryColumn({ name: 'country_code', length: 3 })
+export class Country extends BaseEntity {
+  @PrimaryColumn({ name: 'country_code', length: 3, type: 'char' })
   countryCode: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, type: 'varchar' })
   country: string;
 
   // TODO: Right now the dataset contains null values for continents, but not sure if this is correct
   @Column({ type: 'enum', enum: CONTINENTS, nullable: true })
   continent: CONTINENTS;
 
-  @Column({ name: 'region_1', length: 50, nullable: true })
+  @Column({ name: 'region_1', length: 50, nullable: true, type: 'varchar' })
   region1?: string;
 
-  @Column({ name: 'region_2', length: 50, nullable: true })
+  @Column({ name: 'region_2', length: 50, nullable: true, type: 'varchar' })
   region2?: string;
 
-  @Column({ name: 'numeric_code', length: 3, nullable: true })
+  @Column({ name: 'numeric_code', length: 3, nullable: true, type: 'char' })
   numericCode?: string;
 
   @Column({ name: 'hdi', type: 'int', nullable: true })
