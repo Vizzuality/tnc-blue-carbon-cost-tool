@@ -5,7 +5,6 @@
     "moduleResolution": "nodenext",
     "target": "esnext",
     "outDir": "./dist",
-    "rootDir": "./",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
@@ -13,10 +12,6 @@
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "paths": {
-      "@shared/*": ["../shared/*"],
-      "@api/*": ["../api/src/*"]
-    }
   },
   "include": ["./**/*.ts", "../shared/**/*.ts", "../api/**/*.ts"],
   "exclude": ["node_modules"]
