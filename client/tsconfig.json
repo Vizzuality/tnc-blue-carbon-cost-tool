@@ -29,6 +29,7 @@
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["../shared/*"],
+      "@api/*": ["../api/src/*"],
       "@/*": [
         "./src/*"
       ]
