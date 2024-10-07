@@ -2,8 +2,7 @@
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
-    "next/core-web-vitals",
-    "next/typescript"
+    "next/core-web-vitals"
   ],
   "rules": {
     "no-console": [1, { "allow": ["info", "error", "debug"] }],
