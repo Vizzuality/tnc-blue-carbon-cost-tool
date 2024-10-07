@@ -6,7 +6,7 @@ import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { adminContract } from '@shared/contracts/admin.contract';
 import { AuthenticationService } from '@api/modules/auth/authentication.service';
-import { ROLES } from '@api/modules/auth/roles.enum';
+import { ROLES } from '@shared/entities/users/roles.enum';
 
 @Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
