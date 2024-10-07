@@ -3,6 +3,7 @@ packages:
   - 'client/**'
   - 'shared/**'
   - 'data/**'
+  - 'admin/**'
 
 
 catalog:
@@ -13,3 +14,4 @@ catalog:
   bcrypt: "5.1.1"
   "@types/node": 20.14.2
   typescript: 5.4.5
+  reflect-metadata: "^0.2.0"

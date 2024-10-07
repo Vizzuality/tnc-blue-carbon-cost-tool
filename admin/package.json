@@ -1,0 +1,21 @@
+{
+  "name": "admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@adminjs/express": "^6.1.0",
+    "adminjs": "^7.8.13",
+    "express": "^4.21.0",
+    "typeorm": "catalog:",
+    "pg": "catalog:",
+    "reflect-metadata": "catalog:",
+    "typescript": "catalog:"
+  }
+}
