@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import AdminJS, { ComponentLoader } from "adminjs";
+import AdminJS, { ComponentLoader, locales } from "adminjs";
 import AdminJSExpress from "@adminjs/express";
 import express from "express";
 import * as AdminJSTypeorm from "@adminjs/typeorm";
@@ -14,7 +14,7 @@ AdminJS.registerAdapter({
   Resource: AdminJSTypeorm.Resource,
 });
 
-const PORT = 3000;
+const PORT = 1111;
 
 const componentLoader = new ComponentLoader();
 
@@ -22,14 +22,44 @@ const start = async () => {
   await dataSource.initialize();
   const app = express();
 
+  const databaseNavigation = {
+    name: "Data Management",
+    icon: "Database",
+  };
+
   const admin = new AdminJS({
     rootPath: "/administration",
     componentLoader,
     resources: [
-      { resource: CostInput, options: { navigation: { name: "Cost Inputs" } } },
-      { resource: User, navigation: { name: "Users" } },
-      { resource: Country, navigation: { name: "Countries" } },
-      { resource: CarbonInputEntity, navigation: { name: "Carbon Inputs" } },
+      {
+        resource: CostInput,
+        name: "Cost Input",
+        options: {
+          parent: databaseNavigation,
+          icon: "Coins",
+        },
+      },
+      {
+        resource: User,
+        options: {
+          parent: databaseNavigation,
+          icon: "User",
+        },
+      },
+      {
+        resource: Country,
+        options: {
+          parent: databaseNavigation,
+          icon: "Globe",
+        },
+      },
+      {
+        resource: CarbonInputEntity,
+        options: {
+          parent: databaseNavigation,
+          icon: "Cloud",
+        },
+      },
     ],
   });
 
