@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  BaseEntity,
 } from 'typeorm';
 import { ACTIVITY, ECOSYSTEM } from '@api/modules/model/base-data.entity';
 import { Country } from '@api/modules/model/entities/country.entity';
@@ -21,7 +22,7 @@ export enum CARBON_INPUT_TYPE {
   'ecosystem',
 ])
 @Entity('carbon_input')
-export class CarbonInputEntity {
+export class CarbonInputEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -31,7 +32,7 @@ export class CarbonInputEntity {
   @Column({ name: 'activity', enum: ACTIVITY, type: 'enum' })
   activity: ACTIVITY;
 
-  @Column({ name: 'country_code', length: 3, nullable: true })
+  @Column({ name: 'country_code', length: 3, nullable: true, type: 'char' })
   countryCode: string;
 
   @ManyToOne(() => Country)
