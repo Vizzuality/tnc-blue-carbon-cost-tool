@@ -7,6 +7,7 @@ import { User } from "@shared/entities/users/user.entity.js";
 import { dataSource } from "./datasource.js";
 import { CarbonInputEntity } from "@api/modules/model/entities/carbon-input.entity.js";
 import { CostInput } from "@api/modules/model/entities/cost-input.entity.js";
+import { Country } from "@api/modules/model/entities/country.entity.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -39,6 +40,14 @@ const start = async () => {
         },
       },
       {
+        resource: Country,
+        name: "Country",
+        options: {
+          parent: databaseNavigation,
+          icon: "Globe",
+        },
+      },
+      {
         resource: User,
         options: {
           parent: databaseNavigation,
@@ -47,6 +56,7 @@ const start = async () => {
       },
       {
         resource: CarbonInputEntity,
+        name: "Andresito",
         options: {
           parent: databaseNavigation,
           icon: "Cloud",
