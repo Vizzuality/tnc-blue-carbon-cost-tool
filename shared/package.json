@@ -1,16 +1,22 @@
 {
   "name": "shared",
   "private": true,
-  "devDependencies": {
+  "dependencies": {
+    "@ts-rest/core": "^3.51.0",
+    "bcrypt": "5.1.1",
+    "class-transformer": "catalog:",
+    "lodash": "4.17.21",
     "pg": "catalog:",
     "typeorm": "catalog:",
-    "zod": "catalog:",
-    "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "zod": "catalog:"
   },
-  "dependencies": {
+  "devDependencies": {
     "@nestjs/mapped-types": "^2.0.5",
-    "@ts-rest/core": "^3.51.0",
-    "class-transformer": "catalog:"
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "9.0.7",
+    "@types/lodash": "4.17.10",
+    "@types/node": "catalog:",
+    "jsonwebtoken": "9.0.2",
+    "typescript": "catalog:"
   }
 }
