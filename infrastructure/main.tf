@@ -96,6 +96,12 @@ module api_ecr {
   ecr_repo_name = "api"
 }
 
+module admin_ecr {
+  source = "./modules/ecr"
+  project_name = var.project_name
+  ecr_repo_name = "admin"
+}
+
 module "iam" {
   source = "./modules/iam"
 }
