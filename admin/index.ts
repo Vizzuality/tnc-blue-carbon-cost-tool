@@ -5,7 +5,6 @@ import express from "express";
 import * as AdminJSTypeorm from "@adminjs/typeorm";
 import { User } from "@shared/entities/users/user.entity.js";
 import { dataSource } from "./datasource.js";
-import { Country } from "@api/modules/model/entities/country.entity.js";
 import { CarbonInputEntity } from "@api/modules/model/entities/carbon-input.entity.js";
 import { CostInput } from "@api/modules/model/entities/cost-input.entity.js";
 
@@ -14,7 +13,7 @@ AdminJS.registerAdapter({
   Resource: AdminJSTypeorm.Resource,
 });
 
-const PORT = 1111;
+const PORT = 1234;
 
 const componentLoader = new ComponentLoader();
 
@@ -44,13 +43,6 @@ const start = async () => {
         options: {
           parent: databaseNavigation,
           icon: "User",
-        },
-      },
-      {
-        resource: Country,
-        options: {
-          parent: databaseNavigation,
-          icon: "Globe",
         },
       },
       {
