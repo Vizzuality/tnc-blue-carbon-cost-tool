@@ -18,6 +18,19 @@ services:
     depends_on:
       - database
 
+  admin:
+    container_name: blue-carbon-cost-admin
+    environment:
+      DB_HOST: database
+    build:
+      context: .
+      dockerfile: admin/Dockerfile
+    ports:
+      - "1000:1000"
+    networks:
+      - 4-growth-docker-network
+
+
   client:
     build:
       context: .

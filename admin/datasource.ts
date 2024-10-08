@@ -8,10 +8,10 @@ import { CostInput } from "@api/modules/model/entities/cost-input.entity.js";
 
 export const dataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
-  username: "blue-carbon-cost",
-  password: "blue-carbon-cost",
-  database: "blc",
+  host: process.env.DB_HOST || "localhost",
+  username: process.env.DB_USERNAME || "blue-carbon-cost",
+  password: process.env.DB_PASSWORD || "blue-carbon-cost",
+  database: process.env.DB_NAME || "blc",
   entities: [User, Country, CarbonInputEntity, CostInput],
   synchronize: false,
 });

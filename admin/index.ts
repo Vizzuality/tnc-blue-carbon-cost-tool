@@ -13,7 +13,7 @@ AdminJS.registerAdapter({
   Resource: AdminJSTypeorm.Resource,
 });
 
-const PORT = 1234;
+const PORT = 1000;
 
 const componentLoader = new ComponentLoader();
 
