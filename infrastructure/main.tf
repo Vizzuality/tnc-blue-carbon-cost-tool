@@ -146,6 +146,7 @@ module "github" {
     PIPELINE_USER_SECRET_ACCESS_KEY = module.iam.pipeline_user_access_key_secret
     CLIENT_REPOSITORY_NAME          = module.client_ecr.repository_name
     API_REPOSITORY_NAME             = module.api_ecr.repository_name
+    ADMIN_REPOSITORY_NAME           = module.admin_ecr.repository_name
     AWS_REGION                      = var.aws_region
   }
 }
