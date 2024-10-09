@@ -4,18 +4,32 @@ import { User } from '@shared/entities/users/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
+import { AppBaseService } from '@api/utils/app-base.service';
+import { CreateUserDto } from '@shared/dtos/users/create-user.dto';
+import { UpdateUserDto } from '@shared/dtos/users/update-user.dto';
+import { AppInfoDTO } from '@api/utils/info.dto';
+
 @Injectable()
-export class UsersService {
-  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+export class UsersService extends AppBaseService<
+  User,
+  CreateUserDto,
+  UpdateUserDto,
+  AppInfoDTO
+> {
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {
+    super(userRepository, 'user', 'users');
+  }
 
   async findOneBy(id: string) {
-    return this.repo.findOne({
+    return this.userRepository.findOne({
       where: { id },
     });
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.repo.findOne({ where: { email } });
+    return this.userRepository.findOne({ where: { email } });
   }
 
   async createUser(newUser: Partial<User>) {
@@ -23,20 +37,20 @@ export class UsersService {
     if (existingUser) {
       throw new ConflictException(`Email ${newUser.email} already exists`);
     }
-    return this.repo.save(newUser);
+    return this.userRepository.save(newUser);
   }
 
   async updatePassword(user: User, newPassword: string) {
     user.password = await bcrypt.hash(newPassword, 10);
-    return this.repo.save(user);
+    return this.userRepository.save(user);
   }
 
   async delete(user: User) {
-    return this.repo.remove(user);
+    return this.userRepository.remove(user);
   }
 
   async isUserActive(id: string) {
-    const user = await this.repo.findOneBy({ id });
+    const user = await this.userRepository.findOneBy({ id });
     return user.isActive;
   }
 }

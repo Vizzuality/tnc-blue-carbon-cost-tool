@@ -16,3 +16,5 @@ catalog:
   "@types/node": 20.14.2
   typescript: 5.4.5
   reflect-metadata: "^0.2.0"
+  class-validator: "0.14.1"
+  nestjs-base-service: "0.11.1"
