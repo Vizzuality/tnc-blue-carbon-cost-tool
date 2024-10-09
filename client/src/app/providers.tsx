@@ -10,7 +10,7 @@ import {
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 
-import { makeQueryClient } from "@/lib/queryClient";
+import { makeQueryClient } from "@/lib/query-client";
 
 let browserQueryClient: QueryClient | undefined = undefined;
 
