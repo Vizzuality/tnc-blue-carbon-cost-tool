@@ -1,6 +1,6 @@
 import { initContract } from "@ts-rest/core";
 import { LogInSchema } from "@shared/schemas/auth/login.schema";
-import { UserWithAccessToken } from "@shared/dtos/user.dto";
+import { UserWithAccessToken } from "@shared/dtos/users/user.dto";
 import { JSONAPIError } from "@shared/dtos/json-api.error";
 import { TokenTypeSchema } from "@shared/schemas/auth/token-type.schema";
 import { z } from "zod";
