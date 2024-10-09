@@ -10,7 +10,7 @@ import { getServerSession, NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 
-import { client } from "@/lib/queryClient";
+import { client } from "@/lib/query-client";
 
 declare module "next-auth" {
   interface Session {
