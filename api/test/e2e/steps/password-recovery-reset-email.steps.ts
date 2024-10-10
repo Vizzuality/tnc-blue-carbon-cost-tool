@@ -73,7 +73,7 @@ describe('Reset Password', () => {
 
       then(
         /the user should receive a (\d+) status code/,
-        (statusCode: string) => {
+        async (statusCode: string) => {
           expect(response.status).toBe(Number.parseInt(statusCode));
         },
       );
@@ -123,7 +123,7 @@ describe('Reset Password', () => {
 
       then(
         /the user should receive a (\d+) status code/,
-        (statusCode: string) => {
+        async (statusCode: string) => {
           expect(response.status).toBe(Number.parseInt(statusCode));
         },
       );
