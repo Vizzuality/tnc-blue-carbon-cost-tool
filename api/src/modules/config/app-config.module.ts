@@ -5,6 +5,8 @@ import { DatabaseModule } from '@api/modules/config/database/database.module';
 import { resolveConfigPath } from '@api/modules/config/path-resolver';
 import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
 
+const DEFAULT_RELATIVE_PATH = '../../../../../../';
+
 @Global()
 @Module({
   imports: [

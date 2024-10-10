@@ -6,12 +6,9 @@ const TEST_RELATIVE_PATH = '../../../../';
 const DEFAULT_RELATIVE_PATH = '../../../../../../';
 
 /**
- * @description: Resolve the path of the config file depending on the environment
+ * @description: Resolve the path of the dotenv config file relative to shared folder
  */
 export function resolveConfigPath(relativePath: string): string {
-  const rootDir =
-    process.env.NODE_ENV === 'test'
-      ? TEST_RELATIVE_PATH
-      : DEFAULT_RELATIVE_PATH;
+  const rootDir = DEFAULT_RELATIVE_PATH;
   return join(__dirname, rootDir, relativePath);
 }
