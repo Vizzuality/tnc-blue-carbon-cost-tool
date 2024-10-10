@@ -27,6 +27,9 @@ describe('Password Recovery - Send Email', () => {
       testUser = user;
       jest.clearAllMocks();
     });
+    afterEach(async () => {
+      await testManager.clearDatabase();
+    });
 
     afterAll(async () => {
       await testManager.close();
