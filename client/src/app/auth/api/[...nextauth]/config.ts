@@ -1,4 +1,3 @@
-import { UserWithAccessToken } from "@shared/dtos/user.dto";
 import { LogInSchema } from "@shared/schemas/auth/login.schema";
 import type {
   GetServerSidePropsContext,
@@ -11,6 +10,7 @@ import { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 
 import { client } from "@/lib/query-client";
+import { UserWithAccessToken } from "@shared/dtos/users/user.dto";
 
 declare module "next-auth" {
   interface Session {
