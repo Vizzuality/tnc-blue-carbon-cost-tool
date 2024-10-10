@@ -22,7 +22,7 @@ export class AuthenticationService {
   ) {}
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user?.isActive && (await bcrypt.compare(password, user.password))) {
       return user;
     }
     throw new UnauthorizedException(`Invalid credentials`);
