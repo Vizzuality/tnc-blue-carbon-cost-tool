@@ -1,18 +1,18 @@
-import { defineFeature, loadFeature } from 'jest-cucumber';
-import { Response } from 'supertest';
-import { TestManager } from 'api/test/utils/test-manager';
+import { INestApplication } from '@nestjs/common';
+import * as request from 'supertest';
 import { User } from '@shared/entities/users/user.entity';
+import { TestManager } from '../../utils/test-manager';
 
-const feature = loadFeature('./test/e2e/features/sign-in.feature');
-
-defineFeature(feature, (test) => {
+describe('Sign-in E2E Tests', () => {
+  let app: INestApplication;
   let testManager: TestManager;
 
   beforeAll(async () => {
     testManager = await TestManager.createTestManager();
+    app = testManager.getApp();
   });
 
-  beforeEach(async () => {
+  afterEach(async () => {
     await testManager.clearDatabase();
   });
 
@@ -20,95 +20,50 @@ defineFeature(feature, (test) => {
     await testManager.close();
   });
 
-  test('A user tries to sign in with non-existing credentials', ({
-    when,
-    then,
-    and,
-  }) => {
-    let response: Response;
+  it('should return 404 when user tries to sign in with non-existing credentials', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/authentication/login')
+      .send({ email: 'non-existing@user.com', password: '12345567' });
 
-    when(
-      'a user attempts to sign in with non-existing credentials',
-      async () => {
-        response = await testManager
-          .request()
-          .post('/authentication/login')
-          .send({ email: 'non-existing@user.com', password: '12345567' });
-      },
-    );
-
-    then(
-      /^the user should receive a (\d+) status code$/,
-      (statusCode: string) => {
-        expect(response.status).toBe(Number.parseInt(statusCode, 10));
-      },
-    );
-
-    and(/^the response message should be "(.*)"$/, (message: string) => {
-      expect(response.body.message).toEqual(message);
-    });
+    expect(response.status).toBe(401);
+    expect(response.body.message).toEqual('Invalid credentials');
   });
 
-  test('A user tries to sign in with an incorrect password', ({
-    given,
-    when,
-    then,
-    and,
-  }) => {
-    let user: User;
-    let response: Response;
+  it('should return 401 when user tries to sign in with an incorrect password', async () => {
+    const user: User = await testManager
+      .mocks()
+      .createUser({ email: 'test@test.com', password: '12345678' });
 
-    given('a user exists with valid credentials', async () => {
-      user = await testManager
-        .mocks()
-        .createUser({ email: 'test@test.com', password: '12345678' });
-    });
+    const response = await request(app.getHttpServer())
+      .post('/authentication/login')
+      .send({ email: user.email, password: 'wrongpassword' });
 
-    when('a user attempts to sign in with an incorrect password', async () => {
-      response = await testManager
-        .request()
-        .post('/authentication/login')
-        .send({ email: user.email, password: 'wrongpassword' });
-    });
-
-    then(
-      /^the user should receive a (\d+) status code$/,
-      (statusCode: string) => {
-        expect(response.status).toBe(Number.parseInt(statusCode, 10));
-      },
-    );
-
-    and(/^the response message should be "(.*)"$/, (message: string) => {
-      expect(response.body.message).toEqual(message);
-    });
+    expect(response.status).toBe(401);
+    expect(response.body.message).toEqual('Invalid credentials');
   });
 
-  test('A user successfully signs in', ({ given, when, then, and }) => {
-    let user: User;
-    let response: Response;
+  it('should return 200 and an access token when user successfully signs in', async () => {
+    const user: User = await testManager
+      .mocks()
+      .createUser({ email: 'test@test.com', password: '12345678' });
 
-    given('a user exists with valid credentials', async () => {
-      user = await testManager
-        .mocks()
-        .createUser({ email: 'test@test.com', password: '12345678' });
-    });
+    const response = await request(app.getHttpServer())
+      .post('/authentication/login')
+      .send({ email: user.email, password: user.password });
 
-    when('a user attempts to sign in with valid credentials', async () => {
-      response = await testManager
-        .request()
-        .post('/authentication/login')
-        .send({ email: user.email, password: user.password });
-    });
+    expect(response.status).toBe(201);
+    expect(response.body.accessToken).toBeDefined();
+  });
+  it('should return 401 when user tries to sign in with an inactive account', async () => {
+    const inactiveUser: User = await testManager
+      .mocks()
+      .createUser({ isActive: false });
 
-    then(
-      /^the user should receive a (\d+) status code$/,
-      (statusCode: string) => {
-        expect(response.status).toBe(Number.parseInt(statusCode, 10));
-      },
-    );
+    const response = await testManager
+      .request()
+      .post('/authentication/login')
+      .send({ email: inactiveUser.email, password: inactiveUser.password });
 
-    and('the access token should be defined', () => {
-      expect(response.body.accessToken).toBeDefined();
-    });
+    expect(response.status).toBe(401);
   });
 });
