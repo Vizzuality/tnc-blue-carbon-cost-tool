@@ -9,11 +9,11 @@ import * as request from 'supertest';
 
 import { getDataSourceToken } from '@nestjs/typeorm';
 import { clearTestDataFromDatabase } from './db-helpers';
-import { createUser } from './mocks/entity-mocks';
 import { User } from '@shared/entities/users/user.entity';
 import { IEmailServiceToken } from '@api/modules/notifications/email/email-service.interface';
 import { MockEmailService } from './mocks/mock-email.service';
 import { ROLES } from '@shared/entities/users/roles.enum';
+import { createUser } from '@shared/lib/entity-mocks';
 
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate
