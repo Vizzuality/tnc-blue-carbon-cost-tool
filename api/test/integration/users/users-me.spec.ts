@@ -6,8 +6,6 @@ import { usersContract } from '@shared/contracts/users.contract';
 
 describe('Users ME (e2e)', () => {
   let testManager: TestManager;
-  let authToken: string;
-  let testUser: User;
 
   beforeAll(async () => {
     testManager = await TestManager.createTestManager();
@@ -15,10 +13,6 @@ describe('Users ME (e2e)', () => {
 
   beforeEach(async () => {
     await testManager.clearDatabase();
-
-    const { jwtToken, user } = await testManager.setUpTestUser();
-    authToken = jwtToken;
-    testUser = user;
   });
 
   afterAll(async () => {
@@ -74,20 +68,21 @@ describe('Users ME (e2e)', () => {
 
     expect(newToken).toBeDefined();
   });
-  it('should update a user', async () => {
+  it('should update a user name', async () => {
     const user = await createUser(testManager.getDataSource(), {
       email: 'user@test.com',
     });
 
     const { jwtToken } = await testManager.logUserIn(user);
-    const updatedUser = { email: 'new@mail.com' };
+    const newName = 'newName';
     const response = await testManager
       .request()
-      .patch('/users/' + user.id)
-      .send(updatedUser)
+      .patch(usersContract.updateMe.path)
+      .send({ name: newName })
       .set('Authorization', `Bearer ${jwtToken}`);
     expect(response.status).toBe(201);
-    expect(response.body.data.email).toEqual(updatedUser.email);
+    expect(response.body.data.id).toEqual(user.id);
+    expect(response.body.data.name).toEqual(newName);
 
     // Previous token should work after updating the user's email
     const userMeResponse = await testManager
@@ -96,6 +91,30 @@ describe('Users ME (e2e)', () => {
       .set('Authorization', `Bearer ${jwtToken}`);
 
     expect(userMeResponse.status).toBe(200);
-    expect(userMeResponse.body.data.email).toEqual(updatedUser.email);
+    expect(userMeResponse.body.data.name).toEqual(newName);
+  });
+
+  it('should delete my own user', async () => {
+    const users: User[] = [];
+    for (const n of Array(3).keys()) {
+      users.push(
+        await testManager.mocks().createUser({ email: `user${n}@test.com` }),
+      );
+    }
+    const user = users[0];
+    const { jwtToken } = await testManager.logUserIn(user);
+    const response = await testManager
+      .request()
+      .delete(usersContract.deleteMe.path)
+      .set('Authorization', `Bearer ${jwtToken}`);
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body).toEqual({});
+    const foundUser = await testManager
+      .getDataSource()
+      .getRepository(User)
+      .findOneBy({ id: user.id });
+
+    expect(foundUser).toBeNull();
   });
 });

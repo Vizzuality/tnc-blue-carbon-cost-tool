@@ -47,12 +47,4 @@ export const usersContract = contract.router({
     },
     body: null,
   },
-  resetPassword: {
-    method: "POST",
-    path: "/users/me/password/reset",
-    responses: {
-      200: contract.type<null>(),
-    },
-    body: PasswordSchema,
-  },
 });

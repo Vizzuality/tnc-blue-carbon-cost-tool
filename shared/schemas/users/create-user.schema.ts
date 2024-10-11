@@ -5,5 +5,3 @@ export const CreateUserSchema = z.object({
   name: z.string().optional(),
   partnerName: z.string(),
 });
-
-export type CreateUserDto = z.infer<typeof CreateUserSchema>;
