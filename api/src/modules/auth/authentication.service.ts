@@ -54,8 +54,8 @@ export class AuthenticationService {
   }
 
   async signUp(user: User, signUpDto: SignUpDto): Promise<void> {
-    const { password, newPassword } = signUpDto;
-    if (!(await bcrypt.compare(password, user.password))) {
+    const { oneTimePassword, newPassword } = signUpDto;
+    if (!(await bcrypt.compare(oneTimePassword, user.password))) {
       throw new UnauthorizedException();
     }
     user.isActive = true;
@@ -71,8 +71,8 @@ export class AuthenticationService {
   }
 
   async updatePassword(user: User, dto: UpdateUserPasswordDto): Promise<User> {
-    const { password, newPassword } = dto;
-    if (await this.isPasswordValid(user, password)) {
+    const { oneTimePassword, newPassword } = dto;
+    if (await this.isPasswordValid(user, oneTimePassword)) {
       return this.usersService.saveNewHashedPassword(user, newPassword);
     }
     throw new UnauthorizedException();
@@ -84,5 +84,9 @@ export class AuthenticationService {
 
   async isPasswordValid(user: User, password: string): Promise<boolean> {
     return bcrypt.compare(password, user.password);
+  }
+
+  async token(userid: User['id']) {
+    return this.jwtManager.signSignUpToken(userid);
   }
 }
