@@ -1,7 +1,4 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { z } from "zod";
+import { UpdateUserSchema } from "@shared/schemas/users/update-user.schema";
 
-export class UpdateUserDto {
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-}
+export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;

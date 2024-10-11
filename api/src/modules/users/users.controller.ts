@@ -43,13 +43,13 @@ export class UsersController {
     });
   }
 
-  // @TsRestHandler(c.updateMe)
-  // async update(@GetUser() user: User): Promise<any> {
-  //   return tsRestHandler(c.updateMe, async () => {
-  //     const user = await this.usersService.update(user.id, dto);
-  //     return { body: { data: user }, status: HttpStatus.CREATED };
-  //   });
-  // }
+  @TsRestHandler(c.updateMe)
+  async update(@GetUser() user: User): Promise<any> {
+    return tsRestHandler(c.updateMe, async ({ body }) => {
+      const updatedUser = await this.usersService.update(user.id, body);
+      return { body: { data: updatedUser }, status: HttpStatus.CREATED };
+    });
+  }
 
   @TsRestHandler(c.deleteMe)
   async deleteMe(@GetUser() user: User): Promise<any> {
