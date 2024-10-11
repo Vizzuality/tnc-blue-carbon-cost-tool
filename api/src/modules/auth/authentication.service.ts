@@ -9,11 +9,9 @@ import { CreateUserDto } from '@shared/dtos/users/create-user.dto';
 import { randomBytes } from 'node:crypto';
 import { SendWelcomeEmailCommand } from '@api/modules/notifications/email/commands/send-welcome-email.command';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
-import {
-  SignUpDto,
-  UpdateUserPasswordDto,
-} from '@shared/schemas/auth/sign-up.schema';
+import { SignUpDto } from '@shared/schemas/auth/sign-up.schema';
 import { UserSignedUpEvent } from '@api/modules/admin/events/user-signed-up.event';
+import { UpdateUserPasswordDto } from '@shared/dtos/users/update-user-password.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -71,8 +69,8 @@ export class AuthenticationService {
   }
 
   async updatePassword(user: User, dto: UpdateUserPasswordDto): Promise<User> {
-    const { oneTimePassword, newPassword } = dto;
-    if (await this.isPasswordValid(user, oneTimePassword)) {
+    const { password, newPassword } = dto;
+    if (await this.isPasswordValid(user, password)) {
       return this.usersService.saveNewHashedPassword(user, newPassword);
     }
     throw new UnauthorizedException();
