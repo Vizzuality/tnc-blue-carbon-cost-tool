@@ -9,7 +9,10 @@ import { CreateUserDto } from '@shared/dtos/users/create-user.dto';
 import { randomBytes } from 'node:crypto';
 import { SendWelcomeEmailCommand } from '@api/modules/notifications/email/commands/send-welcome-email.command';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
-import { SignUpDto } from '@shared/schemas/auth/sign-up.schema';
+import {
+  SignUpDto,
+  UpdateUserPasswordDto,
+} from '@shared/schemas/auth/sign-up.schema';
 import { UserSignedUpEvent } from '@api/modules/admin/events/user-signed-up.event';
 
 @Injectable()
@@ -56,7 +59,7 @@ export class AuthenticationService {
       throw new UnauthorizedException();
     }
     user.isActive = true;
-    await this.usersService.updatePassword(user, newPassword);
+    await this.usersService.saveNewHashedPassword(user, newPassword);
     this.eventBus.publish(new UserSignedUpEvent(user.id, user.email));
   }
 
@@ -67,7 +70,19 @@ export class AuthenticationService {
     throw new UnauthorizedException();
   }
 
-  async updatePassword(user: User, newPassword: string): Promise<void> {
-    await this.usersService.updatePassword(user, newPassword);
+  async updatePassword(user: User, dto: UpdateUserPasswordDto): Promise<User> {
+    const { password, newPassword } = dto;
+    if (await this.isPasswordValid(user, password)) {
+      return this.usersService.saveNewHashedPassword(user, newPassword);
+    }
+    throw new UnauthorizedException();
+  }
+
+  async resetPassword(user: User, newPassword: string): Promise<void> {
+    await this.usersService.saveNewHashedPassword(user, newPassword);
+  }
+
+  async isPasswordValid(user: User, password: string): Promise<boolean> {
+    return bcrypt.compare(password, user.password);
   }
 }

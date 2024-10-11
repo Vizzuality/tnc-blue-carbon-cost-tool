@@ -59,7 +59,7 @@ export class AuthenticationController {
     return tsRestHandler(
       authContract.resetPassword,
       async ({ body: { password } }) => {
-        await this.authService.updatePassword(user, password);
+        await this.authService.resetPassword(user, password);
         return {
           body: null,
           status: 201,
