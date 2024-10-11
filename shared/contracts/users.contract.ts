@@ -4,9 +4,9 @@ import { User } from "@shared/entities/users/user.entity";
 import { UserDto } from "@shared/dtos/users/user.dto";
 import { z } from "zod";
 import { UpdateUserDto } from "@shared/dtos/users/update-user.dto";
-import { PasswordSchema } from "@shared/schemas/auth/login.schema";
+
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
-import { UpdateUserPasswordSchema } from "@shared/schemas/auth/sign-up.schema";
+import { UpdateUserPasswordSchema } from "@shared/schemas/users/update-password.schema";
 
 const contract = initContract();
 export const usersContract = contract.router({

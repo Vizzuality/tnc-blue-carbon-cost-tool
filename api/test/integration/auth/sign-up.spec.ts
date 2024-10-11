@@ -59,7 +59,10 @@ describe('Create Users', () => {
       .post(authContract.signUp.path)
       .set('Authorization', `Bearer ${signUpToken}`)
       .query({ tokenType: TOKEN_TYPE_ENUM.SIGN_UP })
-      .send({ password: 'wrongpassword', newPassword: 'newpassword' });
+      .send({
+        oneTimePassword: '8765432187654321',
+        newPassword: 'newpassword',
+      });
 
     expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
   });
@@ -69,6 +72,7 @@ describe('Create Users', () => {
       role: ROLES.PARTNER,
       email: 'test@test.com',
       isActive: false,
+      password: '1234567812345678',
     });
     const { signUpToken } = await jwtManager.signSignUpToken(user.id);
 
@@ -76,7 +80,7 @@ describe('Create Users', () => {
       .request()
       .post(authContract.signUp.path)
       .set('Authorization', `Bearer ${signUpToken}`)
-      .send({ password: user.password, newPassword: 'newpassword' });
+      .send({ oneTimePassword: user.password, newPassword: 'newpassword' });
 
     expect(response.status).toBe(HttpStatus.CREATED);
     const foundUser = await testManager
