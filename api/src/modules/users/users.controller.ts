@@ -1,12 +1,10 @@
 import {
   Controller,
   ClassSerializerInterceptor,
-  Body,
-  Param,
-  ParseUUIDPipe,
   UseInterceptors,
   HttpStatus,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 
 import { UsersService } from './users.service';
@@ -14,14 +12,17 @@ import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { GetUser } from '@api/decorators/get-user.decorator';
 import { User } from '@shared/entities/users/user.entity';
 import { usersContract as c } from '@shared/contracts/users.contract';
-
-import { UpdateUserPasswordDto } from '@shared/dtos/users/update-user-password.dto';
-import { UpdateUserDto } from '@shared/dtos/users/update-user.dto';
+import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
+import { AuthenticationService } from '@api/modules/auth/authentication.service';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
+@UseGuards(JwtAuthGuard)
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private auth: AuthenticationService,
+  ) {}
 
   @TsRestHandler(c.findMe)
   async findMe(@GetUser() user: User): Promise<any> {
@@ -35,27 +36,20 @@ export class UsersController {
   }
 
   @TsRestHandler(c.updatePassword)
-  async updatePassword(
-    @Body() dto: UpdateUserPasswordDto['newPassword'],
-    @GetUser() user: User,
-  ): Promise<any> {
-    return tsRestHandler(c.updatePassword, async () => {
-      const updatedUser = await this.usersService.updatePassword(user, dto);
+  async updatePassword(@GetUser() user: User): Promise<any> {
+    return tsRestHandler(c.updatePassword, async ({ body }) => {
+      const updatedUser = await this.auth.updatePassword(user, body);
       return { body: { data: updatedUser }, status: HttpStatus.OK };
     });
   }
 
-  @TsRestHandler(c.updateUser)
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() dto: UpdateUserDto,
-  ): Promise<any> {
-    return tsRestHandler(c.updateUser, async () => {
-      const user = await this.usersService.update(id, dto);
-      //return { body: { data: user }, status: HttpStatus.CREATED };
-      return { body: { data: user }, status: HttpStatus.CREATED };
-    });
-  }
+  // @TsRestHandler(c.updateMe)
+  // async update(@GetUser() user: User): Promise<any> {
+  //   return tsRestHandler(c.updateMe, async () => {
+  //     const user = await this.usersService.update(user.id, dto);
+  //     return { body: { data: user }, status: HttpStatus.CREATED };
+  //   });
+  // }
 
   @TsRestHandler(c.deleteMe)
   async deleteMe(@GetUser() user: User): Promise<any> {

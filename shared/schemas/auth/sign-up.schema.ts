@@ -14,4 +14,8 @@ export const SignUpSchema = z.object({
     .max(32, "Password must be less than 32 characters"),
 });
 
+export const UpdateUserPasswordSchema = SignUpSchema;
+
+export type UpdateUserPasswordDto = z.infer<typeof UpdateUserPasswordSchema>;
+
 export type SignUpDto = z.infer<typeof SignUpSchema>;

@@ -8,7 +8,6 @@ import { AppBaseService } from '@api/utils/app-base.service';
 import { CreateUserDto } from '@shared/dtos/users/create-user.dto';
 import { UpdateUserDto } from '@shared/dtos/users/update-user.dto';
 import { AppInfoDTO } from '@api/utils/info.dto';
-
 @Injectable()
 export class UsersService extends AppBaseService<
   User,
@@ -40,7 +39,7 @@ export class UsersService extends AppBaseService<
     return this.userRepository.save(newUser);
   }
 
-  async updatePassword(user: User, newPassword: string) {
+  async saveNewHashedPassword(user: User, newPassword: string) {
     user.password = await bcrypt.hash(newPassword, 10);
     return this.userRepository.save(user);
   }

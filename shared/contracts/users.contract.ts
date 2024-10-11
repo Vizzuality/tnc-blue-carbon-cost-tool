@@ -1,14 +1,12 @@
 import { initContract } from "@ts-rest/core";
-import { JSONAPIError } from "@shared/dtos/json-api.error";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { User } from "@shared/entities/users/user.entity";
 import { UserDto } from "@shared/dtos/users/user.dto";
-import { UpdateUserPasswordDto } from "@shared/dtos/users/update-user-password.dto";
 import { z } from "zod";
 import { UpdateUserDto } from "@shared/dtos/users/update-user.dto";
 import { PasswordSchema } from "@shared/schemas/auth/login.schema";
-
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
+import { UpdateUserPasswordSchema } from "@shared/schemas/auth/sign-up.schema";
 
 const contract = initContract();
 export const usersContract = contract.router({
@@ -20,9 +18,9 @@ export const usersContract = contract.router({
     },
     query: generateEntityQuerySchema(User),
   },
-  updateUser: {
+  updateMe: {
     method: "PATCH",
-    path: "/users/:id",
+    path: "/users",
     pathParams: z.object({
       id: z.coerce.string(),
     }),
@@ -38,7 +36,7 @@ export const usersContract = contract.router({
     responses: {
       200: contract.type<ApiResponse<UserDto>>(),
     },
-    body: contract.type<UpdateUserPasswordDto>(),
+    body: UpdateUserPasswordSchema,
     summary: "Update password of the user",
   },
   deleteMe: {
