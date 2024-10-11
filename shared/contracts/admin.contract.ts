@@ -11,7 +11,6 @@ export const adminContract = contract.router({
     path: "/admin/users",
     responses: {
       201: contract.type<null>(),
-      401: contract.type<JSONAPIError>(),
     },
     body: CreateUserSchema,
   },
