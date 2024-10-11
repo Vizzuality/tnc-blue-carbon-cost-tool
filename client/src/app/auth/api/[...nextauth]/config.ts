@@ -51,7 +51,7 @@ export const config = {
         if (!access) {
           if (response.status === 401) {
             throw new Error(
-              response.body.errors?.[0]?.title || "unknown error",
+              response.body.errors?.[0]?.title || "Invalid credentials",
             );
           }
         }

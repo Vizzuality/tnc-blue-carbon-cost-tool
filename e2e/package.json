@@ -8,6 +8,7 @@
     "@playwright/test": "1.44.1",
     "@types/lodash": "4.17.4",
     "@types/node": "catalog:",
+    "dotenv": "16.4.5",
     "tsc-alias": "1.8.10",
     "typescript": "catalog:"
   },

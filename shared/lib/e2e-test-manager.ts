@@ -7,11 +7,11 @@ import { sign } from "jsonwebtoken";
 
 const AppDataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "blue-carbon-cost",
-  password: "blue-carbon-cost",
-  database: "blc",
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT as string),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   entities: DB_ENTITIES,
 });
 
@@ -79,7 +79,6 @@ export class E2eTestManager {
   }
 
   async generateToken(user: User) {
-    // the secret must match the provided for the api when built for e2e tests
-    return sign({ id: user.id }, "mysupersecretfortests");
+    return sign({ id: user.id }, process.env.EMAIL_CONFIRMATION_TOKEN_SECRET as string);
   }
 }
