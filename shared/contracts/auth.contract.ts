@@ -16,7 +16,6 @@ export const authContract = contract.router({
     path: "/authentication/login",
     responses: {
       201: contract.type<UserWithAccessToken>(),
-      401: contract.type<JSONAPIError>(),
     },
     body: LogInSchema,
   },
@@ -25,7 +24,6 @@ export const authContract = contract.router({
     path: "/authentication/sign-up",
     responses: {
       201: contract.type<null>(),
-      401: contract.type<JSONAPIError>(),
     },
     body: SignUpSchema,
   },
@@ -35,7 +33,6 @@ export const authContract = contract.router({
     headers: BearerTokenSchema,
     responses: {
       200: null,
-      401: null,
     },
     query: TokenTypeSchema,
   },
@@ -44,7 +41,6 @@ export const authContract = contract.router({
     path: "/authentication/reset-password",
     responses: {
       201: null,
-      401: null,
     },
     body: z.object({ password: z.string() }),
   },
@@ -53,7 +49,6 @@ export const authContract = contract.router({
     path: "/authentication/recover-password",
     responses: {
       201: null,
-      401: null,
     },
     body: z.object({ email: z.string().email() }),
   },
