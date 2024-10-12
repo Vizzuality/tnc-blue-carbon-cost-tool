@@ -1,8 +1,5 @@
 import { join } from 'path';
 
-// TODO: Workaround: This should be prob fixed in the jest conf
-
-const TEST_RELATIVE_PATH = '../../../../';
 const DEFAULT_RELATIVE_PATH = '../../../../../../';
 
 /**
