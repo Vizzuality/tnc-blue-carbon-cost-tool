@@ -5,8 +5,6 @@ import { MockEmailService } from '../../utils/mocks/mock-email.service';
 import { IEmailServiceToken } from '@api/modules/notifications/email/email-service.interface';
 import { ROLES } from '@shared/entities/users/roles.enum';
 
-//create-user.feature
-
 describe('Create Users', () => {
   let testManager: TestManager;
   let testUser: User;
@@ -68,7 +66,7 @@ describe('Create Users', () => {
     // Then the user should receive a 409 status code
     expect(response.status).toBe(HttpStatus.CONFLICT);
     // And the user should receive a message containing  "Email already exists"
-    expect(response.body.message).toBe(
+    expect(response.body.errors[0].title).toBe(
       `Email ${testUser.email} already exists`,
     );
   });

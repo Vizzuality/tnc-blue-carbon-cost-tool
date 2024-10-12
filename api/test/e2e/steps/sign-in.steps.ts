@@ -26,7 +26,7 @@ describe('Sign-in E2E Tests', () => {
       .send({ email: 'non-existing@user.com', password: '12345567' });
 
     expect(response.status).toBe(401);
-    expect(response.body.message).toEqual('Invalid credentials');
+    expect(response.body.errors[0].title).toEqual('Invalid credentials');
   });
 
   it('should return 401 when user tries to sign in with an incorrect password', async () => {
@@ -39,7 +39,7 @@ describe('Sign-in E2E Tests', () => {
       .send({ email: user.email, password: 'wrongpassword' });
 
     expect(response.status).toBe(401);
-    expect(response.body.message).toEqual('Invalid credentials');
+    expect(response.body.errors[0].title).toEqual('Invalid credentials');
   });
 
   it('should return 200 and an access token when user successfully signs in', async () => {
