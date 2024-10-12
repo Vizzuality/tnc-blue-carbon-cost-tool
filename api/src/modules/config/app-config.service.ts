@@ -57,7 +57,7 @@ export class ApiConfigService {
     return this.jwtConfigHandler.getJwtConfigByType(type);
   }
 
-  get(envVarName: string): ConfigService {
+  get(envVarName: string): string {
     return this.configService.get(envVarName);
   }
 }

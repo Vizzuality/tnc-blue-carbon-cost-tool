@@ -8,6 +8,8 @@ import { AdminModule } from '@api/modules/admin/admin.module';
 import { ImportModule } from '@api/modules/import/import.module';
 import { ApiEventsModule } from '@api/modules/api-events/api-events.module';
 import { UsersModule } from '@api/modules/users/users.module';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from '@api/filters/all-exceptions.exception.filter';
 
 @Module({
   imports: [
@@ -20,6 +22,9 @@ import { UsersModule } from '@api/modules/users/users.module';
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    { provide: APP_FILTER, useClass: AllExceptionsFilter },
+  ],
 })
 export class AppModule {}

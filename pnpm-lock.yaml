@@ -140,6 +140,9 @@ importers:
       dotenv:
         specifier: 16.4.5
         version: 16.4.5
+      jsonapi-serializer:
+        specifier: ^3.6.9
+        version: 3.6.9
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -195,6 +198,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
+      '@types/jsonapi-serializer':
+        specifier: ^3.6.8
+        version: 3.6.8
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.7
@@ -2820,6 +2826,9 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
+  '@types/jsonapi-serializer@3.6.8':
+    resolution: {integrity: sha512-wPx2UBoW+R2KW0Z2U7FkzIM+iDLFqjHXxr8WGE9F8ww02m+qt886+8a2lGFSiODXe9JVnPscB8d+5+eL/d9nOw==}
+
   '@types/jsonwebtoken@9.0.5':
     resolution: {integrity: sha512-VRLSGzik+Unrup6BsouBeHsf4d1hOEgYWTm/7Nmw1sXoN1+tRly/Gy/po3yeahnP4jfnQWWAhQAqcNfH7ngOkA==}
 
@@ -4096,6 +4105,7 @@ packages:
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@9.6.1:
@@ -4534,6 +4544,9 @@ packages:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
     engines: {node: '>=0.8.19'}
 
+  inflected@1.1.7:
+    resolution: {integrity: sha512-3lz7idKIPmKvz0wqlu1PUPSg5strJnCh2v2NldPQy13Fmd6WsWQ5yExDoiIX48lQ9mo8N7ztdDlkZxOauZ/E5g==}
+
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
     deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
@@ -4964,6 +4977,10 @@ packages:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
     engines: {node: '>=6'}
     hasBin: true
+
+  jsonapi-serializer@3.6.9:
+    resolution: {integrity: sha512-LeRPlP93Mz6+Klu13OKcnXNLvtH1gbeo/yfThqihAMw7vUBCWWs6jHImpR/tQwzAxJi7F1+bfVJxeHoNCrbZiQ==}
+    engines: {node: '>=0.12'}
 
   jsonc-parser@3.2.1:
     resolution: {integrity: sha512-AilxAyFOAcK5wA1+LeaySVBrHsGQvUFCDWXKpZjzaL0PqW+xfBOttn8GNtWKFWqneyMZj41MWF9Kl6iPWLwgOA==}
@@ -10134,6 +10151,8 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
+  '@types/jsonapi-serializer@3.6.8': {}
+
   '@types/jsonwebtoken@9.0.5':
     dependencies:
       '@types/node': 22.7.5
@@ -12378,6 +12397,8 @@ snapshots:
 
   imurmurhash@0.1.4: {}
 
+  inflected@1.1.7: {}
+
   inflight@1.0.6:
     dependencies:
       once: 1.4.0
@@ -13028,6 +13049,11 @@ snapshots:
       minimist: 1.2.8
 
   json5@2.2.3: {}
+
+  jsonapi-serializer@3.6.9:
+    dependencies:
+      inflected: 1.1.7
+      lodash: 4.17.21
 
   jsonc-parser@3.2.1: {}
 
