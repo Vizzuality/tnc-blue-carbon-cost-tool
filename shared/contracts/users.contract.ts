@@ -7,6 +7,7 @@ import { UpdateUserDto } from "@shared/dtos/users/update-user.dto";
 
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { UpdateUserPasswordSchema } from "@shared/schemas/users/update-password.schema";
+import { RequestEmailUpdateSchema } from "@shared/schemas/users/request-email-update.schema";
 
 const contract = initContract();
 export const usersContract = contract.router({
@@ -38,6 +39,14 @@ export const usersContract = contract.router({
     },
     body: UpdateUserPasswordSchema,
     summary: "Update password of the user",
+  },
+  updateEmail: {
+    method: "PATCH",
+    path: "/users/me/email",
+    responses: {
+      200: contract.type<null>(),
+    },
+    body: RequestEmailUpdateSchema,
   },
   deleteMe: {
     method: "DELETE",
