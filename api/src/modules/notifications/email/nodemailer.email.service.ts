@@ -10,9 +10,9 @@ import {
   IEmailServiceInterface,
   SendMailDTO,
 } from '@api/modules/notifications/email/email-service.interface';
-import { ConfigService } from '@nestjs/config';
 import { EventBus } from '@nestjs/cqrs';
 import { EmailFailedEvent } from '@api/modules/notifications/email/events/email-failed.event';
+import { ApiConfigService } from '@api/modules/config/app-config.service';
 
 @Injectable()
 export class NodemailerEmailService implements IEmailServiceInterface {
@@ -21,11 +21,11 @@ export class NodemailerEmailService implements IEmailServiceInterface {
   private readonly domain: string;
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly eventBus: EventBus,
+    private readonly apiConfig: ApiConfigService,
   ) {
     const { accessKeyId, secretAccessKey, region, domain } =
-      this.getMailConfig();
+      this.apiConfig.getEmailConfig();
     const ses = new aws.SESClient({
       region,
       credentials: { accessKeyId, secretAccessKey },
@@ -48,20 +48,5 @@ export class NodemailerEmailService implements IEmailServiceInterface {
       this.eventBus.publish(new EmailFailedEvent(sendMailDTO.to, e.message));
       throw new ServiceUnavailableException('Could not send email');
     }
-  }
-
-  private getMailConfig() {
-    const accessKeyId = this.configService.get<string>('AWS_SES_ACCESS_KEY_ID');
-    const secretAccessKey = this.configService.get<string>(
-      'AWS_SES_ACCESS_KEY_SECRET',
-    );
-    const region = this.configService.get<string>('AWS_SES_REGION');
-    const domain = this.configService.get<string>('AWS_SES_DOMAIN');
-    if (!accessKeyId || !secretAccessKey || !region || !domain) {
-      this.logger.error(
-        'Variables for Email Service not set. Email not available',
-      );
-    }
-    return { accessKeyId, secretAccessKey, region, domain };
   }
 }
