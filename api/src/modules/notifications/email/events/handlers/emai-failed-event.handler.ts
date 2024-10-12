@@ -1,7 +1,7 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { EmailFailedEvent } from '../email-failed.event';
 import { ApiEventsService } from '@api/modules/api-events/api-events.service';
 import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
+import { EmailFailedEvent } from '@api/modules/notifications/email/events/email-failed.event';
 
 @EventsHandler(EmailFailedEvent)
 export class EmailFailedEventHandler
