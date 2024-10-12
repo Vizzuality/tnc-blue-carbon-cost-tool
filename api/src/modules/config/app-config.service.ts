@@ -29,11 +29,11 @@ export class ApiConfigService {
    */
   getDatabaseConfig() {
     return {
-      host: this.configService.get('DB_HOST'),
-      port: this.configService.get('DB_PORT'),
-      username: this.configService.get('DB_USERNAME'),
-      password: this.configService.get('DB_PASSWORD'),
-      database: this.configService.get('DB_NAME'),
+      host: this.configService.getOrThrow('DB_HOST'),
+      port: this.configService.getOrThrow('DB_PORT'),
+      username: this.configService.getOrThrow('DB_USERNAME'),
+      password: this.configService.getOrThrow('DB_PASSWORD'),
+      database: this.configService.getOrThrow('DB_NAME'),
       entities: [
         ...COMMON_DATABASE_ENTITIES,
         ApiEventsEntity,
