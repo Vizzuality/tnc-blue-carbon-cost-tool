@@ -1,4 +1,3 @@
-// send-welcome-email.handler.ts
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { SendWelcomeEmailCommand } from './send-welcome-email.command';
 import { AuthMailer } from '@api/modules/auth/services/auth.mailer';

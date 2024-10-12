@@ -12,7 +12,7 @@ import {
 } from '@api/modules/notifications/email/email-service.interface';
 import { ConfigService } from '@nestjs/config';
 import { EventBus } from '@nestjs/cqrs';
-import { EmailFailedEvent } from '@api/modules/api-events/email-failed.event';
+import { EmailFailedEvent } from '@api/modules/notifications/email/events/email-failed.event';
 
 @Injectable()
 export class NodemailerEmailService implements IEmailServiceInterface {
