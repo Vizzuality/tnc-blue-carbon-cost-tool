@@ -3,7 +3,8 @@ import { User } from "@shared/entities/users/user.entity";
 import { createUser } from "@shared/lib/entity-mocks";
 import { clearTestDataFromDatabase } from "@shared/lib/db-helpers";
 import { DB_ENTITIES } from "@shared/lib/db-entities";
-import { sign } from "jsonwebtoken";
+import { JwtPayload, sign } from "jsonwebtoken";
+import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -78,7 +79,23 @@ export class E2eTestManager {
     await this.page.getByRole("button", { name: "Sign out" }).click();
   }
 
-  async generateToken(user: User) {
-    return sign({ id: user.id }, process.env.EMAIL_CONFIRMATION_TOKEN_SECRET as string);
+  async generateTokenByType(user: User, tokenType: TOKEN_TYPE_ENUM) {
+    const payload: JwtPayload = { id: user.id };
+    switch (tokenType) {
+      case TOKEN_TYPE_ENUM.ACCESS:
+        return sign(payload, process.env.ACCESS_TOKEN_SECRET as string);
+      case TOKEN_TYPE_ENUM.RESET_PASSWORD:
+        return sign(payload, process.env.RESET_PASSWORD_TOKEN_SECRET as string);
+      case TOKEN_TYPE_ENUM.SIGN_UP:
+        return sign(payload, process.env.SIGN_UP_TOKEN_SECRET as string);
+
+      case TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION:
+        return sign(
+          payload,
+          process.env.EMAIL_CONFIRMATION_TOKEN_SECRET as string,
+        );
+      default:
+        break;
+    }
   }
 }
