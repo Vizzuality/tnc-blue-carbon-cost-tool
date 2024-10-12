@@ -14,6 +14,13 @@ export type JWTConfig = {
   expiresIn: string;
 };
 
+export type EmailConfig = {
+  accessKeyId: string;
+  secretAccessKey: string;
+  region: string;
+  domain: string;
+};
+
 @Injectable()
 export class ApiConfigService {
   constructor(
@@ -55,6 +62,17 @@ export class ApiConfigService {
 
   getJWTConfigByType(type: TOKEN_TYPE_ENUM): JWTConfig {
     return this.jwtConfigHandler.getJwtConfigByType(type);
+  }
+
+  getEmailConfig(): EmailConfig {
+    return {
+      accessKeyId: this.configService.getOrThrow('AWS_SES_ACCESS_KEY_ID'),
+      secretAccessKey: this.configService.getOrThrow(
+        'AWS_SES_ACCESS_KEY_SECRET',
+      ),
+      region: this.configService.getOrThrow('AWS_SES_REGION'),
+      domain: this.configService.getOrThrow('AWS_SES_DOMAIN'),
+    };
   }
 
   get(envVarName: string): string {
