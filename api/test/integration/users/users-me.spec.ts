@@ -3,6 +3,7 @@ import { TestManager } from '../../utils/test-manager';
 import { User } from '@shared/entities/users/user.entity';
 import { HttpStatus } from '@nestjs/common';
 import { usersContract } from '@shared/contracts/users.contract';
+import { ROLES } from '@shared/entities/users/roles.enum';
 
 describe('Users ME (e2e)', () => {
   let testManager: TestManager;
@@ -25,6 +26,7 @@ describe('Users ME (e2e)', () => {
       createdUsers.push(
         await testManager.mocks().createUser({
           email: `user${n}@mail.com`,
+          role: ROLES.PARTNER,
         }),
       );
     }
@@ -41,7 +43,7 @@ describe('Users ME (e2e)', () => {
   it('should update my own password', async () => {
     const user = await testManager
       .mocks()
-      .createUser({ email: 'test@test.com' });
+      .createUser({ email: 'test@test.com', role: ROLES.PARTNER });
 
     const { jwtToken, password: oldPassword } =
       await testManager.logUserIn(user);
@@ -71,6 +73,7 @@ describe('Users ME (e2e)', () => {
   it('should update a user name', async () => {
     const user = await createUser(testManager.getDataSource(), {
       email: 'user@test.com',
+      role: ROLES.PARTNER,
     });
 
     const { jwtToken } = await testManager.logUserIn(user);
@@ -98,7 +101,9 @@ describe('Users ME (e2e)', () => {
     const users: User[] = [];
     for (const n of Array(3).keys()) {
       users.push(
-        await testManager.mocks().createUser({ email: `user${n}@test.com` }),
+        await testManager
+          .mocks()
+          .createUser({ email: `user${n}@test.com`, role: ROLES.PARTNER }),
       );
     }
     const user = users[0];
