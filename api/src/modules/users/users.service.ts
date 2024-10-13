@@ -36,10 +36,6 @@ export class UsersService extends AppBaseService<
   }
 
   async saveUser(newUser: Partial<User>) {
-    const existingUser = await this.findByEmail(newUser.email);
-    if (existingUser) {
-      throw new ConflictException(`Email ${newUser.email} already exists`);
-    }
     return this.userRepository.save(newUser);
   }
 

@@ -1,4 +1,9 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from '@api/modules/users/users.service';
 import { User } from '@shared/entities/users/user.entity';
 import * as bcrypt from 'bcrypt';
@@ -50,6 +55,10 @@ export class AuthenticationService {
     const { email, name, partnerName } = createUser;
     const plainTextPassword = randomBytes(8).toString('hex');
     const passwordHash = await bcrypt.hash(plainTextPassword, 10);
+    const existingUser = await this.usersService.findByEmail(createUser.email);
+    if (existingUser) {
+      throw new ConflictException(`User with email ${email} already exists`);
+    }
     const newUser = await this.usersService.saveUser({
       name,
       email,
