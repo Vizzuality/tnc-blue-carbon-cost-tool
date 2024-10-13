@@ -63,11 +63,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
         },
       });
     }
-
-    if (status >= 500) {
-      this.logger.error(errors);
-    } else {
-      this.logger.warn(errors);
+    if (this.apiConfig.get('NODE_ENV') !== 'test') {
+      if (status >= 500) {
+        this.logger.error(errors);
+      } else {
+        this.logger.warn(errors);
+      }
     }
 
     /**
