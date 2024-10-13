@@ -66,6 +66,19 @@ export class JwtManager {
     };
   }
 
+  async signEmailUpdateToken(
+    userId: string,
+  ): Promise<{ emailUpdateToken: string; expiresIn: string }> {
+    const { token: emailUpdateToken, expiresIn } = await this.sign(
+      userId,
+      TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION,
+    );
+    return {
+      emailUpdateToken,
+      expiresIn,
+    };
+  }
+
   async isTokenValid(token: string, type: TOKEN_TYPE_ENUM): Promise<boolean> {
     const { secret } = this.config.getJWTConfigByType(type);
     try {

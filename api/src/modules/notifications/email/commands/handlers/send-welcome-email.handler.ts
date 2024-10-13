@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { SendWelcomeEmailCommand } from './send-welcome-email.command';
 import { AuthMailer } from '@api/modules/auth/services/auth.mailer';
+import { SendWelcomeEmailCommand } from '@api/modules/notifications/email/commands/send-welcome-email.command';
 
 @CommandHandler(SendWelcomeEmailCommand)
 export class SendWelcomeEmailHandler
@@ -9,10 +9,11 @@ export class SendWelcomeEmailHandler
   constructor(private readonly authMailer: AuthMailer) {}
 
   async execute(command: SendWelcomeEmailCommand): Promise<void> {
-    const { user, plainPassword } = command;
+    const { user, plainPassword, origin } = command;
     await this.authMailer.sendWelcomeEmail({
       user,
-      defaultPassword: plainPassword,
+      oneTimePassword: plainPassword,
+      origin,
     });
   }
 }
