@@ -76,7 +76,7 @@ export class AuthenticationController {
       authContract.requestPasswordRecovery,
       async ({ body: { email } }) => {
         await this.commandBus.execute(
-          new RequestPasswordRecoveryCommand(email),
+          new RequestPasswordRecoveryCommand(email, origin),
         );
         return {
           body: null,

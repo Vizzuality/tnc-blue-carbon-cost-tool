@@ -1,13 +1,17 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@shared/entities/users/user.entity';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 
 import { AppBaseService } from '@api/utils/app-base.service';
 import { CreateUserDto } from '@shared/dtos/users/create-user.dto';
 import { UpdateUserDto } from '@shared/dtos/users/update-user.dto';
 import { AppInfoDTO } from '@api/utils/info.dto';
+import { RequestEmailUpdateDto } from '@shared/dtos/users/request-email-update.dto';
 @Injectable()
 export class UsersService extends AppBaseService<
   User,
@@ -31,17 +35,12 @@ export class UsersService extends AppBaseService<
     return this.userRepository.findOne({ where: { email } });
   }
 
-  async createUser(newUser: Partial<User>) {
+  async saveUser(newUser: Partial<User>) {
     const existingUser = await this.findByEmail(newUser.email);
     if (existingUser) {
       throw new ConflictException(`Email ${newUser.email} already exists`);
     }
     return this.userRepository.save(newUser);
-  }
-
-  async saveNewHashedPassword(user: User, newPassword: string) {
-    user.password = await bcrypt.hash(newPassword, 10);
-    return this.userRepository.save(user);
   }
 
   async delete(user: User) {
@@ -51,5 +50,12 @@ export class UsersService extends AppBaseService<
   async isUserActive(id: string) {
     const user = await this.userRepository.findOneBy({ id });
     return user.isActive;
+  }
+
+  async requestEmailUpdate(user: User, dto: RequestEmailUpdateDto) {
+    const { email, newEmail } = dto;
+    if (user.email !== email) {
+      throw new UnauthorizedException();
+    }
   }
 }
