@@ -1,3 +1,6 @@
 export class RequestPasswordRecoveryCommand {
-  constructor(public readonly email: string) {}
+  constructor(
+    public readonly email: string,
+    public readonly origin: string,
+  ) {}
 }
