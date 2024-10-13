@@ -106,6 +106,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       ...(exception.body?.issues || []),
       ...(exception.query?.issues || []),
       ...(exception.pathParams?.issues || []),
+      ...(exception.headers?.issues || []),
     ];
     const errors: JSONAPIErrorOptions[] = zodValidationIssues.map(
       (issue): JSONAPIErrorOptions => {
