@@ -79,7 +79,7 @@ export class AuthenticationService {
 
   async signUp(user: User, signUpDto: SignUpDto): Promise<void> {
     const { oneTimePassword, newPassword } = signUpDto;
-    if (await this.isPasswordValid(user, oneTimePassword)) {
+    if (!(await this.isPasswordValid(user, oneTimePassword))) {
       throw new UnauthorizedException();
     }
     user.isActive = true;
