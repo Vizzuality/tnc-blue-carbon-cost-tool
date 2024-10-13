@@ -1,4 +1,4 @@
-import { Controller, UseGuards } from '@nestjs/common';
+import { Controller, Headers, UseGuards } from '@nestjs/common';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
 import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
 import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
@@ -14,10 +14,12 @@ export class AdminController {
   constructor(private readonly auth: AuthenticationService) {}
 
   @RequiredRoles(ROLES.ADMIN)
-  @TsRestHandler(adminContract.createUser)
-  async createUser(): Promise<ControllerResponse> {
-    return tsRestHandler(adminContract.createUser, async ({ body }) => {
-      await this.auth.createUser(body);
+  @TsRestHandler(adminContract.addUser)
+  async createUser(
+    @Headers('origin') origin: string,
+  ): Promise<ControllerResponse> {
+    return tsRestHandler(adminContract.addUser, async ({ body }) => {
+      await this.auth.addUser(origin, body);
       return {
         status: 201,
         body: null,

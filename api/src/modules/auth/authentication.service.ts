@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '@api/modules/users/users.service';
 import { User } from '@shared/entities/users/user.entity';
 import * as bcrypt from 'bcrypt';
@@ -15,6 +15,7 @@ import { UpdateUserPasswordDto } from '@shared/dtos/users/update-user-password.d
 
 @Injectable()
 export class AuthenticationService {
+  logger: Logger = new Logger(AuthenticationService.name);
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtManager: JwtManager,
@@ -29,21 +30,37 @@ export class AuthenticationService {
     throw new UnauthorizedException(`Invalid credentials`);
   }
 
-  async createUser(createUser: CreateUserDto): Promise<void> {
+  async addUser(origin: string, dto: CreateUserDto) {
+    const { newUser, plainTextPassword } = await this.createUser(dto);
+    try {
+      await this.commandBus.execute(
+        new SendWelcomeEmailCommand(newUser, plainTextPassword, origin),
+      );
+    } catch (e) {
+      await this.usersService.delete(newUser);
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  async createUser(
+    createUser: CreateUserDto,
+  ): Promise<{ newUser: User; plainTextPassword: string }> {
     // TODO: This is sync, check how to improve it
     const { email, name, partnerName } = createUser;
     const plainTextPassword = randomBytes(8).toString('hex');
     const passwordHash = await bcrypt.hash(plainTextPassword, 10);
-    const newUser = await this.usersService.createUser({
+    const newUser = await this.usersService.saveUser({
       name,
       email,
       password: passwordHash,
       partnerName,
       isActive: false,
     });
-    await this.commandBus
-      .execute(new SendWelcomeEmailCommand(newUser, plainTextPassword))
-      .catch(() => this.usersService.delete(newUser));
+    return {
+      newUser,
+      plainTextPassword,
+    };
   }
 
   async logIn(user: User): Promise<UserWithAccessToken> {
@@ -53,11 +70,12 @@ export class AuthenticationService {
 
   async signUp(user: User, signUpDto: SignUpDto): Promise<void> {
     const { oneTimePassword, newPassword } = signUpDto;
-    if (!(await bcrypt.compare(oneTimePassword, user.password))) {
+    if (await this.isPasswordValid(user, oneTimePassword)) {
       throw new UnauthorizedException();
     }
     user.isActive = true;
-    await this.usersService.saveNewHashedPassword(user, newPassword);
+    user.password = await this.hashPassword(newPassword);
+    await this.usersService.saveUser(user);
     this.eventBus.publish(new UserSignedUpEvent(user.id, user.email));
   }
 
@@ -71,20 +89,22 @@ export class AuthenticationService {
   async updatePassword(user: User, dto: UpdateUserPasswordDto): Promise<User> {
     const { password, newPassword } = dto;
     if (await this.isPasswordValid(user, password)) {
-      return this.usersService.saveNewHashedPassword(user, newPassword);
+      user.password = await this.hashPassword(newPassword);
+      return this.usersService.saveUser(user);
     }
     throw new UnauthorizedException();
   }
 
   async resetPassword(user: User, newPassword: string): Promise<void> {
-    await this.usersService.saveNewHashedPassword(user, newPassword);
+    user.password = await this.hashPassword(newPassword);
+    await this.usersService.saveUser(user);
   }
 
   async isPasswordValid(user: User, password: string): Promise<boolean> {
     return bcrypt.compare(password, user.password);
   }
 
-  async token(userid: User['id']) {
-    return this.jwtManager.signSignUpToken(userid);
+  async hashPassword(password: string) {
+    return bcrypt.hash(password, 10);
   }
 }

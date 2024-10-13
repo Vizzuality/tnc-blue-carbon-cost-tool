@@ -5,7 +5,7 @@ import { CreateUserSchema } from "@shared/schemas/users/create-user.schema";
 
 const contract = initContract();
 export const adminContract = contract.router({
-  createUser: {
+  addUser: {
     method: "POST",
     path: "/admin/users",
     responses: {
