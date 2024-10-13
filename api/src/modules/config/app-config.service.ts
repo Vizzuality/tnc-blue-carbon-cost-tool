@@ -1,13 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { COMMON_DATABASE_ENTITIES } from '@shared/entities/database.entities';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
-import { ApiEventsEntity } from '@api/modules/api-events/api-events.entity';
-import { BaseData } from '@api/modules/model/base-data.entity';
-import { Country } from '@api/modules/model/entities/country.entity';
-import { CostInput } from '@api/modules/model/entities/cost-input.entity';
-import { CarbonInputEntity } from '@api/modules/model/entities/carbon-input.entity';
+import { DB_ENTITIES } from '@shared/lib/db-entities';
 
 export type JWTConfig = {
   secret: string;
@@ -41,14 +36,7 @@ export class ApiConfigService {
       username: this.configService.getOrThrow('DB_USERNAME'),
       password: this.configService.getOrThrow('DB_PASSWORD'),
       database: this.configService.getOrThrow('DB_NAME'),
-      entities: [
-        ...COMMON_DATABASE_ENTITIES,
-        ApiEventsEntity,
-        Country,
-        BaseData,
-        CostInput,
-        CarbonInputEntity,
-      ],
+      entities: DB_ENTITIES,
       synchronize: true,
       ssl: this.isProduction()
         ? { require: true, rejectUnauthorized: false }

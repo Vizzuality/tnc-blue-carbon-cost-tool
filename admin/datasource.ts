@@ -12,6 +12,7 @@ export const dataSource = new DataSource({
   username: process.env.DB_USERNAME || "blue-carbon-cost",
   password: process.env.DB_PASSWORD || "blue-carbon-cost",
   database: process.env.DB_NAME || "blc",
+  // TODO: Use common db entities from shared
   entities: [User, Country, CarbonInputEntity, CostInput],
   synchronize: false,
 });
