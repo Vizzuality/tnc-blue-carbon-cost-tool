@@ -4,34 +4,50 @@ import { EMAIL_UPDATE_CONFIRMATION_HTML_CONTENT } from '@api/modules/notificatio
 
 export enum TEMPLATE_TYPE {
   WELCOME = 'welcome',
-  RESET_PASSWORD = 'reset-password',
+  PASSWORD_RECOVERY = 'password-recovery',
   EMAIL_UPDATE_CONFIRMATION = 'email-update-confirmation',
 }
 
 export interface TemplateConfig {
   url: string;
-  expiration: number;
+  expiresIn: string;
   type: TEMPLATE_TYPE;
 }
 
 export class EmailTemplateBuilder {
-  url: string;
-  expiration: number;
-  type: TEMPLATE_TYPE;
-  templateMap = {
-    WELCOME_EMAIL_HTML_CONTENT: WELCOME_EMAIL_HTML_CONTENT,
-    RESET_PASSWORD_HTML_CONTENT: RESET_PASSWORD_HTML_CONTENT,
-    EMAIL_UPDATE_CONFIRMATION_HTML_CONTENT:
+  private readonly url: string;
+  private readonly expiration: string;
+  private readonly type: TEMPLATE_TYPE;
+  private templateMap: Record<TEMPLATE_TYPE, any> = {
+    [TEMPLATE_TYPE.WELCOME]: WELCOME_EMAIL_HTML_CONTENT,
+    [TEMPLATE_TYPE.PASSWORD_RECOVERY]: RESET_PASSWORD_HTML_CONTENT,
+    [TEMPLATE_TYPE.EMAIL_UPDATE_CONFIRMATION]:
       EMAIL_UPDATE_CONFIRMATION_HTML_CONTENT,
   };
   constructor(contentConfig: TemplateConfig) {
     this.url = contentConfig.url;
-    this.expiration = contentConfig.expiration;
+    this.expiration = this.passwordRecoveryTokenExpirationHumanReadable(
+      contentConfig.expiresIn,
+    );
     this.type = contentConfig.type;
   }
 
   build() {
     const template = this.templateMap[this.type];
     return template(this.url, this.expiration);
+  }
+
+  private passwordRecoveryTokenExpirationHumanReadable(expirationIn: string) {
+    const unit = expirationIn.slice(-1);
+    const value = parseInt(expirationIn.slice(0, -1), 10);
+
+    switch (unit) {
+      case 'h':
+        return `${value} hour${value > 1 ? 's' : ''}`;
+      case 'd':
+        return `${value} day${value > 1 ? 's' : ''}`;
+      default:
+        return expirationIn;
+    }
   }
 }
