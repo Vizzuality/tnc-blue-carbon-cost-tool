@@ -20,7 +20,7 @@ export abstract class AppBaseService<
     protected pluralAlias: string = 'base_entities',
     protected idProperty: string = 'id',
   ) {
-    super(repository, alias, { idProperty });
+    super(repository, alias, { idProperty, logging: { muteAll: true } });
   }
 
   async findAllPaginated(
