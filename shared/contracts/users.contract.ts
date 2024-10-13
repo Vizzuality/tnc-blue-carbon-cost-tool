@@ -40,7 +40,7 @@ export const usersContract = contract.router({
     body: UpdateUserPasswordSchema,
     summary: "Update password of the user",
   },
-  updateEmail: {
+  requestEmailUpdate: {
     method: "PATCH",
     path: "/users/me/email",
     responses: {
