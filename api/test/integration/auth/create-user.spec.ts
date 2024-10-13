@@ -67,7 +67,7 @@ describe('Create Users', () => {
     expect(response.status).toBe(HttpStatus.CONFLICT);
     // And the user should receive a message containing  "Email already exists"
     expect(response.body.errors[0].title).toBe(
-      `Email ${testUser.email} already exists`,
+      `User with email ${testUser.email} already exists`,
     );
   });
 
