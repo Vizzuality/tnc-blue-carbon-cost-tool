@@ -51,4 +51,13 @@ export const authContract = contract.router({
     },
     body: z.object({ email: z.string().email() }),
   },
+
+  confirmEmail: {
+    method: "GET",
+    query: z.object({ newEmail: z.string().email() }),
+    path: "/authentication/confirm-email",
+    responses: {
+      201: null,
+    },
+  },
 });
