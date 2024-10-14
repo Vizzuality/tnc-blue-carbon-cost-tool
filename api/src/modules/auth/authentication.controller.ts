@@ -92,7 +92,7 @@ export class AuthenticationController {
   async confirmEmail(@GetUser() user: User): Promise<ControllerResponse> {
     return tsRestHandler(
       authContract.confirmEmail,
-      async ({ query: { newEmail } }) => {
+      async ({ body: { newEmail } }) => {
         await this.authService.confirmEmail(user, newEmail);
         return {
           body: null,

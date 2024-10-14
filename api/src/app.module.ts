@@ -18,6 +18,7 @@ import { TsRestModule } from '@ts-rest/nest';
       validateRequestQuery: true,
       validateRequestBody: true,
       isGlobal: true,
+      validateRequestHeaders: false,
     }),
     ApiConfigModule,
     AuthModule,
