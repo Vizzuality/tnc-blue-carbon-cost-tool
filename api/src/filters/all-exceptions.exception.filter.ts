@@ -64,9 +64,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
       });
     }
     if (this.apiConfig.get('NODE_ENV') !== 'test') {
+      this.logger.error('ENVIRONMENT IN CI');
+      this.logger.error(this.apiConfig.get('NODE_ENV'));
       if (status >= 500) {
+        this.logger.error('TRIGGERING ERROR');
         this.logger.error(errors);
       } else {
+        this.logger.error('TRIGGERING WARN');
         this.logger.warn(errors);
       }
     }
