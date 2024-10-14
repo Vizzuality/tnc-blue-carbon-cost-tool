@@ -8,7 +8,7 @@ let page: Page;
 
 test.describe.configure({ mode: "serial" });
 
-test.describe("Auth", () => {
+test.describe("Auth - Sign Up", () => {
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     testManager = await E2eTestManager.load(page);
@@ -24,19 +24,6 @@ test.describe("Auth", () => {
 
   test.afterAll(async () => {
     await testManager.close();
-  });
-
-  test("an user signs in successfully", async ({ page }) => {
-    const user: Pick<User, "email" | "password" | "partnerName"> = {
-      email: "jhondoe@test.com",
-      password: "12345678",
-      partnerName: "admin",
-    };
-    await testManager.mocks().createUser(user);
-    await testManager.login(user as User);
-    await expect(
-      testManager.page.getByText(`Email: ${user.email}`),
-    ).toBeVisible();
   });
 
   test("an user signs up successfully", async ({ page }) => {

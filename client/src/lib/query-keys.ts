@@ -5,6 +5,7 @@ import {
 
 export const authKeys = createQueryKeys("auth", {
   resetPasswordToken: (token: string) => ["reset-password-token", token],
+  confirmEmailToken: (token: string) => ["confirm-email-token", token],
 });
 
 export const userKeys = createQueryKeys("user", {
