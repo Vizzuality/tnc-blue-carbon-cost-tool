@@ -53,7 +53,7 @@ export class UsersController {
   async update(@GetUser() user: User): ControllerResponse {
     return tsRestHandler(usersContract.updateMe, async ({ body }) => {
       const updatedUser = await this.usersService.update(user.id, body);
-      return { body: { data: updatedUser }, status: HttpStatus.CREATED };
+      return { body: { data: updatedUser }, status: HttpStatus.OK };
     });
   }
 
