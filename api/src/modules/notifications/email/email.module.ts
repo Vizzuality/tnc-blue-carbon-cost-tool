@@ -4,11 +4,13 @@ import { NodemailerEmailService } from '@api/modules/notifications/email/nodemai
 import { AuthModule } from '@api/modules/auth/auth.module';
 import { EmailFailedEventHandler } from '@api/modules/notifications/email/events/handlers/emai-failed-event.handler';
 import { SendWelcomeEmailHandler } from '@api/modules/notifications/email/commands/handlers/send-welcome-email.handler';
+import { SendEmailConfirmationHandler } from '@api/modules/notifications/email/commands/handlers/send-email-confirmation.handler';
 
 @Module({
   imports: [forwardRef(() => AuthModule)],
   providers: [
     { provide: IEmailServiceToken, useClass: NodemailerEmailService },
+    SendEmailConfirmationHandler,
     SendWelcomeEmailHandler,
     EmailFailedEventHandler,
   ],

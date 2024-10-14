@@ -1,6 +1,7 @@
 import {
   ClassSerializerInterceptor,
   Controller,
+  Headers,
   HttpStatus,
   UnauthorizedException,
   UseGuards,
@@ -57,9 +58,12 @@ export class UsersController {
   }
 
   @TsRestHandler(usersContract.requestEmailUpdate)
-  async requestEmailUpdate(@GetUser() user: User): ControllerResponse {
+  async requestEmailUpdate(
+    @GetUser() user: User,
+    @Headers('origin') origin: string,
+  ): ControllerResponse {
     return tsRestHandler(usersContract.requestEmailUpdate, async ({ body }) => {
-      await this.usersService.remove(user.id);
+      await this.auth.requestEmailUpdate(user, body, origin);
       return { body: null, status: HttpStatus.OK };
     });
   }
