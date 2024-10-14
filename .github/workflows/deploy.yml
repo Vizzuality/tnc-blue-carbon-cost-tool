@@ -137,6 +137,8 @@ jobs:
             RESET_PASSWORD_TOKEN_EXPIRES_IN=${{ secrets.RESET_PASSWORD_TOKEN_EXPIRES_IN }}
             EMAIL_CONFIRMATION_TOKEN_SECRET=${{ secrets.EMAIL_CONFIRMATION_TOKEN_SECRET }}
             EMAIL_CONFIRMATION_TOKEN_EXPIRES_IN=${{ secrets.EMAIL_CONFIRMATION_TOKEN_EXPIRES_IN }}
+            SIGN_UP_TOKEN_SECRET=${{ secrets.SIGN_UP_TOKEN_SECRET }}
+            SIGN_UP_TOKEN_EXPIRES_IN=${{ secrets.SIGN_UP_TOKEN_EXPIRES_IN }}
             AWS_SES_ACCESS_KEY_ID=${{ secrets.AWS_SES_ACCESS_KEY_ID }}
             AWS_SES_ACCESS_KEY_SECRET=${{ secrets.AWS_SES_ACCESS_KEY_SECRET }}
             AWS_SES_DOMAIN=${{ secrets.AWS_SES_DOMAIN }}
@@ -266,6 +268,7 @@ jobs:
               depends_on:
                 - api
                 - client
+                - administration
           EOF
 
       - name: Generate zip file
