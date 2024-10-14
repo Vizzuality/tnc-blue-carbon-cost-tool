@@ -5,14 +5,19 @@ import { usersContract } from '@shared/contracts/users.contract';
 import { ROLES } from '@shared/entities/users/roles.enum';
 import { MockEmailService } from '../../utils/mocks/mock-email.service';
 import { IEmailServiceToken } from '@api/modules/notifications/email/email-service.interface';
+import { JwtManager } from '@api/modules/auth/services/jwt.manager';
+import { User } from '@shared/entities/users/user.entity';
+import { authContract } from '@shared/contracts/auth.contract';
 
 describe('Users ME (e2e)', () => {
   let testManager: TestManager;
+  let jwt: JwtManager;
   let emailService: MockEmailService;
 
   beforeAll(async () => {
     testManager = await TestManager.createTestManager();
     emailService = testManager.getModule<MockEmailService>(IEmailServiceToken);
+    jwt = testManager.getModule<JwtManager>(JwtManager);
   });
 
   beforeEach(async () => {
@@ -87,56 +92,37 @@ describe('Users ME (e2e)', () => {
         .mocks()
         .createUser({ email: 'test@test.com', role: ROLES.PARTNER });
 
-      const { jwtToken, password: oldPassword } =
-        await testManager.logUserIn(user);
-      const newPassword = 'newPassword';
+      const { emailUpdateToken } = await jwt.signEmailUpdateToken(user.id);
+      const newEmail = 'new-mail@mail.com';
       const response = await testManager
         .request()
-        .patch(usersContract.updatePassword.path)
-        .send({ password: oldPassword, newPassword })
-        .set('Authorization', `Bearer ${jwtToken}`);
+        .get(authContract.confirmEmail.path)
+        .query({ newEmail })
+        .set('Authorization', `Bearer ${emailUpdateToken}`);
 
       expect(response.status).toBe(200);
-      expect(response.body.data.id).toEqual(user.id);
-
-      const { jwtToken: noToken } = await testManager.logUserIn({
-        ...user,
-        password: oldPassword,
-      });
-      expect(noToken).toBeUndefined();
-
-      const { jwtToken: newToken } = await testManager.logUserIn({
-        ...user,
-        password: newPassword,
-      });
-
-      expect(newToken).toBeDefined();
+      const userWithUpdatedEmail = await testManager
+        .getDataSource()
+        .getRepository(User)
+        .findOneBy({ email: newEmail });
+      expect(userWithUpdatedEmail.id).toEqual(user.id);
     });
-    it('should fail if the email confirmation token is not authorized', async () => {
+    it('should fail if the new email is already in use', async () => {
       const user = await createUser(testManager.getDataSource(), {
         email: 'user@test.com',
         role: ROLES.PARTNER,
       });
 
-      const { jwtToken } = await testManager.logUserIn(user);
-      const newName = 'newName';
+      const { emailUpdateToken } = await jwt.signEmailUpdateToken(user.id);
+
       const response = await testManager
         .request()
-        .patch(usersContract.updateMe.path)
-        .send({ name: newName })
-        .set('Authorization', `Bearer ${jwtToken}`);
-      expect(response.status).toBe(201);
-      expect(response.body.data.id).toEqual(user.id);
-      expect(response.body.data.name).toEqual(newName);
+        .get(authContract.confirmEmail.path)
+        .query({ newEmail: user.email })
+        .set('Authorization', `Bearer ${emailUpdateToken}`);
 
-      // Previous token should work after updating the user's email
-      const userMeResponse = await testManager
-        .request()
-        .get('/users/me')
-        .set('Authorization', `Bearer ${jwtToken}`);
-
-      expect(userMeResponse.status).toBe(200);
-      expect(userMeResponse.body.data.name).toEqual(newName);
+      expect(response.status).toBe(409);
+      expect(response.body.errors[0].title).toBe('Email already in use');
     });
   });
 });

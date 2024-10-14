@@ -19,6 +19,7 @@ import { AuthenticationService } from '@api/modules/auth/authentication.service'
 import { SignUp } from '@api/modules/auth/strategies/sign-up.strategy';
 import { CommandBus } from '@nestjs/cqrs';
 import { RequestPasswordRecoveryCommand } from '@api/modules/auth/commands/request-password-recovery.command';
+import { EmailConfirmation } from '@api/modules/auth/strategies/email-update.strategy';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -81,6 +82,21 @@ export class AuthenticationController {
         return {
           body: null,
           status: HttpStatus.CREATED,
+        };
+      },
+    );
+  }
+
+  @UseGuards(AuthGuard(EmailConfirmation))
+  @TsRestHandler(authContract.confirmEmail)
+  async confirmEmail(@GetUser() user: User): Promise<ControllerResponse> {
+    return tsRestHandler(
+      authContract.confirmEmail,
+      async ({ query: { newEmail } }) => {
+        await this.authService.confirmEmail(user, newEmail);
+        return {
+          body: null,
+          status: HttpStatus.OK,
         };
       },
     );
