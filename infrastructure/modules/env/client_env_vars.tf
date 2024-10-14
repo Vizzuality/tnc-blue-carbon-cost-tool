@@ -10,5 +10,6 @@ locals {
   }
   client_env_vars = {
     NEXT_PUBLIC_API_URL = "https://${var.environment}.blue-carbon-cost-tool.dev-vizzuality.com/api"
+    NEXTAUTH_URL = "https://${var.environment}.blue-carbon-cost-tool.dev-vizzuality.com"
   }
 }
