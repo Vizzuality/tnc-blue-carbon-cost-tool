@@ -13,6 +13,7 @@ import { ResetPasswordJwtStrategy } from '@api/modules/auth/strategies/reset-pas
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 import { SignUpStrategy } from '@api/modules/auth/strategies/sign-up.strategy';
 import { PasswordManager } from '@api/modules/auth/services/password.manager';
+import { EmailConfirmationJwtStrategy } from '@api/modules/auth/strategies/email-update.strategy';
 
 @Module({
   imports: [
@@ -53,6 +54,13 @@ import { PasswordManager } from '@api/modules/auth/services/password.manager';
       provide: SignUpStrategy,
       useFactory: (users: UsersService, config: ApiConfigService) => {
         return new SignUpStrategy(users, config);
+      },
+      inject: [UsersService, ApiConfigService],
+    },
+    {
+      provide: EmailConfirmationJwtStrategy,
+      useFactory: (users: UsersService, config: ApiConfigService) => {
+        return new EmailConfirmationJwtStrategy(users, config);
       },
       inject: [UsersService, ApiConfigService],
     },
