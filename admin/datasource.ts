@@ -14,4 +14,8 @@ export const dataSource = new DataSource({
   database: process.env.DB_NAME || "blc",
   entities: [User, Country, CarbonInputEntity, CostInput],
   synchronize: false,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
 });
