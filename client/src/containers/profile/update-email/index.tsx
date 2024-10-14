@@ -40,6 +40,7 @@ const UpdateEmailForm: FC = () => {
       },
     },
     {
+      // @ts-expect-error todo
       select: (data) => data.body.data,
     },
   );
@@ -47,6 +48,7 @@ const UpdateEmailForm: FC = () => {
   const form = useForm<z.infer<typeof accountDetailsSchema>>({
     resolver: zodResolver(accountDetailsSchema),
     defaultValues: {
+      // @ts-expect-error todo
       email: user?.email,
     },
     mode: "onSubmit",
@@ -58,13 +60,9 @@ const UpdateEmailForm: FC = () => {
       const parsed = accountDetailsSchema.safeParse(formData);
 
       if (parsed.success) {
-        // todo: update method
-        const response = await client.user.updateUser.mutation({
-          params: {
-            id: session?.user?.id as string,
-          },
+        const response = await client.user.requestEmailUpdate.mutation({
           body: {
-            email: parsed.data.email,
+            newEmail: parsed.data.email,
           },
           extraHeaders: {
             authorization: `Bearer ${session?.accessToken as string}`,
@@ -121,6 +119,7 @@ const UpdateEmailForm: FC = () => {
                     type="email"
                     autoComplete={field.name}
                     onKeyDown={handleEnterKey}
+                    // @ts-expect-error todo
                     placeholder={user?.email}
                     className="w-full"
                     {...field}

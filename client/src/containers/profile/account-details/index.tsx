@@ -40,6 +40,7 @@ const UpdateEmailForm: FC = () => {
       },
     },
     {
+      // @ts-expect-error todo
       select: (data) => data.body.data,
     },
   );
@@ -47,7 +48,9 @@ const UpdateEmailForm: FC = () => {
   const form = useForm<z.infer<typeof accountDetailsSchema>>({
     resolver: zodResolver(accountDetailsSchema),
     defaultValues: {
+      // @ts-expect-error todo
       name: user?.name,
+      // @ts-expect-error todo
       role: user?.role,
     },
     mode: "onSubmit",
@@ -59,7 +62,6 @@ const UpdateEmailForm: FC = () => {
       const parsed = accountDetailsSchema.safeParse(formData);
 
       if (parsed.success) {
-        // todo: update method
         const response = await client.user.updateMe.mutation({
           params: {
             id: session?.user?.id as string,
@@ -73,9 +75,9 @@ const UpdateEmailForm: FC = () => {
         });
 
         if (response.status === 200) {
-          updateSession(response.body);
+          await updateSession(response.body);
 
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: queryKeys.user.me(session?.user?.id as string).queryKey,
           });
 
@@ -91,8 +93,8 @@ const UpdateEmailForm: FC = () => {
   const handleEnterKey = useCallback(
     (evt: KeyboardEvent) => {
       if (evt.code === "Enter" && form.formState.isValid) {
-        form.handleSubmit(() => {
-          onSubmit(new FormData(formRef.current!));
+        form.handleSubmit(async () => {
+          await onSubmit(new FormData(formRef.current!));
         })();
       }
     },
@@ -105,8 +107,8 @@ const UpdateEmailForm: FC = () => {
         ref={formRef}
         className="w-full space-y-4"
         onSubmit={(evt) => {
-          form.handleSubmit(() => {
-            onSubmit(new FormData(formRef.current!));
+          form.handleSubmit(async () => {
+            await onSubmit(new FormData(formRef.current!));
           })(evt);
         }}
       >
@@ -143,8 +145,8 @@ const UpdateEmailForm: FC = () => {
                 <div className="relative flex items-center">
                   <Input
                     type="text"
+                    // @ts-expect-error todo
                     placeholder={user?.role}
-                    value={user?.role}
                     {...field}
                     disabled
                   />
