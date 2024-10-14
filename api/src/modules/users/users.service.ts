@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@shared/entities/users/user.entity';
 import { Repository } from 'typeorm';
@@ -11,7 +7,6 @@ import { AppBaseService } from '@api/utils/app-base.service';
 import { CreateUserDto } from '@shared/dtos/users/create-user.dto';
 import { UpdateUserDto } from '@shared/dtos/users/update-user.dto';
 import { AppInfoDTO } from '@api/utils/info.dto';
-import { RequestEmailUpdateDto } from '@shared/dtos/users/request-email-update.dto';
 @Injectable()
 export class UsersService extends AppBaseService<
   User,
