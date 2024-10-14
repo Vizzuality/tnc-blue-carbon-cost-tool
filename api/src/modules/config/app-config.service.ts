@@ -58,7 +58,7 @@ export class ApiConfigService {
       secretAccessKey: this.configService.getOrThrow(
         'AWS_SES_ACCESS_KEY_SECRET',
       ),
-      region: this.configService.getOrThrow('AWS_SES_REGION'),
+      region: this.configService.getOrThrow('AWS_REGION'),
       domain: this.configService.getOrThrow('AWS_SES_DOMAIN'),
     };
   }
