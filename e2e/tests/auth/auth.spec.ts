@@ -26,7 +26,7 @@ test.describe("Auth", () => {
     await testManager.close();
   });
 
-  test("an user signs in successfully", async () => {
+  test("an user signs in successfully", async ({ page }) => {
     const user: Pick<User, "email" | "password" | "partnerName"> = {
       email: "jhondoe@test.com",
       password: "12345678",
@@ -34,10 +34,12 @@ test.describe("Auth", () => {
     };
     await testManager.mocks().createUser(user);
     await testManager.login(user as User);
-    await expect(page.getByText(`Email: ${user.email}`)).toBeVisible();
+    await expect(
+      testManager.page.getByText(`Email: ${user.email}`),
+    ).toBeVisible();
   });
 
-  test("an user signs up successfully", async () => {
+  test("an user signs up successfully", async ({ page }) => {
     const user: Pick<User, "email" | "password" | "isActive"> = {
       email: "johndoe@test.com",
       password: "passwordpassword",
@@ -73,7 +75,7 @@ test.describe("Auth", () => {
     ).toBeVisible();
   });
 
-  test("an user signs up with an invalid token", async () => {
+  test("an user signs up with an invalid token", async ({ page }) => {
     await page.goto("/auth/signup/12345678");
 
     await expect(
