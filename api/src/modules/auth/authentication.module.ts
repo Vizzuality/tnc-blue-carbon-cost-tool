@@ -12,6 +12,7 @@ import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { ResetPasswordJwtStrategy } from '@api/modules/auth/strategies/reset-password.strategy';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 import { SignUpStrategy } from '@api/modules/auth/strategies/sign-up.strategy';
+import { PasswordManager } from '@api/modules/auth/services/password.manager';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { SignUpStrategy } from '@api/modules/auth/strategies/sign-up.strategy';
     AuthenticationService,
     LocalStrategy,
     JwtManager,
+    PasswordManager,
     {
       provide: JwtStrategy,
       useFactory: (users: UsersService, config: ApiConfigService) => {

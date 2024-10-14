@@ -19,6 +19,7 @@ import { UserSignedUpEvent } from '@api/modules/admin/events/user-signed-up.even
 import { UpdateUserPasswordDto } from '@shared/dtos/users/update-user-password.dto';
 import { RequestEmailUpdateDto } from '@shared/dtos/users/request-email-update.dto';
 import { SendEmailConfirmationEmailCommand } from '@api/modules/notifications/email/commands/send-email-confirmation-email.command';
+import { PasswordManager } from '@api/modules/auth/services/password.manager';
 
 @Injectable()
 export class AuthenticationService {
@@ -28,6 +29,7 @@ export class AuthenticationService {
     private readonly jwtManager: JwtManager,
     private readonly commandBus: CommandBus,
     private readonly eventBus: EventBus,
+    private readonly passwordManager: PasswordManager,
   ) {}
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
@@ -81,11 +83,11 @@ export class AuthenticationService {
 
   async signUp(user: User, signUpDto: SignUpDto): Promise<void> {
     const { oneTimePassword, newPassword } = signUpDto;
-    if (!(await this.isPasswordValid(user, oneTimePassword))) {
+    if (!(await this.passwordManager.isPasswordValid(user, oneTimePassword))) {
       throw new UnauthorizedException();
     }
     user.isActive = true;
-    user.password = await this.hashPassword(newPassword);
+    user.password = await this.passwordManager.hashPassword(newPassword);
     await this.usersService.saveUser(user);
     this.eventBus.publish(new UserSignedUpEvent(user.id, user.email));
   }
@@ -99,24 +101,16 @@ export class AuthenticationService {
 
   async updatePassword(user: User, dto: UpdateUserPasswordDto): Promise<User> {
     const { password, newPassword } = dto;
-    if (await this.isPasswordValid(user, password)) {
-      user.password = await this.hashPassword(newPassword);
+    if (await this.passwordManager.isPasswordValid(user, password)) {
+      user.password = await this.passwordManager.hashPassword(newPassword);
       return this.usersService.saveUser(user);
     }
     throw new UnauthorizedException();
   }
 
   async resetPassword(user: User, newPassword: string): Promise<void> {
-    user.password = await this.hashPassword(newPassword);
+    user.password = await this.passwordManager.hashPassword(newPassword);
     await this.usersService.saveUser(user);
-  }
-
-  async isPasswordValid(user: User, password: string): Promise<boolean> {
-    return bcrypt.compare(password, user.password);
-  }
-
-  async hashPassword(password: string) {
-    return bcrypt.hash(password, 10);
   }
 
   async requestEmailUpdate(
