@@ -134,12 +134,12 @@ export class AuthenticationService {
     );
   }
 
-  async confirmEmail(user: User, newEmail: string): Promise<void> {
+  async confirmEmail(user: User, newEmail: string): Promise<User> {
     const existingUser = await this.usersService.findByEmail(newEmail);
     if (existingUser) {
       throw new ConflictException(`Email already in use`);
     }
     user.email = newEmail;
-    await this.usersService.saveUser(user);
+    return this.usersService.saveUser(user);
   }
 }

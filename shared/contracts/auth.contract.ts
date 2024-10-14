@@ -1,12 +1,12 @@
 import { initContract } from "@ts-rest/core";
 import { LogInSchema } from "@shared/schemas/auth/login.schema";
-import { UserWithAccessToken } from "@shared/dtos/users/user.dto";
+import { UserDto, UserWithAccessToken } from "@shared/dtos/users/user.dto";
 import { TokenTypeSchema } from "@shared/schemas/auth/token-type.schema";
 import { z } from "zod";
 import { BearerTokenSchema } from "@shared/schemas/auth/bearer-token.schema";
 import { SignUpSchema } from "@shared/schemas/auth/sign-up.schema";
-import { EmailConfirmation } from "@api/modules/auth/strategies/email-update.strategy";
 import { RequestEmailUpdateSchema } from "@shared/schemas/users/request-email-update.schema";
+import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 
 // TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 
@@ -48,7 +48,6 @@ export const authContract = contract.router({
   requestPasswordRecovery: {
     method: "POST",
     path: "/authentication/recover-password",
-    headers: z.object({ origin: z.string().url() }),
     responses: {
       201: null,
     },
@@ -59,7 +58,7 @@ export const authContract = contract.router({
     method: "PATCH",
     path: "/authentication/confirm-email",
     responses: {
-      200: null,
+      200: contract.type<ApiResponse<UserDto>>(),
     },
     body: RequestEmailUpdateSchema,
   },
