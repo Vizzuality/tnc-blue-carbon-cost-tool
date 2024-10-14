@@ -3,7 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { SendEmailConfirmationEmailCommand } from '@api/modules/notifications/email/commands/send-email-confirmation-email.command';
 
 @CommandHandler(SendEmailConfirmationEmailCommand)
-export class SendWelcomeEmailHandler
+export class SendEmailConfirmationHandler
   implements ICommandHandler<SendEmailConfirmationEmailCommand>
 {
   constructor(private readonly authMailer: AuthMailer) {}

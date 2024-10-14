@@ -85,7 +85,7 @@ export class TestManager {
   }
 
   request() {
-    return request(this.testApp.getHttpServer());
+    return request(this.getApp().getHttpServer());
   }
 
   mocks() {

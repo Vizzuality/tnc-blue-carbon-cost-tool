@@ -17,6 +17,8 @@ import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 import { SignUpDto } from '@shared/schemas/auth/sign-up.schema';
 import { UserSignedUpEvent } from '@api/modules/admin/events/user-signed-up.event';
 import { UpdateUserPasswordDto } from '@shared/dtos/users/update-user-password.dto';
+import { RequestEmailUpdateDto } from '@shared/dtos/users/request-email-update.dto';
+import { SendEmailConfirmationEmailCommand } from '@api/modules/notifications/email/commands/send-email-confirmation-email.command';
 
 @Injectable()
 export class AuthenticationService {
@@ -115,5 +117,32 @@ export class AuthenticationService {
 
   async hashPassword(password: string) {
     return bcrypt.hash(password, 10);
+  }
+
+  async requestEmailUpdate(
+    user: User,
+    dto: RequestEmailUpdateDto,
+    origin: string,
+  ) {
+    const { email, newEmail } = dto;
+    const existingUser = await this.usersService.findByEmail(newEmail);
+    if (existingUser) {
+      throw new ConflictException(`Email already in use`);
+    }
+    if (email === newEmail) {
+      throw new ConflictException(
+        'New email must be different from the current one',
+      );
+    }
+    if (user.email !== email) {
+      this.logger.warn(
+        `User ${user.id} tried to update email without providing the correct email`,
+      );
+      throw new UnauthorizedException('Invalid email provided');
+    }
+
+    await this.commandBus.execute(
+      new SendEmailConfirmationEmailCommand(user, newEmail, origin),
+    );
   }
 }

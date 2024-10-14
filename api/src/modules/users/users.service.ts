@@ -47,11 +47,4 @@ export class UsersService extends AppBaseService<
     const user = await this.userRepository.findOneBy({ id });
     return user.isActive;
   }
-
-  async requestEmailUpdate(user: User, dto: RequestEmailUpdateDto) {
-    const { email, newEmail } = dto;
-    if (user.email !== email) {
-      throw new UnauthorizedException();
-    }
-  }
 }

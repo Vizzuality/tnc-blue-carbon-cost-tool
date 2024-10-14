@@ -6,9 +6,7 @@ import { ROLES } from '@shared/entities/users/roles.enum';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 import { User } from '@shared/entities/users/user.entity';
 
-//create-user.feature
-
-describe('Create Users', () => {
+describe('Sign Up', () => {
   let testManager: TestManager;
   let jwtManager: JwtManager;
 
