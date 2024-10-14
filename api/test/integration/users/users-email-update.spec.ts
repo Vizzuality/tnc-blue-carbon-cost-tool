@@ -1,6 +1,5 @@
 import { createUser } from '@shared/lib/entity-mocks';
 import { TestManager } from '../../utils/test-manager';
-import { User } from '@shared/entities/users/user.entity';
 import { HttpStatus } from '@nestjs/common';
 import { usersContract } from '@shared/contracts/users.contract';
 import { ROLES } from '@shared/entities/users/roles.enum';
@@ -17,6 +16,10 @@ describe('Users ME (e2e)', () => {
   });
 
   beforeEach(async () => {
+    await testManager.clearDatabase();
+  });
+
+  afterEach(async () => {
     await testManager.clearDatabase();
   });
 
