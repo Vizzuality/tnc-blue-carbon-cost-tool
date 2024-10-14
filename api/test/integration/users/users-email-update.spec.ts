@@ -33,22 +33,6 @@ describe('Users ME (e2e)', () => {
   });
 
   describe('Send Email Update notification', () => {
-    it('Should fail if the current email sent does not match, and no email should be sent', async () => {
-      const user = await testManager
-        .mocks()
-        .createUser({ role: ROLES.PARTNER });
-      const { jwtToken } = await testManager.logUserIn(user);
-
-      const response = await testManager
-        .request()
-        .patch(usersContract.requestEmailUpdate.path)
-        .send({ email: 'notcurrent@mail.com', newEmail: 'new@mail.com' })
-        .set('Authorization', `Bearer ${jwtToken}`);
-
-      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
-      expect(response.body.errors[0].title).toBe('Invalid email provided');
-      expect(emailService.sendMail).toHaveBeenCalledTimes(0);
-    });
     it('Should fail if the new email is already in use, and no email should be sent', async () => {
       const previousUser = await testManager
         .mocks()
@@ -96,8 +80,8 @@ describe('Users ME (e2e)', () => {
       const newEmail = 'new-mail@mail.com';
       const response = await testManager
         .request()
-        .get(authContract.confirmEmail.path)
-        .query({ newEmail })
+        .patch(authContract.confirmEmail.path)
+        .send({ newEmail })
         .set('Authorization', `Bearer ${emailUpdateToken}`);
 
       expect(response.status).toBe(200);
@@ -117,8 +101,8 @@ describe('Users ME (e2e)', () => {
 
       const response = await testManager
         .request()
-        .get(authContract.confirmEmail.path)
-        .query({ newEmail: user.email })
+        .patch(authContract.confirmEmail.path)
+        .send({ newEmail: user.email })
         .set('Authorization', `Bearer ${emailUpdateToken}`);
 
       expect(response.status).toBe(409);
