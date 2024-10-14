@@ -19,7 +19,7 @@ export async function signUpAction(
   if (!parsed.success) {
     return {
       ok: false,
-      message: "Invalid form data",
+      message: "Invalid update-email data",
     };
   }
 
