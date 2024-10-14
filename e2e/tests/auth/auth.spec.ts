@@ -37,7 +37,7 @@ test.describe("Auth", () => {
     await expect(page.getByText(`Email: ${user.email}`)).toBeVisible();
   });
 
-  test("an user signs up successfully", async ({ page }) => {
+  test("an user signs up successfully", async () => {
     const user: Pick<User, "email" | "password" | "isActive"> = {
       email: "johndoe@test.com",
       password: "passwordpassword",
@@ -73,7 +73,7 @@ test.describe("Auth", () => {
     ).toBeVisible();
   });
 
-  test("an user signs up with an invalid token", async ({ page }) => {
+  test("an user signs up with an invalid token", async () => {
     await page.goto("/auth/signup/12345678");
 
     await expect(
