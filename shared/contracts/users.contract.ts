@@ -43,7 +43,6 @@ export const usersContract = contract.router({
   requestEmailUpdate: {
     method: "PATCH",
     path: "/users/me/email",
-    headers: z.object({ origin: z.string().url() }),
     responses: {
       200: contract.type<null>(),
     },

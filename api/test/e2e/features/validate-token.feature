@@ -56,7 +56,7 @@ Feature: Validate Token
 
   Scenario: Validating a token without providing the Authorization header
     When the user attempts to validate a token without providing the Authorization header
-    Then the user should receive a 400 status code
+    Then the user should receive a 401 status code
 
 
 

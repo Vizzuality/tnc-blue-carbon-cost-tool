@@ -6,7 +6,6 @@ import { ROLES } from '@shared/entities/users/roles.enum';
 import { MockEmailService } from '../../utils/mocks/mock-email.service';
 import { IEmailServiceToken } from '@api/modules/notifications/email/email-service.interface';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
-import { User } from '@shared/entities/users/user.entity';
 import { authContract } from '@shared/contracts/auth.contract';
 
 describe('Users ME (e2e)', () => {
@@ -71,7 +70,7 @@ describe('Users ME (e2e)', () => {
     });
   });
   describe('Confirm email update', () => {
-    it('should update the email', async () => {
+    it('should update the email and return the updated user', async () => {
       const user = await testManager
         .mocks()
         .createUser({ email: 'test@test.com', role: ROLES.PARTNER });
@@ -85,11 +84,8 @@ describe('Users ME (e2e)', () => {
         .set('Authorization', `Bearer ${emailUpdateToken}`);
 
       expect(response.status).toBe(200);
-      const userWithUpdatedEmail = await testManager
-        .getDataSource()
-        .getRepository(User)
-        .findOneBy({ email: newEmail });
-      expect(userWithUpdatedEmail.id).toEqual(user.id);
+      expect(response.body.data.email).toBe(newEmail);
+      expect(response.body.data.id).toBe(user.id);
     });
     it('should fail if the new email is already in use', async () => {
       const user = await createUser(testManager.getDataSource(), {

@@ -93,9 +93,9 @@ export class AuthenticationController {
     return tsRestHandler(
       authContract.confirmEmail,
       async ({ body: { newEmail } }) => {
-        await this.authService.confirmEmail(user, newEmail);
+        const updatedUser = await this.authService.confirmEmail(user, newEmail);
         return {
-          body: null,
+          body: { data: updatedUser },
           status: HttpStatus.OK,
         };
       },
