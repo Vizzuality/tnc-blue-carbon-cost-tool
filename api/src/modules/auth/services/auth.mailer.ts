@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   IEmailServiceInterface,
   IEmailServiceToken,
@@ -17,6 +17,7 @@ export type PasswordRecoveryDto = {
 
 @Injectable()
 export class AuthMailer {
+  logger: Logger = new Logger(AuthMailer.name);
   constructor(
     @Inject(IEmailServiceToken)
     private readonly emailService: IEmailServiceInterface,
@@ -42,6 +43,9 @@ export class AuthMailer {
       subject: 'Recover Password',
       html: templateBuilder.build(),
     });
+    this.logger.warn(
+      `Password recovery email sent to ${passwordRecovery.user.email}`,
+    );
   }
 
   async sendWelcomeEmail(welcomeEmailDto: {
@@ -67,6 +71,7 @@ export class AuthMailer {
       subject: 'Welcome to TNC Blue Carbon Cost Tool Platform',
       html: templateBuilder.build(),
     });
+    this.logger.warn(`Welcome email sent to ${welcomeEmailDto.user.email}`);
   }
 
   async sendEmailConfirmationEmail(emailConfirmationDto: {
@@ -92,5 +97,8 @@ export class AuthMailer {
       subject: 'Confirm Email',
       html: templateBuilder.build(),
     });
+    this.logger.warn(
+      `Email confirmation email sent to ${emailConfirmationDto.newEmail}`,
+    );
   }
 }
