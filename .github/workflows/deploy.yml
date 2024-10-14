@@ -250,7 +250,7 @@ jobs:
               restart: always
               ports:
                 - 4000:4000
-            admin:
+            administration:
               image: $ECR_REGISTRY/$ECR_REPOSITORY_ADMIN:$IMAGE_TAG
               restart: always
               ports:
