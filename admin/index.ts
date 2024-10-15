@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import AdminJS, { ComponentLoader, locales } from "adminjs";
+import AdminJS, { ComponentLoader } from "adminjs";
 import AdminJSExpress from "@adminjs/express";
 import express from "express";
 import * as AdminJSTypeorm from "@adminjs/typeorm";
