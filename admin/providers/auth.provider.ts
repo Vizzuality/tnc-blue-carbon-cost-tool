@@ -2,18 +2,17 @@ import { BaseAuthProvider, LoginHandlerOptions } from "adminjs";
 import { User } from "@shared/entities/users/user.entity.js";
 import { ROLES } from "@shared/entities/users/roles.enum.js";
 
+const API_URL = process.env.API_URL || "http://localhost:4000";
+
 export class AuthProvider extends BaseAuthProvider {
   override async handleLogin(opts: LoginHandlerOptions, context?: any) {
     const { email, password } = opts.data;
     try {
-      const response = await fetch(
-        "http://localhost:4000/authentication/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        },
-      );
+      const response = await fetch(`${API_URL}/authentication/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
       if (response.ok) {
         const data: { user: User } = await response.json();
         if (this.isAdmin(data.user)) {
