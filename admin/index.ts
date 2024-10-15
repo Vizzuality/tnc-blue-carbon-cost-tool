@@ -9,6 +9,7 @@ import { CarbonInputEntity } from "@api/modules/model/entities/carbon-input.enti
 import { CostInput } from "@api/modules/model/entities/cost-input.entity.js";
 import { Country } from "@api/modules/model/entities/country.entity.js";
 import { AuthProvider } from "./providers/auth.provider.js";
+import { userResource } from "./resources/users/user.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -30,9 +31,10 @@ const start = async () => {
   };
 
   const admin = new AdminJS({
-    rootPath: "/administration",
+    rootPath: "/admin",
     componentLoader,
     resources: [
+      userResource,
       {
         resource: CostInput,
         name: "Cost Input",
@@ -49,13 +51,13 @@ const start = async () => {
           icon: "Globe",
         },
       },
-      {
-        resource: User,
-        options: {
-          parent: databaseNavigation,
-          icon: "User",
-        },
-      },
+      // {
+      //   resource: User,
+      //   options: {
+      //     parent: databaseNavigation,
+      //     icon: "User",
+      //   },
+      // },
       {
         resource: CarbonInputEntity,
         name: "Andresito",
@@ -71,6 +73,8 @@ const start = async () => {
     provider: authProvider,
     cookiePassword: "some-secret",
   });
+
+  const adminRouterWithAuth = AdminJSExpress.buildRouter(admin);
   app.use(admin.options.rootPath, adminRouter);
 
   app.listen(PORT, () => {
