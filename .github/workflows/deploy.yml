@@ -15,8 +15,6 @@ on:
       - 'infrastructure/**'
       - 'package.json'
 
-
-
 jobs:
 
   set_environment_name:
@@ -252,7 +250,7 @@ jobs:
               restart: always
               ports:
                 - 4000:4000
-            administration:
+            admin:
               image: $ECR_REGISTRY/$ECR_REPOSITORY_ADMIN:$IMAGE_TAG
               restart: always
               ports:
@@ -268,7 +266,7 @@ jobs:
               depends_on:
                 - api
                 - client
-                - administration
+                - admin
           EOF
 
       - name: Generate zip file
