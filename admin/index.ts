@@ -28,7 +28,7 @@ const start = async () => {
   };
 
   const admin = new AdminJS({
-    rootPath: "/administration",
+    rootPath: "/",
     componentLoader,
     resources: [
       {
