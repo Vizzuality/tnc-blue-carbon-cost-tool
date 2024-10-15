@@ -30,7 +30,7 @@ const start = async () => {
   };
 
   const admin = new AdminJS({
-    rootPath: "/",
+    rootPath: "/administration",
     componentLoader,
     resources: [
       {
