@@ -85,7 +85,7 @@ describe('Users ME (e2e)', () => {
         .patch(usersContract.updateMe.path)
         .send({ name: newName })
         .set('Authorization', `Bearer ${jwtToken}`);
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(200);
       expect(response.body.data.id).toEqual(user.id);
       expect(response.body.data.name).toEqual(newName);
 
