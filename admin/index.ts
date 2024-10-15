@@ -8,6 +8,7 @@ import { dataSource } from "./datasource.js";
 import { CarbonInputEntity } from "@api/modules/model/entities/carbon-input.entity.js";
 import { CostInput } from "@api/modules/model/entities/cost-input.entity.js";
 import { Country } from "@api/modules/model/entities/country.entity.js";
+import { AuthProvider } from "./providers/auth.provider.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -17,6 +18,7 @@ AdminJS.registerAdapter({
 const PORT = 1000;
 
 const componentLoader = new ComponentLoader();
+const authProvider = new AuthProvider();
 
 const start = async () => {
   await dataSource.initialize();
@@ -65,7 +67,10 @@ const start = async () => {
     ],
   });
 
-  const adminRouter = AdminJSExpress.buildRouter(admin);
+  const adminRouter = AdminJSExpress.buildAuthenticatedRouter(admin, {
+    provider: authProvider,
+    cookiePassword: "some-secret",
+  });
   app.use(admin.options.rootPath, adminRouter);
 
   app.listen(PORT, () => {
