@@ -40,15 +40,14 @@ const UpdateEmailForm: FC = () => {
       },
     },
     {
-      // @ts-expect-error todo
       select: (data) => data.body.data,
+      queryKey: queryKeys.user.me(session?.user?.id as string).queryKey,
     },
   );
 
   const form = useForm<z.infer<typeof accountDetailsSchema>>({
     resolver: zodResolver(accountDetailsSchema),
     defaultValues: {
-      // @ts-expect-error todo
       email: user?.email,
     },
     mode: "onSubmit",
@@ -119,7 +118,6 @@ const UpdateEmailForm: FC = () => {
                     type="email"
                     autoComplete={field.name}
                     onKeyDown={handleEnterKey}
-                    // @ts-expect-error todo
                     placeholder={user?.email}
                     className="w-full"
                     {...field}
