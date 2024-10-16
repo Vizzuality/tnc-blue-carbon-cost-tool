@@ -40,17 +40,15 @@ const UpdateEmailForm: FC = () => {
       },
     },
     {
-      // @ts-expect-error todo
       select: (data) => data.body.data,
+      queryKey: queryKeys.user.me(session?.user?.id as string).queryKey,
     },
   );
 
   const form = useForm<z.infer<typeof accountDetailsSchema>>({
     resolver: zodResolver(accountDetailsSchema),
     defaultValues: {
-      // @ts-expect-error todo
       name: user?.name,
-      // @ts-expect-error todo
       role: user?.role,
     },
     mode: "onSubmit",
@@ -145,7 +143,6 @@ const UpdateEmailForm: FC = () => {
                 <div className="relative flex items-center">
                   <Input
                     type="text"
-                    // @ts-expect-error todo
                     placeholder={user?.role}
                     {...field}
                     disabled
