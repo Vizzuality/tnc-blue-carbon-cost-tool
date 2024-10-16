@@ -26,7 +26,7 @@ test.describe("Auth - Sign In", () => {
     await testManager.close();
   });
 
-  test("Auth -  Update user email", async ({ page }) => {
+  test("Auth -  Update user email", async () => {
     const user: Pick<User, "email" | "password" | "partnerName"> = {
       email: "jhondoe@test.com",
       password: "12345678",
@@ -52,6 +52,6 @@ test.describe("Auth - Sign In", () => {
       email: newEmail,
     } as User);
 
-    await expect(testManager.getPage()).toHaveURL("/profile");
+    await expect(page).toHaveURL("/profile");
   });
 });
