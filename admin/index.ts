@@ -48,22 +48,6 @@ const start = async () => {
         options: {
           parent: databaseNavigation,
           icon: "Globe",
-          actions: {
-            new: {
-              handler: async (request, response, context) => {
-                const { resource, h, record, records } = context;
-                const { payload } = request;
-                return {
-                  record: {},
-                  notice: {
-                    message: "Action completed",
-                    type: "success",
-                  },
-                };
-              },
-            },
-            //actionType: "record",
-          },
         },
       },
 
@@ -83,8 +67,7 @@ const start = async () => {
     cookiePassword: "some-secret",
   });
 
-  const adminRouterWithAuth = AdminJSExpress.buildRouter(admin);
-  app.use(admin.options.rootPath, adminRouterWithAuth);
+  app.use(admin.options.rootPath, adminRouter);
 
   app.listen(PORT, () => {
     console.log(
