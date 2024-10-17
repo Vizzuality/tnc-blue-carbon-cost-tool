@@ -12,6 +12,8 @@ import { SessionProvider } from "next-auth/react";
 
 import { makeQueryClient } from "@/lib/query-client";
 
+import { TooltipProvider } from "@/components/ui/tooltip";
+
 let browserQueryClient: QueryClient | undefined = undefined;
 
 function getQueryClient() {
@@ -37,9 +39,11 @@ export default function LayoutProviders({
   return (
     <>
       <SessionProvider session={session} basePath="/auth/api">
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        <TooltipProvider>
+          <QueryClientProvider client={queryClient}>
+            {children}
+          </QueryClientProvider>
+        </TooltipProvider>
       </SessionProvider>
     </>
   );
