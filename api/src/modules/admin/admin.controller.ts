@@ -10,12 +10,12 @@ import { ROLES } from '@shared/entities/users/roles.enum';
 
 @Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
+@RequiredRoles(ROLES.ADMIN)
 export class AdminController {
   constructor(private readonly auth: AuthenticationService) {}
 
-  @RequiredRoles(ROLES.ADMIN)
   @TsRestHandler(adminContract.addUser)
-  async createUser(
+  async addUser(
     @Headers('origin') origin: string,
   ): Promise<ControllerResponse> {
     return tsRestHandler(adminContract.addUser, async ({ body }) => {
