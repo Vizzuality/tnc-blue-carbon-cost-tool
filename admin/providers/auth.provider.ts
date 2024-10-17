@@ -1,5 +1,5 @@
 import { BaseAuthProvider, LoginHandlerOptions } from "adminjs";
-import { User } from "@shared/entities/users/user.entity.js";
+
 import { ROLES } from "@shared/entities/users/roles.enum.js";
 import { UserDto, UserWithAccessToken } from "@shared/dtos/users/user.dto.js";
 
@@ -17,10 +17,8 @@ export class AuthProvider extends BaseAuthProvider {
       if (response.ok) {
         const data: UserWithAccessToken = await response.json();
         const { user, accessToken } = data;
-        console.log("TOKEN", accessToken);
         if (this.isAdmin(user)) {
-          const { user } = data;
-          return { ...user, token: accessToken };
+          return { ...user, accessToken };
         }
         return null;
       }
