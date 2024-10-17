@@ -7,10 +7,13 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { createStore, Provider as JotaiProvider } from "jotai";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 
 import { makeQueryClient } from "@/lib/query-client";
+
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 let browserQueryClient: QueryClient | undefined = undefined;
 
@@ -33,13 +36,16 @@ export default function LayoutProviders({
   session,
 }: PropsWithChildren<{ session: Session | null }>) {
   const queryClient = getQueryClient();
+  const appStore = createStore();
 
   return (
     <>
       <SessionProvider session={session} basePath="/auth/api">
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        <TooltipProvider>
+          <QueryClientProvider client={queryClient}>
+            <JotaiProvider store={appStore}>{children}</JotaiProvider>
+          </QueryClientProvider>
+        </TooltipProvider>
       </SessionProvider>
     </>
   );
