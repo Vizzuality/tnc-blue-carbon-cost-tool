@@ -5,5 +5,5 @@ export const CreateUserSchema = z.object({
   email: z.string().email(),
   name: z.string().optional(),
   partnerName: z.string(),
-  role: z.enum([ROLES.ADMIN, ROLES.PARTNER]),
+  role: z.enum([ROLES.ADMIN, ROLES.PARTNER]).optional(),
 });
