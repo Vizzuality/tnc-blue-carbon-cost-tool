@@ -1,78 +1,60 @@
-import { ActionContext, ActionRequest } from "adminjs";
+import {
+  ActionContext,
+  ActionRequest,
+  ActionResponse,
+  populator,
+} from "adminjs";
+import { getAuthUserFromContext } from "../../utils/get-auth-user-from-context.js";
+import { CreateUserDto } from "@shared/dtos/users/create-user.dto.js";
+
+const API_URL = process.env.API_URL || "http://localhost:4000";
 
 export const createUserAction = async (
   request: ActionRequest,
+  response: ActionResponse,
   context: ActionContext,
 ) => {
   if (request.method === "post") {
-    //console.log("PAYLOAD", request.payload);
+    const { resource, currentAdmin, records } = context;
+    const { email, password, role, name } = request.payload as CreateUserDto;
+    let record = resource.build({ email, password, role, name });
+    const test2 = await record.create(context);
 
-    //console.log("context", context);
+    const test = 111;
+    // const [populatedRecord] = await populator([record], context);
 
-    //console.log("context.currentAdmin", context.currentAdmin);
-    // TOKEN IS HERE!!
-    console.log("ADMIN", context.req.session.adminUser);
-    // console.log("CONTEXT", context);
-    return {
-      record: {},
-    };
-    //console.log("context", context);
-    // console.table("SESSION", session);
+    try {
+      //   const apiResponse = await fetch(`${API_URL}/admin/users`, {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${accessToken}`,
+      //       Origin: context.req.headers.origin,
+      //     },
+      //     body: JSON.stringify(request.payload),
+      //   });
+      //
+      //   if (!apiResponse.ok) {
+      //     throw new Error("Failed to create user");
+      //   }
+
+      // const resources = await context.resource.findMany({});
+      console.log("RECORDS", context.records);
+      console.log("SINGLE RECORD", context.record);
+      const json = test2.toJSON();
+
+      return {
+        redirectUrl: "/admin/resources/User",
+        notice: {
+          message: "User created successfully",
+          type: "success",
+        },
+        record: json,
+      };
+    } catch (error) {
+      const testerror = error;
+      console.error(error);
+      throw error;
+    }
   }
-
-  //   try {
-  //     // Enviar la solicitud a tu API
-  //     const apiResponse = await fetch("https://tu-api.com/auth/register", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`, // Añadir el token si es necesario
-  //       },
-  //       body: JSON.stringify({
-  //         email,
-  //         password,
-  //         ...otherParams,
-  //       }),
-  //     });
-  //
-  //     if (!apiResponse.ok) {
-  //       throw new Error("Error en la API al crear el usuario");
-  //     }
-  //
-  //     // Prefetchear los datos actualizados de la base de datos
-  //     const updatedRecords = await context.resource.findMany({
-  //       limit: 10, // Limita la cantidad de resultados si es necesario
-  //       sort: {
-  //         direction: "desc",
-  //         sortBy: "createdAt", // Ajusta según tu modelo de datos
-  //       },
-  //     });
-  //
-  //     // Mostrar mensaje de éxito y devolver los registros actualizados
-  //     context.notice({
-  //       message: "Usuario creado exitosamente y registros actualizados",
-  //       type: "success",
-  //     });
-  //
-  //     return {
-  //       records: updatedRecords, // Devolver los registros actualizados
-  //       redirectUrl: context.h.recordActionUrl({
-  //         resourceId: context.resource.id(),
-  //         actionName: "list",
-  //       }),
-  //     };
-  //   } catch (error) {
-  //     context.notice({
-  //       message: `Error: ${error.message}`,
-  //       type: "error",
-  //     });
-  //     return {
-  //       record: {},
-  //     };
-  //   }
-  // }
-  //
-  // return {
-  //   record: {},
-  // };
 };

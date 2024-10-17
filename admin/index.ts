@@ -3,7 +3,6 @@ import AdminJS, { ComponentLoader } from "adminjs";
 import AdminJSExpress from "@adminjs/express";
 import express from "express";
 import * as AdminJSTypeorm from "@adminjs/typeorm";
-import { User } from "@shared/entities/users/user.entity.js";
 import { dataSource } from "./datasource.js";
 import { CarbonInputEntity } from "@api/modules/model/entities/carbon-input.entity.js";
 import { CostInput } from "@api/modules/model/entities/cost-input.entity.js";
@@ -49,15 +48,25 @@ const start = async () => {
         options: {
           parent: databaseNavigation,
           icon: "Globe",
+          actions: {
+            new: {
+              handler: async (request, response, context) => {
+                const { resource, h, record, records } = context;
+                const { payload } = request;
+                return {
+                  record: {},
+                  notice: {
+                    message: "Action completed",
+                    type: "success",
+                  },
+                };
+              },
+            },
+            //actionType: "record",
+          },
         },
       },
-      // {
-      //   resource: User,
-      //   options: {
-      //     parent: databaseNavigation,
-      //     icon: "User",
-      //   },
-      // },
+
       {
         resource: CarbonInputEntity,
         name: "Andresito",
@@ -75,7 +84,7 @@ const start = async () => {
   });
 
   const adminRouterWithAuth = AdminJSExpress.buildRouter(admin);
-  app.use(admin.options.rootPath, adminRouter);
+  app.use(admin.options.rootPath, adminRouterWithAuth);
 
   app.listen(PORT, () => {
     console.log(
