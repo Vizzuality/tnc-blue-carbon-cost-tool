@@ -10,7 +10,7 @@ import { useAtomValue } from "jotai";
 
 import { cn } from "@/lib/utils";
 
-import { mainNavOpenAtom } from "@/app/(projects)/store";
+import { projectsUIState } from "@/app/(projects)/store";
 
 import {
   Tooltip,
@@ -32,7 +32,7 @@ export const MainNavItem = ({
 }) => {
   // const searchParams = useSyncSearchParams();
 
-  const navOpen = useAtomValue(mainNavOpenAtom);
+  const { navOpen } = useAtomValue(projectsUIState);
   // const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
   const pathname = usePathname();
 

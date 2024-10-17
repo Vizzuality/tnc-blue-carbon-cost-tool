@@ -1,14 +1,13 @@
 import { atom } from "jotai";
 
-export const mainNavOpenAtom = atom(false);
-export const filtersProjectOpenAtom = atom(false);
-
-export const mapExpandedAtom = atom(false);
-export const tableExpandedAtom = atom(false);
-
-export const projectsUIState = atom({
+export const projectsUIState = atom<{
+  navOpen: boolean;
+  filtersOpen: boolean;
+  mapExpanded: "default" | "expanded" | "collapsed";
+  tableExpanded: "default" | "expanded" | "collapsed";
+}>({
   navOpen: false,
   filtersOpen: false,
-  mapExpanded: false,
-  tableExpanded: false,
+  mapExpanded: "default",
+  tableExpanded: "default",
 });

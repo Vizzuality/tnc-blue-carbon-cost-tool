@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 
+import { cn } from "@/lib/utils";
+
 import { LAYOUT_TRANSITIONS } from "@/app/(projects)/constants";
 import { projectsUIState } from "@/app/(projects)/store";
 
@@ -12,8 +14,7 @@ import ProjectsMap from "@/containers/projects/map";
 import ProjectsTable from "@/containers/projects/table";
 
 export default function Projects() {
-  const { navOpen, filtersOpen, mapExpanded, tableExpanded } =
-    useAtomValue(projectsUIState);
+  const { navOpen, filtersOpen } = useAtomValue(projectsUIState);
 
   return (
     <motion.div
@@ -41,42 +42,22 @@ export default function Projects() {
       </motion.aside>
       <div className="flex flex-1 flex-col">
         <ProjectsHeader />
+
         <div className="grid flex-grow grid-rows-2">
-          <motion.section
-            layout
-            // initial={mapExpanded ? "expanded" : "collapsed"}
-            initial={{
-              height: "auto",
-            }}
-            animate={mapExpanded ? "expanded" : "collapsed"}
-            variants={{
-              expanded: {
-                height: "100%",
-              },
-              collapsed: {
-                height: 0,
-              },
-            }}
-            transition={LAYOUT_TRANSITIONS}
+          <section
+            className={cn({
+              "flex-1": true,
+            })}
           >
             <ProjectsMap />
-          </motion.section>
-          <motion.section
-            layout
-            initial={tableExpanded ? "expanded" : "collapsed"}
-            animate={tableExpanded ? "expanded" : "collapsed"}
-            variants={{
-              expanded: {
-                height: "100%",
-              },
-              collapsed: {
-                height: 0,
-              },
-            }}
-            transition={LAYOUT_TRANSITIONS}
+          </section>
+          <section
+            className={cn({
+              "flex-1": true,
+            })}
           >
             <ProjectsTable />
-          </motion.section>
+          </section>
         </div>
       </div>
     </motion.div>
