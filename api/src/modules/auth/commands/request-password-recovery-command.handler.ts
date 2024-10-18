@@ -3,10 +3,10 @@ import { AuthMailer } from '@api/modules/auth/services/auth.mailer';
 import { RequestPasswordRecoveryCommand } from '@api/modules/auth/commands/request-password-recovery.command';
 import { UsersService } from '@api/modules/users/users.service';
 import { NotFoundException } from '@nestjs/common';
-import { PasswordRecoveryRequestedEvent } from '@api/modules/admin/events/password-recovery-requested.event';
+import { PasswordRecoveryRequestedEvent } from '@api/modules/auth/events/password-recovery-requested.event';
 
 @CommandHandler(RequestPasswordRecoveryCommand)
-export class RequestPasswordRecoveryHandler
+export class RequestPasswordRecoveryCommandHandler
   implements ICommandHandler<RequestPasswordRecoveryCommand>
 {
   constructor(
