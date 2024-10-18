@@ -99,6 +99,8 @@ jobs:
             api:
               - 'api/**'
               - '.github/workflows/**'
+            shared:
+              - 'shared/**'
 
       - name: Configure AWS credentials
         if: ${{ github.event_name == 'workflow_dispatch' || steps.api-changes.outputs.api == 'true' }}
@@ -167,6 +169,8 @@ jobs:
             admin:
               - 'admin/**'
               - '.github/workflows/**'
+            shared:
+              - 'shared/**'
 
       - name: Configure AWS credentials
         if: ${{ github.event_name == 'workflow_dispatch' || steps.admin-changes.outputs.admin == 'true' }}
