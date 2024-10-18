@@ -8,16 +8,24 @@ export enum TEMPLATE_TYPE {
   EMAIL_UPDATE_CONFIRMATION = 'email-update-confirmation',
 }
 
-export interface TemplateConfig {
+export interface BaseTemplateConfig {
   url: string;
   expiresIn: string;
   type: TEMPLATE_TYPE;
+  oneTimePassword?: string;
 }
+
+// If the type is WELCOME, then oneTimePassword is required
+export type TemplateConfig = BaseTemplateConfig &
+  (BaseTemplateConfig['type'] extends TEMPLATE_TYPE.WELCOME
+    ? { oneTimePassword: string }
+    : { oneTimePassword?: string });
 
 export class EmailTemplateBuilder {
   private readonly url: string;
   private readonly expiration: string;
   private readonly type: TEMPLATE_TYPE;
+  private readonly oneTimePassword?: string;
   private templateMap: Record<TEMPLATE_TYPE, any> = {
     [TEMPLATE_TYPE.WELCOME]: WELCOME_EMAIL_HTML_CONTENT,
     [TEMPLATE_TYPE.PASSWORD_RECOVERY]: RESET_PASSWORD_HTML_CONTENT,
@@ -30,11 +38,12 @@ export class EmailTemplateBuilder {
       contentConfig.expiresIn,
     );
     this.type = contentConfig.type;
+    this.oneTimePassword = contentConfig.oneTimePassword;
   }
 
   build() {
     const template = this.templateMap[this.type];
-    return template(this.url, this.expiration);
+    return template(this.url, this.expiration, this.oneTimePassword);
   }
 
   private passwordRecoveryTokenExpirationHumanReadable(expirationIn: string) {

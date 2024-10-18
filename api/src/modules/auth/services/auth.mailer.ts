@@ -63,6 +63,7 @@ export class AuthMailer {
       url: resetPasswordUrl,
       expiresIn,
       type: TEMPLATE_TYPE.WELCOME,
+      oneTimePassword: welcomeEmailDto.oneTimePassword,
     });
 
     await this.emailService.sendMail({
