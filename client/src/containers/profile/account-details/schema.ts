@@ -4,6 +4,6 @@ import { z } from "zod";
 
 export const accountDetailsSchema = UpdateUserSchema.and(
   z.object({
-    role: z.enum([ROLES.ADMIN, ROLES.PARTNER, ROLES.GENERAL_USER]).optional(),
+    role: z.enum([ROLES.ADMIN, ROLES.PARTNER]).optional(),
   }),
 );
