@@ -57,7 +57,7 @@ export class AuthMailer {
       welcomeEmailDto.user.id,
     );
 
-    const resetPasswordUrl = `${welcomeEmailDto.origin}/auth/sign-up/${signUpToken}`;
+    const resetPasswordUrl = `${welcomeEmailDto.origin}/auth/signup/${signUpToken}`;
 
     const templateBuilder = new EmailTemplateBuilder({
       url: resetPasswordUrl,
