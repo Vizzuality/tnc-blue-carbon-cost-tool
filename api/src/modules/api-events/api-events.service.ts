@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApiEventsEntity } from './api-events.entity';
@@ -12,6 +12,7 @@ type CreateApiEvent = {
 
 @Injectable()
 export class ApiEventsService {
+  logger: Logger = new Logger(ApiEventsService.name);
   constructor(
     @InjectRepository(ApiEventsEntity)
     private readonly apiEventsRepository: Repository<ApiEventsEntity>,
