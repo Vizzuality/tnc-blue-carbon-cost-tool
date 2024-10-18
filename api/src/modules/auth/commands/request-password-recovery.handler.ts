@@ -16,7 +16,7 @@ export class RequestPasswordRecoveryHandler
   ) {}
 
   async execute(command: RequestPasswordRecoveryCommand): Promise<void> {
-    const { email } = command;
+    const { email, origin } = command;
     const user = await this.users.findByEmail(email);
     if (!user) {
       this.eventBus.publish(new PasswordRecoveryRequestedEvent(email, null));
@@ -24,8 +24,7 @@ export class RequestPasswordRecoveryHandler
     }
     await this.authMailer.sendPasswordRecoveryEmail({
       user,
-      // TODO: Origin must come from env vars
-      origin: 'http://localhost:3000',
+      origin,
     });
     this.eventBus.publish(new PasswordRecoveryRequestedEvent(email, user.id));
   }
