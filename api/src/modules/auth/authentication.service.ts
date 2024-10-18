@@ -15,11 +15,12 @@ import { randomBytes } from 'node:crypto';
 import { SendWelcomeEmailCommand } from '@api/modules/notifications/email/commands/send-welcome-email.command';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 import { SignUpDto } from '@shared/schemas/auth/sign-up.schema';
-import { UserSignedUpEvent } from '@api/modules/admin/events/user-signed-up.event';
+import { NewUserEvent } from '@api/modules/admin/events/new-user.event';
 import { UpdateUserPasswordDto } from '@shared/dtos/users/update-user-password.dto';
 import { RequestEmailUpdateDto } from '@shared/dtos/users/request-email-update.dto';
 import { SendEmailConfirmationEmailCommand } from '@api/modules/notifications/email/commands/send-email-confirmation-email.command';
 import { PasswordManager } from '@api/modules/auth/services/password.manager';
+import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 
 @Injectable()
 export class AuthenticationService {
@@ -70,6 +71,9 @@ export class AuthenticationService {
       partnerName,
       isActive: false,
     });
+    this.eventBus.publish(
+      new NewUserEvent(newUser.id, newUser.email, API_EVENT_TYPES.USER_CREATED),
+    );
     return {
       newUser,
       plainTextPassword,
@@ -89,7 +93,9 @@ export class AuthenticationService {
     user.isActive = true;
     user.password = await this.passwordManager.hashPassword(newPassword);
     await this.usersService.saveUser(user);
-    this.eventBus.publish(new UserSignedUpEvent(user.id, user.email));
+    this.eventBus.publish(
+      new NewUserEvent(user.id, user.email, API_EVENT_TYPES.USER_SIGNED_UP),
+    );
   }
 
   async verifyToken(token: string, type: TOKEN_TYPE_ENUM): Promise<boolean> {
