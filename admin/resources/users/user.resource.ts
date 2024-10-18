@@ -10,8 +10,11 @@ export const userResource: ResourceWithOptions = {
       icon: "Database",
     },
     properties: {
-      id: { isVisible: false },
+      id: { isVisible: false, isId: true },
       password: { isVisible: false },
+      isActive: { isVisible: false },
+      email: { isRequired: true },
+      role: { isRequired: true },
     },
     actions: {
       new: {
