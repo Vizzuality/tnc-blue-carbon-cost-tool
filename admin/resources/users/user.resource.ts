@@ -15,6 +15,7 @@ export const userResource: ResourceWithOptions = {
       isActive: { isVisible: false },
       email: { isRequired: true },
       role: { isRequired: true },
+      partnerName: { isRequired: true },
     },
     actions: {
       new: {

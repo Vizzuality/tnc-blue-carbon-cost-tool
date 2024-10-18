@@ -1,7 +1,6 @@
 import { ActionContext, ActionRequest, ActionResponse } from "adminjs";
 import { CreateUserDto } from "@shared/dtos/users/create-user.dto.js";
-
-const API_URL = process.env.API_URL || "http://localhost:4000";
+import { API_URL } from "../../index.js";
 
 export const createUserAction = async (
   request: ActionRequest,
@@ -13,6 +12,9 @@ export const createUserAction = async (
     const { email, role, name, partnerName } = request.payload as CreateUserDto;
     const record = resource.build({ email, role, name });
     const accessToken = currentAdmin?.accessToken;
+    if (!accessToken) {
+      throw new Error("Current Admin token not found");
+    }
     try {
       const apiResponse = await fetch(`${API_URL}/admin/users`, {
         method: "POST",

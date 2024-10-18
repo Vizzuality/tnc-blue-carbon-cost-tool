@@ -2,8 +2,7 @@ import { BaseAuthProvider, LoginHandlerOptions } from "adminjs";
 
 import { ROLES } from "@shared/entities/users/roles.enum.js";
 import { UserDto, UserWithAccessToken } from "@shared/dtos/users/user.dto.js";
-
-const API_URL = process.env.API_URL || "http://localhost:4000";
+import { API_URL } from "../index.js";
 
 export class AuthProvider extends BaseAuthProvider {
   override async handleLogin(opts: LoginHandlerOptions, context?: any) {

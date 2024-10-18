@@ -16,6 +16,7 @@ AdminJS.registerAdapter({
 });
 
 const PORT = 1000;
+export const API_URL = process.env.API_URL || "http://localhost:4000";
 
 const componentLoader = new ComponentLoader();
 const authProvider = new AuthProvider();
