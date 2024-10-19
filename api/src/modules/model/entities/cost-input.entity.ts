@@ -8,7 +8,7 @@ import {
   BaseEntity,
 } from 'typeorm';
 import { ACTIVITY, ECOSYSTEM } from '@api/modules/model/base-data.entity';
-import { Country } from '@api/modules/model/entities/country.entity';
+import { Country } from '@shared/entities/countries/country.entity';
 
 export enum COST_INPUT_TYPE {
   PROJECT_SIZE_HA = 'project_size_ha',

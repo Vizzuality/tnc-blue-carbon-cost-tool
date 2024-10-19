@@ -11,6 +11,7 @@ import { UsersModule } from '@api/modules/users/users.module';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from '@api/filters/all-exceptions.exception.filter';
 import { TsRestModule } from '@ts-rest/nest';
+import { CountriesModule } from './modules/countries/countries.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { TsRestModule } from '@ts-rest/nest';
     AdminModule,
     ImportModule,
     UsersModule,
+    CountriesModule,
   ],
   controllers: [AppController],
   providers: [

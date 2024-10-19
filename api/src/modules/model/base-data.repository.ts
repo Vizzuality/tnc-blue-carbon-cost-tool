@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 
 import { ParsedDBEntities } from '@api/modules/import/services/entity.preprocessor';
 import { BaseData } from '@api/modules/model/base-data.entity';
-import { Country } from '@api/modules/model/entities/country.entity';
 import {
   COST_INPUT_TYPE,
   CostInput,
@@ -12,6 +11,7 @@ import {
   CARBON_INPUT_TYPE,
   CarbonInputEntity,
 } from '@api/modules/model/entities/carbon-input.entity';
+import { Country } from '@shared/entities/countries/country.entity';
 
 @Injectable()
 export class BaseDataRepository extends Repository<BaseData> {

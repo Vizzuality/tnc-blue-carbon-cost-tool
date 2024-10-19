@@ -8,7 +8,7 @@ import {
   BaseEntity,
 } from 'typeorm';
 import { ACTIVITY, ECOSYSTEM } from '@api/modules/model/base-data.entity';
-import { Country } from '@api/modules/model/entities/country.entity';
+import { Country } from '@shared/entities/countries/country.entity';
 
 export enum CARBON_INPUT_TYPE {
   ECOSYSTEM_EXTENT = 'ecosystem_extent',
