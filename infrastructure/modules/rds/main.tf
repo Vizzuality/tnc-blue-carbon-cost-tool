@@ -2,6 +2,25 @@
 ## Cluster
 ########################
 
+## To install PostGIS extension, a specific provider is needed, which needs to has access to the actual server.
+## Can be achieved by ssh tunneling, check docs: https://registry.terraform.io/providers/cyrilgdn/postgresql/1.7.2/docs
+
+
+# terraform {
+#   required_providers {
+#     postgresql = {
+#       source  = "cyrilgdn/postgresql"
+#       version = "1.23.0"
+#     }
+#   }
+# }
+#
+# # Installs postgres PostGIS extension
+# resource "postgresql_extension" "postgis" {
+#   name = "postgis"
+# }
+
+
 resource "aws_db_instance" "postgresql" {
   identifier              = "db-${var.project}-${var.environment}"
   engine                  = "postgres"
