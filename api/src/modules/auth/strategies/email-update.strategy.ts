@@ -4,7 +4,6 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UsersService } from '@api/modules/users/users.service';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
-import { Request } from 'express';
 
 export type JwtPayload = { id: string };
 
@@ -28,7 +27,7 @@ export class EmailConfirmationJwtStrategy extends PassportStrategy(
     });
   }
 
-  async validate(req: Request, payload: JwtPayload) {
+  async validate(payload: JwtPayload) {
     const { id } = payload;
     const user = await this.userService.findOneBy(id);
     if (!user) {
