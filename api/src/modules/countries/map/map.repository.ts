@@ -49,13 +49,15 @@ export class MapRepository extends Repository<Country> {
       });
     }
 
-    const result: FeatureCollection | undefined =
-      await queryBuilder.getRawOne<FeatureCollection>();
+    const result: { geojson: FeatureCollection } | undefined =
+      await queryBuilder.getRawOne<{
+        geojson: FeatureCollection;
+      }>();
     this.logger.log(`Retrieved geo features`);
     if (!result) {
       throw new NotFoundException(`Could not retrieve geo features`);
     }
-    return result;
+    return result.geojson;
   }
 
   private getPropertiesQuery(): string {
