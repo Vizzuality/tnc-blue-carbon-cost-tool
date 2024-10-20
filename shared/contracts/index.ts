@@ -25,8 +25,3 @@ export const router = contract.router(
     strictStatusCodes: true,
   },
 );
-
-const baseRouterConfig = contract.router(
-  { authContract, adminContract, usersContract },
-  {},
-);
