@@ -1,15 +1,20 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, HttpStatus } from '@nestjs/common';
 import { MapRepository } from '@api/modules/countries/map/map.repository';
-import { Country } from '@shared/entities/countries/country.entity';
-import { GeoJSON } from 'geojson';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
+import { ControllerResponse } from '@api/types/controller-response.type';
+import { mapContract } from '@shared/contracts/map.contract';
 
-@Controller('map')
+@Controller()
 export class MapController {
   constructor(private readonly mapRepository: MapRepository) {}
-  @Get('/geojson')
-  getGeoJson(
-    @Query('countryCode') countryCode: Country['countryCode'],
-  ): Promise<GeoJSON> {
-    return this.mapRepository.getGeoJson(countryCode);
+
+  @TsRestHandler(mapContract.getGeoFeatures)
+  async getGeoFeatures(): ControllerResponse {
+    return tsRestHandler(mapContract.getGeoFeatures, async ({ query }) => {
+      const geoFeatures = await this.mapRepository.getGeoFeatures(
+        query.countryCode,
+      );
+      return { body: geoFeatures, status: HttpStatus.OK };
+    });
   }
 }
