@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { XlsxParser } from '@api/modules/import/services/xlsx.parser';
 import { EntityPreprocessor } from '@api/modules/import/services/entity.preprocessor';
 import { BaseDataRepository } from '@api/modules/model/base-data.repository';
@@ -21,6 +21,7 @@ export class ImportService {
       return dbResult;
     } catch (e) {
       console.log(e);
+      throw new ServiceUnavailableException('Error importing data');
     } finally {
     }
   }
