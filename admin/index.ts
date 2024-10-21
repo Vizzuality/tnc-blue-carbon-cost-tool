@@ -4,11 +4,13 @@ import AdminJSExpress from "@adminjs/express";
 import express from "express";
 import * as AdminJSTypeorm from "@adminjs/typeorm";
 import { dataSource } from "./datasource.js";
-import { CarbonInputEntity } from "@api/modules/model/entities/carbon-input.entity.js";
-import { CostInput } from "@api/modules/model/entities/cost-input.entity.js";
 import { Country } from "@api/modules/model/entities/country.entity.js";
 import { AuthProvider } from "./providers/auth.provider.js";
 import { userResource } from "./resources/users/user.resource.js";
+import { projectSizeResource } from "./resources/project-size/project-size.resource.js";
+import { User } from "@shared/entities/users/user.entity.js";
+import { BaseData } from "@api/modules/model/base-data.entity.js";
+import { ProjectSize } from "@api/modules/model/entities/project-size.entity.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -35,14 +37,7 @@ const start = async () => {
     componentLoader,
     resources: [
       userResource,
-      {
-        resource: CostInput,
-        name: "Cost Input",
-        options: {
-          parent: databaseNavigation,
-          icon: "Coins",
-        },
-      },
+      projectSizeResource,
       {
         resource: Country,
         name: "Country",
@@ -51,13 +46,12 @@ const start = async () => {
           icon: "Globe",
         },
       },
-
       {
-        resource: CarbonInputEntity,
-        name: "Andresito",
+        resource: BaseData,
+        name: "BaseData",
         options: {
           parent: databaseNavigation,
-          icon: "Cloud",
+          icon: "Globe",
         },
       },
     ],
@@ -68,7 +62,9 @@ const start = async () => {
     cookiePassword: "some-secret",
   });
 
-  app.use(admin.options.rootPath, adminRouter);
+  const router = AdminJSExpress.buildRouter(admin);
+
+  app.use(admin.options.rootPath, router);
 
   app.listen(PORT, () => {
     console.log(

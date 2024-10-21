@@ -1,8 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  BaseEntity,
+} from 'typeorm';
 import { BaseData } from '@api/modules/model/base-data.entity';
 
 @Entity('project_size')
-export class ProjectSize {
+export class ProjectSize extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
