@@ -17,7 +17,7 @@ export class ImportService {
       data = await this.xlsxParser.parseExcel<any>(fileBuffer);
       const dbEntities = this.preprocessor.toDbEntities(data);
 
-      const dbResult = await this.repo.insertData(dbEntities);
+      const dbResult = [];
       return dbResult;
     } catch (e) {
       console.log(e);
