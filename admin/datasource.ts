@@ -1,7 +1,13 @@
 import { DataSource } from "typeorm";
 import { DB_ENTITIES } from "@shared/lib/db-entities.js";
+import { User } from "@shared/entities/users/user.entity.js";
+import { Country } from "@api/modules/model/entities/country.entity.js";
+import { BaseData } from "@api/modules/model/base-data.entity.js";
+import { ProjectSize } from "@api/modules/model/entities/project-size.entity.js";
 
 // TODO: If we go with this, it might be better to share the datasource with the api
+
+export const ADMINJS_ENTITIES = [User, Country, ProjectSize, BaseData];
 
 export const dataSource = new DataSource({
   type: "postgres",
@@ -10,7 +16,7 @@ export const dataSource = new DataSource({
   password: process.env.DB_PASSWORD || "blue-carbon-cost",
   database: process.env.DB_NAME || "blc",
   // TODO: Use common db entities from shared
-  entities: DB_ENTITIES,
+  entities: ADMINJS_ENTITIES,
   synchronize: false,
   ssl:
     process.env.NODE_ENV === "production"
