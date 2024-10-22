@@ -4,15 +4,15 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   BaseEntity,
-} from 'typeorm';
-import { BaseData } from '@api/modules/model/base-data.entity';
+} from "typeorm";
+import { BaseData } from "@shared/entities/base-data.entity";
 
-@Entity('data_collection_and_field_costs')
+@Entity("data_collection_and_field_costs")
 export class DataCollectionAndFieldCosts extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column('decimal', { name: 'field_cost' })
+  @Column("decimal", { name: "field_cost" })
   fieldCost: number;
 
   @OneToMany(() => BaseData, (baseData) => baseData.dataCollectionAndFieldCosts)

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { BaseData } from '@api/modules/model/base-data.entity';
+
 import { Country } from '@api/modules/model/entities/country.entity';
+import { BaseData } from '@shared/entities/base-data.entity';
 
 export type ParsedDBEntities = {
   countries: Country[];

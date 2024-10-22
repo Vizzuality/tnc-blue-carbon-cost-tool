@@ -5,7 +5,7 @@ import {
   OneToMany,
   BaseEntity,
 } from "typeorm";
-import { BaseData } from "@api/modules/model/base-data.entity";
+import { BaseData } from "@shared/entities/base-data.entity";
 
 @Entity("conservation_planning_and_admin")
 export class ConservationPlanningAndAdmin extends BaseEntity {
