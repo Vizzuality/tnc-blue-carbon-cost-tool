@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 import { User } from "@shared/entities/users/user.entity";
 import { createUser } from "@shared/lib/entity-mocks";
 import { clearTestDataFromDatabase } from "@shared/lib/db-helpers";
-import { DB_ENTITIES } from "@shared/lib/db-entities";
+import { BACKEND_DB_ENTITIES } from "@shared/lib/db-entities";
 import { JwtPayload, sign } from "jsonwebtoken";
 import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
 
@@ -13,7 +13,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: DB_ENTITIES,
+  entities: BACKEND_DB_ENTITIES,
 });
 
 export class E2eTestManager {
