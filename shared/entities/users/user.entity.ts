@@ -40,6 +40,6 @@ export class User extends BaseEntity {
   })
   role: ROLES;
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 }
