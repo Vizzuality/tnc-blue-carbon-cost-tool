@@ -1,5 +1,4 @@
 import { DataSource } from "typeorm";
-import { DB_ENTITIES } from "@shared/lib/db-entities.js";
 import { User } from "@shared/entities/users/user.entity.js";
 import { Country } from "@api/modules/model/entities/country.entity.js";
 import { BaseData } from "@api/modules/model/base-data.entity.js";
