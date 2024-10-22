@@ -1,5 +1,5 @@
-import { DataSource, EntityMetadata } from 'typeorm';
-import { difference } from 'lodash';
+import { DataSource, EntityMetadata } from "typeorm";
+import { difference } from "lodash";
 
 export async function clearTestDataFromDatabase(
   dataSource: DataSource,
@@ -11,8 +11,8 @@ export async function clearTestDataFromDatabase(
     const entityTableNames: string[] = dataSource.entityMetadatas
       .filter(
         (entityMetadata: EntityMetadata) =>
-          entityMetadata.tableType === 'regular' ||
-          entityMetadata.tableType === 'junction',
+          entityMetadata.tableType === "regular" ||
+          entityMetadata.tableType === "junction",
       )
       .map((entityMetadata: EntityMetadata) => entityMetadata.tableName);
 
@@ -24,9 +24,9 @@ export async function clearTestDataFromDatabase(
 
     entityTableNames.push(dataSource.metadataTableName);
     entityTableNames.push(
-      dataSource.options.migrationsTableName || 'migrations',
+      dataSource.options.migrationsTableName || "migrations",
     );
-    entityTableNames.push('spatial_ref_sys');
+    entityTableNames.push("spatial_ref_sys");
 
     const databaseTableNames: string[] = (
       await dataSource.query(
@@ -34,14 +34,13 @@ export async function clearTestDataFromDatabase(
       )
     ).map((e: Record<string, any>) => e.table_name);
 
-    // todo: Alex to take a look later
-    // const tablesToDrop = difference(databaseTableNames, entityTableNames);
-    //
-    // await Promise.all(
-    //   tablesToDrop.map((tableToDrop: string) =>
-    //     queryRunner.dropTable(tableToDrop),
-    //   ),
-    // );
+    const tablesToDrop = difference(databaseTableNames, entityTableNames);
+
+    await Promise.all(
+      tablesToDrop.map((tableToDrop: string) =>
+        queryRunner.dropTable(tableToDrop),
+      ),
+    );
     await queryRunner.commitTransaction();
   } catch (err) {
     // rollback changes before throwing error
