@@ -5,7 +5,6 @@ import {
   ManyToOne,
   JoinColumn,
   BaseEntity,
-  RelationId,
 } from 'typeorm';
 import { Country } from '@api/modules/model/entities/country.entity';
 import { ProjectSize } from '@api/modules/model/entities/project-size.entity';

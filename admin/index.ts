@@ -8,9 +8,7 @@ import { Country } from "@api/modules/model/entities/country.entity.js";
 import { AuthProvider } from "./providers/auth.provider.js";
 import { userResource } from "./resources/users/user.resource.js";
 import { projectSizeResource } from "./resources/project-size/project-size.resource.js";
-import { User } from "@shared/entities/users/user.entity.js";
 import { BaseData } from "@api/modules/model/base-data.entity.js";
-import { ProjectSize } from "@api/modules/model/entities/project-size.entity.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
