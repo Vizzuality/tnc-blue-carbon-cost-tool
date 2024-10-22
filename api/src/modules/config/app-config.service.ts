@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
 import { BACKEND_DB_ENTITIES } from '@shared/lib/db-entities';
+import { COMMON_DATABASE_ENTITIES } from '@shared/entities/database.entities';
 
 export type JWTConfig = {
   secret: string;
@@ -36,7 +37,7 @@ export class ApiConfigService {
       username: this.configService.getOrThrow('DB_USERNAME'),
       password: this.configService.getOrThrow('DB_PASSWORD'),
       database: this.configService.getOrThrow('DB_NAME'),
-      entities: BACKEND_DB_ENTITIES,
+      entities: COMMON_DATABASE_ENTITIES,
       synchronize: true,
       ssl: this.isProduction()
         ? { require: true, rejectUnauthorized: false }

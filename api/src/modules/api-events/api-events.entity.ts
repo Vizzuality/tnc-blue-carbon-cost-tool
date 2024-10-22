@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -7,7 +8,7 @@ import {
 import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 
 @Entity('api_events')
-export class ApiEventsEntity {
+export class ApiEventsEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
