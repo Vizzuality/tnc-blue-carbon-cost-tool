@@ -24,14 +24,3 @@ export const COMMON_DATABASE_ENTITIES = [
   ConservationPlanningAndAdmin,
   DataCollectionAndFieldCosts,
 ];
-
-const otro = [
-  User,
-  ApiEventsEntity,
-  Country,
-  BaseData,
-  ProjectSize,
-  FeasibilityAnalysis,
-  ConservationPlanningAndAdmin,
-  DataCollectionAndFieldCosts,
-];

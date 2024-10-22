@@ -4,15 +4,15 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   BaseEntity,
-} from 'typeorm';
-import { BaseData } from '@api/modules/model/base-data.entity';
+} from "typeorm";
+import { BaseData } from "@shared/entities/base-data.entity";
 
-@Entity('project_size')
+@Entity("project_size")
 export class ProjectSize extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column('decimal', { name: 'size_ha' })
+  @Column("decimal", { name: "size_ha" })
   sizeHa: number;
 
   @OneToMany(() => BaseData, (baseData) => baseData.projectSize)

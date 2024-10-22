@@ -5,7 +5,7 @@ import {
   OneToMany,
   BaseEntity,
 } from 'typeorm';
-import { BaseData } from '@api/modules/model/base-data.entity';
+import { BaseData } from '@shared/entities/base-data.entity';
 
 @Entity('project_size')
 export class ProjectSize extends BaseEntity {
