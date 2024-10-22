@@ -11,11 +11,12 @@ import {
   ResourceOptions,
   ResourceWithOptions,
 } from "adminjs";
-import { ProjectSize } from "@api/modules/model/entities/project-size.entity.js";
-import { BaseData } from "@api/modules/model/base-data.entity.js";
 import { dataSource } from "../../datasource.js";
-import { Country } from "@api/modules/model/entities/country.entity.js";
+
 import { Sort } from "typeorm";
+import { ProjectSize } from "@shared/entities/project-size.entity.js";
+import { BaseData } from "@shared/entities/base-data.entity.js";
+import { Country } from "@shared/entities/country.entity.js";
 
 const DEFAULT_DIRECTION = "asc";
 

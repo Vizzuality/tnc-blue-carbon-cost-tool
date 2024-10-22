@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
+import { COMMON_DATABASE_ENTITIES } from '@shared/lib/db-entities';
 // import { BACKEND_DB_ENTITIES } from '@shared/lib/db-entities';
-import { COMMON_DATABASE_ENTITIES } from '@shared/entities/database.entities';
 
 export type JWTConfig = {
   secret: string;

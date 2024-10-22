@@ -1,17 +1,15 @@
 import { DataSource } from "typeorm";
 import { User } from "@shared/entities/users/user.entity.js";
 import { ApiEventsEntity } from "@api/modules/api-events/api-events.entity.js";
-import { Country } from "@api/modules/model/entities/country.entity.js";
-import { BaseData } from "@api/modules/model/base-data.entity.js";
-import { ProjectSize } from "@api/modules/model/entities/project-size.entity.js";
-import { FeasibilityAnalysis } from "@api/modules/model/entities/feasability-analysis.entity.js";
-import { ConservationPlanningAndAdmin } from "@api/modules/model/entities/conservation-and-planning-admin.entity.js";
-import { DataCollectionAndFieldCosts } from "@api/modules/model/entities/data-collection-and-field-costs.entity.js";
+import { Country } from "@shared/entities/country.entity.js";
+import { BaseData } from "@shared/entities/base-data.entity.js";
+import { ProjectSize } from "@shared/entities/project-size.entity.js";
+import { FeasibilityAnalysis } from "@shared/entities/feasability-analysis.entity.js";
+import { ConservationPlanningAndAdmin } from "@shared/entities/conservation-and-planning-admin.entity.js";
+import { DataCollectionAndFieldCosts } from "@shared/entities/data-collection-and-field-costs.entity.js";
 
-// TODO: If we go with this, it might be better to share the datasource with the api, right now adminjs throws and error if we import the BACKEND_DB_ENTITIES
-//       we need to fix this and have a single source of truth for the entities
-
-const ENTITIES = [
+// TODO: If we import the COMMON_DATABASE_ENTITIES from shared, we get an error where DataSouce is not set for a given entity
+export const ADMINJS_ENTITIES = [
   User,
   ApiEventsEntity,
   Country,
@@ -29,7 +27,7 @@ export const dataSource = new DataSource({
   password: process.env.DB_PASSWORD || "blue-carbon-cost",
   database: process.env.DB_NAME || "blc",
   // TODO: Use common db entities from shared
-  entities: ENTITIES,
+  entities: ADMINJS_ENTITIES,
   synchronize: false,
   ssl:
     process.env.NODE_ENV === "production"
