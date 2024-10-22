@@ -10,6 +10,7 @@ import { Country } from '@api/modules/model/entities/country.entity';
 import { ProjectSize } from '@api/modules/model/entities/project-size.entity';
 import { FeasibilityAnalysis } from '@api/modules/model/entities/feasability-analysis.entity';
 import { ConservationPlanningAndAdmin } from '@api/modules/model/entities/conservation-and-planning-admin.entity';
+import { DataCollectionAndFieldCosts } from '@api/modules/model/entities/data-collection-and-field-costs.entity';
 
 export enum ECOSYSTEM {
   MANGROVE = 'Mangrove',
@@ -64,4 +65,15 @@ export class BaseData extends BaseEntity {
     referencedColumnName: 'id',
   })
   conservationPlanningAndAdmin: ConservationPlanningAndAdmin;
+
+  @ManyToOne(
+    'DataCollectionAndFieldCosts',
+    (dataCollectionAndFieldCosts: DataCollectionAndFieldCosts) =>
+      dataCollectionAndFieldCosts.baseData,
+  )
+  @JoinColumn({
+    name: 'data_collection_and_field_costs',
+    referencedColumnName: 'id',
+  })
+  dataCollectionAndFieldCosts: DataCollectionAndFieldCosts;
 }
