@@ -8,6 +8,8 @@ import {
 } from 'typeorm';
 import { Country } from '@api/modules/model/entities/country.entity';
 import { ProjectSize } from '@api/modules/model/entities/project-size.entity';
+import { FeasibilityAnalysis } from '@api/modules/model/entities/feasability-analysis.entity';
+import { ConservationPlanningAndAdmin } from '@api/modules/model/entities/conservation-and-planning-admin.entity';
 
 export enum ECOSYSTEM {
   MANGROVE = 'Mangrove',
@@ -44,4 +46,22 @@ export class BaseData extends BaseEntity {
   @ManyToOne('ProjectSize', (projectSize: ProjectSize) => projectSize.baseData)
   @JoinColumn({ name: 'project_size', referencedColumnName: 'id' })
   projectSize: ProjectSize;
+
+  @ManyToOne(
+    'FeasibilityAnalysis',
+    (feasibilityAnalysis: FeasibilityAnalysis) => feasibilityAnalysis.baseData,
+  )
+  @JoinColumn({ name: 'feasibility_analysis', referencedColumnName: 'id' })
+  feasibilityAnalysis: FeasibilityAnalysis;
+
+  @ManyToOne(
+    'ConservationPlanningAndAdmin',
+    (conservationPlanningAndAdmin: ConservationPlanningAndAdmin) =>
+      conservationPlanningAndAdmin.baseData,
+  )
+  @JoinColumn({
+    name: 'conservation_planning_and_admin',
+    referencedColumnName: 'id',
+  })
+  conservationPlanningAndAdmin: ConservationPlanningAndAdmin;
 }
