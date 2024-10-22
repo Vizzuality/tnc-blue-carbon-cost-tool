@@ -1,9 +1,8 @@
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 
 import { ParsedDBEntities } from '@api/modules/import/services/entity.preprocessor';
 
-import { Country } from '@api/modules/model/entities/country.entity';
 import { BaseData } from '@shared/entities/base-data.entity';
 
 @Injectable()

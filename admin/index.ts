@@ -4,11 +4,11 @@ import AdminJSExpress from "@adminjs/express";
 import express from "express";
 import * as AdminJSTypeorm from "@adminjs/typeorm";
 import { dataSource } from "./datasource.js";
-import { Country } from "@api/modules/model/entities/country.entity.js";
 import { AuthProvider } from "./providers/auth.provider.js";
 import { userResource } from "./resources/users/user.resource.js";
 import { projectSizeResource } from "./resources/project-size/project-size.resource.js";
-import { BaseData } from "@api/modules/model/base-data.entity.js";
+import { BaseData } from "@shared/entities/base-data.entity.js";
+import { Country } from "@shared/entities/country.entity.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
