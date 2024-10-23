@@ -7,13 +7,13 @@ import {
 } from "typeorm";
 import { BaseData } from "@shared/entities/base-data.entity";
 
-@Entity("carbon_rights")
-export class CarbonRights extends BaseEntity {
+@Entity("financing_cost")
+export class FinancingCost extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column("decimal", { name: "carbon_rights_cost" })
-  carbonRightsCost: number;
+  @Column("decimal", { name: "financing_cost_capex_percent" })
+  financingCostCapexPercent: number;
 
   @OneToOne(() => BaseData, (baseData) => baseData.carbonRights)
   baseData: BaseData[];
