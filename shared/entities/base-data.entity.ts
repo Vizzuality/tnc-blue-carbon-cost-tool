@@ -17,6 +17,7 @@ import { CommunityRepresentation } from "./community-representation.entity";
 import { CarbonRights } from "./establishing-carbon-rights.entity";
 import { FinancingCost } from "./financing-cost.entity";
 import { ValidationCost } from "./validation.entity";
+import { ImplementationLaborCost } from "./implementation-labor.entity";
 
 export enum ECOSYSTEM {
   MANGROVE = "Mangrove",
@@ -112,6 +113,17 @@ export class BaseData extends BaseEntity {
     referencedColumnName: "id",
   })
   validationCost: ValidationCost;
+
+  @OneToOne(
+    "ImplementationLaborCost",
+    (implementationLaborCost: ImplementationLaborCost) =>
+      implementationLaborCost.baseData
+  )
+  @JoinColumn({
+    name: "implementation_labor_cost",
+    referencedColumnName: "id",
+  })
+  implementationLaborCost: ImplementationLaborCost;
 
   @OneToOne(
     "DataCollectionAndFieldCosts",
