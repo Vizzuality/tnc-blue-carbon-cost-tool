@@ -2,8 +2,8 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToMany,
   BaseEntity,
+  OneToOne,
 } from "typeorm";
 import { BaseData } from "@shared/entities/base-data.entity";
 
@@ -15,8 +15,8 @@ export class ProjectSize extends BaseEntity {
   @Column("decimal", { name: "size_ha" })
   sizeHa: number;
 
-  @OneToMany(() => BaseData, (baseData) => baseData.projectSize)
-  baseData: BaseData[];
+  @OneToOne(() => BaseData, (baseData) => baseData.projectSize)
+  baseData: BaseData;
 
   //TODO: Additionally include unit for each type?
 }

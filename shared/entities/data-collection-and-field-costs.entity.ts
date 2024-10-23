@@ -2,8 +2,8 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToMany,
   BaseEntity,
+  OneToOne,
 } from "typeorm";
 import { BaseData } from "@shared/entities/base-data.entity";
 
@@ -15,6 +15,6 @@ export class DataCollectionAndFieldCosts extends BaseEntity {
   @Column("decimal", { name: "field_cost" })
   fieldCost: number;
 
-  @OneToMany(() => BaseData, (baseData) => baseData.dataCollectionAndFieldCosts)
+  @OneToOne(() => BaseData, (baseData) => baseData.dataCollectionAndFieldCosts)
   baseData: BaseData[];
 }
