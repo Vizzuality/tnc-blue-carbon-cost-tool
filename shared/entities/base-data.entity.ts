@@ -14,6 +14,7 @@ import { FeasibilityAnalysis } from "@shared/entities/feasability-analysis.entit
 import { ConservationPlanningAndAdmin } from "@shared/entities/conservation-and-planning-admin.entity";
 import { DataCollectionAndFieldCosts } from "@shared/entities/data-collection-and-field-costs.entity";
 import { CommunityRepresentation } from "./community-representation.entity";
+import { CarbonRights } from "./establishing-carbon-rights.entity";
 
 export enum ECOSYSTEM {
   MANGROVE = "Mangrove",
@@ -79,6 +80,16 @@ export class BaseData extends BaseEntity {
     referencedColumnName: "id",
   })
   communityRepresentation: CommunityRepresentation;
+
+  @OneToOne(
+    "CarbonRights",
+    (carbonRights: CarbonRights) => carbonRights.baseData
+  )
+  @JoinColumn({
+    name: "carbon_rights",
+    referencedColumnName: "id",
+  })
+  carbonRights: CarbonRights;
 
   @OneToOne(
     "DataCollectionAndFieldCosts",
