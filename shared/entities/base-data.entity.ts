@@ -1,3 +1,4 @@
+import { CommunityCashFlow } from "./community-cash-flow.entity";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -176,4 +177,14 @@ export class BaseData extends BaseEntity {
     referencedColumnName: "id",
   })
   carbonStandardFees: CarbonStandardFees;
+
+  @OneToOne(
+    "CommunityCashFlow",
+    (communityCashFlow: CommunityCashFlow) => communityCashFlow.baseData
+  )
+  @JoinColumn({
+    name: "community_cash_flow",
+    referencedColumnName: "id",
+  })
+  communityCashFlow: CommunityCashFlow;
 }

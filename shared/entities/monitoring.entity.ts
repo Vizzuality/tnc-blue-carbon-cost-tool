@@ -15,6 +15,6 @@ export class MonitoringCost extends BaseEntity {
   @Column("decimal", { name: "monitoring_cost_per_year" })
   monitoringCost: number;
 
-  @OneToOne(() => BaseData, (baseData) => baseData.projectSize)
+  @OneToOne(() => BaseData, (baseData) => baseData.monitoringCost)
   baseData: BaseData;
 }
