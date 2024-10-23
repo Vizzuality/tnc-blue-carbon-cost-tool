@@ -5,6 +5,8 @@ import {
   ManyToOne,
   JoinColumn,
   BaseEntity,
+  OneToOne,
+  OneToMany,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
 import { ProjectSize } from "@shared/entities/project-size.entity";
@@ -44,18 +46,18 @@ export class BaseData extends BaseEntity {
   country: Country;
 
   // Using a string reference to avoid AdminJS crashing when no metadata for this entity is found through BaseData
-  @ManyToOne("ProjectSize", (projectSize: ProjectSize) => projectSize.baseData)
+  @OneToOne("ProjectSize", (projectSize: ProjectSize) => projectSize.baseData)
   @JoinColumn({ name: "project_size", referencedColumnName: "id" })
   projectSize: ProjectSize;
 
-  @ManyToOne(
+  @OneToOne(
     "FeasibilityAnalysis",
     (feasibilityAnalysis: FeasibilityAnalysis) => feasibilityAnalysis.baseData,
   )
   @JoinColumn({ name: "feasibility_analysis", referencedColumnName: "id" })
   feasibilityAnalysis: FeasibilityAnalysis;
 
-  @ManyToOne(
+  @OneToOne(
     "ConservationPlanningAndAdmin",
     (conservationPlanningAndAdmin: ConservationPlanningAndAdmin) =>
       conservationPlanningAndAdmin.baseData,
@@ -66,7 +68,7 @@ export class BaseData extends BaseEntity {
   })
   conservationPlanningAndAdmin: ConservationPlanningAndAdmin;
 
-  @ManyToOne(
+  @OneToOne(
     "DataCollectionAndFieldCosts",
     (dataCollectionAndFieldCosts: DataCollectionAndFieldCosts) =>
       dataCollectionAndFieldCosts.baseData,
