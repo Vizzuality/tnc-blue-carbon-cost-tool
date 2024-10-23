@@ -15,6 +15,6 @@ export class FinancingCost extends BaseEntity {
   @Column("decimal", { name: "financing_cost_capex_percent" })
   financingCostCapexPercent: number;
 
-  @OneToOne(() => BaseData, (baseData) => baseData.carbonRights)
+  @OneToOne(() => BaseData, (baseData) => baseData.financingCost)
   baseData: BaseData[];
 }

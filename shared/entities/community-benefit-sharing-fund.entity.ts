@@ -15,6 +15,6 @@ export class CommunityBenefitSharingFund extends BaseEntity {
   @Column("decimal", { name: "benefit_sharing_fund_pc_of_revenue" })
   benefitSharingFund: number;
 
-  @OneToOne(() => BaseData, (baseData) => baseData.communityRepresentation)
+  @OneToOne(() => BaseData, (baseData) => baseData.communityBenefit)
   baseData: BaseData[];
 }

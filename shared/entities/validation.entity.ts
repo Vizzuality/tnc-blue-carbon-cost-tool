@@ -15,6 +15,6 @@ export class ValidationCost extends BaseEntity {
   @Column("decimal", { name: "validation_cost" })
   validationCost: number;
 
-  @OneToOne(() => BaseData, (baseData) => baseData.projectSize)
+  @OneToOne(() => BaseData, (baseData) => baseData.validationCost)
   baseData: BaseData;
 }

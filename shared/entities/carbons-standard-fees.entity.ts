@@ -15,6 +15,6 @@ export class CarbonStandardFees extends BaseEntity {
   @Column("decimal", { name: "cost_per_carbon_credit_issued" })
   carbonStandardFee: number;
 
-  @OneToOne(() => BaseData, (baseData) => baseData.projectSize)
+  @OneToOne(() => BaseData, (baseData) => baseData.carbonStandardFees)
   baseData: BaseData;
 }

@@ -15,6 +15,6 @@ export class ImplementationLaborCost extends BaseEntity {
   @Column("decimal", { name: "implementation_labor_cost_per_ha" })
   implementationLaborCost: number;
 
-  @OneToOne(() => BaseData, (baseData) => baseData.projectSize)
+  @OneToOne(() => BaseData, (baseData) => baseData.implementationLaborCost)
   baseData: BaseData;
 }

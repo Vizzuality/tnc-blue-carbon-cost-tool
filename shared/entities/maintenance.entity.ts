@@ -18,6 +18,6 @@ export class Maintenance extends BaseEntity {
   @Column("decimal", { name: "maintenance_duration_years" })
   maintenance_duration: number;
 
-  @OneToOne(() => BaseData, (baseData) => baseData.projectSize)
+  @OneToOne(() => BaseData, (baseData) => baseData.maintenance)
   baseData: BaseData;
 }
