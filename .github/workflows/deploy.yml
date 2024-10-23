@@ -215,7 +215,7 @@ jobs:
 
   deploy:
     name: Deploy Services to Amazon EBS
-    needs: [ set_environment_name, build_client, build_api ]
+    needs: [ set_environment_name, build_client, build_api, build_admin ]
     runs-on: ubuntu-latest
     environment:
       name: ${{ needs.set_environment_name.outputs.env_name }}
