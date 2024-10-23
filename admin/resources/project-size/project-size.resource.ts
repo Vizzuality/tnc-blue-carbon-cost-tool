@@ -73,66 +73,6 @@ export const projectSizeResource: ResourceWithOptions = {
     },
     actions: {
       list: {
-        handler: async (request, response, context) => {
-          const { query } = request;
-          const {
-            sortBy,
-            direction,
-            filters = {},
-          } = flat.unflatten(query || {}) as ActionQueryParameters;
-          const { resource, _admin } = context;
-          let { page, perPage } = flat.unflatten(
-            query || {},
-          ) as ActionQueryParameters;
-
-          if (perPage) {
-            perPage = +perPage > PER_PAGE_LIMIT ? PER_PAGE_LIMIT : +perPage;
-          } else {
-            perPage = _admin.options.settings?.defaultPerPage ?? 10;
-          }
-          page = Number(page) || 1;
-
-          const listProperties = resource.decorate().getListProperties();
-          const firstProperty = listProperties.find((p) => p.isSortable());
-          let sort: any;
-          if (firstProperty) {
-            sort = sortSetter(
-              { sortBy, direction },
-              firstProperty.name(),
-              resource.decorate().options,
-            );
-          }
-
-          const filter = await new Filter(filters, resource).populate(context);
-
-          const { currentAdmin } = context;
-          // TODO: We should manipulate the query here to apply custom filters, and remove the after hook
-          const records = await resource.find(
-            filter,
-            {
-              limit: perPage,
-              offset: (page - 1) * perPage,
-              sort,
-            },
-            context,
-          );
-          const populatedRecords = await populator(records, context);
-
-          // eslint-disable-next-line no-param-reassign
-          context.records = populatedRecords;
-
-          const total = await resource.count(filter, context);
-          return {
-            meta: {
-              total,
-              perPage,
-              page,
-              direction: sort?.direction,
-              sortBy: sort?.sortBy,
-            },
-            records: populatedRecords.map((r) => r.toJSON(currentAdmin)),
-          };
-        },
         after: async (
           request: ActionRequest,
           response: ActionResponse,
@@ -140,32 +80,34 @@ export const projectSizeResource: ResourceWithOptions = {
         ) => {
           const { records } = context;
           const baseDataRepo = dataSource.getRepository(BaseData);
-          const query = await baseDataRepo
+          const queryBuilder = baseDataRepo
             .createQueryBuilder("baseData")
             .leftJoin(
               ProjectSize,
               "projectSize",
               "baseData.projectSize = projectSize.id",
             )
-            .leftJoin(
-              Country,
-              "country",
-              "country.countryCode = baseData.countryCode",
-            )
+            .leftJoin(Country, "country", "country.code = baseData.countryCode")
             .select("projectSize.id", "id")
             .addSelect("projectSize.sizeHa", "sizeHa")
-            .addSelect("country.country", "countryName")
+            .addSelect("country.name", "countryName")
             .addSelect("baseData.ecosystem", "ecosystem")
-            .addSelect("baseData.activity", "activity")
-            .where("projectSize.id IN (:...ids)", {
-              ids: records!.map((r) => r.params.id),
-            })
-            .getRawMany();
+            .addSelect("baseData.activity", "activity");
+          if (records?.length) {
+            queryBuilder.where("projectSize.id IN (:...ids)", {
+              ids: records.map((r) => r.params.id),
+            });
+          }
+
+          // .where("projectSize.id IN (:...ids)", {
+          //   ids: records!.map((r) => r.params.id),
+          // })
+          const result = await queryBuilder.getRawMany();
 
           return {
             ...request,
             records: records!.map((record: BaseRecord) => {
-              record.params = query.find((q) => q.id === record.params.id);
+              record.params = result.find((q) => q.id === record.params.id);
               return record;
             }),
           };
