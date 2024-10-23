@@ -22,7 +22,9 @@ import { ImplementationLaborCost } from "./implementation-labor.entity";
 import { MonitoringCost } from "./monitoring.entity";
 import { Maintenance } from "./maintenance.entity";
 import { CommunityBenefitSharingFund } from "./community-benefit-sharing-fund.entity";
-import { CarbonStandardFees } from "./carbons-standard-fees.entity";
+import { CarbonStandardFees } from "./carbon-standard-fees.entity";
+import { EcosystemLoss } from "./ecosystem-loss.entity";
+import { RestorableLand } from "./restorable-land.entity";
 
 export enum ECOSYSTEM {
   MANGROVE = "Mangrove",
@@ -187,4 +189,24 @@ export class BaseData extends BaseEntity {
     referencedColumnName: "id",
   })
   communityCashFlow: CommunityCashFlow;
+
+  @OneToOne(
+    "EcosystemLoss",
+    (ecosystemLoss: EcosystemLoss) => ecosystemLoss.baseData
+  )
+  @JoinColumn({
+    name: "ecosystem_loss",
+    referencedColumnName: "id",
+  })
+  ecosystemLoss: EcosystemLoss;
+
+  @OneToOne(
+    "RestorableLand",
+    (restorableLand: RestorableLand) => restorableLand.baseData
+  )
+  @JoinColumn({
+    name: "restorable_land",
+    referencedColumnName: "id",
+  })
+  restorableLand: EcosystemLoss;
 }
