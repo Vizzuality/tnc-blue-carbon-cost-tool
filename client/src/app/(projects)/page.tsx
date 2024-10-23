@@ -43,7 +43,7 @@ export default function Projects() {
       </motion.aside>
       <div className="flex flex-1 flex-col">
         <ProjectsHeader />
-        <div className="grid flex-grow grid-rows-2">
+        <div className="grid flex-grow grid-rows-2 gap-3">
           <section className="flex-1">
             <ProjectsMap />
           </section>
