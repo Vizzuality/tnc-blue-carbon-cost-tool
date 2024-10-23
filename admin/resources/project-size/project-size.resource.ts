@@ -1,55 +1,14 @@
 import {
   ActionContext,
-  ActionQueryParameters,
   ActionRequest,
   ActionResponse,
   BaseRecord,
-  ConfigurationError,
-  Filter,
-  flat,
-  populator,
-  ResourceOptions,
   ResourceWithOptions,
 } from "adminjs";
 import { dataSource } from "../../datasource.js";
-
-import { Sort } from "typeorm";
 import { ProjectSize } from "@shared/entities/project-size.entity.js";
 import { BaseData } from "@shared/entities/base-data.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
-
-const DEFAULT_DIRECTION = "asc";
-
-const sortSetter = (
-  { direction, sortBy }: { direction?: "asc" | "desc"; sortBy?: string } = {},
-  firstPropertyName: string,
-  resourceOptions: ResourceOptions = {},
-): Sort => {
-  const options: any = resourceOptions.sort || ({} as Sort);
-  if (
-    resourceOptions &&
-    resourceOptions.sort &&
-    resourceOptions.sort.direction &&
-    !["asc", "desc"].includes(resourceOptions.sort.direction)
-  ) {
-    throw new ConfigurationError(
-      `
-    Sort direction should be either "asc" or "desc",
-    "${resourceOptions.sort.direction} was given"`,
-      "global.html#ResourceOptions",
-    );
-  }
-  const computedDirection =
-    direction || (options.direction as Sort) || DEFAULT_DIRECTION;
-  const params = {
-    direction: computedDirection === "asc" ? "asc" : ("desc" as "asc" | "desc"),
-    sortBy: sortBy || options.sortBy || firstPropertyName,
-  };
-
-  return params;
-};
-
-const PER_PAGE_LIMIT = 500;
 
 export const projectSizeResource: ResourceWithOptions = {
   resource: ProjectSize,
@@ -65,7 +24,6 @@ export const projectSizeResource: ResourceWithOptions = {
         isVisible: { list: true, show: true, edit: false, filter: true },
       },
     },
-    // Definir las propiedades que deben aparecer en la lista
     listProperties: ["sizeHa", "countryName", "ecosystem", "activity"],
     navigation: {
       name: "Data Management",
@@ -99,9 +57,6 @@ export const projectSizeResource: ResourceWithOptions = {
             });
           }
 
-          // .where("projectSize.id IN (:...ids)", {
-          //   ids: records!.map((r) => r.params.id),
-          // })
           const result = await queryBuilder.getRawMany();
 
           return {

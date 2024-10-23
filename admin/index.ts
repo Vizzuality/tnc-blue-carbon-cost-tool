@@ -7,7 +7,6 @@ import { dataSource } from "./datasource.js";
 import { AuthProvider } from "./providers/auth.provider.js";
 import { userResource } from "./resources/users/user.resource.js";
 import { projectSizeResource } from "./resources/project-size/project-size.resource.js";
-import { BaseData } from "@shared/entities/base-data.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
 
 AdminJS.registerAdapter({
@@ -44,15 +43,18 @@ const start = async () => {
           icon: "Globe",
         },
       },
-      {
-        resource: BaseData,
-        name: "BaseData",
-        options: {
-          parent: databaseNavigation,
-          icon: "Globe",
+    ],
+    locale: {
+      language: "en",
+      translations: {
+        en: {
+          labels: {
+            User: "Users",
+            Country: "Countries",
+          },
         },
       },
-    ],
+    },
   });
 
   const adminRouter = AdminJSExpress.buildAuthenticatedRouter(admin, {
