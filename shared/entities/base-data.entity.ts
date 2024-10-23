@@ -19,6 +19,7 @@ import { FinancingCost } from "./financing-cost.entity";
 import { ValidationCost } from "./validation.entity";
 import { ImplementationLaborCost } from "./implementation-labor.entity";
 import { MonitoringCost } from "./monitoring.entity";
+import { Maintenance } from "./maintenance.entity";
 
 export enum ECOSYSTEM {
   MANGROVE = "Mangrove",
@@ -135,6 +136,13 @@ export class BaseData extends BaseEntity {
     referencedColumnName: "id",
   })
   monitoringCost: MonitoringCost;
+
+  @OneToOne("Maintenance", (maintenance: Maintenance) => maintenance.baseData)
+  @JoinColumn({
+    name: "maintenance",
+    referencedColumnName: "id",
+  })
+  maintenance: Maintenance;
 
   @OneToOne(
     "DataCollectionAndFieldCosts",
