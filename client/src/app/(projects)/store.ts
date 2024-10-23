@@ -12,6 +12,12 @@ export const projectsUIState = atom<{
   tableExpanded: "default",
 });
 
+export const projectsMapState = atom<{
+  legendOpen: boolean;
+}>({
+  legendOpen: true,
+});
+
 export const projectsFiltersState = atom<{
   keyword: string | undefined;
   projectSize: (typeof PROJECT_PARAMETERS)[0]["options"][number]["value"];

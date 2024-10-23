@@ -27,6 +27,7 @@
     "@ts-rest/react-query": "3.51.0",
     "class-variance-authority": "0.7.0",
     "clsx": "2.1.1",
+    "d3": "7.9.0",
     "framer-motion": "11.11.9",
     "jotai": "2.10.1",
     "lucide-react": "0.447.0",
@@ -42,6 +43,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@types/d3": "7.4.3",
+    "@types/geojson": "7946.0.14",
     "@types/mapbox-gl": "3.4.0",
     "@types/node": "catalog:",
     "@types/react": "^18",

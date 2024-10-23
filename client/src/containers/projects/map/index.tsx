@@ -1,22 +1,45 @@
 "use client";
 
-import { ExpandIcon } from "lucide-react";
+import { ComponentProps } from "react";
+
+import { useAtomValue } from "jotai";
+
+import { projectsMapState } from "@/app/(projects)/store";
+
+import Controls from "@/containers/projects/map/controls";
+import LegendControl from "@/containers/projects/map/controls/legend";
+import ZoomControl from "@/containers/projects/map/controls/zoom";
+import ProjectsLayer from "@/containers/projects/map/layers/projects";
+import { MATRIX_COLORS } from "@/containers/projects/map/layers/projects/utils";
+import Legend from "@/containers/projects/map/legend";
+import MatrixLegend from "@/containers/projects/map/legend/types/matrix";
 
 import Map from "@/components/map";
-import { Button } from "@/components/ui/button";
 
 export default function ProjectsMap() {
-  const onToggleExpand = () => {};
+  const { legendOpen } = useAtomValue(projectsMapState);
+
+  const matrixItems: ComponentProps<typeof MatrixLegend>["intersections"] =
+    Object.keys(MATRIX_COLORS).map((key, index) => ({
+      color: key,
+      id: index,
+    }));
 
   return (
     <div className="h-full overflow-hidden rounded-2xl">
       <Map>
-        <Button
-          onClick={onToggleExpand}
-          className="absolute right-2 top-2 z-50"
-        >
-          <ExpandIcon />
-        </Button>
+        <Controls>
+          <ZoomControl />
+        </Controls>
+        <Controls className="bottom-8 top-auto">
+          <LegendControl />
+        </Controls>
+        {legendOpen && (
+          <Legend>
+            <MatrixLegend intersections={matrixItems} />
+          </Legend>
+        )}
+        <ProjectsLayer />
       </Map>
     </div>
   );
