@@ -5,7 +5,6 @@ import { ImportController } from '@api/modules/import/import.controller';
 import { XlsxParser } from '@api/modules/import/services/xlsx.parser';
 import { EntityPreprocessor } from '@api/modules/import/services/entity.preprocessor';
 import { ModelModule } from '@api/modules/model/model.module';
-import { ExcelParserToken } from '@api/modules/import/services/excel-parser.interface';
 
 @Module({
   imports: [MulterModule.register({}), ModelModule],

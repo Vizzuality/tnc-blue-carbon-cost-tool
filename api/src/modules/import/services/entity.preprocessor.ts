@@ -35,57 +35,73 @@ export class EntityPreprocessor {
     const parsedArray: BaseData[] = [];
     raw.forEach((row: BaseDataJson) => {
       const baseData = new BaseData();
+
       baseData.country = { code: row.country_code } as Country;
       baseData.activity = row.activity;
       baseData.ecosystem = row.ecosystem;
-      baseData.projectSize = { sizeHa: row.project_size_ha } as ProjectSize;
+
+      baseData.projectSize = {
+        sizeHa: this.emptyStringToZero(row.project_size_ha),
+      } as ProjectSize;
       baseData.feasibilityAnalysis = {
-        analysisScore: row.feasibility_analysis,
+        analysisScore: this.emptyStringToZero(row.feasibility_analysis),
       } as FeasibilityAnalysis;
       baseData.conservationPlanningAndAdmin = {
-        planningCost: row.conservation_planning_and_admin,
+        planningCost: this.emptyStringToZero(
+          row.conservation_planning_and_admin,
+        ),
       } as ConservationPlanningAndAdmin;
       baseData.communityRepresentation = {
-        liaisonCost: row.community_representation,
+        liaisonCost: this.emptyStringToZero(row.community_representation),
       } as CommunityRepresentation;
       baseData.carbonRights = {
-        carbonRightsCost: row.establishing_carbon_rights,
+        carbonRightsCost: this.emptyStringToZero(
+          row.establishing_carbon_rights,
+        ),
       } as CarbonRights;
       baseData.financingCost = {
-        financingCostCapexPercent: row.financing_cost,
+        financingCostCapexPercent: this.emptyStringToZero(row.financing_cost),
       } as FinancingCost;
       baseData.validationCost = {
-        validationCost: row.validation,
+        validationCost: this.emptyStringToZero(row.validation),
       } as ValidationCost;
       baseData.implementationLaborCost = {
-        implementationLaborCost: row.implementation_labor_planting,
+        implementationLaborCost: this.emptyStringToZero(
+          row.implementation_labor_planting,
+        ),
       } as ImplementationLaborCost;
       baseData.monitoringCost = {
-        monitoringCost: row.monitoring,
+        monitoringCost: this.emptyStringToZero(row.monitoring),
       } as MonitoringCost;
       baseData.maintenance = {
-        maintenanceCost: row.maintenance,
+        maintenanceCost: this.emptyStringToZero(row.maintenance),
+        maintenanceDuration: this.emptyStringToZero(row.maintenance_duration),
       } as Maintenance;
       baseData.dataCollectionAndFieldCosts = {
-        fieldCost: row.data_collection_and_field_costs,
+        fieldCost: this.emptyStringToZero(row.data_collection_and_field_costs),
       } as DataCollectionAndFieldCosts;
       baseData.communityBenefit = {
-        benefitSharingFund: row.community_benefit_sharing_fund,
+        benefitSharingFund: this.emptyStringToZero(
+          row.community_benefit_sharing_fund,
+        ),
       } as CommunityBenefitSharingFund;
       baseData.carbonStandardFees = {
-        carbonStandardFee: row.carbon_standard_fees,
+        carbonStandardFee: this.emptyStringToZero(row.carbon_standard_fees),
       } as CarbonStandardFees;
       baseData.communityCashFlow = {
-        cashflowType: row.other_community_cash_flow,
+        cashflowType: this.emptyStringToNull(row.other_community_cash_flow),
       } as CommunityCashFlow;
 
       parsedArray.push(baseData);
     });
-
     return parsedArray;
   }
 
   private emptyStringToNull(value: any): any | null {
     return value || null;
+  }
+
+  private emptyStringToZero(value: any): any | 0 {
+    return value || 0;
   }
 }
