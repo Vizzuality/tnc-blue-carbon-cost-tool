@@ -58,13 +58,18 @@ export class BaseData extends BaseEntity {
   country: Country;
 
   // Using a string reference to avoid AdminJS crashing when no metadata for this entity is found through BaseData
-  @OneToOne("ProjectSize", (projectSize: ProjectSize) => projectSize.baseData)
+  @OneToOne("ProjectSize", (projectSize: ProjectSize) => projectSize.baseData, {
+    cascade: ["insert"],
+  })
   @JoinColumn({ name: "project_size", referencedColumnName: "id" })
   projectSize: ProjectSize;
 
   @OneToOne(
     "FeasibilityAnalysis",
-    (feasibilityAnalysis: FeasibilityAnalysis) => feasibilityAnalysis.baseData
+    (feasibilityAnalysis: FeasibilityAnalysis) => feasibilityAnalysis.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({ name: "feasibility_analysis", referencedColumnName: "id" })
   feasibilityAnalysis: FeasibilityAnalysis;
@@ -72,7 +77,10 @@ export class BaseData extends BaseEntity {
   @OneToOne(
     "ConservationPlanningAndAdmin",
     (conservationPlanningAndAdmin: ConservationPlanningAndAdmin) =>
-      conservationPlanningAndAdmin.baseData
+      conservationPlanningAndAdmin.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "conservation_planning_and_admin",
@@ -83,7 +91,10 @@ export class BaseData extends BaseEntity {
   @OneToOne(
     "CommunityRepresentation",
     (communityRepresentation: CommunityRepresentation) =>
-      communityRepresentation.baseData
+      communityRepresentation.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "community_representation",
@@ -93,7 +104,10 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "CarbonRights",
-    (carbonRights: CarbonRights) => carbonRights.baseData
+    (carbonRights: CarbonRights) => carbonRights.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "carbon_rights",
@@ -103,7 +117,10 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "FinancingCost",
-    (financingCost: FinancingCost) => financingCost.baseData
+    (financingCost: FinancingCost) => financingCost.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "financing_cost",
@@ -113,7 +130,10 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "ValidationCost",
-    (validationCost: ValidationCost) => validationCost.baseData
+    (validationCost: ValidationCost) => validationCost.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "validation_cost",
@@ -124,7 +144,10 @@ export class BaseData extends BaseEntity {
   @OneToOne(
     "ImplementationLaborCost",
     (implementationLaborCost: ImplementationLaborCost) =>
-      implementationLaborCost.baseData
+      implementationLaborCost.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "implementation_labor_cost",
@@ -134,7 +157,10 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "MonitoringCost",
-    (monitoringCost: MonitoringCost) => monitoringCost.baseData
+    (monitoringCost: MonitoringCost) => monitoringCost.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "monitoring_cost",
@@ -142,7 +168,9 @@ export class BaseData extends BaseEntity {
   })
   monitoringCost: MonitoringCost;
 
-  @OneToOne("Maintenance", (maintenance: Maintenance) => maintenance.baseData)
+  @OneToOne("Maintenance", (maintenance: Maintenance) => maintenance.baseData, {
+    cascade: ["insert"],
+  })
   @JoinColumn({
     name: "maintenance",
     referencedColumnName: "id",
@@ -152,7 +180,10 @@ export class BaseData extends BaseEntity {
   @OneToOne(
     "DataCollectionAndFieldCosts",
     (dataCollectionAndFieldCosts: DataCollectionAndFieldCosts) =>
-      dataCollectionAndFieldCosts.baseData
+      dataCollectionAndFieldCosts.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "data_collection_and_field_costs",
@@ -162,7 +193,11 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "CommunityBenefitSharingFund",
-    (communityBenefit: CommunityBenefitSharingFund) => communityBenefit.baseData
+    (communityBenefit: CommunityBenefitSharingFund) =>
+      communityBenefit.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "community_benefit_sharing_fund",
@@ -172,7 +207,10 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "CarbonStandardFees",
-    (carbonStandardFees: CarbonStandardFees) => carbonStandardFees.baseData
+    (carbonStandardFees: CarbonStandardFees) => carbonStandardFees.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "carbon_standard_fees",
@@ -182,7 +220,10 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "CommunityCashFlow",
-    (communityCashFlow: CommunityCashFlow) => communityCashFlow.baseData
+    (communityCashFlow: CommunityCashFlow) => communityCashFlow.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "community_cash_flow",
@@ -192,7 +233,10 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "EcosystemLoss",
-    (ecosystemLoss: EcosystemLoss) => ecosystemLoss.baseData
+    (ecosystemLoss: EcosystemLoss) => ecosystemLoss.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "ecosystem_loss",
@@ -202,7 +246,10 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "RestorableLand",
-    (restorableLand: RestorableLand) => restorableLand.baseData
+    (restorableLand: RestorableLand) => restorableLand.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "restorable_land",

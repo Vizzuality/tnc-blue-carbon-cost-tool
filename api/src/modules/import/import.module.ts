@@ -9,6 +9,11 @@ import { ModelModule } from '@api/modules/model/model.module';
 @Module({
   imports: [MulterModule.register({}), ModelModule],
   controllers: [ImportController],
-  providers: [ImportService, XlsxParser, EntityPreprocessor],
+  providers: [
+    ImportService,
+    EntityPreprocessor,
+    XlsxParser,
+    //  { provide: ExcelParserToken, useClass: XlsxParser },
+  ],
 })
 export class ImportModule {}
