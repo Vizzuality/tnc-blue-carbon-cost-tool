@@ -1,4 +1,4 @@
-import { Controller, Post, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
@@ -10,14 +10,14 @@ import { ImportService } from '@api/modules/import/import.service';
 import { Multer } from 'multer';
 
 @Controller()
-@UseInterceptors(JwtAuthGuard, RolesGuard)
+//@UseGuards(JwtAuthGuard, RolesGuard)
 export class ImportController {
   constructor(private readonly service: ImportService) {}
   // TODO: File validation following:
   //       https://docs.nestjs.com/techniques/file-upload
 
   @Post('/admin/upload/xlsx')
-  @RequiredRoles(ROLES.ADMIN)
+  //@RequiredRoles(ROLES.ADMIN)
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadXlsm() file: Express.Multer.File): Promise<any> {
     return this.service.import(file.buffer);

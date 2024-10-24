@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryColumn, BaseEntity } from "typeorm";
+import {
+  Column,
+  Entity,
+  PrimaryColumn,
+  BaseEntity,
+  Geometry,
+  Index,
+} from "typeorm";
 
 export enum CONTINENTS {
   AFRICA = "Africa",
@@ -13,7 +20,7 @@ export enum CONTINENTS {
 
 @Entity("countries")
 export class Country extends BaseEntity {
-  @PrimaryColumn({ name: "country_code", length: 3, type: "char" })
+  @PrimaryColumn({ name: "code", length: 3, type: "char" })
   code: string;
 
   @Column({ length: 100, type: "varchar" })
@@ -34,4 +41,13 @@ export class Country extends BaseEntity {
 
   @Column({ name: "hdi", type: "int", nullable: true })
   hdi?: number;
+
+  @Index({ spatial: true })
+  @Column({
+    type: "geometry",
+    srid: 4326,
+    // TODO: Make it nullable false once we have all the data
+    nullable: true,
+  })
+  geometry: Geometry;
 }
