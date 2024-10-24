@@ -1,8 +1,11 @@
+import { PropsWithChildren } from "react";
+
 import { Inter } from "next/font/google";
 
 import type { Metadata } from "next";
 import "@/app/globals.css";
 import { getServerSession } from "next-auth";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { config } from "@/app/auth/api/[...nextauth]/config";
 
@@ -19,18 +22,18 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<PropsWithChildren>) {
   const session = await getServerSession(config);
 
   return (
     <LayoutProviders session={session}>
       <html lang="en">
-        <body className={inter.className}>
-          <main>{children}</main>
-          <Toaster />
-        </body>
+        <NuqsAdapter>
+          <body className={inter.className}>
+            <main>{children}</main>
+            <Toaster />
+          </body>
+        </NuqsAdapter>
       </html>
     </LayoutProviders>
   );

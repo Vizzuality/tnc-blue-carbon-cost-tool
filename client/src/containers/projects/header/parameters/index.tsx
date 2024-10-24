@@ -1,6 +1,13 @@
-import { useAtom, ExtractAtomValue } from "jotai";
+import { z } from "zod";
 
-import { projectsFiltersState } from "@/app/(projects)/store";
+import {
+  CARBON_PRICING_TYPE_VALUES,
+  COST_VALUES,
+  FILTER_KEYS,
+  PROJECT_SIZE_VALUES,
+} from "@/app/(projects)/constants";
+import { useGlobalFilters } from "@/app/(projects)/url-store";
+import { filtersSchema } from "@/app/(projects)/url-store";
 
 import { Label } from "@/components/ui/label";
 import {
@@ -10,70 +17,63 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 export const PROJECT_PARAMETERS = [
   {
+    key: FILTER_KEYS[1],
     label: "Project size",
-    key: "projectSize",
-    defaultValue: "medium",
     options: [
       {
         label: "Small",
-        value: "small",
+        value: PROJECT_SIZE_VALUES[0],
       },
       {
         label: "Medium",
-        value: "medium",
+        value: PROJECT_SIZE_VALUES[1],
       },
       {
         label: "Large",
-        value: "large",
+        value: PROJECT_SIZE_VALUES[2],
       },
     ],
   },
   {
+    key: FILTER_KEYS[2],
     label: "Carbon pricing type",
-    key: "carbonPricingType",
-    defaultValue: "market_price",
     options: [
       {
         label: "Market price",
-        value: "market_price",
+        value: CARBON_PRICING_TYPE_VALUES[0],
       },
       {
         label: "OPEX Breakeven price",
-        value: "opex_breakeven_price",
+        value: CARBON_PRICING_TYPE_VALUES[1],
       },
     ],
   },
   {
+    key: FILTER_KEYS[3],
     label: "Cost",
-    key: "cost",
-    defaultValue: "npv",
     options: [
       {
         label: "Total",
-        value: "total",
+        value: COST_VALUES[0],
       },
       {
         label: "NPV",
-        value: "npv",
+        value: COST_VALUES[1],
       },
     ],
   },
 ] as const;
 
 export default function ParametersProjects() {
-  const [, setFilters] = useAtom(projectsFiltersState);
+  const [filters, setFilters] = useGlobalFilters();
 
-  const handleParameters = (
+  const handleParameters = async (
     v: string,
-    parameter: keyof Omit<
-      ExtractAtomValue<typeof projectsFiltersState>,
-      "keyword"
-    >,
+    parameter: keyof Omit<z.infer<typeof filtersSchema>, "keyword">,
   ) => {
-    setFilters((prev) => ({ ...prev, [parameter]: v }));
+    await setFilters((prev) => ({ ...prev, [parameter]: v }));
   };
 
   return (
@@ -83,7 +83,7 @@ export default function ParametersProjects() {
           <Label htmlFor={parameter.label}>{parameter.label}</Label>
           <Select
             name={parameter.label}
-            defaultValue={parameter.defaultValue}
+            defaultValue={filters[parameter.key]}
             onValueChange={(v) => {
               handleParameters(v, parameter.key);
             }}
