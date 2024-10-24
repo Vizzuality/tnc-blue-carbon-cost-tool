@@ -1,1 +1,5 @@
 excel/data_ingestion.xlsm
+
+#ignore raw data files
+raw_data/*
+test_data/*
