@@ -25,6 +25,12 @@ import { CommunityBenefitSharingFund } from "./community-benefit-sharing-fund.en
 import { CarbonStandardFees } from "./carbon-standard-fees.entity";
 import { EcosystemLoss } from "./ecosystem-loss.entity";
 import { RestorableLand } from "./restorable-land.entity";
+import { EmissionFactors } from "./emission-factors.entity";
+import { BaselineReassessment } from "./baseline-reassessment.entity";
+import { MRV } from "./mrv.entity";
+import { BlueCarbonProjectPlanning } from "./blue-carbon-project-planning.entity";
+import { LongTermProjectOperating } from "./long-term-project-operating.entity";
+import { SequestrationRate } from "./sequestration-rate.entity";
 
 export enum ECOSYSTEM {
   MANGROVE = "Mangrove",
@@ -209,4 +215,64 @@ export class BaseData extends BaseEntity {
     referencedColumnName: "id",
   })
   restorableLand: EcosystemLoss;
+
+  @OneToOne(
+    "EmissionFactors",
+    (emissionFactors: EmissionFactors) => emissionFactors.baseData
+  )
+  @JoinColumn({
+    name: "emission_factors",
+    referencedColumnName: "id",
+  })
+  emissionFactors: EmissionFactors;
+
+  @OneToOne(
+    "BaselineReassessment",
+    (baselineReassessment: BaselineReassessment) =>
+      baselineReassessment.baseData
+  )
+  @JoinColumn({
+    name: "baseline_reassessment",
+    referencedColumnName: "id",
+  })
+  baselineReassessment: BaselineReassessment;
+
+  @OneToOne("MRV", (mrv: MRV) => mrv.baseData)
+  @JoinColumn({
+    name: "mrv",
+    referencedColumnName: "id",
+  })
+  mrv: MRV;
+
+  @OneToOne(
+    "BlueCarbonProjectPlanning",
+    (blueCarbonProjectPlanning: BlueCarbonProjectPlanning) =>
+      blueCarbonProjectPlanning.baseData
+  )
+  @JoinColumn({
+    name: "blue_carbon_project_planning",
+    referencedColumnName: "id",
+  })
+  blueCarbonProjectPlanning: BlueCarbonProjectPlanning;
+
+  @OneToOne(
+    "LongTermProjectOperating",
+    (longTermProjectOperating: LongTermProjectOperating) =>
+      longTermProjectOperating.baseData
+  )
+  @JoinColumn({
+    name: "long_term_project_operating",
+    referencedColumnName: "id",
+  })
+  longTermProjectOperating: LongTermProjectOperating;
+
+  @OneToOne(
+    "SequestrationRate",
+    (sequestrationRate: SequestrationRate) => sequestrationRate.baseData
+  )
+  @JoinColumn({
+    name: "sequestration_rate",
+    referencedColumnName: "id",
+  })
+  sequestrationRate: SequestrationRate;
 }
