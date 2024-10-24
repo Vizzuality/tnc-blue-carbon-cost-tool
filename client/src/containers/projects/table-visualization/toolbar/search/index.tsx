@@ -1,17 +1,16 @@
 import { ComponentProps } from "react";
 
-import { useSetAtom } from "jotai";
-
-import { projectsFiltersState } from "@/app/(projects)/store";
+import { useGlobalFilters } from "@/app/(projects)/url-store";
 
 import Search from "@/components/ui/search";
 
 export default function SearchProjectsTable() {
-  const setFilters = useSetAtom(projectsFiltersState);
-  const handleSearch = (
+  const [, setFilters] = useGlobalFilters();
+
+  const handleSearch = async (
     v: Parameters<ComponentProps<typeof Search>["onChange"]>[0],
   ) => {
-    setFilters((prev) => ({ ...prev, keyword: v }));
+    await setFilters((prev) => ({ ...prev, keyword: v }));
   };
 
   return <Search placeholder="Search project" onChange={handleSearch} />;
