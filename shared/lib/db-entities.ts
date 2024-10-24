@@ -18,6 +18,12 @@ import { Maintenance } from "@shared/entities/maintenance.entity";
 import { MonitoringCost } from "@shared/entities/monitoring.entity";
 import { RestorableLand } from "@shared/entities/restorable-land.entity";
 import { ValidationCost } from "@shared/entities/validation.entity";
+import { BaselineReassessment } from "@shared/entities/baseline-reassessment.entity";
+import { BlueCarbonProjectPlanning } from "@shared/entities/blue-carbon-project-planning.entity";
+import { EmissionFactors } from "@shared/entities/emission-factors.entity";
+import { LongTermProjectOperating } from "@shared/entities/long-term-project-operating.entity";
+import { MRV } from "@shared/entities/mrv.entity";
+import { SequestrationRate } from "@shared/entities/sequestration-rate.entity";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -41,4 +47,10 @@ export const COMMON_DATABASE_ENTITIES = [
   MonitoringCost,
   RestorableLand,
   ValidationCost,
+  BaselineReassessment,
+  BlueCarbonProjectPlanning,
+  EmissionFactors,
+  LongTermProjectOperating,
+  MRV,
+  SequestrationRate,
 ];
