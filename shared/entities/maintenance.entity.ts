@@ -16,7 +16,7 @@ export class Maintenance extends BaseEntity {
   maintenanceCost: number;
 
   @Column("decimal", { name: "maintenance_duration_years" })
-  maintenance_duration: number;
+  maintenanceDuration: number;
 
   @OneToOne(() => BaseData, (baseData) => baseData.maintenance)
   baseData: BaseData;

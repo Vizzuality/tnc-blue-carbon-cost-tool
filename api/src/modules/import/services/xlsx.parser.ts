@@ -4,22 +4,21 @@ import {
   ExcelParserInterface,
   SHEETS_TO_PARSE,
 } from './excel-parser.interface';
+import { BaseDataJson } from '@api/modules/import/excel-base-data.dto';
 
 @Injectable()
 export class XlsxParser implements ExcelParserInterface {
-  async parseExcel<T>(buffer: Buffer): Promise<any> {
+  async parseExcel(buffer: Buffer): Promise<BaseDataJson[]> {
     const workbook: WorkBook = read(buffer);
-
-    const result: any = {};
+    let parsedData: BaseDataJson[];
 
     for (const sheetName of SHEETS_TO_PARSE) {
       const sheet: WorkSheet = workbook.Sheets[sheetName];
-      const data = utils.sheet_to_json(sheet, {
+      parsedData = utils.sheet_to_json(sheet, {
         raw: true,
       });
-      result[sheetName] = data;
     }
 
-    return result;
+    return parsedData;
   }
 }
