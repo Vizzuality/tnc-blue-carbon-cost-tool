@@ -36,7 +36,7 @@ export default function ProjectsMap() {
         </Controls>
         {legendOpen && (
           <Legend>
-            <MatrixLegend items={[]} intersections={matrixItems} />
+            <MatrixLegend intersections={matrixItems} />
           </Legend>
         )}
         <ProjectsLayer />
