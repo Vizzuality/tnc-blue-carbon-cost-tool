@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
@@ -6,20 +6,31 @@ import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
 import { ROLES } from '@shared/entities/users/roles.enum';
 import { UploadXlsm } from '@api/modules/import/decorators/xlsm-upload.decorator';
 import { ImportService } from '@api/modules/import/import.service';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
+import { adminContract } from '@shared/contracts/admin.contract';
+import { ControllerResponse } from '@api/types/controller-response.type';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Multer } from 'multer';
 
 @Controller()
-//@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class ImportController {
   constructor(private readonly service: ImportService) {}
   // TODO: File validation following:
   //       https://docs.nestjs.com/techniques/file-upload
 
-  @Post('/admin/upload/xlsx')
-  //@RequiredRoles(ROLES.ADMIN)
+  @TsRestHandler(adminContract.uploadFile)
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadXlsm() file: Express.Multer.File): Promise<any> {
-    return this.service.import(file.buffer);
+  @RequiredRoles(ROLES.ADMIN)
+  async uploadFile(
+    @UploadXlsm() file: Express.Multer.File,
+  ): Promise<ControllerResponse> {
+    return tsRestHandler(adminContract.uploadFile, async () => {
+      const importedData = await this.service.import(file.buffer);
+      return {
+        status: 201,
+        body: importedData,
+      };
+    });
   }
 }

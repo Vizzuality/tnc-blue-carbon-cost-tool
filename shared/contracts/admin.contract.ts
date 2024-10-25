@@ -13,4 +13,12 @@ export const adminContract = contract.router({
     },
     body: CreateUserSchema,
   },
+  uploadFile: {
+    method: "POST",
+    path: "/admin/upload/xlsx",
+    responses: {
+      201: contract.type<any>(),
+    },
+    body: contract.type<any>(),
+  },
 });
