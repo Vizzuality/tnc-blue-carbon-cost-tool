@@ -1,8 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { FeatureCollection, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Country } from '@shared/entities/countries/country.entity';
-import { BaseData } from '@api/modules/model/base-data.entity';
+import { Country } from '@shared/entities/country.entity';
+import { BaseData } from '@shared/entities/base-data.entity';
 
 /**
  * @description: The aim for this repository is to work with geospatial data, for now "geometry" column in countries
@@ -21,14 +21,10 @@ export class MapRepository extends Repository<Country> {
   }
 
   async getGeoFeatures(
-    countryCode: Country['countryCode'],
+    countryCode: Country['code'],
   ): Promise<FeatureCollection> {
     const queryBuilder = this.createQueryBuilder('country');
-    queryBuilder.innerJoin(
-      BaseData,
-      'bd',
-      'bd.country_code = country.country_code',
-    );
+    queryBuilder.innerJoin(BaseData, 'bd', 'bd.country_code = country.code');
     queryBuilder.select(
       `
         json_build_object(
@@ -44,7 +40,7 @@ export class MapRepository extends Repository<Country> {
       'geojson',
     );
     if (countryCode) {
-      queryBuilder.where('country.country_code = :countryCode', {
+      queryBuilder.where('country.code = :countryCode', {
         countryCode,
       });
     }
