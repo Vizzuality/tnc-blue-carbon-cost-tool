@@ -57,8 +57,8 @@ export class MapRepository extends Repository<Country> {
   }
 
   private getPropertiesQuery(): string {
-    return `'projectSize', bd.project_size_ha,
-            'feasibilityAnalysis', bd.feasibility_analysis,
-            'conservationPlanningAndAdmin', bd.conservation_planning_and_admin`;
+    return `'country', country.name,
+            'abatementPotential', 10000,
+            'cost', 20000`;
   }
 }
