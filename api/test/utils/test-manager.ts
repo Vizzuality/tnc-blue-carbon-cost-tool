@@ -12,10 +12,11 @@ import { User } from '@shared/entities/users/user.entity';
 import { IEmailServiceToken } from '@api/modules/notifications/email/email-service.interface';
 import { MockEmailService } from './mocks/mock-email.service';
 import { ROLES } from '@shared/entities/users/roles.enum';
-import { createUser } from '@shared/lib/entity-mocks';
+import { createBaseData, createUser } from '@shared/lib/entity-mocks';
 import { clearTestDataFromDatabase } from '@shared/lib/db-helpers';
 import * as path from 'path';
 import * as fs from 'fs';
+import { BaseData } from '@shared/entities/base-data.entity';
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate
  * common testing utilities
@@ -102,6 +103,8 @@ export class TestManager {
     return {
       createUser: (additionalData?: Partial<User>) =>
         createUser(this.getDataSource(), additionalData),
+      createBaseData: async (additionalData?: Partial<BaseData>) =>
+        createBaseData(this.getDataSource(), additionalData),
     };
   }
 }
