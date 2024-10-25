@@ -18,7 +18,12 @@ export class BlueCarbonProjectPlanning extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ type: "enum", enum: INPUT_SELECTION, nullable: false })
+  @Column({
+    type: "enum",
+    enum: INPUT_SELECTION,
+    nullable: false,
+    default: INPUT_SELECTION.INPUT_1,
+  })
   inputSelection: INPUT_SELECTION;
 
   @Column("decimal", { name: "input_1_cost_per_project" })

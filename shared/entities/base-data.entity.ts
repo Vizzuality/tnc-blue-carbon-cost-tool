@@ -265,7 +265,7 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "EmissionFactors",
-    (emissionFactors: EmissionFactors) => emissionFactors.baseData
+    (emissionFactors: EmissionFactors) => emissionFactors.baseData,
   )
   @JoinColumn({
     name: "emission_factors",
@@ -276,7 +276,7 @@ export class BaseData extends BaseEntity {
   @OneToOne(
     "BaselineReassessment",
     (baselineReassessment: BaselineReassessment) =>
-      baselineReassessment.baseData
+      baselineReassessment.baseData,
   )
   @JoinColumn({
     name: "baseline_reassessment",
@@ -294,7 +294,7 @@ export class BaseData extends BaseEntity {
   @OneToOne(
     "BlueCarbonProjectPlanning",
     (blueCarbonProjectPlanning: BlueCarbonProjectPlanning) =>
-      blueCarbonProjectPlanning.baseData
+      blueCarbonProjectPlanning.baseData,
   )
   @JoinColumn({
     name: "blue_carbon_project_planning",
@@ -305,7 +305,7 @@ export class BaseData extends BaseEntity {
   @OneToOne(
     "LongTermProjectOperating",
     (longTermProjectOperating: LongTermProjectOperating) =>
-      longTermProjectOperating.baseData
+      longTermProjectOperating.baseData,
   )
   @JoinColumn({
     name: "long_term_project_operating",
@@ -315,7 +315,7 @@ export class BaseData extends BaseEntity {
 
   @OneToOne(
     "SequestrationRate",
-    (sequestrationRate: SequestrationRate) => sequestrationRate.baseData
+    (sequestrationRate: SequestrationRate) => sequestrationRate.baseData,
   )
   @JoinColumn({
     name: "sequestration_rate",

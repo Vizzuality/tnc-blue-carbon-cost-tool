@@ -32,6 +32,7 @@ export type BaseDataJson = {
   ecosystem_extent_historic: number;
   ecosystem_loss_rate: number;
   restorable_land: number;
+  // TODO: Since this is the value that is selected in the corresponding tab within different tiers, maybe the naming is a bit confusing, talk with Elena
   tier_1_emission_factor: string;
   emission_factor_AGB: number;
   emission_factor_SOC: number;
