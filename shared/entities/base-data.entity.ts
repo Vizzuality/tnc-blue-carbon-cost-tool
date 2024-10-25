@@ -261,7 +261,7 @@ export class BaseData extends BaseEntity {
     name: "restorable_land",
     referencedColumnName: "id",
   })
-  restorableLand: EcosystemLoss;
+  restorableLand: RestorableLand;
 
   @OneToOne(
     "EmissionFactors",
