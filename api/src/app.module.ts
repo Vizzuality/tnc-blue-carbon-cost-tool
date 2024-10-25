@@ -50,10 +50,14 @@ export class AppModule implements OnModuleInit {
       if (countries[0].count > 0) {
         return;
       }
-      const sql = fs.readFileSync(
-        path.join(__dirname, '../../../src/geocountries.sql'),
-        'utf8',
-      );
+
+      const isTestEnv = process.env.NODE_ENV === 'test';
+
+      const sqlFilePath = isTestEnv
+        ? path.join(__dirname, '../src/geocountries.sql')
+        : path.join(__dirname, '../../../src/geocountries.sql');
+
+      const sql = fs.readFileSync(sqlFilePath, 'utf8');
 
       await queryRunner.query(sql);
       console.warn('Countries imported');
