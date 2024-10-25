@@ -17,7 +17,12 @@ export class EmissionFactors extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ type: "enum", enum: EMISSION_FACTORS_TIER_TYPES, nullable: false })
+  @Column({
+    type: "enum",
+    enum: EMISSION_FACTORS_TIER_TYPES,
+    nullable: false,
+    default: EMISSION_FACTORS_TIER_TYPES.TIER_1,
+  })
   tierSelector: EMISSION_FACTORS_TIER_TYPES;
 
   @Column("decimal", { name: "tier_1_factor" })

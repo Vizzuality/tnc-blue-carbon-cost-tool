@@ -21,6 +21,7 @@ export class SequestrationRate extends BaseEntity {
     type: "enum",
     enum: SEQUESTRATION_RATE_TIER_TYPES,
     nullable: false,
+    default: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
   })
   tierSelector: SEQUESTRATION_RATE_TIER_TYPES;
 
