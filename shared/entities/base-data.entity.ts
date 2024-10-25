@@ -7,7 +7,7 @@ import {
   JoinColumn,
   BaseEntity,
   OneToOne,
-  OneToMany,
+  Index,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
 import { ProjectSize } from "@shared/entities/project-size.entity";
@@ -44,6 +44,11 @@ export enum ACTIVITY {
 }
 
 @Entity("base_data")
+@Index(
+  "compose_idx_countrycode_ecosystem_activity",
+  ["ecosystem", "activity", "countryCode"],
+  { unique: true },
+)
 export class BaseData extends BaseEntity {
   // TODO: We could use a integer value as primary to match the excel rows so that we know if there are new values or something is being updated
   @PrimaryGeneratedColumn("uuid")
