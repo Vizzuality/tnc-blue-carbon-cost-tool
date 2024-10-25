@@ -11,7 +11,7 @@ import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { UserWithAccessToken } from '@shared/dtos/users/user.dto';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { CreateUserDto } from '@shared/dtos/users/create-user.dto';
-import { randomBytes } from 'node:crypto';
+import { randomBytes } from 'crypto';
 import { SendWelcomeEmailCommand } from '@api/modules/notifications/email/commands/send-welcome-email.command';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 import { SignUpDto } from '@shared/schemas/auth/sign-up.schema';

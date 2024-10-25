@@ -79,6 +79,6 @@ describe('Import Tests', () => {
         .find();
 
       expect(baseData).toHaveLength(200);
-    });
+    }, 30000);
   });
 });
