@@ -1,6 +1,11 @@
 import { genSalt, hash } from "bcrypt";
 import { DataSource, DeepPartial } from "typeorm";
 import { User } from "@shared/entities/users/user.entity";
+import {
+  ACTIVITY,
+  BaseData,
+  ECOSYSTEM,
+} from "@shared/entities/base-data.entity";
 
 export const createUser = async (
   dataSource: DataSource,
@@ -17,4 +22,16 @@ export const createUser = async (
 
   await dataSource.getRepository(User).save(user);
   return { ...user, password: usedPassword } as User;
+};
+
+export const createBaseData = async (
+  dataSource: DataSource,
+  additionalData?: Partial<BaseData>,
+): Promise<BaseData> => {
+  const baseData = new BaseData();
+  baseData.ecosystem = ECOSYSTEM.MANGROVE;
+  baseData.countryCode = "AND";
+  baseData.activity = ACTIVITY.CONSERVATION;
+
+  return dataSource.getRepository(BaseData).save(baseData);
 };
