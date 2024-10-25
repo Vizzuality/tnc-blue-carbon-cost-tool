@@ -14,6 +14,7 @@ import { TsRestModule } from '@ts-rest/nest';
 import { DataSource } from 'typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
+import { CountriesModule } from '@api/modules/countries/countries.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import * as path from 'path';
     ApiEventsModule,
     AdminModule,
     ImportModule,
+    CountriesModule,
     UsersModule,
   ],
   controllers: [AppController],
