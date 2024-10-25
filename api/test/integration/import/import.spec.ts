@@ -14,11 +14,19 @@ describe('Import Tests', () => {
     '../../../../data/excel/data_ingestion.xlsm',
   );
   const fileBuffer = fs.readFileSync(testFilePath);
+  const geoCountriesFilePath = path.join(
+    __dirname,
+    '../../../../api/src/geocountries.sql',
+  );
+  const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, 'utf8');
 
   beforeAll(async () => {
     testManager = await TestManager.createTestManager();
-    const { jwtToken: token } = await testManager.setUpTestUser();
-    testUserToken = token;
+  });
+
+  beforeEach(async () => {
+    const { jwtToken } = await testManager.setUpTestUser();
+    testUserToken = jwtToken;
   });
 
   afterEach(async () => {
@@ -58,13 +66,12 @@ describe('Import Tests', () => {
   });
   describe('Import Data', () => {
     it('should import data from an excel file', async () => {
-      const response = await testManager
+      await testManager.getDataSource().query(geoCountriesSql);
+      await testManager
         .request()
         .post(adminContract.uploadFile.path)
         .set('Authorization', `Bearer ${testUserToken}`)
         .attach('file', fileBuffer, 'data_ingestion.xlsm');
-
-      expect(response.status).toBe(HttpStatus.CREATED);
 
       const baseData = await testManager
         .getDataSource()

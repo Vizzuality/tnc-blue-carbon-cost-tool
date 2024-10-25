@@ -41,6 +41,9 @@ export class AppModule implements OnModuleInit {
   constructor(private datasource: DataSource) {}
 
   async onModuleInit() {
+    if (process.env.NODE_ENV === 'test') {
+      return;
+    }
     const queryRunner = this.datasource.createQueryRunner();
     try {
       await queryRunner.connect();
@@ -51,16 +54,13 @@ export class AppModule implements OnModuleInit {
         return;
       }
 
-      const isTestEnv = process.env.NODE_ENV === 'test';
-
-      const sqlFilePath = isTestEnv
-        ? path.join(__dirname, '../src/geocountries.sql')
-        : path.join(__dirname, '../../../src/geocountries.sql');
-
-      const sql = fs.readFileSync(sqlFilePath, 'utf8');
+      const sql = fs.readFileSync(
+        path.join(__dirname, '../../../src/geocountries.sql'),
+        'utf8',
+      );
 
       await queryRunner.query(sql);
-      console.warn('Countries imported');
+      console.log('Countries imported');
     } catch (e) {
       console.error('Error while importing countries', e);
     } finally {
