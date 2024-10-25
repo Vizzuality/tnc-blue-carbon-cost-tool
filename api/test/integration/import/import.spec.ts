@@ -14,11 +14,6 @@ describe('Import Tests', () => {
     '../../../../data/excel/data_ingestion.xlsm',
   );
   const fileBuffer = fs.readFileSync(testFilePath);
-  const geoCountriesFilePath = path.join(
-    __dirname,
-    '../../../../api/src/geocountries.sql',
-  );
-  const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, 'utf8');
 
   beforeAll(async () => {
     testManager = await TestManager.createTestManager();
@@ -66,7 +61,7 @@ describe('Import Tests', () => {
   });
   describe('Import Data', () => {
     it('should import data from an excel file', async () => {
-      await testManager.getDataSource().query(geoCountriesSql);
+      await testManager.ingestCountries();
       await testManager
         .request()
         .post(adminContract.uploadFile.path)

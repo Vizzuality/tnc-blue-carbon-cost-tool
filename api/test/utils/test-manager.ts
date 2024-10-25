@@ -14,7 +14,8 @@ import { MockEmailService } from './mocks/mock-email.service';
 import { ROLES } from '@shared/entities/users/roles.enum';
 import { createUser } from '@shared/lib/entity-mocks';
 import { clearTestDataFromDatabase } from '@shared/lib/db-helpers';
-
+import * as path from 'path';
+import * as fs from 'fs';
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate
  * common testing utilities
@@ -86,6 +87,15 @@ export class TestManager {
 
   request() {
     return request(this.getApp().getHttpServer());
+  }
+
+  async ingestCountries() {
+    const geoCountriesFilePath = path.join(
+      __dirname,
+      '../../../api/src/geocountries.sql',
+    );
+    const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, 'utf8');
+    await this.dataSource.query(geoCountriesSql);
   }
 
   mocks() {
