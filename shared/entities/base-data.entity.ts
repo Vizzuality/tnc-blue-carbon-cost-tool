@@ -271,6 +271,9 @@ export class BaseData extends BaseEntity {
   @OneToOne(
     "EmissionFactors",
     (emissionFactors: EmissionFactors) => emissionFactors.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "emission_factors",
@@ -282,6 +285,9 @@ export class BaseData extends BaseEntity {
     "BaselineReassessment",
     (baselineReassessment: BaselineReassessment) =>
       baselineReassessment.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "baseline_reassessment",
@@ -289,7 +295,9 @@ export class BaseData extends BaseEntity {
   })
   baselineReassessment: BaselineReassessment;
 
-  @OneToOne("MRV", (mrv: MRV) => mrv.baseData)
+  @OneToOne("MRV", (mrv: MRV) => mrv.baseData, {
+    cascade: ["insert"],
+  })
   @JoinColumn({
     name: "mrv",
     referencedColumnName: "id",
@@ -300,6 +308,9 @@ export class BaseData extends BaseEntity {
     "BlueCarbonProjectPlanning",
     (blueCarbonProjectPlanning: BlueCarbonProjectPlanning) =>
       blueCarbonProjectPlanning.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "blue_carbon_project_planning",
@@ -311,6 +322,9 @@ export class BaseData extends BaseEntity {
     "LongTermProjectOperating",
     (longTermProjectOperating: LongTermProjectOperating) =>
       longTermProjectOperating.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "long_term_project_operating",
@@ -321,6 +335,9 @@ export class BaseData extends BaseEntity {
   @OneToOne(
     "SequestrationRate",
     (sequestrationRate: SequestrationRate) => sequestrationRate.baseData,
+    {
+      cascade: ["insert"],
+    },
   )
   @JoinColumn({
     name: "sequestration_rate",
