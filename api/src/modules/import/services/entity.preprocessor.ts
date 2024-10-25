@@ -17,6 +17,8 @@ import { DataCollectionAndFieldCosts } from '@shared/entities/data-collection-an
 import { CommunityBenefitSharingFund } from '@shared/entities/community-benefit-sharing-fund.entity';
 import { CarbonStandardFees } from '@shared/entities/carbon-standard-fees.entity';
 import { CommunityCashFlow } from '@shared/entities/community-cash-flow.entity';
+import { EcosystemLoss } from '@shared/entities/ecosystem-loss.entity';
+import { RestorableLand } from '@shared/entities/restorable-land.entity';
 
 export type ParsedDBEntities = {
   baseData: BaseData[];
@@ -91,6 +93,12 @@ export class EntityPreprocessor {
       baseData.communityCashFlow = {
         cashflowType: this.emptyStringToNull(row.other_community_cash_flow),
       } as CommunityCashFlow;
+      baseData.ecosystemLoss = {
+        ecosystemLossRate: this.emptyStringToZero(row.ecosystem_loss_rate),
+      } as EcosystemLoss;
+      baseData.restorableLand = {
+        restorableLand: this.emptyStringToZero(row.restorable_land),
+      } as RestorableLand;
 
       parsedArray.push(baseData);
     });
