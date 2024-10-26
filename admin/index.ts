@@ -22,6 +22,7 @@ import { CommunityBenefitResource } from "./resources/community-benefit/communit
 import { CarbonStandardFeesResource } from "./resources/carbon-estandard-fees/carbon-estandard-fees.resource.js";
 import { CommunityCashFlowResource } from "./resources/community-cash-flow/community-cash-flow.resource.js";
 import { EcosystemLossResource } from "./resources/ecosystem-loss/ecosystem-loss.resource.js";
+import { RestorableLandResource } from "./resources/restorable-land/restorable-land.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -63,6 +64,7 @@ const start = async () => {
       CarbonStandardFeesResource,
       CommunityCashFlowResource,
       EcosystemLossResource,
+      RestorableLandResource,
       {
         resource: Country,
         name: "Country",
