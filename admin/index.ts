@@ -25,6 +25,7 @@ import { EcosystemLossResource } from "./resources/ecosystem-loss/ecosystem-loss
 import { RestorableLandResource } from "./resources/restorable-land/restorable-land.resource.js";
 import { EmissionFactorsResource } from "./resources/emission-factors/emission-factors.resource.js";
 import { BaselineReassessmentResource } from "./resources/baseline-reassesment/baseline-reassesment.resource.js";
+import { MRVResource } from "./resources/mrv/mrv.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -69,6 +70,7 @@ const start = async () => {
       RestorableLandResource,
       EmissionFactorsResource,
       BaselineReassessmentResource,
+      MRVResource,
       {
         resource: Country,
         name: "Country",
