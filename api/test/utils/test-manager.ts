@@ -93,7 +93,7 @@ export class TestManager {
   async ingestCountries() {
     const geoCountriesFilePath = path.join(
       __dirname,
-      '../../../api/src/geocountries.sql',
+      '../../../api/src/insert_countries.sql',
     );
     const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, 'utf8');
     await this.dataSource.query(geoCountriesSql);
