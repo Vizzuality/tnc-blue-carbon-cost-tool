@@ -12,6 +12,7 @@ import { FeasibilityAnalysisResource } from "./resources/feasability-analysis/fe
 import { ConservationAndPlanningAdminResource } from "./resources/conservation-and-planning-admin/conservation-and-planning-admin.resource.js";
 import { CommunityRepresentationResource } from "./resources/community-representation/community-representation.resource.js";
 import { CarbonRightsResource } from "./resources/carbon-righs/carbon-rights.resource.js";
+import { FinancingCostResource } from "./resources/financing-cost/financing-cost.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -43,6 +44,7 @@ const start = async () => {
       ConservationAndPlanningAdminResource,
       CommunityRepresentationResource,
       CarbonRightsResource,
+      FinancingCostResource,
       {
         resource: Country,
         name: "Country",
