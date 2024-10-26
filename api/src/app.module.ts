@@ -57,7 +57,7 @@ export class AppModule implements OnModuleInit {
       }
 
       const sql = fs.readFileSync(
-        path.join(__dirname, '../../../src/geocountries.sql'),
+        path.join(__dirname, '../../../src/insert_countries.sql'),
         'utf8',
       );
 
