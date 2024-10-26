@@ -24,6 +24,7 @@ import { EmissionFactors } from "@shared/entities/emission-factors.entity";
 import { LongTermProjectOperating } from "@shared/entities/long-term-project-operating.entity";
 import { MRV } from "@shared/entities/mrv.entity";
 import { SequestrationRate } from "@shared/entities/sequestration-rate.entity";
+import { Project } from "@shared/entities/users/projects.entity";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -53,4 +54,5 @@ export const COMMON_DATABASE_ENTITIES = [
   LongTermProjectOperating,
   MRV,
   SequestrationRate,
+  Project,
 ];

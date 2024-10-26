@@ -1,0 +1,85 @@
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
+import { Country } from "@shared/entities/country.entity";
+import { ACTIVITY, ECOSYSTEM } from "@shared/entities/base-data.entity";
+
+export enum PROJECT_SIZE_FILTER {
+  SMALL = "Small",
+  MEDIUM = "Medium",
+  LARGE = "Large",
+}
+
+export enum PROJECT_PRICE_TYPE {
+  OPEN_BREAK_EVEN_PRICE = "Open Break Even Price",
+  MARKET_PRICE = "Market Price",
+}
+
+@Entity("projects")
+export class Project extends BaseEntity {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
+  @Column({ name: "project_name", type: "varchar", length: 255 })
+  projectName: string;
+
+  @Column({ name: "country_code", length: 3, nullable: true, type: "char" })
+  countryCode: string;
+
+  // Unidirectional relation
+  @ManyToOne(() => Country)
+  @JoinColumn({ name: "country_code" })
+  country: Country;
+
+  @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
+  ecosystem: ECOSYSTEM;
+
+  @Column({ name: "activity", enum: ACTIVITY, type: "enum" })
+  activity: ACTIVITY;
+
+  // TODO: We need to make this a somehow enum, as a subactivity of restoration, that can be null for conservation, and can represent all restoration activities
+  @Column({
+    name: "activity_subtype",
+    type: "varchar",
+    length: 255,
+    nullable: true,
+  })
+  activitySubtype: string;
+
+  @Column({ name: "project_size", type: "decimal" })
+  projectSize: number;
+
+  // TODO: We could potentially remove this column from the database and excel, and have a threshold to filter by
+  @Column({
+    name: "project_size_filter",
+    type: "enum",
+    enum: PROJECT_SIZE_FILTER,
+  })
+  projectSizeFilter: string;
+
+  @Column({ name: "abatement_potential", type: "decimal" })
+  abatementPotential: number;
+
+  @Column({ name: "total_cost_npv", type: "decimal" })
+  totalCostNPV: number;
+
+  @Column({ name: "total_cost", type: "decimal" })
+  totalCost: number;
+
+  @Column({ name: "cost_per_tco2e_npv", type: "decimal" })
+  costPerTCO2eNPV: number;
+
+  @Column({ name: "cost_per_tco2e", type: "decimal" })
+  costPerTCO2e: number;
+
+  @Column({ name: "initial_price_assumption", type: "varchar", length: 255 })
+  initialPriceAssumption: string;
+
+  @Column({ name: "price_type", enum: PROJECT_PRICE_TYPE, type: "enum" })
+  priceType: PROJECT_PRICE_TYPE;
+}
