@@ -8,7 +8,6 @@ import {
 import { dataSource } from "../../datasource.js";
 import { BaseData } from "@shared/entities/base-data.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
-import { FinancingCost } from "@shared/entities/financing-cost.entity.js";
 import { COMMON_RESOURCE_LIST_PROPERTIES } from "../common/common.resources.js";
 import { ImplementationLaborCost } from "@shared/entities/implementation-labor.entity.js";
 
