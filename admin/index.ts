@@ -26,6 +26,7 @@ import { RestorableLandResource } from "./resources/restorable-land/restorable-l
 import { EmissionFactorsResource } from "./resources/emission-factors/emission-factors.resource.js";
 import { BaselineReassessmentResource } from "./resources/baseline-reassesment/baseline-reassesment.resource.js";
 import { MRVResource } from "./resources/mrv/mrv.resource.js";
+import { BlueCarbonProjectPlanningResource } from "./resources/blue-carbon-project-planning/blue-carbon-project-planning.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -71,6 +72,7 @@ const start = async () => {
       EmissionFactorsResource,
       BaselineReassessmentResource,
       MRVResource,
+      BlueCarbonProjectPlanningResource,
       {
         resource: Country,
         name: "Country",
