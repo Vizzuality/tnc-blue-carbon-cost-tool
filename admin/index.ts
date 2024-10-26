@@ -29,6 +29,7 @@ import { MRVResource } from "./resources/mrv/mrv.resource.js";
 import { BlueCarbonProjectPlanningResource } from "./resources/blue-carbon-project-planning/blue-carbon-project-planning.resource.js";
 import { LongTermProjectOperatingResource } from "./resources/long-term-project-operating/long-term-project-operating.resource.js";
 import { SequestrationRateResource } from "./resources/sequestration-rate/sequestration-rate.resource.js";
+import { ProjectsResource } from "./resources/projects/projects.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -77,6 +78,7 @@ const start = async () => {
       BlueCarbonProjectPlanningResource,
       LongTermProjectOperatingResource,
       SequestrationRateResource,
+      ProjectsResource,
       {
         resource: Country,
         name: "Country",
@@ -93,6 +95,7 @@ const start = async () => {
           labels: {
             User: "Users",
             Country: "Countries",
+            Project: "Projects",
           },
         },
       },
