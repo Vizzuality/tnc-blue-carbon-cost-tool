@@ -9,6 +9,7 @@ import { UserResource } from "./resources/users/user.resource.js";
 import { ProjectSizeResource } from "./resources/project-size/project-size.resource.js";
 import { Country } from "@shared/entities/country.entity.js";
 import { FeasibilityAnalysisResource } from "./resources/feasability-analysis/feasability-analysis.resource.js";
+import { ConservationAndPlanningAdminResource } from "./resources/conservation-and-planning-admin/conservation-and-planning-admin.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -37,6 +38,7 @@ const start = async () => {
       UserResource,
       ProjectSizeResource,
       FeasibilityAnalysisResource,
+      ConservationAndPlanningAdminResource,
       {
         resource: Country,
         name: "Country",
