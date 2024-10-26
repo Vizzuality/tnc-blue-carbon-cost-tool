@@ -27,6 +27,7 @@ import { EmissionFactorsResource } from "./resources/emission-factors/emission-f
 import { BaselineReassessmentResource } from "./resources/baseline-reassesment/baseline-reassesment.resource.js";
 import { MRVResource } from "./resources/mrv/mrv.resource.js";
 import { BlueCarbonProjectPlanningResource } from "./resources/blue-carbon-project-planning/blue-carbon-project-planning.resource.js";
+import { LongTermProjectOperatingResource } from "./resources/long-term-project-operating/long-term-project-operating.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -73,6 +74,7 @@ const start = async () => {
       BaselineReassessmentResource,
       MRVResource,
       BlueCarbonProjectPlanningResource,
+      LongTermProjectOperatingResource,
       {
         resource: Country,
         name: "Country",
