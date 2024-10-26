@@ -1,4 +1,3 @@
-import { CommunityCashFlow } from "./community-cash-flow.entity";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -31,6 +30,7 @@ import { MRV } from "./mrv.entity";
 import { BlueCarbonProjectPlanning } from "./blue-carbon-project-planning.entity";
 import { LongTermProjectOperating } from "./long-term-project-operating.entity";
 import { SequestrationRate } from "./sequestration-rate.entity";
+import { CommunityCashFlow } from "@shared/entities/community-cash-flow.entity";
 
 export enum ECOSYSTEM {
   MANGROVE = "Mangrove",
@@ -50,7 +50,6 @@ export enum ACTIVITY {
   { unique: true },
 )
 export class BaseData extends BaseEntity {
-  // TODO: We could use a integer value as primary to match the excel rows so that we know if there are new values or something is being updated
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -63,34 +62,41 @@ export class BaseData extends BaseEntity {
   @Column({ name: "country_code", length: 3, nullable: true, type: "char" })
   countryCode: string;
 
-  // Unidirectional relation
+  // Relación con Country (sin onDelete: 'CASCADE')
   @ManyToOne(() => Country)
   @JoinColumn({ name: "country_code" })
   country: Country;
 
-  // Using a string reference to avoid AdminJS crashing when no metadata for this entity is found through BaseData
-  @OneToOne("ProjectSize", (projectSize: ProjectSize) => projectSize.baseData, {
-    cascade: ["insert"],
-  })
+  // Relaciones con onDelete: 'CASCADE' y cascade: ["insert"]
+  @OneToOne(
+    () => ProjectSize,
+    (projectSize: ProjectSize) => projectSize.baseData,
+    {
+      cascade: ["insert"],
+      onDelete: "CASCADE",
+    },
+  )
   @JoinColumn({ name: "project_size", referencedColumnName: "id" })
   projectSize: ProjectSize;
 
   @OneToOne(
-    "FeasibilityAnalysis",
+    () => FeasibilityAnalysis,
     (feasibilityAnalysis: FeasibilityAnalysis) => feasibilityAnalysis.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
   @JoinColumn({ name: "feasibility_analysis", referencedColumnName: "id" })
   feasibilityAnalysis: FeasibilityAnalysis;
 
   @OneToOne(
-    "ConservationPlanningAndAdmin",
+    () => ConservationPlanningAndAdmin,
     (conservationPlanningAndAdmin: ConservationPlanningAndAdmin) =>
       conservationPlanningAndAdmin.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
   @JoinColumn({
@@ -100,100 +106,91 @@ export class BaseData extends BaseEntity {
   conservationPlanningAndAdmin: ConservationPlanningAndAdmin;
 
   @OneToOne(
-    "CommunityRepresentation",
+    () => CommunityRepresentation,
     (communityRepresentation: CommunityRepresentation) =>
       communityRepresentation.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "community_representation",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "community_representation", referencedColumnName: "id" })
   communityRepresentation: CommunityRepresentation;
 
   @OneToOne(
-    "CarbonRights",
+    () => CarbonRights,
     (carbonRights: CarbonRights) => carbonRights.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "carbon_rights",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "carbon_rights", referencedColumnName: "id" })
   carbonRights: CarbonRights;
 
   @OneToOne(
-    "FinancingCost",
+    () => FinancingCost,
     (financingCost: FinancingCost) => financingCost.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "financing_cost",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "financing_cost", referencedColumnName: "id" })
   financingCost: FinancingCost;
 
   @OneToOne(
-    "ValidationCost",
+    () => ValidationCost,
     (validationCost: ValidationCost) => validationCost.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "validation_cost",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "validation_cost", referencedColumnName: "id" })
   validationCost: ValidationCost;
 
   @OneToOne(
-    "ImplementationLaborCost",
+    () => ImplementationLaborCost,
     (implementationLaborCost: ImplementationLaborCost) =>
       implementationLaborCost.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "implementation_labor_cost",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "implementation_labor_cost", referencedColumnName: "id" })
   implementationLaborCost: ImplementationLaborCost;
 
   @OneToOne(
-    "MonitoringCost",
+    () => MonitoringCost,
     (monitoringCost: MonitoringCost) => monitoringCost.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "monitoring_cost",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "monitoring_cost", referencedColumnName: "id" })
   monitoringCost: MonitoringCost;
 
-  @OneToOne("Maintenance", (maintenance: Maintenance) => maintenance.baseData, {
-    cascade: ["insert"],
-  })
-  @JoinColumn({
-    name: "maintenance",
-    referencedColumnName: "id",
-  })
+  @OneToOne(
+    () => Maintenance,
+    (maintenance: Maintenance) => maintenance.baseData,
+    {
+      cascade: ["insert"],
+      onDelete: "CASCADE",
+    },
+  )
+  @JoinColumn({ name: "maintenance", referencedColumnName: "id" })
   maintenance: Maintenance;
 
   @OneToOne(
-    "DataCollectionAndFieldCosts",
+    () => DataCollectionAndFieldCosts,
     (dataCollectionAndFieldCosts: DataCollectionAndFieldCosts) =>
       dataCollectionAndFieldCosts.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
   @JoinColumn({
@@ -203,11 +200,12 @@ export class BaseData extends BaseEntity {
   dataCollectionAndFieldCosts: DataCollectionAndFieldCosts;
 
   @OneToOne(
-    "CommunityBenefitSharingFund",
+    () => CommunityBenefitSharingFund,
     (communityBenefit: CommunityBenefitSharingFund) =>
       communityBenefit.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
   @JoinColumn({
@@ -217,99 +215,86 @@ export class BaseData extends BaseEntity {
   communityBenefit: CommunityBenefitSharingFund;
 
   @OneToOne(
-    "CarbonStandardFees",
+    () => CarbonStandardFees,
     (carbonStandardFees: CarbonStandardFees) => carbonStandardFees.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "carbon_standard_fees",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "carbon_standard_fees", referencedColumnName: "id" })
   carbonStandardFees: CarbonStandardFees;
 
   @OneToOne(
-    "CommunityCashFlow",
+    () => CommunityCashFlow,
     (communityCashFlow: CommunityCashFlow) => communityCashFlow.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "community_cash_flow",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "community_cash_flow", referencedColumnName: "id" })
   communityCashFlow: CommunityCashFlow;
 
   @OneToOne(
-    "EcosystemLoss",
+    () => EcosystemLoss,
     (ecosystemLoss: EcosystemLoss) => ecosystemLoss.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "ecosystem_loss",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "ecosystem_loss", referencedColumnName: "id" })
   ecosystemLoss: EcosystemLoss;
 
   @OneToOne(
-    "RestorableLand",
+    () => RestorableLand,
     (restorableLand: RestorableLand) => restorableLand.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "restorable_land",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "restorable_land", referencedColumnName: "id" })
   restorableLand: RestorableLand;
 
   @OneToOne(
-    "EmissionFactors",
+    () => EmissionFactors,
     (emissionFactors: EmissionFactors) => emissionFactors.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "emission_factors",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "emission_factors", referencedColumnName: "id" })
   emissionFactors: EmissionFactors;
 
   @OneToOne(
-    "BaselineReassessment",
+    () => BaselineReassessment,
     (baselineReassessment: BaselineReassessment) =>
       baselineReassessment.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "baseline_reassessment",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "baseline_reassessment", referencedColumnName: "id" })
   baselineReassessment: BaselineReassessment;
 
-  @OneToOne("MRV", (mrv: MRV) => mrv.baseData, {
+  @OneToOne(() => MRV, (mrv: MRV) => mrv.baseData, {
     cascade: ["insert"],
+    onDelete: "CASCADE",
   })
-  @JoinColumn({
-    name: "mrv",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "mrv", referencedColumnName: "id" })
   mrv: MRV;
 
   @OneToOne(
-    "BlueCarbonProjectPlanning",
+    () => BlueCarbonProjectPlanning,
     (blueCarbonProjectPlanning: BlueCarbonProjectPlanning) =>
       blueCarbonProjectPlanning.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
   @JoinColumn({
@@ -319,11 +304,12 @@ export class BaseData extends BaseEntity {
   blueCarbonProjectPlanning: BlueCarbonProjectPlanning;
 
   @OneToOne(
-    "LongTermProjectOperating",
+    () => LongTermProjectOperating,
     (longTermProjectOperating: LongTermProjectOperating) =>
       longTermProjectOperating.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
   @JoinColumn({
@@ -333,15 +319,13 @@ export class BaseData extends BaseEntity {
   longTermProjectOperating: LongTermProjectOperating;
 
   @OneToOne(
-    "SequestrationRate",
+    () => SequestrationRate,
     (sequestrationRate: SequestrationRate) => sequestrationRate.baseData,
     {
       cascade: ["insert"],
+      onDelete: "CASCADE",
     },
   )
-  @JoinColumn({
-    name: "sequestration_rate",
-    referencedColumnName: "id",
-  })
+  @JoinColumn({ name: "sequestration_rate", referencedColumnName: "id" })
   sequestrationRate: SequestrationRate;
 }
