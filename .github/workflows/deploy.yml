@@ -44,6 +44,8 @@ jobs:
             client:
               - 'client/**'
               - '.github/workflows/**'
+            shared:
+              - 'shared/**'
 
 
       - name: Configure AWS credentials
