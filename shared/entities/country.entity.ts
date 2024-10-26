@@ -36,7 +36,7 @@ export class Country extends BaseEntity {
   @Column({ name: "region_2", length: 50, nullable: true, type: "varchar" })
   region2?: string;
 
-  @Column({ name: "numeric_code", length: 3, nullable: true, type: "char" })
+  @Column({ name: "numeric_code", nullable: true, type: "varchar" })
   numericCode?: string;
 
   @Column({ name: "hdi", type: "int", nullable: true })
