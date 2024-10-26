@@ -25,6 +25,10 @@ export const ProjectSizeResource: ResourceWithOptions = {
       },
     },
     listProperties: ["sizeHa", "countryName", "ecosystem", "activity"],
+    sort: {
+      sortBy: "sizeHa",
+      direction: "desc",
+    },
     navigation: {
       name: "Data Management",
       icon: "Database",

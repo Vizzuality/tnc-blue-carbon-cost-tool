@@ -3,6 +3,7 @@ import {
   ActionRequest,
   ActionResponse,
   BaseRecord,
+  PropertyOptions,
   ResourceWithOptions,
 } from "adminjs";
 import { dataSource } from "../../datasource.js";
@@ -10,24 +11,16 @@ import { ProjectSize } from "@shared/entities/project-size.entity.js";
 import { BaseData } from "@shared/entities/base-data.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
 import { FeasibilityAnalysis } from "@shared/entities/feasability-analysis.entity.js";
+import { ConservationPlanningAndAdmin } from "@shared/entities/conservation-and-planning-admin.entity.js";
+import { COMMON_RESOURCE_LIST_PROPERTIES } from "../common/common.resources.js";
 
-export const FeasibilityAnalysisResource: ResourceWithOptions = {
-  resource: FeasibilityAnalysis,
+export const ConservationAndPlanningAdminResource: ResourceWithOptions = {
+  resource: ConservationPlanningAndAdmin,
   options: {
-    properties: {
-      countryName: {
-        isVisible: { list: true, show: true, edit: false, filter: true },
-      },
-      ecosystem: {
-        isVisible: { list: true, show: true, edit: false, filter: true },
-      },
-      activity: {
-        isVisible: { list: true, show: true, edit: false, filter: true },
-      },
-    },
-    listProperties: ["analysisScore", "countryName", "ecosystem", "activity"],
+    properties: COMMON_RESOURCE_LIST_PROPERTIES,
+    listProperties: ["planningCost", "countryName", "ecosystem", "activity"],
     sort: {
-      sortBy: "analysisScore",
+      sortBy: "planningCost",
       direction: "desc",
     },
     navigation: {
@@ -46,19 +39,19 @@ export const FeasibilityAnalysisResource: ResourceWithOptions = {
           const queryBuilder = baseDataRepo
             .createQueryBuilder("baseData")
             .leftJoin(
-              FeasibilityAnalysis,
-              "fa",
-              "baseData.feasibilityAnalysis = fa.id",
+              ConservationPlanningAndAdmin,
+              "cpa",
+              "baseData.conservationPlanningAndAdmin = cpa.id",
             )
             .leftJoin(Country, "country", "country.code = baseData.countryCode")
-            .select("fa.id", "id")
-            .addSelect("fa.analysisScore", "analysisScore")
+            .select("cpa.id", "id")
+            .addSelect("cpa.planningCost", "planningCost")
             .addSelect("country.name", "countryName")
             .addSelect("baseData.ecosystem", "ecosystem")
             .addSelect("baseData.activity", "activity");
 
           if (records?.length) {
-            queryBuilder.andWhere("fa.id IN (:...ids)", {
+            queryBuilder.andWhere("cpa.id IN (:...ids)", {
               ids: records.map((r) => r.params.id),
             });
           }
