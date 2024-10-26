@@ -16,6 +16,7 @@ import { FinancingCostResource } from "./resources/financing-cost/financing-cost
 import { ValidationCostResource } from "./resources/validation-cost/validation-cost.resource.js";
 import { ImplementationLaborCostResource } from "./resources/implementation-labor/implementation-labor-cost.resource.js";
 import { MonitoringCostResource } from "./resources/monitoring-cost/monitoring-cost.resource.js";
+import { MaintenanceResource } from "./resources/maintenance/maintenance.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -51,6 +52,7 @@ const start = async () => {
       ValidationCostResource,
       ImplementationLaborCostResource,
       MonitoringCostResource,
+      MaintenanceResource,
       {
         resource: Country,
         name: "Country",
