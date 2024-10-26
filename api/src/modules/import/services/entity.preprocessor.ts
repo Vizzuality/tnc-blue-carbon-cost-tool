@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { BaseData } from '@shared/entities/base-data.entity';
 import { Country } from '@shared/entities/country.entity';
-import { BaseDataJson } from '@api/modules/import/excel-base-data.dto';
+import { ExcelMasterTable } from '@api/modules/import/excel-base-data.dto';
 import { ProjectSize } from '@shared/entities/project-size.entity';
 import { FeasibilityAnalysis } from '@shared/entities/feasability-analysis.entity';
 import { ConservationPlanningAndAdmin } from '@shared/entities/conservation-and-planning-admin.entity';
@@ -32,16 +32,16 @@ export type ParsedDBEntities = {
 
 @Injectable()
 export class EntityPreprocessor {
-  toDbEntities(raw: { rawBaseData: BaseDataJson[] }): ParsedDBEntities {
+  toDbEntities(raw: { rawBaseData: ExcelMasterTable[] }): ParsedDBEntities {
     const parsedBaseData = this.processBaseData(raw.rawBaseData);
     return {
       baseData: parsedBaseData,
     };
   }
 
-  private processBaseData(raw: BaseDataJson[]) {
+  private processBaseData(raw: ExcelMasterTable[]) {
     const parsedArray: BaseData[] = [];
-    raw.forEach((row: BaseDataJson) => {
+    raw.forEach((row: ExcelMasterTable) => {
       const baseData = new BaseData();
 
       baseData.country = { code: row.country_code } as Country;

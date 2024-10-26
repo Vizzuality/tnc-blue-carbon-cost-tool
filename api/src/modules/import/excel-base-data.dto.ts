@@ -1,7 +1,7 @@
 import { ACTIVITY, ECOSYSTEM } from '@shared/entities/base-data.entity';
 import { COMMUNITY_CASH_FLOW_TYPES } from '@shared/entities/community-cash-flow.entity';
 
-export type BaseDataJson = {
+export type ExcelMasterTable = {
   country: string;
   ecosystem: ECOSYSTEM;
   activity: ACTIVITY;

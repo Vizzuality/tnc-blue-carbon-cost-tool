@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EntityPreprocessor } from '@api/modules/import/services/entity.preprocessor';
 import { BaseDataRepository } from '@api/modules/model/base-data.repository';
-import { BaseDataJson } from '@api/modules/import/excel-base-data.dto';
+import { ExcelMasterTable } from '@api/modules/import/excel-base-data.dto';
 import {
   ExcelParserInterface,
   ExcelParserToken,
@@ -20,17 +20,17 @@ export class ImportService {
   // TODO: Register import events via event bus
   //       handle updates
   async import(fileBuffer: Buffer) {
-    let rawBaseData: BaseDataJson[];
+    //let rawBaseData: ExcelMasterTable[];
     this.logger.warn('Excel file import started...');
     try {
-      rawBaseData = await this.excelParser.parseExcel(fileBuffer);
-      const parsedDBEntities = this.preprocessor.toDbEntities({ rawBaseData });
-      const savedBaseData = await this.repo.saveBaseData(
-        parsedDBEntities.baseData,
-      );
-      this.logger.warn('Excel file import completed successfully');
-      // TODO: We don't really need to return the saved data here, but current convenience we will leave it
-      return savedBaseData;
+      const parsedSheets = await this.excelParser.parseExcel(fileBuffer);
+      // const parsedDBEntities = this.preprocessor.toDbEntities({ rawBaseData });
+      // const savedBaseData = await this.repo.saveBaseData(
+      //   parsedDBEntities.baseData,
+      // );
+      // this.logger.warn('Excel file import completed successfully');
+      // // TODO: We don't really need to return the saved data here, but current convenience we will leave it
+      return parsedSheets;
     } catch (e) {
       this.logger.error('Excel file import failed', e);
     } finally {
