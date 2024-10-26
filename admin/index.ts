@@ -5,9 +5,10 @@ import express from "express";
 import * as AdminJSTypeorm from "@adminjs/typeorm";
 import { dataSource } from "./datasource.js";
 import { AuthProvider } from "./providers/auth.provider.js";
-import { userResource } from "./resources/users/user.resource.js";
-import { projectSizeResource } from "./resources/project-size/project-size.resource.js";
+import { UserResource } from "./resources/users/user.resource.js";
+import { ProjectSizeResource } from "./resources/project-size/project-size.resource.js";
 import { Country } from "@shared/entities/country.entity.js";
+import { FeasibilityAnalysisResource } from "./resources/feasability-analysis/feasability-analysis.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -33,8 +34,9 @@ const start = async () => {
     rootPath: "/admin",
     componentLoader,
     resources: [
-      userResource,
-      projectSizeResource,
+      UserResource,
+      ProjectSizeResource,
+      FeasibilityAnalysisResource,
       {
         resource: Country,
         name: "Country",
@@ -64,7 +66,7 @@ const start = async () => {
 
   const router = AdminJSExpress.buildRouter(admin);
 
-  app.use(admin.options.rootPath, adminRouter);
+  app.use(admin.options.rootPath, router);
 
   app.listen(PORT, () => {
     console.log(

@@ -9,9 +9,10 @@ import { dataSource } from "../../datasource.js";
 import { ProjectSize } from "@shared/entities/project-size.entity.js";
 import { BaseData } from "@shared/entities/base-data.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
+import { FeasibilityAnalysis } from "@shared/entities/feasability-analysis.entity.js";
 
-export const ProjectSizeResource: ResourceWithOptions = {
-  resource: ProjectSize,
+export const FeasibilityAnalysisResource: ResourceWithOptions = {
+  resource: FeasibilityAnalysis,
   options: {
     properties: {
       countryName: {
@@ -24,7 +25,7 @@ export const ProjectSizeResource: ResourceWithOptions = {
         isVisible: { list: true, show: true, edit: false, filter: true },
       },
     },
-    listProperties: ["sizeHa", "countryName", "ecosystem", "activity"],
+    listProperties: ["analysisScore", "countryName", "ecosystem", "activity"],
     navigation: {
       name: "Data Management",
       icon: "Database",
@@ -41,19 +42,19 @@ export const ProjectSizeResource: ResourceWithOptions = {
           const queryBuilder = baseDataRepo
             .createQueryBuilder("baseData")
             .leftJoin(
-              ProjectSize,
-              "projectSize",
-              "baseData.projectSize = projectSize.id",
+              FeasibilityAnalysis,
+              "fa",
+              "baseData.feasibilityAnalysis = fa.id",
             )
             .leftJoin(Country, "country", "country.code = baseData.countryCode")
-            .select("projectSize.id", "id")
-            .addSelect("projectSize.sizeHa", "sizeHa")
+            .select("fa.id", "id")
+            .addSelect("fa.analysisScore", "analysisScore")
             .addSelect("country.name", "countryName")
             .addSelect("baseData.ecosystem", "ecosystem")
             .addSelect("baseData.activity", "activity");
 
           if (records?.length) {
-            queryBuilder.andWhere("projectSize.id IN (:...ids)", {
+            queryBuilder.andWhere("fa.id IN (:...ids)", {
               ids: records.map((r) => r.params.id),
             });
           }

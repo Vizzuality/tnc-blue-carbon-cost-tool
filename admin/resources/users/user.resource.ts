@@ -2,12 +2,12 @@ import { ResourceWithOptions } from "adminjs";
 import { User } from "@shared/entities/users/user.entity.js";
 import { createUserAction } from "./user.actions.js";
 
-export const userResource: ResourceWithOptions = {
+export const UserResource: ResourceWithOptions = {
   resource: User,
   options: {
     navigation: {
-      name: "Data Management",
-      icon: "Database",
+      name: "User Management",
+      icon: "User",
     },
     properties: {
       id: { isVisible: false, isId: true },
