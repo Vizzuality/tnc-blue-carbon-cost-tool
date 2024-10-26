@@ -61,7 +61,7 @@ export const dataSource = new DataSource({
   host: process.env.DB_HOST || "localhost",
   username: process.env.DB_USERNAME || "blue-carbon-cost",
   password: process.env.DB_PASSWORD || "blue-carbon-cost",
-  database: process.env.DB_NAME || "blc",
+  database: process.env.DB_NAME || "blc-dev",
   // TODO: Use common db entities from shared
   entities: ADMINJS_ENTITIES,
   synchronize: false,
