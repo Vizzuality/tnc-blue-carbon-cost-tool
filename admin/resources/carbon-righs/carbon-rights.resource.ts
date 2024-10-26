@@ -3,17 +3,12 @@ import {
   ActionRequest,
   ActionResponse,
   BaseRecord,
-  PropertyOptions,
   ResourceWithOptions,
 } from "adminjs";
 import { dataSource } from "../../datasource.js";
-import { ProjectSize } from "@shared/entities/project-size.entity.js";
 import { BaseData } from "@shared/entities/base-data.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
-import { FeasibilityAnalysis } from "@shared/entities/feasability-analysis.entity.js";
-import { ConservationPlanningAndAdmin } from "@shared/entities/conservation-and-planning-admin.entity.js";
 import { COMMON_RESOURCE_LIST_PROPERTIES } from "../common/common.resources.js";
-import { CommunityRepresentation } from "@shared/entities/community-representation.entity.js";
 import { CarbonRights } from "@shared/entities/establishing-carbon-rights.entity.js";
 
 export const CarbonRightsResource: ResourceWithOptions = {

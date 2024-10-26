@@ -6,7 +6,6 @@ import {
   ResourceWithOptions,
 } from "adminjs";
 import { dataSource } from "../../datasource.js";
-import { ProjectSize } from "@shared/entities/project-size.entity.js";
 import { BaseData } from "@shared/entities/base-data.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
 import { FeasibilityAnalysis } from "@shared/entities/feasability-analysis.entity.js";

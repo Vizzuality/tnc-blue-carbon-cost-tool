@@ -8,21 +8,16 @@ import {
 import { dataSource } from "../../datasource.js";
 import { BaseData } from "@shared/entities/base-data.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
-import { FinancingCost } from "@shared/entities/financing-cost.entity.js";
 import { COMMON_RESOURCE_LIST_PROPERTIES } from "../common/common.resources.js";
+import { ValidationCost } from "@shared/entities/validation.entity.js";
 
-export const FinancingCostResource: ResourceWithOptions = {
-  resource: FinancingCost,
+export const ValidationCostResource: ResourceWithOptions = {
+  resource: ValidationCost,
   options: {
     properties: COMMON_RESOURCE_LIST_PROPERTIES,
-    listProperties: [
-      "financingCostCapexPercent",
-      "countryName",
-      "ecosystem",
-      "activity",
-    ],
+    listProperties: ["validationCost", "countryName", "ecosystem", "activity"],
     sort: {
-      sortBy: "financingCostCapexPercent",
+      sortBy: "validationCost",
       direction: "desc",
     },
     navigation: {
@@ -37,16 +32,14 @@ export const FinancingCostResource: ResourceWithOptions = {
           context: ActionContext,
         ) => {
           const { records } = context;
+          console.log("records", records);
           const baseDataRepo = dataSource.getRepository(BaseData);
           const queryBuilder = baseDataRepo
             .createQueryBuilder("baseData")
-            .leftJoin(FinancingCost, "r", "baseData.financingCost = r.id")
+            .leftJoin(ValidationCost, "r", "baseData.validationCost = r.id")
             .leftJoin(Country, "country", "country.code = baseData.countryCode")
             .select("r.id", "id")
-            .addSelect(
-              "r.financingCostCapexPercent",
-              "financingCostCapexPercent",
-            )
+            .addSelect("r.validationCost", "validationCost")
             .addSelect("country.name", "countryName")
             .addSelect("baseData.ecosystem", "ecosystem")
             .addSelect("baseData.activity", "activity");
