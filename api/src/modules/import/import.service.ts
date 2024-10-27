@@ -6,6 +6,7 @@ import {
   ExcelParserInterface,
   ExcelParserToken,
 } from '@api/modules/import/services/excel-parser.interface';
+import { ImportRepository } from '@api/modules/import/import.repostiory';
 
 @Injectable()
 export class ImportService {
@@ -14,6 +15,7 @@ export class ImportService {
     @Inject(ExcelParserToken)
     private readonly excelParser: ExcelParserInterface,
     private readonly repo: BaseDataRepository,
+    private readonly importRepo: ImportRepository,
     private readonly preprocessor: EntityPreprocessor,
   ) {}
 
@@ -24,11 +26,12 @@ export class ImportService {
     this.logger.warn('Excel file import started...');
     try {
       const parsedSheets = await this.excelParser.parseExcel(fileBuffer);
-      // const parsedDBEntities = this.preprocessor.toDbEntities({ rawBaseData });
+      const parsedDBEntities = this.preprocessor.toDbEntities(parsedSheets);
+      await this.importRepo.ingest(parsedDBEntities);
       // const savedBaseData = await this.repo.saveBaseData(
       //   parsedDBEntities.baseData,
       // );
-      // this.logger.warn('Excel file import completed successfully');
+      this.logger.warn('Excel file import completed successfully');
       // // TODO: We don't really need to return the saved data here, but current convenience we will leave it
       return parsedSheets;
     } catch (e) {

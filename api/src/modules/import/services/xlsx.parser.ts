@@ -8,7 +8,9 @@ import { ExcelMasterTable } from '@api/modules/import/excel-base-data.dto';
 
 @Injectable()
 export class XlsxParser implements ExcelParserInterface {
-  async parseExcel(buffer: Buffer): Promise<ExcelMasterTable[]> {
+  async parseExcel(
+    buffer: Buffer,
+  ): Promise<{ master_table: ExcelMasterTable[]; Projects: any[] }> {
     const workbook: WorkBook = read(buffer);
     const parsedData: any = {};
 

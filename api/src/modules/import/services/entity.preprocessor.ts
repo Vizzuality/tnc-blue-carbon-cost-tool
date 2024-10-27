@@ -25,17 +25,25 @@ import { MRV } from '@shared/entities/mrv.entity';
 import { BlueCarbonProjectPlanning } from '@shared/entities/blue-carbon-project-planning.entity';
 import { LongTermProjectOperating } from '@shared/entities/long-term-project-operating.entity';
 import { SequestrationRate } from '@shared/entities/sequestration-rate.entity';
+import { Project } from '@shared/entities/users/projects.entity';
+import { ExcelProjects } from '@api/modules/import/excel-projects.dto';
 
 export type ParsedDBEntities = {
   baseData: BaseData[];
+  projects: Project[];
 };
 
 @Injectable()
 export class EntityPreprocessor {
-  toDbEntities(raw: { rawBaseData: ExcelMasterTable[] }): ParsedDBEntities {
-    const parsedBaseData = this.processBaseData(raw.rawBaseData);
+  toDbEntities(raw: {
+    master_table: ExcelMasterTable[];
+    Projects: ExcelProjects[];
+  }): ParsedDBEntities {
+    const parsedBaseData = this.processBaseData(raw.master_table);
+    const processedProjects = this.processProjects(raw.Projects);
     return {
       baseData: parsedBaseData,
+      projects: processedProjects,
     };
   }
 
@@ -125,7 +133,7 @@ export class EntityPreprocessor {
       } as MRV;
       // TODO: This is also a selectable entity, we need to talk about how to handle this
       const blueCarbonProjectPlanningValue = this.emptyStringToZero(
-        row.blue_carbon_planning,
+        row.blue_carbon_project_planning,
       );
       baseData.blueCarbonProjectPlanning = {
         input1: blueCarbonProjectPlanningValue,
@@ -148,6 +156,30 @@ export class EntityPreprocessor {
       } as SequestrationRate;
 
       parsedArray.push(baseData);
+    });
+    return parsedArray;
+  }
+
+  private processProjects(raw: ExcelProjects[]) {
+    const parsedArray: Project[] = [];
+    raw.forEach((row: ExcelProjects) => {
+      const project = new Project();
+      project.projectName = row.Project_name;
+      project.countryCode = row['Country code'];
+      project.ecosystem = row.Ecosystem;
+      project.activity = row.Activity;
+      project.activitySubtype = row.Activity_type;
+      project.projectSize = row.Project_size;
+      project.projectSizeFilter = row.Project_size_filter;
+      project.abatementPotential = row.Abatement_potential;
+      project.totalCostNPV = row.Total_cost_NPV;
+      project.totalCost = row.Total_cost;
+      project.costPerTCO2e = row['$/tCO2e (NPV)'];
+      project.costPerTCO2e = row['$/tCO2e'];
+      project.initialPriceAssumption = row['Initial price assumption'];
+      project.priceType = row['Price type'];
+
+      parsedArray.push(project);
     });
     return parsedArray;
   }
