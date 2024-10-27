@@ -17,6 +17,7 @@ export const ProjectsResource: ResourceWithOptions = {
     listProperties: [
       "projectName",
       "projectSize",
+      "projectSizeFilter",
       "abatementPotential",
       "totalCostNPV",
       "costPerTCO2eNPV",
@@ -52,16 +53,20 @@ export const ProjectsResource: ResourceWithOptions = {
             .addSelect("project.activitySubtype", "activitySubtype")
             .addSelect("country.name", "countryName")
             .addSelect("project.projectSize", "projectSize")
+            .addSelect("project.projectSizeFilter", "projectSizeFilter")
             .addSelect("project.abatementPotential", "abatementPotential")
             .addSelect("project.totalCostNPV", "totalCostNPV")
             .addSelect("project.costPerTCO2eNPV", "costPerTCO2eNPV")
+            .addSelect("project.totalCost", "totalCost")
+            .addSelect("project.costPerTCO2e", "costPerTCO2e")
+            .addSelect("project.priceType", "priceType")
             .addSelect(
               "project.initialPriceAssumption",
               "initialPriceAssumption",
             );
 
           if (records?.length) {
-            queryBuilder.andWhere("projectDataImport.id IN (:...ids)", {
+            queryBuilder.andWhere("project.id IN (:...ids)", {
               ids: records.map((r) => r.params.id),
             });
           }
