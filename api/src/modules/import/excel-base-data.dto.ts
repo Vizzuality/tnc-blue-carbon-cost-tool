@@ -13,7 +13,7 @@ export type ExcelMasterTable = {
   conservation_planning_and_admin: number;
   data_collection_and_field_costs: number;
   community_representation: number;
-  blue_carbon_planning: number;
+  blue_carbon_project_planning: number;
   establishing_carbon_rights: number;
   financing_cost: number;
   validation: number;
