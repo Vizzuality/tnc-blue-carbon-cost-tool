@@ -174,7 +174,7 @@ export class EntityPreprocessor {
       project.abatementPotential = row.Abatement_potential;
       project.totalCostNPV = row.Total_cost_NPV;
       project.totalCost = row.Total_cost;
-      project.costPerTCO2e = row['$/tCO2e (NPV)'];
+      project.costPerTCO2eNPV = row['$/tCO2e (NPV)'];
       project.costPerTCO2e = row['$/tCO2e'];
       project.initialPriceAssumption = row['Initial price assumption'];
       project.priceType = row['Price type'];
