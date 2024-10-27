@@ -15,6 +15,7 @@ import { DataSource } from 'typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
 import { CountriesModule } from '@api/modules/countries/countries.module';
+import { ProjectsModule } from '@api/modules/projects/projects.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { CountriesModule } from '@api/modules/countries/countries.module';
     ImportModule,
     CountriesModule,
     UsersModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [
