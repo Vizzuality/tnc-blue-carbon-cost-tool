@@ -3,7 +3,7 @@ import {
   Entity,
   PrimaryColumn,
   BaseEntity,
-  Geometry,
+  type Geometry,
   Index,
 } from "typeorm";
 
