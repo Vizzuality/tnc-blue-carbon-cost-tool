@@ -7,6 +7,7 @@ import { EntityPreprocessor } from '@api/modules/import/services/entity.preproce
 import { ModelModule } from '@api/modules/model/model.module';
 import { ExcelParserToken } from '@api/modules/import/services/excel-parser.interface';
 import { ImportRepository } from '@api/modules/import/import.repostiory';
+import { ImportEventHandler } from '@api/modules/import/events/handlers/import-event.handler';
 
 @Module({
   imports: [MulterModule.register({}), ModelModule],
@@ -15,6 +16,7 @@ import { ImportRepository } from '@api/modules/import/import.repostiory';
     ImportService,
     EntityPreprocessor,
     ImportRepository,
+    ImportEventHandler,
     { provide: ExcelParserToken, useClass: XlsxParser },
   ],
 })

@@ -11,6 +11,8 @@ import { adminContract } from '@shared/contracts/admin.contract';
 import { ControllerResponse } from '@api/types/controller-response.type';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Multer } from 'multer';
+import { GetUser } from '@api/modules/auth/decorators/get-user.decorator';
+import { User } from '@shared/entities/users/user.entity';
 
 @Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -24,9 +26,10 @@ export class ImportController {
   @RequiredRoles(ROLES.ADMIN)
   async uploadFile(
     @UploadXlsm() file: Express.Multer.File,
+    @GetUser() user: User,
   ): Promise<ControllerResponse> {
     return tsRestHandler(adminContract.uploadFile, async () => {
-      const importedData = await this.service.import(file.buffer);
+      const importedData = await this.service.import(file.buffer, user.id);
       return {
         status: 201,
         body: importedData,
