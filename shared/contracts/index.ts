@@ -4,6 +4,7 @@ import { authContract } from "@shared/contracts/auth.contract";
 import { usersContract } from "@shared/contracts/users.contract";
 import { JSONAPIError } from "@shared/dtos/json-api.error";
 import { mapContract } from "@shared/contracts/map.contract";
+import { projectsContract } from "@shared/contracts/projects.contract";
 
 const contract = initContract();
 
@@ -13,6 +14,7 @@ export const router = contract.router(
     admin: adminContract,
     user: usersContract,
     map: mapContract,
+    projects: projectsContract,
   },
   {
     commonResponses: {
