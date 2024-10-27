@@ -73,7 +73,7 @@ describe('Import Tests', () => {
         .getRepository(BaseData)
         .find();
 
-      expect(baseData).toHaveLength(200);
+      expect(baseData).toHaveLength(222);
     }, 30000);
   });
 });
