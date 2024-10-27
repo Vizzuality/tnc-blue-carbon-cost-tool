@@ -16,8 +16,8 @@ export enum PROJECT_SIZE_FILTER {
 }
 
 export enum PROJECT_PRICE_TYPE {
-  OPEN_BREAK_EVEN_PRICE = "Open Break Even Price",
-  MARKET_PRICE = "Market Price",
+  OPEN_BREAK_EVEN_PRICE = "Opex breakeven price",
+  MARKET_PRICE = "Market price",
 }
 
 @Entity("projects")
@@ -62,24 +62,34 @@ export class Project extends BaseEntity {
   })
   projectSizeFilter: string;
 
-  @Column({ name: "abatement_potential", type: "decimal" })
+  @Column({ name: "abatement_potential", type: "decimal", nullable: true })
   abatementPotential: number;
 
-  @Column({ name: "total_cost_npv", type: "decimal" })
+  @Column({ name: "total_cost_npv", type: "decimal", nullable: true })
   totalCostNPV: number;
 
-  @Column({ name: "total_cost", type: "decimal" })
+  @Column({ name: "total_cost", type: "decimal", nullable: true })
   totalCost: number;
 
-  @Column({ name: "cost_per_tco2e_npv", type: "decimal" })
+  @Column({ name: "cost_per_tco2e_npv", type: "decimal", nullable: true })
   costPerTCO2eNPV: number;
 
-  @Column({ name: "cost_per_tco2e", type: "decimal" })
+  @Column({ name: "cost_per_tco2e", type: "decimal", nullable: true })
   costPerTCO2e: number;
 
-  @Column({ name: "initial_price_assumption", type: "varchar", length: 255 })
+  @Column({
+    name: "initial_price_assumption",
+    type: "varchar",
+    length: 255,
+    nullable: true,
+  })
   initialPriceAssumption: string;
 
-  @Column({ name: "price_type", enum: PROJECT_PRICE_TYPE, type: "enum" })
+  @Column({
+    name: "price_type",
+    enum: PROJECT_PRICE_TYPE,
+    type: "enum",
+    nullable: true,
+  })
   priceType: PROJECT_PRICE_TYPE;
 }
