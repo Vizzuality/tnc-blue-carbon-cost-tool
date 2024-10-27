@@ -11,26 +11,22 @@ export class ImportRepository {
   async ingest(importData: { baseData: BaseData[]; projects: Project[] }) {
     return this.dataSource.transaction(async (manager) => {
       // TODO: Workaround as there are N/A country codes in the excel file
-      try {
-        const existingCountries = await manager
-          .createQueryBuilder()
-          .select('countries.code', 'countryCode')
-          .from(Country, 'countries')
-          .getRawMany();
-        const countryFilteredBaseData: BaseData[] = [];
-        existingCountries.forEach(({ countryCode }) => {
-          const countryData = importData.baseData.find(
-            (data) => data.country.code === countryCode,
-          );
-          if (countryData) {
-            countryFilteredBaseData.push(countryData);
-          }
-        });
-        await manager.save(countryFilteredBaseData);
-        await manager.save(importData.projects);
-      } catch (e) {
-        console.error(e);
-      }
+      const existingCountries = await manager
+        .createQueryBuilder()
+        .select('countries.code', 'countryCode')
+        .from(Country, 'countries')
+        .getRawMany();
+      const countryFilteredBaseData: BaseData[] = [];
+      existingCountries.forEach(({ countryCode }) => {
+        const countryData = importData.baseData.find(
+          (data) => data.country.code === countryCode,
+        );
+        if (countryData) {
+          countryFilteredBaseData.push(countryData);
+        }
+      });
+      await manager.save(countryFilteredBaseData);
+      await manager.save(importData.projects);
     });
   }
 }
