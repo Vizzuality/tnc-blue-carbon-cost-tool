@@ -7,6 +7,7 @@ import {
 import { Project } from "@shared/entities/projects.entity";
 import { FetchSpecification } from "nestjs-base-service";
 import { CountryWithNoGeometry } from "@shared/entities/country.entity";
+import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 
 const contract = initContract();
 export const projectsContract = contract.router({
@@ -16,7 +17,8 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiPaginationResponse<Project>>(),
     },
-    query: contract.type<FetchSpecification>(),
+    //query: contract.type<FetchSpecification>(),
+    query: generateEntityQuerySchema(Project),
   },
   getProject: {
     method: "GET",
@@ -27,7 +29,8 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiResponse<Project>>(),
     },
-    query: contract.type<FetchSpecification>(),
+    //query: contract.type<FetchSpecification>(),
+    query: generateEntityQuerySchema(Project),
   },
   getProjectCountries: {
     method: "GET",
