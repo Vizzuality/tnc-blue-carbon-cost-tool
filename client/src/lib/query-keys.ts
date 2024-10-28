@@ -11,4 +11,9 @@ export const authKeys = createQueryKeys("auth", {
 export const userKeys = createQueryKeys("user", {
   me: (token: string) => ["me", token],
 });
-export const queryKeys = mergeQueryKeys(authKeys, userKeys);
+
+export const geometriesKeys = createQueryKeys("geometries", {
+  all: null,
+  country: (country: string) => ["country", country],
+});
+export const queryKeys = mergeQueryKeys(authKeys, userKeys, geometriesKeys);
