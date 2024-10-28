@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@types/d3": "7.4.3",
-    "@types/geojson": "7946.0.14",
+    "@types/geojson": "catalog:",
     "@types/mapbox-gl": "3.4.0",
     "@types/node": "catalog:",
     "@types/react": "^18",

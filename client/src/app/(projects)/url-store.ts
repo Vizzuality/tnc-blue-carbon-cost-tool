@@ -1,4 +1,9 @@
-import { parseAsJson, parseAsStringLiteral, useQueryState } from "nuqs";
+import {
+  parseAsJson,
+  parseAsString,
+  parseAsStringLiteral,
+  useQueryState,
+} from "nuqs";
 import { z } from "zod";
 
 import {
@@ -27,6 +32,10 @@ export function useGlobalFilters() {
       cost: "npv",
     }),
   );
+}
+
+export function useSyncCountry() {
+  return useQueryState("country", parseAsString.withDefault(""));
 }
 
 export function useTableMode() {

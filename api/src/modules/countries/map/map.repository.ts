@@ -1,8 +1,12 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { FeatureCollection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Country } from '@shared/entities/country.entity';
 import { BaseData } from '@shared/entities/base-data.entity';
+
+import { FeatureCollection, Geometry } from 'geojson';
+
+import { ProjectGeoProperties } from '@shared/schemas/geometries/projects';
 
 /**
  * @description: The aim for this repository is to work with geospatial data, for now "geometry" column in countries
@@ -22,7 +26,7 @@ export class MapRepository extends Repository<Country> {
 
   async getGeoFeatures(
     countryCode: Country['code'],
-  ): Promise<FeatureCollection> {
+  ): Promise<FeatureCollection<Geometry, ProjectGeoProperties>> {
     const queryBuilder = this.createQueryBuilder('country');
     queryBuilder.innerJoin(BaseData, 'bd', 'bd.country_code = country.code');
     queryBuilder.select(
@@ -45,10 +49,13 @@ export class MapRepository extends Repository<Country> {
       });
     }
 
-    const result: { geojson: FeatureCollection } | undefined =
-      await queryBuilder.getRawOne<{
-        geojson: FeatureCollection;
-      }>();
+    const result:
+      | {
+          geojson: FeatureCollection<Geometry, ProjectGeoProperties>;
+        }
+      | undefined = await queryBuilder.getRawOne<{
+      geojson: FeatureCollection<Geometry, ProjectGeoProperties>;
+    }>();
     this.logger.log(`Retrieved geo features`);
     if (!result) {
       throw new NotFoundException(`Could not retrieve geo features`);
