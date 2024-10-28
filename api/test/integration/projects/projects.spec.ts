@@ -6,10 +6,15 @@ import { Project } from '@shared/entities/projects.entity';
 
 describe('Projects', () => {
   let testManager: TestManager;
+  let countriesInDb: Country[];
 
   beforeAll(async () => {
     testManager = await TestManager.createTestManager();
     await testManager.ingestCountries();
+    countriesInDb = await testManager
+      .getDataSource()
+      .getRepository(Country)
+      .find();
   });
 
   afterEach(async () => {
@@ -23,13 +28,8 @@ describe('Projects', () => {
 
   describe('Get Projects', () => {
     test('Should return a list of Projects', async () => {
-      const countries = await testManager
-        .getDataSource()
-        .getRepository(Country)
-        .find();
-
       const projects: Project[] = [];
-      for (const country of countries.slice(countries.length / 2)) {
+      for (const country of countriesInDb.slice(countriesInDb.length / 2)) {
         projects.push(
           await testManager
             .mocks()
@@ -45,20 +45,57 @@ describe('Projects', () => {
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.data.length).toBe(projects.length);
     });
+
+    test('Should return a list of projects filtered by countries', async () => {
+      const fiveCountriesWithNoGeometry = countriesInDb
+        .slice(0, 5)
+        .map((country) => {
+          delete country.geometry;
+          return country;
+        });
+      const projects: Project[] = [];
+      for (const country of fiveCountriesWithNoGeometry) {
+        projects.push(
+          await testManager
+            .mocks()
+            .createProject({ countryCode: country.code }),
+        );
+      }
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjects.path)
+        .query({
+          filter: {
+            countryCode: [
+              fiveCountriesWithNoGeometry[0].code,
+              fiveCountriesWithNoGeometry[1].code,
+            ],
+          },
+        });
+      expect(response.body.data).toHaveLength(2);
+      expect(
+        response.body.data.map((project: Project) => project.projectName),
+      ).toEqual(
+        projects
+          .filter(
+            (project) =>
+              project.countryCode === fiveCountriesWithNoGeometry[0].code ||
+              project.countryCode === fiveCountriesWithNoGeometry[1].code,
+          )
+          .map((project) => project.projectName),
+      );
+    });
   });
 
   describe('Filters for Projects', () => {
     test('Should get a list of countries there are projects in', async () => {
-      const fiveCountriesWithNoGeometry = await testManager
-        .getDataSource()
-        .getRepository(Country)
-        .find()
-        .then((countries) =>
-          countries.slice(0, 5).map((c) => {
-            const { geometry, ...rest } = c;
-            return rest;
-          }),
-        );
+      const fiveCountriesWithNoGeometry = countriesInDb
+        .slice(0, 5)
+        .map((country) => {
+          delete country.geometry;
+          return country;
+        });
 
       for (const country of fiveCountriesWithNoGeometry) {
         await testManager.mocks().createProject({ countryCode: country.code });
