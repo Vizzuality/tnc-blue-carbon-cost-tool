@@ -3,10 +3,15 @@ import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { projectsContract } from '@shared/contracts/projects.contract';
 import { ProjectsService } from '@api/modules/projects/projects.service';
+import { CountriesService } from '@api/modules/countries/countries.service';
+import { CountryWithNoGeometry } from '@shared/entities/country.entity';
 
 @Controller()
 export class ProjectsController {
-  constructor(private readonly projectsService: ProjectsService) {}
+  constructor(
+    private readonly projectsService: ProjectsService,
+    private readonly countryService: CountriesService,
+  ) {}
 
   @TsRestHandler(projectsContract.getProjects)
   async getProjects(): ControllerResponse {
@@ -19,8 +24,19 @@ export class ProjectsController {
   @TsRestHandler(projectsContract.getProjectCountries)
   async getProjectCountries(): ControllerResponse {
     return tsRestHandler(projectsContract.getProjectCountries, async () => {
-      const data = await this.projectsService.getProjectCountries();
-      return { body: { data }, status: HttpStatus.OK };
+      const projectCountryCodes = await this.projectsService.projectRepository
+        .find()
+        .then((projects) => projects.map((p) => p.countryCode));
+      const [countries] = await this.countryService.findAll({
+        filter: { code: projectCountryCodes },
+        omitFields: ['geometry'],
+        disablePagination: true,
+      });
+
+      return {
+        body: { data: countries as CountryWithNoGeometry[] },
+        status: HttpStatus.OK,
+      };
     });
   }
 
