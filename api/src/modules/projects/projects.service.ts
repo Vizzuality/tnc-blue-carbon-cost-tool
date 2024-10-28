@@ -3,8 +3,6 @@ import { AppBaseService } from '@api/utils/app-base.service';
 import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CountryWithNoGeometry } from '@shared/entities/country.entity';
-import { CountriesService } from '@api/modules/countries/countries.service';
 
 @Injectable()
 export class ProjectsService extends AppBaseService<
@@ -15,22 +13,8 @@ export class ProjectsService extends AppBaseService<
 > {
   constructor(
     @InjectRepository(Project)
-    private readonly projectRepository: Repository<Project>,
-    private readonly countryService: CountriesService,
+    public readonly projectRepository: Repository<Project>,
   ) {
     super(projectRepository, 'project', 'projects');
-  }
-
-  async getProjectCountries(): Promise<CountryWithNoGeometry[]> {
-    const projects = await this.projectRepository.find();
-
-    const countryCodes = projects.map((p) => p.countryCode);
-    const [countries] = await this.countryService.findAll({
-      filter: { code: countryCodes },
-      omitFields: ['geometry'],
-      disablePagination: true,
-    });
-
-    return countries as CountryWithNoGeometry[];
   }
 }
