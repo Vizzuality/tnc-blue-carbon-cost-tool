@@ -18,6 +18,8 @@ export enum CONTINENTS {
   ANTARCTICA = "Antarctica",
 }
 
+export type CountryWithNoGeometry = Omit<Country, "geometry">;
+
 @Entity("countries")
 export class Country extends BaseEntity {
   @PrimaryColumn({ name: "code", length: 3, type: "char" })

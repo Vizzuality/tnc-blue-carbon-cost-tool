@@ -25,4 +25,12 @@ export class ProjectsController {
       },
     );
   }
+
+  @TsRestHandler(projectsContract.getProjectCountries)
+  async getProjectCountries(): ControllerResponse {
+    return tsRestHandler(projectsContract.getProjectCountries, async () => {
+      const data = await this.projectsService.getProjectCountries();
+      return { body: { data }, status: HttpStatus.OK };
+    });
+  }
 }
