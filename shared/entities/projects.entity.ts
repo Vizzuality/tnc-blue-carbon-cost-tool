@@ -6,8 +6,9 @@ import {
   ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { Country } from "@shared/entities/country.entity";
+
 import { ACTIVITY, ECOSYSTEM } from "@shared/entities/base-data.entity";
+import { Country } from "@shared/entities/country.entity";
 
 export enum PROJECT_SIZE_FILTER {
   SMALL = "Small",
@@ -31,7 +32,7 @@ export class Project extends BaseEntity {
   @Column({ name: "country_code", length: 3, nullable: true, type: "char" })
   countryCode: string;
 
-  // Unidirectional relation
+  //Unidirectional relation
   @ManyToOne(() => Country)
   @JoinColumn({ name: "country_code" })
   country: Country;

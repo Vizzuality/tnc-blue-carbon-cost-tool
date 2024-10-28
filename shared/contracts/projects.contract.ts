@@ -5,7 +5,8 @@ import {
   ApiPaginationResponse,
   ApiResponse,
 } from "@shared/dtos/global/api-response.dto";
-import { Project } from "@shared/entities/users/projects.entity";
+import { Project } from "@shared/entities/projects.entity";
+import { User } from "@shared/entities/users/user.entity";
 
 const contract = initContract();
 export const projectsContract = contract.router({

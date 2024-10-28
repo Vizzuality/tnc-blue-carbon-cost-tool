@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { BaseData } from '@shared/entities/base-data.entity';
-import { Project } from '@shared/entities/users/projects.entity';
+import { Project } from '@shared/entities/projects.entity';
 import { Country } from '@shared/entities/country.entity';
 
 @Injectable()

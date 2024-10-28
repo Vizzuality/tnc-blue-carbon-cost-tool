@@ -25,7 +25,7 @@ import { EmissionFactors } from "@shared/entities/emission-factors.entity.js";
 import { LongTermProjectOperating } from "@shared/entities/long-term-project-operating.entity.js";
 import { MRV } from "@shared/entities/mrv.entity.js";
 import { SequestrationRate } from "@shared/entities/sequestration-rate.entity.js";
-import { Project } from "@shared/entities/users/projects.entity.js";
+import { Project } from "@shared/entities/projects.entity.js";
 
 // TODO: If we import the COMMON_DATABASE_ENTITIES from shared, we get an error where DataSouce is not set for a given entity
 export const ADMINJS_ENTITIES = [

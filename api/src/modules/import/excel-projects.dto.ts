@@ -1,5 +1,5 @@
 import { ACTIVITY, ECOSYSTEM } from '@shared/entities/base-data.entity';
-import { PROJECT_PRICE_TYPE } from '@shared/entities/users/projects.entity';
+import { PROJECT_PRICE_TYPE } from '@shared/entities/projects.entity';
 
 export type ExcelProjects = {
   Project_name: string;
