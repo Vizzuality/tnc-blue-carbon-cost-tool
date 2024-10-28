@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
 import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CountryWithNoGeometry } from '@shared/entities/country.entity';
 import { CountriesService } from '@api/modules/countries/countries.service';
 
@@ -23,10 +23,14 @@ export class ProjectsService extends AppBaseService<
 
   async getProjectCountries(): Promise<CountryWithNoGeometry[]> {
     const projects = await this.projectRepository.find();
+
+    const countryCodes = projects.map((p) => p.countryCode);
     const [countries] = await this.countryService.findAll({
-      filter: { code: In(projects.map((p) => p.countryCode)) },
+      filter: { code: countryCodes },
       omitFields: ['geometry'],
+      disablePagination: true,
     });
+
     return countries as CountryWithNoGeometry[];
   }
 }
