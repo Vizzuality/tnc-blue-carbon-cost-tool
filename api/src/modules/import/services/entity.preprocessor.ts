@@ -25,7 +25,7 @@ import { MRV } from '@shared/entities/mrv.entity';
 import { BlueCarbonProjectPlanning } from '@shared/entities/blue-carbon-project-planning.entity';
 import { LongTermProjectOperating } from '@shared/entities/long-term-project-operating.entity';
 import { SequestrationRate } from '@shared/entities/sequestration-rate.entity';
-import { Project } from '@shared/entities/users/projects.entity';
+import { Project } from '@shared/entities/projects.entity';
 import { ExcelProjects } from '@api/modules/import/excel-projects.dto';
 
 export type ParsedDBEntities = {
