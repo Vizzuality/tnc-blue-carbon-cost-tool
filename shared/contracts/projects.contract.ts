@@ -1,12 +1,11 @@
 import { initContract } from "@ts-rest/core";
-import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { z } from "zod";
 import {
   ApiPaginationResponse,
   ApiResponse,
 } from "@shared/dtos/global/api-response.dto";
 import { Project } from "@shared/entities/projects.entity";
-import { User } from "@shared/entities/users/user.entity";
+import { FetchSpecification } from "nestjs-base-service";
 
 const contract = initContract();
 export const projectsContract = contract.router({
@@ -16,7 +15,7 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiPaginationResponse<Project>>(),
     },
-    query: generateEntityQuerySchema(Project),
+    query: contract.type<FetchSpecification>(),
   },
   getProject: {
     method: "GET",
@@ -27,6 +26,6 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiResponse<Project>>(),
     },
-    query: generateEntityQuerySchema(Project),
+    query: contract.type<FetchSpecification>(),
   },
 });
