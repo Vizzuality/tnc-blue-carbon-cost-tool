@@ -15,6 +15,15 @@ export class ProjectsController {
       return { body: data, status: HttpStatus.OK };
     });
   }
+
+  @TsRestHandler(projectsContract.getProjectCountries)
+  async getProjectCountries(): ControllerResponse {
+    return tsRestHandler(projectsContract.getProjectCountries, async () => {
+      const data = await this.projectsService.getProjectCountries();
+      return { body: { data }, status: HttpStatus.OK };
+    });
+  }
+
   @TsRestHandler(projectsContract.getProject)
   async getProject(): ControllerResponse {
     return tsRestHandler(
@@ -24,13 +33,5 @@ export class ProjectsController {
         return { body: { data }, status: HttpStatus.OK };
       },
     );
-  }
-
-  @TsRestHandler(projectsContract.getProjectCountries)
-  async getProjectCountries(): ControllerResponse {
-    return tsRestHandler(projectsContract.getProjectCountries, async () => {
-      const data = await this.projectsService.getProjectCountries();
-      return { body: { data }, status: HttpStatus.OK };
-    });
   }
 }
