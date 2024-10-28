@@ -6,7 +6,7 @@ import {
 } from "@shared/dtos/global/api-response.dto";
 import { Project } from "@shared/entities/projects.entity";
 import { FetchSpecification } from "nestjs-base-service";
-import { Country } from "@shared/entities/country.entity";
+import { CountryWithNoGeometry } from "@shared/entities/country.entity";
 
 const contract = initContract();
 export const projectsContract = contract.router({
@@ -33,7 +33,7 @@ export const projectsContract = contract.router({
     method: "GET",
     path: "/projects/countries",
     responses: {
-      200: contract.type<ApiResponse<Country[]>>(),
+      200: contract.type<ApiResponse<CountryWithNoGeometry[]>>(),
     },
   },
 });
