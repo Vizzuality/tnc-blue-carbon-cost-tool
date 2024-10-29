@@ -10,6 +10,7 @@ export const mapContract = contract.router({
     responses: {
       200: contract.type<FeatureCollection<Geometry, any>>(),
     },
+    // TODO: Not sure this endpoint will ever be used, check with andres
     query: z.object({ countryCode: z.string().length(3).optional() }),
   },
 });

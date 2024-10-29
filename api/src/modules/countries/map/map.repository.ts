@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Country } from '@shared/entities/country.entity';
-
 import { FeatureCollection } from 'geojson';
 
 /**
