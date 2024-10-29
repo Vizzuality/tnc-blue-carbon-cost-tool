@@ -32,7 +32,7 @@ export class MapRepository extends Repository<Country> {
           'features', json_agg(
             json_build_object(
               'type', 'Feature',
-              'geometry', ST_AsGeoJSON(country.geometry)::jsonb, 
+              'geometry', ST_AsGeoJSON(ST_Simplify(country.geometry, 0.01))::jsonb, 
               'properties', json_build_object(${propertiesSubQuery})
             )
           )
