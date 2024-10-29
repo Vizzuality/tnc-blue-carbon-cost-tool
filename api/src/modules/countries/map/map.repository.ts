@@ -1,17 +1,14 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Injectable, Logger } from '@nestjs/common';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Country } from '@shared/entities/country.entity';
-import { BaseData } from '@shared/entities/base-data.entity';
 
-import { FeatureCollection, Geometry } from 'geojson';
-
-import { ProjectGeoProperties } from '@shared/schemas/geometries/projects';
+import { FeatureCollection } from 'geojson';
 
 /**
- * @description: The aim for this repository is to work with geospatial data, for now "geometry" column in countries
- * table. The country repository will be used to work with the metadata of the countries and avoid loading geometries when only metadata is needed,
- * which can consume a lot of resources.
+ * @description: The aim for this repository is to work with geospatial data. Since we need to join with different entities and apply different filters
+ * depending on the joint entity, this repository returns a queryBuilder that can be used to retrieve all geometries by default, and/or to build
+ * a custom query with joins and filters.
  */
 
 @Injectable()
@@ -24,11 +21,10 @@ export class MapRepository extends Repository<Country> {
     super(repository.target, repository.manager, repository.queryRunner);
   }
 
-  async getGeoFeatures(
-    countryCode: Country['code'],
-  ): Promise<FeatureCollection<Geometry, ProjectGeoProperties>> {
+  getGeoFeaturesQueryBuilder(
+    propertiesSubQuery: string,
+  ): SelectQueryBuilder<FeatureCollection> {
     const queryBuilder = this.createQueryBuilder('country');
-    queryBuilder.innerJoin(BaseData, 'bd', 'bd.country_code = country.code');
     queryBuilder.select(
       `
         json_build_object(
@@ -36,36 +32,13 @@ export class MapRepository extends Repository<Country> {
           'features', json_agg(
             json_build_object(
               'type', 'Feature',
-              'geometry', ST_AsGeoJSON(ST_Simplify(country.geometry, 0.01))::jsonb, 
-              'properties', json_build_object(${this.getPropertiesQuery()})
+              'geometry', ST_AsGeoJSON(country.geometry)::jsonb, 
+              'properties', json_build_object(${propertiesSubQuery})
             )
           )
         )`,
       'geojson',
     );
-    if (countryCode) {
-      queryBuilder.where('country.code = :countryCode', {
-        countryCode,
-      });
-    }
-
-    const result:
-      | {
-          geojson: FeatureCollection<Geometry, ProjectGeoProperties>;
-        }
-      | undefined = await queryBuilder.getRawOne<{
-      geojson: FeatureCollection<Geometry, ProjectGeoProperties>;
-    }>();
-    this.logger.log(`Retrieved geo features`);
-    if (!result) {
-      throw new NotFoundException(`Could not retrieve geo features`);
-    }
-    return result.geojson;
-  }
-
-  private getPropertiesQuery(): string {
-    return `'country', country.name,
-            'abatementPotential', 10000,
-            'cost', 20000`;
+    return queryBuilder as unknown as SelectQueryBuilder<FeatureCollection>;
   }
 }

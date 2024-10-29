@@ -1,11 +1,6 @@
 import { z } from "zod";
 import { FeatureCollection, Geometry } from "geojson";
-
-export const ProjectGeoPropertiesSchema = z.object({
-  abatementPotential: z.number(),
-  cost: z.number(),
-  country: z.string(),
-});
+import { ProjectGeoPropertiesSchema } from "@shared/schemas/geometries/projects";
 
 export type ProjectGeoProperties = z.infer<typeof ProjectGeoPropertiesSchema>;
 
