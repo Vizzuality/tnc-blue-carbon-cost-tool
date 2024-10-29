@@ -23,7 +23,8 @@ export class MapController {
       const { geojson } = await queryBuilder.getRawOne<{
         geojson: FeatureCollection;
       }>();
-      return { body: geojson, status: HttpStatus.OK };
+      console.log('FEATURES IN ALL MAP', geojson.features.length);
+      return { body: geojson, status: HttpStatus.OK } as any;
     });
   }
 }

@@ -17,11 +17,11 @@ export default function ProjectsLayer() {
     ? geometriesKeys.country(country).queryKey
     : geometriesKeys.all.queryKey;
 
-  const { data, isSuccess } = client.map.getGeoFeatures.useQuery(
+  const { data, isSuccess } = client.projects.getProjectsMap.useQuery(
     queryKey,
     {
       query: {
-        ...(country && { countryCode: country }),
+        ...(country && { countryCodes: [country] }),
       },
     },
     {

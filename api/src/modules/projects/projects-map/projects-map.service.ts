@@ -3,6 +3,7 @@ import { MapRepository } from '@api/modules/countries/map/map.repository';
 import { IMapService } from '@api/modules/countries/map/map-service.interface';
 import { Project } from '@shared/entities/projects.entity';
 import { ProjectMapFilters } from '@shared/contracts/projects.contract';
+import { ProjectMap } from '@shared/dtos/projects/projects-map.dto';
 
 @Injectable()
 export class ProjectsMapService implements IMapService {
@@ -11,7 +12,7 @@ export class ProjectsMapService implements IMapService {
     this.mapRepository = mapRepo;
   }
 
-  async getMap<ProjectMap>(filters: ProjectMapFilters) {
+  async getMap(filters: ProjectMapFilters) {
     const mapQueryBuilder = this.mapRepository.getGeoFeaturesQueryBuilder(
       this.getGeoPropertiesQuery(),
     );
@@ -21,11 +22,13 @@ export class ProjectsMapService implements IMapService {
       'project.countryCode = country.code',
     );
 
-    if (filters.countryCodes.length) {
+    if (filters?.countryCodes.length) {
       mapQueryBuilder.andWhere('project.countryCode IN (:...countryCodes)', {
         countryCodes: filters.countryCodes,
       });
     }
+
+    console.log('QUERY BUILDER', mapQueryBuilder.getSql());
     const result:
       | {
           geojson: ProjectMap;
@@ -36,12 +39,13 @@ export class ProjectsMapService implements IMapService {
     if (!result) {
       throw new NotFoundException(`Could not retrieve geo features`);
     }
+    console.log('FEATURES IN PROJECTS MAP', result.geojson.features.length);
     return result.geojson;
   }
 
   getGeoPropertiesQuery(): string {
     return `'country', country.name,
-            'abatementPotential', project.abatementPotential,
-            'cost', project.totalCost`;
+            'abatementPotential', sum(project.abatementPotential),
+            'cost', sum(project.totalCost)`;
   }
 }

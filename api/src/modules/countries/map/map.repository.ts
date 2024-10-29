@@ -38,6 +38,10 @@ export class MapRepository extends Repository<Country> {
         )`,
       'geojson',
     );
+
+    queryBuilder.groupBy('country.geometry');
+    queryBuilder.addGroupBy('country.code');
+
     return queryBuilder as unknown as SelectQueryBuilder<FeatureCollection>;
   }
 }
