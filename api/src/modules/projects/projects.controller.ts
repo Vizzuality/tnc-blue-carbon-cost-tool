@@ -5,6 +5,7 @@ import { projectsContract } from '@shared/contracts/projects.contract';
 import { ProjectsService } from '@api/modules/projects/projects.service';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { CountryWithNoGeometry } from '@shared/entities/country.entity';
+import { ProjectMap } from '@shared/dtos/projects/projects-map.dto';
 
 @Controller()
 export class ProjectsController {
@@ -37,6 +38,14 @@ export class ProjectsController {
         body: { data: countries as CountryWithNoGeometry[] },
         status: HttpStatus.OK,
       };
+    });
+  }
+
+  @TsRestHandler(projectsContract.getProjectsMap)
+  async getProjectsMap(): ControllerResponse {
+    return tsRestHandler(projectsContract.getProjectsMap, async () => {
+      const data = await this.projectsService.projectMaps.getMap<ProjectMap>();
+      return { body: data, status: HttpStatus.OK };
     });
   }
 

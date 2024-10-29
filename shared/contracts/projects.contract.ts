@@ -7,6 +7,9 @@ import {
 import { Project } from "@shared/entities/projects.entity";
 import { FetchSpecification } from "nestjs-base-service";
 import { CountryWithNoGeometry } from "@shared/entities/country.entity";
+import { FeatureCollection, Geometry } from "geojson";
+import { ProjectGeoProperties } from "@shared/schemas/geometries/projects";
+import { ProjectMap } from "@shared/dtos/projects/projects-map.dto";
 
 const contract = initContract();
 export const projectsContract = contract.router({
@@ -34,6 +37,13 @@ export const projectsContract = contract.router({
     path: "/projects/countries",
     responses: {
       200: contract.type<ApiResponse<CountryWithNoGeometry[]>>(),
+    },
+  },
+  getProjectsMap: {
+    method: "GET",
+    path: "/projects/map",
+    responses: {
+      200: contract.type<ProjectMap>(),
     },
   },
 });
