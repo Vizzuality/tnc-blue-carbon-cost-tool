@@ -32,7 +32,7 @@ export function ProjectsTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md border">
+    <div className="flex-1 rounded-md border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

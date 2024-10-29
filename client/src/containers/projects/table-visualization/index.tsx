@@ -13,7 +13,7 @@ import {
 
 export default function TableVisualization() {
   return (
-    <div>
+    <>
       <ToolbarProjectsTable />
       <ProjectsTable columns={[]} data={[]} />
       <div className="flex">
@@ -46,6 +46,6 @@ export default function TableVisualization() {
           </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 }
