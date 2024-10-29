@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { MapRepository } from '@api/modules/countries/map/map.repository';
 import { IMapService } from '@api/modules/countries/map/map-service.interface';
 import { Project } from '@shared/entities/projects.entity';
+import { ProjectMapFilters } from '@shared/contracts/projects.contract';
 
 @Injectable()
 export class ProjectsMapService implements IMapService {
@@ -10,7 +11,7 @@ export class ProjectsMapService implements IMapService {
     this.mapRepository = mapRepo;
   }
 
-  async getMap<ProjectMap>() {
+  async getMap<ProjectMap>(filters: ProjectMapFilters) {
     const mapQueryBuilder = this.mapRepository.getGeoFeaturesQueryBuilder(
       this.getGeoPropertiesQuery(),
     );
@@ -19,6 +20,12 @@ export class ProjectsMapService implements IMapService {
       'project',
       'project.countryCode = country.code',
     );
+
+    if (filters.countryCodes.length) {
+      mapQueryBuilder.andWhere('project.countryCode IN (:...countryCodes)', {
+        countryCodes: filters.countryCodes,
+      });
+    }
     const result:
       | {
           geojson: ProjectMap;
