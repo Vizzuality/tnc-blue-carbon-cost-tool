@@ -47,7 +47,7 @@ export class BlueCarbonProjectPlanning extends BaseEntity {
 
   @BeforeInsert()
   @BeforeUpdate()
-  setBlueCarbonValueValue() {
+  setBlueCarbonValue() {
     if (this.inputSelection === INPUT_SELECTION.INPUT_1) {
       this.blueCarbon = this.input1;
     } else if (this.inputSelection === INPUT_SELECTION.INPUT_2) {
