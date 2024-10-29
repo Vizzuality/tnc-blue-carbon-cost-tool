@@ -41,13 +41,13 @@ export class ProjectsController {
     });
   }
 
-  @TsRestHandler(projectsContract.getProjectsMap)
-  async getProjectsMap(): ControllerResponse {
-    return tsRestHandler(projectsContract.getProjectsMap, async () => {
-      const data = await this.projectsService.projectMaps.getMap();
-      return { body: null, status: HttpStatus.OK } as any;
-    });
-  }
+  // @TsRestHandler(projectsContract.getProjectsMap)
+  // async getProjectsMap(): ControllerResponse {
+  //   return tsRestHandler(projectsContract.getProjectsMap, async () => {
+  //     const data = await this.projectsService.projectMaps.getMap();
+  //     return { body: null, status: HttpStatus.OK } as any;
+  //   });
+  // }
 
   @TsRestHandler(projectsContract.getProject)
   async getProject(): ControllerResponse {
