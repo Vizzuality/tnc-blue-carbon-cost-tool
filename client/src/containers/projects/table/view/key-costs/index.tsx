@@ -5,7 +5,6 @@ import { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { keepPreviousData } from "@tanstack/react-query";
 import {
-  AccessorKeyColumnDef,
   flexRender,
   getCoreRowModel,
   PaginationState,
