@@ -5,13 +5,14 @@ import { projectsContract } from '@shared/contracts/projects.contract';
 import { ProjectsService } from '@api/modules/projects/projects.service';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { CountryWithNoGeometry } from '@shared/entities/country.entity';
-import { ProjectMap } from '@shared/dtos/projects/projects-map.dto';
+import { ProjectsMapRepository } from '@api/modules/projects/projects-map.repository';
 
 @Controller()
 export class ProjectsController {
   constructor(
     private readonly projectsService: ProjectsService,
     private readonly countryService: CountriesService,
+    private readonly projectMapRepository: ProjectsMapRepository,
   ) {}
 
   @TsRestHandler(projectsContract.getProjects)
@@ -41,13 +42,13 @@ export class ProjectsController {
     });
   }
 
-  // @TsRestHandler(projectsContract.getProjectsMap)
-  // async getProjectsMap(): ControllerResponse {
-  //   return tsRestHandler(projectsContract.getProjectsMap, async () => {
-  //     const data = await this.projectsService.projectMaps.getMap();
-  //     return { body: null, status: HttpStatus.OK } as any;
-  //   });
-  // }
+  @TsRestHandler(projectsContract.getProjectsMap)
+  async getProjectsMap(): ControllerResponse {
+    return tsRestHandler(projectsContract.getProjectsMap, async () => {
+      const data = await this.projectMapRepository.getProjectsMap();
+      return { body: data, status: HttpStatus.OK } as any;
+    });
+  }
 
   @TsRestHandler(projectsContract.getProject)
   async getProject(): ControllerResponse {
