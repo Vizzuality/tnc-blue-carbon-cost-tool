@@ -18,6 +18,7 @@ describe('Create Users', () => {
       testManager.getModule<MockEmailService>(IEmailServiceToken);
   });
   beforeEach(async () => {
+    jest.clearAllMocks();
     const { user, jwtToken: token } = await testManager.setUpTestUser();
     testUser = user;
     jwtToken = token;
@@ -71,7 +72,7 @@ describe('Create Users', () => {
     );
   });
 
-  test('An Admin registers a new user ', async () => {
+  test('An Admin registers a new user, and if no role provided, it should be set as partner ', async () => {
     // Given a admin user exists with valid credentials
     // beforeAll
     const newUser = {
@@ -94,6 +95,32 @@ describe('Create Users', () => {
       .findOne({ where: { email: newUser.email } });
 
     expect(createdUser.isActive).toBe(false);
+    expect(createdUser.role).toBe(ROLES.PARTNER);
+    expect(mockEmailService.sendMail).toHaveBeenCalledTimes(1);
+  });
+
+  test('An Admin can register another admin by setting a role', async () => {
+    const newUser = {
+      email: 'test@test.com',
+      partnerName: 'test',
+      role: ROLES.ADMIN,
+    };
+    const response = await testManager
+      .request()
+      .post('/admin/users')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .send(newUser);
+
+    // Then the user should receive a 201 status code
+    expect(response.status).toBe(HttpStatus.CREATED);
+    //  And the user should not be active
+    const createdUser = await testManager
+      .getDataSource()
+      .getRepository(User)
+      .findOne({ where: { email: newUser.email } });
+
+    expect(createdUser.isActive).toBe(false);
+    expect(createdUser.role).toBe(ROLES.ADMIN);
     expect(mockEmailService.sendMail).toHaveBeenCalledTimes(1);
   });
 });
