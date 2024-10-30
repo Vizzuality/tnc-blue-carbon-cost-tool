@@ -113,8 +113,8 @@ def join_with_csv(geom_gdf, csv_path, key="GID_0"):
 def generate_sql_insert(row):
     sql_template = """
     INSERT INTO public.countries
-    (code, "name", continent, region_1, region_2, numeric_code, hdi, geometry)
-    VALUES ('{code}', '{name}', '{continent}'::public.countries_continent_enum, '{region_1}', {region_2}, '{numeric_code}', {hdi}, '{geometry}');
+    (code, name, continent, region_1, region_2, numeric_code, hdi, geometry)
+    VALUES ('{code}', '{name}', '{continent}'::public.countries_continent_enum, '{region_1}', ''{region_2}'', {numeric_code}, {hdi}, '{geometry}');
     """  # noqa: E501
 
     geometry_wkt = row["geometry"].wkt  # Get WKT representation of the geometry
