@@ -21,7 +21,7 @@ export default function ProjectsLayer() {
     queryKey,
     {
       query: {
-        ...(country && { countryCodes: [country] }),
+        filter: { ...(country && { countryCode: [country] }) },
       },
     },
     {
