@@ -17,7 +17,10 @@ import {
   createProject,
   createUser,
 } from '@shared/lib/entity-mocks';
-import { clearTestDataFromDatabase } from '@shared/lib/db-helpers';
+import {
+  clearTablesByEntities,
+  clearTestDataFromDatabase,
+} from '@shared/lib/db-helpers';
 import * as path from 'path';
 import * as fs from 'fs';
 import { BaseData } from '@shared/entities/base-data.entity';
@@ -58,6 +61,10 @@ export class TestManager {
 
   async clearDatabase() {
     await clearTestDataFromDatabase(this.dataSource);
+  }
+
+  async clearTablesByEntities(entities: any[]) {
+    return clearTablesByEntities(this.dataSource, entities);
   }
 
   getApp() {

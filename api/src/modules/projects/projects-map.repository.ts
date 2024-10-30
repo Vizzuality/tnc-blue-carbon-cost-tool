@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProjectMap } from '@shared/dtos/projects/projects-map.dto';
+import {
+  ProjectMap,
+  ProjectMapFilters,
+} from '@shared/dtos/projects/projects-map.dto';
 
 @Injectable()
 export class ProjectsMapRepository extends Repository<Project> {
@@ -13,7 +16,7 @@ export class ProjectsMapRepository extends Repository<Project> {
     super(projectRepo.target, projectRepo.manager, projectRepo.queryRunner);
   }
 
-  async getProjectsMap(): Promise<ProjectMap> {
+  async getProjectsMap(filters?: ProjectMapFilters): Promise<ProjectMap> {
     const geoQueryBuilder = this.manager.createQueryBuilder();
     geoQueryBuilder
       .select(
@@ -37,7 +40,7 @@ export class ProjectsMapRepository extends Repository<Project> {
       .from('countries', 'country')
       .innerJoin(
         (subQuery) => {
-          return subQuery
+          subQuery
             .select('p.country_code')
             .from(Project, 'p')
             .addSelect(
@@ -46,6 +49,8 @@ export class ProjectsMapRepository extends Repository<Project> {
             )
             .addSelect('SUM(p.total_cost)', 'total_cost')
             .groupBy('p.country_code');
+
+          return this.applyFilters(subQuery, filters);
         },
         'filtered_projects',
         'filtered_projects.country_code = country.code',
@@ -55,5 +60,57 @@ export class ProjectsMapRepository extends Repository<Project> {
       geojson: ProjectMap;
     }>();
     return geojson;
+  }
+
+  private applyFilters(
+    queryBuilder: SelectQueryBuilder<Project>,
+    filters: ProjectMapFilters = {},
+  ) {
+    const {
+      countryCode,
+      totalCost,
+      abatementPotential,
+      activity,
+      activitySubtype,
+      ecosystem,
+      projectSizeFilter,
+      priceType,
+    } = filters;
+    if (countryCode?.length) {
+      queryBuilder.andWhere('p.countryCode IN (:...countryCodes)', {
+        countryCodes: countryCode,
+      });
+    }
+    if (totalCost?.length) {
+      const maxTotalCost = Math.max(...totalCost);
+      queryBuilder.andWhere('p.totalCost <= :maxTotalCost', {
+        maxTotalCost,
+      });
+    }
+    if (abatementPotential?.length) {
+      const maxAbatementPotential = Math.max(...abatementPotential);
+      queryBuilder.andWhere('p.abatementPotential <= :maxAbatementPotential', {
+        maxAbatementPotential,
+      });
+    }
+    if (activity) {
+      queryBuilder.andWhere('p.activity IN (:...activity)', {
+        activity,
+      });
+    }
+    if (activitySubtype?.length) {
+      queryBuilder.andWhere('p.activitySubtype IN (:...activitySubtype)', {
+        activitySubtype,
+      });
+    }
+
+    if (ecosystem) {
+      queryBuilder.andWhere('p.ecosystem IN (:...ecosystem)', {
+        ecosystem,
+      });
+    }
+
+    // TODO: Pending to apply "parameter" filters (size, price type, NPV vs non-NPV)...
+    return queryBuilder;
   }
 }

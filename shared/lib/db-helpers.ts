@@ -1,5 +1,7 @@
 import { DataSource, EntityMetadata } from "typeorm";
 import { difference } from "lodash";
+import { EntityTarget } from "typeorm/common/EntityTarget";
+import { ObjectLiteral } from "typeorm/common/ObjectLiteral";
 
 export async function clearTestDataFromDatabase(
   dataSource: DataSource,
@@ -49,5 +51,15 @@ export async function clearTestDataFromDatabase(
   } finally {
     // release query runner which is manually created
     await queryRunner.release();
+  }
+}
+
+export async function clearTablesByEntities(
+  dataSource: DataSource,
+  entities: EntityTarget<ObjectLiteral>[],
+): Promise<void> {
+  for (const entity of entities) {
+    const repo = dataSource.getRepository(entity);
+    await repo.delete({});
   }
 }
