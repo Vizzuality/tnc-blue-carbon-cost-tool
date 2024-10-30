@@ -7,7 +7,10 @@ import {
 import { Project } from "@shared/entities/projects.entity";
 import { FetchSpecification } from "nestjs-base-service";
 import { CountryWithNoGeometry } from "@shared/entities/country.entity";
-import { ProjectMap } from "@shared/dtos/projects/projects-map.dto";
+import {
+  ProjectMap,
+  ProjectMapFilters,
+} from "@shared/dtos/projects/projects-map.dto";
 
 const contract = initContract();
 export const projectsContract = contract.router({
@@ -45,10 +48,7 @@ export const projectsContract = contract.router({
     },
     // TODO: we need to define filters, they should probably match filters for Projects. Or we might want to pass only project ids, which
     //       would be already filtered
-    query: z.object({ countryCodes: z.string().array().optional() }).optional(),
+    //query: z.object({ countryCodes: z.string().array().optional() }).optional(),
+    query: contract.type<{ filter: ProjectMapFilters }>(),
   },
 });
-
-export type ProjectMapFilters = z.infer<
-  typeof projectsContract.getProjectsMap.query
->;

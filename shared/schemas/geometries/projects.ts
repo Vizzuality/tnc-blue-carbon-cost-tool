@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { FeatureCollection, Geometry } from "geojson";
 
 export const ProjectGeoPropertiesSchema = z.object({
   abatementPotential: z.number(),
@@ -7,6 +6,13 @@ export const ProjectGeoPropertiesSchema = z.object({
   country: z.string(),
 });
 
-export type ProjectGeoProperties = z.infer<typeof ProjectGeoPropertiesSchema>;
-
-export type ProjectMap = FeatureCollection<Geometry, ProjectGeoProperties>;
+export const ProjectMapQuerySchema = z.object({
+  countryCode: z.string().array(),
+  totalCost: z.number().array(),
+  abatementPotential: z.number().array(),
+  activity: z.string().array(),
+  activitySubtype: z.string().array(),
+  ecosystem: z.string().array(),
+  projectSizeFilter: z.number().array(),
+  priceType: z.string().array(),
+});
