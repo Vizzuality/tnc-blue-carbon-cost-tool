@@ -1,5 +1,4 @@
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { ExpandIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,10 +12,6 @@ import {
 
 export default function InfoDownloadProjectsTable() {
   const onClickInfo = () => {
-    //   todo
-  };
-
-  const onToggleExpand = () => {
     //   todo
   };
 
@@ -63,9 +58,6 @@ export default function InfoDownloadProjectsTable() {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      <Button onClick={onToggleExpand}>
-        <ExpandIcon />
-      </Button>
     </div>
   );
 }

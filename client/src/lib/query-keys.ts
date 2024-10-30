@@ -2,6 +2,12 @@ import {
   createQueryKeys,
   mergeQueryKeys,
 } from "@lukemorales/query-key-factory";
+import { PaginationState, SortingState } from "@tanstack/react-table";
+import { z } from "zod";
+
+import { filtersSchema } from "@/app/(projects)/url-store";
+
+import { TABLE_VIEWS } from "@/containers/projects/table/toolbar/table-selector";
 
 export const authKeys = createQueryKeys("auth", {
   resetPasswordToken: (token: string) => ["reset-password-token", token],
@@ -16,4 +22,21 @@ export const geometriesKeys = createQueryKeys("geometries", {
   all: null,
   country: (country: string) => ["country", country],
 });
-export const queryKeys = mergeQueryKeys(authKeys, userKeys, geometriesKeys);
+
+export const projectKeys = createQueryKeys("projects", {
+  all: (
+    tableView: (typeof TABLE_VIEWS)[number],
+    filters?: z.infer<typeof filtersSchema> & {
+      sorting?: SortingState;
+      pagination?: PaginationState;
+    },
+  ) => ["all", tableView, filters],
+  id: (id: string) => [id],
+});
+
+export const queryKeys = mergeQueryKeys(
+  authKeys,
+  userKeys,
+  geometriesKeys,
+  projectKeys,
+);

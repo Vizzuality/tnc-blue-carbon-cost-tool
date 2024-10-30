@@ -12,7 +12,7 @@ export const COST_VALUES = ["total", "npv"] as const;
 
 export const FILTER_KEYS = [
   "keyword",
-  "projectSize",
-  "carbonPricingType",
-  "cost",
+  "projectSizeFilter",
+  "priceType",
+  "totalCost",
 ] as const;

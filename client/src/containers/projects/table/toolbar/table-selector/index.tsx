@@ -1,8 +1,8 @@
-import { useTableMode } from "@/app/(projects)/url-store";
+import { useTableView } from "@/app/(projects)/url-store";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export const TABLE_MODES = [
+export const TABLE_VIEWS = [
   "overview",
   "scorecard-prioritization",
   "key-costs",
@@ -11,20 +11,20 @@ export const TABLE_MODES = [
 export const TABLE_TABS = [
   {
     label: "Overview",
-    value: TABLE_MODES[0],
+    value: TABLE_VIEWS[0],
   },
   {
     label: "Scorecard Prioritization",
-    value: TABLE_MODES[1],
+    value: TABLE_VIEWS[1],
   },
   {
     label: "Key costs",
-    value: TABLE_MODES[2],
+    value: TABLE_VIEWS[2],
   },
 ] as const;
 
 export default function TabsProjectsTable() {
-  const [tableMode, setTableMode] = useTableMode();
+  const [tableMode, setTableMode] = useTableView();
   return (
     <Tabs
       defaultValue={tableMode}

@@ -11,7 +11,6 @@ import { projectsUIState } from "@/app/(projects)/store";
 import ProjectsFilters from "@/containers/projects/filters";
 import ProjectsHeader from "@/containers/projects/header";
 import ProjectsMap from "@/containers/projects/map";
-import ProjectsTable from "@/containers/projects/table-visualization";
 
 import {
   ResizableHandle,
@@ -19,6 +18,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useSidebar } from "@/components/ui/sidebar";
+import ProjectsTable from "src/containers/projects/table";
 
 const PANEL_MIN_SIZE = 25;
 
@@ -67,6 +67,7 @@ export default function Projects() {
             className="flex flex-1 flex-col"
             minSize={PANEL_MIN_SIZE}
             onResize={onResizeMapPanel}
+            defaultSize={100}
           >
             <ProjectsMap />
           </ResizablePanel>
@@ -74,6 +75,7 @@ export default function Projects() {
           <ResizablePanel
             className="flex flex-1 flex-col"
             minSize={PANEL_MIN_SIZE}
+            defaultSize={100}
           >
             <ProjectsTable />
           </ResizablePanel>

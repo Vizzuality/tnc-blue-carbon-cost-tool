@@ -13,7 +13,7 @@ import {
   FILTER_KEYS,
 } from "@/app/(projects)/constants";
 
-import { TABLE_MODES } from "@/containers/projects/table-visualization/toolbar/table-selector";
+import { TABLE_VIEWS } from "@/containers/projects/table/toolbar/table-selector";
 
 export const filtersSchema = z.object({
   [FILTER_KEYS[0]]: z.string().optional(),
@@ -27,9 +27,9 @@ export function useGlobalFilters() {
     "filters",
     parseAsJson(filtersSchema.parse).withDefault({
       keyword: "",
-      projectSize: "medium",
-      carbonPricingType: "market_price",
-      cost: "npv",
+      projectSizeFilter: "medium",
+      priceType: "market_price",
+      totalCost: "npv",
     }),
   );
 }
@@ -38,9 +38,9 @@ export function useSyncCountry() {
   return useQueryState("country", parseAsString.withDefault(""));
 }
 
-export function useTableMode() {
+export function useTableView() {
   return useQueryState(
     "table",
-    parseAsStringLiteral(TABLE_MODES).withDefault("overview"),
+    parseAsStringLiteral(TABLE_VIEWS).withDefault("overview"),
   );
 }
