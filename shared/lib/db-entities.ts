@@ -46,6 +46,7 @@ import { MonitoringCost2 } from "@shared/entities/cost-inputs/monitoring.entity"
 import { MRV2 } from "@shared/entities/cost-inputs/mrv.entity";
 import { ProjectSize2 } from "@shared/entities/cost-inputs/project-size.entity";
 import { ValidationCost2 } from "@shared/entities/cost-inputs/validation.entity";
+import { EcosystemExtent2 } from "@shared/entities/carbon-inputs/ecosystem-extent.entity";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -96,4 +97,5 @@ export const COMMON_DATABASE_ENTITIES = [
   SequestrationRate,
   SequestrationRate2,
   Project,
+  EcosystemExtent2,
 ];

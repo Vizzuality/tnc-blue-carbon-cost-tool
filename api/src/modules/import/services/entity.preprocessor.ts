@@ -1,3 +1,4 @@
+import { EcosystemExtent2 } from './../../../../../shared/entities/carbon-inputs/ecosystem-extent.entity';
 import { ExcelEstablishingCarbonRights } from './../dtos/excel-establishing-carbon-rights.dto';
 import { Injectable } from '@nestjs/common';
 
@@ -70,6 +71,21 @@ import {
   COMMUNITY_CASH_FLOW_TYPES,
   CommunityCashFlow2,
 } from '@shared/entities/cost-inputs/community-cash-flow.entity';
+import { ExcelEcosystemExtent } from '../dtos/excel-ecosystem-extent.dto';
+import { ExcelEcosystemLoss } from '../dtos/excel-ccosystem-loss.dto';
+import { EcosystemLoss2 } from '@shared/entities/carbon-inputs/ecosystem-loss.entity';
+import { ExcelRestorableLand } from '../dtos/excel-restorable-land.dto';
+import { RestorableLand2 } from '@shared/entities/carbon-inputs/restorable-land.entity';
+import { ExcelSequestrationRate } from '../dtos/excel-sequestration-rate.dto';
+import {
+  SEQUESTRATION_RATE_TIER_TYPES,
+  SequestrationRate2,
+} from '@shared/entities/carbon-inputs/sequestration-rate.entity';
+import {
+  EMISSION_FACTORS_TIER_TYPES,
+  EmissionFactors2,
+} from '@shared/entities/carbon-inputs/emission-factors.entity';
+import { ExcelEmissionFactors } from '../dtos/excel-emission-factors.dto';
 
 export type ParsedDBEntities = {
   baseData: BaseData[];
@@ -91,6 +107,11 @@ export type ParsedDBEntities = {
   longTermProjectOperating: LongTermProjectOperating2[];
   carbonStandardFees: CarbonStandardFees2[];
   communityCashFlow: CommunityCashFlow2[];
+  ecosystemExtent: EcosystemExtent2[];
+  ecosystemLoss: EcosystemLoss2[];
+  restorableLand: RestorableLand2[];
+  sequestrationRate: SequestrationRate2[];
+  emissionFactors: EmissionFactors2[];
 };
 
 @Injectable()
@@ -115,9 +136,16 @@ export class EntityPreprocessor {
     'Long-term project operating': ExcelLongTermProjectOperating[];
     'Carbon standard fees': ExcelCarbonStandardFees[];
     'Community cash flow': ExcelCommunityCashFlow[];
+    'Ecosystem extent': ExcelEcosystemExtent[];
+    'Ecosystem loss': ExcelEcosystemLoss[];
+    'Restorable land': ExcelRestorableLand[];
+    'Sequestration rate': ExcelSequestrationRate[];
+    'Emission factors': ExcelEmissionFactors[];
   }): ParsedDBEntities {
     const parsedBaseData = this.processBaseData(raw.master_table);
     const processedProjects = this.processProjects(raw.Projects);
+
+    // process cost inputs
     const projectSize = this.processProjectSize(raw['Project size']);
     const feasabilityAnalysis = this.processFeasabilityAnalysis(
       raw['Feasibility analysis'],
@@ -159,6 +187,19 @@ export class EntityPreprocessor {
       raw['Community cash flow'],
     );
 
+    // proess carbon inputs
+    const ecosystemExtent = this.processEcosystemExtent(
+      raw['Ecosystem extent'],
+    );
+    const ecosystemLoss = this.processEcosystemLoss(raw['Ecosystem loss']);
+    const restorableLand = this.processRestorableLand(raw['Restorable land']);
+    const sequestrationRate = this.processSequestrationRate(
+      raw['Sequestration rate'],
+    );
+    const emissionFactors = this.processEmissionFactors(
+      raw['Emission factors'],
+    );
+
     return {
       baseData: parsedBaseData,
       projects: processedProjects,
@@ -179,7 +220,261 @@ export class EntityPreprocessor {
       longTermProjectOperating: longTermProjectOperating,
       carbonStandardFees: carbonStandardFees,
       communityCashFlow: communityCashFlow,
+      ecosystemExtent: ecosystemExtent,
+      ecosystemLoss: ecosystemLoss,
+      restorableLand: restorableLand,
+      sequestrationRate: sequestrationRate,
+      emissionFactors: emissionFactors,
     };
+  }
+
+  private processEmissionFactors(raw: ExcelEmissionFactors[]) {
+    const parsedArray: EmissionFactors2[] = [];
+    raw.forEach((row: ExcelEmissionFactors) => {
+      // mangrove emission factors
+      const mangroveEmissionFactors = new EmissionFactors2();
+      mangroveEmissionFactors.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveEmissionFactors.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveEmissionFactors.tierSelector = row[
+        'Selection (only for mangroves)'
+      ] as EMISSION_FACTORS_TIER_TYPES;
+      mangroveEmissionFactors.global = this.stringToNumeric(
+        row['Mangrove - Tier 1 - Global emission factor'],
+      );
+      mangroveEmissionFactors.t2CountrySpecificAGB = this.stringToNumeric(
+        row['Mangrove - Tier 2 - Country-specific emission factor - AGB'],
+      );
+      mangroveEmissionFactors.t2CountrySpecificSOC = this.stringToNumeric(
+        row['Mangrove - Tier 2 - Country-specific emission factor - SOC'],
+      );
+      parsedArray.push(mangroveEmissionFactors);
+
+      // seagrass emission factors
+      const seagrassEmissionFactors = new EmissionFactors2();
+      seagrassEmissionFactors.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassEmissionFactors.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassEmissionFactors.tierSelector = row[
+        'Selection (only for seagrass)'
+      ] as EMISSION_FACTORS_TIER_TYPES;
+      seagrassEmissionFactors.global = this.stringToNumeric(
+        row['Seagrass - Tier 1 - Global emission factor'],
+      );
+      seagrassEmissionFactors.t2CountrySpecificAGB = this.stringToNumeric(
+        row['Seagrass - Tier 2 - Country-specific emission factor - AGB'],
+      );
+      seagrassEmissionFactors.t2CountrySpecificSOC = this.stringToNumeric(
+        row['Seagrass - Tier 2 - Country-specific emission factor - SOC'],
+      );
+      parsedArray.push(seagrassEmissionFactors);
+
+      // salt marsh emission factors
+      const saltMarshEmissionFactors = new EmissionFactors2();
+      saltMarshEmissionFactors.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshEmissionFactors.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshEmissionFactors.tierSelector = row[
+        'Selection (only for salt marsh)'
+      ] as EMISSION_FACTORS_TIER_TYPES;
+      saltMarshEmissionFactors.global = this.stringToNumeric(
+        row['Salt marsh - Tier 1 - Global emission factor'],
+      );
+      saltMarshEmissionFactors.t2CountrySpecificAGB = this.stringToNumeric(
+        row['Salt marsh - Tier 2 - Country-specific emission factor - AGB'],
+      );
+      saltMarshEmissionFactors.t2CountrySpecificSOC = this.stringToNumeric(
+        row['Salt marsh - Tier 2 - Country-specific emission factor - SOC'],
+      );
+      parsedArray.push(saltMarshEmissionFactors);
+    });
+    return parsedArray;
+  }
+
+  private processSequestrationRate(raw: ExcelSequestrationRate[]) {
+    const parsedArray: SequestrationRate2[] = [];
+    raw.forEach((row: ExcelSequestrationRate) => {
+      // mangrove sequestration rate
+      const mangroveSequestrationRate = new SequestrationRate2();
+      mangroveSequestrationRate.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveSequestrationRate.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveSequestrationRate.tierSelector = row[
+        'Input used (mangrove only)'
+      ] as SEQUESTRATION_RATE_TIER_TYPES;
+      mangroveSequestrationRate.tier1Factor = this.emptyStringToZero(
+        row['Mangrove Tier 1 - IPCC default value'],
+      );
+      mangroveSequestrationRate.tier2Factor = this.emptyStringToZero(
+        row['Mangrove Tier 2 - country-specific rate'],
+      );
+      parsedArray.push(mangroveSequestrationRate);
+
+      // seagrass sequestration rate
+      const seagrassSequestrationRate = new SequestrationRate2();
+      seagrassSequestrationRate.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassSequestrationRate.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassSequestrationRate.tierSelector = row[
+        'Input used (seagrass only)'
+      ] as SEQUESTRATION_RATE_TIER_TYPES;
+      seagrassSequestrationRate.tier1Factor = this.emptyStringToZero(
+        row['Seagrass Tier 1 - IPCC default value'],
+      );
+      seagrassSequestrationRate.tier2Factor = this.emptyStringToZero(
+        row['Seagrass Tier 2 - country-specific rate'],
+      );
+      parsedArray.push(seagrassSequestrationRate);
+
+      // salt marsh sequestration rate
+      const saltMarshSequestrationRate = new SequestrationRate2();
+      saltMarshSequestrationRate.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshSequestrationRate.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshSequestrationRate.tierSelector = row[
+        'Input used (salt marsh only)'
+      ] as SEQUESTRATION_RATE_TIER_TYPES;
+      saltMarshSequestrationRate.tier1Factor = this.emptyStringToZero(
+        row['Salt marsh Tier 1 - IPCC default value'],
+      );
+      saltMarshSequestrationRate.tier2Factor = this.emptyStringToZero(
+        row['Salt marsh Tier 2 - country-specific rate'],
+      );
+      parsedArray.push(saltMarshSequestrationRate);
+    });
+    return parsedArray;
+  }
+
+  private processRestorableLand(raw: ExcelRestorableLand[]) {
+    const parsedArray: RestorableLand2[] = [];
+    raw.forEach((row: ExcelRestorableLand) => {
+      // mangrove restorable land
+      const mangroveRestorableLand = new RestorableLand2();
+      mangroveRestorableLand.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveRestorableLand.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveRestorableLand.restorableLand = this.emptyStringToZero(
+        row['Mangrove restorable land'],
+      );
+      parsedArray.push(mangroveRestorableLand);
+
+      // seagrass restorable land
+      const seagrassRestorableLand = new RestorableLand2();
+      seagrassRestorableLand.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassRestorableLand.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassRestorableLand.restorableLand = this.emptyStringToZero(
+        row['Seagrass restorable land'],
+      );
+      parsedArray.push(seagrassRestorableLand);
+
+      // salt marsh restorable land
+      const saltMarshRestorableLand = new RestorableLand2();
+      saltMarshRestorableLand.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshRestorableLand.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshRestorableLand.restorableLand = this.emptyStringToZero(
+        row['Salt marsh restorable land'],
+      );
+      parsedArray.push(saltMarshRestorableLand);
+    });
+    return parsedArray;
+  }
+
+  private processEcosystemLoss(raw: ExcelEcosystemLoss[]) {
+    const parsedArray: EcosystemLoss2[] = [];
+    raw.forEach((row: ExcelEcosystemLoss) => {
+      // mangrove ecosystem loss
+      const mangroveEcosystemLoss = new EcosystemLoss2();
+      mangroveEcosystemLoss.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveEcosystemLoss.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveEcosystemLoss.ecosystemLossRate = this.percentToNumber(
+        row['Mangrove loss rate'],
+      );
+      parsedArray.push(mangroveEcosystemLoss);
+
+      // seagrass ecosystem loss
+      const seagrassEcosystemLoss = new EcosystemLoss2();
+      seagrassEcosystemLoss.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassEcosystemLoss.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassEcosystemLoss.ecosystemLossRate = this.percentToNumber(
+        row['Seagrass loss rate'],
+      );
+      parsedArray.push(seagrassEcosystemLoss);
+
+      // salt marsh ecosystem loss
+      const saltMarshEcosystemLoss = new EcosystemLoss2();
+      saltMarshEcosystemLoss.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshEcosystemLoss.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshEcosystemLoss.ecosystemLossRate = this.percentToNumber(
+        row['Salt marsh loss rate'],
+      );
+      parsedArray.push(saltMarshEcosystemLoss);
+    });
+    return parsedArray;
+  }
+
+  private processEcosystemExtent(raw: ExcelEcosystemExtent[]) {
+    const parsedArray: EcosystemExtent2[] = [];
+    raw.forEach((row: ExcelEcosystemExtent) => {
+      // mangrove ecosystem extent
+      const mangroveEcosystemExtent = new EcosystemExtent2();
+      mangroveEcosystemExtent.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveEcosystemExtent.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveEcosystemExtent.extent = this.emptyStringToNull(
+        row[' Mangrove extent'],
+      );
+      mangroveEcosystemExtent.historicExtent = this.emptyStringToNull(
+        row[' Mangrove extent historic'],
+      );
+      parsedArray.push(mangroveEcosystemExtent);
+
+      // seagrass ecosystem extent
+      const seagrassEcosystemExtent = new EcosystemExtent2();
+      seagrassEcosystemExtent.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassEcosystemExtent.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassEcosystemExtent.extent = this.emptyStringToNull(
+        row[' Seagrass extent'],
+      );
+      seagrassEcosystemExtent.historicExtent = this.emptyStringToNull(
+        row[' Seagrass extent historic'],
+      );
+      parsedArray.push(seagrassEcosystemExtent);
+
+      // salt marsh ecosystem extent
+      const saltMarshEcosystemExtent = new EcosystemExtent2();
+      saltMarshEcosystemExtent.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshEcosystemExtent.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshEcosystemExtent.extent = this.emptyStringToNull(
+        row[' Salt marsh extent'],
+      );
+      saltMarshEcosystemExtent.historicExtent = this.emptyStringToNull(
+        row['Salt marsh extent historic'],
+      );
+      parsedArray.push(saltMarshEcosystemExtent);
+    });
+    return parsedArray;
   }
 
   private processCommunityCashFlow(raw: ExcelCommunityCashFlow[]) {
@@ -795,5 +1090,9 @@ export class EntityPreprocessor {
 
   private percentToNumber(value: any, defaultReturn: number = 0): number {
     return value ? parseFloat(value) : defaultReturn;
+  }
+
+  private stringToNumeric(value: any): number {
+    return value ? parseFloat(value) : 0;
   }
 }

@@ -19,6 +19,11 @@ export const SHEETS_TO_PARSE = [
   'Long-term project operating',
   'Carbon standard fees',
   'Community cash flow',
+  'Ecosystem extent',
+  'Ecosystem loss',
+  'Restorable land',
+  'Sequestration rate',
+  'Emission factors',
 ] as const;
 
 export interface ExcelParserInterface {

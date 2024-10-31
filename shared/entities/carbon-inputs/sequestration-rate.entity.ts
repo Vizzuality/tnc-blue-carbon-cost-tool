@@ -31,18 +31,16 @@ export class SequestrationRate2 extends BaseEntity {
   @Column({
     type: "enum",
     enum: SEQUESTRATION_RATE_TIER_TYPES,
-    nullable: false,
-    default: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
   })
   tierSelector: SEQUESTRATION_RATE_TIER_TYPES;
 
-  @Column("decimal", { name: "tier_1_factor" })
+  @Column("decimal", { name: "tier_1_factor", nullable: true })
   tier1Factor: number;
 
-  @Column("decimal", { name: "tier_2_factor" })
+  @Column("decimal", { name: "tier_2_factor", nullable: true })
   tier2Factor: number;
 
-  @Column("decimal", { name: "sequestration_rate" })
+  @Column("decimal", { name: "sequestration_rate", nullable: true })
   sequestrationRate: number;
 
   @BeforeInsert()

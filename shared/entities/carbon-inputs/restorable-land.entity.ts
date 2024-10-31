@@ -21,6 +21,6 @@ export class RestorableLand2 extends BaseEntity {
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
   ecosystem: ECOSYSTEM;
 
-  @Column("decimal", { name: "restorable_land" })
+  @Column("decimal", { name: "restorable_land", nullable: true })
   restorableLand: number;
 }

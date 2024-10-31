@@ -21,9 +21,9 @@ export class EcosystemExtent2 extends BaseEntity {
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
   ecosystem: ECOSYSTEM;
 
-  @Column("decimal", { name: "extent" })
+  @Column("decimal", { name: "extent", nullable: true })
   extent: number;
 
-  @Column("decimal", { name: "historic_extent" })
+  @Column("decimal", { name: "historic_extent", nullable: true })
   historicExtent: number;
 }

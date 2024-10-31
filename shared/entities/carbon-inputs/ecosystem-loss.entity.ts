@@ -21,6 +21,6 @@ export class EcosystemLoss2 extends BaseEntity {
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
   ecosystem: ECOSYSTEM;
 
-  @Column("decimal", { name: "ecosystem_loss_rate" })
+  @Column("decimal", { name: "ecosystem_loss_rate", nullable: true })
   ecosystemLossRate: number;
 }

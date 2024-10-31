@@ -21,6 +21,11 @@ import { MRV2 } from '@shared/entities/cost-inputs/mrv.entity';
 import { LongTermProjectOperating2 } from '@shared/entities/cost-inputs/long-term-project-operating.entity';
 import { CarbonStandardFees2 } from '@shared/entities/cost-inputs/carbon-standard-fees.entity';
 import { CommunityCashFlow2 } from '@shared/entities/cost-inputs/community-cash-flow.entity';
+import { EcosystemExtent2 } from '@shared/entities/carbon-inputs/ecosystem-extent.entity';
+import { EcosystemLoss2 } from '@shared/entities/carbon-inputs/ecosystem-loss.entity';
+import { RestorableLand2 } from '@shared/entities/carbon-inputs/restorable-land.entity';
+import { SequestrationRate2 } from '@shared/entities/carbon-inputs/sequestration-rate.entity';
+import { EmissionFactors2 } from '@shared/entities/carbon-inputs/emission-factors.entity';
 
 @Injectable()
 export class ImportRepository {
@@ -46,6 +51,11 @@ export class ImportRepository {
     longTermProjectOperating: LongTermProjectOperating2[];
     carbonStandardFees: CarbonStandardFees2[];
     communityCashFlow: CommunityCashFlow2[];
+    ecosystemExtent: EcosystemExtent2[];
+    ecosystemLoss: EcosystemLoss2[];
+    restorableLand: RestorableLand2[];
+    sequestrationRate: SequestrationRate2[];
+    emissionFactors: EmissionFactors2[];
   }) {
     return this.dataSource.transaction(async (manager) => {
       // TODO: Workaround as there are N/A country codes in the excel file
@@ -84,6 +94,13 @@ export class ImportRepository {
       await manager.save(importData.longTermProjectOperating);
       await manager.save(importData.carbonStandardFees);
       await manager.save(importData.communityCashFlow);
+
+      // Carbon inputs ingestion
+      await manager.save(importData.ecosystemExtent);
+      await manager.save(importData.ecosystemLoss);
+      await manager.save(importData.restorableLand);
+      await manager.save(importData.sequestrationRate);
+      await manager.save(importData.emissionFactors);
     });
   }
 }
