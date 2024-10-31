@@ -3,7 +3,7 @@ import { HttpStatus } from '@nestjs/common';
 import { Project } from '@shared/entities/projects.entity';
 import { Country } from '@shared/entities/country.entity';
 import { projectsContract } from '@shared/contracts/projects.contract';
-import { ECOSYSTEM } from '@shared/entities/base-data.entity';
+import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 
 describe('Project Map', () => {
   let testManager: TestManager;

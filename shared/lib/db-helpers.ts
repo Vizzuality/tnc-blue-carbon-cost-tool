@@ -56,7 +56,7 @@ export async function clearTestDataFromDatabase(
 
 export async function clearTablesByEntities(
   dataSource: DataSource,
-  entities: EntityTarget<ObjectLiteral>[],
+  entities: EntityTarget<ObjectLiteral>[]
 ): Promise<void> {
   for (const entity of entities) {
     const repo = dataSource.getRepository(entity);

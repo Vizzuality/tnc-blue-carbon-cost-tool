@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { FeatureCollection, Geometry } from "geojson";
 import { ProjectGeoPropertiesSchema } from "@shared/schemas/geometries/projects";
-import { ACTIVITY, ECOSYSTEM } from "@shared/entities/base-data.entity";
 import {
   PROJECT_PRICE_TYPE,
   PROJECT_SIZE_FILTER,
 } from "@shared/entities/projects.entity";
+import { ACTIVITY } from "@shared/entities/activity.enum";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 export type ProjectGeoProperties = z.infer<typeof ProjectGeoPropertiesSchema>;
 
