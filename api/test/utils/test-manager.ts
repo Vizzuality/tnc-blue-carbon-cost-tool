@@ -12,8 +12,13 @@ import { User } from '@shared/entities/users/user.entity';
 import { IEmailServiceToken } from '@api/modules/notifications/email/email-service.interface';
 import { MockEmailService } from './mocks/mock-email.service';
 import { ROLES } from '@shared/entities/users/roles.enum';
+
 import { createProject, createUser } from '@shared/lib/entity-mocks';
-import { clearTestDataFromDatabase } from '@shared/lib/db-helpers';
+import {
+  clearTablesByEntities,
+  clearTestDataFromDatabase,
+} from '@shared/lib/db-helpers';
+
 import * as path from 'path';
 import * as fs from 'fs';
 import { Project } from '@shared/entities/projects.entity';
@@ -53,6 +58,10 @@ export class TestManager {
 
   async clearDatabase() {
     await clearTestDataFromDatabase(this.dataSource);
+  }
+
+  async clearTablesByEntities(entities: any[]) {
+    return clearTablesByEntities(this.dataSource, entities);
   }
 
   getApp() {

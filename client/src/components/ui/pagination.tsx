@@ -1,10 +1,7 @@
 import * as React from "react";
 
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
+import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+import { ChevronFirstIcon, ChevronLastIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -40,18 +37,18 @@ const PaginationItem = React.forwardRef<
 ));
 PaginationItem.displayName = "PaginationItem";
 
-type PaginationLinkProps = {
+type PaginationButtonProps = {
   isActive?: boolean;
-} & Pick<ButtonProps, "size"> &
-  React.ComponentProps<"a">;
+} & ButtonProps;
 
-const PaginationLink = ({
+const PaginationButton = ({
   className,
   isActive,
   size = "icon",
   ...props
-}: PaginationLinkProps) => (
-  <a
+}: PaginationButtonProps) => (
+  <button
+    type="button"
     aria-current={isActive ? "page" : undefined}
     className={cn(
       buttonVariants({
@@ -63,61 +60,66 @@ const PaginationLink = ({
     {...props}
   />
 );
-PaginationLink.displayName = "PaginationLink";
+PaginationButton.displayName = "PaginationButton";
 
-const PaginationPrevious = ({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
+const PaginationFirst = ({ className, ...props }: ButtonProps) => (
+  <PaginationButton
+    aria-label="Go to first page"
+    size="default"
+    className={cn("gap-1 pl-2.5", className)}
+    {...props}
+  >
+    <ChevronFirstIcon className="h-4 w-4" />
+  </PaginationButton>
+);
+PaginationFirst.displayName = "PaginationFirst";
+
+const PaginationPrevious = ({ className, ...props }: ButtonProps) => (
+  <PaginationButton
     aria-label="Go to previous page"
     size="default"
     className={cn("gap-1 pl-2.5", className)}
     {...props}
   >
     <ChevronLeftIcon className="h-4 w-4" />
-    <span>Previous</span>
-  </PaginationLink>
+  </PaginationButton>
 );
 PaginationPrevious.displayName = "PaginationPrevious";
 
 const PaginationNext = ({
   className,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
+}: React.ComponentProps<typeof PaginationButton>) => (
+  <PaginationButton
     aria-label="Go to next page"
     size="default"
     className={cn("gap-1 pr-2.5", className)}
     {...props}
   >
-    <span>Next</span>
     <ChevronRightIcon className="h-4 w-4" />
-  </PaginationLink>
+  </PaginationButton>
 );
 PaginationNext.displayName = "PaginationNext";
 
-const PaginationEllipsis = ({
-  className,
-  ...props
-}: React.ComponentProps<"span">) => (
-  <span
-    aria-hidden
-    className={cn("flex h-9 w-9 items-center justify-center", className)}
+const PaginationLast = ({ className, ...props }: ButtonProps) => (
+  <PaginationButton
+    aria-label="Go to first page"
+    size="default"
+    className={cn("gap-1 pl-2.5", className)}
     {...props}
   >
-    <DotsHorizontalIcon className="h-4 w-4" />
-    <span className="sr-only">More pages</span>
-  </span>
+    <ChevronLastIcon className="h-4 w-4" />
+  </PaginationButton>
 );
-PaginationEllipsis.displayName = "PaginationEllipsis";
+PaginationLast.displayName = "PaginationLast";
 
 export {
   Pagination,
   PaginationContent,
-  PaginationLink,
+  PaginationButton,
   PaginationItem,
+  PaginationFirst,
   PaginationPrevious,
   PaginationNext,
-  PaginationEllipsis,
+  PaginationLast,
 };

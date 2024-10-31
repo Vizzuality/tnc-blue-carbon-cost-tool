@@ -4,10 +4,11 @@ import { Project } from '@shared/entities/projects.entity';
 import { ProjectsController } from './projects.controller';
 import { ProjectsService } from './projects.service';
 import { CountriesModule } from '@api/modules/countries/countries.module';
+import { ProjectsMapRepository } from '@api/modules/projects/projects-map.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Project]), CountriesModule],
   controllers: [ProjectsController],
-  providers: [ProjectsService],
+  providers: [ProjectsService, ProjectsMapRepository],
 })
 export class ProjectsModule {}

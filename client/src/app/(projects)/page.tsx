@@ -1,5 +1,7 @@
 "use client";
 
+import { useMap } from "react-map-gl";
+
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 
@@ -9,13 +11,27 @@ import { projectsUIState } from "@/app/(projects)/store";
 import ProjectsFilters from "@/containers/projects/filters";
 import ProjectsHeader from "@/containers/projects/header";
 import ProjectsMap from "@/containers/projects/map";
-import ProjectsTable from "@/containers/projects/table-visualization";
 
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { useSidebar } from "@/components/ui/sidebar";
+import ProjectsTable from "src/containers/projects/table";
+
+const PANEL_MIN_SIZE = 25;
 
 export default function Projects() {
   const { filtersOpen } = useAtomValue(projectsUIState);
   const { open: navOpen } = useSidebar();
+  const { default: map } = useMap();
+
+  const onResizeMapPanel = () => {
+    if (!map) return;
+
+    map.resize();
+  };
 
   return (
     <motion.div
@@ -43,14 +59,27 @@ export default function Projects() {
       </motion.aside>
       <div className="flex flex-1 flex-col">
         <ProjectsHeader />
-        <div className="grid flex-grow grid-rows-2 gap-3">
-          <section className="flex-1">
+        <ResizablePanelGroup
+          direction="vertical"
+          className="grid flex-grow grid-rows-2 gap-3"
+        >
+          <ResizablePanel
+            className="flex flex-1 flex-col"
+            minSize={PANEL_MIN_SIZE}
+            onResize={onResizeMapPanel}
+            defaultSize={100}
+          >
             <ProjectsMap />
-          </section>
-          <section className="flex-1">
+          </ResizablePanel>
+          <ResizableHandle withHandle className="my-3" />
+          <ResizablePanel
+            className="flex flex-1 flex-col"
+            minSize={PANEL_MIN_SIZE}
+            defaultSize={100}
+          >
             <ProjectsTable />
-          </section>
-        </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
     </motion.div>
   );

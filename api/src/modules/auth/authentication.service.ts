@@ -57,7 +57,7 @@ export class AuthenticationService {
     createUser: CreateUserDto,
   ): Promise<{ newUser: User; plainTextPassword: string }> {
     // TODO: This is sync, check how to improve it
-    const { email, name, partnerName } = createUser;
+    const { email, name, partnerName, role } = createUser;
     const plainTextPassword = randomBytes(8).toString('hex');
     const passwordHash = await bcrypt.hash(plainTextPassword, 10);
     const existingUser = await this.usersService.findByEmail(createUser.email);
@@ -70,6 +70,7 @@ export class AuthenticationService {
       password: passwordHash,
       partnerName,
       isActive: false,
+      role,
     });
     this.eventBus.publish(
       new NewUserEvent(newUser.id, newUser.email, API_EVENT_TYPES.USER_CREATED),
