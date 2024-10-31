@@ -4,20 +4,6 @@ import { ProjectSize } from "@shared/entities/cost-inputs/project-size.entity.js
 export const ProjectSizeResource: ResourceWithOptions = {
   resource: ProjectSize,
   options: {
-    properties: {
-      id: {
-        isVisible: { list: false, show: false, edit: false, filter: false },
-      },
-      ecosystem: {
-        isVisible: { list: true, show: true, edit: false, filter: true },
-      },
-      activity: {
-        isVisible: { list: true, show: true, edit: false, filter: true },
-      },
-      sizeHa: {
-        isVisible: { list: true, show: true, edit: true, filter: false },
-      },
-    },
     sort: {
       sortBy: "sizeHa",
       direction: "desc",

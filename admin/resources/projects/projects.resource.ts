@@ -8,7 +8,7 @@ import {
 import { dataSource } from "../../datasource.js";
 import { Project } from "@shared/entities/projects.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
-import { COMMON_RESOURCE_LIST_PROPERTIES } from "../common/common.resource.js";
+import { COMMON_RESOURCE_LIST_PROPERTIES } from "../common/common.resources.js";
 
 export const ProjectsResource: ResourceWithOptions = {
   resource: Project,
