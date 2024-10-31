@@ -306,10 +306,10 @@ export class EntityPreprocessor {
       mangroveSequestrationRate.tierSelector = row[
         'Input used (mangrove only)'
       ] as SEQUESTRATION_RATE_TIER_TYPES;
-      mangroveSequestrationRate.tier1Factor = this.emptyStringToZero(
+      mangroveSequestrationRate.tier1Factor = this.stringToNumeric(
         row['Mangrove Tier 1 - IPCC default value'],
       );
-      mangroveSequestrationRate.tier2Factor = this.emptyStringToZero(
+      mangroveSequestrationRate.tier2Factor = this.stringToNumeric(
         row['Mangrove Tier 2 - country-specific rate'],
       );
       parsedArray.push(mangroveSequestrationRate);
@@ -323,10 +323,10 @@ export class EntityPreprocessor {
       seagrassSequestrationRate.tierSelector = row[
         'Input used (seagrass only)'
       ] as SEQUESTRATION_RATE_TIER_TYPES;
-      seagrassSequestrationRate.tier1Factor = this.emptyStringToZero(
+      seagrassSequestrationRate.tier1Factor = this.stringToNumeric(
         row['Seagrass Tier 1 - IPCC default value'],
       );
-      seagrassSequestrationRate.tier2Factor = this.emptyStringToZero(
+      seagrassSequestrationRate.tier2Factor = this.stringToNumeric(
         row['Seagrass Tier 2 - country-specific rate'],
       );
       parsedArray.push(seagrassSequestrationRate);
@@ -340,10 +340,10 @@ export class EntityPreprocessor {
       saltMarshSequestrationRate.tierSelector = row[
         'Input used (salt marsh only)'
       ] as SEQUESTRATION_RATE_TIER_TYPES;
-      saltMarshSequestrationRate.tier1Factor = this.emptyStringToZero(
+      saltMarshSequestrationRate.tier1Factor = this.stringToNumeric(
         row['Salt marsh Tier 1 - IPCC default value'],
       );
-      saltMarshSequestrationRate.tier2Factor = this.emptyStringToZero(
+      saltMarshSequestrationRate.tier2Factor = this.stringToNumeric(
         row['Salt marsh Tier 2 - country-specific rate'],
       );
       parsedArray.push(saltMarshSequestrationRate);
@@ -360,7 +360,7 @@ export class EntityPreprocessor {
       mangroveRestorableLand.country = {
         code: row['Country code'],
       } as Country;
-      mangroveRestorableLand.restorableLand = this.emptyStringToZero(
+      mangroveRestorableLand.restorableLand = this.stringToNumeric(
         row['Mangrove restorable land'],
       );
       parsedArray.push(mangroveRestorableLand);
@@ -371,7 +371,7 @@ export class EntityPreprocessor {
       seagrassRestorableLand.country = {
         code: row['Country code'],
       } as Country;
-      seagrassRestorableLand.restorableLand = this.emptyStringToZero(
+      seagrassRestorableLand.restorableLand = this.stringToNumeric(
         row['Seagrass restorable land'],
       );
       parsedArray.push(seagrassRestorableLand);
@@ -382,7 +382,7 @@ export class EntityPreprocessor {
       saltMarshRestorableLand.country = {
         code: row['Country code'],
       } as Country;
-      saltMarshRestorableLand.restorableLand = this.emptyStringToZero(
+      saltMarshRestorableLand.restorableLand = this.stringToNumeric(
         row['Salt marsh restorable land'],
       );
       parsedArray.push(saltMarshRestorableLand);
@@ -438,10 +438,10 @@ export class EntityPreprocessor {
       mangroveEcosystemExtent.country = {
         code: row['Country code'],
       } as Country;
-      mangroveEcosystemExtent.extent = this.emptyStringToNull(
+      mangroveEcosystemExtent.extent = this.stringToNumeric(
         row[' Mangrove extent'],
       );
-      mangroveEcosystemExtent.historicExtent = this.emptyStringToNull(
+      mangroveEcosystemExtent.historicExtent = this.stringToNumeric(
         row[' Mangrove extent historic'],
       );
       parsedArray.push(mangroveEcosystemExtent);
@@ -452,10 +452,10 @@ export class EntityPreprocessor {
       seagrassEcosystemExtent.country = {
         code: row['Country code'],
       } as Country;
-      seagrassEcosystemExtent.extent = this.emptyStringToNull(
+      seagrassEcosystemExtent.extent = this.stringToNumeric(
         row[' Seagrass extent'],
       );
-      seagrassEcosystemExtent.historicExtent = this.emptyStringToNull(
+      seagrassEcosystemExtent.historicExtent = this.stringToNumeric(
         row[' Seagrass extent historic'],
       );
       parsedArray.push(seagrassEcosystemExtent);
@@ -466,10 +466,10 @@ export class EntityPreprocessor {
       saltMarshEcosystemExtent.country = {
         code: row['Country code'],
       } as Country;
-      saltMarshEcosystemExtent.extent = this.emptyStringToNull(
+      saltMarshEcosystemExtent.extent = this.stringToNumeric(
         row[' Salt marsh extent'],
       );
-      saltMarshEcosystemExtent.historicExtent = this.emptyStringToNull(
+      saltMarshEcosystemExtent.historicExtent = this.stringToNumeric(
         row['Salt marsh extent historic'],
       );
       parsedArray.push(saltMarshEcosystemExtent);
@@ -499,7 +499,7 @@ export class EntityPreprocessor {
       carbonStandardFees.country = {
         code: row['Country code'],
       } as Country;
-      carbonStandardFees.carbonStandardFee = this.emptyStringToZero(
+      carbonStandardFees.carbonStandardFee = this.stringToNumeric(
         row['Carbon standard fees'],
       );
       parsedArray.push(carbonStandardFees);
