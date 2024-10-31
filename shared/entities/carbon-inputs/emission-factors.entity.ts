@@ -16,9 +16,9 @@ export enum EMISSION_FACTORS_TIER_TYPES {
   TIER_1 = "Tier 1 - Global emission factor",
 }
 
-@Entity("emission_factors")
+@Entity("emission_factors_2")
 @Unique(["country", "ecosystem"])
-export class EmissionFactors extends BaseEntity {
+export class EmissionFactors2 extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

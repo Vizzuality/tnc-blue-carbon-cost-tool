@@ -8,9 +8,9 @@ import {
 } from "typeorm";
 import { Country } from "../country.entity";
 
-@Entity("financing_cost")
+@Entity("financing_cost_2")
 @Unique(["country"])
-export class FinancingCost extends BaseEntity {
+export class FinancingCost2 extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

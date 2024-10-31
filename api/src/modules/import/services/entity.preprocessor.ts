@@ -1,9 +1,10 @@
+import { ExcelEstablishingCarbonRights } from './../dtos/excel-establishing-carbon-rights.dto';
 import { Injectable } from '@nestjs/common';
 
 import { BaseData } from '@shared/entities/base-data.entity';
 import { Country } from '@shared/entities/country.entity';
-import { ExcelMasterTable } from '@api/modules/import/excel-base-data.dto';
-import { ProjectSize } from '@shared/entities/project-size.entity';
+import { ExcelMasterTable } from '@api/modules/import/dtos/excel-base-data.dto';
+import { ProjectSize2 } from '@shared/entities/cost-inputs/project-size.entity';
 import { FeasibilityAnalysis } from '@shared/entities/feasability-analysis.entity';
 import { ConservationPlanningAndAdmin } from '@shared/entities/conservation-and-planning-admin.entity';
 import { CommunityRepresentation } from '@shared/entities/community-representation.entity';
@@ -26,11 +27,70 @@ import { BlueCarbonProjectPlanning } from '@shared/entities/blue-carbon-project-
 import { LongTermProjectOperating } from '@shared/entities/long-term-project-operating.entity';
 import { SequestrationRate } from '@shared/entities/sequestration-rate.entity';
 import { Project } from '@shared/entities/projects.entity';
-import { ExcelProjects } from '@api/modules/import/excel-projects.dto';
+import { ExcelProjects } from '@api/modules/import/dtos/excel-projects.dto';
+import { ExcelProjectSize } from '@api/modules/import/dtos/excel-project-size.dto';
+import { ACTIVITY } from '@shared/entities/activity.enum';
+import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
+import { ProjectSize } from '@shared/entities/project-size.entity';
+import { FeasibilityAnalysis2 } from '@shared/entities/cost-inputs/feasability-analysis.entity';
+import { ExcelFeasibilityAnalysis } from '../dtos/excel-feasibility-analysis.dto';
+import { ExcelConservationPlanningAndAdmin } from '../dtos/excel-conservation-planning-and-admin.dto';
+import { ConservationPlanningAndAdmin2 } from '@shared/entities/cost-inputs/conservation-and-planning-admin.entity';
+import { ExcelDataCollectionAndFieldCosts } from '../dtos/excel-data-collection-field-cost.dto';
+import { DataCollectionAndFieldCosts2 } from '@shared/entities/cost-inputs/data-collection-and-field-costs.entity';
+import { ExcelCommunityRepresentation } from '../dtos/excel-community-representation.dto';
+import { CommunityRepresentation2 } from '@shared/entities/cost-inputs/community-representation.entity';
+import {
+  BlueCarbonProjectPlanning2,
+  INPUT_SELECTION,
+} from '@shared/entities/cost-inputs/blue-carbon-project-planning.entity';
+import { ExcelBlueCarbonProjectPlanning } from '../dtos/excel-blue-carbon-project-planning.dto';
+import { parse } from 'path';
+import { CarbonRights2 } from '@shared/entities/cost-inputs/establishing-carbon-rights.entity';
+import { FinancingCost2 } from '@shared/entities/cost-inputs/financing-cost.entity';
+import { ExcelFinancingCost } from '../dtos/excel-financing-cost.dto';
+import { ExcelValidation } from '../dtos/excel-validation.dto';
+import { ValidationCost2 } from '@shared/entities/cost-inputs/validation.entity';
+import { ExcelMonitoring } from '../dtos/excel-monitoring.dto';
+import { MonitoringCost2 } from '@shared/entities/cost-inputs/monitoring.entity';
+import { ExcelMaintenance } from '../dtos/excel-maintenance.dto';
+import { Maintenance2 } from '@shared/entities/cost-inputs/maintenance.entity';
+import { ExcelCommunityBenefitSharingFund } from '../dtos/excel-community-benefit-sharing-fund.dto';
+import { CommunityBenefitSharingFund2 } from '@shared/entities/cost-inputs/community-benefit-sharing-fund.entity';
+import { ExcelBaselineReassessment } from '../dtos/excel-baseline-reassessment.dto';
+import { BaselineReassessment2 } from '@shared/entities/cost-inputs/baseline-reassessment.entity';
+import { ExcelMRV } from '../dtos/excel-mrv.dto';
+import { MRV2 } from '@shared/entities/cost-inputs/mrv.entity';
+import { ExcelLongTermProjectOperating } from '../dtos/excel-long-term-project-operating.dto';
+import { LongTermProjectOperating2 } from '@shared/entities/cost-inputs/long-term-project-operating.entity';
+import { ExcelCarbonStandardFees } from '../dtos/excel-carbon-standard-fees.dto';
+import { CarbonStandardFees2 } from '@shared/entities/cost-inputs/carbon-standard-fees.entity';
+import { ExcelCommunityCashFlow } from '../dtos/excel-community-cash-flow.dto';
+import {
+  COMMUNITY_CASH_FLOW_TYPES,
+  CommunityCashFlow2,
+} from '@shared/entities/cost-inputs/community-cash-flow.entity';
 
 export type ParsedDBEntities = {
   baseData: BaseData[];
   projects: Project[];
+  projectSize: ProjectSize2[];
+  feasibilityAnalysis: FeasibilityAnalysis2[];
+  conservationPlanningAndAdmin: ConservationPlanningAndAdmin2[];
+  dataCollectionAndFieldCosts: DataCollectionAndFieldCosts2[];
+  communityRepresentation: CommunityRepresentation2[];
+  blueCarbonProjectPlanning: BlueCarbonProjectPlanning2[];
+  establishingCarbonRights: CarbonRights2[];
+  financingCost: FinancingCost2[];
+  validationCost: ValidationCost2[];
+  monitoringCost: MonitoringCost2[];
+  maintenanceCost: Maintenance2[];
+  communityBenefit: CommunityBenefitSharingFund2[];
+  baselineReassessment: BaselineReassessment2[];
+  mrv: MRV2[];
+  longTermProjectOperating: LongTermProjectOperating2[];
+  carbonStandardFees: CarbonStandardFees2[];
+  communityCashFlow: CommunityCashFlow2[];
 };
 
 @Injectable()
@@ -38,13 +98,554 @@ export class EntityPreprocessor {
   toDbEntities(raw: {
     master_table: ExcelMasterTable[];
     Projects: ExcelProjects[];
+    'Project size': ExcelProjectSize[];
+    'Feasibility analysis': ExcelFeasibilityAnalysis[];
+    'Conservation planning and admin': ExcelConservationPlanningAndAdmin[];
+    'Data collection and field costs': ExcelDataCollectionAndFieldCosts[];
+    'Community representation': ExcelCommunityRepresentation[];
+    'Blue carbon project planning': ExcelBlueCarbonProjectPlanning[];
+    'Establishing carbon rights': ExcelEstablishingCarbonRights[];
+    'Financing cost': ExcelFinancingCost[];
+    Validation: ExcelValidation[];
+    Monitoring: ExcelMonitoring[];
+    Maintenance: ExcelMaintenance[];
+    'Community benefit sharing fund': ExcelCommunityBenefitSharingFund[];
+    'Baseline reassessment': ExcelBaselineReassessment[];
+    MRV: ExcelMRV[];
+    'Long-term project operating': ExcelLongTermProjectOperating[];
+    'Carbon standard fees': ExcelCarbonStandardFees[];
+    'Community cash flow': ExcelCommunityCashFlow[];
   }): ParsedDBEntities {
     const parsedBaseData = this.processBaseData(raw.master_table);
     const processedProjects = this.processProjects(raw.Projects);
+    const projectSize = this.processProjectSize(raw['Project size']);
+    const feasabilityAnalysis = this.processFeasabilityAnalysis(
+      raw['Feasibility analysis'],
+    );
+    const conservationPlanningAndAdmin =
+      this.processConservationPlanningAndAdmin(
+        raw['Conservation planning and admin'],
+      );
+    const dataCollectionAndFieldCosts = this.processDataCollectionAndFieldCosts(
+      raw['Data collection and field costs'],
+    );
+    const communityRepresentation = this.processCommunityRepresentation(
+      raw['Community representation'],
+    );
+    const blueCarbonProjectPlanning = this.processBlueCarbonProjectPlanning(
+      raw['Blue carbon project planning'],
+    );
+    const establishingCarbonRights = this.processEstablishingCarbonRights(
+      raw['Establishing carbon rights'],
+    );
+    const financingCost = this.processFinancingCost(raw['Financing cost']);
+    const validationCost = this.processValidationCost(raw['Validation']);
+    const monitoringCost = this.processMonitoringCost(raw.Monitoring);
+    const maintenanceCost = this.processMaintenanceCost(raw.Maintenance);
+    const communityBenefit = this.processCommunityBenefit(
+      raw['Community benefit sharing fund'],
+    );
+    const baselineReassessment = this.processBaselineReassessment(
+      raw['Baseline reassessment'],
+    );
+    const mrv = this.processMRV(raw.MRV);
+    const longTermProjectOperating = this.processLongTermProjectOperating(
+      raw['Long-term project operating'],
+    );
+    const carbonStandardFees = this.processCarbonStandardFees(
+      raw['Carbon standard fees'],
+    );
+    const communityCashFlow = this.processCommunityCashFlow(
+      raw['Community cash flow'],
+    );
+
     return {
       baseData: parsedBaseData,
       projects: processedProjects,
+      projectSize: projectSize,
+      feasibilityAnalysis: feasabilityAnalysis,
+      conservationPlanningAndAdmin: conservationPlanningAndAdmin,
+      dataCollectionAndFieldCosts: dataCollectionAndFieldCosts,
+      communityRepresentation: communityRepresentation,
+      blueCarbonProjectPlanning: blueCarbonProjectPlanning,
+      establishingCarbonRights: establishingCarbonRights,
+      financingCost: financingCost,
+      validationCost: validationCost,
+      monitoringCost: monitoringCost,
+      maintenanceCost: maintenanceCost,
+      communityBenefit: communityBenefit,
+      baselineReassessment: baselineReassessment,
+      mrv: mrv,
+      longTermProjectOperating: longTermProjectOperating,
+      carbonStandardFees: carbonStandardFees,
+      communityCashFlow: communityCashFlow,
     };
+  }
+
+  private processCommunityCashFlow(raw: ExcelCommunityCashFlow[]) {
+    const parsedArray: CommunityCashFlow2[] = [];
+    raw.forEach((row: ExcelCommunityCashFlow) => {
+      const communityCashFlow = new CommunityCashFlow2();
+      communityCashFlow.country = {
+        code: row['Country code'],
+      } as Country;
+      communityCashFlow.cashflowType = this.emptyStringToNull(
+        row['Other community cash flow'],
+      ) as COMMUNITY_CASH_FLOW_TYPES;
+      parsedArray.push(communityCashFlow);
+    });
+    return parsedArray;
+  }
+
+  private processCarbonStandardFees(raw: ExcelCarbonStandardFees[]) {
+    const parsedArray: CarbonStandardFees2[] = [];
+    raw.forEach((row: ExcelCarbonStandardFees) => {
+      const carbonStandardFees = new CarbonStandardFees2();
+      carbonStandardFees.country = {
+        code: row['Country code'],
+      } as Country;
+      carbonStandardFees.carbonStandardFee = this.emptyStringToZero(
+        row['Carbon standard fees'],
+      );
+      parsedArray.push(carbonStandardFees);
+    });
+    return parsedArray;
+  }
+
+  private processLongTermProjectOperating(
+    raw: ExcelLongTermProjectOperating[],
+  ) {
+    const parsedArray: LongTermProjectOperating2[] = [];
+    raw.forEach((row: ExcelLongTermProjectOperating) => {
+      // mangrove long term project operating
+      const mangroveLongTermProjectOperating = new LongTermProjectOperating2();
+      mangroveLongTermProjectOperating.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveLongTermProjectOperating.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveLongTermProjectOperating.longTermProjectOperatingCost =
+        this.emptyStringToZero(row['Mangrove long-term project operating']);
+      parsedArray.push(mangroveLongTermProjectOperating);
+
+      // seagrass long term project operating
+      const seagrassLongTermProjectOperating = new LongTermProjectOperating2();
+      seagrassLongTermProjectOperating.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassLongTermProjectOperating.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassLongTermProjectOperating.longTermProjectOperatingCost =
+        this.emptyStringToZero(row['Seagrass long-term project operating']);
+      parsedArray.push(seagrassLongTermProjectOperating);
+
+      // salt marsh long term project operating
+      const saltMarshLongTermProjectOperating = new LongTermProjectOperating2();
+      saltMarshLongTermProjectOperating.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshLongTermProjectOperating.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshLongTermProjectOperating.longTermProjectOperatingCost =
+        this.emptyStringToZero(row['Salt marsh long-term project operating']);
+      parsedArray.push(saltMarshLongTermProjectOperating);
+    });
+    return parsedArray;
+  }
+
+  private processMRV(raw: ExcelMRV[]) {
+    const parsedArray: MRV2[] = [];
+    raw.forEach((row: ExcelMRV) => {
+      const mrv = new MRV2();
+      mrv.country = {
+        code: row['Country code'],
+      } as Country;
+      mrv.mrvCost = this.emptyStringToZero(row.MRV);
+      parsedArray.push(mrv);
+    });
+    return parsedArray;
+  }
+
+  private processBaselineReassessment(raw: ExcelBaselineReassessment[]) {
+    const parsedArray: BaselineReassessment2[] = [];
+    raw.forEach((row: ExcelBaselineReassessment) => {
+      const baselineReassessment = new BaselineReassessment2();
+      baselineReassessment.country = {
+        code: row['Country code'],
+      } as Country;
+      baselineReassessment.baselineReassessmentCost = this.emptyStringToZero(
+        row['Baseline reassessment'],
+      );
+      parsedArray.push(baselineReassessment);
+    });
+    return parsedArray;
+  }
+
+  private processCommunityBenefit(raw: ExcelCommunityBenefitSharingFund[]) {
+    const parsedArray: CommunityBenefitSharingFund2[] = [];
+    raw.forEach((row: ExcelCommunityBenefitSharingFund) => {
+      const communityBenefit = new CommunityBenefitSharingFund2();
+      communityBenefit.country = {
+        code: row['Country code'],
+      } as Country;
+      communityBenefit.communityBenefitSharingFund = this.percentToNumber(
+        row['Community benefit sharing fund'],
+      );
+      parsedArray.push(communityBenefit);
+    });
+    return parsedArray;
+  }
+
+  private processMaintenanceCost(raw: ExcelMaintenance[]) {
+    const parsedArray: Maintenance2[] = [];
+    raw.forEach((row: ExcelMaintenance) => {
+      const maintenanceCost = new Maintenance2();
+      maintenanceCost.country = {
+        code: row['Country code'],
+      } as Country;
+      maintenanceCost.maintenanceCost = this.percentToNumber(
+        row['Maintenance'],
+      );
+      maintenanceCost.maintenanceDuration = this.emptyStringToZero(
+        row['Maintenance duration'],
+      );
+      parsedArray.push(maintenanceCost);
+    });
+    return parsedArray;
+  }
+
+  private processMonitoringCost(raw: ExcelMonitoring[]) {
+    const parsedArray: MonitoringCost2[] = [];
+    raw.forEach((row: ExcelMonitoring) => {
+      // mangrove monitoring
+      const mangroveMonitoring = new MonitoringCost2();
+      mangroveMonitoring.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveMonitoring.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveMonitoring.monitoringCost = this.emptyStringToZero(
+        row['Mangrove monitoring'],
+      );
+      parsedArray.push(mangroveMonitoring);
+
+      // seagrass monitoring
+      const seagrassMonitoring = new MonitoringCost2();
+      seagrassMonitoring.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassMonitoring.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassMonitoring.monitoringCost = this.emptyStringToZero(
+        row['Seagrass monitoring'],
+      );
+      parsedArray.push(seagrassMonitoring);
+
+      // salt marsh monitoring
+      const saltMarshMonitoring = new MonitoringCost2();
+      saltMarshMonitoring.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshMonitoring.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshMonitoring.monitoringCost = this.emptyStringToZero(
+        row['Salt marsh monitoring'],
+      );
+      parsedArray.push(saltMarshMonitoring);
+    });
+    return parsedArray;
+  }
+
+  private processValidationCost(raw: ExcelValidation[]) {
+    const parsedArray: ValidationCost2[] = [];
+    raw.forEach((row: ExcelValidation) => {
+      const validationCost = new ValidationCost2();
+      validationCost.country = {
+        code: row['Country code'],
+      } as Country;
+      validationCost.validationCost = this.emptyStringToZero(row['Validation']);
+      parsedArray.push(validationCost);
+    });
+    return parsedArray;
+  }
+
+  private processFinancingCost(raw: ExcelFinancingCost[]) {
+    const parsedArray: FinancingCost2[] = [];
+    raw.forEach((row: ExcelFinancingCost) => {
+      const financingCost = new FinancingCost2();
+      financingCost.country = {
+        code: row['Country code'],
+      } as Country;
+      financingCost.financingCostCapexPercent = this.percentToNumber(
+        row['Financing cost'],
+      );
+      parsedArray.push(financingCost);
+    });
+    return parsedArray;
+  }
+
+  private processEstablishingCarbonRights(
+    raw: ExcelEstablishingCarbonRights[],
+  ) {
+    const parsedArray: CarbonRights2[] = [];
+    raw.forEach((row: ExcelEstablishingCarbonRights) => {
+      const carbonRights = new CarbonRights2();
+      carbonRights.country = {
+        code: row['Country code'],
+      } as Country;
+      carbonRights.carbonRightsCost = this.emptyStringToZero(
+        row['Establishing carbon rights'],
+      );
+      parsedArray.push(carbonRights);
+    });
+    return parsedArray;
+  }
+
+  private processBlueCarbonProjectPlanning(
+    raw: ExcelBlueCarbonProjectPlanning[],
+  ) {
+    const parsedArray: BlueCarbonProjectPlanning2[] = [];
+    raw.forEach((row: ExcelBlueCarbonProjectPlanning) => {
+      const blueCarbonProjectPlanning = new BlueCarbonProjectPlanning2();
+      blueCarbonProjectPlanning.country = {
+        code: row['Country code'],
+      } as Country;
+      blueCarbonProjectPlanning.inputSelection = this.emptyStringToNull(
+        row['Input selection'],
+      ) as INPUT_SELECTION;
+      blueCarbonProjectPlanning.input1 = this.emptyStringToZero(row['Input 1']);
+      blueCarbonProjectPlanning.input2 = this.emptyStringToZero(row['Input 2']);
+      blueCarbonProjectPlanning.input3 = this.emptyStringToZero(row['Input 3']);
+      parsedArray.push(blueCarbonProjectPlanning);
+    });
+
+    return parsedArray;
+  }
+
+  private processCommunityRepresentation(raw: ExcelCommunityRepresentation[]) {
+    const parsedArray: CommunityRepresentation2[] = [];
+    raw.forEach((row: ExcelCommunityRepresentation) => {
+      // mangrove community representation
+      const mangroveCommunityRepresentation = new CommunityRepresentation2();
+      mangroveCommunityRepresentation.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveCommunityRepresentation.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveCommunityRepresentation.liaisonCost = this.emptyStringToZero(
+        row['Mangrove community representation / liaison'],
+      );
+      parsedArray.push(mangroveCommunityRepresentation);
+
+      // seagrass community representation
+      const seagrassCommunityRepresentation = new CommunityRepresentation2();
+      seagrassCommunityRepresentation.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassCommunityRepresentation.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassCommunityRepresentation.liaisonCost = this.emptyStringToZero(
+        row['Seagrass Community representation / liaison'],
+      );
+      parsedArray.push(seagrassCommunityRepresentation);
+
+      // salt marsh community representation
+      const saltMarshCommunityRepresentation = new CommunityRepresentation2();
+      saltMarshCommunityRepresentation.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshCommunityRepresentation.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshCommunityRepresentation.liaisonCost = this.emptyStringToZero(
+        row['Salt marsh Community representation / liaison'],
+      );
+      parsedArray.push(saltMarshCommunityRepresentation);
+    });
+    return parsedArray;
+  }
+
+  private processDataCollectionAndFieldCosts(
+    raw: ExcelDataCollectionAndFieldCosts[],
+  ) {
+    const parsedArray: DataCollectionAndFieldCosts2[] = [];
+    raw.forEach((row: ExcelDataCollectionAndFieldCosts) => {
+      // mangrove data collection and field costs
+      const mangroveDataCollectionAndFieldCosts =
+        new DataCollectionAndFieldCosts2();
+      mangroveDataCollectionAndFieldCosts.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveDataCollectionAndFieldCosts.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveDataCollectionAndFieldCosts.fieldCost = this.emptyStringToZero(
+        row['Mangrove data collection and field costs'],
+      );
+      parsedArray.push(mangroveDataCollectionAndFieldCosts);
+
+      // seagrass data collection and field costs
+      const seagrassDataCollectionAndFieldCosts =
+        new DataCollectionAndFieldCosts2();
+      seagrassDataCollectionAndFieldCosts.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassDataCollectionAndFieldCosts.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassDataCollectionAndFieldCosts.fieldCost = this.emptyStringToZero(
+        row['Seagrass data collection and field costs'],
+      );
+      parsedArray.push(seagrassDataCollectionAndFieldCosts);
+
+      // salt marsh data collection and field costs
+      const saltMarshDataCollectionAndFieldCosts =
+        new DataCollectionAndFieldCosts2();
+      saltMarshDataCollectionAndFieldCosts.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshDataCollectionAndFieldCosts.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshDataCollectionAndFieldCosts.fieldCost = this.emptyStringToZero(
+        row['Salt marsh data collection and field costs'],
+      );
+      parsedArray.push(saltMarshDataCollectionAndFieldCosts);
+    });
+    return parsedArray;
+  }
+
+  private processConservationPlanningAndAdmin(
+    raw: ExcelConservationPlanningAndAdmin[],
+  ) {
+    const parsedArray: ConservationPlanningAndAdmin2[] = [];
+    raw.forEach((row: ExcelConservationPlanningAndAdmin) => {
+      // mangrove conservation planning and admin
+      const mangroveConservationPlanningAndAdmin =
+        new ConservationPlanningAndAdmin2();
+      mangroveConservationPlanningAndAdmin.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveConservationPlanningAndAdmin.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveConservationPlanningAndAdmin.planningCost =
+        this.emptyStringToZero(row['Mangrove conservation planning and admin']);
+      parsedArray.push(mangroveConservationPlanningAndAdmin);
+
+      // seagrass conservation planning and admin
+      const seagrassConservationPlanningAndAdmin =
+        new ConservationPlanningAndAdmin2();
+      seagrassConservationPlanningAndAdmin.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassConservationPlanningAndAdmin.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassConservationPlanningAndAdmin.planningCost =
+        this.emptyStringToZero(row['Seagrass conservation planning and admin']);
+      parsedArray.push(seagrassConservationPlanningAndAdmin);
+
+      // salt marsh conservation planning and admin
+      const saltMarshConservationPlanningAndAdmin =
+        new ConservationPlanningAndAdmin2();
+      saltMarshConservationPlanningAndAdmin.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshConservationPlanningAndAdmin.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshConservationPlanningAndAdmin.planningCost =
+        this.emptyStringToZero(
+          row['Salt marsh conservation planning and admin'],
+        );
+      parsedArray.push(saltMarshConservationPlanningAndAdmin);
+    });
+    return parsedArray;
+  }
+
+  private processFeasabilityAnalysis(raw: ExcelFeasibilityAnalysis[]) {
+    const parsedArray: FeasibilityAnalysis2[] = [];
+    raw.forEach((row: ExcelFeasibilityAnalysis) => {
+      // mangrove feasibility analysis
+      const mangroveFeasibilityAnalysis = new FeasibilityAnalysis2();
+      mangroveFeasibilityAnalysis.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveFeasibilityAnalysis.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveFeasibilityAnalysis.analysisCost = this.emptyStringToZero(
+        row['Mangrove feasibility analysis'],
+      );
+      parsedArray.push(mangroveFeasibilityAnalysis);
+
+      // seagrass feasibility
+      const seagrassFeasibilityAnalysis = new FeasibilityAnalysis2();
+      seagrassFeasibilityAnalysis.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassFeasibilityAnalysis.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassFeasibilityAnalysis.analysisCost = this.emptyStringToZero(
+        row['Seagrass feasibility analysis'],
+      );
+      parsedArray.push(seagrassFeasibilityAnalysis);
+
+      // salt marsh feasibility
+      const saltMarshFeasibilityAnalysis = new FeasibilityAnalysis2();
+      saltMarshFeasibilityAnalysis.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshFeasibilityAnalysis.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshFeasibilityAnalysis.analysisCost = this.emptyStringToZero(
+        row['Salt marsh feasibility analysis'],
+      );
+      parsedArray.push(saltMarshFeasibilityAnalysis);
+    });
+
+    return parsedArray;
+  }
+
+  private processProjectSize(raw: ExcelProjectSize[]) {
+    const parsedArray: ProjectSize2[] = [];
+    raw.forEach((row: ExcelProjectSize) => {
+      // mangrove restored
+      const mangroveRestoredArea = new ProjectSize2();
+      mangroveRestoredArea.activity = ACTIVITY.RESTORATION;
+      mangroveRestoredArea.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveRestoredArea.country = { code: row['Country code'] } as Country;
+      mangroveRestoredArea.sizeHa = this.emptyStringToZero(
+        row['Mangrove restored area'],
+      );
+      parsedArray.push(mangroveRestoredArea);
+
+      // mangrove conserved
+      const mangroveConservedArea = new ProjectSize2();
+      mangroveConservedArea.activity = ACTIVITY.CONSERVATION;
+      mangroveConservedArea.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveConservedArea.country = { code: row['Country code'] } as Country;
+      mangroveConservedArea.sizeHa = this.emptyStringToZero(
+        row['Mangrove conserved area'],
+      );
+      parsedArray.push(mangroveConservedArea);
+
+      // seagrass restored
+      const seagrassRestoredArea = new ProjectSize2();
+      seagrassRestoredArea.activity = ACTIVITY.RESTORATION;
+      seagrassRestoredArea.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassRestoredArea.country = { code: row['Country code'] } as Country;
+      seagrassRestoredArea.sizeHa = this.emptyStringToZero(
+        row['Seagrass restored area'],
+      );
+      parsedArray.push(seagrassRestoredArea);
+
+      // seagrass conserved
+      const seagrassConservedArea = new ProjectSize2();
+      seagrassConservedArea.activity = ACTIVITY.CONSERVATION;
+      seagrassConservedArea.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassConservedArea.country = { code: row['Country code'] } as Country;
+      seagrassConservedArea.sizeHa = this.emptyStringToZero(
+        row['Seagrass conserved area'],
+      );
+      parsedArray.push(seagrassConservedArea);
+
+      // salt marsh restored
+      const saltMarshRestoredArea = new ProjectSize2();
+      saltMarshRestoredArea.activity = ACTIVITY.RESTORATION;
+      saltMarshRestoredArea.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshRestoredArea.country = { code: row['Country code'] } as Country;
+      saltMarshRestoredArea.sizeHa = this.emptyStringToZero(
+        row['Salt marsh restored area'],
+      );
+      parsedArray.push(saltMarshRestoredArea);
+
+      // salt marsh conserved
+      const saltMarshConservedArea = new ProjectSize2();
+      saltMarshConservedArea.activity = ACTIVITY.CONSERVATION;
+      saltMarshConservedArea.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshConservedArea.country = { code: row['Country code'] } as Country;
+      saltMarshConservedArea.sizeHa = this.emptyStringToZero(
+        row['Salt marsh conserved area'],
+      );
+      parsedArray.push(saltMarshConservedArea);
+    });
+    return parsedArray;
   }
 
   private processBaseData(raw: ExcelMasterTable[]) {
@@ -164,20 +765,20 @@ export class EntityPreprocessor {
     const parsedArray: Project[] = [];
     raw.forEach((row: ExcelProjects) => {
       const project = new Project();
-      project.projectName = row.Project_name;
-      project.countryCode = row['Country code'];
-      project.ecosystem = row.Ecosystem;
-      project.activity = row.Activity;
-      project.activitySubtype = row.Activity_type;
-      project.projectSize = row.Project_size;
-      project.projectSizeFilter = row.Project_size_filter;
-      project.abatementPotential = row.Abatement_potential;
-      project.totalCostNPV = row.Total_cost_NPV;
-      project.totalCost = row.Total_cost;
+      project.projectName = row.project_name;
+      project.countryCode = row.country_code;
+      project.ecosystem = row.ecosystem;
+      project.activity = row.activity;
+      project.activitySubtype = row.activity_type;
+      project.projectSize = row.project_size_ha;
+      project.projectSizeFilter = row.project_size_filter;
+      project.abatementPotential = row.aAbatement_potential;
+      project.totalCostNPV = row.total_cost_NPV;
+      project.totalCost = row.total_cost;
       project.costPerTCO2eNPV = row['$/tCO2e (NPV)'];
       project.costPerTCO2e = row['$/tCO2e'];
-      project.initialPriceAssumption = row['Initial price assumption'];
-      project.priceType = row['Price type'];
+      project.initialPriceAssumption = row.initial_price_assumption;
+      project.priceType = row.price_type;
 
       parsedArray.push(project);
     });
@@ -190,5 +791,9 @@ export class EntityPreprocessor {
 
   private emptyStringToZero(value: any): any | 0 {
     return value || 0;
+  }
+
+  private percentToNumber(value: any, defaultReturn: number = 0): number {
+    return value ? parseFloat(value) : defaultReturn;
   }
 }

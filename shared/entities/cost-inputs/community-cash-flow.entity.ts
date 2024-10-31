@@ -13,9 +13,9 @@ export enum COMMUNITY_CASH_FLOW_TYPES {
   DEVELOPMENT = "Development",
 }
 
-@Entity("community_cash_flow")
+@Entity("community_cash_flow_2")
 @Unique(["country"])
-export class CommunityCashFlow extends BaseEntity {
+export class CommunityCashFlow2 extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

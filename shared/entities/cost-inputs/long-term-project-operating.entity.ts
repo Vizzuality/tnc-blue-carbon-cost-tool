@@ -9,9 +9,9 @@ import {
 import { Country } from "../country.entity";
 import { ECOSYSTEM } from "../ecosystem.enum";
 
-@Entity("long_term_project_operating")
+@Entity("long_term_project_operating_2")
 @Unique(["country", "ecosystem"])
-export class LongTermProjectOperating extends BaseEntity {
+export class LongTermProjectOperating2 extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
