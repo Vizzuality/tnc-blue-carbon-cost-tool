@@ -2,7 +2,6 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Country } from '@shared/entities/country.entity';
-import { BaseData } from '@shared/entities/base-data.entity';
 
 import { FeatureCollection, Geometry } from 'geojson';
 
@@ -28,7 +27,6 @@ export class MapRepository extends Repository<Country> {
     countryCode: Country['code'],
   ): Promise<FeatureCollection<Geometry, ProjectGeoProperties>> {
     const queryBuilder = this.createQueryBuilder('country');
-    queryBuilder.innerJoin(BaseData, 'bd', 'bd.country_code = country.code');
     queryBuilder.select(
       `
         json_build_object(
