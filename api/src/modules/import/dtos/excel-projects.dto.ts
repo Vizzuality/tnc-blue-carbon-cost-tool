@@ -1,4 +1,5 @@
-import { ACTIVITY, ECOSYSTEM } from '@shared/entities/base-data.entity';
+import { ACTIVITY } from '@shared/entities/activity.enum';
+import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { PROJECT_PRICE_TYPE } from '@shared/entities/projects.entity';
 
 export type ExcelProjects = {

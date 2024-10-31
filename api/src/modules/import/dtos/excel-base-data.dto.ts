@@ -1,5 +1,6 @@
-import { ACTIVITY, ECOSYSTEM } from '@shared/entities/base-data.entity';
-import { COMMUNITY_CASH_FLOW_TYPES } from '@shared/entities/community-cash-flow.entity';
+import { ACTIVITY } from '@shared/entities/activity.enum';
+import { COMMUNITY_CASH_FLOW_TYPES } from '@shared/entities/cost-inputs/community-cash-flow.entity';
+import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 
 export type ExcelMasterTable = {
   country: string;

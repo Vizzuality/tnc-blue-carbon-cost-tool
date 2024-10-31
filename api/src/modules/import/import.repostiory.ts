@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { BaseData } from '@shared/entities/base-data.entity';
 import { Project } from '@shared/entities/projects.entity';
 import { ProjectSize2 } from '@shared/entities/cost-inputs/project-size.entity';
 import { FeasibilityAnalysis2 } from '@shared/entities/cost-inputs/feasability-analysis.entity';
@@ -30,7 +29,6 @@ export class ImportRepository {
   constructor(private readonly dataSource: DataSource) {}
 
   async ingest(importData: {
-    baseData: BaseData[];
     projects: Project[];
     projectSize: ProjectSize2[];
     feasibilityAnalysis: FeasibilityAnalysis2[];
@@ -56,7 +54,6 @@ export class ImportRepository {
     emissionFactors: EmissionFactors2[];
   }) {
     return this.dataSource.transaction(async (manager) => {
-      await manager.save(importData.baseData);
       await manager.save(importData.projects);
 
       // Cost inputs ingestion
