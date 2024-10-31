@@ -5,6 +5,7 @@ import {
   BaseEntity,
   Unique,
   ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { Country } from "../country.entity";
 import { ECOSYSTEM } from "../ecosystem.enum";
@@ -17,6 +18,7 @@ export class ProjectSize2 extends BaseEntity {
   id: string;
 
   @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
+  @JoinColumn()
   country: Country;
 
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })

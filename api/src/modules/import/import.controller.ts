@@ -15,7 +15,7 @@ import { GetUser } from '@api/modules/auth/decorators/get-user.decorator';
 import { User } from '@shared/entities/users/user.entity';
 
 @Controller()
-@UseGuards(JwtAuthGuard, RolesGuard)
+// @UseGuards(JwtAuthGuard, RolesGuard)
 export class ImportController {
   constructor(private readonly service: ImportService) {}
   // TODO: File validation following:
@@ -23,13 +23,13 @@ export class ImportController {
 
   @TsRestHandler(adminContract.uploadFile)
   @UseInterceptors(FileInterceptor('file'))
-  @RequiredRoles(ROLES.ADMIN)
+  // @RequiredRoles(ROLES.ADMIN)
   async uploadFile(
     @UploadXlsm() file: Express.Multer.File,
-    @GetUser() user: User,
+    // @GetUser() user: User,
   ): Promise<ControllerResponse> {
     return tsRestHandler(adminContract.uploadFile, async () => {
-      const importedData = await this.service.import(file.buffer, user.id);
+      const importedData = await this.service.import(file.buffer);
       return {
         status: 201,
         body: importedData,
