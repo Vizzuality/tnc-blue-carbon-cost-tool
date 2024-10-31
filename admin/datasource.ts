@@ -48,6 +48,7 @@ import { LongTermProjectOperating2 } from "@shared/entities/cost-inputs/long-ter
 import { MRV2 } from "@shared/entities/cost-inputs/mrv.entity.js";
 import { SequestrationRate2 } from "@shared/entities/carbon-inputs/sequestration-rate.entity.js";
 import { EcosystemExtent2 } from "@shared/entities/carbon-inputs/ecosystem-extent.entity.js";
+import { BaseDataView } from "@shared/entities/base-data.view.js";
 
 // TODO: If we import the COMMON_DATABASE_ENTITIES from shared, we get an error where DataSouce is not set for a given entity
 export const ADMINJS_ENTITIES = [
@@ -100,6 +101,7 @@ export const ADMINJS_ENTITIES = [
   SequestrationRate2,
   Project,
   EcosystemExtent2,
+  BaseDataView,
 ];
 
 export const dataSource = new DataSource({

@@ -47,6 +47,7 @@ import { MRV2 } from "@shared/entities/cost-inputs/mrv.entity";
 import { ProjectSize2 } from "@shared/entities/cost-inputs/project-size.entity";
 import { ValidationCost2 } from "@shared/entities/cost-inputs/validation.entity";
 import { EcosystemExtent2 } from "@shared/entities/carbon-inputs/ecosystem-extent.entity";
+import { BaseDataView } from "@shared/entities/base-data.view";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -98,4 +99,5 @@ export const COMMON_DATABASE_ENTITIES = [
   SequestrationRate2,
   Project,
   EcosystemExtent2,
+  BaseDataView,
 ];

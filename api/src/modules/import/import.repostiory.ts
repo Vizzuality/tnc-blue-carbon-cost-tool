@@ -1,4 +1,3 @@
-import { ConservationAndPlanningAdminResource } from './../../../../admin/resources/conservation-and-planning-admin/conservation-and-planning-admin.resource';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { BaseData } from '@shared/entities/base-data.entity';

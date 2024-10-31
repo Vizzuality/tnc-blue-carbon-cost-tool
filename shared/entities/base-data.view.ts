@@ -1,0 +1,214 @@
+import { ViewColumn, ViewEntity } from "typeorm";
+
+@ViewEntity({
+  name: "base_data_view",
+  expression: `
+WITH country_activity_ecosystem_combinations AS (
+	SELECT 
+	    c.code AS country_code,
+	    a.activity as activity,
+	    e.ecosystem as ecosystem
+	FROM 
+	    (SELECT DISTINCT code FROM countries) c
+	CROSS JOIN 
+        (SELECT 'Restoration'::VARCHAR AS activity UNION ALL 
+         SELECT 'Conservation'::VARCHAR) AS a
+    CROSS JOIN 
+        (SELECT 'Mangrove'::VARCHAR AS ecosystem UNION ALL 
+         SELECT 'Seagrass'::VARCHAR UNION ALL 
+         SELECT 'Salt marsh'::VARCHAR) AS e
+)
+select 
+	cae.country_code as country_code,
+	cae.ecosystem as ecosystem,
+	cae.activity as activity,
+	ps.size as project_size_ha,
+	fa.analysis_cost_per_project as feasibility_analysis,
+	cpa.planning_cost_per_project as conservation_planning_and_admin,
+	dcfc.field_cost_per_project as data_collection_and_field_cost,
+	cr.liaison_cost as community_representation,
+	bcpp.blue_carbon as blue_carbon_project_planning,
+	crights.carbon_rights_cost as establishing_carbon_rights,
+	fc.financing_cost_capex_percent as financing_cost,
+	vc.validation_cost as validation,
+	monitoring.monitoring_cost_per_year as monitoring,
+	maintenance.maintenance_cost_pc_of_impl_labor_cost as maintenance,
+	maintenance.maintenance_duration_years as maintenance_duration,
+	csf.cost_per_carbon_credit_issued as carbon_standard_fees,
+	cbsf.community_benefit_sharing_fund_pc_of_revenue as community_benefit_sharing_fund,
+	br.baseline_reassessment_cost_per_event as baseline_reassessment,
+	mrv.mrv_cost_per_event as MRV,
+	ltpo.long_term_project_operating_cost_per_year as long_term_project_operating_cost,
+	ee.extent as ecosystem_extent,
+	ee.historic_extent as ecosystem_extent_historic,
+	elr.ecosystem_loss_rate as ecosystem_loss_rate,
+	rl.restorable_land as restorable_land,
+	ef.emission_factor_global as tier_1_emission_factor,
+	ef.emission_factor_agb as emission_factor_AGB,
+	ef.emission_factor_soc as emission_factor_SOC,
+	sr.tier_1_factor as tier_1_sequestration_rate,
+	sr.tier_2_factor as tier_2_sequestration_rate,
+	ccf."cashflowType" as other_community_cash_flow
+from
+	country_activity_ecosystem_combinations as cae
+inner join 
+	project_size_2 ps on 
+		ps."countryCode" = cae.country_code and 
+		ps."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR and
+		ps."activity"::VARCHAR = cae."activity"::VARCHAR
+inner join 
+	feasibility_analysis_2 fa on 
+		fa."countryCode" = cae.country_code and 
+		fa."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	conservation_planning_and_admin_2 cpa on 
+		cpa."countryCode" = cae.country_code and 
+		cpa."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	data_collection_and_field_costs_2 dcfc on
+		dcfc."countryCode" = cae.country_code and 
+		dcfc."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	community_representation_2 cr on
+		cr."countryCode" = cae.country_code and 
+		cr."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	blue_carbon_project_planning_2 bcpp on bcpp."countryCode" = cae.country_code
+inner join 
+	carbon_rights_2 crights on  crights."countryCode" = cae.country_code
+inner join 
+	financing_cost_2 fc on fc."countryCode" = cae.country_code
+inner join 
+	validation_cost_2 vc on vc."countryCode" = cae.country_code
+inner join 
+	monitoring_cost_2 monitoring on 
+		monitoring."countryCode" = cae.country_code and 
+		monitoring."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	maintenance_2 maintenance on maintenance."countryCode" = cae.country_code
+inner join 
+	carbon_standard_fees_2 csf on csf."countryCode" = cae.country_code
+inner join 
+	community_benefit_sharing_fund_2 cbsf on cbsf."countryCode" = cae.country_code
+inner join 
+	baseline_reassessment_2 br on br."countryCode" = cae.country_code
+inner join 
+	mrv_2 mrv on mrv."countryCode" = cae.country_code
+inner join 
+	long_term_project_operating_2 ltpo on 
+		ltpo."countryCode" = cae.country_code and 
+		ltpo."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	ecosystem_extent_2 ee on 
+		ee."countryCode" = cae.country_code and 
+		ee."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	ecosystem_loss_2 elr on 
+		elr."countryCode" = cae.country_code and 
+		elr."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	restorable_land_2 rl on 
+		rl."countryCode" = cae.country_code and 
+		rl."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	emission_factors_2 ef on 
+		ef."countryCode" = cae.country_code and 
+		ef."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	sequestration_rate_2 sr on 
+		sr."countryCode" = cae.country_code and 
+		sr."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
+inner join 
+	community_cash_flow_2 ccf on ccf."countryCode" = cae.country_code`,
+})
+export class BaseDataView {
+  @ViewColumn({ name: "country_code" })
+  country_code: string;
+
+  @ViewColumn({ name: "ecosystem" })
+  ecosystem: string;
+
+  @ViewColumn({ name: "activity" })
+  activity: string;
+
+  @ViewColumn({ name: "project_size_ha" })
+  project_size_ha: number;
+
+  @ViewColumn({ name: "feasibility_analysis" })
+  feasibility_analysis: number;
+
+  @ViewColumn({ name: "conservation_planning_and_admin" })
+  conservation_planning_and_admin: number;
+
+  @ViewColumn({ name: "data_collection_and_field_cost" })
+  data_collection_and_field_cost: number;
+
+  @ViewColumn({ name: "community_representation" })
+  community_representation: number;
+
+  @ViewColumn({ name: "blue_carbon_project_planning" })
+  blue_carbon_project_planning: number;
+
+  @ViewColumn({ name: "establishing_carbon_rights" })
+  establishing_carbon_rights: number;
+
+  @ViewColumn({ name: "financing_cost" })
+  financing_cost: number;
+
+  @ViewColumn({ name: "validation" })
+  validation: number;
+
+  @ViewColumn({ name: "monitoring" })
+  monitoring: number;
+
+  @ViewColumn({ name: "maintenance" })
+  maintenance: number;
+
+  @ViewColumn({ name: "maintenance_duration" })
+  maintenance_duration: number;
+
+  @ViewColumn({ name: "carbon_standard_fees" })
+  carbon_standard_fees: number;
+
+  @ViewColumn({ name: "community_benefit_sharing_fund" })
+  community_benefit_sharing_fund: number;
+
+  @ViewColumn({ name: "baseline_reassessment" })
+  baseline_reassessment: number;
+
+  @ViewColumn({ name: "mrv" })
+  mrv: number;
+
+  @ViewColumn({ name: "long_term_project_operating_cost" })
+  long_term_project_operating_cost: number;
+
+  @ViewColumn({ name: "ecosystem_extent" })
+  ecosystem_extent: number;
+
+  @ViewColumn({ name: "ecosystem_extent_historic" })
+  ecosystem_extent_historic: number;
+
+  @ViewColumn({ name: "ecosystem_loss_rate" })
+  ecosystem_loss_rate: number;
+
+  @ViewColumn({ name: "restorable_land" })
+  restorable_land: number;
+
+  @ViewColumn({ name: "tier_1_emission_factor" })
+  tier_1_emission_factor: number;
+
+  @ViewColumn({ name: "emission_factor_agb" })
+  emission_factor_agb: number;
+
+  @ViewColumn({ name: "emission_factor_soc" })
+  emission_factor_soc: number;
+
+  @ViewColumn({ name: "tier_1_sequestration_rate" })
+  tier_1_sequestration_rate: number;
+
+  @ViewColumn({ name: "tier_2_sequestration_rate" })
+  tier_2_sequestration_rate: number;
+
+  @ViewColumn({ name: "other_community_cash_flow" })
+  other_community_cash_flow: string;
+}
