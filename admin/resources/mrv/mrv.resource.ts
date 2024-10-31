@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { MRV2 } from "@shared/entities/cost-inputs/mrv.entity.js";
+import { MRV } from "@shared/entities/cost-inputs/mrv.entity.js";
 
 export const MRVResource: ResourceWithOptions = {
-  resource: MRV2,
+  resource: MRV,
   options: {
     sort: {
       sortBy: "mrvCost",

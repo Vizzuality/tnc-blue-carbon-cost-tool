@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { ValidationCost2 } from "@shared/entities/cost-inputs/validation.entity.js";
+import { ValidationCost } from "@shared/entities/cost-inputs/validation.entity.js";
 
 export const ValidationCostResource: ResourceWithOptions = {
-  resource: ValidationCost2,
+  resource: ValidationCost,
   options: {
     sort: {
       sortBy: "validationCost",

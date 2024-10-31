@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { MonitoringCost2 } from "@shared/entities/cost-inputs/monitoring.entity.js";
+import { MonitoringCost } from "@shared/entities/cost-inputs/monitoring.entity.js";
 
 export const MonitoringCostResource: ResourceWithOptions = {
-  resource: MonitoringCost2,
+  resource: MonitoringCost,
   options: {
     sort: {
       sortBy: "monitoringCost",

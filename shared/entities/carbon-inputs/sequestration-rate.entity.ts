@@ -16,9 +16,9 @@ export enum SEQUESTRATION_RATE_TIER_TYPES {
   TIER_1 = "Tier 1 - IPCC default value",
 }
 
-@Entity("sequestration_rate_2")
+@Entity("sequestration_rate")
 @Unique(["country", "ecosystem"])
-export class SequestrationRate2 extends BaseEntity {
+export class SequestrationRate extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

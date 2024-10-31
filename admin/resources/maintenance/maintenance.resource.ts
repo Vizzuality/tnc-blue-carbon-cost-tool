@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { Maintenance2 } from "@shared/entities/cost-inputs/maintenance.entity.js";
+import { Maintenance } from "@shared/entities/cost-inputs/maintenance.entity.js";
 
 export const MaintenanceResource: ResourceWithOptions = {
-  resource: Maintenance2,
+  resource: Maintenance,
   options: {
     sort: {
       sortBy: "maintenanceCost",

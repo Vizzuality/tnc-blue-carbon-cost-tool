@@ -1,8 +1,8 @@
-import { BlueCarbonProjectPlanning2 } from "@shared/entities/cost-inputs/blue-carbon-project-planning.entity.js";
+import { BlueCarbonProjectPlanning } from "@shared/entities/cost-inputs/blue-carbon-project-planning.entity.js";
 import { ResourceWithOptions } from "adminjs";
 
 export const BlueCarbonProjectPlanningResource: ResourceWithOptions = {
-  resource: BlueCarbonProjectPlanning2,
+  resource: BlueCarbonProjectPlanning,
   options: {
     properties: {
       id: {

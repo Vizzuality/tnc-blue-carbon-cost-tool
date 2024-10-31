@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { CommunityRepresentation2 } from "@shared/entities/cost-inputs/community-representation.entity.js";
+import { CommunityRepresentation } from "@shared/entities/cost-inputs/community-representation.entity.js";
 
 export const CommunityRepresentationResource: ResourceWithOptions = {
-  resource: CommunityRepresentation2,
+  resource: CommunityRepresentation,
   options: {
     sort: {
       sortBy: "liaisonCost",

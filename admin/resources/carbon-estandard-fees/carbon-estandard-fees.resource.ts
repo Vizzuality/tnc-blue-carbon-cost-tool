@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { CarbonStandardFees2 } from "@shared/entities/cost-inputs/carbon-standard-fees.entity.js";
+import { CarbonStandardFees } from "@shared/entities/cost-inputs/carbon-standard-fees.entity.js";
 
 export const CarbonStandardFeesResource: ResourceWithOptions = {
-  resource: CarbonStandardFees2,
+  resource: CarbonStandardFees,
   options: {
     sort: {
       sortBy: "carbonStandardFee",

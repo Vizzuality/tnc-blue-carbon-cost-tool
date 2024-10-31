@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { RestorableLand2 } from "@shared/entities/carbon-inputs/restorable-land.entity.js";
+import { RestorableLand } from "@shared/entities/carbon-inputs/restorable-land.entity.js";
 
 export const RestorableLandResource: ResourceWithOptions = {
-  resource: RestorableLand2,
+  resource: RestorableLand,
   options: {
     sort: {
       sortBy: "restorableLand",

@@ -16,9 +16,9 @@ export enum INPUT_SELECTION {
   INPUT_3 = "Input 3",
 }
 
-@Entity("blue_carbon_project_planning_2")
+@Entity("blue_carbon_project_planning")
 @Unique(["country"])
-export class BlueCarbonProjectPlanning2 extends BaseEntity {
+export class BlueCarbonProjectPlanning extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

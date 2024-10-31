@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { EcosystemLoss2 } from "@shared/entities/carbon-inputs/ecosystem-loss.entity.js";
+import { EcosystemLoss } from "@shared/entities/carbon-inputs/ecosystem-loss.entity.js";
 
 export const EcosystemLossResource: ResourceWithOptions = {
-  resource: EcosystemLoss2,
+  resource: EcosystemLoss,
   options: {
     sort: {
       sortBy: "ecosystemLossRate",

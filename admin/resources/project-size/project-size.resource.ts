@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { ProjectSize2 } from "@shared/entities/cost-inputs/project-size.entity.js";
+import { ProjectSize } from "@shared/entities/cost-inputs/project-size.entity.js";
 
 export const ProjectSizeResource: ResourceWithOptions = {
-  resource: ProjectSize2,
+  resource: ProjectSize,
   options: {
     properties: {
       id: {

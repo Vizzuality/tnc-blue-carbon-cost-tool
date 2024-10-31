@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { FinancingCost2 } from "@shared/entities/cost-inputs/financing-cost.entity.js";
+import { FinancingCost } from "@shared/entities/cost-inputs/financing-cost.entity.js";
 
 export const FinancingCostResource: ResourceWithOptions = {
-  resource: FinancingCost2,
+  resource: FinancingCost,
   options: {
     sort: {
       sortBy: "financingCostCapexPercent",

@@ -1,93 +1,92 @@
-import { EcosystemExtent2 } from './../../../../../shared/entities/carbon-inputs/ecosystem-extent.entity';
 import { ExcelEstablishingCarbonRights } from './../dtos/excel-establishing-carbon-rights.dto';
 import { Injectable } from '@nestjs/common';
 
 import { Country } from '@shared/entities/country.entity';
 import { ExcelMasterTable } from '@api/modules/import/dtos/excel-base-data.dto';
-import { ProjectSize2 } from '@shared/entities/cost-inputs/project-size.entity';
 import { Project } from '@shared/entities/projects.entity';
 import { ExcelProjects } from '@api/modules/import/dtos/excel-projects.dto';
 import { ExcelProjectSize } from '@api/modules/import/dtos/excel-project-size.dto';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
-import { FeasibilityAnalysis2 } from '@shared/entities/cost-inputs/feasability-analysis.entity';
 import { ExcelFeasibilityAnalysis } from '../dtos/excel-feasibility-analysis.dto';
 import { ExcelConservationPlanningAndAdmin } from '../dtos/excel-conservation-planning-and-admin.dto';
-import { ConservationPlanningAndAdmin2 } from '@shared/entities/cost-inputs/conservation-and-planning-admin.entity';
 import { ExcelDataCollectionAndFieldCosts } from '../dtos/excel-data-collection-field-cost.dto';
-import { DataCollectionAndFieldCosts2 } from '@shared/entities/cost-inputs/data-collection-and-field-costs.entity';
 import { ExcelCommunityRepresentation } from '../dtos/excel-community-representation.dto';
-import { CommunityRepresentation2 } from '@shared/entities/cost-inputs/community-representation.entity';
 import {
-  BlueCarbonProjectPlanning2,
+  BlueCarbonProjectPlanning,
   INPUT_SELECTION,
 } from '@shared/entities/cost-inputs/blue-carbon-project-planning.entity';
 import { ExcelBlueCarbonProjectPlanning } from '../dtos/excel-blue-carbon-project-planning.dto';
-import { parse } from 'path';
-import { CarbonRights2 } from '@shared/entities/cost-inputs/establishing-carbon-rights.entity';
-import { FinancingCost2 } from '@shared/entities/cost-inputs/financing-cost.entity';
 import { ExcelFinancingCost } from '../dtos/excel-financing-cost.dto';
 import { ExcelValidation } from '../dtos/excel-validation.dto';
-import { ValidationCost2 } from '@shared/entities/cost-inputs/validation.entity';
 import { ExcelMonitoring } from '../dtos/excel-monitoring.dto';
-import { MonitoringCost2 } from '@shared/entities/cost-inputs/monitoring.entity';
 import { ExcelMaintenance } from '../dtos/excel-maintenance.dto';
-import { Maintenance2 } from '@shared/entities/cost-inputs/maintenance.entity';
 import { ExcelCommunityBenefitSharingFund } from '../dtos/excel-community-benefit-sharing-fund.dto';
-import { CommunityBenefitSharingFund2 } from '@shared/entities/cost-inputs/community-benefit-sharing-fund.entity';
 import { ExcelBaselineReassessment } from '../dtos/excel-baseline-reassessment.dto';
-import { BaselineReassessment2 } from '@shared/entities/cost-inputs/baseline-reassessment.entity';
 import { ExcelMRV } from '../dtos/excel-mrv.dto';
-import { MRV2 } from '@shared/entities/cost-inputs/mrv.entity';
 import { ExcelLongTermProjectOperating } from '../dtos/excel-long-term-project-operating.dto';
-import { LongTermProjectOperating2 } from '@shared/entities/cost-inputs/long-term-project-operating.entity';
 import { ExcelCarbonStandardFees } from '../dtos/excel-carbon-standard-fees.dto';
-import { CarbonStandardFees2 } from '@shared/entities/cost-inputs/carbon-standard-fees.entity';
 import { ExcelCommunityCashFlow } from '../dtos/excel-community-cash-flow.dto';
 import {
   COMMUNITY_CASH_FLOW_TYPES,
-  CommunityCashFlow2,
+  CommunityCashFlow,
 } from '@shared/entities/cost-inputs/community-cash-flow.entity';
 import { ExcelEcosystemExtent } from '../dtos/excel-ecosystem-extent.dto';
 import { ExcelEcosystemLoss } from '../dtos/excel-ccosystem-loss.dto';
-import { EcosystemLoss2 } from '@shared/entities/carbon-inputs/ecosystem-loss.entity';
 import { ExcelRestorableLand } from '../dtos/excel-restorable-land.dto';
-import { RestorableLand2 } from '@shared/entities/carbon-inputs/restorable-land.entity';
 import { ExcelSequestrationRate } from '../dtos/excel-sequestration-rate.dto';
 import {
   SEQUESTRATION_RATE_TIER_TYPES,
-  SequestrationRate2,
+  SequestrationRate,
 } from '@shared/entities/carbon-inputs/sequestration-rate.entity';
 import {
   EMISSION_FACTORS_TIER_TYPES,
-  EmissionFactors2,
+  EmissionFactors,
 } from '@shared/entities/carbon-inputs/emission-factors.entity';
 import { ExcelEmissionFactors } from '../dtos/excel-emission-factors.dto';
+import { EcosystemExtent } from '@shared/entities/carbon-inputs/ecosystem-extent.entity';
+import { EcosystemLoss } from '@shared/entities/carbon-inputs/ecosystem-loss.entity';
+import { RestorableLand } from '@shared/entities/carbon-inputs/restorable-land.entity';
+import { BaselineReassessment } from '@shared/entities/cost-inputs/baseline-reassessment.entity';
+import { CarbonStandardFees } from '@shared/entities/cost-inputs/carbon-standard-fees.entity';
+import { CommunityBenefitSharingFund } from '@shared/entities/cost-inputs/community-benefit-sharing-fund.entity';
+import { CommunityRepresentation } from '@shared/entities/cost-inputs/community-representation.entity';
+import { ConservationPlanningAndAdmin } from '@shared/entities/cost-inputs/conservation-and-planning-admin.entity';
+import { DataCollectionAndFieldCosts } from '@shared/entities/cost-inputs/data-collection-and-field-costs.entity';
+import { CarbonRights } from '@shared/entities/cost-inputs/establishing-carbon-rights.entity';
+import { FeasibilityAnalysis } from '@shared/entities/cost-inputs/feasability-analysis.entity';
+import { FinancingCost } from '@shared/entities/cost-inputs/financing-cost.entity';
+import { LongTermProjectOperating } from '@shared/entities/cost-inputs/long-term-project-operating.entity';
+import { Maintenance } from '@shared/entities/cost-inputs/maintenance.entity';
+import { MonitoringCost } from '@shared/entities/cost-inputs/monitoring.entity';
+import { MRV } from '@shared/entities/cost-inputs/mrv.entity';
+import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
+import { ValidationCost } from '@shared/entities/cost-inputs/validation.entity';
 
 export type ParsedDBEntities = {
   projects: Project[];
-  projectSize: ProjectSize2[];
-  feasibilityAnalysis: FeasibilityAnalysis2[];
-  conservationPlanningAndAdmin: ConservationPlanningAndAdmin2[];
-  dataCollectionAndFieldCosts: DataCollectionAndFieldCosts2[];
-  communityRepresentation: CommunityRepresentation2[];
-  blueCarbonProjectPlanning: BlueCarbonProjectPlanning2[];
-  establishingCarbonRights: CarbonRights2[];
-  financingCost: FinancingCost2[];
-  validationCost: ValidationCost2[];
-  monitoringCost: MonitoringCost2[];
-  maintenanceCost: Maintenance2[];
-  communityBenefit: CommunityBenefitSharingFund2[];
-  baselineReassessment: BaselineReassessment2[];
-  mrv: MRV2[];
-  longTermProjectOperating: LongTermProjectOperating2[];
-  carbonStandardFees: CarbonStandardFees2[];
-  communityCashFlow: CommunityCashFlow2[];
-  ecosystemExtent: EcosystemExtent2[];
-  ecosystemLoss: EcosystemLoss2[];
-  restorableLand: RestorableLand2[];
-  sequestrationRate: SequestrationRate2[];
-  emissionFactors: EmissionFactors2[];
+  projectSize: ProjectSize[];
+  feasibilityAnalysis: FeasibilityAnalysis[];
+  conservationPlanningAndAdmin: ConservationPlanningAndAdmin[];
+  dataCollectionAndFieldCosts: DataCollectionAndFieldCosts[];
+  communityRepresentation: CommunityRepresentation[];
+  blueCarbonProjectPlanning: BlueCarbonProjectPlanning[];
+  establishingCarbonRights: CarbonRights[];
+  financingCost: FinancingCost[];
+  validationCost: ValidationCost[];
+  monitoringCost: MonitoringCost[];
+  maintenanceCost: Maintenance[];
+  communityBenefit: CommunityBenefitSharingFund[];
+  baselineReassessment: BaselineReassessment[];
+  mrv: MRV[];
+  longTermProjectOperating: LongTermProjectOperating[];
+  carbonStandardFees: CarbonStandardFees[];
+  communityCashFlow: CommunityCashFlow[];
+  ecosystemExtent: EcosystemExtent[];
+  ecosystemLoss: EcosystemLoss[];
+  restorableLand: RestorableLand[];
+  sequestrationRate: SequestrationRate[];
+  emissionFactors: EmissionFactors[];
 };
 
 @Injectable()
@@ -203,10 +202,10 @@ export class EntityPreprocessor {
   }
 
   private processEmissionFactors(raw: ExcelEmissionFactors[]) {
-    const parsedArray: EmissionFactors2[] = [];
+    const parsedArray: EmissionFactors[] = [];
     raw.forEach((row: ExcelEmissionFactors) => {
       // mangrove emission factors
-      const mangroveEmissionFactors = new EmissionFactors2();
+      const mangroveEmissionFactors = new EmissionFactors();
       mangroveEmissionFactors.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveEmissionFactors.country = {
         code: row['Country code'],
@@ -226,7 +225,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveEmissionFactors);
 
       // seagrass emission factors
-      const seagrassEmissionFactors = new EmissionFactors2();
+      const seagrassEmissionFactors = new EmissionFactors();
       seagrassEmissionFactors.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassEmissionFactors.country = {
         code: row['Country code'],
@@ -246,7 +245,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassEmissionFactors);
 
       // salt marsh emission factors
-      const saltMarshEmissionFactors = new EmissionFactors2();
+      const saltMarshEmissionFactors = new EmissionFactors();
       saltMarshEmissionFactors.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshEmissionFactors.country = {
         code: row['Country code'],
@@ -269,10 +268,10 @@ export class EntityPreprocessor {
   }
 
   private processSequestrationRate(raw: ExcelSequestrationRate[]) {
-    const parsedArray: SequestrationRate2[] = [];
+    const parsedArray: SequestrationRate[] = [];
     raw.forEach((row: ExcelSequestrationRate) => {
       // mangrove sequestration rate
-      const mangroveSequestrationRate = new SequestrationRate2();
+      const mangroveSequestrationRate = new SequestrationRate();
       mangroveSequestrationRate.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveSequestrationRate.country = {
         code: row['Country code'],
@@ -289,7 +288,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveSequestrationRate);
 
       // seagrass sequestration rate
-      const seagrassSequestrationRate = new SequestrationRate2();
+      const seagrassSequestrationRate = new SequestrationRate();
       seagrassSequestrationRate.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassSequestrationRate.country = {
         code: row['Country code'],
@@ -306,7 +305,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassSequestrationRate);
 
       // salt marsh sequestration rate
-      const saltMarshSequestrationRate = new SequestrationRate2();
+      const saltMarshSequestrationRate = new SequestrationRate();
       saltMarshSequestrationRate.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshSequestrationRate.country = {
         code: row['Country code'],
@@ -326,10 +325,10 @@ export class EntityPreprocessor {
   }
 
   private processRestorableLand(raw: ExcelRestorableLand[]) {
-    const parsedArray: RestorableLand2[] = [];
+    const parsedArray: RestorableLand[] = [];
     raw.forEach((row: ExcelRestorableLand) => {
       // mangrove restorable land
-      const mangroveRestorableLand = new RestorableLand2();
+      const mangroveRestorableLand = new RestorableLand();
       mangroveRestorableLand.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveRestorableLand.country = {
         code: row['Country code'],
@@ -340,7 +339,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveRestorableLand);
 
       // seagrass restorable land
-      const seagrassRestorableLand = new RestorableLand2();
+      const seagrassRestorableLand = new RestorableLand();
       seagrassRestorableLand.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassRestorableLand.country = {
         code: row['Country code'],
@@ -351,7 +350,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassRestorableLand);
 
       // salt marsh restorable land
-      const saltMarshRestorableLand = new RestorableLand2();
+      const saltMarshRestorableLand = new RestorableLand();
       saltMarshRestorableLand.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshRestorableLand.country = {
         code: row['Country code'],
@@ -365,10 +364,10 @@ export class EntityPreprocessor {
   }
 
   private processEcosystemLoss(raw: ExcelEcosystemLoss[]) {
-    const parsedArray: EcosystemLoss2[] = [];
+    const parsedArray: EcosystemLoss[] = [];
     raw.forEach((row: ExcelEcosystemLoss) => {
       // mangrove ecosystem loss
-      const mangroveEcosystemLoss = new EcosystemLoss2();
+      const mangroveEcosystemLoss = new EcosystemLoss();
       mangroveEcosystemLoss.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveEcosystemLoss.country = {
         code: row['Country code'],
@@ -379,7 +378,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveEcosystemLoss);
 
       // seagrass ecosystem loss
-      const seagrassEcosystemLoss = new EcosystemLoss2();
+      const seagrassEcosystemLoss = new EcosystemLoss();
       seagrassEcosystemLoss.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassEcosystemLoss.country = {
         code: row['Country code'],
@@ -390,7 +389,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassEcosystemLoss);
 
       // salt marsh ecosystem loss
-      const saltMarshEcosystemLoss = new EcosystemLoss2();
+      const saltMarshEcosystemLoss = new EcosystemLoss();
       saltMarshEcosystemLoss.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshEcosystemLoss.country = {
         code: row['Country code'],
@@ -404,10 +403,10 @@ export class EntityPreprocessor {
   }
 
   private processEcosystemExtent(raw: ExcelEcosystemExtent[]) {
-    const parsedArray: EcosystemExtent2[] = [];
+    const parsedArray: EcosystemExtent[] = [];
     raw.forEach((row: ExcelEcosystemExtent) => {
       // mangrove ecosystem extent
-      const mangroveEcosystemExtent = new EcosystemExtent2();
+      const mangroveEcosystemExtent = new EcosystemExtent();
       mangroveEcosystemExtent.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveEcosystemExtent.country = {
         code: row['Country code'],
@@ -421,7 +420,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveEcosystemExtent);
 
       // seagrass ecosystem extent
-      const seagrassEcosystemExtent = new EcosystemExtent2();
+      const seagrassEcosystemExtent = new EcosystemExtent();
       seagrassEcosystemExtent.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassEcosystemExtent.country = {
         code: row['Country code'],
@@ -435,7 +434,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassEcosystemExtent);
 
       // salt marsh ecosystem extent
-      const saltMarshEcosystemExtent = new EcosystemExtent2();
+      const saltMarshEcosystemExtent = new EcosystemExtent();
       saltMarshEcosystemExtent.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshEcosystemExtent.country = {
         code: row['Country code'],
@@ -452,9 +451,9 @@ export class EntityPreprocessor {
   }
 
   private processCommunityCashFlow(raw: ExcelCommunityCashFlow[]) {
-    const parsedArray: CommunityCashFlow2[] = [];
+    const parsedArray: CommunityCashFlow[] = [];
     raw.forEach((row: ExcelCommunityCashFlow) => {
-      const communityCashFlow = new CommunityCashFlow2();
+      const communityCashFlow = new CommunityCashFlow();
       communityCashFlow.country = {
         code: row['Country code'],
       } as Country;
@@ -467,9 +466,9 @@ export class EntityPreprocessor {
   }
 
   private processCarbonStandardFees(raw: ExcelCarbonStandardFees[]) {
-    const parsedArray: CarbonStandardFees2[] = [];
+    const parsedArray: CarbonStandardFees[] = [];
     raw.forEach((row: ExcelCarbonStandardFees) => {
-      const carbonStandardFees = new CarbonStandardFees2();
+      const carbonStandardFees = new CarbonStandardFees();
       carbonStandardFees.country = {
         code: row['Country code'],
       } as Country;
@@ -484,10 +483,10 @@ export class EntityPreprocessor {
   private processLongTermProjectOperating(
     raw: ExcelLongTermProjectOperating[],
   ) {
-    const parsedArray: LongTermProjectOperating2[] = [];
+    const parsedArray: LongTermProjectOperating[] = [];
     raw.forEach((row: ExcelLongTermProjectOperating) => {
       // mangrove long term project operating
-      const mangroveLongTermProjectOperating = new LongTermProjectOperating2();
+      const mangroveLongTermProjectOperating = new LongTermProjectOperating();
       mangroveLongTermProjectOperating.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveLongTermProjectOperating.country = {
         code: row['Country code'],
@@ -497,7 +496,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveLongTermProjectOperating);
 
       // seagrass long term project operating
-      const seagrassLongTermProjectOperating = new LongTermProjectOperating2();
+      const seagrassLongTermProjectOperating = new LongTermProjectOperating();
       seagrassLongTermProjectOperating.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassLongTermProjectOperating.country = {
         code: row['Country code'],
@@ -507,7 +506,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassLongTermProjectOperating);
 
       // salt marsh long term project operating
-      const saltMarshLongTermProjectOperating = new LongTermProjectOperating2();
+      const saltMarshLongTermProjectOperating = new LongTermProjectOperating();
       saltMarshLongTermProjectOperating.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshLongTermProjectOperating.country = {
         code: row['Country code'],
@@ -520,9 +519,9 @@ export class EntityPreprocessor {
   }
 
   private processMRV(raw: ExcelMRV[]) {
-    const parsedArray: MRV2[] = [];
+    const parsedArray: MRV[] = [];
     raw.forEach((row: ExcelMRV) => {
-      const mrv = new MRV2();
+      const mrv = new MRV();
       mrv.country = {
         code: row['Country code'],
       } as Country;
@@ -533,9 +532,9 @@ export class EntityPreprocessor {
   }
 
   private processBaselineReassessment(raw: ExcelBaselineReassessment[]) {
-    const parsedArray: BaselineReassessment2[] = [];
+    const parsedArray: BaselineReassessment[] = [];
     raw.forEach((row: ExcelBaselineReassessment) => {
-      const baselineReassessment = new BaselineReassessment2();
+      const baselineReassessment = new BaselineReassessment();
       baselineReassessment.country = {
         code: row['Country code'],
       } as Country;
@@ -548,9 +547,9 @@ export class EntityPreprocessor {
   }
 
   private processCommunityBenefit(raw: ExcelCommunityBenefitSharingFund[]) {
-    const parsedArray: CommunityBenefitSharingFund2[] = [];
+    const parsedArray: CommunityBenefitSharingFund[] = [];
     raw.forEach((row: ExcelCommunityBenefitSharingFund) => {
-      const communityBenefit = new CommunityBenefitSharingFund2();
+      const communityBenefit = new CommunityBenefitSharingFund();
       communityBenefit.country = {
         code: row['Country code'],
       } as Country;
@@ -563,9 +562,9 @@ export class EntityPreprocessor {
   }
 
   private processMaintenanceCost(raw: ExcelMaintenance[]) {
-    const parsedArray: Maintenance2[] = [];
+    const parsedArray: Maintenance[] = [];
     raw.forEach((row: ExcelMaintenance) => {
-      const maintenanceCost = new Maintenance2();
+      const maintenanceCost = new Maintenance();
       maintenanceCost.country = {
         code: row['Country code'],
       } as Country;
@@ -581,10 +580,10 @@ export class EntityPreprocessor {
   }
 
   private processMonitoringCost(raw: ExcelMonitoring[]) {
-    const parsedArray: MonitoringCost2[] = [];
+    const parsedArray: MonitoringCost[] = [];
     raw.forEach((row: ExcelMonitoring) => {
       // mangrove monitoring
-      const mangroveMonitoring = new MonitoringCost2();
+      const mangroveMonitoring = new MonitoringCost();
       mangroveMonitoring.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveMonitoring.country = {
         code: row['Country code'],
@@ -595,7 +594,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveMonitoring);
 
       // seagrass monitoring
-      const seagrassMonitoring = new MonitoringCost2();
+      const seagrassMonitoring = new MonitoringCost();
       seagrassMonitoring.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassMonitoring.country = {
         code: row['Country code'],
@@ -606,7 +605,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassMonitoring);
 
       // salt marsh monitoring
-      const saltMarshMonitoring = new MonitoringCost2();
+      const saltMarshMonitoring = new MonitoringCost();
       saltMarshMonitoring.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshMonitoring.country = {
         code: row['Country code'],
@@ -620,9 +619,9 @@ export class EntityPreprocessor {
   }
 
   private processValidationCost(raw: ExcelValidation[]) {
-    const parsedArray: ValidationCost2[] = [];
+    const parsedArray: ValidationCost[] = [];
     raw.forEach((row: ExcelValidation) => {
-      const validationCost = new ValidationCost2();
+      const validationCost = new ValidationCost();
       validationCost.country = {
         code: row['Country code'],
       } as Country;
@@ -633,9 +632,9 @@ export class EntityPreprocessor {
   }
 
   private processFinancingCost(raw: ExcelFinancingCost[]) {
-    const parsedArray: FinancingCost2[] = [];
+    const parsedArray: FinancingCost[] = [];
     raw.forEach((row: ExcelFinancingCost) => {
-      const financingCost = new FinancingCost2();
+      const financingCost = new FinancingCost();
       financingCost.country = {
         code: row['Country code'],
       } as Country;
@@ -650,9 +649,9 @@ export class EntityPreprocessor {
   private processEstablishingCarbonRights(
     raw: ExcelEstablishingCarbonRights[],
   ) {
-    const parsedArray: CarbonRights2[] = [];
+    const parsedArray: CarbonRights[] = [];
     raw.forEach((row: ExcelEstablishingCarbonRights) => {
-      const carbonRights = new CarbonRights2();
+      const carbonRights = new CarbonRights();
       carbonRights.country = {
         code: row['Country code'],
       } as Country;
@@ -667,9 +666,9 @@ export class EntityPreprocessor {
   private processBlueCarbonProjectPlanning(
     raw: ExcelBlueCarbonProjectPlanning[],
   ) {
-    const parsedArray: BlueCarbonProjectPlanning2[] = [];
+    const parsedArray: BlueCarbonProjectPlanning[] = [];
     raw.forEach((row: ExcelBlueCarbonProjectPlanning) => {
-      const blueCarbonProjectPlanning = new BlueCarbonProjectPlanning2();
+      const blueCarbonProjectPlanning = new BlueCarbonProjectPlanning();
       blueCarbonProjectPlanning.country = {
         code: row['Country code'],
       } as Country;
@@ -686,10 +685,10 @@ export class EntityPreprocessor {
   }
 
   private processCommunityRepresentation(raw: ExcelCommunityRepresentation[]) {
-    const parsedArray: CommunityRepresentation2[] = [];
+    const parsedArray: CommunityRepresentation[] = [];
     raw.forEach((row: ExcelCommunityRepresentation) => {
       // mangrove community representation
-      const mangroveCommunityRepresentation = new CommunityRepresentation2();
+      const mangroveCommunityRepresentation = new CommunityRepresentation();
       mangroveCommunityRepresentation.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveCommunityRepresentation.country = {
         code: row['Country code'],
@@ -700,7 +699,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveCommunityRepresentation);
 
       // seagrass community representation
-      const seagrassCommunityRepresentation = new CommunityRepresentation2();
+      const seagrassCommunityRepresentation = new CommunityRepresentation();
       seagrassCommunityRepresentation.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassCommunityRepresentation.country = {
         code: row['Country code'],
@@ -711,7 +710,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassCommunityRepresentation);
 
       // salt marsh community representation
-      const saltMarshCommunityRepresentation = new CommunityRepresentation2();
+      const saltMarshCommunityRepresentation = new CommunityRepresentation();
       saltMarshCommunityRepresentation.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshCommunityRepresentation.country = {
         code: row['Country code'],
@@ -727,11 +726,11 @@ export class EntityPreprocessor {
   private processDataCollectionAndFieldCosts(
     raw: ExcelDataCollectionAndFieldCosts[],
   ) {
-    const parsedArray: DataCollectionAndFieldCosts2[] = [];
+    const parsedArray: DataCollectionAndFieldCosts[] = [];
     raw.forEach((row: ExcelDataCollectionAndFieldCosts) => {
       // mangrove data collection and field costs
       const mangroveDataCollectionAndFieldCosts =
-        new DataCollectionAndFieldCosts2();
+        new DataCollectionAndFieldCosts();
       mangroveDataCollectionAndFieldCosts.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveDataCollectionAndFieldCosts.country = {
         code: row['Country code'],
@@ -743,7 +742,7 @@ export class EntityPreprocessor {
 
       // seagrass data collection and field costs
       const seagrassDataCollectionAndFieldCosts =
-        new DataCollectionAndFieldCosts2();
+        new DataCollectionAndFieldCosts();
       seagrassDataCollectionAndFieldCosts.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassDataCollectionAndFieldCosts.country = {
         code: row['Country code'],
@@ -755,7 +754,7 @@ export class EntityPreprocessor {
 
       // salt marsh data collection and field costs
       const saltMarshDataCollectionAndFieldCosts =
-        new DataCollectionAndFieldCosts2();
+        new DataCollectionAndFieldCosts();
       saltMarshDataCollectionAndFieldCosts.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshDataCollectionAndFieldCosts.country = {
         code: row['Country code'],
@@ -771,11 +770,11 @@ export class EntityPreprocessor {
   private processConservationPlanningAndAdmin(
     raw: ExcelConservationPlanningAndAdmin[],
   ) {
-    const parsedArray: ConservationPlanningAndAdmin2[] = [];
+    const parsedArray: ConservationPlanningAndAdmin[] = [];
     raw.forEach((row: ExcelConservationPlanningAndAdmin) => {
       // mangrove conservation planning and admin
       const mangroveConservationPlanningAndAdmin =
-        new ConservationPlanningAndAdmin2();
+        new ConservationPlanningAndAdmin();
       mangroveConservationPlanningAndAdmin.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveConservationPlanningAndAdmin.country = {
         code: row['Country code'],
@@ -786,7 +785,7 @@ export class EntityPreprocessor {
 
       // seagrass conservation planning and admin
       const seagrassConservationPlanningAndAdmin =
-        new ConservationPlanningAndAdmin2();
+        new ConservationPlanningAndAdmin();
       seagrassConservationPlanningAndAdmin.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassConservationPlanningAndAdmin.country = {
         code: row['Country code'],
@@ -797,7 +796,7 @@ export class EntityPreprocessor {
 
       // salt marsh conservation planning and admin
       const saltMarshConservationPlanningAndAdmin =
-        new ConservationPlanningAndAdmin2();
+        new ConservationPlanningAndAdmin();
       saltMarshConservationPlanningAndAdmin.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshConservationPlanningAndAdmin.country = {
         code: row['Country code'],
@@ -812,10 +811,10 @@ export class EntityPreprocessor {
   }
 
   private processFeasabilityAnalysis(raw: ExcelFeasibilityAnalysis[]) {
-    const parsedArray: FeasibilityAnalysis2[] = [];
+    const parsedArray: FeasibilityAnalysis[] = [];
     raw.forEach((row: ExcelFeasibilityAnalysis) => {
       // mangrove feasibility analysis
-      const mangroveFeasibilityAnalysis = new FeasibilityAnalysis2();
+      const mangroveFeasibilityAnalysis = new FeasibilityAnalysis();
       mangroveFeasibilityAnalysis.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveFeasibilityAnalysis.country = {
         code: row['Country code'],
@@ -826,7 +825,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveFeasibilityAnalysis);
 
       // seagrass feasibility
-      const seagrassFeasibilityAnalysis = new FeasibilityAnalysis2();
+      const seagrassFeasibilityAnalysis = new FeasibilityAnalysis();
       seagrassFeasibilityAnalysis.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassFeasibilityAnalysis.country = {
         code: row['Country code'],
@@ -837,7 +836,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassFeasibilityAnalysis);
 
       // salt marsh feasibility
-      const saltMarshFeasibilityAnalysis = new FeasibilityAnalysis2();
+      const saltMarshFeasibilityAnalysis = new FeasibilityAnalysis();
       saltMarshFeasibilityAnalysis.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshFeasibilityAnalysis.country = {
         code: row['Country code'],
@@ -852,10 +851,10 @@ export class EntityPreprocessor {
   }
 
   private processProjectSize(raw: ExcelProjectSize[]) {
-    const parsedArray: ProjectSize2[] = [];
+    const parsedArray: ProjectSize[] = [];
     raw.forEach((row: ExcelProjectSize) => {
       // mangrove restored
-      const mangroveRestoredArea = new ProjectSize2();
+      const mangroveRestoredArea = new ProjectSize();
       mangroveRestoredArea.activity = ACTIVITY.RESTORATION;
       mangroveRestoredArea.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveRestoredArea.country = { code: row['Country code'] } as Country;
@@ -865,7 +864,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveRestoredArea);
 
       // mangrove conserved
-      const mangroveConservedArea = new ProjectSize2();
+      const mangroveConservedArea = new ProjectSize();
       mangroveConservedArea.activity = ACTIVITY.CONSERVATION;
       mangroveConservedArea.ecosystem = ECOSYSTEM.MANGROVE;
       mangroveConservedArea.country = { code: row['Country code'] } as Country;
@@ -875,7 +874,7 @@ export class EntityPreprocessor {
       parsedArray.push(mangroveConservedArea);
 
       // seagrass restored
-      const seagrassRestoredArea = new ProjectSize2();
+      const seagrassRestoredArea = new ProjectSize();
       seagrassRestoredArea.activity = ACTIVITY.RESTORATION;
       seagrassRestoredArea.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassRestoredArea.country = { code: row['Country code'] } as Country;
@@ -885,7 +884,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassRestoredArea);
 
       // seagrass conserved
-      const seagrassConservedArea = new ProjectSize2();
+      const seagrassConservedArea = new ProjectSize();
       seagrassConservedArea.activity = ACTIVITY.CONSERVATION;
       seagrassConservedArea.ecosystem = ECOSYSTEM.SEAGRASS;
       seagrassConservedArea.country = { code: row['Country code'] } as Country;
@@ -895,7 +894,7 @@ export class EntityPreprocessor {
       parsedArray.push(seagrassConservedArea);
 
       // salt marsh restored
-      const saltMarshRestoredArea = new ProjectSize2();
+      const saltMarshRestoredArea = new ProjectSize();
       saltMarshRestoredArea.activity = ACTIVITY.RESTORATION;
       saltMarshRestoredArea.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshRestoredArea.country = { code: row['Country code'] } as Country;
@@ -905,7 +904,7 @@ export class EntityPreprocessor {
       parsedArray.push(saltMarshRestoredArea);
 
       // salt marsh conserved
-      const saltMarshConservedArea = new ProjectSize2();
+      const saltMarshConservedArea = new ProjectSize();
       saltMarshConservedArea.activity = ACTIVITY.CONSERVATION;
       saltMarshConservedArea.ecosystem = ECOSYSTEM.SALT_MARSH;
       saltMarshConservedArea.country = { code: row['Country code'] } as Country;

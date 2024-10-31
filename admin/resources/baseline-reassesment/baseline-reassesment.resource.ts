@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { BaselineReassessment2 } from "@shared/entities/cost-inputs/baseline-reassessment.entity.js";
+import { BaselineReassessment } from "@shared/entities/cost-inputs/baseline-reassessment.entity.js";
 
 export const BaselineReassessmentResource: ResourceWithOptions = {
-  resource: BaselineReassessment2,
+  resource: BaselineReassessment,
   options: {
     sort: {
       sortBy: "baselineReassessmentCost",

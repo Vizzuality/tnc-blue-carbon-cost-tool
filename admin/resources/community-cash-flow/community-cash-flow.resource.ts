@@ -1,8 +1,8 @@
-import { CommunityCashFlow2 } from "@shared/entities/cost-inputs/community-cash-flow.entity.js";
+import { CommunityCashFlow } from "@shared/entities/cost-inputs/community-cash-flow.entity.js";
 import { ResourceWithOptions } from "adminjs";
 
 export const CommunityCashFlowResource: ResourceWithOptions = {
-  resource: CommunityCashFlow2,
+  resource: CommunityCashFlow,
   options: {
     sort: {
       sortBy: "cashflowType",

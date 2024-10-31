@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { EmissionFactors2 } from "@shared/entities/carbon-inputs/emission-factors.entity.js";
+import { EmissionFactors } from "@shared/entities/carbon-inputs/emission-factors.entity.js";
 
 export const EmissionFactorsResource: ResourceWithOptions = {
-  resource: EmissionFactors2,
+  resource: EmissionFactors,
   options: {
     sort: {
       sortBy: "tierSelector",

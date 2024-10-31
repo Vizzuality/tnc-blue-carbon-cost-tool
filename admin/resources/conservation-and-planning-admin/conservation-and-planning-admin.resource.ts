@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { ConservationPlanningAndAdmin2 } from "@shared/entities/cost-inputs/conservation-and-planning-admin.entity.js";
+import { ConservationPlanningAndAdmin } from "@shared/entities/cost-inputs/conservation-and-planning-admin.entity.js";
 
 export const ConservationAndPlanningAdminResource: ResourceWithOptions = {
-  resource: ConservationPlanningAndAdmin2,
+  resource: ConservationPlanningAndAdmin,
   options: {
     sort: {
       sortBy: "planningCost",

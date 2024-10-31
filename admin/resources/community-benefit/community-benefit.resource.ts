@@ -1,8 +1,8 @@
-import { CommunityBenefitSharingFund2 } from "@shared/entities/cost-inputs/community-benefit-sharing-fund.entity.js";
+import { CommunityBenefitSharingFund } from "@shared/entities/cost-inputs/community-benefit-sharing-fund.entity.js";
 import { ResourceWithOptions } from "adminjs";
 
 export const CommunityBenefitResource: ResourceWithOptions = {
-  resource: CommunityBenefitSharingFund2,
+  resource: CommunityBenefitSharingFund,
   options: {
     sort: {
       sortBy: "communityBenefitSharingFund",

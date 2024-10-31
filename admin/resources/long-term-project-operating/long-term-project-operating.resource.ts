@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { LongTermProjectOperating2 } from "@shared/entities/cost-inputs/long-term-project-operating.entity.js";
+import { LongTermProjectOperating } from "@shared/entities/cost-inputs/long-term-project-operating.entity.js";
 
 export const LongTermProjectOperatingResource: ResourceWithOptions = {
-  resource: LongTermProjectOperating2,
+  resource: LongTermProjectOperating,
   options: {
     sort: {
       sortBy: "longTermProjectOperatingCost",

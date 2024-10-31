@@ -1,8 +1,8 @@
 import { ResourceWithOptions } from "adminjs";
-import { FeasibilityAnalysis2 } from "@shared/entities/cost-inputs/feasability-analysis.entity.js";
+import { FeasibilityAnalysis } from "@shared/entities/cost-inputs/feasability-analysis.entity.js";
 
 export const FeasibilityAnalysisResource: ResourceWithOptions = {
-  resource: FeasibilityAnalysis2,
+  resource: FeasibilityAnalysis,
   options: {
     sort: {
       sortBy: "analysisCost",
