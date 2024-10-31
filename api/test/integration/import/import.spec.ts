@@ -74,7 +74,7 @@ describe('Import Tests', () => {
         .getRepository(BaseData)
         .find();
 
-      expect(baseData).toHaveLength(9);
+      expect(baseData).toHaveLength(42);
     }, 30000);
 
     it('should import cost data from an excel file', async () => {
