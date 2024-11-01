@@ -25,6 +25,9 @@ export const SHEETS_TO_PARSE = [
   'Sequestration rate',
   'Emission factors',
   'Implementation labor',
+  'base_size_table',
+  'base_increase',
+  'Model assumptions',
 ] as const;
 
 export interface ExcelParserInterface {

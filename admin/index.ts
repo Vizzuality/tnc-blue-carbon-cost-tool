@@ -30,6 +30,9 @@ import { SequestrationRateResource } from "./resources/sequestration-rate/seques
 import { ProjectsResource } from "./resources/projects/projects.resource.js";
 import { ProjectSizeResource } from "./resources/project-size/project-size.resource.js";
 import { ImplementationLaborCostResource } from "./resources/implementation-labor-cost/implementation-labor-cost.resource.js";
+import { BaseSizeResource } from "./resources/base-size/base-size.resource.js";
+import { BaseIncreaseResource } from "./resources/base-increase/base-increase.resource.js";
+import { ModelAssumptionResource } from "./resources/model-assumptions/model-assumptions.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -79,6 +82,9 @@ const start = async () => {
       SequestrationRateResource,
       ProjectsResource,
       ImplementationLaborCostResource,
+      BaseSizeResource,
+      BaseIncreaseResource,
+      ModelAssumptionResource,
       {
         resource: Country,
         name: "Country",
