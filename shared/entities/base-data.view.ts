@@ -166,13 +166,13 @@ export class BaseDataView {
   validation: number;
 
   @ViewColumn({ name: "implementation_labor_planting" })
-  implementationLaborPlanting: number;
+  implementation_labor_planting: number;
 
   @ViewColumn({ name: "implementation_labor_hybrid" })
-  implementationLaborHybrid: number;
+  implementation_labor_hybrid: number;
 
   @ViewColumn({ name: "implementation_labor_hydrology" })
-  implementationLaborHydrology: number;
+  implementation_labor_hydrology: number;
 
   @ViewColumn({ name: "monitoring" })
   monitoring: number;

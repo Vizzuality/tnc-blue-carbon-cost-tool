@@ -29,6 +29,7 @@ import { LongTermProjectOperatingResource } from "./resources/long-term-project-
 import { SequestrationRateResource } from "./resources/sequestration-rate/sequestration-rate.resource.js";
 import { ProjectsResource } from "./resources/projects/projects.resource.js";
 import { ProjectSizeResource } from "./resources/project-size/project-size.resource.js";
+import { ImplementationLaborCostResource } from "./resources/implementation-labor-cost/implementation-labor-cost.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -77,6 +78,7 @@ const start = async () => {
       LongTermProjectOperatingResource,
       SequestrationRateResource,
       ProjectsResource,
+      ImplementationLaborCostResource,
       {
         resource: Country,
         name: "Country",
