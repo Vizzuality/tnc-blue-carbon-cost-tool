@@ -2,20 +2,17 @@ import { genSalt, hash } from "bcrypt";
 import { DataSource, DeepPartial } from "typeorm";
 import { User } from "@shared/entities/users/user.entity";
 import {
-  ACTIVITY,
-  BaseData,
-  ECOSYSTEM,
-} from "@shared/entities/base-data.entity";
-import {
   Project,
   PROJECT_PRICE_TYPE,
   PROJECT_SIZE_FILTER,
 } from "@shared/entities/projects.entity";
 import { Country } from "@shared/entities/country.entity";
+import { ACTIVITY } from "@shared/entities/activity.enum";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 export const createUser = async (
   dataSource: DataSource,
-  additionalData?: Partial<User>,
+  additionalData?: Partial<User>
 ): Promise<User> => {
   const salt = await genSalt();
   const usedPassword = additionalData?.password ?? "12345678";
@@ -30,23 +27,9 @@ export const createUser = async (
   return { ...user, password: usedPassword } as User;
 };
 
-export const createBaseData = async (
-  dataSource: DataSource,
-  additionalData?: Partial<BaseData>,
-): Promise<BaseData> => {
-  const baseData = new BaseData();
-  baseData.ecosystem = ECOSYSTEM.MANGROVE;
-  baseData.countryCode = "AND";
-  baseData.activity = ACTIVITY.CONSERVATION;
-
-  return dataSource
-    .getRepository(BaseData)
-    .save({ ...baseData, ...additionalData });
-};
-
 export const createProject = async (
   dataSource: DataSource,
-  additionalData?: DeepPartial<Project>,
+  additionalData?: DeepPartial<Project>
 ): Promise<Project> => {
   const countries = await dataSource.getRepository(Country).find();
   if (!countries.length) {

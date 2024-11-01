@@ -4,7 +4,7 @@ import {
   ExcelParserInterface,
   SHEETS_TO_PARSE,
 } from './excel-parser.interface';
-import { ExcelMasterTable } from '@api/modules/import/excel-base-data.dto';
+import { ExcelMasterTable } from '@api/modules/import/dtos/excel-base-data.dto';
 
 @Injectable()
 export class XlsxParser implements ExcelParserInterface {

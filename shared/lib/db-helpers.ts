@@ -4,7 +4,7 @@ import { EntityTarget } from "typeorm/common/EntityTarget";
 import { ObjectLiteral } from "typeorm/common/ObjectLiteral";
 
 export async function clearTestDataFromDatabase(
-  dataSource: DataSource,
+  dataSource: DataSource
 ): Promise<void> {
   const queryRunner = dataSource.createQueryRunner();
   await queryRunner.connect();
@@ -14,25 +14,25 @@ export async function clearTestDataFromDatabase(
       .filter(
         (entityMetadata: EntityMetadata) =>
           entityMetadata.tableType === "regular" ||
-          entityMetadata.tableType === "junction",
+          entityMetadata.tableType === "junction"
       )
       .map((entityMetadata: EntityMetadata) => entityMetadata.tableName);
 
     await Promise.all(
       entityTableNames.map((entityTableName: string) =>
-        queryRunner.query(`TRUNCATE TABLE "${entityTableName}" CASCADE`),
-      ),
+        queryRunner.query(`TRUNCATE TABLE "${entityTableName}" CASCADE`)
+      )
     );
 
     entityTableNames.push(dataSource.metadataTableName);
     entityTableNames.push(
-      dataSource.options.migrationsTableName || "migrations",
+      dataSource.options.migrationsTableName || "migrations"
     );
     entityTableNames.push("spatial_ref_sys");
 
     const databaseTableNames: string[] = (
       await dataSource.query(
-        `SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'`,
+        `SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'`
       )
     ).map((e: Record<string, any>) => e.table_name);
 
@@ -40,8 +40,8 @@ export async function clearTestDataFromDatabase(
 
     await Promise.all(
       tablesToDrop.map((tableToDrop: string) =>
-        queryRunner.dropTable(tableToDrop),
-      ),
+        queryRunner.dropTable(tableToDrop)
+      )
     );
     await queryRunner.commitTransaction();
   } catch (err) {
@@ -56,7 +56,7 @@ export async function clearTestDataFromDatabase(
 
 export async function clearTablesByEntities(
   dataSource: DataSource,
-  entities: EntityTarget<ObjectLiteral>[],
+  entities: EntityTarget<ObjectLiteral>[]
 ): Promise<void> {
   for (const entity of entities) {
     const repo = dataSource.getRepository(entity);

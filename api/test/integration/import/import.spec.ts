@@ -4,14 +4,14 @@ import { adminContract } from '@shared/contracts/admin.contract';
 import { ROLES } from '@shared/entities/users/roles.enum';
 import * as path from 'path';
 import * as fs from 'fs';
-import { BaseData } from '@shared/entities/base-data.entity';
+import { BaseDataView } from '@shared/entities/base-data.view';
 
 describe('Import Tests', () => {
   let testManager: TestManager;
   let testUserToken: string;
   const testFilePath = path.join(
     __dirname,
-    '../../../../data/excel/data_ingestion.xlsm',
+    '../../../../data/excel/data_ingestion_WIP.xlsm',
   );
   const fileBuffer = fs.readFileSync(testFilePath);
 
@@ -54,26 +54,26 @@ describe('Import Tests', () => {
         .request()
         .post(adminContract.uploadFile.path)
         .set('Authorization', `Bearer ${jwtToken}`)
-        .attach('file', fileBuffer, 'data_ingestion.xlsm');
+        .attach('file', fileBuffer, 'data_ingestion_WIP.xlsm');
 
       expect(response.status).toBe(HttpStatus.FORBIDDEN);
     });
   });
   describe('Import Data', () => {
-    it('should import data from an excel file', async () => {
+    it('should import cost data from an excel file', async () => {
       await testManager.ingestCountries();
       await testManager
         .request()
         .post(adminContract.uploadFile.path)
         .set('Authorization', `Bearer ${testUserToken}`)
-        .attach('file', fileBuffer, 'data_ingestion.xlsm');
+        .attach('file', fileBuffer, 'data_ingestion_WIP.xlsm');
 
-      const baseData = await testManager
+      const baseDataView = await testManager
         .getDataSource()
-        .getRepository(BaseData)
+        .getRepository(BaseDataView)
         .find();
 
-      expect(baseData).toHaveLength(222);
+      expect(baseDataView).toHaveLength(54);
     }, 30000);
   });
 });

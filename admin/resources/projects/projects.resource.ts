@@ -6,9 +6,9 @@ import {
   ResourceWithOptions,
 } from "adminjs";
 import { dataSource } from "../../datasource.js";
-import { COMMON_RESOURCE_LIST_PROPERTIES } from "../common/common.resources.js";
 import { Project } from "@shared/entities/projects.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
+import { COMMON_RESOURCE_LIST_PROPERTIES } from "../common/common.resources.js";
 
 export const ProjectsResource: ResourceWithOptions = {
   resource: Project,
@@ -39,7 +39,7 @@ export const ProjectsResource: ResourceWithOptions = {
         after: async (
           request: ActionRequest,
           response: ActionResponse,
-          context: ActionContext,
+          context: ActionContext
         ) => {
           const { records } = context;
           const projectDataRepo = dataSource.getRepository(Project);
@@ -62,7 +62,7 @@ export const ProjectsResource: ResourceWithOptions = {
             .addSelect("project.priceType", "priceType")
             .addSelect(
               "project.initialPriceAssumption",
-              "initialPriceAssumption",
+              "initialPriceAssumption"
             );
 
           if (records?.length) {

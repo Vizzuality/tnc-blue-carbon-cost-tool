@@ -6,7 +6,6 @@ import * as AdminJSTypeorm from "@adminjs/typeorm";
 import { dataSource } from "./datasource.js";
 import { AuthProvider } from "./providers/auth.provider.js";
 import { UserResource } from "./resources/users/user.resource.js";
-import { ProjectSizeResource } from "./resources/project-size/project-size.resource.js";
 import { Country } from "@shared/entities/country.entity.js";
 import { FeasibilityAnalysisResource } from "./resources/feasability-analysis/feasability-analysis.resource.js";
 import { ConservationAndPlanningAdminResource } from "./resources/conservation-and-planning-admin/conservation-and-planning-admin.resource.js";
@@ -14,7 +13,6 @@ import { CommunityRepresentationResource } from "./resources/community-represent
 import { CarbonRightsResource } from "./resources/carbon-righs/carbon-rights.resource.js";
 import { FinancingCostResource } from "./resources/financing-cost/financing-cost.resource.js";
 import { ValidationCostResource } from "./resources/validation-cost/validation-cost.resource.js";
-import { ImplementationLaborCostResource } from "./resources/implementation-labor/implementation-labor-cost.resource.js";
 import { MonitoringCostResource } from "./resources/monitoring-cost/monitoring-cost.resource.js";
 import { MaintenanceResource } from "./resources/maintenance/maintenance.resource.js";
 import { DataCollectionAndFieldCostResource } from "./resources/data-collection-and-field-cost/data-collection-and-field-cost.resource.js";
@@ -30,6 +28,8 @@ import { BlueCarbonProjectPlanningResource } from "./resources/blue-carbon-proje
 import { LongTermProjectOperatingResource } from "./resources/long-term-project-operating/long-term-project-operating.resource.js";
 import { SequestrationRateResource } from "./resources/sequestration-rate/sequestration-rate.resource.js";
 import { ProjectsResource } from "./resources/projects/projects.resource.js";
+import { ProjectSizeResource } from "./resources/project-size/project-size.resource.js";
+import { ImplementationLaborCostResource } from "./resources/implementation-labor-cost/implementation-labor-cost.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -63,7 +63,6 @@ const start = async () => {
       CarbonRightsResource,
       FinancingCostResource,
       ValidationCostResource,
-      ImplementationLaborCostResource,
       MonitoringCostResource,
       MaintenanceResource,
       DataCollectionAndFieldCostResource,
@@ -79,6 +78,7 @@ const start = async () => {
       LongTermProjectOperatingResource,
       SequestrationRateResource,
       ProjectsResource,
+      ImplementationLaborCostResource,
       {
         resource: Country,
         name: "Country",
@@ -113,7 +113,7 @@ const start = async () => {
 
   app.listen(PORT, () => {
     console.log(
-      `AdminJS started on http://localhost:${PORT}${admin.options.rootPath}`,
+      `AdminJS started on http://localhost:${PORT}${admin.options.rootPath}`
     );
   });
 };

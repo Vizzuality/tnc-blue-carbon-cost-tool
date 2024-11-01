@@ -7,8 +7,9 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import { ACTIVITY, ECOSYSTEM } from "@shared/entities/base-data.entity";
 import { Country } from "@shared/entities/country.entity";
+import { ECOSYSTEM } from "./ecosystem.enum";
+import { ACTIVITY } from "./activity.enum";
 
 export enum PROJECT_SIZE_FILTER {
   SMALL = "Small",
