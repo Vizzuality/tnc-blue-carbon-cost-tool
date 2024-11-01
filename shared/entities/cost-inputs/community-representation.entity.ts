@@ -5,6 +5,7 @@ import {
   BaseEntity,
   Unique,
   ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
@@ -16,6 +17,7 @@ export class CommunityRepresentation extends BaseEntity {
   id: string;
 
   @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "country_code" })
   country: Country;
 
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })

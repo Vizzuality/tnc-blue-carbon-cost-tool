@@ -23,6 +23,7 @@ import { MRV } from "@shared/entities/cost-inputs/mrv.entity";
 import { ProjectSize } from "@shared/entities/cost-inputs/project-size.entity";
 import { ValidationCost } from "@shared/entities/cost-inputs/validation.entity";
 import { Country } from "@shared/entities/country.entity";
+import { ImplementationLaborCost } from "@shared/entities/cost-inputs/implementation-labor-cost.entity";
 import { Project } from "@shared/entities/projects.entity";
 import { User } from "@shared/entities/users/user.entity";
 
@@ -54,4 +55,5 @@ export const COMMON_DATABASE_ENTITIES = [
   Project,
   EcosystemExtent,
   BaseDataView,
+  ImplementationLaborCost,
 ];

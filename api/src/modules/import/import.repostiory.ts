@@ -23,6 +23,7 @@ import { Maintenance } from '@shared/entities/cost-inputs/maintenance.entity';
 import { MonitoringCost } from '@shared/entities/cost-inputs/monitoring.entity';
 import { MRV } from '@shared/entities/cost-inputs/mrv.entity';
 import { ValidationCost } from '@shared/entities/cost-inputs/validation.entity';
+import { ImplementationLaborCost } from '@shared/entities/cost-inputs/implementation-labor-cost.entity';
 
 @Injectable()
 export class ImportRepository {
@@ -52,6 +53,7 @@ export class ImportRepository {
     restorableLand: RestorableLand[];
     sequestrationRate: SequestrationRate[];
     emissionFactors: EmissionFactors[];
+    implementationLaborCost: ImplementationLaborCost[];
   }) {
     return this.dataSource.transaction(async (manager) => {
       await manager.save(importData.projects);
@@ -74,6 +76,7 @@ export class ImportRepository {
       await manager.save(importData.longTermProjectOperating);
       await manager.save(importData.carbonStandardFees);
       await manager.save(importData.communityCashFlow);
+      await manager.save(importData.implementationLaborCost);
 
       // Carbon inputs ingestion
       await manager.save(importData.ecosystemExtent);

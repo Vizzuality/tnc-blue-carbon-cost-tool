@@ -62,6 +62,8 @@ import { MonitoringCost } from '@shared/entities/cost-inputs/monitoring.entity';
 import { MRV } from '@shared/entities/cost-inputs/mrv.entity';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { ValidationCost } from '@shared/entities/cost-inputs/validation.entity';
+import { ExcelImplementationLaborCost } from '../dtos/excel-implementation-labor.dto';
+import { ImplementationLaborCost } from '@shared/entities/cost-inputs/implementation-labor-cost.entity';
 
 export type ParsedDBEntities = {
   projects: Project[];
@@ -87,6 +89,7 @@ export type ParsedDBEntities = {
   restorableLand: RestorableLand[];
   sequestrationRate: SequestrationRate[];
   emissionFactors: EmissionFactors[];
+  implementationLaborCost: ImplementationLaborCost[];
 };
 
 @Injectable()
@@ -116,6 +119,7 @@ export class EntityPreprocessor {
     'Restorable land': ExcelRestorableLand[];
     'Sequestration rate': ExcelSequestrationRate[];
     'Emission factors': ExcelEmissionFactors[];
+    'Implementation labor': ExcelImplementationLaborCost[];
   }): ParsedDBEntities {
     const processedProjects = this.processProjects(raw.Projects);
 
@@ -160,6 +164,9 @@ export class EntityPreprocessor {
     const communityCashFlow = this.processCommunityCashFlow(
       raw['Community cash flow'],
     );
+    const implementationLaborCost = this.processImplementationLaborCost(
+      raw['Implementation labor'],
+    );
 
     // proess carbon inputs
     const ecosystemExtent = this.processEcosystemExtent(
@@ -198,7 +205,65 @@ export class EntityPreprocessor {
       restorableLand: restorableLand,
       sequestrationRate: sequestrationRate,
       emissionFactors: emissionFactors,
+      implementationLaborCost: implementationLaborCost,
     };
+  }
+
+  private processImplementationLaborCost(raw: ExcelImplementationLaborCost[]) {
+    const parsedArray: ImplementationLaborCost[] = [];
+    raw.forEach((row: ExcelImplementationLaborCost) => {
+      // mangrove implementation labor cost
+      const mangroveImplementationLaborCost = new ImplementationLaborCost();
+      mangroveImplementationLaborCost.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveImplementationLaborCost.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveImplementationLaborCost.plantingCost = this.stringToNumeric(
+        row['Mangrove planting'],
+      );
+      mangroveImplementationLaborCost.hybridCost = this.stringToNumeric(
+        row['Mangrove hybrid'],
+      );
+      mangroveImplementationLaborCost.hydrologyCost = this.stringToNumeric(
+        row['Mangrove hydrology'],
+      );
+      parsedArray.push(mangroveImplementationLaborCost);
+
+      // seagrass implementation labor cost
+      const seagrassImplementationLaborCost = new ImplementationLaborCost();
+      seagrassImplementationLaborCost.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassImplementationLaborCost.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassImplementationLaborCost.plantingCost = this.stringToNumeric(
+        row['Seagrass planting'],
+      );
+      seagrassImplementationLaborCost.hybridCost = this.stringToNumeric(
+        row['Seagrass hybrid'],
+      );
+      seagrassImplementationLaborCost.hydrologyCost = this.stringToNumeric(
+        row['Seagrass hydrology'],
+      );
+      parsedArray.push(seagrassImplementationLaborCost);
+
+      // salt marsh implementation labor cost
+      const saltMarshImplementationLaborCost = new ImplementationLaborCost();
+      saltMarshImplementationLaborCost.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshImplementationLaborCost.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshImplementationLaborCost.plantingCost = this.stringToNumeric(
+        row['Salt marsh planting'],
+      );
+      saltMarshImplementationLaborCost.hybridCost = this.stringToNumeric(
+        row['Salt marsh hybrid'],
+      );
+      saltMarshImplementationLaborCost.hydrologyCost = this.stringToNumeric(
+        row['Salt marsh hydrology'],
+      );
+      parsedArray.push(saltMarshImplementationLaborCost);
+    });
+    return parsedArray;
   }
 
   private processEmissionFactors(raw: ExcelEmissionFactors[]) {

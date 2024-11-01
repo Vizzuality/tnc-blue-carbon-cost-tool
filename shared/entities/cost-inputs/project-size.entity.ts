@@ -18,7 +18,7 @@ export class ProjectSize extends BaseEntity {
   id: string;
 
   @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
-  @JoinColumn()
+  @JoinColumn({ name: "country_code" })
   country: Country;
 
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })

@@ -25,6 +25,7 @@ import { MonitoringCost } from "@shared/entities/cost-inputs/monitoring.entity.j
 import { MRV } from "@shared/entities/cost-inputs/mrv.entity.js";
 import { ProjectSize } from "@shared/entities/cost-inputs/project-size.entity.js";
 import { ValidationCost } from "@shared/entities/cost-inputs/validation.entity.js";
+import { ImplementationLaborCost } from "@shared/entities/cost-inputs/implementation-labor-cost.entity.js";
 
 // TODO: If we import the COMMON_DATABASE_ENTITIES from shared, we get an error where DataSouce is not set for a given entity
 export const ADMINJS_ENTITIES = [
@@ -54,6 +55,7 @@ export const ADMINJS_ENTITIES = [
   SequestrationRate,
   EcosystemExtent,
   Project,
+  ImplementationLaborCost,
 ];
 
 export const dataSource = new DataSource({

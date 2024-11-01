@@ -26,18 +26,18 @@ export class ImportService {
     private readonly eventBus: EventBus,
   ) {}
 
-  async import(fileBuffer: Buffer, userId: string) {
+  async import(fileBuffer: Buffer) {
     this.logger.warn('Excel file import started...');
-    this.registerImportEvent(userId, this.eventMap.STARTED);
+    // this.registerImportEvent(userId, this.eventMap.STARTED);
     try {
       const parsedSheets = await this.excelParser.parseExcel(fileBuffer);
       const parsedDBEntities = this.preprocessor.toDbEntities(parsedSheets);
       await this.importRepo.ingest(parsedDBEntities);
       this.logger.warn('Excel file import completed successfully');
-      this.registerImportEvent(userId, this.eventMap.SUCCESS);
+      // this.registerImportEvent(userId, this.eventMap.SUCCESS);
     } catch (e) {
       this.logger.error('Excel file import failed', e);
-      this.registerImportEvent(userId, this.eventMap.FAILED);
+      // this.registerImportEvent(userId, this.eventMap.FAILED);
     }
   }
 

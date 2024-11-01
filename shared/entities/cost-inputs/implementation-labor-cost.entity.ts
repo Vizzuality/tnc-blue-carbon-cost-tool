@@ -10,9 +10,9 @@ import {
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
-@Entity("conservation_planning_and_admin")
+@Entity("implementation_labor_cost")
 @Unique(["country", "ecosystem"])
-export class ConservationPlanningAndAdmin extends BaseEntity {
+export class ImplementationLaborCost extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -23,6 +23,12 @@ export class ConservationPlanningAndAdmin extends BaseEntity {
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
   ecosystem: ECOSYSTEM;
 
-  @Column("decimal", { name: "planning_cost_per_project" })
-  planningCost: number;
+  @Column("decimal", { name: "planting_cost_ha" })
+  plantingCost: number;
+
+  @Column("decimal", { name: "hybrid_cost_ha" })
+  hybridCost: number;
+
+  @Column("decimal", { name: "hydrology_cost_ha" })
+  hydrologyCost: number;
 }

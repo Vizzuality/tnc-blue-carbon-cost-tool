@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   Unique,
+  JoinColumn,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
 
@@ -20,6 +21,7 @@ export class CommunityCashFlow extends BaseEntity {
   id: string;
 
   @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "country_code" })
   country: Country;
 
   @Column({ type: "enum", enum: COMMUNITY_CASH_FLOW_TYPES, nullable: true })

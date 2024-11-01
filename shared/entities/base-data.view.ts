@@ -31,6 +31,9 @@ select
 	crights.carbon_rights_cost as establishing_carbon_rights,
 	fc.financing_cost_capex_percent as financing_cost,
 	vc.validation_cost as validation,
+	ilc.planting_cost_ha as implementation_labor_planting,
+	ilc.hybrid_cost_ha as implementation_labor_hybrid,
+	ilc.hydrology_cost_ha as implementation_labor_hydrology,
 	monitoring.monitoring_cost_per_year as monitoring,
 	maintenance.maintenance_cost_pc_of_impl_labor_cost as maintenance,
 	maintenance.maintenance_duration_years as maintenance_duration,
@@ -53,73 +56,77 @@ from
 	country_activity_ecosystem_combinations as cae
 inner join 
 	project_size ps on 
-		ps."countryCode" = cae.country_code and 
+		ps."country_code" = cae.country_code and 
 		ps."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR and
 		ps."activity"::VARCHAR = cae."activity"::VARCHAR
 inner join 
 	feasibility_analysis fa on 
-		fa."countryCode" = cae.country_code and 
+		fa."country_code" = cae.country_code and 
 		fa."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
 	conservation_planning_and_admin cpa on 
-		cpa."countryCode" = cae.country_code and 
+		cpa."country_code" = cae.country_code and 
 		cpa."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
 	data_collection_and_field_costs dcfc on
-		dcfc."countryCode" = cae.country_code and 
+		dcfc."country_code" = cae.country_code and 
 		dcfc."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
 	community_representation cr on
-		cr."countryCode" = cae.country_code and 
+		cr."country_code" = cae.country_code and 
 		cr."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
-	blue_carbon_project_planning bcpp on bcpp."countryCode" = cae.country_code
+	blue_carbon_project_planning bcpp on bcpp."country_code" = cae.country_code
 inner join 
-	carbon_rights crights on  crights."countryCode" = cae.country_code
+	carbon_rights crights on  crights."country_code" = cae.country_code
 inner join 
-	financing_cost fc on fc."countryCode" = cae.country_code
+	financing_cost fc on fc."country_code" = cae.country_code
 inner join 
-	validation_cost vc on vc."countryCode" = cae.country_code
+	validation_cost vc on vc."country_code" = cae.country_code
 inner join 
 	monitoring_cost monitoring on 
-		monitoring."countryCode" = cae.country_code and 
+		monitoring."country_code" = cae.country_code and 
 		monitoring."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
-	maintenance maintenance on maintenance."countryCode" = cae.country_code
+	implementation_labor_cost ilc on 
+		ilc."country_code" = cae.country_code and 
+		ilc."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
-	carbon_standard_fees csf on csf."countryCode" = cae.country_code
+	maintenance maintenance on maintenance."country_code" = cae.country_code
 inner join 
-	community_benefit_sharing_fund cbsf on cbsf."countryCode" = cae.country_code
+	carbon_standard_fees csf on csf."country_code" = cae.country_code
 inner join 
-	baseline_reassessment br on br."countryCode" = cae.country_code
+	community_benefit_sharing_fund cbsf on cbsf."country_code" = cae.country_code
 inner join 
-	mrv mrv on mrv."countryCode" = cae.country_code
+	baseline_reassessment br on br."country_code" = cae.country_code
+inner join 
+	mrv mrv on mrv."country_code" = cae.country_code
 inner join 
 	long_term_project_operating ltpo on 
-		ltpo."countryCode" = cae.country_code and 
+		ltpo."country_code" = cae.country_code and 
 		ltpo."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
 	ecosystem_extent ee on 
-		ee."countryCode" = cae.country_code and 
+		ee."country_code" = cae.country_code and 
 		ee."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
 	ecosystem_loss elr on 
-		elr."countryCode" = cae.country_code and 
+		elr."country_code" = cae.country_code and 
 		elr."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
 	restorable_land rl on 
-		rl."countryCode" = cae.country_code and 
+		rl."country_code" = cae.country_code and 
 		rl."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
 	emission_factors ef on 
-		ef."countryCode" = cae.country_code and 
+		ef."country_code" = cae.country_code and 
 		ef."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
 	sequestration_rate sr on 
-		sr."countryCode" = cae.country_code and 
+		sr."country_code" = cae.country_code and 
 		sr."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR
 inner join 
-	community_cash_flow ccf on ccf."countryCode" = cae.country_code`,
+	community_cash_flow ccf on ccf."country_code" = cae.country_code`,
 })
 export class BaseDataView {
   @ViewColumn({ name: "country_code" })
@@ -157,6 +164,15 @@ export class BaseDataView {
 
   @ViewColumn({ name: "validation" })
   validation: number;
+
+  @ViewColumn({ name: "implementation_labor_planting" })
+  implementationLaborPlanting: number;
+
+  @ViewColumn({ name: "implementation_labor_hybrid" })
+  implementationLaborHybrid: number;
+
+  @ViewColumn({ name: "implementation_labor_hydrology" })
+  implementationLaborHydrology: number;
 
   @ViewColumn({ name: "monitoring" })
   monitoring: number;

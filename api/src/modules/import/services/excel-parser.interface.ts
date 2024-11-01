@@ -24,6 +24,7 @@ export const SHEETS_TO_PARSE = [
   'Restorable land',
   'Sequestration rate',
   'Emission factors',
+  'Implementation labor',
 ] as const;
 
 export interface ExcelParserInterface {

@@ -5,6 +5,7 @@ import {
   BaseEntity,
   ManyToOne,
   Unique,
+  JoinColumn,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
 
@@ -15,6 +16,7 @@ export class CarbonStandardFees extends BaseEntity {
   id: string;
 
   @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "country_code" })
   country: Country;
 
   @Column("decimal", { name: "cost_per_carbon_credit_issued" })
