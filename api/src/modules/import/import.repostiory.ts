@@ -24,6 +24,9 @@ import { MonitoringCost } from '@shared/entities/cost-inputs/monitoring.entity';
 import { MRV } from '@shared/entities/cost-inputs/mrv.entity';
 import { ValidationCost } from '@shared/entities/cost-inputs/validation.entity';
 import { ImplementationLaborCost } from '@shared/entities/cost-inputs/implementation-labor-cost.entity';
+import { BaseIncrease } from '@shared/entities/base-increase.entity';
+import { BaseSize } from '@shared/entities/base-size.entity';
+import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 
 @Injectable()
 export class ImportRepository {
@@ -54,6 +57,9 @@ export class ImportRepository {
     sequestrationRate: SequestrationRate[];
     emissionFactors: EmissionFactors[];
     implementationLaborCost: ImplementationLaborCost[];
+    baseSize: BaseSize[];
+    baseIncrease: BaseIncrease[];
+    modelAssumptions: ModelAssumptions[];
   }) {
     return this.dataSource.transaction(async (manager) => {
       await manager.save(importData.projects);
@@ -84,6 +90,11 @@ export class ImportRepository {
       await manager.save(importData.restorableLand);
       await manager.save(importData.sequestrationRate);
       await manager.save(importData.emissionFactors);
+
+      // Other tables ingestion
+      await manager.save(importData.baseSize);
+      await manager.save(importData.baseIncrease);
+      await manager.save(importData.modelAssumptions);
     });
   }
 }
