@@ -3,7 +3,8 @@
 # Bytecode version: 3.12.0rc2 (3531)
 # Source timestamp: 2024-10-23 09:22:26 UTC (1729675346)
 
-from sequestration_credits_calculator import SequestrationCreditsCalculator
+from data.src.restored_code.sequestration_credits_calculator import SequestrationCreditsCalculator
+
 
 class RevenueProfitCalculator:
 
@@ -25,7 +26,8 @@ class RevenueProfitCalculator:
                 if year < -1:
                     estimated_revenue_plan[year] = 0
                 else:
-                    estimated_revenue_plan[year] = float(estimated_credits_issued[year]) * float(self.project.carbon_price) * (1 + float(self.project.carbon_price_increase)) ** int(year)
+                    estimated_revenue_plan[year] = float(estimated_credits_issued[year]) * float(
+                        self.project.carbon_price) * (1 + float(self.project.carbon_price_increase)) ** int(year)
             else:
                 estimated_revenue_plan[year] = 0
         return estimated_revenue_plan
@@ -38,8 +40,11 @@ class RevenueProfitCalculator:
         cost_plans = {'capex_total': capex_total_cost_plan, 'opex_total': opex_total_cost_plan}
         for key, value in cost_plans.items():
             cost_plans[key] = {k: -v for k, v in value.items()}
-        total_cost_plan = {k: cost_plans['capex_total'].get(k, 0) + cost_plans['opex_total'].get(k, 0) for k in set(cost_plans['capex_total']) | set(cost_plans['opex_total'])}
-        annual_net_cash_flow = {year: estimated_revenue[year] + total_cost_plan.get(year, 0) if year != 0 else annual_net_cash_flow for year in range(-4, self.project_length + 1)}
+        total_cost_plan = {k: cost_plans['capex_total'].get(k, 0) + cost_plans['opex_total'].get(k, 0) for k in
+                           set(cost_plans['capex_total']) | set(cost_plans['opex_total'])}
+        annual_net_cash_flow = {
+            year: estimated_revenue[year] + total_cost_plan.get(year, 0) if year != 0 else annual_net_cash_flow for year
+            in range(-4, self.project_length + 1)}
         return annual_net_cash_flow
 
     def calculate_annual_net_income(self, opex_total_cost_plan):
@@ -50,5 +55,7 @@ class RevenueProfitCalculator:
         for key, value in cost_plans.items():
             cost_plans[key] = {k: -v for k, v in value.items()}
         estimated_revenue = self.calculate_est_revenue()
-        annual_net_income = {year: estimated_revenue[year] + cost_plans['opex_total'].get(year, 0) if year != 0 else year for year in range(-4, self.project_length + 1)}
+        annual_net_income = {
+            year: estimated_revenue[year] + cost_plans['opex_total'].get(year, 0) if year != 0 else year for year in
+            range(-4, self.project_length + 1)}
         return annual_net_income
