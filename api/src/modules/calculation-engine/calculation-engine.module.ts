@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { CalculationEngineService } from './calculation-engine.service';
+import { CalculationEngine } from './calculation.engine';
 
 @Module({
-  providers: [CalculationEngineService],
+  providers: [CalculationEngine],
+  exports: [CalculationEngine],
 })
 export class CalculationEngineModule {}
