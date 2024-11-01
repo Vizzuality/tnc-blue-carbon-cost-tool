@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
  * @description: This entity is to save Custom Projects (that are calculated, and can be saved only by registered users. Most likely, we don't need to add these as a resource
  * in the backoffice because privacity reasons.
  *
- * The shape defined here is probably wrong, it's only based on the output of the prototype in the notebooks, and it will only server as a learning resource.
+ * The shape defined here is probably wrong, it's only based on the output of the prototype in the notebooks, and it will only serve as a learning resource.
  */
 
 @Entity({ name: "custom_projects" })
