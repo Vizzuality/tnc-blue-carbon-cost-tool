@@ -25,6 +25,7 @@ import { ValidationCost } from "@shared/entities/cost-inputs/validation.entity";
 import { Country } from "@shared/entities/country.entity";
 import { Project } from "@shared/entities/projects.entity";
 import { User } from "@shared/entities/users/user.entity";
+import { Assumption } from "@shared/entities/assumptions.entity";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -53,5 +54,6 @@ export const COMMON_DATABASE_ENTITIES = [
   SequestrationRate,
   Project,
   EcosystemExtent,
+  Assumption,
   BaseDataView,
 ];
