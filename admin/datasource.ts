@@ -3,7 +3,6 @@ import { User } from "@shared/entities/users/user.entity.js";
 import { ApiEventsEntity } from "@api/modules/api-events/api-events.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
 import { Project } from "@shared/entities/projects.entity.js";
-import { BaseDataView } from "@shared/entities/base-data.view.js";
 import { EcosystemExtent } from "@shared/entities/carbon-inputs/ecosystem-extent.entity.js";
 import { EcosystemLoss } from "@shared/entities/carbon-inputs/ecosystem-loss.entity.js";
 import { EmissionFactors } from "@shared/entities/carbon-inputs/emission-factors.entity.js";
@@ -55,7 +54,6 @@ export const ADMINJS_ENTITIES = [
   SequestrationRate,
   EcosystemExtent,
   Project,
-  BaseDataView,
 ];
 
 export const dataSource = new DataSource({
