@@ -1,8 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from revenue_profit_calculator import RevenueProfitCalculator
-from sequestration_credits_calculator import SequestrationCreditsCalculator
-from utils import aggregate_costs, calculate_cost_plan, calculate_funding_gap, calculate_irr, calculate_npv, create_simple_plan, find_first_zero_value
+from data.src.restored_code.revenue_profit_calculator import RevenueProfitCalculator
+from data.src.restored_code.sequestration_credits_calculator import SequestrationCreditsCalculator
+from data.src.restored_code.utils import aggregate_costs, calculate_cost_plan, calculate_funding_gap, calculate_irr, calculate_npv, create_simple_plan, find_first_zero_value
 
 class CostCalculator:
     def __init__(self, project):
@@ -73,8 +73,12 @@ class CostCalculator:
             self.calculate_long_term_project_operating
         ]
         for cost_func in cost_functions:
-            cost_plan = cost_func()
-            aggregate_costs(cost_plan, self.opex_total_cost_plan)
+            try:
+                cost_plan = cost_func()
+                aggregate_costs(cost_plan, self.opex_total_cost_plan)
+            except Exception:
+                print(f'Error calculating {cost_func.__name__}')
+                a = 1
         return self.opex_total_cost_plan
 
     def calculate_feasibility_analysis_cost(self):
@@ -136,7 +140,8 @@ class CostCalculator:
         first_zero_value = find_first_zero_value(implementation_labor_cost_plan)
         maintenance_end_year = first_zero_value + maintenance_duration - 1 if self.project.project_size_ha / self.project.restoration_rate <= 20 else self.project.default_project_length + maintenance_duration
         maintenance_cost_plan = {year: 0 for year in range(-4, self.project.default_project_length + 1) if year != 0}
-        for year in range(1, maintenance_end_year + 1):
+        ## TODO: !!! Parsing to int as maintenance_end_year is a np.int64 value here
+        for year in range(1, int(maintenance_end_year) + 1):
             if year <= maintenance_end_year:
                 maintenance_cost_plan[year] = base_cost
         return maintenance_cost_plan

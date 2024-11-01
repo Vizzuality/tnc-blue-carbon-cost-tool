@@ -48,9 +48,35 @@ Project = BlueCarbonProject(
 ## Aqui ya tengo los parametros necesarios para calcular el proyecto
 #print(Project.get_project_parameters())
 
-
-
-
+# Project.set_additional_assumptions(
+#     # verification_frequency,
+#     # discount_rate,
+#     # carbon_price_increase,
+#     buffer=0.28,
+#     # baseline_reassessment_frequency,
+#     conservation_project_length=30,
+#     # restoration_project_length,
+#     # restoration_rate
+# )
+#
+# Project.override_cost_input(
+#     feasibility_analysis=30000
+#     # conservation_planning_and_admin,
+#     # data_collection_and_field_cost,
+#     # community_representation,
+#     # blue_carbon_project_planning,
+#     # establishing_carbon_rights,
+#     # validation,
+#     # implementation_labor,
+#     # monitoring,
+#     # maintenance,
+#     # community_benefit_sharing_fund,
+#     # carbon_standard_fees,
+#     # baseline_reassessment,
+#     # MRV,
+#     # long_term_project_operating,
+#     # financing_cost
+# )
 
 cost_calculator = CostCalculator(Project)
 

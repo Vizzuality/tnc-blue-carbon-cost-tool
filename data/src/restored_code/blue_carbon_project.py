@@ -4,7 +4,7 @@
 # Source timestamp: 2024-10-23 09:26:09 UTC (1729675569)
 
 import logging
-from utils import get_value_from_master_table, initialize_restoration_plan, load_country_code
+from data.src.restored_code.utils import get_value_from_master_table, initialize_restoration_plan, load_country_code
 
 
 class BlueCarbonProject:
