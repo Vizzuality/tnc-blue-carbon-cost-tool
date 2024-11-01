@@ -7,9 +7,9 @@ import {
   ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { Country } from "../country.entity";
-import { ECOSYSTEM } from "../ecosystem.enum";
-import { ACTIVITY } from "../activity.enum";
+import { Country } from "@shared/entities/country.entity";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { ACTIVITY } from "@shared/entities/activity.enum";
 
 @Entity("project_size")
 @Unique(["country", "ecosystem", "activity"])

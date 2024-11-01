@@ -8,7 +8,7 @@ import {
   BeforeInsert,
   BeforeUpdate,
 } from "typeorm";
-import { Country } from "../country.entity";
+import { Country } from "@shared/entities/country.entity";
 
 export enum INPUT_SELECTION {
   INPUT_1 = "Input 1",

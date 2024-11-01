@@ -8,8 +8,8 @@ import {
   BeforeUpdate,
   Unique,
 } from "typeorm";
-import { Country } from "../country.entity";
-import { ECOSYSTEM } from "../ecosystem.enum";
+import { Country } from "@shared/entities/country.entity";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 export enum SEQUESTRATION_RATE_TIER_TYPES {
   TIER_2 = "Tier 2 - Country-specific rate",

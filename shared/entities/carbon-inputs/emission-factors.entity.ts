@@ -8,8 +8,8 @@ import {
   BeforeUpdate,
   Unique,
 } from "typeorm";
-import { Country } from "../country.entity";
-import { ECOSYSTEM } from "../ecosystem.enum";
+import { Country } from "@shared/entities/country.entity";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 export enum EMISSION_FACTORS_TIER_TYPES {
   TIER_2 = "Tier 2 - Country-specific emission factor",

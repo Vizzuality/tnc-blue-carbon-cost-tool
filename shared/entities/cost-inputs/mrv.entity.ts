@@ -6,7 +6,7 @@ import {
   ManyToOne,
   Unique,
 } from "typeorm";
-import { Country } from "../country.entity";
+import { Country } from "@shared/entities/country.entity";
 
 @Entity("mrv")
 @Unique(["country"])

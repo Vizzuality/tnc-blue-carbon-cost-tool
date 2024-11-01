@@ -6,8 +6,8 @@ import {
   ManyToOne,
   Unique,
 } from "typeorm";
-import { Country } from "../country.entity";
-import { ECOSYSTEM } from "../ecosystem.enum";
+import { Country } from "@shared/entities/country.entity";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 @Entity("ecosystem_loss")
 @Unique(["country", "ecosystem"])
