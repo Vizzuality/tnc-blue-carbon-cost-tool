@@ -5,12 +5,14 @@ import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
+import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
 
 @Controller()
 export class CustomProjectsController {
   constructor(
     private readonly countries: CountriesService,
     private readonly dataSource: DataSource,
+    private readonly customProjects: CustomProjectsService,
   ) {}
 
   @TsRestHandler(customProjectContract.getAvailableCountries)
@@ -39,16 +41,17 @@ export class CustomProjectsController {
     );
   }
 
-  // @TsRestHandler(customProjectContract.createCustomProject)
-  // async create(): Promise<ControllerResponse> {
-  //   return tsRestHandler(
-  //     customProjectContract.createCustomProject,
-  //     async ({ body }) => {
-  //       // return {
-  //       //   status: 201,
-  //       //   body: null,
-  //       // };
-  //     },
-  //   );
-  // }
+  @TsRestHandler(customProjectContract.createCustomProject)
+  async create(): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.createCustomProject,
+      async ({ body }) => {
+        const customProject = await this.customProjects.create(body);
+        return {
+          status: 201,
+          body: { data: customProject },
+        };
+      },
+    );
+  }
 }
