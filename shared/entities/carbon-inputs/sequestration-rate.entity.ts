@@ -17,6 +17,9 @@ export enum SEQUESTRATION_RATE_TIER_TYPES {
   TIER_1 = "Tier 1 - IPCC default value",
 }
 
+// TODO: According to the calculation notebooks, we might be missing a Tier 3, which is a user-defined value, not sure if this should be stored as default or
+//       just be provided by the user, but we need to somehow make it as an available option
+
 @Entity("sequestration_rate")
 @Unique(["country", "ecosystem"])
 export class SequestrationRate extends BaseEntity {
