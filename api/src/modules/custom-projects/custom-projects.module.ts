@@ -4,9 +4,14 @@ import { CountriesModule } from '@api/modules/countries/countries.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CustomProjectsController } from './custom-projects.controller';
+import { CalculationsModule } from '@api/modules/calculations/calculations.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CustomProject]), CountriesModule],
+  imports: [
+    TypeOrmModule.forFeature([CustomProject]),
+    CountriesModule,
+    CalculationsModule,
+  ],
   providers: [CustomProjectsService],
   controllers: [CustomProjectsController],
 })

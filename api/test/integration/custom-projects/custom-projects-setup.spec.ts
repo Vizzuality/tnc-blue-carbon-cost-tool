@@ -29,7 +29,6 @@ describe('Create Custom Projects - Setup', () => {
     const response = await testManager
       .request()
       .get(customProjectContract.getDefaultAssumptions.path);
-    console.log(response.body);
 
     expect(response.body.data).toHaveLength(18);
   });
