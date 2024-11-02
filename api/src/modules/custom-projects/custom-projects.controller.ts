@@ -1,26 +1,54 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, HttpStatus } from '@nestjs/common';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { DataSource } from 'typeorm';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
+import { ControllerResponse } from '@api/types/controller-response.type';
+import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 
-@Controller('custom-projects')
+@Controller()
 export class CustomProjectsController {
   constructor(
     private readonly countries: CountriesService,
     private readonly dataSource: DataSource,
   ) {}
 
-  @Get('available-countries')
-  async getAvailableCountriesToCreateACustomProject() {
-    const data =
-      await this.countries.getAvailableCountriesToCreateACustomProject();
-    return { data };
+  @TsRestHandler(customProjectContract.getAvailableCountries)
+  async getAvailableCountriesToCreateACustomProject(): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.getAvailableCountries,
+      async () => {
+        const data =
+          await this.countries.getAvailableCountriesToCreateACustomProject();
+        return { body: { data }, status: HttpStatus.OK };
+      },
+    );
   }
 
   // TODO: This should go in another controller, probably methodology controller. according to the design
-  @Get('/assumptions')
-  async getAssumptions() {
-    const data = await this.dataSource.getRepository(ModelAssumptions).find();
-    return { data };
+  @TsRestHandler(customProjectContract.getDefaultAssumptions)
+  async getAssumptions(): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.getDefaultAssumptions,
+      async () => {
+        const data = await this.dataSource
+          .getRepository(ModelAssumptions)
+          .find();
+        return { body: { data }, status: HttpStatus.OK };
+      },
+    );
   }
+
+  // @TsRestHandler(customProjectContract.createCustomProject)
+  // async create(): Promise<ControllerResponse> {
+  //   return tsRestHandler(
+  //     customProjectContract.createCustomProject,
+  //     async ({ body }) => {
+  //       // return {
+  //       //   status: 201,
+  //       //   body: null,
+  //       // };
+  //     },
+  //   );
+  // }
 }
