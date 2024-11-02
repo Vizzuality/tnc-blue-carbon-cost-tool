@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
-import { CustomProjectsService } from './custom-projects.service';
+import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
+import { CountriesModule } from '@api/modules/countries/countries.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CustomProject } from '@shared/entities/custom-project.entity';
 
 @Module({
-  providers: [CustomProjectsService]
+  imports: [TypeOrmModule.forFeature([CustomProject]), CountriesModule],
+  providers: [CustomProjectsService],
 })
 export class CustomProjectsModule {}

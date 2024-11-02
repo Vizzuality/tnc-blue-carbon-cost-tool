@@ -29,6 +29,7 @@ import { User } from "@shared/entities/users/user.entity";
 import { BaseSize } from "@shared/entities/base-size.entity";
 import { BaseIncrease } from "@shared/entities/base-increase.entity";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
+import { CustomProject } from "@shared/entities/custom-project.entity";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -62,4 +63,5 @@ export const COMMON_DATABASE_ENTITIES = [
   BaseSize,
   BaseIncrease,
   ModelAssumptions,
+  CustomProject,
 ];
