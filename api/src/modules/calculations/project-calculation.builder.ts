@@ -1,12 +1,18 @@
 import { BaseDataView } from '@shared/entities/base-data.view';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
-import { BaseSize } from '@shared/entities/base-size.entity';
-import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { RESTORATION_ACTIVITY_SUBTYPE } from '@shared/entities/projects.entity';
 import { SEQUESTRATION_RATE_TIER_TYPES } from '@shared/entities/carbon-inputs/sequestration-rate.entity';
 import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
+
+/**
+ * @notes: There is a clear distinction between the data needed depending on the activity, and the ecosystem. We will probably need to create a class for each of the activities,
+ * and then have a factory that will create the correct class depending on the activity and ecosystem.
+ *
+ * BaseSize and BaseIncrease are not used in the example class of the notebook, but they are later used in the constructor, so we don't need them here
+ *
+ */
 
 // TODO: This seems to be a mix of assumptions, base sizes and increases. Check with Data
 export const DEFAULT_STUFF = {
@@ -65,8 +71,6 @@ export class ProjectCalculationBuilder {
     carbonRevenuesToCover: string;
     baseData: BaseDataView;
     assumptions: ModelAssumptions;
-    baseSize: BaseSize;
-    baseIncrease: BaseIncrease;
     plantingSuccessRate: number;
     sequestrationRateUsed: SEQUESTRATION_RATE_TIER_TYPES;
     projectSpecificSequestrationRate: number;
@@ -94,7 +98,7 @@ export class ProjectCalculationBuilder {
     );
     this.lossRateUsed = config.lossRateUsed;
     this.projectSpecificLossRate = config.projectSpecificLossRate;
-    this.setPlantingSuccessRate();
+    //this.setPlantingSuccessRate();
     this.setLossRate();
     this.emissionFactorUsed = config.emissionFactorUsed;
     this.getEmissionFactor();
@@ -112,19 +116,19 @@ export class ProjectCalculationBuilder {
     }
   }
 
-  private setPlantingSuccessRate() {
-    // TODO: In the code this method does not set any value to any property
-    if (this.activity != ACTIVITY.RESTORATION) {
-      throw new Error(
-        'Planting success rate is only available for restoration projects',
-      );
-    }
-    if (this.activitySubType === 'Planting' && !this.plantingSuccessRate) {
-      throw new Error(
-        'Planting success rate is required for planting projects',
-      );
-    }
-  }
+  // private setPlantingSuccessRate() {
+  //   // TODO: In the code this method does not set any value to any property
+  //   if (this.activity != ACTIVITY.RESTORATION) {
+  //     throw new Error(
+  //       'Planting success rate is only available for restoration projects',
+  //     );
+  //   }
+  //   if (this.activitySubType === 'Planting' && !this.plantingSuccessRate) {
+  //     throw new Error(
+  //       'Planting success rate is required for planting projects',
+  //     );
+  //   }
+  // }
 
   private setImplementationLabor() {
     if (this.activity === ACTIVITY.CONSERVATION) {

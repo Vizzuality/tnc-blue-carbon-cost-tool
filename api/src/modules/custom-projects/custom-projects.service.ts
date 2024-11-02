@@ -24,7 +24,17 @@ export class CustomProjectsService extends AppBaseService<
 
   async create(dto: CreateCustomProjectDto): Promise<any> {
     const { countryCode, ecosystem, activity } = dto;
-    return this.calculationEngine.getBaseData({
+    const { baseData, baseSize, baseIncrease, defaultAssumptions } =
+      await this.calculationEngine.getBaseData({
+        countryCode,
+        ecosystem,
+        activity,
+      });
+    return this.calculationEngine.buildProject({
+      baseData,
+      baseSize,
+      baseIncrease,
+      defaultAssumptions,
       countryCode,
       ecosystem,
       activity,
