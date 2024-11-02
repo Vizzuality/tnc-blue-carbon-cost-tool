@@ -5,6 +5,8 @@ import { Country } from '@shared/entities/country.entity';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { BaseDataView } from '@shared/entities/base-data.view';
+import { BaseSize } from '@shared/entities/base-size.entity';
+import { BaseIncrease } from '@shared/entities/base-increase.entity';
 
 export type GetBaseData = {
   countryCode: Country['code'];
@@ -15,6 +17,8 @@ export type GetBaseData = {
 export type BaseDataForCalculation = {
   defaultAssumptions: ModelAssumptions[];
   baseData: BaseDataView;
+  baseSize: BaseSize[];
+  baseIncrease: BaseIncrease[];
 };
 
 @Injectable()
@@ -33,9 +37,13 @@ export class CalculationEngine {
           activity: filter.activity,
         },
       });
+      const baseSize = await manager.getRepository(BaseSize).find();
+      const baseIncrease = await manager.getRepository(BaseIncrease).find();
       return {
         defaultAssumptions,
         baseData,
+        baseSize,
+        baseIncrease,
       };
     });
   }
