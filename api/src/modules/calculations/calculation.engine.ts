@@ -7,6 +7,8 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { BaseDataView } from '@shared/entities/base-data.view';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
+import { ProjectCalculationBuilder } from '@api/modules/calculations/project-calculation.builder';
+import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
 
 export type GetBaseData = {
   countryCode: Country['code'];
@@ -45,6 +47,41 @@ export class CalculationEngine {
         baseSize,
         baseIncrease,
       };
+    });
+  }
+
+  buildProject(data: any) {
+    const {
+      countryCode,
+      ecosystem,
+      activity,
+      activitySubType,
+      baseData,
+      assumptions,
+      plantingSuccessRate,
+      sequestrationRateUsed,
+      projectSpecificSequestrationRate,
+    } = data;
+    const carbonPrice = 20;
+    const carbonRevenuesToCover = 'Opex';
+    const lossRateUsed = 'project-specific';
+    const projectSpecificLossRate = 0.001;
+    const emissionFactorUsed = EMISSION_FACTORS_TIER_TYPES.TIER_2;
+    return new ProjectCalculationBuilder({
+      countryCode,
+      ecosystem,
+      activity,
+      activitySubType,
+      carbonPrice,
+      carbonRevenuesToCover,
+      baseData,
+      assumptions,
+      plantingSuccessRate,
+      sequestrationRateUsed,
+      projectSpecificSequestrationRate,
+      projectSpecificLossRate,
+      lossRateUsed,
+      emissionFactorUsed,
     });
   }
 }
