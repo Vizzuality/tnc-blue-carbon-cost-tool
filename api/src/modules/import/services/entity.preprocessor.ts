@@ -2,7 +2,6 @@ import { ExcelEstablishingCarbonRights } from './../dtos/excel-establishing-carb
 import { Injectable } from '@nestjs/common';
 
 import { Country } from '@shared/entities/country.entity';
-import { ExcelMasterTable } from '@api/modules/import/dtos/excel-base-data.dto';
 import { Project } from '@shared/entities/projects.entity';
 import { ExcelProjects } from '@api/modules/import/dtos/excel-projects.dto';
 import { ExcelProjectSize } from '@api/modules/import/dtos/excel-project-size.dto';
@@ -62,6 +61,14 @@ import { MonitoringCost } from '@shared/entities/cost-inputs/monitoring.entity';
 import { MRV } from '@shared/entities/cost-inputs/mrv.entity';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { ValidationCost } from '@shared/entities/cost-inputs/validation.entity';
+import { ExcelImplementationLaborCost } from '../dtos/excel-implementation-labor.dto';
+import { ImplementationLaborCost } from '@shared/entities/cost-inputs/implementation-labor-cost.entity';
+import { ExcelBaseSize } from '../dtos/excel-base-size.dto';
+import { ExcelBaseIncrease } from '../dtos/excel-base-increase.dto';
+import { ExcelModelAssumptions } from '../dtos/excel-model-assumptions.dto';
+import { BaseSize } from '@shared/entities/base-size.entity';
+import { BaseIncrease } from '@shared/entities/base-increase.entity';
+import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 
 export type ParsedDBEntities = {
   projects: Project[];
@@ -87,12 +94,15 @@ export type ParsedDBEntities = {
   restorableLand: RestorableLand[];
   sequestrationRate: SequestrationRate[];
   emissionFactors: EmissionFactors[];
+  implementationLaborCost: ImplementationLaborCost[];
+  baseSize: BaseSize[];
+  baseIncrease: BaseIncrease[];
+  modelAssumptions: ModelAssumptions[];
 };
 
 @Injectable()
 export class EntityPreprocessor {
   toDbEntities(raw: {
-    master_table: ExcelMasterTable[];
     Projects: ExcelProjects[];
     'Project size': ExcelProjectSize[];
     'Feasibility analysis': ExcelFeasibilityAnalysis[];
@@ -116,6 +126,10 @@ export class EntityPreprocessor {
     'Restorable land': ExcelRestorableLand[];
     'Sequestration rate': ExcelSequestrationRate[];
     'Emission factors': ExcelEmissionFactors[];
+    'Implementation labor': ExcelImplementationLaborCost[];
+    base_size_table: ExcelBaseSize[];
+    base_increase: ExcelBaseIncrease[];
+    'Model assumptions': ExcelModelAssumptions[];
   }): ParsedDBEntities {
     const processedProjects = this.processProjects(raw.Projects);
 
@@ -160,6 +174,9 @@ export class EntityPreprocessor {
     const communityCashFlow = this.processCommunityCashFlow(
       raw['Community cash flow'],
     );
+    const implementationLaborCost = this.processImplementationLaborCost(
+      raw['Implementation labor'],
+    );
 
     // proess carbon inputs
     const ecosystemExtent = this.processEcosystemExtent(
@@ -172,6 +189,13 @@ export class EntityPreprocessor {
     );
     const emissionFactors = this.processEmissionFactors(
       raw['Emission factors'],
+    );
+
+    // process other data
+    const baseSize = this.processBaseSize(raw.base_size_table);
+    const baseIncrease = this.processBaseIncrease(raw.base_increase);
+    const modelAssumptions = this.processModelAssumptions(
+      raw['Model assumptions'],
     );
 
     return {
@@ -198,7 +222,166 @@ export class EntityPreprocessor {
       restorableLand: restorableLand,
       sequestrationRate: sequestrationRate,
       emissionFactors: emissionFactors,
+      implementationLaborCost: implementationLaborCost,
+      baseSize: baseSize,
+      baseIncrease: baseIncrease,
+      modelAssumptions: modelAssumptions,
     };
+  }
+
+  private processModelAssumptions(raw: ExcelModelAssumptions[]) {
+    const parsedArray: ModelAssumptions[] = [];
+    raw.forEach((row: ExcelModelAssumptions) => {
+      const modelAssumption = new ModelAssumptions();
+      modelAssumption.name = row['Assumptions'];
+      modelAssumption.unit = row['Units'];
+      modelAssumption.value = row['Value'];
+      parsedArray.push(modelAssumption);
+    });
+    return parsedArray;
+  }
+
+  private processBaseIncrease(raw: ExcelBaseIncrease[]) {
+    const parsedArray: BaseIncrease[] = [];
+    raw.forEach((row: ExcelBaseIncrease) => {
+      const baseIncrease = new BaseIncrease();
+      baseIncrease.ecosystem = row.ecosystem as ECOSYSTEM;
+      baseIncrease.feasibilityAnalysis = this.stringToNumeric(
+        row['feasibility_analysis'],
+      );
+      baseIncrease.conservationPlanningAndAdmin = this.stringToNumeric(
+        row['conservation_planning_and_admin'],
+      );
+      baseIncrease.dataCollectionAndFieldCost = this.stringToNumeric(
+        row['data_collection_and_field_cost'],
+      );
+      baseIncrease.communityRepresentation = this.stringToNumeric(
+        row['community_representation'],
+      );
+      baseIncrease.blueCarbonProjectPlanning = this.stringToNumeric(
+        row['blue_carbon_project_planning'],
+      );
+      baseIncrease.establishingCarbonRights = this.stringToNumeric(
+        row['establishing_carbon_rights'],
+      );
+      baseIncrease.financingCost = this.stringToNumeric(row['financing_cost']);
+      baseIncrease.validation = this.stringToNumeric(row['validation']);
+      baseIncrease.monitoring = this.stringToNumeric(row['monitoring']);
+      baseIncrease.baselineReassessment = this.stringToNumeric(
+        row['baseline_reassessment'],
+      );
+      baseIncrease.mrv = this.stringToNumeric(row['MRV']);
+      baseIncrease.longTermProjectOperatingCost = this.stringToNumeric(
+        row['long_term_project_operating_cost'],
+      );
+      parsedArray.push(baseIncrease);
+    });
+    return parsedArray;
+  }
+
+  private processBaseSize(raw: ExcelBaseSize[]) {
+    const parsedArray: BaseSize[] = [];
+    raw.forEach((row: ExcelBaseSize) => {
+      const baseSize = new BaseSize();
+      baseSize.ecosystem = row.ecosystem as ECOSYSTEM;
+      baseSize.activity = row.activity as ACTIVITY;
+      baseSize.feasibilityAnalysis = this.stringToNumeric(
+        row.feasibility_analysis,
+      );
+      baseSize.conservationPlanningAndAdmin = this.stringToNumeric(
+        row['conservation_planning_and_admin'],
+      );
+      baseSize.dataCollectionAndFieldCost = this.stringToNumeric(
+        row['data_collection_and_field_cost'],
+      );
+      baseSize.communityRepresentation = this.stringToNumeric(
+        row['community_representation'],
+      );
+      baseSize.blueCarbonProjectPlanning = this.stringToNumeric(
+        row['blue_carbon_project_planning'],
+      );
+      baseSize.establishingCarbonRights = this.stringToNumeric(
+        row['establishing_carbon_rights'],
+      );
+      baseSize.financingCost = this.stringToNumeric(row['financing_cost']);
+      baseSize.validation = this.stringToNumeric(row['validation']);
+      baseSize.implementationLaborPlanting = this.stringToNumeric(
+        row['implementation_labor_planting'],
+      );
+      baseSize.implementationLaborHybrid = this.stringToNumeric(
+        row['implementation_labor_hybrid'],
+      );
+      baseSize.implementationLaborHydrology = this.stringToNumeric(
+        row['implementation_labor_hydrology'],
+      );
+      baseSize.monitoring = this.stringToNumeric(row['monitoring']);
+      baseSize.baselineReassessment = this.stringToNumeric(
+        row['baseline_reassessment'],
+      );
+      baseSize.mrv = this.stringToNumeric(row['MRV']);
+      baseSize.longTermProjectOperatingCost = this.stringToNumeric(
+        row['long_term_project_operating_cost'],
+      );
+      parsedArray.push(baseSize);
+    });
+    return parsedArray;
+  }
+
+  private processImplementationLaborCost(raw: ExcelImplementationLaborCost[]) {
+    const parsedArray: ImplementationLaborCost[] = [];
+    raw.forEach((row: ExcelImplementationLaborCost) => {
+      // mangrove implementation labor cost
+      const mangroveImplementationLaborCost = new ImplementationLaborCost();
+      mangroveImplementationLaborCost.ecosystem = ECOSYSTEM.MANGROVE;
+      mangroveImplementationLaborCost.country = {
+        code: row['Country code'],
+      } as Country;
+      mangroveImplementationLaborCost.plantingCost = this.stringToNumeric(
+        row['Mangrove planting'],
+      );
+      mangroveImplementationLaborCost.hybridCost = this.stringToNumeric(
+        row['Mangrove hybrid'],
+      );
+      mangroveImplementationLaborCost.hydrologyCost = this.stringToNumeric(
+        row['Mangrove hydrology'],
+      );
+      parsedArray.push(mangroveImplementationLaborCost);
+
+      // seagrass implementation labor cost
+      const seagrassImplementationLaborCost = new ImplementationLaborCost();
+      seagrassImplementationLaborCost.ecosystem = ECOSYSTEM.SEAGRASS;
+      seagrassImplementationLaborCost.country = {
+        code: row['Country code'],
+      } as Country;
+      seagrassImplementationLaborCost.plantingCost = this.stringToNumeric(
+        row['Seagrass planting'],
+      );
+      seagrassImplementationLaborCost.hybridCost = this.stringToNumeric(
+        row['Seagrass hybrid'],
+      );
+      seagrassImplementationLaborCost.hydrologyCost = this.stringToNumeric(
+        row['Seagrass hydrology'],
+      );
+      parsedArray.push(seagrassImplementationLaborCost);
+
+      // salt marsh implementation labor cost
+      const saltMarshImplementationLaborCost = new ImplementationLaborCost();
+      saltMarshImplementationLaborCost.ecosystem = ECOSYSTEM.SALT_MARSH;
+      saltMarshImplementationLaborCost.country = {
+        code: row['Country code'],
+      } as Country;
+      saltMarshImplementationLaborCost.plantingCost = this.stringToNumeric(
+        row['Salt marsh planting'],
+      );
+      saltMarshImplementationLaborCost.hybridCost = this.stringToNumeric(
+        row['Salt marsh hybrid'],
+      );
+      saltMarshImplementationLaborCost.hydrologyCost = this.stringToNumeric(
+        row['Salt marsh hydrology'],
+      );
+      parsedArray.push(saltMarshImplementationLaborCost);
+    });
+    return parsedArray;
   }
 
   private processEmissionFactors(raw: ExcelEmissionFactors[]) {

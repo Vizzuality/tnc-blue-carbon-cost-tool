@@ -3,7 +3,6 @@ import { User } from "@shared/entities/users/user.entity.js";
 import { ApiEventsEntity } from "@api/modules/api-events/api-events.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
 import { Project } from "@shared/entities/projects.entity.js";
-import { BaseDataView } from "@shared/entities/base-data.view.js";
 import { EcosystemExtent } from "@shared/entities/carbon-inputs/ecosystem-extent.entity.js";
 import { EcosystemLoss } from "@shared/entities/carbon-inputs/ecosystem-loss.entity.js";
 import { EmissionFactors } from "@shared/entities/carbon-inputs/emission-factors.entity.js";
@@ -26,6 +25,10 @@ import { MonitoringCost } from "@shared/entities/cost-inputs/monitoring.entity.j
 import { MRV } from "@shared/entities/cost-inputs/mrv.entity.js";
 import { ProjectSize } from "@shared/entities/cost-inputs/project-size.entity.js";
 import { ValidationCost } from "@shared/entities/cost-inputs/validation.entity.js";
+import { ImplementationLaborCost } from "@shared/entities/cost-inputs/implementation-labor-cost.entity.js";
+import { BaseSize } from "@shared/entities/base-size.entity.js";
+import { BaseIncrease } from "@shared/entities/base-increase.entity.js";
+import { ModelAssumptions } from "@shared/entities/model-assumptions.entity.js";
 
 // TODO: If we import the COMMON_DATABASE_ENTITIES from shared, we get an error where DataSouce is not set for a given entity
 export const ADMINJS_ENTITIES = [
@@ -55,7 +58,10 @@ export const ADMINJS_ENTITIES = [
   SequestrationRate,
   EcosystemExtent,
   Project,
-  BaseDataView,
+  ImplementationLaborCost,
+  BaseSize,
+  BaseIncrease,
+  ModelAssumptions,
 ];
 
 export const dataSource = new DataSource({

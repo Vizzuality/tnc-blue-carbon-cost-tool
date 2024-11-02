@@ -7,8 +7,9 @@ import {
   ManyToOne,
   BeforeInsert,
   BeforeUpdate,
+  JoinColumn,
 } from "typeorm";
-import { Country } from "../country.entity";
+import { Country } from "@shared/entities/country.entity";
 
 export enum INPUT_SELECTION {
   INPUT_1 = "Input 1",
@@ -23,6 +24,7 @@ export class BlueCarbonProjectPlanning extends BaseEntity {
   id: string;
 
   @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "country_code" })
   country: Country;
 
   @Column({

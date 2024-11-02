@@ -7,9 +7,10 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Unique,
+  JoinColumn,
 } from "typeorm";
-import { Country } from "../country.entity";
-import { ECOSYSTEM } from "../ecosystem.enum";
+import { Country } from "@shared/entities/country.entity";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 export enum SEQUESTRATION_RATE_TIER_TYPES {
   TIER_2 = "Tier 2 - Country-specific rate",
@@ -23,6 +24,7 @@ export class SequestrationRate extends BaseEntity {
   id: string;
 
   @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "country_code" })
   country: Country;
 
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
