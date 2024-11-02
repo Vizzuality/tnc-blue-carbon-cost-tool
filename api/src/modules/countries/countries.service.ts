@@ -26,7 +26,7 @@ export class CountriesService extends AppBaseService<
       .innerJoin(
         BaseDataView,
         'baseDataView',
-        'baseDataView.countryCode = country.code',
+        'baseDataView.country_code = country.code',
       )
       .getMany();
   }
