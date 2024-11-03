@@ -15,4 +15,8 @@ export interface CostInputs {
   mrv: number;
   longTermProjectOperating: number;
   financingCost: number;
+  lossRate?: number;
+  emissionFactor?: number;
+  // Not sure if projectSizeHa is a cost input
+  projectSizeHa?: number;
 }

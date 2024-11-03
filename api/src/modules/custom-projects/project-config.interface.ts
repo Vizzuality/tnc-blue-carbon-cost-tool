@@ -1,4 +1,5 @@
 import { BaseDataView } from '@shared/entities/base-data.view';
+import { ACTIVITY } from '@shared/entities/activity.enum';
 
 // TODO: This seems to be a mix of assumptions, base sizes and increases. Check with Data
 export const DEFAULT_STUFF = {
@@ -17,14 +18,17 @@ export const DEFAULT_STUFF = {
   DEFAULT_PROJECT_LENGTH: 40,
 };
 
+export type ProjectConfig = ConservationProjectConfig;
+
 export interface ConservationProjectConfig {
+  name: string;
+  activity: ACTIVITY;
   ecosystem: string;
   countryCode: string;
-  data: BaseDataView;
+  inputData: BaseDataView;
   projectSizeHa: number;
   carbonPrice?: number;
   carbonRevenuesToCover?: string;
-  lossRateUsed: string;
   projectSpecificLossRate?: number;
   emissionFactorUsed: string;
   tier3ProjectSpecificEmission?: string;
