@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
 import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CalculationEngine } from '@api/modules/calculations/calculation.engine';
 import { CustomProjectFactory } from '@api/modules/custom-projects/custom-project.factory';
 import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
+import { ConservationCostCalculator } from '@api/modules/calculations/conservation-cost.calculator';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -20,6 +21,7 @@ export class CustomProjectsService extends AppBaseService<
     public readonly repo: Repository<CustomProject>,
     public readonly calculationEngine: CalculationEngine,
     public readonly customProjectFactory: CustomProjectFactory,
+    public readonly dataSource: DataSource,
   ) {
     super(repo, 'customProject', 'customProjects');
   }
@@ -44,16 +46,12 @@ export class CustomProjectsService extends AppBaseService<
       emissionFactorUsed,
       projectSizeHa: baseData.projectSizeHa,
     });
-    return project;
-    //   return this.calculationEngine.buildProject({
-    //     baseData,
-    //     baseSize,
-    //     baseIncrease,
-    //     defaultAssumptions,
-    //     countryCode,
-    //     ecosystem,
-    //     activity,
-    //   });
-    // }
+
+    const calculator = new ConservationCostCalculator(
+      project,
+      baseIncrease,
+      baseSize,
+    );
+    return calculator;
   }
 }

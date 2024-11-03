@@ -18,8 +18,8 @@ export type GetBaseData = {
 export type BaseDataForCalculation = {
   defaultAssumptions: ModelAssumptions[];
   baseData: BaseDataView;
-  baseSize: BaseSize[];
-  baseIncrease: BaseIncrease[];
+  baseSize: BaseSize;
+  baseIncrease: BaseIncrease;
 };
 
 @Injectable()
@@ -38,8 +38,12 @@ export class CalculationEngine {
           activity: filter.activity,
         },
       });
-      const baseSize = await manager.getRepository(BaseSize).find();
-      const baseIncrease = await manager.getRepository(BaseIncrease).find();
+      const baseSize = await manager.getRepository(BaseSize).findOne({
+        where: { activity: filter.activity, ecosystem: filter.ecosystem },
+      });
+      const baseIncrease = await manager
+        .getRepository(BaseIncrease)
+        .findOne({ where: { ecosystem: filter.ecosystem } });
       return {
         defaultAssumptions,
         baseData,
