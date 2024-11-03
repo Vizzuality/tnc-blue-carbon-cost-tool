@@ -1,19 +1,31 @@
 import { ConservationProject } from '@api/modules/custom-projects/conservation.project';
 import { DEFAULT_STUFF } from '@api/modules/custom-projects/project-config.interface';
 import { CostCalculator } from '@api/modules/calculations/cost.calculator';
+import { BaseIncrease } from '@shared/entities/base-increase.entity';
+import { BaseSize } from '@shared/entities/base-size.entity';
 
 export class ConservationCostCalculator extends CostCalculator {
   project: ConservationProject;
-  // TODO: Project length depends on the activity and it seems to only be used in the calculation, so we can probably remove it from project instantiation
+  // TODO: Project length and starting point scaling depend on the activity and it seems to only be used in the calculation, so we can probably remove it from project instantiation
   conservationProjectLength: number = DEFAULT_STUFF.CONSERVATION_PROJECT_LENGTH;
+  startingPointScaling: number =
+    DEFAULT_STUFF.CONSERVATION_STARTING_POINT_SCALING;
   defaultProjectLength: number = DEFAULT_STUFF.DEFAULT_PROJECT_LENGTH;
   // TODO: Maybe instead of using capexTotal and opexTotal, we can use just totalCostPlan if the only difference is the type of cost
   capexTotalCostPlan: { [year: number]: number } = {};
   opexTotalCostPlan: { [year: number]: number } = {};
   totalCostPlan: { [year: number]: number } = {};
-  constructor(project: ConservationProject) {
+  baseIncrease: BaseIncrease;
+  baseSize: BaseSize;
+  constructor(
+    project: ConservationProject,
+    baseIncrease: BaseIncrease,
+    baseSize: BaseSize,
+  ) {
     super();
     this.project = project;
+    this.baseIncrease = baseIncrease;
+    this.baseSize = baseSize;
     this.capexTotalCostPlan = this.initializeCostPlan();
     this.opexTotalCostPlan = this.initializeCostPlan();
     this.totalCostPlan = this.initializeCostPlan();
@@ -58,4 +70,20 @@ export class ConservationCostCalculator extends CostCalculator {
       totalCostPlan[year] += costPlan[year];
     }
   }
+
+  // private calculateFeasibilityAnalysisCost(): { [year: number]: number } {
+  //   const totalBaseCost = this.calculateCostPlan(
+  //     this.project.baseSize,
+  //     this.project.baseIncrease,
+  //     this.project.projectSizeHa,
+  //     'feasibility_analysis',
+  //     this.project.feasibilityAnalysis,
+  //     this.project.activity,
+  //     this.project.ecosystem,
+  //   );
+  //   const feasibilityAnalysisCostPlan = this.createSimplePlan(totalBaseCost, [
+  //     -4,
+  //   ]);
+  //   return feasibilityAnalysisCostPlan;
+  // }
 }
