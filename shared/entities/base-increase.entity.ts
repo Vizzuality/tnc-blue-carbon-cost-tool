@@ -1,6 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
+// TODO: For this and other entities, we might consider using a transformer to parse the values to num, as decimal columns
+//       are returned as strings by default
 @Entity("base_increase")
 export class BaseIncrease extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
