@@ -19,4 +19,5 @@ export interface CostInputs {
   emissionFactor?: number;
   // Not sure if projectSizeHa is a cost input
   projectSizeHa?: number;
+  projectDevelopmentType?: string;
 }
