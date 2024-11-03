@@ -40,12 +40,12 @@ export class ConservationProject {
     this.name = projectConfig.name;
     this.ecosystem = projectConfig.ecosystem;
     this.countryCode = projectConfig.countryCode;
-    this.projectSizeHa = projectConfig.projectSizeHa;
-    this.carbonPrice = projectConfig.carbonPrice || 30;
+    this.projectSizeHa = Number(projectConfig.projectSizeHa);
+    this.carbonPrice = Number(projectConfig.carbonPrice) || 30;
     this.carbonRevenuesToCover = projectConfig.carbonRevenuesToCover || 'Opex';
     this.carbonRevenuesWillNotCover =
       this.carbonRevenuesToCover === 'Opex' ? 'Capex' : 'None';
-    this.lossRate = this.setLossRate(projectConfig.inputData);
+    this.lossRate = Number(this.setLossRate(projectConfig.inputData));
     this.emissionFactorUsed = projectConfig.emissionFactorUsed;
     this.tier3ProjectSpecificEmission =
       projectConfig.tier3ProjectSpecificEmission;
@@ -59,25 +59,29 @@ export class ConservationProject {
 
   private initializeCostInputs(baseData: BaseDataView): void {
     this.costInputs = {
-      feasibilityAnalysis: baseData.feasibilityAnalysis,
-      conservationPlanningAndAdmin: baseData.conservationPlanningAndAdmin,
-      dataCollectionAndFieldCost: baseData.dataCollectionAndFieldCost,
-      communityRepresentation: baseData.communityRepresentation,
-      blueCarbonProjectPlanning: baseData.blueCarbonProjectPlanning,
-      establishingCarbonRights: baseData.establishingCarbonRights,
-      validation: baseData.validation,
-      monitoring: baseData.monitoring,
-      maintenance: baseData.maintenance,
-      communityBenefitSharingFund: baseData.communityBenefitSharingFund,
-      carbonStandardFees: baseData.carbonStandardFees,
-      baselineReassessment: baseData.baselineReassessment,
-      mrv: baseData.mrv,
-      longTermProjectOperating: baseData.longTermProjectOperatingCost,
-      financingCost: baseData.financingCost,
+      feasibilityAnalysis: Number(baseData.feasibilityAnalysis),
+      conservationPlanningAndAdmin: Number(
+        baseData.conservationPlanningAndAdmin,
+      ),
+      dataCollectionAndFieldCost: Number(baseData.dataCollectionAndFieldCost),
+      communityRepresentation: Number(baseData.communityRepresentation),
+      blueCarbonProjectPlanning: Number(baseData.blueCarbonProjectPlanning),
+      establishingCarbonRights: Number(baseData.establishingCarbonRights),
+      validation: Number(baseData.validation),
+      monitoring: Number(baseData.monitoring),
+      maintenance: Number(baseData.maintenance),
+      communityBenefitSharingFund: Number(baseData.communityBenefitSharingFund),
+      carbonStandardFees: Number(baseData.carbonStandardFees),
+      baselineReassessment: Number(baseData.baselineReassessment),
+      mrv: Number(baseData.mrv),
+      longTermProjectOperating: Number(baseData.longTermProjectOperatingCost),
+      financingCost: Number(baseData.financingCost),
       implementationLabor: 0, // It's set to 0 for Conservation projects
-      // TODO: Not sure if the below 2 properties are cost inputs
-      lossRate: this.setLossRate(baseData),
-      projectSizeHa: baseData.projectSizeHa,
+      // TODO: Not sure if the below properties are cost inputs
+      lossRate: Number(this.setLossRate(baseData)),
+      projectSizeHa: Number(baseData.projectSizeHa),
+      // Below is not a numeric value: Development, Non-Development
+      projectDevelopmentType: baseData.otherCommunityCashFlow,
       //emissionFactor: this.setEmissionFactor(baseData),
     };
   }

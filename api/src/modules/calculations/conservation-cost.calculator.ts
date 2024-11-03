@@ -29,6 +29,7 @@ export class ConservationCostCalculator extends CostCalculator {
     this.capexTotalCostPlan = this.initializeCostPlan();
     this.opexTotalCostPlan = this.initializeCostPlan();
     this.totalCostPlan = this.initializeCostPlan();
+    this.calculateCapexTotal();
   }
 
   private initializeCostPlan(): { [year: number]: number } {
@@ -43,14 +44,14 @@ export class ConservationCostCalculator extends CostCalculator {
 
   private calculateCapexTotal(): { [year: number]: number } {
     const costFunctions = [
-      // this.calculateFeasibilityAnalysisCost,
-      // this.calculateConservationPlanningAndAdmin,
-      // this.calculateDataCollectionAndFieldCost,
-      // this.calculateCommunityRepresentation,
-      // this.calculateBlueCarbonProjectPlanning,
-      // this.calculateEstablishingCarbonRights,
-      // this.calculateValidation,
-      // this.calculateImplementationLabor,
+      this.calculateFeasibilityAnalysisCost,
+      this.calculateConservationPlanningAndAdmin,
+      this.calculateDataCollectionAndFieldCost,
+      this.calculateCommunityRepresentation,
+      this.calculateBlueCarbonProjectPlanning,
+      this.calculateEstablishingCarbonRights,
+      this.calculateValidation,
+      this.calculateImplementationLabor,
     ];
 
     for (const costFunc of costFunctions) {
@@ -59,6 +60,82 @@ export class ConservationCostCalculator extends CostCalculator {
     }
 
     return this.capexTotalCostPlan;
+  }
+
+  private calculateFeasibilityAnalysisCost(): { [year: number]: number } {
+    const totalBaseCost = this.calculateCostPlan('feasibilityAnalysis');
+    const feasibilityAnalysisCostPlan = this.createSimplePlan(totalBaseCost, [
+      -4,
+    ]);
+    return feasibilityAnalysisCostPlan;
+  }
+
+  private calculateConservationPlanningAndAdmin(): { [year: number]: number } {
+    const totalBaseCost = this.calculateCostPlan(
+      'conservationPlanningAndAdmin',
+    );
+    const conservationPlanningAndAdminCostPlan = this.createSimplePlan(
+      totalBaseCost,
+      [-4, -3, -2, -1],
+    );
+    return conservationPlanningAndAdminCostPlan;
+  }
+
+  private calculateDataCollectionAndFieldCost(): { [year: number]: number } {
+    const totalBaseCost = this.calculateCostPlan('dataCollectionAndFieldCost');
+    const dataCollectionAndFieldCostPlan = this.createSimplePlan(
+      totalBaseCost,
+      [-4, -3, -2],
+    );
+    return dataCollectionAndFieldCostPlan;
+  }
+
+  private calculateCommunityRepresentation(): { [year: number]: number } {
+    const totalBaseCost = this.calculateCostPlan('communityRepresentation');
+    const projectDevelopmentType =
+      this.project.costInputs.projectDevelopmentType;
+    const initialCostPlan =
+      projectDevelopmentType === 'Development' ? totalBaseCost : 0;
+    const communityRepresentationCostPlan = this.createSimplePlan(
+      totalBaseCost,
+      [-4, -3, -2],
+    );
+    communityRepresentationCostPlan[-4] = initialCostPlan;
+    return communityRepresentationCostPlan;
+  }
+
+  private calculateBlueCarbonProjectPlanning(): { [year: number]: number } {
+    const totalBaseCost = this.calculateCostPlan('blueCarbonProjectPlanning');
+    const blueCarbonProjectPlanningCostPlan = this.createSimplePlan(
+      totalBaseCost,
+      [-1],
+    );
+    return blueCarbonProjectPlanningCostPlan;
+  }
+
+  private calculateEstablishingCarbonRights(): { [year: number]: number } {
+    const totalBaseCost = this.calculateCostPlan('establishingCarbonRights');
+    const establishingCarbonRightsCostPlan = this.createSimplePlan(
+      totalBaseCost,
+      [-3, -2, -1],
+    );
+    return establishingCarbonRightsCostPlan;
+  }
+
+  private calculateValidation(): { [year: number]: number } {
+    const totalBaseCost = this.calculateCostPlan('validation');
+    const validationCostPlan = this.createSimplePlan(totalBaseCost, [-1]);
+    return validationCostPlan;
+  }
+
+  private calculateImplementationLabor(): { [year: number]: number } {
+    // TODO: This needs SequestrationCreditsCalculator to be implemented
+    const totalBaseCost = this.project.costInputs.implementationLabor;
+    return totalBaseCost as any;
+    // const implementationLaborCostPlan = this.createSimplePlan(totalBaseCost, [
+    //   -1,
+    // ]);
+    // return implementationLaborCostPlan;
   }
 
   private aggregateCosts(
@@ -71,19 +148,28 @@ export class ConservationCostCalculator extends CostCalculator {
     }
   }
 
-  // private calculateFeasibilityAnalysisCost(): { [year: number]: number } {
-  //   const totalBaseCost = this.calculateCostPlan(
-  //     this.project.baseSize,
-  //     this.project.baseIncrease,
-  //     this.project.projectSizeHa,
-  //     'feasibility_analysis',
-  //     this.project.feasibilityAnalysis,
-  //     this.project.activity,
-  //     this.project.ecosystem,
-  //   );
-  //   const feasibilityAnalysisCostPlan = this.createSimplePlan(totalBaseCost, [
-  //     -4,
-  //   ]);
-  //   return feasibilityAnalysisCostPlan;
-  // }
+  private calculateCostPlan(baseKey: any): number {
+    const increasedBy: number = parseFloat(this.baseIncrease[baseKey]);
+    const baseCostValue: number = parseFloat(this.baseSize[baseKey]);
+    const sizeDifference =
+      this.project.projectSizeHa - this.startingPointScaling;
+    const value = Math.max(Math.round(sizeDifference / baseCostValue), 0);
+
+    const totalBaseCost = baseCostValue + increasedBy * value * baseCostValue;
+    return totalBaseCost;
+  }
+
+  private createSimplePlan(
+    totalBaseCost: number,
+    years?: number[],
+  ): { [year: number]: number } {
+    if (!years) {
+      years = [-4, -3, -2, -1];
+    }
+    const plan: { [year: number]: number } = {};
+    for (const year of years) {
+      plan[year] = totalBaseCost;
+    }
+    return plan;
+  }
 }
