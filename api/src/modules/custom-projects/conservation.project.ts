@@ -23,6 +23,7 @@ export class ConservationProject {
   discountRate: number = DEFAULT_STUFF.DISCOUNT_RATE;
   verificationFrequency: number = DEFAULT_STUFF.VERIFICATION_FREQUENCY;
   carbonPriceIncrease: number = DEFAULT_STUFF.CARBON_PRICE_INCREASE;
+  restorationRate: number = DEFAULT_STUFF.RESTORATION_RATE;
   buffer: number = DEFAULT_STUFF.BUFFER;
   projectSpecificLossRate?: number;
   emissionFactorUsed: string;
@@ -70,6 +71,7 @@ export class ConservationProject {
       validation: Number(baseData.validation),
       monitoring: Number(baseData.monitoring),
       maintenance: Number(baseData.maintenance),
+      maintenanceDuration: Number(baseData.maintenanceDuration),
       communityBenefitSharingFund: Number(baseData.communityBenefitSharingFund),
       carbonStandardFees: Number(baseData.carbonStandardFees),
       baselineReassessment: Number(baseData.baselineReassessment),

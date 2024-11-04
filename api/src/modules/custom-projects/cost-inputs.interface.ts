@@ -9,6 +9,7 @@ export interface CostInputs {
   implementationLabor: number;
   monitoring: number;
   maintenance: number;
+  maintenanceDuration: number;
   communityBenefitSharingFund: number;
   carbonStandardFees: number;
   baselineReassessment: number;
