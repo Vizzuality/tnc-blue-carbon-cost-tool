@@ -15,4 +15,10 @@ export const FILTER_KEYS = [
   "projectSizeFilter",
   "priceType",
   "totalCost",
+  "countryCode",
+  "ecosystem",
+  "activity",
+  "activitySubtype",
+  "cost",
+  "abatementPotential",
 ] as const;

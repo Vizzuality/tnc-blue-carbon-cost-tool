@@ -6,22 +6,26 @@ import { FillLayerSpecification } from "mapbox-gl";
 import { client } from "@/lib/query-client";
 import { geometriesKeys } from "@/lib/query-keys";
 
-import { useSyncCountry } from "@/app/(projects)/url-store";
+import { useGlobalFilters } from "@/app/(projects)/url-store";
 
 import { generateColorRamp } from "@/containers/projects/map/layers/projects/utils";
 
 export default function ProjectsLayer() {
-  const [country] = useSyncCountry();
+  const [filters] = useGlobalFilters();
 
-  const queryKey = country
-    ? geometriesKeys.country(country).queryKey
-    : geometriesKeys.all.queryKey;
+  const queryKey = geometriesKeys.all(filters).queryKey;
 
   const { data, isSuccess } = client.projects.getProjectsMap.useQuery(
     queryKey,
     {
       query: {
-        filter: { ...(country && { countryCode: [country] }) },
+        filter: {
+          ...(filters.countryCode && { countryCode: [filters.countryCode] }),
+          totalCost: filters.cost,
+          abatementPotential: filters.abatementPotential,
+          ecosystem: filters.ecosystem,
+          activity: filters.activity,
+        },
       },
     },
     {
