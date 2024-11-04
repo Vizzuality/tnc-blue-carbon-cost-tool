@@ -54,11 +54,12 @@ export class CustomProjectsService extends AppBaseService<
       baseIncrease,
       baseSize,
     );
-    //return calculator.capexTotalCostPlan;
+    // TODO: Also define clearly which are the outputs that the consumer expects, that is, relevant for the custom project
 
     return {
-      capexTotalCostPlan: calculator.capexTotalCostPlan,
-      opexTotalCostPlan: calculator.opexTotalCostPlan,
+      estimates: calculator.getCostEstimates(),
+      summary: calculator.getSummary(),
+      yearBreakdown: calculator.getYearlyCostBreakdown(),
     };
   }
 }
