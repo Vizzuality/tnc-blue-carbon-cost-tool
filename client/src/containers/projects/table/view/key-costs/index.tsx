@@ -57,13 +57,14 @@ export function KeyCostsTable() {
     pagination,
   }).queryKey;
 
-  console.log(TABLE_COLUMNS[0]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { totalCost, ...filtersWithoutTotalCost } = filters;
 
   const { data, isSuccess } = client.projects.getProjects.useQuery(
     queryKey,
     {
       query: {
-        ...filtersToQueryParams(filters),
+        ...filtersToQueryParams(filtersWithoutTotalCost),
         fields: TABLE_COLUMNS.map((column) => column.accessorKey),
         ...(sorting.length > 0 && {
           sort: sorting.map((sort) => `${sort.desc ? "" : "-"}${sort.id}`),

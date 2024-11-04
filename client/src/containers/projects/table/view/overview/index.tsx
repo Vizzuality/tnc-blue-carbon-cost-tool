@@ -59,11 +59,14 @@ export function OverviewTable() {
 
   const columnsBasedOnFilters = columns(filters);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { totalCost, ...filtersWithoutTotalCost } = filters;
+
   const { data, isSuccess } = client.projects.getProjects.useQuery(
     queryKey,
     {
       query: {
-        ...filtersToQueryParams(filters),
+        ...filtersToQueryParams(filtersWithoutTotalCost),
         fields: columnsBasedOnFilters.map((column) => column.accessorKey),
         ...(sorting.length > 0 && {
           sort: sorting.map((sort) => `${sort.desc ? "" : "-"}${sort.id}`),
