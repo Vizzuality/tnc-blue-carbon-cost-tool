@@ -12,12 +12,17 @@ export class ConservationCostCalculator extends CostCalculator {
     DEFAULT_STUFF.CONSERVATION_STARTING_POINT_SCALING;
   defaultProjectLength: number = DEFAULT_STUFF.DEFAULT_PROJECT_LENGTH;
   restorationRate: number = DEFAULT_STUFF.RESTORATION_RATE;
+  discountRate: number = DEFAULT_STUFF.DISCOUNT_RATE;
   // TODO: Maybe instead of using capexTotal and opexTotal, we can use just totalCostPlan if the only difference is the type of cost
   baselineReassessmentFrequency: number =
     DEFAULT_STUFF.BASELINE_REASSESSMENT_FREQUENCY;
   capexTotalCostPlan: { [year: number]: number } = {};
   opexTotalCostPlan: { [year: number]: number } = {};
   totalCostPlan: { [year: number]: number } = {};
+  totalCapex: number;
+  totalCapexNPV: number;
+  totalOpexNPV: number;
+  totalNPV: number;
   baseIncrease: BaseIncrease;
   baseSize: BaseSize;
   constructor(
@@ -34,6 +39,19 @@ export class ConservationCostCalculator extends CostCalculator {
     this.totalCostPlan = this.initializeCostPlan();
     this.calculateCapexTotal();
     this.calculateOpexTotal();
+    this.totalCapex = Object.values(this.capexTotalCostPlan).reduce(
+      (sum, value) => sum + value,
+      0,
+    );
+    this.totalCapexNPV = this.calculateNPV(
+      this.capexTotalCostPlan,
+      this.discountRate,
+    );
+    this.totalOpexNPV = this.calculateNPV(
+      this.opexTotalCostPlan,
+      this.discountRate,
+    );
+    this.totalNPV = this.totalCapexNPV + this.totalOpexNPV;
   }
 
   private initializeCostPlan(): { [year: number]: number } {
@@ -349,5 +367,27 @@ export class ConservationCostCalculator extends CostCalculator {
       plan[year] = totalBaseCost;
     }
     return plan;
+  }
+
+  private calculateNPV(
+    costPlan: { [year: number]: number },
+    discountRate: number,
+    actualYear: number = -4,
+  ): number {
+    let npv = 0;
+
+    for (const [yearStr, cost] of Object.entries(costPlan)) {
+      const year = Number(yearStr);
+
+      if (year === actualYear) {
+        npv += cost;
+      } else if (year > 0) {
+        npv += cost / Math.pow(1 + discountRate, year + (-actualYear - 1));
+      } else {
+        npv += cost / Math.pow(1 + discountRate, -actualYear + year);
+      }
+    }
+
+    return npv;
   }
 }
