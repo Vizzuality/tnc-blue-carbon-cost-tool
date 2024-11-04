@@ -17,20 +17,27 @@ class CostCalculator:
         self.total_capex = sum(self.capex_cost_plan.values())
         self.total_capex_NPV = calculate_npv(self.capex_cost_plan, self.project.discount_rate)
         self.opex_cost_plan = self.calculate_opex_total()
+
         self.total_opex = sum(self.opex_cost_plan.values())
+
         self.total_opex_NPV = calculate_npv(self.opex_cost_plan, self.project.discount_rate)
+
         self.total_NPV = self.total_capex_NPV + self.total_opex_NPV
+
         self.estimated_revenue_plan = self.revenue_profit_calculator.calculate_est_revenue()
         self.total_revenue = sum(self.estimated_revenue_plan.values())
         self.total_revenue_NPV = calculate_npv(self.estimated_revenue_plan, self.project.discount_rate)
         self.total_credits_plan = self.sequestration_credits_calculator.calculate_est_credits_issued()
         self.credits_issued = sum(self.total_credits_plan.values())
         self.cost_per_tCO2e = self.total_NPV / self.credits_issued
+
         self.cost_per_ha = self.total_NPV / self.project.project_size_ha
         if self.project.carbon_revenues_to_cover == 'Opex':
             self.NPV_covering_cost = self.total_revenue_NPV - self.total_opex_NPV
         else:
             self.NPV_covering_cost = self.total_revenue_NPV - self.total_NPV
+
+
         self.financing_cost = float(self.project.financing_cost) * float(self.total_capex)
         if self.NPV_covering_cost < 0:
             self.funding_gap_NPV = -self.NPV_covering_cost
