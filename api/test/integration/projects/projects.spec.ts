@@ -87,7 +87,7 @@ describe('Projects', () => {
       );
     });
 
-    test.only('Should return a list of projects filtered by project name', async () => {
+    test('Should return a list of projects filtered by project name', async () => {
       const projects: Project[] = [];
       projects.push(
         await testManager
