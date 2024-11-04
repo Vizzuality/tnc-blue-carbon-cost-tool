@@ -52,6 +52,11 @@ export class CustomProjectsService extends AppBaseService<
       baseIncrease,
       baseSize,
     );
-    return calculator.capexTotalCostPlan;
+    //return calculator.capexTotalCostPlan;
+
+    return {
+      capexTotalCostPlan: calculator.capexTotalCostPlan,
+      opexTotalCostPlan: calculator.opexTotalCostPlan,
+    };
   }
 }

@@ -1,5 +1,6 @@
 import { ViewColumn, ViewEntity } from "typeorm";
 
+// TODO: Maybe this could be renamed to CostInputs
 @ViewEntity({
   name: "base_data_view",
   expression: `
