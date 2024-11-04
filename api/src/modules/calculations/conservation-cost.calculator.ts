@@ -3,6 +3,9 @@ import { DEFAULT_STUFF } from '@api/modules/custom-projects/project-config.inter
 import { CostCalculator } from '@api/modules/calculations/cost.calculator';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { BaseSize } from '@shared/entities/base-size.entity';
+import { SequestrationRatesCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
+import { RESTORATION_ACTIVITY_SUBTYPE } from '@shared/entities/projects.entity';
+import { ACTIVITY } from '@shared/entities/activity.enum';
 
 export class ConservationCostCalculator extends CostCalculator {
   project: ConservationProject;
@@ -25,6 +28,7 @@ export class ConservationCostCalculator extends CostCalculator {
   totalNPV: number;
   baseIncrease: BaseIncrease;
   baseSize: BaseSize;
+  sequestrationCreditsCalculator: SequestrationRatesCalculator;
   constructor(
     project: ConservationProject,
     baseIncrease: BaseIncrease,
@@ -52,6 +56,13 @@ export class ConservationCostCalculator extends CostCalculator {
       this.discountRate,
     );
     this.totalNPV = this.totalCapexNPV + this.totalOpexNPV;
+    this.sequestrationCreditsCalculator = new SequestrationRatesCalculator(
+      project,
+      this.conservationProjectLength,
+      this.defaultProjectLength,
+      ACTIVITY.CONSERVATION,
+      RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
+    );
   }
 
   private initializeCostPlan(): { [year: number]: number } {

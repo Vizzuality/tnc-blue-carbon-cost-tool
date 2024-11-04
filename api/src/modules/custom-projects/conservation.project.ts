@@ -17,6 +17,7 @@ export class ConservationProject {
   startingPointScaling: number =
     DEFAULT_STUFF.CONSERVATION_STARTING_POINT_SCALING;
   projectSizeHa: number;
+  plantingSuccessRate: number;
   carbonPrice: number;
   carbonRevenuesToCover: string;
   carbonRevenuesWillNotCover: string;
@@ -25,6 +26,8 @@ export class ConservationProject {
   carbonPriceIncrease: number = DEFAULT_STUFF.CARBON_PRICE_INCREASE;
   restorationRate: number = DEFAULT_STUFF.RESTORATION_RATE;
   buffer: number = DEFAULT_STUFF.BUFFER;
+  soilOrganicCarbonReleaseLength: number =
+    DEFAULT_STUFF.SOIL_ORGANIC_CARBON_RELEASE_LENGTH;
   projectSpecificLossRate?: number;
   emissionFactorUsed: string;
   emissionFactor?: number;
@@ -43,6 +46,7 @@ export class ConservationProject {
     this.countryCode = projectConfig.countryCode;
     this.projectSizeHa = Number(projectConfig.projectSizeHa);
     this.carbonPrice = Number(projectConfig.carbonPrice) || 30;
+    this.plantingSuccessRate = projectConfig.plantingSuccessRate;
     this.carbonRevenuesToCover = projectConfig.carbonRevenuesToCover || 'Opex';
     this.carbonRevenuesWillNotCover =
       this.carbonRevenuesToCover === 'Opex' ? 'Capex' : 'None';
@@ -85,6 +89,8 @@ export class ConservationProject {
       // Below is not a numeric value: Development, Non-Development
       projectDevelopmentType: baseData.otherCommunityCashFlow,
       //emissionFactor: this.setEmissionFactor(baseData),
+      tier1SequestrationRate: baseData.tier1SequestrationRate,
+      tier2SequestrationRate: baseData.tier2SequestrationRate,
     };
   }
 
