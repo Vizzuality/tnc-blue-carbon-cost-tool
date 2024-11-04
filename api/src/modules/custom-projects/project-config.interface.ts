@@ -27,6 +27,7 @@ export interface ConservationProjectConfig {
   countryCode: string;
   inputData: BaseDataView;
   projectSizeHa: number;
+  plantingSuccessRate: number;
   carbonPrice?: number;
   carbonRevenuesToCover?: string;
   projectSpecificLossRate?: number;

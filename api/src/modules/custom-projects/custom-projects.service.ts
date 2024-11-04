@@ -35,6 +35,7 @@ export class CustomProjectsService extends AppBaseService<
         activity,
       });
 
+    // TODO: We need to clearly define which properties are required for the consumer and which can be retrieved from the data
     // This prop should be required for the consumer? TIER 3 is not defined in the entity
     const emissionFactorUsed = EMISSION_FACTORS_TIER_TYPES.TIER_2;
     const project = this.customProjectFactory.createProject({
@@ -45,6 +46,7 @@ export class CustomProjectsService extends AppBaseService<
       inputData: baseData,
       emissionFactorUsed,
       projectSizeHa: baseData.projectSizeHa,
+      plantingSuccessRate: 0.8,
     });
 
     const calculator = new ConservationCostCalculator(

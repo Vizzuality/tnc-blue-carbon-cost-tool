@@ -1,3 +1,5 @@
+import { ViewColumn } from 'typeorm';
+
 export interface CostInputs {
   feasibilityAnalysis: number;
   conservationPlanningAndAdmin: number;
@@ -21,4 +23,6 @@ export interface CostInputs {
   // Not sure if projectSizeHa is a cost input
   projectSizeHa?: number;
   projectDevelopmentType?: string;
+  tier1SequestrationRate: number;
+  tier2SequestrationRate: number;
 }
