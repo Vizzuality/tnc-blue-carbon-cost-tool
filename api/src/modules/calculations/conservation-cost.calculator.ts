@@ -6,6 +6,7 @@ import { BaseSize } from '@shared/entities/base-size.entity';
 import { SequestrationRatesCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
 import { RESTORATION_ACTIVITY_SUBTYPE } from '@shared/entities/projects.entity';
 import { ACTIVITY } from '@shared/entities/activity.enum';
+import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculators';
 
 export class ConservationCostCalculator extends CostCalculator {
   project: ConservationProject;
@@ -29,6 +30,7 @@ export class ConservationCostCalculator extends CostCalculator {
   baseIncrease: BaseIncrease;
   baseSize: BaseSize;
   sequestrationCreditsCalculator: SequestrationRatesCalculator;
+  revenueProfitCalculator: RevenueProfitCalculator;
   constructor(
     project: ConservationProject,
     baseIncrease: BaseIncrease,
@@ -62,6 +64,12 @@ export class ConservationCostCalculator extends CostCalculator {
       this.defaultProjectLength,
       ACTIVITY.CONSERVATION,
       RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
+    );
+    this.revenueProfitCalculator = new RevenueProfitCalculator(
+      this.project,
+      this.conservationProjectLength,
+      this.defaultProjectLength,
+      this.sequestrationCreditsCalculator,
     );
   }
 
