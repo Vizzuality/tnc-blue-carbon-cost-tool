@@ -21,4 +21,7 @@ export type ProjectMapFilters = {
   ecosystem?: ECOSYSTEM;
   projectSizeFilter?: PROJECT_SIZE_FILTER;
   priceType?: PROJECT_PRICE_TYPE;
+  costRange?: number[];
+  abatementPotentialRange?: number[];
+  costRangeSelector?: "total" | "npv";
 };

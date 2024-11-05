@@ -75,6 +75,9 @@ export class ProjectsMapRepository extends Repository<Project> {
       ecosystem,
       projectSizeFilter,
       priceType,
+      costRange,
+      abatementPotentialRange,
+      costRangeSelector,
     } = filters;
     if (countryCode?.length) {
       queryBuilder.andWhere('p.countryCode IN (:...countryCodes)', {
@@ -108,6 +111,37 @@ export class ProjectsMapRepository extends Repository<Project> {
       queryBuilder.andWhere('p.ecosystem IN (:...ecosystem)', {
         ecosystem,
       });
+    }
+
+    if (abatementPotentialRange) {
+      queryBuilder.andWhere(
+        'p.abatementPotential >= :minAP AND p.abatementPotential <= :maxAP',
+        {
+          minAP: Math.min(...abatementPotentialRange),
+          maxAP: Math.max(...abatementPotentialRange),
+        },
+      );
+    }
+
+    if (costRange && costRangeSelector) {
+      let filteredCostColumn: string;
+      switch (costRangeSelector) {
+        case 'npv':
+          filteredCostColumn = 'p.totalCostNPV';
+          break;
+        case 'total':
+        default:
+          filteredCostColumn = 'p.totalCost';
+          break;
+      }
+
+      queryBuilder.andWhere(
+        `${filteredCostColumn} >= :minCost AND ${filteredCostColumn} <= :maxCost`,
+        {
+          minCost: Math.min(...costRange),
+          maxCost: Math.max(...costRange),
+        },
+      );
     }
 
     // TODO: Pending to apply "parameter" filters (size, price type, NPV vs non-NPV)...
