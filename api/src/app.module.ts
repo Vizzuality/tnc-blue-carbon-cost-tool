@@ -16,6 +16,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { CountriesModule } from '@api/modules/countries/countries.module';
 import { ProjectsModule } from '@api/modules/projects/projects.module';
+import { CustomProjectsModule } from '@api/modules/custom-projects/custom-projects.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ProjectsModule } from '@api/modules/projects/projects.module';
     CountriesModule,
     UsersModule,
     ProjectsModule,
+    CustomProjectsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -22,6 +22,8 @@ import {
 import * as path from 'path';
 import * as fs from 'fs';
 import { Project } from '@shared/entities/projects.entity';
+import { adminContract } from '@shared/contracts/admin.contract';
+import { Country } from '@shared/entities/country.entity';
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate
  * common testing utilities
@@ -106,6 +108,26 @@ export class TestManager {
     );
     const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, 'utf8');
     await this.dataSource.query(geoCountriesSql);
+  }
+
+  async ingestExcel(jwtToken: string) {
+    const countriesPresent = await this.dataSource
+      .getRepository(Country)
+      .find();
+    if (!countriesPresent.length) {
+      throw new Error(
+        'No Countries present in the DB, cannot ingest Excel data for tests',
+      );
+    }
+    const testFilePath = path.join(
+      __dirname,
+      '../../../data/excel/data_ingestion_WIP.xlsm',
+    );
+    const fileBuffer = fs.readFileSync(testFilePath);
+    await this.request()
+      .post(adminContract.uploadFile.path)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .attach('file', fileBuffer, 'data_ingestion_WIP.xlsm');
   }
 
   mocks() {

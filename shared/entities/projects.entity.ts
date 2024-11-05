@@ -22,6 +22,12 @@ export enum PROJECT_PRICE_TYPE {
   MARKET_PRICE = "Market price",
 }
 
+export enum RESTORATION_ACTIVITY_SUBTYPE {
+  HYBRID = "Hybrid",
+  HYDROLOGY = "Hydrology",
+  PLANTING = "Planting",
+}
+
 @Entity("projects")
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")

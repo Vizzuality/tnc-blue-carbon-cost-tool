@@ -43,6 +43,7 @@ class RevenueProfitCalculator:
         total_cost_plan = {k: cost_plans['capex_total'].get(k, 0) + cost_plans['opex_total'].get(k, 0) for k in
                            set(cost_plans['capex_total']) | set(cost_plans['opex_total'])}
         annual_net_cash_flow = {
+            ## Where is annual net cash flow defined?
             year: estimated_revenue[year] + total_cost_plan.get(year, 0) if year != 0 else annual_net_cash_flow for year
             in range(-4, self.project_length + 1)}
         return annual_net_cash_flow

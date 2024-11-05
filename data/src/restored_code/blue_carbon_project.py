@@ -86,6 +86,8 @@ class BlueCarbonProject:
         self.calculate_project_parameters()
         self.restoration_plan = initialize_restoration_plan()
 
+
+    ## TODO: Here we are setting sequestration rate but in get_sequestration_rate we check that the activity is not restoration
     def get_project_parameters(self):
         if self.activity == 'Restoration':
             additional_parameters = {
@@ -189,6 +191,7 @@ class BlueCarbonProject:
                             'Project-specific sequestration rate must be provided when\n                     \'Tier 3 '
                             '- Project-specific rate\' is selected.')
 
+    ## TODO: This is not actually setting any value
     def get_planting_success_rate(self):
         if self.activity != 'Restoration':
             raise ValueError('Planting success rate can only be calculated for restoration projects.')

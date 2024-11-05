@@ -86,6 +86,31 @@ describe('Projects', () => {
           .map((project) => project.projectName),
       );
     });
+
+    test('Should return a list of projects filtered by project name', async () => {
+      const projects: Project[] = [];
+      projects.push(
+        await testManager
+          .mocks()
+          .createProject({ projectName: 'PROJECT_NAME_ABC' }),
+        await testManager
+          .mocks()
+          .createProject({ projectName: 'PROJECT_NAME_DEF' }),
+      );
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjects.path)
+        .query({
+          filter: {
+            projectName: 'ABC',
+          },
+        });
+      expect(response.body.data).toHaveLength(1);
+      expect(
+        response.body.data.map((project: Project) => project.projectName),
+      ).toEqual(['PROJECT_NAME_ABC']);
+    });
   });
 
   describe('Filters for Projects', () => {

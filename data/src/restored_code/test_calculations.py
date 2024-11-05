@@ -45,19 +45,19 @@ Project = BlueCarbonProject(
     # tier_3_emission_factor_SOC=0.5
 )
 
-## Aqui ya tengo los parametros necesarios para calcular el proyecto
-#print(Project.get_project_parameters())
+# Aqui ya tengo los parametros necesarios para calcular el proyecto
+print(Project.get_project_parameters())
 
-# Project.set_additional_assumptions(
-#     # verification_frequency,
-#     # discount_rate,
-#     # carbon_price_increase,
-#     buffer=0.28,
-#     # baseline_reassessment_frequency,
-#     conservation_project_length=30,
-#     # restoration_project_length,
-#     # restoration_rate
-# )
+Project.set_additional_assumptions(
+    # verification_frequency,
+    # discount_rate,
+    # carbon_price_increase,
+    buffer=0.28,
+    # baseline_reassessment_frequency,
+    conservation_project_length=30,
+    # restoration_project_length,
+    # restoration_rate
+)
 #
 # Project.override_cost_input(
 #     feasibility_analysis=30000

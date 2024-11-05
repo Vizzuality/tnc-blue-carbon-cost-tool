@@ -1,5 +1,6 @@
 import { ViewColumn, ViewEntity } from "typeorm";
 
+// TODO: Maybe this could be renamed to CostInputs
 @ViewEntity({
   name: "base_data_view",
   expression: `
@@ -130,7 +131,7 @@ inner join
 })
 export class BaseDataView {
   @ViewColumn({ name: "country_code" })
-  country_code: string;
+  countryCode: string;
 
   @ViewColumn({ name: "ecosystem" })
   ecosystem: string;
@@ -139,40 +140,40 @@ export class BaseDataView {
   activity: string;
 
   @ViewColumn({ name: "project_size_ha" })
-  project_size_ha: number;
+  projectSizeHa: number;
 
   @ViewColumn({ name: "feasibility_analysis" })
-  feasibility_analysis: number;
+  feasibilityAnalysis: number;
 
   @ViewColumn({ name: "conservation_planning_and_admin" })
-  conservation_planning_and_admin: number;
+  conservationPlanningAndAdmin: number;
 
   @ViewColumn({ name: "data_collection_and_field_cost" })
-  data_collection_and_field_cost: number;
+  dataCollectionAndFieldCost: number;
 
   @ViewColumn({ name: "community_representation" })
-  community_representation: number;
+  communityRepresentation: number;
 
   @ViewColumn({ name: "blue_carbon_project_planning" })
-  blue_carbon_project_planning: number;
+  blueCarbonProjectPlanning: number;
 
   @ViewColumn({ name: "establishing_carbon_rights" })
-  establishing_carbon_rights: number;
+  establishingCarbonRights: number;
 
   @ViewColumn({ name: "financing_cost" })
-  financing_cost: number;
+  financingCost: number;
 
   @ViewColumn({ name: "validation" })
   validation: number;
 
   @ViewColumn({ name: "implementation_labor_planting" })
-  implementation_labor_planting: number;
+  implementationLaborPlanting: number;
 
   @ViewColumn({ name: "implementation_labor_hybrid" })
-  implementation_labor_hybrid: number;
+  implementationLaborHybrid: number;
 
   @ViewColumn({ name: "implementation_labor_hydrology" })
-  implementation_labor_hydrology: number;
+  implementationLaborHydrology: number;
 
   @ViewColumn({ name: "monitoring" })
   monitoring: number;
@@ -181,50 +182,50 @@ export class BaseDataView {
   maintenance: number;
 
   @ViewColumn({ name: "maintenance_duration" })
-  maintenance_duration: number;
+  maintenanceDuration: number;
 
   @ViewColumn({ name: "carbon_standard_fees" })
-  carbon_standard_fees: number;
+  carbonStandardFees: number;
 
   @ViewColumn({ name: "community_benefit_sharing_fund" })
-  community_benefit_sharing_fund: number;
+  communityBenefitSharingFund: number;
 
   @ViewColumn({ name: "baseline_reassessment" })
-  baseline_reassessment: number;
+  baselineReassessment: number;
 
   @ViewColumn({ name: "mrv" })
   mrv: number;
 
   @ViewColumn({ name: "long_term_project_operating_cost" })
-  long_term_project_operating_cost: number;
+  longTermProjectOperatingCost: number;
 
   @ViewColumn({ name: "ecosystem_extent" })
-  ecosystem_extent: number;
+  ecosystemExtent: number;
 
   @ViewColumn({ name: "ecosystem_extent_historic" })
-  ecosystem_extent_historic: number;
+  ecosystemExtentHistoric: number;
 
   @ViewColumn({ name: "ecosystem_loss_rate" })
-  ecosystem_loss_rate: number;
+  ecosystemLossRate: number;
 
   @ViewColumn({ name: "restorable_land" })
-  restorable_land: number;
+  restorableLand: number;
 
   @ViewColumn({ name: "tier_1_emission_factor" })
-  tier_1_emission_factor: number;
+  tier1EmissionFactor: number;
 
   @ViewColumn({ name: "emission_factor_agb" })
-  emission_factor_agb: number;
+  emissionFactorAgb: number;
 
   @ViewColumn({ name: "emission_factor_soc" })
-  emission_factor_soc: number;
+  emissionFactorSoc: number;
 
   @ViewColumn({ name: "tier_1_sequestration_rate" })
-  tier_1_sequestration_rate: number;
+  tier1SequestrationRate: number;
 
   @ViewColumn({ name: "tier_2_sequestration_rate" })
-  tier_2_sequestration_rate: number;
+  tier2SequestrationRate: number;
 
   @ViewColumn({ name: "other_community_cash_flow" })
-  other_community_cash_flow: string;
+  otherCommunityCashFlow: string;
 }
