@@ -3,7 +3,11 @@ import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { Country } from "@shared/entities/country.entity";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { CustomProject } from "@shared/entities/custom-project.entity";
-import { CreateCustomProjectSchema } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import {
+  CombinedCustomProjectSchema,
+  ConservationCustomProjectSchema,
+  CreateCustomProjectSchema,
+} from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 // TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 
@@ -32,6 +36,14 @@ export const customProjectContract = contract.router({
     responses: {
       201: contract.type<ApiResponse<CustomProject>>(),
     },
-    body: CreateCustomProjectSchema,
+    body: CombinedCustomProjectSchema,
+  },
+  createConservationCustomProject: {
+    method: "POST",
+    path: "/custom-projects/conservation",
+    responses: {
+      201: contract.type<ApiResponse<CustomProject>>(),
+    },
+    body: ConservationCustomProjectSchema,
   },
 });

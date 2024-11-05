@@ -54,4 +54,17 @@ export class CustomProjectsController {
       },
     );
   }
+  @TsRestHandler(customProjectContract.createConservationCustomProject)
+  async createConservationProject(): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.createConservationCustomProject,
+      async ({ body }) => {
+        const customProject = await this.customProjects.create(body);
+        return {
+          status: 201,
+          body: { data: customProject },
+        };
+      },
+    );
+  }
 }
