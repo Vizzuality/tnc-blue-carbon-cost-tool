@@ -1,4 +1,7 @@
-import { ACTIVITY, RESTORATION_ACTIVITY } from "@shared/entities/activity.enum";
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { parseAsJson, parseAsStringLiteral, useQueryState } from "nuqs";
 import { z } from "zod";
@@ -12,7 +15,7 @@ import {
 
 import { TABLE_VIEWS } from "@/containers/projects/table/toolbar/table-selector";
 
-const SUB_ACTIVITIES = RESTORATION_ACTIVITY;
+const SUB_ACTIVITIES = RESTORATION_ACTIVITY_SUBTYPE;
 
 export const filtersSchema = z.object({
   [FILTER_KEYS[0]]: z.string().optional(),

@@ -1,5 +1,8 @@
 import { CheckedState } from "@radix-ui/react-checkbox";
-import { ACTIVITY, RESTORATION_ACTIVITY } from "@shared/entities/activity.enum";
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { useSetAtom } from "jotai/index";
 import { XIcon } from "lucide-react";
@@ -219,9 +222,9 @@ export default function ProjectsFilters() {
                   await setFilters((prev) => ({
                     ...prev,
                     subActivities: [
-                      RESTORATION_ACTIVITY.HYBRID,
-                      RESTORATION_ACTIVITY.HYDROLOGY,
-                      RESTORATION_ACTIVITY.PLANTING,
+                      RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
+                      RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY,
+                      RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
                     ],
                   }));
                 }}
@@ -231,54 +234,54 @@ export default function ProjectsFilters() {
 
             <ul className="ml-3">
               <li>
-                <Label htmlFor={RESTORATION_ACTIVITY.HYBRID}>
+                <Label htmlFor={RESTORATION_ACTIVITY_SUBTYPE.HYBRID}>
                   <Checkbox
-                    id={RESTORATION_ACTIVITY.HYBRID}
+                    id={RESTORATION_ACTIVITY_SUBTYPE.HYBRID}
                     checked={filters.activitySubtype.includes(
-                      RESTORATION_ACTIVITY.HYBRID,
+                      RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
                     )}
                     onCheckedChange={async (isChecked) => {
                       await handleSubActivityChange(
                         isChecked,
-                        RESTORATION_ACTIVITY.HYBRID,
+                        RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
                       );
                     }}
                   />
-                  {RESTORATION_ACTIVITY.HYBRID}
+                  {RESTORATION_ACTIVITY_SUBTYPE.HYBRID}
                 </Label>
               </li>
               <li>
-                <Label htmlFor={RESTORATION_ACTIVITY.HYDROLOGY}>
+                <Label htmlFor={RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY}>
                   <Checkbox
-                    id={RESTORATION_ACTIVITY.HYDROLOGY}
+                    id={RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY}
                     checked={filters.activitySubtype.includes(
-                      RESTORATION_ACTIVITY.HYDROLOGY,
+                      RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY,
                     )}
                     onCheckedChange={async (isChecked) => {
                       await handleSubActivityChange(
                         isChecked,
-                        RESTORATION_ACTIVITY.HYDROLOGY,
+                        RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY,
                       );
                     }}
                   />
-                  {RESTORATION_ACTIVITY.HYDROLOGY}
+                  {RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY}
                 </Label>
               </li>
               <li>
-                <Label htmlFor={RESTORATION_ACTIVITY.PLANTING}>
+                <Label htmlFor={RESTORATION_ACTIVITY_SUBTYPE.PLANTING}>
                   <Checkbox
-                    id={RESTORATION_ACTIVITY.PLANTING}
+                    id={RESTORATION_ACTIVITY_SUBTYPE.PLANTING}
                     checked={filters.activitySubtype.includes(
-                      RESTORATION_ACTIVITY.PLANTING,
+                      RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
                     )}
                     onCheckedChange={async (isChecked) => {
                       await handleSubActivityChange(
                         isChecked,
-                        RESTORATION_ACTIVITY.PLANTING,
+                        RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
                       );
                     }}
                   />
-                  {RESTORATION_ACTIVITY.PLANTING}
+                  {RESTORATION_ACTIVITY_SUBTYPE.PLANTING}
                 </Label>
               </li>
             </ul>
