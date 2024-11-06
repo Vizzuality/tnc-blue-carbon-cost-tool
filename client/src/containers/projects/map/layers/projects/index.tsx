@@ -21,11 +21,18 @@ export default function ProjectsLayer() {
       query: {
         filter: {
           ...(filters.countryCode && { countryCode: [filters.countryCode] }),
-          totalCost: filters.cost,
-          abatementPotential: filters.abatementPotential,
+          costRange: {
+            min: filters.costRange[0],
+            max: filters.costRange[1],
+          },
+          abatementPotentialRange: {
+            min: filters.abatementPotentialRange[0],
+            max: filters.abatementPotentialRange[1],
+          },
           ecosystem: filters.ecosystem,
           activity: filters.activity,
         },
+        costRangeSelector: filters.costRangeSelector,
       },
     },
     {

@@ -77,6 +77,7 @@ export function OverviewTable() {
             (sort) => `${sort.desc ? "" : "-"}${sort.id}`,
           ) as sortFields,
         }),
+        costRangeSelector: filters.costRangeSelector,
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
       },

@@ -22,10 +22,9 @@ export enum PROJECT_PRICE_TYPE {
   MARKET_PRICE = "Market price",
 }
 
-export enum RESTORATION_ACTIVITY_SUBTYPE {
-  HYBRID = "Hybrid",
-  HYDROLOGY = "Hydrology",
-  PLANTING = "Planting",
+export enum COST_TYPE_SELECTOR {
+  TOTAL = "total",
+  NPV = "npv",
 }
 
 @Entity("projects")

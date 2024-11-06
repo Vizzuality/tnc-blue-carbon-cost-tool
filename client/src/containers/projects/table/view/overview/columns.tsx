@@ -17,7 +17,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
   //   header: () => <span>Scorecard rating</span>,
   // }),
   columnHelper.accessor(
-    filters.totalCost === "npv" ? "costPerTCO2eNPV" : "costPerTCO2e",
+    filters.costRangeSelector === "npv" ? "costPerTCO2eNPV" : "costPerTCO2e",
     {
       enableSorting: true,
       header: () => <span>Cost $/tCo2</span>,
@@ -28,7 +28,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
     header: () => <span>Abatement potential</span>,
   }),
   columnHelper.accessor(
-    filters.totalCost === "npv" ? "totalCostNPV" : "totalCost",
+    filters.costRangeSelector === "npv" ? "totalCostNPV" : "totalCost",
     {
       enableSorting: true,
       header: () => <span>Total Cost (CapEx + OpEx)</span>,

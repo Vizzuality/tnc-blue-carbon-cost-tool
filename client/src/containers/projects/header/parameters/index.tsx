@@ -1,11 +1,11 @@
+import {
+  PROJECT_SIZE_FILTER,
+  COST_TYPE_SELECTOR,
+  PROJECT_PRICE_TYPE,
+} from "@shared/entities/projects.entity";
 import { z } from "zod";
 
-import {
-  CARBON_PRICING_TYPE_VALUES,
-  COST_VALUES,
-  FILTER_KEYS,
-  PROJECT_SIZE_VALUES,
-} from "@/app/(projects)/constants";
+import { FILTER_KEYS } from "@/app/(projects)/constants";
 import { useGlobalFilters } from "@/app/(projects)/url-store";
 import { filtersSchema } from "@/app/(projects)/url-store";
 
@@ -24,16 +24,16 @@ export const PROJECT_PARAMETERS = [
     className: "w-[125px]",
     options: [
       {
-        label: "Small",
-        value: PROJECT_SIZE_VALUES[0],
+        label: PROJECT_SIZE_FILTER.SMALL,
+        value: PROJECT_SIZE_FILTER.SMALL,
       },
       {
-        label: "Medium",
-        value: PROJECT_SIZE_VALUES[1],
+        label: PROJECT_SIZE_FILTER.MEDIUM,
+        value: PROJECT_SIZE_FILTER.MEDIUM,
       },
       {
-        label: "Large",
-        value: PROJECT_SIZE_VALUES[2],
+        label: PROJECT_SIZE_FILTER.LARGE,
+        value: PROJECT_SIZE_FILTER.LARGE,
       },
     ],
   },
@@ -43,12 +43,12 @@ export const PROJECT_PARAMETERS = [
     className: "w-[195px]",
     options: [
       {
-        label: "Market price",
-        value: CARBON_PRICING_TYPE_VALUES[0],
+        label: PROJECT_PRICE_TYPE.MARKET_PRICE,
+        value: PROJECT_PRICE_TYPE.MARKET_PRICE,
       },
       {
-        label: "OPEX Breakeven price",
-        value: CARBON_PRICING_TYPE_VALUES[1],
+        label: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+        value: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
       },
     ],
   },
@@ -58,12 +58,12 @@ export const PROJECT_PARAMETERS = [
     className: "w-[85px]",
     options: [
       {
-        label: "Total",
-        value: COST_VALUES[0],
+        label: COST_TYPE_SELECTOR.TOTAL,
+        value: COST_TYPE_SELECTOR.TOTAL,
       },
       {
-        label: "NPV",
-        value: COST_VALUES[1],
+        label: COST_TYPE_SELECTOR.NPV,
+        value: COST_TYPE_SELECTOR.NPV,
       },
     ],
   },
