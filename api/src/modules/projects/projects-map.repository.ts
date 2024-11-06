@@ -55,7 +55,6 @@ export class ProjectsMapRepository extends Repository<Project> {
         'filtered_projects.country_code = country.code',
       );
 
-    console.log('>>>>>>>>>>>>>', geoQueryBuilder.getSql());
     const { geojson } = await geoQueryBuilder.getRawOne<{
       geojson: ProjectMap;
     }>();
