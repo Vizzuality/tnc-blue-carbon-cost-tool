@@ -11,6 +11,10 @@ import { useDebounce } from "rooks";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
+import {
+  INITIAL_COST_RANGE,
+  INITIAL_ABATEMENT_POTENTIAL_RANGE,
+} from "@/app/(projects)/constants";
 import { projectsUIState } from "@/app/(projects)/store";
 import {
   INITIAL_FILTERS_STATE,
@@ -29,9 +33,6 @@ import {
 } from "@/components/ui/select";
 import { RangeSlider } from "@/components/ui/slider";
 
-const COST_RANGE = [1200, 2300];
-const ABATEMENT_POTENTIAL_RANGE = [0, 100];
-
 export const FILTERS_SIDEBAR_WIDTH = 320;
 
 export default function ProjectsFilters() {
@@ -45,8 +46,8 @@ export default function ProjectsFilters() {
       ecosystem: INITIAL_FILTERS_STATE.ecosystem,
       activities: INITIAL_FILTERS_STATE.activity,
       activitySubtype: INITIAL_FILTERS_STATE.activitySubtype,
-      abatementPotential: INITIAL_FILTERS_STATE.abatementPotential,
-      cost: INITIAL_FILTERS_STATE.cost,
+      abatementPotential: INITIAL_FILTERS_STATE.abatementPotentialRange,
+      costRange: INITIAL_FILTERS_STATE.costRange,
     }));
   };
   const closeFilters = () => {
@@ -292,18 +293,18 @@ export default function ProjectsFilters() {
         <Label htmlFor="costs">Cost ($)</Label>
         <RangeSlider
           defaultValue={[
-            filters.cost[0] || COST_RANGE[0],
-            filters.cost[1] || COST_RANGE[1],
+            filters.costRange[0] || INITIAL_COST_RANGE[0],
+            filters.costRange[1] || INITIAL_COST_RANGE[1],
           ]}
-          min={COST_RANGE[0]}
-          max={COST_RANGE[1]}
+          min={INITIAL_COST_RANGE[0]}
+          max={INITIAL_COST_RANGE[1]}
           step={1}
           minStepsBetweenThumbs={1}
           onValueChange={debouncedCostChange}
         />
         <div className="flex justify-between">
-          <span>{COST_RANGE[0]}</span>
-          <span>{COST_RANGE[1]}</span>
+          <span>{INITIAL_COST_RANGE[0]}</span>
+          <span>{INITIAL_COST_RANGE[1]}</span>
         </div>
       </div>
 
@@ -311,18 +312,20 @@ export default function ProjectsFilters() {
         <Label htmlFor="abatement_potential">Abatement Potential ($)</Label>
         <RangeSlider
           defaultValue={[
-            filters.abatementPotential[0] || ABATEMENT_POTENTIAL_RANGE[0],
-            filters.abatementPotential[1] || ABATEMENT_POTENTIAL_RANGE[1],
+            filters.abatementPotentialRange[0] ||
+              INITIAL_ABATEMENT_POTENTIAL_RANGE[0],
+            filters.abatementPotentialRange[1] ||
+              INITIAL_ABATEMENT_POTENTIAL_RANGE[1],
           ]}
-          min={ABATEMENT_POTENTIAL_RANGE[0]}
-          max={ABATEMENT_POTENTIAL_RANGE[1]}
+          min={INITIAL_ABATEMENT_POTENTIAL_RANGE[0]}
+          max={INITIAL_ABATEMENT_POTENTIAL_RANGE[1]}
           step={1}
           minStepsBetweenThumbs={1}
           onValueChange={debouncedAbatementPotentialChange}
         />
         <div className="flex justify-between">
-          <span>{ABATEMENT_POTENTIAL_RANGE[0]}</span>
-          <span>{ABATEMENT_POTENTIAL_RANGE[1]}</span>
+          <span>{INITIAL_ABATEMENT_POTENTIAL_RANGE[0]}</span>
+          <span>{INITIAL_ABATEMENT_POTENTIAL_RANGE[1]}</span>
         </div>
       </div>
     </section>

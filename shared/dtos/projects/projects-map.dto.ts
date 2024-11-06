@@ -15,7 +15,14 @@ export type ProjectMap = FeatureCollection<Geometry, ProjectGeoProperties>;
 export type ProjectMapFilters = {
   countryCode?: string[];
   totalCost?: number[];
-  abatementPotential?: number[];
+  costRange?: {
+    min: number;
+    max: number;
+  },
+  abatementPotentialRange?: {
+    min: number;
+    max: number;
+  },
   activity?: ACTIVITY[];
   activitySubtype?: string[];
   ecosystem?: ECOSYSTEM[];

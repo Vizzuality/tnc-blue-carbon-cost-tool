@@ -3,22 +3,20 @@ export const LAYOUT_TRANSITIONS = {
   ease: "easeInOut",
 };
 
-export const PROJECT_SIZE_VALUES = ["small", "medium", "large"] as const;
-export const CARBON_PRICING_TYPE_VALUES = [
-  "market_price",
-  "opex_breakeven_price",
-] as const;
-export const COST_VALUES = ["total", "npv"] as const;
-
 export const FILTER_KEYS = [
   "keyword",
   "projectSizeFilter",
   "priceType",
-  "totalCost",
+  "costRangeSelector",
   "countryCode",
   "ecosystem",
   "activity",
   "activitySubtype",
-  "cost",
-  "abatementPotential",
+  "costRange",
+  "abatementPotentialRange",
 ] as const;
+
+// ? cost and abatement potential ranges are hardcoded for now.
+// ? Ask data to figure out the correct values and hardcore them here.
+export const INITIAL_COST_RANGE = [1200, 2300];
+export const INITIAL_ABATEMENT_POTENTIAL_RANGE = [0, 100];
