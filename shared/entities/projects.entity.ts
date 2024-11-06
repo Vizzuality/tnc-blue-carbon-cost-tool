@@ -27,6 +27,12 @@ export enum COST_TYPE_SELECTOR {
   NPV = "npv",
 }
 
+export enum RESTORATION_ACTIVITY_SUBTYPE {
+  HYBRID = "Hybrid",
+  HYDROLOGY = "Hydrology",
+  PLANTING = "Planting",
+}
+
 @Entity("projects")
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
