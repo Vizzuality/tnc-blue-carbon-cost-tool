@@ -177,7 +177,7 @@ describe('Project Map', () => {
     const response = await testManager
       .request()
       .get(projectsContract.getProjectsMap.path)
-      .query({ filter: { costRange: '1000, 1000', costRangeSelector: 'nvm' } });
+      .query({ filter: { costRange: '1000, 1000', costRangeSelector: 'npv' } });
 
     expect(response.status).toBe(HttpStatus.OK);
     expect(response.body.features.length).toBe(1);

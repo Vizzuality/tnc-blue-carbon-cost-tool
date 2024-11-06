@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { QueryBuilder, Repository, SelectQueryBuilder } from 'typeorm';
 import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -47,7 +47,6 @@ export class ProjectsMapRepository extends Repository<Project> {
               'SUM(p.abatement_potential)',
               'total_abatement_potential',
             )
-            .addSelect('SUM(p.total_cost)', 'total_cost')
             .groupBy('p.country_code');
 
           return this.applyFilters(subQuery, filters);
@@ -56,6 +55,7 @@ export class ProjectsMapRepository extends Repository<Project> {
         'filtered_projects.country_code = country.code',
       );
 
+    console.log('>>>>>>>>>>>>>', geoQueryBuilder.getSql());
     const { geojson } = await geoQueryBuilder.getRawOne<{
       geojson: ProjectMap;
     }>();
@@ -79,6 +79,12 @@ export class ProjectsMapRepository extends Repository<Project> {
       abatementPotentialRange,
       costRangeSelector,
     } = filters;
+    if (costRangeSelector?.length && costRangeSelector[0] === 'npv') {
+      queryBuilder.addSelect('SUM(p.total_cost_npv)', 'total_cost');
+    } else {
+      queryBuilder.addSelect('SUM(p.total_cost)', 'total_cost');
+    }
+
     if (countryCode?.length) {
       queryBuilder.andWhere('p.countryCode IN (:...countryCodes)', {
         countryCodes: countryCode,
