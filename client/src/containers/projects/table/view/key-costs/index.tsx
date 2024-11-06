@@ -57,8 +57,6 @@ export function KeyCostsTable() {
     pagination,
   }).queryKey;
 
-  console.log(TABLE_COLUMNS[0]);
-
   const { data, isSuccess } = client.projects.getProjects.useQuery(
     queryKey,
     {

@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 
-import { ActivityIcon, HelpCircleIcon, UserCircle } from "lucide-react";
+import {
+  LayoutDashboardIcon,
+  ClipboardEditIcon,
+  ClipboardListIcon,
+  ServerCogIcon,
+  UserIcon,
+  FileQuestionIcon,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -10,7 +17,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -19,38 +25,38 @@ import {
 } from "@/components/ui/sidebar";
 
 const navItems = {
-  overview: [
+  main: [
     {
-      title: "Overview",
+      title: "Project Overview",
       url: "/",
-      icon: ActivityIcon,
+      icon: LayoutDashboardIcon,
+    },
+    {
+      title: "Create custom project",
+      url: "/projects/new",
+      icon: ClipboardEditIcon,
+    },
+    {
+      title: "My custom projects",
+      url: "/projects/custom",
+      icon: ClipboardListIcon,
+    },
+    {
+      title: "Admin",
+      url: "/admin",
+      icon: ServerCogIcon,
     },
   ],
-  projects: {
-    label: "Custom projects",
-    items: [
-      {
-        title: "New custom project",
-        url: "/projects/new",
-        icon: ActivityIcon,
-      },
-      {
-        title: "Custom projects",
-        url: "/projects/custom",
-        icon: ActivityIcon,
-      },
-    ],
-  },
   footer: [
-    {
-      title: "Profile",
-      url: "/profile",
-      icon: UserCircle,
-    },
     {
       title: "Methodology",
       url: "/methodology",
-      icon: HelpCircleIcon,
+      icon: FileQuestionIcon,
+    },
+    {
+      title: "Profile",
+      url: "/profile",
+      icon: UserIcon,
     },
   ],
 };
@@ -61,36 +67,13 @@ export default function MainNav() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <span>{open ? "Blue Carbon Cost" : "BCC"}</span>
+        <span>{open ? "Blue Carbon Cost Tool" : "BCCT"}</span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.overview.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip={{
-                      children: item.title,
-                      hidden: open,
-                    }}
-                  >
-                    <Link href={item.url}>
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>{navItems.projects.label}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.projects.items.map((item) => (
+              {navItems.main.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild

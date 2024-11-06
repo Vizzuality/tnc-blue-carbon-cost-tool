@@ -152,6 +152,8 @@ export default function Map({
         onMove={handleMapMove}
         onLoad={handleMapLoad}
         mapStyle={MAPBOX_STYLE}
+        maxZoom={10}
+        minZoom={0}
         {...mapboxProps}
         {...localViewState}
       >

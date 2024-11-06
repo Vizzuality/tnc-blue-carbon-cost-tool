@@ -61,7 +61,7 @@ export default function Projects() {
         <ProjectsHeader />
         <ResizablePanelGroup
           direction="vertical"
-          className="grid flex-grow grid-rows-2 gap-3"
+          className="grid flex-grow grid-rows-2"
         >
           <ResizablePanel
             className="flex flex-1 flex-col"
@@ -71,9 +71,9 @@ export default function Projects() {
           >
             <ProjectsMap />
           </ResizablePanel>
-          <ResizableHandle withHandle className="my-3" />
+          <ResizableHandle withHandle />
           <ResizablePanel
-            className="flex flex-1 flex-col"
+            className="mb-4 flex flex-1 flex-col"
             minSize={PANEL_MIN_SIZE}
             defaultSize={100}
           >

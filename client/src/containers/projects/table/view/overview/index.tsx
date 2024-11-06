@@ -95,9 +95,9 @@ export function OverviewTable() {
   return (
     <>
       <Table>
-        <TableHeader className="sticky top-0 bg-white">
+        <TableHeader className="sticky top-0">
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="divide-background">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>

@@ -5,7 +5,7 @@ const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     container: {
-      center: "true",
+      center: true,
     },
     extend: {
       colors: {
@@ -59,11 +59,41 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "big-stone": {
+          50: "#f2f7fd",
+          100: "#e4edfa",
+          200: "#c3dbf4",
+          300: "#8fbeea",
+          400: "#539ddd",
+          500: "#2d80ca",
+          600: "#1e64ab",
+          700: "#19508b",
+          800: "#194673",
+          900: "#1a3b60",
+          950: "#132a47",
+          1000: "#0f2139",
+        },
+        "sky-blue": {
+          50: "#edfcfe",
+          100: "#d1f5fc",
+          200: "#a8eaf9",
+          300: "#6cd9f4",
+          400: "#29bee7",
+          500: "#0da1cd",
+          600: "#0e80ac",
+          700: "#12678c",
+          800: "#185572",
+          900: "#194760",
+          950: "#0a2d42",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["var(--font-spline-sans)"],
       },
     },
   },

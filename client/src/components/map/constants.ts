@@ -6,4 +6,5 @@ export const DEFAULT_VIEW_STATE: Partial<ViewState> = {
   longitude: 0,
 };
 
-export const MAPBOX_STYLE = "mapbox://styles/mapbox/standard-satellite";
+export const MAPBOX_STYLE =
+  "mapbox://styles/vizzualitybluecarbon/cm37685r0000h01mfhl92a2p1";

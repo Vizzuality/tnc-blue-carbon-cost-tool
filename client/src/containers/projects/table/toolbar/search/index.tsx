@@ -13,5 +13,11 @@ export default function SearchProjectsTable() {
     await setFilters((prev) => ({ ...prev, keyword: v }));
   };
 
-  return <Search placeholder="Search project" onChange={handleSearch} />;
+  return (
+    <Search
+      placeholder="Search project"
+      onChange={handleSearch}
+      className="flex-1"
+    />
+  );
 }

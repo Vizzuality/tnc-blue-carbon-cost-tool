@@ -65,8 +65,8 @@ PaginationButton.displayName = "PaginationButton";
 const PaginationFirst = ({ className, ...props }: ButtonProps) => (
   <PaginationButton
     aria-label="Go to first page"
-    size="default"
-    className={cn("gap-1 pl-2.5", className)}
+    size="icon"
+    className={cn("gap-1", className)}
     {...props}
   >
     <ChevronFirstIcon className="h-4 w-4" />
@@ -77,8 +77,8 @@ PaginationFirst.displayName = "PaginationFirst";
 const PaginationPrevious = ({ className, ...props }: ButtonProps) => (
   <PaginationButton
     aria-label="Go to previous page"
-    size="default"
-    className={cn("gap-1 pl-2.5", className)}
+    size="icon"
+    className={cn("gap-1", className)}
     {...props}
   >
     <ChevronLeftIcon className="h-4 w-4" />
@@ -92,8 +92,8 @@ const PaginationNext = ({
 }: React.ComponentProps<typeof PaginationButton>) => (
   <PaginationButton
     aria-label="Go to next page"
-    size="default"
-    className={cn("gap-1 pr-2.5", className)}
+    size="icon"
+    className={cn("gap-1", className)}
     {...props}
   >
     <ChevronRightIcon className="h-4 w-4" />
@@ -104,8 +104,8 @@ PaginationNext.displayName = "PaginationNext";
 const PaginationLast = ({ className, ...props }: ButtonProps) => (
   <PaginationButton
     aria-label="Go to first page"
-    size="default"
-    className={cn("gap-1 pl-2.5", className)}
+    size="icon"
+    className={cn("gap-1", className)}
     {...props}
   >
     <ChevronLastIcon className="h-4 w-4" />
