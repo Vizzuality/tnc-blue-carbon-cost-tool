@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 
-import { Inter } from "next/font/google";
+import { Spline_Sans } from "next/font/google";
 
 import type { Metadata } from "next";
 import "@/app/globals.css";
@@ -13,7 +13,11 @@ import Toaster from "@/components/ui/toast/toaster";
 
 import LayoutProviders from "./providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Spline_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-spline-sans",
+});
 
 export const metadata: Metadata = {
   title: "Blue Carbon Cost",

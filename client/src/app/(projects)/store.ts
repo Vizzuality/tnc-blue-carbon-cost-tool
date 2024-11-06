@@ -9,9 +9,3 @@ export const projectsUIState = atom<{
   mapExpanded: "default",
   tableExpanded: "default",
 });
-
-export const projectsMapState = atom<{
-  legendOpen: boolean;
-}>({
-  legendOpen: true,
-});

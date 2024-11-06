@@ -8,6 +8,8 @@ import { useDebounce } from "rooks";
 
 import { cn } from "@/lib/utils";
 
+import { Input } from "@/components/ui/input";
+
 export default function Search({
   placeholder,
   onChange,
@@ -30,13 +32,12 @@ export default function Search({
   }, 150);
 
   return (
-    <div className={cn("flex", className)}>
+    <div className={cn("flex items-center space-x-2", className)}>
       <SearchIcon className="text-grey-900 h-6 w-6" />
       <div className="relative flex w-full">
-        <input
-          className={cn(
-            "placeholder:text-grey-600 flex w-[345px] items-center bg-white pl-6 pr-6 focus:outline-none",
-          )}
+        <Input
+          variant="ghost"
+          className="w-[325px] px-3"
           placeholder={placeholder}
           onChange={(e) => {
             setValue(e.target.value);

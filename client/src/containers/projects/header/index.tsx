@@ -1,7 +1,7 @@
 "use client";
 
 import { useSetAtom } from "jotai";
-import { PlusIcon } from "lucide-react";
+import { Settings2Icon } from "lucide-react";
 
 import { projectsUIState } from "@/app/(projects)/store";
 
@@ -18,10 +18,10 @@ export default function ProjectsHeader() {
       <div className="flex items-center space-x-6">
         <div className="flex items-center space-x-2">
           <SidebarTrigger />
-          <h2 className="text-2xl font-semibold">Overview</h2>
+          <h2 className="text-2xl font-medium">Projects Overview</h2>
         </div>
         <Button
-          className="flex items-center space-x-2"
+          type="button"
           onClick={() => {
             setFiltersOpen((prev) => ({
               ...prev,
@@ -30,7 +30,7 @@ export default function ProjectsHeader() {
           }}
         >
           <>
-            <PlusIcon />
+            <Settings2Icon className="h-4 w-4" />
             <span>Filters</span>
           </>
         </Button>

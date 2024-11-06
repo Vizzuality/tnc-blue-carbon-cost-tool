@@ -4,7 +4,7 @@ import TabsProjectsTable from "@/containers/projects/table/toolbar/table-selecto
 
 export default function ToolbarProjectsTable() {
   return (
-    <div className="flex items-center justify-between py-3">
+    <div className="flex items-center justify-between px-5 py-3">
       <SearchProjectsTable />
       <TabsProjectsTable />
       <InfoDownloadProjectsTable />

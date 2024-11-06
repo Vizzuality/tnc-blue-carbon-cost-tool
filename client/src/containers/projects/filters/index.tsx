@@ -1,21 +1,10 @@
+import { Input } from "@/components/ui/input";
+
 export default function ProjectsFilters() {
   return (
-    <div className="w-[450px]">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec pur
-      us. Ut sit amet libero auctor, tincidunt mauris sit amet, ultricies
-      turpis. Donec nec nulla in purus Lorem ipsum dolor sit amet, consectetur
-      adipiscing elit. Nullam nec pur us. Ut sit amet libero auctor, tincidunt
-      mauris sit amet, ultricies turpis. Donec nec nulla in purus Lorem ipsum
-      dolor sit amet, consectetur adipiscing elit. Nullam nec pur us. Ut sit
-      amet libero auctor, tincidunt mauris sit amet, ultricies turpis. Donec nec
-      nulla in purus Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Nullam nec pur us. Ut sit amet libero auctor, tincidunt mauris sit amet,
-      ultricies turpis. Donec nec nulla in purus Lorem ipsum dolor sit amet,
-      consectetur adipiscing elit. Nullam nec pur us. Ut sit amet libero auctor,
-      tincidunt mauris sit amet, ultricies turpis. Donec nec nulla in purus
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec pur
-      us. Ut sit amet libero auctor, tincidunt mauris sit amet, ultricies
-      turpis. Donec nec nulla in purus
+    <div className="flex w-[450px] flex-col gap-4">
+      <Input className="w-full" />
+      <Input variant="ghost" className="w-full" />
     </div>
   );
 }

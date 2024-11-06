@@ -38,7 +38,7 @@ export default function TablePagination({
     <div className={cn("sticky bottom-0 border-t px-4 py-2", className)}>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="inline-flex">
+          <div className="inline-flex text-xs">
             {pagination.pageIndex * pagination.pageSize + 1} -{" "}
             {Math.min(
               (pagination.pageIndex + 1) * pagination.pageSize,

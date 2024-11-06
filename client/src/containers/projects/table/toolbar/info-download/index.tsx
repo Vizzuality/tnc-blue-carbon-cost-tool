@@ -16,14 +16,11 @@ export default function InfoDownloadProjectsTable() {
   };
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex flex-1 items-center justify-end space-x-2">
       <Dialog>
         <DialogTrigger asChild>
-          <Button onClick={onClickInfo} variant="ghost" className="space-x-2">
-            <>
-              <InfoCircledIcon className="h-5 w-5" />
-              <span>Info</span>
-            </>
+          <Button onClick={onClickInfo} variant="ghost" size="icon">
+            <InfoCircledIcon className="h-5 w-5" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

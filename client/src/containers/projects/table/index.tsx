@@ -9,15 +9,15 @@ export default function TableVisualization() {
   const [tableView] = useTableView();
 
   return (
-    <>
+    <div className="flex h-full flex-1 flex-col rounded-b-md border border-t-0 border-border">
       <ToolbarProjectsTable />
-      <div className="mb-4 flex h-full flex-1 flex-col overflow-hidden rounded-md border">
+      <div className="flex h-full flex-1 flex-col overflow-hidden">
         {tableView === "overview" && <OverviewTable />}
         {tableView === "scorecard-prioritization" && (
           <ScoredCardPrioritizationTable />
         )}
         {tableView === "key-costs" && <KeyCostsTable />}
       </div>
-    </>
+    </div>
   );
 }

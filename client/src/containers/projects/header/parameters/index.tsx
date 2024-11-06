@@ -21,6 +21,7 @@ export const PROJECT_PARAMETERS = [
   {
     key: FILTER_KEYS[1],
     label: "Project size",
+    className: "w-[125px]",
     options: [
       {
         label: "Small",
@@ -39,6 +40,7 @@ export const PROJECT_PARAMETERS = [
   {
     key: FILTER_KEYS[2],
     label: "Carbon pricing type",
+    className: "w-[195px]",
     options: [
       {
         label: "Market price",
@@ -53,6 +55,7 @@ export const PROJECT_PARAMETERS = [
   {
     key: FILTER_KEYS[3],
     label: "Cost",
+    className: "w-[85px]",
     options: [
       {
         label: "Total",
@@ -88,7 +91,7 @@ export default function ParametersProjects() {
               handleParameters(v, parameter.key);
             }}
           >
-            <SelectTrigger className="w-[165px]">
+            <SelectTrigger className={parameter.className}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

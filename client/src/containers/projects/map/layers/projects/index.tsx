@@ -50,6 +50,7 @@ export default function ProjectsLayer() {
       id: "cost-abatement-layer",
       type: "fill",
       source: costAbatementSource.id,
+
       paint: {
         "fill-color": [
           "match",
@@ -75,14 +76,14 @@ export default function ProjectsLayer() {
           ...colors,
           "#FFF",
         ],
-        "fill-opacity": 1,
+        "fill-opacity": 0.8,
       },
     };
 
     return (
       <>
         <Source {...costAbatementSource} />
-        <Layer {...costAbatementLayer} />
+        <Layer {...costAbatementLayer} beforeId="custom-layers" />
       </>
     );
   }
