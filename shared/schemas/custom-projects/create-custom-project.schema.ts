@@ -38,6 +38,15 @@ export const ConservationCustomProjectSchema = z
         message: `Project Specific Loss Rate is required when lossRateUsed is ${LOSS_RATE_USED.PROJECT_SPECIFIC}`,
       });
     }
+    if (
+      data.lossRateUsed === LOSS_RATE_USED.NATIONAL_AVERAGE &&
+      data.projectSpecificLossRate
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Project Specific Loss Rate should not be provided when lossRateUsed is ${LOSS_RATE_USED.NATIONAL_AVERAGE}`,
+      });
+    }
   });
 
 // TODO: Work on having a conditionally validated schema based on multiple conditions
