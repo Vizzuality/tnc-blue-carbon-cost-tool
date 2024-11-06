@@ -27,7 +27,7 @@ export class CustomProjectsService extends AppBaseService<
   }
 
   async create(dto: CreateCustomProjectDto): Promise<any> {
-    const { countryCode, ecosystem, activity, name } = dto;
+    const { countryCode, ecosystem, activity, projectName } = dto;
     const { baseData, baseSize, baseIncrease, defaultAssumptions } =
       await this.calculationEngine.getBaseData({
         countryCode,
@@ -39,7 +39,7 @@ export class CustomProjectsService extends AppBaseService<
     // This prop should be required for the consumer? TIER 3 is not defined in the entity
     const emissionFactorUsed = EMISSION_FACTORS_TIER_TYPES.TIER_2;
     const project = this.customProjectFactory.createProject({
-      name,
+      name: projectName,
       ecosystem,
       activity,
       countryCode,

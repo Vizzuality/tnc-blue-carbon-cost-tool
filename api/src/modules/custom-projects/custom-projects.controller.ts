@@ -1,4 +1,4 @@
-import { Controller, HttpStatus } from '@nestjs/common';
+import { Body, Controller, HttpStatus } from '@nestjs/common';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { DataSource } from 'typeorm';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
@@ -6,12 +6,13 @@ import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
+import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 
 @Controller()
 export class CustomProjectsController {
   constructor(
     private readonly countries: CountriesService,
-    private readonly dataSource: DataSource,
+    public readonly dataSource: DataSource,
     private readonly customProjects: CustomProjectsService,
   ) {}
 
@@ -42,11 +43,15 @@ export class CustomProjectsController {
   }
 
   @TsRestHandler(customProjectContract.createCustomProject)
-  async create(): Promise<ControllerResponse> {
+  async create(
+    // @ts-ignore
+    @Body()
+    dto: CreateCustomProjectDto,
+  ): Promise<ControllerResponse> {
     return tsRestHandler(
       customProjectContract.createCustomProject,
       async ({ body }) => {
-        const customProject = await this.customProjects.create(body);
+        const customProject = await this.customProjects.create(dto);
         return {
           status: 201,
           body: { data: customProject },
@@ -54,17 +59,17 @@ export class CustomProjectsController {
       },
     );
   }
-  @TsRestHandler(customProjectContract.createConservationCustomProject)
-  async createConservationProject(): Promise<ControllerResponse> {
-    return tsRestHandler(
-      customProjectContract.createConservationCustomProject,
-      async ({ body }) => {
-        const customProject = await this.customProjects.create(body);
-        return {
-          status: 201,
-          body: { data: customProject },
-        };
-      },
-    );
-  }
+  // @TsRestHandler(customProjectContract.createConservationCustomProject)
+  // async createConservationProject(): Promise<ControllerResponse> {
+  //   return tsRestHandler(
+  //     customProjectContract.createConservationCustomProject,
+  //     async ({ body }) => {
+  //       const customProject = await this.customProjects.create(body);
+  //       return {
+  //         status: 201,
+  //         body: { data: customProject },
+  //       };
+  //     },
+  //   );
+  // }
 }
