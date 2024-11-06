@@ -25,7 +25,10 @@ export const ConservationCustomProjectSchema = z
     countryCode: z.string().min(3).max(3),
     ecosystem: z.nativeEnum(ECOSYSTEM),
     lossRateUsed: z.nativeEnum(LOSS_RATE_USED),
-    projectSpecificLossRate: z.number().negative().optional(),
+    projectSpecificLossRate: z
+      .number({ message: "Project Specific Loss Rate should be a message" })
+      .negative({ message: "Project Specific Loss Rate should be negative" })
+      .optional(),
   })
   .superRefine((data, ctx) => {
     console.log("DATA", data);
