@@ -120,11 +120,11 @@ describe('Project Map', () => {
       .request()
       .get(projectsContract.getProjectsMap.path)
       .query({
-        filter: { countryCode: [countries[0].code] },
+        filter: { countryCode: [countries[0].code, countries[1].code] },
       });
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body.features.length).toBe(1);
+    expect(response.body.features.length).toBe(2);
     expect(response.body.features[0].properties.country).toBe(
       countries[0].name,
     );
