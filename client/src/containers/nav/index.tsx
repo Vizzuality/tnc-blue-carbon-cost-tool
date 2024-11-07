@@ -65,7 +65,7 @@ export default function MainNav() {
   const { open } = useSidebar();
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="py-6">
       <SidebarHeader>
         <span>{open ? "Blue Carbon Cost Tool" : "BCCT"}</span>
       </SidebarHeader>
