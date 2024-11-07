@@ -48,12 +48,11 @@ export class ProjectsController {
   }
 
   @TsRestHandler(projectsContract.getProjectsMap)
-  async getProjectsMap(
-    @ProcessFetchSpecification() dto: FetchSpecification,
-  ): ControllerResponse {
-    return tsRestHandler(projectsContract.getProjectsMap, async () => {
+  async getProjectsMap(): ControllerResponse {
+    return tsRestHandler(projectsContract.getProjectsMap, async ({ query }) => {
+      const { filter } = query;
       const data = await this.projectMapRepository.getProjectsMap(
-        dto.filter as ProjectMapFilters,
+        filter as ProjectMapFilters,
       );
       return { body: data, status: HttpStatus.OK } as any;
     });
