@@ -6,10 +6,6 @@ import { ProjectsService } from '@api/modules/projects/projects.service';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { CountryWithNoGeometry } from '@shared/entities/country.entity';
 import { ProjectsMapRepository } from '@api/modules/projects/projects-map.repository';
-import {
-  FetchSpecification,
-  ProcessFetchSpecification,
-} from 'nestjs-base-service';
 import { ProjectMapFilters } from '@shared/dtos/projects/projects-map.dto';
 
 @Controller()
@@ -52,7 +48,7 @@ export class ProjectsController {
     return tsRestHandler(projectsContract.getProjectsMap, async ({ query }) => {
       const { filter } = query;
       const data = await this.projectMapRepository.getProjectsMap(
-        filter as ProjectMapFilters,
+        filter as unknown as ProjectMapFilters,
       );
       return { body: data, status: HttpStatus.OK } as any;
     });
