@@ -23,7 +23,7 @@ import TablePagination, {
   PAGINATION_SIZE_OPTIONS,
 } from "@/containers/projects/table/pagination";
 import {
-  filtersToQueryParams,
+  //filtersToQueryParams,
   NO_DATA,
 } from "@/containers/projects/table/utils";
 import { columns } from "@/containers/projects/table/view/overview/columns";
@@ -63,11 +63,11 @@ export function OverviewTable() {
     queryKey,
     {
       query: {
-        ...filtersToQueryParams(filters),
-        fields: columnsBasedOnFilters.map((column) => column.accessorKey),
-        ...(sorting.length > 0 && {
-          sort: sorting.map((sort) => `${sort.desc ? "" : "-"}${sort.id}`),
-        }),
+        // ...filtersToQueryParams(filters),
+        // fields: columnsBasedOnFilters.map((column) => column.accessorKey),
+        // ...(sorting.length > 0 && {
+        //   sort: sorting.map((sort) => `${sort.desc ? "" : "-"}${sort.id}`),
+        // }),
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
       },
