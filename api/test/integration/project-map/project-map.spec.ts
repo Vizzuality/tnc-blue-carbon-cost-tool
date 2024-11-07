@@ -98,4 +98,38 @@ describe('Project Map', () => {
       mangroveProjectInPortugal.abatementPotential,
     );
   });
+
+  test('Should return the geometries of the countries filtered by country code', async () => {
+    const countries = await testManager
+      .getDataSource()
+      .getRepository(Country)
+      .find({ take: 4 });
+
+    const savedProjects: Project[] = [];
+
+    for (const [index, country] of Object.entries(countries)) {
+      const project = await testManager.mocks().createProject({
+        countryCode: country.code,
+        totalCost: 1000 + parseInt(index),
+        abatementPotential: 2000 + parseInt(index),
+      });
+      savedProjects.push(project);
+    }
+
+    const response = await testManager
+      .request()
+      .get(projectsContract.getProjectsMap.path)
+      .query({
+        filter: { countryCode: [countries[0].code, countries[1].code] },
+      });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body.features.length).toBe(2);
+    expect(response.body.features[0].properties.country).toBe(
+      countries[0].name,
+    );
+    expect(response.body.features[1].properties.country).toBe(
+      countries[1].name,
+    );
+  });
 });
