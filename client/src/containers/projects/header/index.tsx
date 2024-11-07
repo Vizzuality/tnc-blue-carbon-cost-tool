@@ -1,9 +1,14 @@
 "use client";
 
 import { useSetAtom } from "jotai";
+import isEqual from "lodash.isequal";
 import { Settings2Icon } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+
 import { projectsUIState } from "@/app/(projects)/store";
+import { useGlobalFilters } from "@/app/(projects)/url-store";
+import { INITIAL_FILTERS_STATE } from "@/app/(projects)/url-store";
 
 import ParametersProjects from "@/containers/projects/header/parameters";
 
@@ -12,6 +17,26 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function ProjectsHeader() {
   const setFiltersOpen = useSetAtom(projectsUIState);
+  const [filters] = useGlobalFilters();
+
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  const {
+    keyword,
+    priceType,
+    projectSizeFilter,
+    costRangeSelector,
+    ...sideFilters
+  } = filters;
+  const {
+    keyword: initialKeyword,
+    priceType: initialPriceType,
+    projectSizeFilter: initialProjectSizeFilter,
+    costRangeSelector: initialCostRangeSelector,
+    ...initialSideFilters
+  } = INITIAL_FILTERS_STATE;
+  /* eslint-enable @typescript-eslint/no-unused-vars */
+
+  const filtersEqual = isEqual(sideFilters, initialSideFilters);
 
   return (
     <header className="flex w-full items-center justify-between py-3">
@@ -28,10 +53,16 @@ export default function ProjectsHeader() {
               filtersOpen: !prev.filtersOpen,
             }));
           }}
+          className={cn({
+            relative: !filtersEqual,
+          })}
         >
           <>
             <Settings2Icon className="h-4 w-4" />
             <span>Filters</span>
+            {!filtersEqual && (
+              <span className="absolute right-0 top-0 h-3 w-3 rounded-full border border-border bg-big-stone-600" />
+            )}
           </>
         </Button>
       </div>

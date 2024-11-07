@@ -1,4 +1,4 @@
-import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { InfoIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +20,7 @@ export default function InfoDownloadProjectsTable() {
       <Dialog>
         <DialogTrigger asChild>
           <Button onClick={onClickInfo} variant="ghost" size="icon">
-            <InfoCircledIcon className="h-5 w-5" />
+            <InfoIcon className="h-5 w-5" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

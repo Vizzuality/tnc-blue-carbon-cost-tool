@@ -43,7 +43,9 @@ export default function LayoutProviders({
       <SessionProvider session={session} basePath="/auth/api">
         <TooltipProvider>
           <QueryClientProvider client={queryClient}>
-            <JotaiProvider store={appStore}>{children}</JotaiProvider>
+            <TooltipProvider>
+              <JotaiProvider store={appStore}>{children}</JotaiProvider>
+            </TooltipProvider>
           </QueryClientProvider>
         </TooltipProvider>
       </SessionProvider>

@@ -5,8 +5,6 @@ import { useMap } from "react-map-gl";
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 
-import { cn } from "@/lib/utils";
-
 import { LAYOUT_TRANSITIONS } from "@/app/(projects)/constants";
 import { projectsUIState } from "@/app/(projects)/store";
 
@@ -42,9 +40,7 @@ export default function Projects() {
     <motion.div
       layout
       layoutDependency={navOpen}
-      className={cn("flex flex-1", {
-        "mx-3": !filtersOpen,
-      })}
+      className="flex flex-1"
       transition={LAYOUT_TRANSITIONS}
     >
       <motion.aside
@@ -64,7 +60,7 @@ export default function Projects() {
       >
         <ProjectsFilters />
       </motion.aside>
-      <div className="flex flex-1 flex-col">
+      <div className="mx-3 flex flex-1 flex-col">
         <ProjectsHeader />
         <ResizablePanelGroup
           direction="vertical"

@@ -13,7 +13,7 @@ const Thumb = React.forwardRef<
   <SliderPrimitive.Thumb
     ref={ref}
     className={cn(
-      "block h-4 w-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+      "block h-4 w-4 rounded-full border-2 border-accent bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
       className,
     )}
     {...props}
@@ -21,6 +21,9 @@ const Thumb = React.forwardRef<
 ));
 
 Thumb.displayName = SliderPrimitive.Thumb.displayName;
+
+const SLIDER_TRACK_STYLES =
+  "relative h-1.5 w-full grow overflow-hidden rounded-full bg-big-stone-1000";
 
 const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
@@ -34,7 +37,7 @@ const Slider = React.forwardRef<
     )}
     {...props}
   >
-    <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20">
+    <SliderPrimitive.Track className={SLIDER_TRACK_STYLES}>
       <SliderPrimitive.Range className="absolute h-full bg-primary" />
     </SliderPrimitive.Track>
     <Thumb />
@@ -55,7 +58,7 @@ const RangeSlider = React.forwardRef<
     )}
     {...props}
   >
-    <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20">
+    <SliderPrimitive.Track className={SLIDER_TRACK_STYLES}>
       <SliderPrimitive.Range className="absolute h-full bg-primary" />
     </SliderPrimitive.Track>
     <Thumb />
@@ -65,4 +68,19 @@ const RangeSlider = React.forwardRef<
 
 RangeSlider.displayName = SliderPrimitive.Root.displayName;
 
-export { Slider, RangeSlider };
+const SliderLabels = function ({
+  min,
+  max,
+}: {
+  min: React.ReactNode;
+  max: React.ReactNode;
+}) {
+  return (
+    <div className="flex w-full items-center justify-between text-foreground">
+      <span>{min}</span>
+      <span>{max}</span>
+    </div>
+  );
+};
+
+export { Slider, RangeSlider, SliderLabels };

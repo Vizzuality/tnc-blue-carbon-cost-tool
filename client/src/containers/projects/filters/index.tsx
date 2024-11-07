@@ -1,8 +1,7 @@
+import * as React from "react";
+
 import { CheckedState } from "@radix-ui/react-checkbox";
-import {
-  ACTIVITY,
-  RESTORATION_ACTIVITY_SUBTYPE,
-} from "@shared/entities/activity.enum";
+import { ACTIVITY } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { useSetAtom } from "jotai/index";
 import { XIcon } from "lucide-react";
@@ -10,6 +9,7 @@ import { useDebounce } from "rooks";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
+import { cn } from "@/lib/utils";
 
 import {
   INITIAL_COST_RANGE,
@@ -22,7 +22,7 @@ import {
 } from "@/app/(projects)/url-store";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { CheckboxWrapper } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -31,7 +31,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RangeSlider } from "@/components/ui/slider";
+import { RangeSlider, SliderLabels } from "@/components/ui/slider";
+
+import { ACTIVITIES } from "./constants";
 
 export const FILTERS_SIDEBAR_WIDTH = 320;
 
@@ -120,23 +122,50 @@ export default function ProjectsFilters() {
 
   return (
     <section
-      className="space-y-10 px-4 py-6"
+      className="h-full flex-1 space-y-10 border-r border-border bg-big-stone-950 p-6"
       style={{
         width: FILTERS_SIDEBAR_WIDTH,
       }}
     >
-      <header>
-        <h3>Filters</h3>
-        <Button onClick={resetFilters}>Reset</Button>
-        <Button onClick={closeFilters} variant="ghost">
-          <XIcon />
+      <header className="flex w-full flex-col">
+        <Button
+          onClick={closeFilters}
+          variant="ghost"
+          className="h-5 w-5 grow self-end p-0 hover:bg-transparent"
+        >
+          <XIcon className="h-5 w-5 text-foreground hover:text-muted-foreground" />
         </Button>
+        <div className="flex items-center gap-3">
+          <h3 className="text-xl font-semibold">Filters</h3>
+          <Button
+            onClick={resetFilters}
+            variant="secondary"
+            size="sm"
+            className="text-xs"
+          >
+            Reset
+          </Button>
+        </div>
       </header>
-      <div>
-        <Label htmlFor="countryCode">Country</Label>
+      <div className="space-y-2">
+        <Label
+          htmlFor="countryCode"
+          tooltip={{
+            title: "Country",
+            content: (
+              <p>
+                Select the country you want to filter by. You can select
+                multiple countries.
+              </p>
+            ),
+          }}
+        >
+          Country
+        </Label>
         <Select
           name="countryCode"
           defaultValue={filters.countryCode || "all"}
+          value={filters.countryCode || "all"}
           onValueChange={async (v) => {
             await setFilters((prev) => ({
               ...prev,
@@ -157,139 +186,91 @@ export default function ProjectsFilters() {
           </SelectContent>
         </Select>
       </div>
-      <div>
-        <p>Ecosystems</p>
-        <ul>
-          <li>
-            <Label htmlFor={ECOSYSTEM.MANGROVE}>
-              <Checkbox
-                id={ECOSYSTEM.MANGROVE}
-                checked={filters.ecosystem.includes(ECOSYSTEM.MANGROVE)}
+      <div className="space-y-2">
+        <Label
+          tooltip={{
+            title: "Ecosystems",
+            content: (
+              <p>
+                Select the ecosystems you want to filter by. You can select
+                multiple ecosystems.
+              </p>
+            ),
+          }}
+        >
+          Ecosystems
+        </Label>
+        <ul className="flex flex-col gap-2">
+          {Object.values(ECOSYSTEM).map((ecosystem) => (
+            <li key={ecosystem}>
+              <CheckboxWrapper
+                label={ecosystem}
+                id={ecosystem}
+                checked={filters.ecosystem.includes(ecosystem)}
                 onCheckedChange={async (isChecked) => {
-                  await handleEcosystemChange(isChecked, ECOSYSTEM.MANGROVE);
+                  await handleEcosystemChange(isChecked, ecosystem);
                 }}
               />
-              {ECOSYSTEM.MANGROVE}
-            </Label>
-          </li>
-          <li>
-            <Label htmlFor={ECOSYSTEM.SALT_MARSH}>
-              <Checkbox
-                id={ECOSYSTEM.SALT_MARSH}
-                checked={filters.ecosystem.includes(ECOSYSTEM.SALT_MARSH)}
-                onCheckedChange={async (isChecked) => {
-                  await handleEcosystemChange(isChecked, ECOSYSTEM.SALT_MARSH);
-                }}
-              />
-              {ECOSYSTEM.SALT_MARSH}
-            </Label>
-          </li>
-          <li>
-            <Label htmlFor={ECOSYSTEM.SEAGRASS}>
-              <Checkbox
-                id={ECOSYSTEM.SEAGRASS}
-                checked={filters.ecosystem.includes(ECOSYSTEM.SEAGRASS)}
-                onCheckedChange={async (isChecked) => {
-                  await handleEcosystemChange(isChecked, ECOSYSTEM.SEAGRASS);
-                }}
-              />
-              {ECOSYSTEM.SEAGRASS}
-            </Label>
-          </li>
+            </li>
+          ))}
         </ul>
       </div>
-      <div>
-        <p>Activity type</p>
-        <ul>
-          <li>
-            <Label htmlFor={ACTIVITY.CONSERVATION}>
-              <Checkbox
-                id={ACTIVITY.CONSERVATION}
-                checked={filters.activity.includes(ACTIVITY.CONSERVATION)}
+      <div className="space-y-2">
+        <Label
+          tooltip={{
+            title: "Activities",
+            content: (
+              <p>
+                Select the activities you want to filter by. You can select
+                multiple activities and sub-activities.
+              </p>
+            ),
+          }}
+        >
+          Activities
+        </Label>
+        <ul className="flex flex-col gap-2">
+          {ACTIVITIES.map((activity) => (
+            <li
+              key={activity.value}
+              className={cn({
+                "flex flex-col gap-2": activity.children,
+              })}
+            >
+              <CheckboxWrapper
+                label={activity.label}
+                id={activity.value}
+                checked={filters.activity.includes(activity.value)}
                 onCheckedChange={async (isChecked) => {
-                  await handleActivityChange(isChecked, ACTIVITY.CONSERVATION);
+                  await handleActivityChange(isChecked, activity.value);
                 }}
               />
-              {ACTIVITY.CONSERVATION}
-            </Label>
-          </li>
-          <li>
-            <Label htmlFor={ACTIVITY.RESTORATION}>
-              <Checkbox
-                id={ACTIVITY.RESTORATION}
-                checked={filters.activity.includes(ACTIVITY.RESTORATION)}
-                onCheckedChange={async (isChecked) => {
-                  await handleActivityChange(isChecked, ACTIVITY.RESTORATION);
-                  await setFilters((prev) => ({
-                    ...prev,
-                    subActivities: [
-                      RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
-                      RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY,
-                      RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
-                    ],
-                  }));
-                }}
-              />
-              {ACTIVITY.RESTORATION}
-            </Label>
-
-            <ul className="ml-3">
-              <li>
-                <Label htmlFor={RESTORATION_ACTIVITY_SUBTYPE.HYBRID}>
-                  <Checkbox
-                    id={RESTORATION_ACTIVITY_SUBTYPE.HYBRID}
-                    checked={filters.activitySubtype.includes(
-                      RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
-                    )}
-                    onCheckedChange={async (isChecked) => {
-                      await handleSubActivityChange(
-                        isChecked,
-                        RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
-                      );
-                    }}
-                  />
-                  {RESTORATION_ACTIVITY_SUBTYPE.HYBRID}
-                </Label>
-              </li>
-              <li>
-                <Label htmlFor={RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY}>
-                  <Checkbox
-                    id={RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY}
-                    checked={filters.activitySubtype.includes(
-                      RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY,
-                    )}
-                    onCheckedChange={async (isChecked) => {
-                      await handleSubActivityChange(
-                        isChecked,
-                        RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY,
-                      );
-                    }}
-                  />
-                  {RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY}
-                </Label>
-              </li>
-              <li>
-                <Label htmlFor={RESTORATION_ACTIVITY_SUBTYPE.PLANTING}>
-                  <Checkbox
-                    id={RESTORATION_ACTIVITY_SUBTYPE.PLANTING}
-                    checked={filters.activitySubtype.includes(
-                      RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
-                    )}
-                    onCheckedChange={async (isChecked) => {
-                      await handleSubActivityChange(
-                        isChecked,
-                        RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
-                      );
-                    }}
-                  />
-                  {RESTORATION_ACTIVITY_SUBTYPE.PLANTING}
-                </Label>
-              </li>
-            </ul>
-          </li>
+              {activity.children && (
+                <ul className="ml-6 flex flex-col gap-2">
+                  {activity.children.map((subActivity) => (
+                    <li key={subActivity.value}>
+                      <CheckboxWrapper
+                        label={subActivity.label}
+                        id={subActivity.value}
+                        checked={filters.activitySubtype.includes(
+                          subActivity.value,
+                        )}
+                        onCheckedChange={async (isChecked) => {
+                          await handleSubActivityChange(
+                            isChecked,
+                            subActivity.value,
+                          );
+                        }}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
         </ul>
       </div>
-      <div>
+      <div className="flex flex-col gap-3">
         <Label htmlFor="costs">Cost ($)</Label>
         <RangeSlider
           defaultValue={[
@@ -302,13 +283,10 @@ export default function ProjectsFilters() {
           minStepsBetweenThumbs={1}
           onValueChange={debouncedCostChange}
         />
-        <div className="flex justify-between">
-          <span>{INITIAL_COST_RANGE[0]}</span>
-          <span>{INITIAL_COST_RANGE[1]}</span>
-        </div>
+        <SliderLabels min={INITIAL_COST_RANGE[0]} max={INITIAL_COST_RANGE[1]} />
       </div>
 
-      <div>
+      <div className="flex flex-col gap-3">
         <Label htmlFor="abatement_potential">Abatement Potential ($)</Label>
         <RangeSlider
           defaultValue={[
@@ -323,10 +301,10 @@ export default function ProjectsFilters() {
           minStepsBetweenThumbs={1}
           onValueChange={debouncedAbatementPotentialChange}
         />
-        <div className="flex justify-between">
-          <span>{INITIAL_ABATEMENT_POTENTIAL_RANGE[0]}</span>
-          <span>{INITIAL_ABATEMENT_POTENTIAL_RANGE[1]}</span>
-        </div>
+        <SliderLabels
+          min={INITIAL_ABATEMENT_POTENTIAL_RANGE[0]}
+          max={INITIAL_ABATEMENT_POTENTIAL_RANGE[1]}
+        />
       </div>
     </section>
   );

@@ -34,6 +34,7 @@
     "d3": "7.9.0",
     "framer-motion": "11.11.9",
     "jotai": "2.10.1",
+    "lodash.isequal": "4.5.0",
     "lucide-react": "0.447.0",
     "mapbox-gl": "3.7.0",
     "next": "14.2.10",
@@ -51,6 +52,7 @@
   "devDependencies": {
     "@types/d3": "7.4.3",
     "@types/geojson": "catalog:",
+    "@types/lodash.isequal": "4.5.8",
     "@types/mapbox-gl": "3.4.0",
     "@types/node": "catalog:",
     "@types/react": "^18",
