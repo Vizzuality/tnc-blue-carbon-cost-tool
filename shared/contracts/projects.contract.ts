@@ -11,8 +11,11 @@ import {
   ProjectMap,
   ProjectMapFilters,
 } from "@shared/dtos/projects/projects-map.dto";
+import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 
 const contract = initContract();
+
+const projectsQuerySchema = generateEntityQuerySchema(Project);
 export const projectsContract = contract.router({
   getProjects: {
     method: "GET",
@@ -20,7 +23,7 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiPaginationResponse<Project>>(),
     },
-    query: contract.type<FetchSpecification>(),
+    query: projectsQuerySchema,
   },
   getProject: {
     method: "GET",
@@ -31,7 +34,7 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiResponse<Project>>(),
     },
-    query: contract.type<FetchSpecification>(),
+    query: projectsQuerySchema,
   },
   getProjectCountries: {
     method: "GET",
@@ -49,6 +52,6 @@ export const projectsContract = contract.router({
     // TODO: we need to define filters, they should probably match filters for Projects. Or we might want to pass only project ids, which
     //       would be already filtered
     //query: z.object({ countryCodes: z.string().array().optional() }).optional(),
-    query: contract.type<{ filter: ProjectMapFilters }>(),
+    query: projectsQuerySchema.pick({ filter: true }),
   },
 });

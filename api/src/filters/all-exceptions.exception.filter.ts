@@ -62,6 +62,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         title: exception.message,
         meta: {
           timestamp: new Date().toISOString(),
+          stack: exception.stack,
         },
       });
     }
