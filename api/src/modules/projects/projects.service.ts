@@ -4,6 +4,11 @@ import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { FetchSpecification } from 'nestjs-base-service';
+import { z } from 'zod';
+import { ProjectGeoPropertiesSchema } from '@shared/schemas/geometries/projects';
+import { projectsQuerySchema } from '@shared/contracts/projects.contract';
+
+export type ProjectFetchSpecificacion = z.infer<typeof projectsQuerySchema>;
 
 @Injectable()
 export class ProjectsService extends AppBaseService<
@@ -21,14 +26,18 @@ export class ProjectsService extends AppBaseService<
 
   async extendFindAllQuery(
     query: SelectQueryBuilder<Project>,
-    fetchSpecification: FetchSpecification,
+    fetchSpecification: ProjectFetchSpecificacion,
   ): Promise<SelectQueryBuilder<Project>> {
     // Filter by project name
     if (fetchSpecification?.filter?.projectName) {
-      query = query.andWhere('project_name ILIKE :projectName', {
-        projectName: `%${fetchSpecification.filter.projectName}%`,
+      const filter = fetchSpecification.filter.projectName
+        .map((name) => `'%${name}%'`)
+        .join(',');
+      query = query.andWhere('project_name ILIKE ANY(ARRAY[:projectName])', {
+        projectName: filter,
       });
     }
+    console.log('query', query.getQueryAndParameters());
     return query;
   }
 }
