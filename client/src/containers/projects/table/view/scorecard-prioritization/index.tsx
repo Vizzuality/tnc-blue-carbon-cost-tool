@@ -62,10 +62,10 @@ export function ScoredCardPrioritizationTable() {
     {
       query: {
         ...filtersToQueryParams(filters),
-        fields: TABLE_COLUMNS.map((column) => column.accessorKey),
-        ...(sorting.length > 0 && {
-          sort: sorting.map((sort) => `${sort.desc ? "" : "-"}${sort.id}`),
-        }),
+        // fields: TABLE_COLUMNS.map((column) => column.accessorKey),
+        // ...(sorting.length > 0 && {
+        //   sort: sorting.map((sort) => `${sort.desc ? "" : "-"}${sort.id}`),
+        // }),
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
       },

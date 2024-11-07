@@ -15,7 +15,7 @@ import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 
 const contract = initContract();
 
-const projectsQuerySchema = generateEntityQuerySchema(Project);
+export const projectsQuerySchema = generateEntityQuerySchema(Project);
 export const projectsContract = contract.router({
   getProjects: {
     method: "GET",
