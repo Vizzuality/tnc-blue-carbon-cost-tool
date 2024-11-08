@@ -149,23 +149,21 @@ describe('Projects', () => {
       ).toEqual(['15', '25']);
     });
 
-    // test('Should return a list of projects filtered by project name', async () => {
-    //   await testManager.mocks().createProject({ projectName: 'PROJ_ABC' });
-    //   await testManager.mocks().createProject({ projectName: 'PROJ_DEF' });
+    test('Should return a list of projects filtered by project name', async () => {
+      await testManager.mocks().createProject({ projectName: 'PROJ_ABC' });
+      await testManager.mocks().createProject({ projectName: 'PROJ_DEF' });
 
-    //   const response = await testManager
-    //     .request()
-    //     .get(projectsContract.getProjects.path)
-    //     .query({
-    //       filter: {
-    //         projectName: ['ABC'],
-    //       },
-    //     });
-    //   expect(response.body.data).toHaveLength(1);
-    //   expect(
-    //     response.body.data.map((project: Project) => project.projectName),
-    //   ).toEqual(['PROJ_ABC']);
-    // });
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjects.path)
+        .query({
+          partialProjectName: 'ABC',
+        });
+      expect(response.body.data).toHaveLength(1);
+      expect(
+        response.body.data.map((project: Project) => project.projectName),
+      ).toEqual(['PROJ_ABC']);
+    });
   });
 
   describe('Filters for Projects', () => {

@@ -18,6 +18,7 @@ export const otherFilters = z.object({
   costRange: z.coerce.number().array().optional(),
   abatementPotentialRange: z.coerce.number().array().optional(),
   costRangeSelector: z.enum(["total", "npv"]).optional(),
+  partialProjectName: z.string().optional(),
 });
 export const projectsQuerySchema = generateEntityQuerySchema(Project);
 export const getProjectsQuerySchema = projectsQuerySchema.merge(otherFilters);
