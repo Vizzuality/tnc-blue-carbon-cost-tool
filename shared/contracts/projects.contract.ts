@@ -12,8 +12,11 @@ import {
   ProjectMapFilters,
 } from "@shared/dtos/projects/projects-map.dto";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
+import { BaseEntity } from "typeorm";
 
 const contract = initContract();
+
+export type ProjectType = Omit<Project, keyof BaseEntity>;
 
 export const projectsQuerySchema = generateEntityQuerySchema(Project);
 export const projectsContract = contract.router({
@@ -23,7 +26,9 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiPaginationResponse<Project>>(),
     },
-    query: projectsQuerySchema,
+    query: projectsQuerySchema.merge(
+      z.object({ costRangeSelector: z.string().optional() }),
+    ),
   },
   getProject: {
     method: "GET",
