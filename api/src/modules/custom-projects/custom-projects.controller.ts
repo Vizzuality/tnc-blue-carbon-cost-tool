@@ -44,7 +44,6 @@ export class CustomProjectsController {
 
   @TsRestHandler(customProjectContract.createCustomProject)
   async create(
-    // @ts-ignore
     @Body()
     dto: CreateCustomProjectDto,
   ): Promise<ControllerResponse> {
