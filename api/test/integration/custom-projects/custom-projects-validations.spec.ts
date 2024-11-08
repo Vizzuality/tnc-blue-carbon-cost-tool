@@ -23,6 +23,31 @@ describe('Create Custom Projects - Request Validations', () => {
       expect(response.body.errors).toMatchObject(GENERAL_VALIDATION_ERRORS);
     });
   });
+  describe('Conservation Project Validations', () => {
+    test('If Loss Rate used is National Average, Project Specific Loss Rate should not be provided', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send({
+          countryCode: 'IND',
+          activity: 'Conservation',
+          ecosystem: 'Mangrove',
+          projectName: 'My custom project',
+          projectSizeHa: 1000,
+          initialCarbonPriceAssumption: 1000,
+          carbonRevenuesToCover: 'Opex',
+          parameters: {
+            lossRateUsed: 'National average',
+            emissionFactorUsed: 'Tier 1 - Global emission factor',
+            projectSpecificLossRate: -0.5,
+          },
+        });
+
+      console.log(response.body.errors);
+
+      expect(response.body.errors).toHaveLength(1);
+    });
+  });
 });
 
 const GENERAL_VALIDATION_ERRORS = [

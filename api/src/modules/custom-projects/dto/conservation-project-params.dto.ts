@@ -29,7 +29,7 @@ export class ConservationProjectParamDto {
   })
   @IsNumber()
   @IsNegative({ message: 'Project Specific Loss Rate must be negative' })
-  projectSpecificLossRate?: number;
+  projectSpecificLossRate: number;
 
   @IsEnum(EMISSION_FACTORS_TIER_TYPES || TIER_3_EMISSION_FACTORS)
   emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES | TIER_3_EMISSION_FACTORS;

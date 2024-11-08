@@ -44,7 +44,7 @@ export class CustomProjectsController {
 
   @TsRestHandler(customProjectContract.createCustomProject)
   async create(
-    @Body(new ValidationPipe({ enableDebugMessages: true }))
+    @Body(new ValidationPipe({ enableDebugMessages: true, transform: true }))
     dto: CreateCustomProjectDto,
   ): Promise<ControllerResponse> {
     return tsRestHandler(
