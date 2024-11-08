@@ -27,11 +27,9 @@ export class ProjectsService extends AppBaseService<
     fetchSpecification: ProjectFetchSpecificacion,
   ): Promise<SelectQueryBuilder<Project>> {
     // Filter by project name
-    if (fetchSpecification.filter?.projectName) {
-      query = query.andWhere('project_name ILIKE ANY (:projectNames)', {
-        projectNames: fetchSpecification.filter.projectName.map(
-          (term) => `%${term}%`,
-        ),
+    if (fetchSpecification.partialProjectName) {
+      query = query.andWhere('project_name ILIKE :projectName', {
+        projectName: `%${fetchSpecification.partialProjectName}%`,
       });
     }
 
@@ -67,6 +65,7 @@ export class ProjectsService extends AppBaseService<
         },
       );
     }
+
     return query;
   }
 }
