@@ -3,7 +3,7 @@ import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { Country } from "@shared/entities/country.entity";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { CustomProject } from "@shared/entities/custom-project.entity";
-import { CreateCustomProjectDto } from "@shared/dtos/custom-projects/create-custom-project.dto";
+import { CreateCustomProjectDto } from "@shared/dtos/custom-projects/create-custom-project-dto.deprecated";
 
 // TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 

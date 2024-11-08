@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus } from '@nestjs/common';
+import { Body, Controller, HttpStatus, ValidationPipe } from '@nestjs/common';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { DataSource } from 'typeorm';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
@@ -6,7 +6,7 @@ import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
-import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
+import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project-dto.deprecated';
 
 @Controller()
 export class CustomProjectsController {
@@ -44,13 +44,14 @@ export class CustomProjectsController {
 
   @TsRestHandler(customProjectContract.createCustomProject)
   async create(
-    @Body()
+    @Body(new ValidationPipe({ enableDebugMessages: true }))
     dto: CreateCustomProjectDto,
   ): Promise<ControllerResponse> {
     return tsRestHandler(
       customProjectContract.createCustomProject,
       async ({ body }) => {
-        const customProject = await this.customProjects.create(dto);
+        console.log('dto', dto);
+        const customProject = await this.customProjects.create(dto as any);
         return {
           status: 201,
           body: { data: customProject },

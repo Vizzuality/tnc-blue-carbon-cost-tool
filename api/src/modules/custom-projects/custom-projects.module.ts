@@ -6,7 +6,6 @@ import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CustomProjectsController } from './custom-projects.controller';
 import { CalculationsModule } from '@api/modules/calculations/calculations.module';
 import { CustomProjectFactory } from '@api/modules/custom-projects/custom-project.factory';
-import { CreateCustomProjectValidator } from '@api/modules/custom-projects/validation/create-custom-project.validator';
 
 @Module({
   imports: [
@@ -14,11 +13,7 @@ import { CreateCustomProjectValidator } from '@api/modules/custom-projects/valid
     CountriesModule,
     CalculationsModule,
   ],
-  providers: [
-    CustomProjectsService,
-    CustomProjectFactory,
-    CreateCustomProjectValidator,
-  ],
+  providers: [CustomProjectsService, CustomProjectFactory],
   controllers: [CustomProjectsController],
 })
 export class CustomProjectsModule {}
