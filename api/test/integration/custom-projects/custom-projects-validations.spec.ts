@@ -1,8 +1,5 @@
 import { TestManager } from '../../utils/test-manager';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
-import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
-import { ACTIVITY } from '@shared/entities/activity.enum';
-import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 
 describe('Create Custom Projects - Request Validations', () => {
   let testManager: TestManager;

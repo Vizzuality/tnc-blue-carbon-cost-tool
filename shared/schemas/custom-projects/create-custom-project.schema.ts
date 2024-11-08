@@ -15,8 +15,8 @@ export const CreateCustomProjectSchema = z.object({
 });
 
 export enum LOSS_RATE_USED {
-  NATIONAL_AVERAGE = "NATIONAL_AVERAGE",
-  PROJECT_SPECIFIC = "PROJECT_SPECIFIC",
+  NATIONAL_AVERAGE = "National average",
+  PROJECT_SPECIFIC = "Project specific",
 }
 
 export const ConservationCustomProjectSchema = z

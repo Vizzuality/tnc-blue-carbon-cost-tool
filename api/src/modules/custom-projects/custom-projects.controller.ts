@@ -6,7 +6,7 @@ import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
-import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project-dto.deprecated';
+import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto.deprecated';
 
 @Controller()
 export class CustomProjectsController {
