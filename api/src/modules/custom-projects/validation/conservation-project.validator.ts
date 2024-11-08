@@ -3,8 +3,7 @@ import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-pr
 import { BadRequestException } from '@nestjs/common';
 import { BaseDataView } from '@shared/entities/base-data.view';
 import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
-import {ACTIVITY} from "@shared/entities/activity.enum";
-import {ECOSYSTEM} from "@shared/entities/ecosystem.enum";
+import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 
 export class ConservationProjectValidator {
   validatedProject: Record<any, any>;
@@ -62,13 +61,26 @@ export class ConservationProjectValidator {
     if (
       this.createDto.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_2
     ) {
-      if(this.createDto.ecosystem !== ECOSYSTEM.MANGROVE) {
-        throw new BadRequestException(`No Tier 2 emission factors for ${this.createDto.ecosystem}`);
+      if (this.createDto.ecosystem !== ECOSYSTEM.MANGROVE) {
+        throw new BadRequestException(
+          `No Tier 2 emission factors for ${this.createDto.ecosystem}`,
+        );
       }
       this.validatedProject.emissionFactorAGB = this.data.emissionFactorAgb;
       this.validatedProject.emissionFactorSOC = this.data.emissionFactorSoc;
       return;
     }
-    this.
+    if (this.createDto.projectSpecificEmission === 'One emission factor') {
+      this.validatedProject.emissionFactor =
+        this.createDto.projectSpecificEmissionFactor;
+      this.validatedProject.emissionFactorAGB = 0;
+      this.validatedProject.emissionFactorSOC = 0;
+    } else {
+      this.validatedProject.emissionFactor = null;
+      this.validatedProject.emissionFactorAGB =
+        this.createDto.emissionFactorAGB;
+      this.validatedProject.emissionFactorSOC =
+        this.createDto.emissionFactorSOC;
+    }
   }
 }
