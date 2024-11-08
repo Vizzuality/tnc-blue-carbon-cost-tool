@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import { projectsQuerySchema } from "@shared/contracts/projects.contract";
 import { keepPreviousData } from "@tanstack/react-query";
 import {
   flexRender,
@@ -12,6 +13,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronsUpDownIcon } from "lucide-react";
+import { z } from "zod";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
@@ -23,10 +25,13 @@ import TablePagination, {
   PAGINATION_SIZE_OPTIONS,
 } from "@/containers/projects/table/pagination";
 import {
-  //filtersToQueryParams,
+  filtersToQueryParams,
   NO_DATA,
 } from "@/containers/projects/table/utils";
 import { columns } from "@/containers/projects/table/view/overview/columns";
+
+type filterFields = z.infer<typeof projectsQuerySchema.shape.fields>;
+type sortFields = z.infer<typeof projectsQuerySchema.shape.sort>;
 
 import {
   Table,
@@ -63,11 +68,15 @@ export function OverviewTable() {
     queryKey,
     {
       query: {
-        // ...filtersToQueryParams(filters),
-        // fields: columnsBasedOnFilters.map((column) => column.accessorKey),
-        // ...(sorting.length > 0 && {
-        //   sort: sorting.map((sort) => `${sort.desc ? "" : "-"}${sort.id}`),
-        // }),
+        ...filtersToQueryParams(filters),
+        fields: columnsBasedOnFilters.map(
+          (column) => column.accessorKey,
+        ) as filterFields,
+        ...(sorting.length > 0 && {
+          sort: sorting.map(
+            (sort) => `${sort.desc ? "" : "-"}${sort.id}`,
+          ) as sortFields,
+        }),
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
       },

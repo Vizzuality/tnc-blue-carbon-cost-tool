@@ -82,7 +82,6 @@ export function ScoredCardPrioritizationTable() {
   );
 
   const table = useReactTable({
-    // @ts-expect-error see columns.tsx disclaimer
     data: isSuccess ? data.data : NO_DATA,
     columns: TABLE_COLUMNS,
     getCoreRowModel: getCoreRowModel(),

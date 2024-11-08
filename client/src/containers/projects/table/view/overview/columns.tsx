@@ -1,10 +1,10 @@
-import { Project } from "@shared/entities/projects.entity";
+import { ProjectType } from "@shared/contracts/projects.contract";
 import { createColumnHelper } from "@tanstack/react-table";
 import { z } from "zod";
 
 import { filtersSchema } from "@/app/(projects)/url-store";
 
-const columnHelper = createColumnHelper<Partial<Project>>();
+const columnHelper = createColumnHelper<Partial<ProjectType>>();
 
 export const columns = (filters: z.infer<typeof filtersSchema>) => [
   columnHelper.accessor("projectName", {
