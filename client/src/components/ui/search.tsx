@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState } from "react";
 
-import { SearchIcon, SearchX } from "lucide-react";
+import { SearchIcon, XIcon } from "lucide-react";
 import { useDebounce } from "rooks";
 
 import { cn } from "@/lib/utils";
@@ -34,35 +34,37 @@ export default function Search({
   return (
     <div className={cn("flex items-center space-x-2", className)}>
       <SearchIcon className="text-grey-900 h-6 w-6" />
-      <div className="relative flex w-full">
-        <Input
-          variant="ghost"
-          className="w-[325px] px-3"
-          placeholder={placeholder}
-          onChange={(e) => {
-            setValue(e.target.value);
-            debouncedOnChange(e.target.value);
-          }}
-          value={value}
-          autoFocus={autoFocus}
-        />
+      <div className="flex w-full">
+        <div className="relative">
+          <Input
+            variant="ghost"
+            className="w-[325px] pl-3 pr-8"
+            placeholder={placeholder}
+            onChange={(e) => {
+              setValue(e.target.value);
+              debouncedOnChange(e.target.value);
+            }}
+            value={value}
+            autoFocus={autoFocus}
+          />
 
-        <span
-          role="button"
-          className={cn(
-            "text-grey-800 hover:text-grey-900 absolute right-0 block h-6 w-6 p-1 focus:outline-none",
-            {
-              hidden: value === "" && !showCloseIconAlways,
-            },
-          )}
-          onClick={() => {
-            setValue("");
-            debouncedOnChange(undefined);
-            onClose?.();
-          }}
-        >
-          <SearchX className="text-current" />
-        </span>
+          <span
+            role="button"
+            className={cn(
+              "text-grey-800 hover:text-grey-900 absolute right-2 top-1/2 block h-6 w-6 -translate-y-[calc(50%+2px)] p-1 focus:outline-none",
+              {
+                hidden: value === "" && !showCloseIconAlways,
+              },
+            )}
+            onClick={() => {
+              setValue("");
+              debouncedOnChange(undefined);
+              onClose?.();
+            }}
+          >
+            <XIcon className="h-5 w-5 text-current hover:text-muted-foreground" />
+          </span>
+        </div>
       </div>
     </div>
   );
