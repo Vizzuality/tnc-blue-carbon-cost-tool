@@ -1,17 +1,13 @@
-import { FetchSpecification } from 'nestjs-base-service';
 import { Injectable } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
 import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import { z } from 'zod';
+import { getProjectsQuerySchema } from '@shared/contracts/projects.contract';
+import { log } from 'console';
 
-interface ExtendedFetchSpecification extends FetchSpecification {
-  otherFilters?: {
-    abatementPotentialRange?: number[];
-    costRange?: number[];
-    costRangeSelector?: 'npv' | 'total';
-  };
-}
+export type ProjectFetchSpecificacion = z.infer<typeof getProjectsQuerySchema>;
 
 @Injectable()
 export class ProjectsService extends AppBaseService<
@@ -29,30 +25,32 @@ export class ProjectsService extends AppBaseService<
 
   async extendFindAllQuery(
     query: SelectQueryBuilder<Project>,
-    fetchSpecification: ExtendedFetchSpecification,
+    fetchSpecification: ProjectFetchSpecificacion,
   ): Promise<SelectQueryBuilder<Project>> {
     // Filter by project name
-    if (fetchSpecification?.filter?.projectName) {
-      query = query.andWhere('project_name ILIKE :projectName', {
-        projectName: `%${fetchSpecification.filter.projectName}%`,
+    if (fetchSpecification.filter?.projectName) {
+      query = query.andWhere('project_name ILIKE ANY (:projectNames)', {
+        projectNames: fetchSpecification.filter.projectName.map(
+          (term) => `%${term}%`,
+        ),
       });
     }
 
     // Filter by abatement potential
-    if (this.isAbatementPotentialFilterValid(fetchSpecification)) {
+    if (fetchSpecification.abatementPotentialRange) {
       query = query.andWhere(
         'abatement_potential >= :minAP AND abatement_potential <= :maxAP',
         {
-          minAP: fetchSpecification.otherFilters.abatementPotentialRange[0],
-          maxAP: fetchSpecification.otherFilters.abatementPotentialRange[1],
+          minAP: Math.min(...fetchSpecification.abatementPotentialRange),
+          maxAP: Math.max(...fetchSpecification.abatementPotentialRange),
         },
       );
     }
 
     // Filter by cost (total or NPV)
-    if (this.isCostFilterValid(fetchSpecification)) {
+    if (fetchSpecification.costRange && fetchSpecification.costRangeSelector) {
       let filteredCostColumn: string;
-      switch (fetchSpecification.otherFilters.costRangeSelector) {
+      switch (fetchSpecification.costRangeSelector) {
         case 'npv':
           filteredCostColumn = 'total_cost_npv';
           break;
@@ -65,34 +63,11 @@ export class ProjectsService extends AppBaseService<
       query = query.andWhere(
         `${filteredCostColumn} >= :minCost AND ${filteredCostColumn} <= :maxCost`,
         {
-          minCost: fetchSpecification.otherFilters.costRange[0],
-          maxCost: fetchSpecification.otherFilters.costRange[1],
+          minCost: Math.min(...fetchSpecification.costRange),
+          maxCost: Math.max(...fetchSpecification.costRange),
         },
       );
     }
     return query;
-  }
-
-  private isCostFilterValid(
-    fetchSpecification: ExtendedFetchSpecification,
-  ): boolean {
-    return !!(
-      fetchSpecification?.otherFilters?.costRange &&
-      fetchSpecification?.otherFilters?.costRange.length === 2 &&
-      fetchSpecification?.otherFilters?.costRange[0] <=
-        fetchSpecification?.otherFilters?.costRange[1] &&
-      fetchSpecification?.otherFilters?.costRangeSelector
-    );
-  }
-
-  private isAbatementPotentialFilterValid(
-    fetchSpecification: ExtendedFetchSpecification,
-  ): boolean {
-    return !!(
-      fetchSpecification?.otherFilters?.abatementPotentialRange &&
-      fetchSpecification?.otherFilters?.abatementPotentialRange.length === 2 &&
-      fetchSpecification?.otherFilters?.abatementPotentialRange[0] <=
-        fetchSpecification?.otherFilters?.abatementPotentialRange[1]
-    );
   }
 }

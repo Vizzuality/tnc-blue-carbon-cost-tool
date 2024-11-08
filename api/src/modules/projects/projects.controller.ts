@@ -23,19 +23,7 @@ export class ProjectsController {
   @TsRestHandler(projectsContract.getProjects)
   async getProjects(): ControllerResponse {
     return tsRestHandler(projectsContract.getProjects, async ({ query }) => {
-      // The following filters do not work out of the box with the BaseService implementation
-      const otherFilters = {
-        costRange: query.filter?.costRange,
-        abatementPotentialRange: query.filter?.abatementPotentialRange,
-        costRangeSelector: query.filter?.costRangeSelector,
-      };
-      delete query.filter?.costRange;
-      delete query.filter?.abatementPotentialRange;
-      delete query.filter?.costRangeSelector;
-
-      const data = await this.projectsService.findAllPaginated(query, {
-        otherFilters: otherFilters,
-      });
+      const data = await this.projectsService.findAllPaginated(query);
       return { body: data, status: HttpStatus.OK };
     });
   }
