@@ -22,3 +22,9 @@ export type ProjectMapFilters = {
   projectSizeFilter?: PROJECT_SIZE_FILTER;
   priceType?: PROJECT_PRICE_TYPE;
 };
+
+export type OtherMapFilters = {
+  costRange?: number[];
+  abatementPotentialRange?: number[];
+  costRangeSelector?: "total" | "npv";
+};

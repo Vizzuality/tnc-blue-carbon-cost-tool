@@ -3,12 +3,10 @@ import { AppBaseService } from '@api/utils/app-base.service';
 import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
-import { FetchSpecification } from 'nestjs-base-service';
 import { z } from 'zod';
-import { ProjectGeoPropertiesSchema } from '@shared/schemas/geometries/projects';
-import { projectsQuerySchema } from '@shared/contracts/projects.contract';
+import { getProjectsQuerySchema } from '@shared/contracts/projects.contract';
 
-export type ProjectFetchSpecificacion = z.infer<typeof projectsQuerySchema>;
+export type ProjectFetchSpecificacion = z.infer<typeof getProjectsQuerySchema>;
 
 @Injectable()
 export class ProjectsService extends AppBaseService<
@@ -29,15 +27,46 @@ export class ProjectsService extends AppBaseService<
     fetchSpecification: ProjectFetchSpecificacion,
   ): Promise<SelectQueryBuilder<Project>> {
     // Filter by project name
-    if (fetchSpecification?.filter?.projectName) {
-      const filter = fetchSpecification.filter.projectName
-        .map((name) => `'%${name}%'`)
-        .join(',');
-      query = query.andWhere('project_name ILIKE ANY(ARRAY[:projectName])', {
-        projectName: filter,
+    if (fetchSpecification.filter?.projectName) {
+      query = query.andWhere('project_name ILIKE ANY (:projectNames)', {
+        projectNames: fetchSpecification.filter.projectName.map(
+          (term) => `%${term}%`,
+        ),
       });
     }
-    console.log('query', query.getQueryAndParameters());
+
+    // Filter by abatement potential
+    if (fetchSpecification.abatementPotentialRange) {
+      query = query.andWhere(
+        'abatement_potential >= :minAP AND abatement_potential <= :maxAP',
+        {
+          minAP: Math.min(...fetchSpecification.abatementPotentialRange),
+          maxAP: Math.max(...fetchSpecification.abatementPotentialRange),
+        },
+      );
+    }
+
+    // Filter by cost (total or NPV)
+    if (fetchSpecification.costRange && fetchSpecification.costRangeSelector) {
+      let filteredCostColumn: string;
+      switch (fetchSpecification.costRangeSelector) {
+        case 'npv':
+          filteredCostColumn = 'total_cost_npv';
+          break;
+        case 'total':
+        default:
+          filteredCostColumn = 'total_cost';
+          break;
+      }
+
+      query = query.andWhere(
+        `${filteredCostColumn} >= :minCost AND ${filteredCostColumn} <= :maxCost`,
+        {
+          minCost: Math.min(...fetchSpecification.costRange),
+          maxCost: Math.max(...fetchSpecification.costRange),
+        },
+      );
+    }
     return query;
   }
 }
