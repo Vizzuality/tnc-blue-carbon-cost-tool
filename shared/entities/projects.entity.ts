@@ -57,7 +57,7 @@ export class Project extends BaseEntity {
     length: 255,
     nullable: true,
   })
-  activitySubtype: string;
+  activitySubtype: RESTORATION_ACTIVITY_SUBTYPE;
 
   @Column({ name: "project_size", type: "decimal" })
   projectSize: number;
