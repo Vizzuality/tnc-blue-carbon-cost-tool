@@ -61,7 +61,7 @@ export default function ProjectsHeader() {
             <Settings2Icon className="h-4 w-4" />
             <span>Filters</span>
             {!filtersEqual && (
-              <span className="absolute right-0 top-0 h-3 w-3 rounded-full border border-border bg-big-stone-600" />
+              <span className="absolute right-0 top-0 h-3 w-3 rounded-full border border-border bg-foreground" />
             )}
           </>
         </Button>

@@ -13,7 +13,9 @@ export const filtersToQueryParams = (
     .reduce(
       (acc, key) => ({
         ...acc,
-        [`filter[${key}]`]: filters[key as keyof typeof filters],
+        ...(filters[key as keyof typeof filters]?.length && {
+          [`filter[${key}]`]: filters[key as keyof typeof filters],
+        }),
       }),
       {},
     );
