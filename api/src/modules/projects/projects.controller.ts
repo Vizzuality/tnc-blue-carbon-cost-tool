@@ -6,7 +6,10 @@ import { ProjectsService } from '@api/modules/projects/projects.service';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { CountryWithNoGeometry } from '@shared/entities/country.entity';
 import { ProjectsMapRepository } from '@api/modules/projects/projects-map.repository';
-import { ProjectMapFilters } from '@shared/dtos/projects/projects-map.dto';
+import {
+  OtherMapFilters,
+  ProjectMapFilters,
+} from '@shared/dtos/projects/projects-map.dto';
 
 @Controller()
 export class ProjectsController {
@@ -47,8 +50,14 @@ export class ProjectsController {
   async getProjectsMap(): ControllerResponse {
     return tsRestHandler(projectsContract.getProjectsMap, async ({ query }) => {
       const { filter } = query;
+      const otherFilters: OtherMapFilters = {
+        costRange: query.costRange,
+        abatementPotentialRange: query.abatementPotentialRange,
+        costRangeSelector: query.costRangeSelector,
+      };
       const data = await this.projectMapRepository.getProjectsMap(
         filter as unknown as ProjectMapFilters,
+        otherFilters,
       );
       return { body: data, status: HttpStatus.OK } as any;
     });

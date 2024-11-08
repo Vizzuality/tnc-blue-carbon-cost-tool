@@ -5,12 +5,8 @@ import {
   ApiResponse,
 } from "@shared/dtos/global/api-response.dto";
 import { Project } from "@shared/entities/projects.entity";
-import { FetchSpecification } from "nestjs-base-service";
 import { CountryWithNoGeometry } from "@shared/entities/country.entity";
-import {
-  ProjectMap,
-  ProjectMapFilters,
-} from "@shared/dtos/projects/projects-map.dto";
+import { ProjectMap } from "@shared/dtos/projects/projects-map.dto";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { BaseEntity } from "typeorm";
 
@@ -18,7 +14,13 @@ const contract = initContract();
 
 export type ProjectType = Omit<Project, keyof BaseEntity>;
 
+export const otherFilters = z.object({
+  costRange: z.coerce.number().array().optional(),
+  abatementPotentialRange: z.coerce.number().array().optional(),
+  costRangeSelector: z.enum(["total", "npv"]).optional(),
+});
 export const projectsQuerySchema = generateEntityQuerySchema(Project);
+export const getProjectsQuerySchema = projectsQuerySchema.merge(otherFilters);
 export const projectsContract = contract.router({
   getProjects: {
     method: "GET",
@@ -26,9 +28,7 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiPaginationResponse<Project>>(),
     },
-    query: projectsQuerySchema.merge(
-      z.object({ costRangeSelector: z.string().optional() }),
-    ),
+    query: getProjectsQuerySchema,
   },
   getProject: {
     method: "GET",
@@ -57,6 +57,11 @@ export const projectsContract = contract.router({
     // TODO: we need to define filters, they should probably match filters for Projects. Or we might want to pass only project ids, which
     //       would be already filtered
     //query: z.object({ countryCodes: z.string().array().optional() }).optional(),
-    query: projectsQuerySchema.pick({ filter: true }),
+    query: getProjectsQuerySchema.pick({
+      filter: true,
+      costRange: true,
+      abatementPotentialRange: true,
+      costRangeSelector: true,
+    }),
   },
 });

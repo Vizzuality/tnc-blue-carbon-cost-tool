@@ -5,6 +5,7 @@ import {
   Project,
   PROJECT_PRICE_TYPE,
   PROJECT_SIZE_FILTER,
+  RESTORATION_ACTIVITY_SUBTYPE,
 } from "@shared/entities/projects.entity";
 import { Country } from "@shared/entities/country.entity";
 import { ACTIVITY } from "@shared/entities/activity.enum";
@@ -40,7 +41,7 @@ export const createProject = async (
     countryCode: countries[0].code,
     activity: ACTIVITY.CONSERVATION,
     ecosystem: ECOSYSTEM.MANGROVE,
-    activitySubtype: "Planting",
+    activitySubtype: RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
     projectSize: 100,
     projectSizeFilter: PROJECT_SIZE_FILTER.LARGE,
     abatementPotential: 100,

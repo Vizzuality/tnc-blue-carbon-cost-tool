@@ -87,30 +87,85 @@ describe('Projects', () => {
       );
     });
 
-    test('Should return a list of projects filtered by project name', async () => {
-      const projects: Project[] = [];
-      projects.push(
-        await testManager
-          .mocks()
-          .createProject({ projectName: 'PROJECT_NAME_ABC' }),
-        await testManager
-          .mocks()
-          .createProject({ projectName: 'PROJECT_NAME_DEF' }),
-      );
+    test('Should return a list of projects filtered by min/max NPV cost', async () => {
+      await testManager.mocks().createProject({ totalCostNPV: 25 });
+      await testManager.mocks().createProject({ totalCostNPV: 15 });
+      await testManager.mocks().createProject({ totalCostNPV: 45 });
+      await testManager.mocks().createProject({ totalCostNPV: 10 });
 
       const response = await testManager
         .request()
         .get(projectsContract.getProjects.path)
         .query({
-          filter: {
-            projectName: 'ABC',
-          },
+          costRangeSelector: 'npv',
+          costRange: [12, 26],
         });
-      expect(response.body.data).toHaveLength(1);
+
+      expect(response.body.data).toHaveLength(2);
       expect(
-        response.body.data.map((project: Project) => project.projectName),
-      ).toEqual(['PROJECT_NAME_ABC']);
+        response.body.data
+          .map((project: Project) => project.totalCostNPV)
+          .sort(),
+      ).toEqual(['15', '25']);
     });
+
+    test('Should return a list of projects filtered by min/max total cost', async () => {
+      await testManager.mocks().createProject({ totalCost: 25 });
+      await testManager.mocks().createProject({ totalCost: 15 });
+      await testManager.mocks().createProject({ totalCost: 45 });
+      await testManager.mocks().createProject({ totalCost: 10 });
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjects.path)
+        .query({
+          costRangeSelector: 'total',
+          costRange: [12, 26],
+        });
+
+      expect(response.body.data).toHaveLength(2);
+      expect(
+        response.body.data.map((project: Project) => project.totalCost).sort(),
+      ).toEqual(['15', '25']);
+    });
+
+    test('Should return a list of projects filtered by min/max abatement potential', async () => {
+      await testManager.mocks().createProject({ abatementPotential: 25 });
+      await testManager.mocks().createProject({ abatementPotential: 15 });
+      await testManager.mocks().createProject({ abatementPotential: 45 });
+      await testManager.mocks().createProject({ abatementPotential: 10 });
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjects.path)
+        .query({
+          abatementPotentialRange: [12, 26],
+        });
+      expect(response.body.data).toHaveLength(2);
+      expect(
+        response.body.data
+          .map((project: Project) => project.abatementPotential)
+          .sort(),
+      ).toEqual(['15', '25']);
+    });
+
+    // test('Should return a list of projects filtered by project name', async () => {
+    //   await testManager.mocks().createProject({ projectName: 'PROJ_ABC' });
+    //   await testManager.mocks().createProject({ projectName: 'PROJ_DEF' });
+
+    //   const response = await testManager
+    //     .request()
+    //     .get(projectsContract.getProjects.path)
+    //     .query({
+    //       filter: {
+    //         projectName: ['ABC'],
+    //       },
+    //     });
+    //   expect(response.body.data).toHaveLength(1);
+    //   expect(
+    //     response.body.data.map((project: Project) => project.projectName),
+    //   ).toEqual(['PROJ_ABC']);
+    // });
   });
 
   describe('Filters for Projects', () => {

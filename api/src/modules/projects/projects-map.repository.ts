@@ -3,6 +3,7 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
+  OtherMapFilters,
   ProjectMap,
   ProjectMapFilters,
 } from '@shared/dtos/projects/projects-map.dto';
@@ -16,7 +17,10 @@ export class ProjectsMapRepository extends Repository<Project> {
     super(projectRepo.target, projectRepo.manager, projectRepo.queryRunner);
   }
 
-  async getProjectsMap(filters?: ProjectMapFilters): Promise<ProjectMap> {
+  async getProjectsMap(
+    filters?: ProjectMapFilters,
+    otherFilters?: OtherMapFilters,
+  ): Promise<ProjectMap> {
     const geoQueryBuilder = this.manager.createQueryBuilder();
     geoQueryBuilder
       .select(
@@ -47,10 +51,9 @@ export class ProjectsMapRepository extends Repository<Project> {
               'SUM(p.abatement_potential)',
               'total_abatement_potential',
             )
-            .addSelect('SUM(p.total_cost)', 'total_cost')
             .groupBy('p.country_code');
 
-          return this.applyFilters(subQuery, filters);
+          return this.applyFilters(subQuery, filters, otherFilters);
         },
         'filtered_projects',
         'filtered_projects.country_code = country.code',
@@ -65,6 +68,7 @@ export class ProjectsMapRepository extends Repository<Project> {
   private applyFilters(
     queryBuilder: SelectQueryBuilder<Project>,
     filters: ProjectMapFilters = {},
+    otherFilters: OtherMapFilters = {},
   ) {
     const {
       countryCode,
@@ -76,6 +80,15 @@ export class ProjectsMapRepository extends Repository<Project> {
       projectSizeFilter,
       priceType,
     } = filters;
+    const { costRange, abatementPotentialRange, costRangeSelector } =
+      otherFilters;
+
+    if (costRangeSelector === 'npv') {
+      queryBuilder.addSelect('SUM(p.total_cost_npv)', 'total_cost');
+    } else {
+      queryBuilder.addSelect('SUM(p.total_cost)', 'total_cost');
+    }
+
     if (countryCode?.length) {
       queryBuilder.andWhere('p.countryCode IN (:...countryCodes)', {
         countryCodes: countryCode,
@@ -108,6 +121,36 @@ export class ProjectsMapRepository extends Repository<Project> {
       queryBuilder.andWhere('p.ecosystem IN (:...ecosystem)', {
         ecosystem,
       });
+    }
+    if (abatementPotentialRange) {
+      queryBuilder.andWhere(
+        'p.abatementPotential >= :minAP AND p.abatementPotential <= :maxAP',
+        {
+          minAP: Math.min(...abatementPotentialRange),
+          maxAP: Math.max(...abatementPotentialRange),
+        },
+      );
+    }
+
+    if (costRange && costRangeSelector) {
+      let filteredCostColumn: string;
+      switch (costRangeSelector) {
+        case 'npv':
+          filteredCostColumn = 'p.totalCostNPV';
+          break;
+        case 'total':
+        default:
+          filteredCostColumn = 'p.totalCost';
+          break;
+      }
+
+      queryBuilder.andWhere(
+        `${filteredCostColumn} >= :minCost AND ${filteredCostColumn} <= :maxCost`,
+        {
+          minCost: Math.min(...costRange),
+          maxCost: Math.max(...costRange),
+        },
+      );
     }
 
     // TODO: Pending to apply "parameter" filters (size, price type, NPV vs non-NPV)...
