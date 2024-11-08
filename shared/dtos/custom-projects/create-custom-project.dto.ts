@@ -43,3 +43,33 @@ export class CreateCustomProjectDto {
   projectSpecificEmission: "One emission factor" | "Two emission factors";
   projectSpecificEmissionFactor: number;
 }
+
+export enum CARBON_REVENUES_TO_COVER {
+  OPEX = "Opex",
+  CAPEX_AND_OPEX = "Capex and Opex",
+}
+
+export class GeneralCustomProjectParam {
+  @IsString()
+  @Min(3)
+  @Max(3)
+  countryCode: string;
+
+  @IsString()
+  projectName: string;
+
+  @IsEnum(ACTIVITY)
+  activity: ACTIVITY;
+
+  @IsEnum(ECOSYSTEM)
+  ecosystem: ECOSYSTEM;
+
+  @IsNumber()
+  projectsSizeHa: number;
+
+  @IsNumber()
+  initialCarbonPriceAssumption: number;
+
+  @IsEnum(CARBON_REVENUES_TO_COVER)
+  carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
+}
