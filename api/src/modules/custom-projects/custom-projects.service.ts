@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
-import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto.deprecated';
+import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';

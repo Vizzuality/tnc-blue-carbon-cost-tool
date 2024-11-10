@@ -44,6 +44,11 @@ export class ConservationProjectParamDto {
       o.projectSpecificEmission ===
         PROJECT_SPECIFIC_EMISSION.TWO_EMISSION_FACTORS,
   )
+  @IsNotEmpty({
+    message:
+      'Emission Factor AGB is required when emissionFactorUsed is Tier 3 and projectSpecificEmission is Two emission factors',
+  })
+  @IsNumber()
   emissionFactorAGB: number;
 
   @ValidateIf(
@@ -52,6 +57,11 @@ export class ConservationProjectParamDto {
       o.projectSpecificEmission ===
         PROJECT_SPECIFIC_EMISSION.TWO_EMISSION_FACTORS,
   )
+  @IsNotEmpty({
+    message:
+      'Emission Factor SOC is required when emissionFactorUsed is Tier 3 and projectSpecificEmission is Two emission factors',
+  })
+  @IsNumber()
   emissionFactorSOC: number;
 
   @ValidateIf((o) => o.emissionFactorUsed === PROJECT_EMISSION_FACTORS.TIER_3)
@@ -64,5 +74,10 @@ export class ConservationProjectParamDto {
       o.projectSpecificEmission ===
         PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
   )
+  @IsNotEmpty({
+    message:
+      'Project Specific Emission Factor must be provided when emissionFactorUsed is Tier 3 and projectSpecificEmission is One emission factor',
+  })
+  @IsNumber()
   projectSpecificEmissionFactor: number;
 }

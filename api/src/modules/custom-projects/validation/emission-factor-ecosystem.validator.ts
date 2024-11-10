@@ -22,7 +22,7 @@ export class ValidateEcosystemForTier2EmissionFactor
     );
   }
 
-  defaultMessage(args: ValidationArguments): string {
+  defaultMessage(): string {
     return 'There is only Tier 2 emission factor for Mangrove ecosystems';
   }
 }
