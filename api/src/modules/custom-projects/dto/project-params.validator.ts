@@ -30,20 +30,21 @@ export class ProjectParamsValidator implements ValidatorConstraintInterface {
     const validationErrors: ValidationError[] = validateSync(
       Object.assign(dto, value),
     );
+    if (validationErrors.length) {
+      throw new BadRequestException(this.formatErrors(validationErrors));
+    }
     return validationErrors.length === 0;
   }
 
-  defaultMessage(validationArguments?: ValidationArguments): string {
-    console.log('validationArguments', validationArguments);
-    return 'Invalid project parameters';
-  }
   private formatErrors(errors: ValidationError[]): any[] {
-    return errors.map((err) => ({
-      property: err.property,
-      constraints: err.constraints,
-      children: err.children?.length
-        ? this.formatErrors(err.children)
-        : undefined,
-    }));
+    const formattedErrors = [];
+    errors.forEach((error) => {
+      Object.values(error.constraints).forEach((constraint) => {
+        formattedErrors.push({
+          message: constraint,
+        });
+      });
+    });
+    return formattedErrors;
   }
 }
