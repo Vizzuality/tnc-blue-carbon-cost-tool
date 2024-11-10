@@ -11,6 +11,7 @@ import { ConservationProjectParamDto } from '@api/modules/custom-projects/dto/co
 import { RestorationProjectParamsDto } from '@api/modules/custom-projects/dto/restoration-project-params.dto';
 import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto.deprecated';
 import { BadRequestException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 
 @ValidatorConstraint({ name: 'ProjectParameterValidator', async: false })
 export class ProjectParamsValidator implements ValidatorConstraintInterface {
@@ -18,18 +19,22 @@ export class ProjectParamsValidator implements ValidatorConstraintInterface {
     const object = args.object as any;
     const { activity } = object;
 
-    let dto;
+    let dto: ConservationProjectParamDto | RestorationProjectParamsDto;
     if (activity === ACTIVITY.CONSERVATION) {
-      dto = new ConservationProjectParamDto();
+      dto = plainToInstance(
+        ConservationProjectParamDto,
+        value,
+      ) as ConservationProjectParamDto;
     } else if (activity === ACTIVITY.RESTORATION) {
-      dto = new RestorationProjectParamsDto();
+      dto = plainToInstance(
+        RestorationProjectParamsDto,
+        value,
+      ) as RestorationProjectParamsDto;
     } else {
       return false;
     }
 
-    const validationErrors: ValidationError[] = validateSync(
-      Object.assign(dto, value),
-    );
+    const validationErrors: ValidationError[] = validateSync(dto);
     if (validationErrors.length) {
       throw new BadRequestException(this.formatErrors(validationErrors));
     }
