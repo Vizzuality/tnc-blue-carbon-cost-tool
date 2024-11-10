@@ -43,8 +43,6 @@ describe('Create Custom Projects - Request Validations', () => {
           },
         });
 
-      console.log(response.body.errors);
-
       expect(response.body.errors).toHaveLength(1);
     });
   });
