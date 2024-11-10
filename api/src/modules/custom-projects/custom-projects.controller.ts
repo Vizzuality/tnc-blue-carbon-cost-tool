@@ -6,7 +6,7 @@ import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
-import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto.deprecated';
+import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 
 @Controller()
 export class CustomProjectsController {
@@ -50,7 +50,6 @@ export class CustomProjectsController {
     return tsRestHandler(
       customProjectContract.createCustomProject,
       async ({ body }) => {
-        console.log('dto', dto);
         const customProject = await this.customProjects.create(dto as any);
         return {
           status: 201,
@@ -59,17 +58,4 @@ export class CustomProjectsController {
       },
     );
   }
-  // @TsRestHandler(customProjectContract.createConservationCustomProject)
-  // async createConservationProject(): Promise<ControllerResponse> {
-  //   return tsRestHandler(
-  //     customProjectContract.createConservationCustomProject,
-  //     async ({ body }) => {
-  //       const customProject = await this.customProjects.create(body);
-  //       return {
-  //         status: 201,
-  //         body: { data: customProject },
-  //       };
-  //     },
-  //   );
-  // }
 }

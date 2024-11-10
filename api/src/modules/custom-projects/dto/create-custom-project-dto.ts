@@ -10,7 +10,7 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ConservationProjectParamDto } from '@api/modules/custom-projects/dto/conservation-project-params.dto';
 import { RestorationProjectParamsDto } from '@api/modules/custom-projects/dto/restoration-project-params.dto';
-import { ProjectParamsValidator } from '@api/modules/custom-projects/dto/project-params.validator';
+import { ProjectParamsValidator } from '@api/modules/custom-projects/validation/project-params.validator';
 import { Transform } from 'class-transformer';
 
 export enum CARBON_REVENUES_TO_COVER {
