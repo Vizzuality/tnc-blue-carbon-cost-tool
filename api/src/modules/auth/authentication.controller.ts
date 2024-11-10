@@ -20,6 +20,7 @@ import { SignUp } from '@api/modules/auth/strategies/sign-up.strategy';
 import { CommandBus } from '@nestjs/cqrs';
 import { RequestPasswordRecoveryCommand } from '@api/modules/auth/commands/request-password-recovery.command';
 import { EmailConfirmation } from '@api/modules/auth/strategies/email-update.strategy';
+import { ROLES } from '@shared/entities/users/roles.enum';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,6 +29,21 @@ export class AuthenticationController {
     private authService: AuthenticationService,
     private readonly commandBus: CommandBus,
   ) {}
+
+  @Public()
+  @TsRestHandler(authContract.register)
+  async register(
+    @Headers('origin') origin: string,
+  ): Promise<ControllerResponse> {
+    return tsRestHandler(authContract.register, async ({ body }) => {
+      const userToRegister = { ...body, role: ROLES.PARTNER };
+      await this.authService.addUser(origin, userToRegister);
+      return {
+        body: null,
+        status: 201,
+      };
+    });
+  }
 
   @Public()
   @UseGuards(LocalAuthGuard)
