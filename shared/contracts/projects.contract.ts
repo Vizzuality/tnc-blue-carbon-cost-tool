@@ -4,7 +4,7 @@ import {
   ApiPaginationResponse,
   ApiResponse,
 } from "@shared/dtos/global/api-response.dto";
-import { Project } from "@shared/entities/projects.entity";
+import { COST_TYPE_SELECTOR, Project } from "@shared/entities/projects.entity";
 import { CountryWithNoGeometry } from "@shared/entities/country.entity";
 import { ProjectMap } from "@shared/dtos/projects/projects-map.dto";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
@@ -17,7 +17,7 @@ export type ProjectType = Omit<Project, keyof BaseEntity>;
 export const otherFilters = z.object({
   costRange: z.coerce.number().array().optional(),
   abatementPotentialRange: z.coerce.number().array().optional(),
-  costRangeSelector: z.enum(["total", "npv"]).optional(),
+  costRangeSelector: z.nativeEnum(COST_TYPE_SELECTOR).optional(),
   partialProjectName: z.string().optional(),
 });
 export const projectsQuerySchema = generateEntityQuerySchema(Project);
