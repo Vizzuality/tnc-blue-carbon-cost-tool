@@ -21,17 +21,11 @@ export default function ProjectsLayer() {
       query: {
         filter: {
           ...(filters.countryCode && { countryCode: [filters.countryCode] }),
-          costRange: {
-            min: filters.costRange[0],
-            max: filters.costRange[1],
-          },
-          abatementPotentialRange: {
-            min: filters.abatementPotentialRange[0],
-            max: filters.abatementPotentialRange[1],
-          },
           ecosystem: filters.ecosystem,
           activity: filters.activity,
         },
+        costRange: filters.costRange,
+        abatementPotentialRange: filters.abatementPotentialRange,
         costRangeSelector: filters.costRangeSelector,
       },
     },
@@ -41,7 +35,7 @@ export default function ProjectsLayer() {
     },
   );
 
-  if (isSuccess && data) {
+  if (isSuccess && data?.features?.length) {
     const costAbatementSource = {
       id: "cost-abatement-source",
       type: "geojson",
