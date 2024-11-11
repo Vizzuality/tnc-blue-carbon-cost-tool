@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { Country } from '@shared/entities/country.entity';
@@ -7,7 +7,8 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { BaseDataView } from '@shared/entities/base-data.view';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
-import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
+import { DefaultCostInputsDto } from '@shared/dtos/custom-projects/default-cost-inputs.dto';
+import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
 
 export type GetBaseData = {
   countryCode: Country['code'];
@@ -53,38 +54,40 @@ export class CalculationEngine {
     });
   }
 
-  // buildProject(data: any) {
-  //   const {
-  //     countryCode,
-  //     ecosystem,
-  //     activity,
-  //     activitySubType,
-  //     baseData,
-  //     assumptions,
-  //     plantingSuccessRate,
-  //     sequestrationRateUsed,
-  //     projectSpecificSequestrationRate,
-  //   } = data;
-  //   const carbonPrice = 20;
-  //   const carbonRevenuesToCover = 'Opex';
-  //   const lossRateUsed = 'project-specific';
-  //   const projectSpecificLossRate = 0.001;
-  //   const emissionFactorUsed = EMISSION_FACTORS_TIER_TYPES.TIER_2;
-  //   return new ProjectCalculationBuilder({
-  //     countryCode,
-  //     ecosystem,
-  //     activity,
-  //     activitySubType,
-  //     carbonPrice,
-  //     carbonRevenuesToCover,
-  //     baseData,
-  //     assumptions,
-  //     plantingSuccessRate,
-  //     sequestrationRateUsed,
-  //     projectSpecificSequestrationRate,
-  //     projectSpecificLossRate,
-  //     lossRateUsed,
-  //     emissionFactorUsed,
-  //   });
-  // }
+  async getDefaultCostInputs(
+    dto: GetDefaultCostInputsDto,
+  ): Promise<DefaultCostInputsDto> {
+    const { countryCode, activity, ecosystem } = dto;
+    // TODO: In the UI we have "implementation labor", which in the calculations we actually set it as value, but in the base data view we have
+    //       this property as implementation_labor_activity_subtype (hydrology etc). Check with science!
+    const costInputs: DefaultCostInputsDto = await this.dataSource
+      .getRepository(BaseDataView)
+      .findOne({
+        where: { countryCode, activity, ecosystem },
+        select: [
+          'feasibilityAnalysis',
+          'conservationPlanningAndAdmin',
+          'dataCollectionAndFieldCost',
+          'communityRepresentation',
+          'blueCarbonProjectPlanning',
+          'establishingCarbonRights',
+          'validation',
+          'implementationLaborHybrid',
+          'monitoring',
+          'maintenance',
+          'communityBenefitSharingFund',
+          'carbonStandardFees',
+          'baselineReassessment',
+          'mrv',
+          'longTermProjectOperatingCost',
+          'financingCost',
+        ],
+      });
+    if (!costInputs) {
+      throw new NotFoundException(
+        `Could not find default Cost Inputs for country ${countryCode}, activity ${activity} and ecosystem ${ecosystem}`,
+      );
+    }
+    return costInputs;
+  }
 }

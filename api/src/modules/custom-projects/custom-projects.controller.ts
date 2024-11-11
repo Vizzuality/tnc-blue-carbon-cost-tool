@@ -42,6 +42,17 @@ export class CustomProjectsController {
     );
   }
 
+  @TsRestHandler(customProjectContract.getDefaultCostInputs)
+  async getCostInputs(): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.getDefaultCostInputs,
+      async ({ query }) => {
+        const data = await this.customProjects.getDefaultCostInputs(query);
+        return { body: { data }, status: HttpStatus.OK };
+      },
+    );
+  }
+
   @TsRestHandler(customProjectContract.createCustomProject)
   async create(
     @Body(new ValidationPipe({ enableDebugMessages: true, transform: true }))

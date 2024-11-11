@@ -8,6 +8,8 @@ import { CalculationEngine } from '@api/modules/calculations/calculation.engine'
 import { CustomProjectFactory } from '@api/modules/custom-projects/custom-project.factory';
 import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
 import { ConservationCostCalculator } from '@api/modules/calculations/conservation-cost.calculator';
+import { DefaultCostInputsDto } from '@shared/dtos/custom-projects/default-cost-inputs.dto';
+import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -61,5 +63,11 @@ export class CustomProjectsService extends AppBaseService<
       summary: calculator.getSummary(),
       yearBreakdown: calculator.getYearlyCostBreakdown(),
     };
+  }
+
+  async getDefaultCostInputs(
+    dto: GetDefaultCostInputsDto,
+  ): Promise<DefaultCostInputsDto> {
+    return this.calculationEngine.getDefaultCostInputs(dto);
   }
 }
