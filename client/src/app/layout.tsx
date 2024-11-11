@@ -9,6 +9,9 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { config } from "@/app/auth/api/[...nextauth]/config";
 
+import MainNav from "@/containers/nav";
+
+import { SidebarProvider } from "@/components/ui/sidebar";
 import Toaster from "@/components/ui/toast/toaster";
 
 import LayoutProviders from "./providers";
@@ -34,8 +37,13 @@ export default async function RootLayout({
       <html lang="en">
         <NuqsAdapter>
           <body className={inter.className}>
-            <main>{children}</main>
-            <Toaster />
+            <SidebarProvider>
+              <MainNav />
+              <main className="flex h-dvh flex-1 overflow-hidden">
+                {children}
+              </main>
+              <Toaster />
+            </SidebarProvider>
           </body>
         </NuqsAdapter>
       </html>
