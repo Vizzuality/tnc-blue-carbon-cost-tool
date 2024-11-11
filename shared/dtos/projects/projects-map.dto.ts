@@ -15,17 +15,10 @@ export type ProjectMap = FeatureCollection<Geometry, ProjectGeoProperties>;
 export type ProjectMapFilters = {
   countryCode?: string[];
   totalCost?: number[];
-  costRange?: {
-    min: number;
-    max: number;
-  },
-  abatementPotentialRange?: {
-    min: number;
-    max: number;
-  },
-  activity?: ACTIVITY[];
+  abatementPotential?: number[];
+  activity?: ACTIVITY;
   activitySubtype?: string[];
-  ecosystem?: ECOSYSTEM[];
+  ecosystem?: ECOSYSTEM;
   projectSizeFilter?: PROJECT_SIZE_FILTER;
   priceType?: PROJECT_PRICE_TYPE;
 };
