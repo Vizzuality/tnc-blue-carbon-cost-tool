@@ -4,6 +4,8 @@ import { Country } from "@shared/entities/country.entity";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { CustomProject } from "@shared/entities/custom-project.entity";
 import { CreateCustomProjectDto } from "@api/modules/custom-projects/dto/create-custom-project-dto";
+import { DefaultCostInputsDto } from "@shared/dtos/custom-projects/default-cost-inputs.dto";
+import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-cost-inputs.schema";
 
 // TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 
@@ -26,6 +28,14 @@ export const customProjectContract = contract.router({
     },
     summary: "Get default model assumptions",
   },
+  getDefaultCostInputs: {
+    method: "GET",
+    path: "/custom-projects/cost-inputs",
+    responses: {
+      200: contract.type<ApiResponse<DefaultCostInputsDto>>(),
+    },
+    query: GetDefaultCostInputsSchema,
+  },
   createCustomProject: {
     method: "POST",
     path: "/custom-projects",
@@ -34,14 +44,6 @@ export const customProjectContract = contract.router({
     },
     body: contract.type<CreateCustomProjectDto>(),
   },
-  // createConservationCustomProject: {
-  //   method: "POST",
-  //   path: "/custom-projects/conservation",
-  //   responses: {
-  //     201: contract.type<ApiResponse<CustomProject>>(),
-  //   },
-  //   body: contract.type<CreateCustomProjectDto>(),
-  // },
 });
 
 // TODO: Due to dificulties crafting a deeply nested conditional schema, I will go forward with nestjs custom validation pipe for now
