@@ -1,6 +1,6 @@
 import { ComponentProps } from "react";
 
-import { useGlobalFilters } from "@/app/(projects)/url-store";
+import { useGlobalFilters } from "@/app/(overview)/url-store";
 
 import Search from "@/components/ui/search";
 

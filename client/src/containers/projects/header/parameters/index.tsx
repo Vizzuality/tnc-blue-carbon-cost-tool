@@ -5,9 +5,9 @@ import {
 } from "@shared/entities/projects.entity";
 import { z } from "zod";
 
-import { FILTER_KEYS } from "@/app/(projects)/constants";
-import { useGlobalFilters } from "@/app/(projects)/url-store";
-import { filtersSchema } from "@/app/(projects)/url-store";
+import { FILTER_KEYS } from "@/app/(overview)/constants";
+import { useGlobalFilters } from "@/app/(overview)/url-store";
+import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { Label } from "@/components/ui/label";
 import {

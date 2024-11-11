@@ -5,7 +5,7 @@ import {
 import { PaginationState, SortingState } from "@tanstack/react-table";
 import { z } from "zod";
 
-import { filtersSchema } from "@/app/(projects)/url-store";
+import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { TABLE_VIEWS } from "@/containers/projects/table/toolbar/table-selector";
 
