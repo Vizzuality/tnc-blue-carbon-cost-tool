@@ -2,7 +2,7 @@ import { ProjectType } from "@shared/contracts/projects.contract";
 import { createColumnHelper } from "@tanstack/react-table";
 import { z } from "zod";
 
-import { filtersSchema } from "@/app/(projects)/url-store";
+import { filtersSchema } from "@/app/(overview)/url-store";
 
 const columnHelper = createColumnHelper<Partial<ProjectType>>();
 

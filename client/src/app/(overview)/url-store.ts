@@ -11,11 +11,11 @@ import {
 import { parseAsJson, parseAsStringLiteral, useQueryState } from "nuqs";
 import { z } from "zod";
 
-import { FILTER_KEYS } from "@/app/(projects)/constants";
+import { FILTER_KEYS } from "@/app/(overview)/constants";
 import {
   INITIAL_COST_RANGE,
   INITIAL_ABATEMENT_POTENTIAL_RANGE,
-} from "@/app/(projects)/constants";
+} from "@/app/(overview)/constants";
 
 import { TABLE_VIEWS } from "@/containers/projects/table/toolbar/table-selector";
 

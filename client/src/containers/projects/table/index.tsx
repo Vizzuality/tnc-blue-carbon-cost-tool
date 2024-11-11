@@ -1,4 +1,4 @@
-import { useTableView } from "@/app/(projects)/url-store";
+import { useTableView } from "@/app/(overview)/url-store";
 
 import ToolbarProjectsTable from "@/containers/projects/table/toolbar";
 import { KeyCostsTable } from "@/containers/projects/table/view/key-costs";

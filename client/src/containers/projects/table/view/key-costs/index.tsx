@@ -17,7 +17,7 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
-import { useGlobalFilters, useTableView } from "@/app/(projects)/url-store";
+import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
 import TablePagination, {
   PAGINATION_SIZE_OPTIONS,

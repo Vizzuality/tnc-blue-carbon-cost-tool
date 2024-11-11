@@ -1,7 +1,7 @@
 import { Project } from "@shared/entities/projects.entity";
 import { z } from "zod";
 
-import { filtersSchema } from "@/app/(projects)/url-store";
+import { filtersSchema } from "@/app/(overview)/url-store";
 
 export const NO_DATA: Project[] = [];
 

@@ -5,8 +5,8 @@ import { useMap } from "react-map-gl";
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 
-import { LAYOUT_TRANSITIONS } from "@/app/(projects)/constants";
-import { projectsUIState } from "@/app/(projects)/store";
+import { LAYOUT_TRANSITIONS } from "@/app/(overview)/constants";
+import { projectsUIState } from "@/app/(overview)/store";
 
 import ProjectsFilters, {
   FILTERS_SIDEBAR_WIDTH,

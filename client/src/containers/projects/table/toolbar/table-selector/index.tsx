@@ -1,4 +1,4 @@
-import { useTableView } from "@/app/(projects)/url-store";
+import { useTableView } from "@/app/(overview)/url-store";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 

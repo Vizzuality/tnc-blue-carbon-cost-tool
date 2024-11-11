@@ -14,12 +14,12 @@ import { cn } from "@/lib/utils";
 import {
   INITIAL_COST_RANGE,
   INITIAL_ABATEMENT_POTENTIAL_RANGE,
-} from "@/app/(projects)/constants";
-import { projectsUIState } from "@/app/(projects)/store";
+} from "@/app/(overview)/constants";
+import { projectsUIState } from "@/app/(overview)/store";
 import {
   INITIAL_FILTERS_STATE,
   useGlobalFilters,
-} from "@/app/(projects)/url-store";
+} from "@/app/(overview)/url-store";
 
 import { Button } from "@/components/ui/button";
 import { CheckboxWrapper } from "@/components/ui/checkbox";
