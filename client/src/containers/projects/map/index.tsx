@@ -1,12 +1,18 @@
 import { ComponentProps, useState } from "react";
 
+import { useSetAtom } from "jotai";
 import { LayersIcon } from "lucide-react";
+
+import { popupAtom } from "@/app/(overview)/store";
 
 import Controls from "@/containers/projects/map/controls";
 import ZoomControl from "@/containers/projects/map/controls/zoom";
-import ProjectsLayer from "@/containers/projects/map/layers/projects";
+import ProjectsLayer, {
+  LAYER_ID as COST_ABATEMENT_LAYER_ID,
+} from "@/containers/projects/map/layers/projects";
 import { MATRIX_COLORS } from "@/containers/projects/map/layers/projects/utils";
 import MatrixLegend from "@/containers/projects/map/legend/types/matrix";
+import CostAbatementPopup from "@/containers/projects/map/popup";
 
 import Map from "@/components/map";
 import { Button } from "@/components/ui/button";
@@ -24,9 +30,25 @@ export default function ProjectsMap() {
       id: index,
     }));
 
+  const setPopup = useSetAtom(popupAtom);
+
   return (
     <div className="h-full overflow-hidden rounded-t-2xl">
-      <Map>
+      <Map
+        minZoom={0}
+        maxZoom={10}
+        interactiveLayerIds={[COST_ABATEMENT_LAYER_ID]}
+        onClick={(e) => {
+          setPopup({
+            lngLat: e.lngLat,
+            features: e.features,
+          });
+        }}
+      >
+        <ProjectsLayer />
+
+        <CostAbatementPopup />
+
         <Controls>
           <ZoomControl />
         </Controls>
@@ -53,8 +75,6 @@ export default function ProjectsMap() {
             </PopoverContent>
           </Popover>
         </Controls>
-
-        <ProjectsLayer />
       </Map>
     </div>
   );

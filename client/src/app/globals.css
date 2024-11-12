@@ -61,3 +61,13 @@ body {
     @apply bg-background text-foreground antialiased;
   }
 }
+
+.mapboxgl-popup-tip {
+  @apply !border-t-popover !z-10 relative;
+}
+.mapboxgl-popup-content {
+  @apply !bg-popover !rounded-md border border-border text-big-stone-50 shadow-md;
+}
+.mapboxgl-popup-close-button {
+  @apply hidden;
+}
