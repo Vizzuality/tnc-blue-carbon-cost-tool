@@ -20,7 +20,7 @@ describe('Create Custom Projects - Request Validations', () => {
         .post(customProjectContract.createCustomProject.path)
         .send({});
 
-      expect(response.body.errors).toHaveLength(10);
+      expect(response.body.errors).toHaveLength(12);
     });
   });
   describe('Conservation Project Validations', () => {
