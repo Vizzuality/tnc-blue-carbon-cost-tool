@@ -23,7 +23,7 @@ export const authContract = contract.router({
   },
   register: {
     method: "POST",
-    path: "/authentication/register",
+    path: "/authentication/sign-up",
     responses: {
       201: contract.type<null>(),
     },
@@ -31,7 +31,7 @@ export const authContract = contract.router({
   },
   signUp: {
     method: "POST",
-    path: "/authentication/sign-up",
+    path: "/authentication/confirm-account",
     responses: {
       201: contract.type<null>(),
     },
