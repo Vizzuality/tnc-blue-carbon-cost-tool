@@ -42,8 +42,8 @@ export default async function RootLayout({
               <main className="flex h-dvh flex-1 overflow-hidden">
                 {children}
               </main>
-              <Toaster />
             </SidebarProvider>
+            <Toaster />
           </body>
         </NuqsAdapter>
       </html>
