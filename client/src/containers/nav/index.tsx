@@ -10,6 +10,7 @@ import {
   UserIcon,
   FileQuestionIcon,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 import {
   Sidebar,
@@ -53,16 +54,12 @@ const navItems = {
       url: "/methodology",
       icon: FileQuestionIcon,
     },
-    {
-      title: "Profile",
-      url: "/profile",
-      icon: UserIcon,
-    },
   ],
 };
 
 export default function MainNav() {
   const { open } = useSidebar();
+  const { status } = useSession();
 
   return (
     <Sidebar collapsible="icon" className="py-6">
@@ -111,6 +108,24 @@ export default function MainNav() {
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              tooltip={{
+                children: status === "authenticated" ? "Profile" : "Sign in",
+                hidden: open,
+              }}
+            >
+              <Link
+                href={status === "authenticated" ? "/profile" : "/auth/signin"}
+              >
+                <UserIcon />
+                <span>
+                  {status === "authenticated" ? "Profile" : "Sign in"}
+                </span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
