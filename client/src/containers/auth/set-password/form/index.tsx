@@ -10,7 +10,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { client } from "@/lib/query-client";
@@ -55,7 +55,7 @@ const SignUpForm: FC = () => {
     data: isValidToken,
     isFetching,
     isError,
-  } = useQuery({
+  } = useSuspenseQuery({
     queryKey: queryKeys.auth.resetPasswordToken(params.token).queryKey,
     queryFn: () => {
       return client.auth.validateToken.query({
