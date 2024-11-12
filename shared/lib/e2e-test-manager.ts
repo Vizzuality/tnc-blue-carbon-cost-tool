@@ -86,8 +86,11 @@ export class E2eTestManager {
         return sign(payload, process.env.ACCESS_TOKEN_SECRET as string);
       case TOKEN_TYPE_ENUM.RESET_PASSWORD:
         return sign(payload, process.env.RESET_PASSWORD_TOKEN_SECRET as string);
-      case TOKEN_TYPE_ENUM.SIGN_UP:
-        return sign(payload, process.env.SIGN_UP_TOKEN_SECRET as string);
+      case TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION:
+        return sign(
+          payload,
+          process.env.ACCOUNT_CONFIRMATION_TOKEN_SECRET as string,
+        );
 
       case TOKEN_TYPE_ENUM.EMAIL_CONFIRMATION:
         return sign(

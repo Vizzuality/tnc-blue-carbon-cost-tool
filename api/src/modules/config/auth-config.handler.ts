@@ -29,11 +29,13 @@ export class JwtConfigHandler {
           ),
         };
 
-      case TOKEN_TYPE_ENUM.SIGN_UP:
+      case TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION:
         return {
-          secret: this.configService.getOrThrow<string>('SIGN_UP_TOKEN_SECRET'),
+          secret: this.configService.getOrThrow<string>(
+            'ACCOUNT_CONFIRMATION_TOKEN_SECRET',
+          ),
           expiresIn: this.configService.getOrThrow<string>(
-            'SIGN_UP_TOKEN_EXPIRES_IN',
+            'ACCOUNT_CONFIRMATION_EXPIRES_IN',
           ),
         };
 

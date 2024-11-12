@@ -3,7 +3,7 @@ import { z } from "zod";
 export enum TOKEN_TYPE_ENUM {
   ACCESS = "access",
   RESET_PASSWORD = "reset-password",
-  SIGN_UP = "sign-up",
+  ACCOUNT_CONFIRMATION = "sign-up",
   EMAIL_CONFIRMATION = "email-confirmation",
 }
 
