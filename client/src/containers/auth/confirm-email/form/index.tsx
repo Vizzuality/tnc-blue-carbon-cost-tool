@@ -17,6 +17,13 @@ import { queryKeys } from "@/lib/query-keys";
 
 import { Button } from "@/components/ui/button";
 import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import {
   Form,
   FormControl,
   FormField,
@@ -93,46 +100,49 @@ const NewPasswordForm: FC = () => {
   const isDisabled = isFetching || isError || !isValidToken;
 
   return (
-    <div className="space-y-8 rounded-2xl py-6">
-      <div className="space-y-4 px-6">
-        <h2 className="text-xl font-semibold">Confirm email</h2>
-        {!isValidToken && (
-          <p className="text-sm text-destructive">
-            The token is invalid or has expired.
-          </p>
-        )}
-      </div>
-      <Form {...form}>
-        <form
-          ref={formRef}
-          className="w-full space-y-8"
-          onSubmit={handleEmailConfirmation}
-        >
-          <FormField
-            control={form.control}
-            name="newEmail"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input type="hidden" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="space-y-2 px-6">
-            <Button
-              variant="secondary"
-              type="submit"
-              className="w-full"
-              disabled={isDisabled}
-            >
-              Confirm email
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+    <Card variant="secondary">
+      <CardHeader className="space-y-4">
+        <CardTitle className="text-xl font-semibold">
+          Confirm your email
+        </CardTitle>
+        <CardDescription className="text-muted-foreground">
+          {!isValidToken ? (
+            <p className="text-sm text-destructive">
+              The token is invalid or has expired.
+            </p>
+          ) : (
+            <p>To create your account please fill in the details bellow.</p>
+          )}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            ref={formRef}
+            className="w-full space-y-8"
+            onSubmit={handleEmailConfirmation}
+          >
+            <FormField
+              control={form.control}
+              name="newEmail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input type="hidden" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex justify-end">
+              <Button type="submit" disabled={isDisabled}>
+                Confirm email
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 

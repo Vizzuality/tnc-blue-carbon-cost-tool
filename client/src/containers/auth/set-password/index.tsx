@@ -5,37 +5,35 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardContent,
 } from "@/components/ui/card";
 
-import SignInForm from "./form";
+import SignUpForm from "./form";
 
-const SignIn: FC = () => {
+const SetPassword: FC = () => {
   return (
     <>
       <Card variant="secondary">
-        <CardHeader className="space-y-4">
-          <CardTitle className="text-xl font-semibold">
-            Welcome to Blue Carbon Cost
-          </CardTitle>
+        <CardHeader className="space-y-4 pb-4">
+          <CardTitle className="text-xl font-semibold">Set password</CardTitle>
           <CardDescription className="text-muted-foreground">
-            To sign in please enter your email and password below.
+            Please set a new password to secure your account.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SignInForm />
+          <SignUpForm />
         </CardContent>
       </Card>
       <Card variant="secondary" className="p-6">
         <p className="text-sm">
           <span className="pr-2 text-muted-foreground">
-            Don&apos;t have an account?
+            Already have an account?
           </span>
           <Button variant="link" className="p-0 text-primary" asChild>
-            <Link href="/auth/signup">Sign up</Link>
+            <Link href="/auth/signin">Sign in</Link>
           </Button>
         </p>
       </Card>
@@ -43,4 +41,4 @@ const SignIn: FC = () => {
   );
 };
 
-export default SignIn;
+export default SetPassword;
