@@ -39,7 +39,7 @@ describe('Sign Up', () => {
       .request()
       .get(authContract.validateToken.path)
       .set('Authorization', `Bearer ${signUpToken}`)
-      .query({ tokenType: TOKEN_TYPE_ENUM.SIGN_UP });
+      .query({ tokenType: TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION });
 
     expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
   });
@@ -56,7 +56,7 @@ describe('Sign Up', () => {
       .request()
       .post(authContract.signUp.path)
       .set('Authorization', `Bearer ${signUpToken}`)
-      .query({ tokenType: TOKEN_TYPE_ENUM.SIGN_UP })
+      .query({ tokenType: TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION })
       .send({
         oneTimePassword: '8765432187654321',
         newPassword: 'newpassword',

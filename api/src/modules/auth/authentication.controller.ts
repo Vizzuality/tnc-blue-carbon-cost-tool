@@ -16,7 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ResetPassword } from '@api/modules/auth/strategies/reset-password.strategy';
 import { authContract } from '@shared/contracts/auth.contract';
 import { AuthenticationService } from '@api/modules/auth/authentication.service';
-import { SignUp } from '@api/modules/auth/strategies/sign-up.strategy';
+import { ConfirmAccount } from '@api/modules/auth/strategies/confirm-account.strategy';
 import { CommandBus } from '@nestjs/cqrs';
 import { RequestPasswordRecoveryCommand } from '@api/modules/auth/commands/request-password-recovery.command';
 import { EmailConfirmation } from '@api/modules/auth/strategies/email-update.strategy';
@@ -58,7 +58,7 @@ export class AuthenticationController {
     });
   }
 
-  @UseGuards(AuthGuard(SignUp))
+  @UseGuards(AuthGuard(ConfirmAccount))
   @TsRestHandler(authContract.signUp)
   async signUp(@GetUser() user: User): Promise<ControllerResponse> {
     return tsRestHandler(authContract.signUp, async ({ body }) => {

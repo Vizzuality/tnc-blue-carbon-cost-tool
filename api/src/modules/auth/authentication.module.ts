@@ -11,7 +11,7 @@ import { JwtStrategy } from '@api/modules/auth/strategies/jwt.strategy';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { ResetPasswordJwtStrategy } from '@api/modules/auth/strategies/reset-password.strategy';
 import { JwtManager } from '@api/modules/auth/services/jwt.manager';
-import { SignUpStrategy } from '@api/modules/auth/strategies/sign-up.strategy';
+import { ConfirmAccountStrategy } from '@api/modules/auth/strategies/confirm-account.strategy';
 import { PasswordManager } from '@api/modules/auth/services/password.manager';
 import { EmailConfirmationJwtStrategy } from '@api/modules/auth/strategies/email-update.strategy';
 
@@ -51,9 +51,9 @@ import { EmailConfirmationJwtStrategy } from '@api/modules/auth/strategies/email
       inject: [UsersService, ApiConfigService],
     },
     {
-      provide: SignUpStrategy,
+      provide: ConfirmAccountStrategy,
       useFactory: (users: UsersService, config: ApiConfigService) => {
-        return new SignUpStrategy(users, config);
+        return new ConfirmAccountStrategy(users, config);
       },
       inject: [UsersService, ApiConfigService],
     },

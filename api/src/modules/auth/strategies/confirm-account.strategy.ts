@@ -7,15 +7,20 @@ import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 
 export type JwtPayload = { id: string };
 
-export const SignUp = 'sign-up';
+export const ConfirmAccount = 'confirm-account';
 
 @Injectable()
-export class SignUpStrategy extends PassportStrategy(Strategy, SignUp) {
+export class ConfirmAccountStrategy extends PassportStrategy(
+  Strategy,
+  ConfirmAccount,
+) {
   constructor(
     private readonly userService: UsersService,
     private readonly config: ApiConfigService,
   ) {
-    const { secret } = config.getJWTConfigByType(TOKEN_TYPE_ENUM.SIGN_UP);
+    const { secret } = config.getJWTConfigByType(
+      TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION,
+    );
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: secret,

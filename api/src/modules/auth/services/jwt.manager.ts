@@ -58,7 +58,7 @@ export class JwtManager {
   ): Promise<{ signUpToken: string; expiresIn: string }> {
     const { token: signUpToken, expiresIn } = await this.sign(
       userId,
-      TOKEN_TYPE_ENUM.SIGN_UP,
+      TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION,
     );
     return {
       signUpToken: signUpToken,
@@ -84,7 +84,7 @@ export class JwtManager {
     try {
       const { id } = await this.jwt.verifyAsync(token, { secret });
       switch (type) {
-        case TOKEN_TYPE_ENUM.SIGN_UP:
+        case TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION:
           /**
            * If the user is already active, we don't want to allow them to confirm their email again.
            */
