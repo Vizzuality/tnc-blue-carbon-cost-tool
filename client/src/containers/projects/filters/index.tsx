@@ -106,7 +106,7 @@ export default function ProjectsFilters() {
   const debouncedCostChange = useDebounce(async (cost: [number, number]) => {
     await setFilters((prev) => ({
       ...prev,
-      cost,
+      costRange: cost,
     }));
   }, 250);
 
@@ -114,7 +114,7 @@ export default function ProjectsFilters() {
     async (abatementPotential: [number, number]) => {
       await setFilters((prev) => ({
         ...prev,
-        abatementPotential,
+        abatementPotentialRange: abatementPotential,
       }));
     },
     250,
