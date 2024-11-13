@@ -24,8 +24,6 @@ import { ChevronsUpDownIcon, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { LAYOUT_TRANSITIONS } from "@/app/(projects)/constants";
-
 import TablePagination from "@/containers/projects/table/pagination";
 
 import { Button } from "@/components/ui/button";
@@ -54,6 +52,12 @@ type CustomProject = {
   totalNPVCost: number;
   abatementPotential: number;
   type: "Conservation" | "Restoration";
+  className?: string;
+};
+
+const LAYOUT_TRANSITIONS = {
+  duration: 0.2,
+  ease: "easeInOut",
 };
 
 // Mock data
@@ -86,7 +90,21 @@ const ActionsDropdown = () => (
   </DropdownMenu>
 );
 
-// Column definitions
+type CustomColumn = {
+  accessorKey?: string;
+  header:
+    | string
+    | ((props: { table: TableInstance<CustomProject> }) => React.ReactNode);
+  cell:
+    | string
+    | ((props: {
+        row: Row<CustomProject>;
+        getValue: () => void;
+      }) => React.ReactNode);
+  className?: string;
+  enableSorting?: boolean;
+};
+
 const columns = [
   {
     accessorKey: "projectName",
@@ -155,9 +173,7 @@ const columns = [
     accessorKey: "actions",
     header: ActionsDropdown,
     cell: ActionsDropdown,
-    meta: {
-      className: "!border-l-0",
-    },
+    className: "!border-l-0",
     enableSorting: false,
   },
 ];
@@ -304,7 +320,12 @@ export default function MyProjects() {
                       {row.getVisibleCells().map((cell) => (
                         <TableCell
                           key={cell.id}
-                          className={cell.column.columnDef.meta?.className}
+                          className={
+                            (cell.column.columnDef as CustomColumn)
+                              .accessorKey === "actions"
+                              ? "!border-l-0"
+                              : ""
+                          }
                         >
                           {flexRender(
                             cell.column.columnDef.cell,

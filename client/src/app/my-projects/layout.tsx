@@ -16,7 +16,6 @@ export default function MyProjectsLayout({ children }: PropsWithChildren) {
       <MapProvider>
         <main className="flex h-dvh flex-1 overflow-hidden">
           <LayoutGroup>
-            <MainNav />
             {children}
           </LayoutGroup>
         </main>

@@ -68,6 +68,7 @@ const navItems = {
 export default function MainNav() {
   const { open } = useSidebar();
   const { status } = useSession();
+  const pathname = usePathname();
 
   return (
     <Sidebar collapsible="icon" className="py-6">
