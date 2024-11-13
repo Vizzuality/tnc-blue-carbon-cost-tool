@@ -28,13 +28,11 @@ export default function MapPopup({ children }: PropsWithChildren) {
       className="bg-transparent text-sm"
       maxWidth="320"
     >
-      <div className="flex flex-col gap-2">
-        <>
-          <button type="button" onClick={closePopup} className="self-end">
-            <XIcon className="h-5 w-5 text-foreground hover:text-muted-foreground" />
-          </button>
-          {children}
-        </>
+      <div className="flex flex-col">
+        <button type="button" onClick={closePopup} className="self-end">
+          <XIcon className="h-4 w-4 text-foreground hover:text-muted-foreground" />
+        </button>
+        {children}
       </div>
     </Popup>
   );
