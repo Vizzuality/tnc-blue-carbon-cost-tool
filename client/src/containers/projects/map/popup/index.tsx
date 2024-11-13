@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { popupAtom } from "@/app/(overview)/store";
 
 import MapPopup from "@/components/map/popup";
-import { Badge } from "@/components/ui/badge";
 
 const HEADER_CLASSES = "py-0.5 text-left font-normal text-muted-foreground";
 const CELL_CLASSES = "py-0.5 font-semibold";
@@ -17,14 +16,11 @@ export default function CostAbatementPopup() {
   return (
     <MapPopup>
       <div className="flex items-center justify-between">
-        <span className="font-semibold">
+        <span className="font-semibold leading-none">
           {popup?.features?.[0]?.properties?.country}
         </span>
-        <Badge variant="outline" className="pointer-events-none">
-          SUM
-        </Badge>
       </div>
-      <table>
+      <table className="mt-2">
         <thead>
           <tr>
             <th className={cn(HEADER_CLASSES, "pr-2")}>Cost</th>
@@ -44,7 +40,7 @@ export default function CostAbatementPopup() {
           </tr>
         </tbody>
       </table>
-      <p className="text-xs text-muted-foreground">
+      <p className="mt-2 text-xs text-muted-foreground">
         Values for the SUM of all projects.
       </p>
     </MapPopup>
