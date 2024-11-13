@@ -6,8 +6,6 @@ import { MapProvider } from "react-map-gl";
 
 import { LayoutGroup } from "framer-motion";
 
-import MainNav from "@/containers/nav";
-
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function MyProjectsLayout({ children }: PropsWithChildren) {
@@ -15,9 +13,7 @@ export default function MyProjectsLayout({ children }: PropsWithChildren) {
     <SidebarProvider>
       <MapProvider>
         <main className="flex h-dvh flex-1 overflow-hidden">
-          <LayoutGroup>
-            {children}
-          </LayoutGroup>
+          <LayoutGroup>{children}</LayoutGroup>
         </main>
       </MapProvider>
     </SidebarProvider>
