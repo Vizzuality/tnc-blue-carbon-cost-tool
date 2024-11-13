@@ -4,7 +4,7 @@ export const formatCurrency = (
   value: number,
   options: Intl.NumberFormatOptions = {},
 ) => {
-  return Intl.NumberFormat(undefined, {
+  return Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     ...options,
