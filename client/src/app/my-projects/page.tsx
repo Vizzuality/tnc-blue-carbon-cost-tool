@@ -17,6 +17,7 @@ import {
   SortingState,
   useReactTable,
   Row,
+  Table as TableInstance,
 } from "@tanstack/react-table";
 import { motion } from "framer-motion";
 import { ChevronsUpDownIcon, Search } from "lucide-react";
@@ -89,7 +90,7 @@ const ActionsDropdown = () => (
 const columns = [
   {
     accessorKey: "projectName",
-    header: ({ table }) => (
+    header: ({ table }: { table: TableInstance<CustomProject> }) => (
       <div className="flex items-center gap-2">
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
