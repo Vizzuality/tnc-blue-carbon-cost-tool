@@ -13,6 +13,7 @@ import {
 import {
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   PaginationState,
   SortingState,
   useReactTable,
@@ -65,8 +66,8 @@ const MOCK_DATA: CustomProject[] = Array.from({ length: 15 }, (_, i) => ({
   id: i + 1,
   projectName: "My custom project",
   location: "Location",
-  totalNPVCost: 1075508,
-  abatementPotential: 1075508,
+  totalNPVCost: Math.floor(1000000 + Math.random() * 9000000),
+  abatementPotential: Math.floor(1000000 + Math.random() * 9000000),
   type: i % 3 === 1 ? "Conservation" : "Restoration",
 }));
 
@@ -199,9 +200,12 @@ export default function MyProjects() {
   const [activeFilter, setActiveFilter] = useState("All");
 
   const table = useReactTable({
-    data: MOCK_DATA,
+    data: MOCK_DATA.filter((project) =>
+      activeFilter === "All" ? true : project.type === activeFilter,
+    ),
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
     state: {
       sorting,
@@ -220,7 +224,7 @@ export default function MyProjects() {
       className="flex flex-1 flex-col"
       transition={LAYOUT_TRANSITIONS}
     >
-      <div className="mx-3 flex flex-1 flex-col">
+      <div className="mx-3 flex h-full flex-1 flex-col">
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center space-x-2">
             <SidebarTrigger />
@@ -232,7 +236,7 @@ export default function MyProjects() {
           </Button>
         </div>
 
-        <div className="flex items-center justify-between border-b border-border py-4">
+        <div className="flex items-center justify-between py-4">
           <div className="flex gap-2 rounded-full bg-slate-900">
             {filters.map((filter) => (
               <Button
@@ -254,8 +258,8 @@ export default function MyProjects() {
             />
           </div>
         </div>
-        <div className="flex h-full flex-1 flex-col rounded-lg border border-border bg-background">
-          <div className="max-h-[550px] flex-1 overflow-auto">
+        <div className="mb-4 flex h-full flex-1 flex-col overflow-hidden rounded-lg border border-border bg-background">
+          <div className="flex h-full flex-1 flex-col overflow-hidden">
             <Table>
               <TableHeader className="sticky top-0">
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -347,18 +351,16 @@ export default function MyProjects() {
                 )}
               </TableBody>
             </Table>
+            <TablePagination
+              onChangePagination={setPagination}
+              pagination={{
+                ...pagination,
+                totalPages: 6 ?? 0,
+                totalItems: 90 ?? 0,
+              }}
+            />
           </div>
         </div>
-      </div>
-      <div className="flex items-center justify-between border-t border-border px-4 py-2">
-        <TablePagination
-          onChangePagination={setPagination}
-          pagination={{
-            ...pagination,
-            totalPages: 6 ?? 0,
-            totalItems: 90 ?? 0,
-          }}
-        />
       </div>
     </motion.div>
   );
