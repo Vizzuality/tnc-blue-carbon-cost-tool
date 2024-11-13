@@ -38,7 +38,7 @@ test.describe("Auth - Sign Up", () => {
     const userCreated = await testManager.mocks().createUser(user);
     const userToken = await testManager.generateTokenByType(
       userCreated,
-      TOKEN_TYPE_ENUM.SIGN_UP,
+      TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION,
     );
 
     await page.goto(`/auth/signup/${userToken}`);

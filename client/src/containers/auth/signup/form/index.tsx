@@ -62,7 +62,7 @@ const SignUpForm: FC = () => {
           authorization: `Bearer ${params.token}`,
         },
         query: {
-          tokenType: TOKEN_TYPE_ENUM.SIGN_UP,
+          tokenType: TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION,
         },
       });
     },

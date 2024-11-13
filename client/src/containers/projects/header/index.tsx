@@ -6,9 +6,9 @@ import { Settings2Icon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { projectsUIState } from "@/app/(projects)/store";
-import { useGlobalFilters } from "@/app/(projects)/url-store";
-import { INITIAL_FILTERS_STATE } from "@/app/(projects)/url-store";
+import { projectsUIState } from "@/app/(overview)/store";
+import { useGlobalFilters } from "@/app/(overview)/url-store";
+import { INITIAL_FILTERS_STATE } from "@/app/(overview)/url-store";
 
 import ParametersProjects from "@/containers/projects/header/parameters";
 

@@ -6,7 +6,7 @@ import { FillLayerSpecification } from "mapbox-gl";
 import { client } from "@/lib/query-client";
 import { geometriesKeys } from "@/lib/query-keys";
 
-import { useGlobalFilters } from "@/app/(projects)/url-store";
+import { useGlobalFilters } from "@/app/(overview)/url-store";
 
 import { generateColorRamp } from "@/containers/projects/map/layers/projects/utils";
 

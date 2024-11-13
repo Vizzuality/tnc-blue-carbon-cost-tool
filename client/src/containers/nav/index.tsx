@@ -11,6 +11,7 @@ import {
   UserIcon,
   FileQuestionIcon,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 import { cn } from "@/lib/utils";
 
@@ -61,18 +62,12 @@ const navItems = {
       icon: FileQuestionIcon,
       match: (pathname: string) => pathname === "/methodology",
     },
-    {
-      title: "Profile",
-      url: "/profile",
-      icon: UserIcon,
-      match: (pathname: string) => pathname === "/profile",
-    },
   ],
 };
 
 export default function MainNav() {
   const { open } = useSidebar();
-  const pathname = usePathname();
+  const { status } = useSession();
 
   return (
     <Sidebar collapsible="icon" className="py-6">
@@ -112,29 +107,40 @@ export default function MainNav() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-          {navItems.footer.map((item) => {
-            const isActive = item.match(pathname);
-            return (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton
-                  asChild
-                  tooltip={{
-                    children: item.title,
-                    hidden: open,
-                  }}
-                  className={cn(
-                    isActive &&
-                      "bg-sidebar-accent text-sidebar-accent-foreground",
-                  )}
-                >
-                  <Link href={item.url}>
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
+          {navItems.footer.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                asChild
+                tooltip={{
+                  children: item.title,
+                  hidden: open,
+                }}
+              >
+                <Link href={item.url}>
+                  {item.icon && <item.icon />}
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              tooltip={{
+                children: status === "authenticated" ? "Profile" : "Sign in",
+                hidden: open,
+              }}
+            >
+              <Link
+                href={status === "authenticated" ? "/profile" : "/auth/signin"}
+              >
+                <UserIcon />
+                <span>
+                  {status === "authenticated" ? "Profile" : "Sign in"}
+                </span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>

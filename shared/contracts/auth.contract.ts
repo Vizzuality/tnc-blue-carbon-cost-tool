@@ -7,6 +7,7 @@ import { BearerTokenSchema } from "@shared/schemas/auth/bearer-token.schema";
 import { SignUpSchema } from "@shared/schemas/auth/sign-up.schema";
 import { RequestEmailUpdateSchema } from "@shared/schemas/users/request-email-update.schema";
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
+import { CreateUserSchema } from "@shared/schemas/users/create-user.schema";
 
 // TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 
@@ -20,9 +21,17 @@ export const authContract = contract.router({
     },
     body: LogInSchema,
   },
-  signUp: {
+  register: {
     method: "POST",
     path: "/authentication/sign-up",
+    responses: {
+      201: contract.type<null>(),
+    },
+    body: CreateUserSchema.omit({ role: true }),
+  },
+  signUp: {
+    method: "POST",
+    path: "/authentication/confirm-account",
     responses: {
       201: contract.type<null>(),
     },
