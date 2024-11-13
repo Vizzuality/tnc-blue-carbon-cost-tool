@@ -4,19 +4,10 @@ import * as React from "react";
 
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { cva, type VariantProps } from "class-variance-authority";
-import { InfoIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import InfoButton from "@/components/ui/info-button";
 
 const labelVariants = cva(
   "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
@@ -40,22 +31,7 @@ const Label = React.forwardRef<
           className={cn(labelVariants(), className)}
           {...props}
         />
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              variant="ghost"
-              className="group h-5 w-5 p-0 hover:bg-transparent"
-            >
-              <InfoIcon className="h-7 w-7 text-foreground hover:text-muted-foreground" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>{tooltip.title}</DialogTitle>
-              <DialogDescription>{tooltip.content}</DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
+        <InfoButton title={tooltip.title}>{tooltip.content}</InfoButton>
       </div>
     );
   }
