@@ -16,7 +16,7 @@ import SignInForm from "./form";
 const SignIn: FC = () => {
   return (
     <>
-      <Card variant="secondary">
+      <Card variant="secondary" className="p-6">
         <CardHeader className="space-y-4">
           <CardTitle className="text-xl font-semibold">
             Welcome to Blue Carbon Cost

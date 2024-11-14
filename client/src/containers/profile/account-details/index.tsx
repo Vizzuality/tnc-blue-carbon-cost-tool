@@ -112,7 +112,7 @@ const UpdateEmailForm: FC<{ id: string }> = ({ id }) => {
   );
 
   return (
-    <Card variant="secondary">
+    <Card variant="secondary" className="p-6">
       <CardHeader className="space-y-4">
         <CardTitle id={id} className="text-xl font-semibold">
           My details
