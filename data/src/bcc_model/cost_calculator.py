@@ -55,7 +55,9 @@ class CostCalculator:
         )
         self.credits_issued = sum(self.total_credits_plan.values())
         # Calculate $/tCO2e (NPV)
-        self.cost_per_tCO2e = self.total_NPV / self.credits_issued
+        self.cost_per_tCO2e = (
+            self.total_NPV / self.credits_issued if self.credits_issued != 0 else 0
+        )
         # Calculate $/ha (NPV)
         self.cost_per_ha = self.total_NPV / self.project.project_size_ha
         # Calculate NPV covering opex
@@ -71,16 +73,21 @@ class CostCalculator:
         else:
             self.funding_gap_NPV = 0
         # Funding gap per tCO2e (NPV)
-        self.funding_gap_per_tco2_NPV = self.funding_gap_NPV / self.credits_issued
+        self.funding_gap_per_tco2_NPV = (
+            self.funding_gap_NPV / self.credits_issued if self.credits_issued != 0 else 0
+        )
 
         # Community benefit sharing fund fund % of revenue
         self.community_benefit_sharing_fund_plan = self.calculate_cummunity_benefit_sharing_fund()
         self.total_community_benefit_sharing_fund_NPV = calculate_npv(
             self.community_benefit_sharing_fund_plan, self.project.discount_rate
         )
-        self.community_benefit_sharing_fund = (
-            self.total_community_benefit_sharing_fund_NPV / self.total_revenue_NPV
-        )
+        if self.total_revenue_NPV == 0:
+            self.community_benefit_sharing_fund = 0
+        else:
+            self.community_benefit_sharing_fund = (
+                self.total_community_benefit_sharing_fund_NPV / self.total_revenue_NPV
+            )
 
         # Calculate funding gap
         reference_npv = (
@@ -98,7 +105,7 @@ class CostCalculator:
             self.revenue_profit_calculator.calculate_annual_net_income(self.opex_total_cost_plan),
             use_capex=False,
         )
-        # IRR when priced to cover OPEX
+        # IRR when priced to cover OPEX + CAPEX
         self.IRR_total_cost = calculate_irr(
             self.revenue_profit_calculator.calculate_annual_net_cash_flow(
                 self.capex_total_cost_plan, self.opex_total_cost_plan
@@ -459,11 +466,21 @@ class CostCalculator:
             & (self.project.base_size["ecosystem"] == self.project.ecosystem),
             "long_term_project_operating_cost",
         ].values[0]
+        if base_size == 0:
+            raise ValueError("Base size must be non-zero to avoid division errors.")
         base_cost = self.project.long_term_project_operating
         increased_by = self.project.base_increase.loc[
-            self.project.master_table["ecosystem"] == self.project.ecosystem,
+            self.project.base_increase["ecosystem"] == self.project.ecosystem,
             "long_term_project_operating_cost",
         ].values[0]
+
+        # Add a conditional check to handle cases where there is an empty or undefined value
+        if (
+            not base_cost
+            or not self.project.project_size_ha
+            or not self.project.starting_point_scaling
+        ):
+            raise ValueError("Required project attributes are missing.")
         if (
             float(self.project.project_size_ha) - float(self.project.starting_point_scaling)
         ) / float(base_size) < 1:

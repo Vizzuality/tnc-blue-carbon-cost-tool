@@ -65,6 +65,9 @@ class BlueCarbonProject:
         self.restoration_activity = restoration_activity
         self.sequestration_rate_used = sequestration_rate_used
         self.project_specific_sequestration_rate = project_specific_sequestration_rate
+        self.tier_1_sequestration_rate = get_value_from_master_table(
+            self.master_table, self.country_code, self.ecosystem, "tier_1_sequestration_rate"
+        )
         self.planting_success_rate = planting_success_rate
 
         # Conservation-specific attributes:
@@ -77,6 +80,11 @@ class BlueCarbonProject:
         )
         self.tier_3_emission_factor_agb = tier_3_emission_factor_agb
         self.tier_3_emission_factor_soc = tier_3_emission_factor_soc
+
+        # Get ecosystem extent:
+        self.ecosystem_extent = get_value_from_master_table(
+            self.master_table, self.country_code, self.ecosystem, "ecosystem_extent"
+        )
 
         # Initialize default values for additional assumptions
         self.verification_frequency = BlueCarbonProject.VERIFICATION_FREQUENCY
@@ -134,7 +142,7 @@ class BlueCarbonProject:
                 "Loss rate used": self.loss_rate_used,
                 f"{self.loss_rate_used}": self.project_specific_loss_rate
                 if self.loss_rate_used == "Project-specific"
-                else self.loss_rate,
+                else float(self.loss_rate),
                 "Emission factor used": self.emission_factor_used,
                 "Global emission factor": float(self.emission_factor)
                 if self.emission_factor_used == "Tier 1 - Global emission factor"
@@ -331,6 +339,8 @@ class BlueCarbonProject:
             self.emission_factor = get_value_from_master_table(
                 self.master_table, self.country_code, self.ecosystem, "tier_1_emission_factor"
             )
+            self.emission_factor_AGB = None
+            self.emission_factor_SOC = None
         elif self.emission_factor_used == "Tier 2 - Country-specific emission factor":
             self.emission_factor_AGB = get_value_from_master_table(
                 self.master_table, self.country_code, self.ecosystem, "emission_factor_AGB"
@@ -338,14 +348,16 @@ class BlueCarbonProject:
             self.emission_factor_SOC = get_value_from_master_table(
                 self.master_table, self.country_code, self.ecosystem, "emission_factor_SOC"
             )
+            self.emission_factor = None
         elif self.emission_factor_used == "Tier 3 - Project specific emission factor":
             if self.tier_3_project_specific_emission == "One emission factor":
                 self.emission_factor = self.tier_3_project_specific_emission_one_factor
-                self.emission_factor_AGB = 0  # Set to None ideally
-                self.emission_factor_SOC = 0
+                self.emission_factor_AGB = None
+                self.emission_factor_SOC = None
             elif self.tier_3_project_specific_emission == "AGB and SOC separately":
                 self.emission_factor_AGB = self.tier_3_emission_factor_agb
                 self.emission_factor_SOC = self.tier_3_emission_factor_soc
+                self.emission_factor = None
                 self.logger.info(
                     f"""Emission Factor AGB: {self.tier_3_emission_factor_agb},
                      SOC: {self.tier_3_emission_factor_soc}"""

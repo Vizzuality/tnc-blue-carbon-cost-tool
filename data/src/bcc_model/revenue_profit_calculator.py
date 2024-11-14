@@ -1,4 +1,5 @@
 # src/revenue_profit_calculator.py
+import math
 
 from sequestration_credits_calculator import SequestrationCreditsCalculator
 
@@ -27,7 +28,7 @@ class RevenueProfitCalculator:
                 if year < -1:
                     estimated_revenue_plan[year] = 0
                 else:
-                    estimated_revenue_plan[year] = (
+                    estimated_revenue_plan[year] = float(
                         float(estimated_credits_issued[year])
                         * float(self.project.carbon_price)
                         * (1 + float(self.project.carbon_price_increase)) ** int(year)
@@ -54,7 +55,9 @@ class RevenueProfitCalculator:
         }
 
         annual_net_cash_flow = {
-            year: estimated_revenue[year] + total_cost_plan.get(year, 0)
+            year: estimated_revenue.get(year, 0) + total_cost_plan.get(year, 0)
+            if math.isfinite(estimated_revenue.get(year, 0) + total_cost_plan.get(year, 0))
+            else 0
             for year in range(-4, self.project_length + 1)
             if year != 0
         }
@@ -74,7 +77,9 @@ class RevenueProfitCalculator:
         estimated_revenue = self.calculate_est_revenue()
 
         annual_net_income = {
-            year: estimated_revenue[year] + cost_plans["opex_total"].get(year, 0)
+            year: estimated_revenue.get(year, 0) + cost_plans["opex_total"].get(year, 0)
+            if math.isfinite(estimated_revenue.get(year, 0) + cost_plans["opex_total"].get(year, 0))
+            else 0
             for year in range(-4, self.project_length + 1)
             if year != 0
         }
