@@ -164,13 +164,8 @@ const SignUpForm: FC = () => {
           )}
         />
 
-        <div className="!mt-10 px-8">
-          <Button
-            variant="secondary"
-            type="submit"
-            className="w-full"
-            disabled={!form.formState.isValid}
-          >
+        <div className="flex justify-end">
+          <Button type="submit" disabled={!form.formState.isValid}>
             Update password
           </Button>
         </div>

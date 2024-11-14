@@ -1,16 +1,21 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { intersectingAtom } from "@/containers/profile/store";
-import { client } from "@/lib/query-client";
-import { queryKeys } from "@/lib/query-keys";
-import { cn } from "@/lib/utils";
+import { FC } from "react";
+
+import Link from "next/link";
+
 import { useAtomValue } from "jotai";
 import { LogOutIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import { FC } from "react";
 
-const getSidebarLinkId = (slug?: string): string =>
+import { client } from "@/lib/query-client";
+import { queryKeys } from "@/lib/query-keys";
+import { cn } from "@/lib/utils";
+
+import { intersectingAtom } from "@/containers/profile/store";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+
+export const getSidebarLinkId = (slug?: string): string =>
   `profile-sidebar-${slug}-link`;
 
 const getInitials = (fullName?: string): string => {
@@ -42,8 +47,6 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
   );
   const intersecting = useAtomValue(intersectingAtom);
 
-  console.log(user);
-
   return (
     <aside className="flex h-full flex-col gap-8 pb-6 pt-3">
       <div className="flex gap-4">
@@ -65,8 +68,10 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
               <Link
                 className={cn(
                   "block rounded-3xl text-sm font-semibold text-muted-foreground transition-colors hover:bg-big-stone-900",
-                  intersecting === o.id &&
-                    "border-l-2 border-white bg-secondary",
+                  intersecting === o.id && [
+                    "bg-accent text-accent-foreground",
+                    "hover:bg-accent hover:text-accent-foreground",
+                  ],
                 )}
                 href={`#${o.id}`}
                 id={getSidebarLinkId(o.id)}
