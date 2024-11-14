@@ -1,11 +1,6 @@
+import { FC } from "react";
+
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -14,54 +9,43 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Link from "next/link";
-import { FC } from "react";
 
-const CustomProjects: FC<{ id: string }> = ({ id }) => {
+const CustomProjects: FC = () => {
+  // TODO: Should fetch custom-projects from API when available
   return (
-    <Card variant="secondary" className="p-6">
-      <CardHeader className="space-y-4">
-        <CardTitle id={id} className="text-xl font-semibold">
-          My custom projects
-        </CardTitle>
-        <CardDescription className="text-muted-foreground">
-          You can see more detail and modify your custom projects in{" "}
-          <Link
-            href="/projects/custom"
-            className="text-primary hover:underline"
-          >
-            My Custom Projects
-          </Link>{" "}
-          page.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow className="divide-x-0">
-              <TableHead className="w-[260px] bg-transparent font-normal">
-                Project type
-              </TableHead>
-              <TableHead className="bg-transparent font-normal">
-                Number of projects
-              </TableHead>
-              <TableHead className="bg-transparent font-normal">
-                Methodology version
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow className="divide-x-0">
-              <TableCell className="font-medium">Conservation</TableCell>
-              <TableCell className="text-center">16</TableCell>
-              <TableCell>
-                <Badge variant="outline">V 1.0</Badge>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+    <Table>
+      <TableHeader>
+        <TableRow className="divide-x-0">
+          <TableHead className="w-[260px] bg-transparent font-normal">
+            Project type
+          </TableHead>
+          <TableHead className="bg-transparent font-normal">
+            Number of projects
+          </TableHead>
+          <TableHead className="bg-transparent font-normal">
+            Methodology version
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Array.from({ length: 10 }, (_, index) => ({
+          id: index + 1,
+          projectName: `Project ${index + 1}`,
+          numberOfProjects: Math.floor(Math.random() * 100) + 1,
+          version: "V1.0",
+        })).map((row) => (
+          <TableRow key={row.id} className="divide-x-0">
+            <TableCell className="font-medium">{row.projectName}</TableCell>
+            <TableCell className="text-center">
+              {row.numberOfProjects}
+            </TableCell>
+            <TableCell>
+              <Badge variant="outline">{row.version}</Badge>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
 
