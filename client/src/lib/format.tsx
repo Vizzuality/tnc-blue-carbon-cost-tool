@@ -7,6 +7,7 @@ export const formatCurrency = (
   return Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
+    maximumFractionDigits: 2,
     ...options,
   }).format(value);
 };
@@ -17,6 +18,7 @@ export const formatNumber = (
 ) => {
   return Intl.NumberFormat("en-US", {
     style: "decimal",
+    maximumFractionDigits: 2,
     ...options,
   }).format(value);
 };

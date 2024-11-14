@@ -2,6 +2,11 @@ import {
   createQueryKeys,
   mergeQueryKeys,
 } from "@lukemorales/query-key-factory";
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { PaginationState, SortingState } from "@tanstack/react-table";
 import { z } from "zod";
 
@@ -38,10 +43,40 @@ export const tableKeys = createQueryKeys("tables", {
   id: (id: string) => [id],
 });
 
+export const customProjectKeys = createQueryKeys("customProjects", {
+  countries: null,
+  assumptions: ({
+    ecosystem,
+    activity,
+  }: {
+    ecosystem: ECOSYSTEM;
+    activity: ACTIVITY;
+  }) => [ecosystem, activity],
+  defaultCosts: ({
+    ecosystem,
+    countryCode,
+    activity,
+    restorationActivity,
+  }: {
+    ecosystem: ECOSYSTEM;
+    countryCode: string;
+    activity: ACTIVITY;
+    restorationActivity?: RESTORATION_ACTIVITY_SUBTYPE;
+  }) => ["defaultCosts", ecosystem, countryCode, activity, restorationActivity],
+  defaultActivityTypes: ({
+    ecosystem,
+    countryCode,
+  }: {
+    ecosystem: ECOSYSTEM;
+    countryCode: string;
+  }) => ["defaultActivityTypes", ecosystem, countryCode],
+});
+
 export const queryKeys = mergeQueryKeys(
   authKeys,
   userKeys,
   geometriesKeys,
   tableKeys,
   countriesKeys,
+  customProjectKeys,
 );

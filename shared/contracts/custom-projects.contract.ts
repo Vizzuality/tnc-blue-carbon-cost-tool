@@ -1,19 +1,16 @@
 import { initContract } from "@ts-rest/core";
-import {
-  ApiPaginationResponse,
-  ApiResponse,
-  ErrorResponse,
-} from "@shared/dtos/global/api-response.dto";
+import { ApiPaginationResponse, ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { Country } from "@shared/entities/country.entity";
-import { CustomProject } from "@shared/entities/custom-project.entity";
-import { CreateCustomProjectDto } from "@api/modules/custom-projects/dto/create-custom-project-dto";
-import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-cost-inputs.schema";
-import { OverridableCostInputs } from "@api/modules/custom-projects/dto/project-cost-inputs.dto";
-import { GetAssumptionsSchema } from "@shared/schemas/assumptions/get-assumptions.schema";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
+import { CustomProject } from "@shared/entities/custom-project.entity";
+import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-cost-inputs.schema";
+import { GetAssumptionsSchema } from "@shared/schemas/assumptions/get-assumptions.schema";
+
+import { CreateCustomProjectSchema, InputCostsSchema } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { z } from "zod";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
-import { GetActivityTypesDefaultsSchema } from "@shared/schemas/custom-projects/activity-types-defaults.schema";
 import { ActivityTypesDefaults } from "@shared/dtos/custom-projects/activity-types-defaults";
+import { GetActivityTypesDefaultsSchema } from "@shared/schemas/custom-projects/activity-types-defaults.schema";
 
 export const customProjecsQuerySchema =
   generateEntityQuerySchema(CustomProject);
@@ -34,7 +31,7 @@ export const customProjectContract = contract.router({
     method: "GET",
     path: "/custom-projects/available-countries",
     responses: {
-      201: contract.type<ApiResponse<Pick<Country, "name" | "code">>>(),
+      201: contract.type<ApiResponse<Pick<Country, "name" | "code">[]>>(),
     },
     summary: "Get available countries to create a custom project",
   },
@@ -43,7 +40,7 @@ export const customProjectContract = contract.router({
     method: "GET",
     path: "/custom-projects/assumptions",
     responses: {
-      200: contract.type<ApiResponse<Partial<ModelAssumptions>>>(),
+      200: contract.type<ApiResponse<Partial<ModelAssumptions>[]>>(),
     },
     query: GetAssumptionsSchema,
     summary: "Get default model assumptions",
@@ -52,7 +49,7 @@ export const customProjectContract = contract.router({
     method: "GET",
     path: "/custom-projects/cost-inputs",
     responses: {
-      200: contract.type<ApiResponse<OverridableCostInputs>>(),
+      200: contract.type<ApiResponse<z.infer<typeof InputCostsSchema>>>(),
     },
     query: GetDefaultCostInputsSchema,
   },
@@ -62,7 +59,7 @@ export const customProjectContract = contract.router({
     responses: {
       201: contract.type<ApiResponse<CustomProject>>(),
     },
-    body: contract.type<CreateCustomProjectDto>(),
+    body: CreateCustomProjectSchema,
   },
   getCustomProjects: {
     method: "GET",

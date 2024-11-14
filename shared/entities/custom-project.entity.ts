@@ -21,6 +21,16 @@ export enum CARBON_REVENUES_TO_COVER {
   CAPEX_AND_OPEX = "Capex and Opex",
 }
 
+export enum PROJECT_SPECIFIC_EMISSION {
+  ONE_EMISSION_FACTOR = 'One emission factor',
+  TWO_EMISSION_FACTORS = 'Two emission factors',
+}
+export enum PROJECT_EMISSION_FACTORS {
+  TIER_1 = 'Tier 1 - Global emission factor',
+  TIER_2 = 'Tier 2 - Country-specific emission factor',
+  TIER_3 = 'Tier 3 - Project specific emission factor',
+}
+
 @Entity({ name: "custom_projects" })
 export class CustomProject {
   @PrimaryGeneratedColumn("uuid")
