@@ -16,8 +16,6 @@ import { ChevronsUpDownIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import TablePagination from "@/containers/projects/table/pagination";
-
 import Search from "@/components/ui/search";
 import { useSidebar } from "@/components/ui/sidebar";
 import {
@@ -28,6 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import TablePagination from "@/components/ui/table-pagination";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { columns } from "./columns";

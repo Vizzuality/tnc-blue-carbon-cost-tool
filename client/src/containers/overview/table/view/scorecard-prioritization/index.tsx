@@ -19,9 +19,6 @@ import { cn } from "@/lib/utils";
 
 import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
-import TablePagination, {
-  PAGINATION_SIZE_OPTIONS,
-} from "@/containers/overview/table/pagination";
 import {
   filtersToQueryParams,
   NO_DATA,
@@ -36,6 +33,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import TablePagination, {
+  PAGINATION_SIZE_OPTIONS,
+} from "@/components/ui/table-pagination";
 
 export function ScoredCardPrioritizationTable() {
   const [tableView] = useTableView();
