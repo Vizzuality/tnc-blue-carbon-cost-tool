@@ -17,7 +17,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 let browserQueryClient: QueryClient | undefined = undefined;
 
-function getQueryClient() {
+export function getQueryClient() {
   if (isServer) {
     // Server: always make a new query client
     return makeQueryClient();

@@ -39,9 +39,7 @@ export default async function RootLayout({
           <body className={inter.className}>
             <SidebarProvider>
               <MainNav />
-              <main className="flex h-dvh flex-1 overflow-hidden">
-                {children}
-              </main>
+              <main className="mx-3 flex h-dvh flex-1">{children}</main>
             </SidebarProvider>
             <Toaster />
           </body>

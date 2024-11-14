@@ -13,8 +13,9 @@ import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 export enum SEQUESTRATION_RATE_TIER_TYPES {
-  TIER_2 = "Tier 2 - Country-specific rate",
   TIER_1 = "Tier 1 - IPCC default value",
+  TIER_2 = "Tier 2 - Country-specific rate",
+  TIER_3 = "Tier 3 - Project-specific rate",
 }
 
 // TODO: According to the calculation notebooks, we might be missing a Tier 3, which is a user-defined value, not sure if this should be stored as default or

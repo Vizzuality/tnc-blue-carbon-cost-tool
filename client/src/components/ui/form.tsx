@@ -16,6 +16,7 @@ import { Slot } from "@radix-ui/react-slot";
 
 import { cn } from "@/lib/utils";
 
+import InfoButton from "@/components/ui/info-button";
 import { Label } from "@/components/ui/label";
 
 const Form = FormProvider;
@@ -91,9 +92,28 @@ FormItem.displayName = "FormItem";
 
 const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & {
+    tooltip?: {
+      title: string;
+      content: React.ReactNode;
+    };
+  }
+>(({ className, tooltip, ...props }, ref) => {
   const { error, formItemId } = useFormField();
+
+  if (tooltip) {
+    return (
+      <div className="flex items-center gap-2">
+        <Label
+          ref={ref}
+          className={cn(error && "text-destructive", className)}
+          htmlFor={formItemId}
+          {...props}
+        />
+        <InfoButton title={tooltip.title}>{tooltip.content}</InfoButton>
+      </div>
+    );
+  }
 
   return (
     <Label
