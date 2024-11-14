@@ -10,9 +10,10 @@ import { projectsUIState } from "@/app/(overview)/store";
 
 import ProjectsFilters, {
   FILTERS_SIDEBAR_WIDTH,
-} from "@/containers/projects/filters";
-import ProjectsHeader from "@/containers/projects/header";
-import ProjectsMap from "@/containers/projects/map";
+} from "@/containers/overview/filters";
+import ProjectsHeader from "@/containers/overview/header";
+import ProjectsMap from "@/containers/overview/map";
+import ProjectsTable from "@/containers/overview/table";
 
 import {
   ResizableHandle,
@@ -20,7 +21,6 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useSidebar } from "@/components/ui/sidebar";
-import ProjectsTable from "src/containers/projects/table";
 
 const PANEL_MIN_SIZE = 25;
 const PANEL_DEFAULT_SIZE = 50;

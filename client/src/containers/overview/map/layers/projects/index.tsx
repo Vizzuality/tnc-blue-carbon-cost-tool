@@ -8,7 +8,7 @@ import { geometriesKeys } from "@/lib/query-keys";
 
 import { useGlobalFilters } from "@/app/(overview)/url-store";
 
-import { generateColorRamp } from "@/containers/projects/map/layers/projects/utils";
+import { generateColorRamp } from "@/containers/overview/map/layers/projects/utils";
 
 export const LAYER_ID = "cost-abatement-layer";
 
