@@ -23,7 +23,8 @@ import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
 import TablePagination, {
   PAGINATION_SIZE_OPTIONS,
-} from "@/containers/overview/table/pagination";
+} from "@/components/ui/table-pagination";
+
 import {
   filtersToQueryParams,
   NO_DATA,

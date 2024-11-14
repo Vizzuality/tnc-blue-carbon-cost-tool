@@ -86,6 +86,9 @@ const config: Config = {
           900: "#194760",
           950: "#0a2d42",
         },
+        "mint-green": {
+          200: "#70C69B"
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
