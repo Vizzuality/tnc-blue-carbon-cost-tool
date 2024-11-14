@@ -1,8 +1,8 @@
-import MyProjectsView from "../../containers/my-projects";
-import { CustomProject } from "../../containers/my-projects/types";
+import MyProjectsView from "@/containers/my-projects";
+import { CustomProject } from "@/containers/my-projects/types";
 
 const MOCK_DATA: CustomProject[] = Array.from({ length: 15 }, (_, i) => ({
-  id: i + 1,
+  id: String(i + 1),
   projectName: "My custom project",
   location: "Location",
   totalNPVCost: Math.floor(1000000 + Math.random() * 9000000),
