@@ -99,7 +99,7 @@ const UpdateEmailForm: FC = () => {
     <Form {...form}>
       <form
         ref={formRef}
-        className="flex w-full items-center justify-between space-x-4"
+        className="w-full space-y-4"
         onSubmit={(evt) => {
           form.handleSubmit(() => {
             onSubmit(new FormData(formRef.current!));
@@ -110,8 +110,8 @@ const UpdateEmailForm: FC = () => {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="flex w-full items-center space-x-4 space-y-0">
-              <FormLabel>Email</FormLabel>
+            <FormItem>
+              <FormLabel>Your email</FormLabel>
               <FormControl>
                 <div className="relative flex w-full items-center">
                   <Input
@@ -132,13 +132,11 @@ const UpdateEmailForm: FC = () => {
           )}
         />
 
-        <Button
-          variant="secondary"
-          type="submit"
-          disabled={!form.formState.isValid}
-        >
-          Update email
-        </Button>
+        <div className="flex justify-end">
+          <Button type="submit" disabled={!form.formState.isValid}>
+            Update email
+          </Button>
+        </div>
       </form>
     </Form>
   );

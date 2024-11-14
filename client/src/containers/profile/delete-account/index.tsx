@@ -19,15 +19,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast/use-toast";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
 
-const DeleteAccount: FC<{ id: string }> = ({ id }) => {
+const DeleteAccount: FC = () => {
   const { data: session } = useSession();
   const { toast } = useToast();
 
@@ -58,54 +51,41 @@ const DeleteAccount: FC<{ id: string }> = ({ id }) => {
   }, [session?.accessToken, toast]);
 
   return (
-    <Card variant="secondary" className="p-6">
-      <CardHeader className="space-y-4">
-        <CardTitle id={id} className="text-xl font-semibold">
-          Delete account
-        </CardTitle>
-        <CardDescription className="text-muted-foreground">
-          This action will permanently delete your account. By doing this you
-          will loose access to all your custom scenarios.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <AlertDialog>
-          <div className="flex justify-end">
-            <AlertDialogTrigger asChild>
-              <Button type="button" variant="destructive">
-                Delete account
-              </Button>
-            </AlertDialogTrigger>
-          </div>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete my account</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel asChild>
-                <Button variant="outline" type="button">
-                  Cancel
-                </Button>
-              </AlertDialogCancel>
-              <AlertDialogAction asChild>
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={onDeleteAccount}
-                  className="bg-destructive text-foreground hover:bg-red-600 hover:text-white"
-                >
-                  Delete account
-                </Button>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </CardContent>
-    </Card>
+    <AlertDialog>
+      <div className="flex justify-end">
+        <AlertDialogTrigger asChild>
+          <Button type="button" variant="destructive">
+            Delete account
+          </Button>
+        </AlertDialogTrigger>
+      </div>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete my account</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel asChild>
+            <Button variant="outline" type="button">
+              Cancel
+            </Button>
+          </AlertDialogCancel>
+          <AlertDialogAction asChild>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={onDeleteAccount}
+              className="bg-destructive text-foreground hover:bg-red-600 hover:text-white"
+            >
+              Delete account
+            </Button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 
