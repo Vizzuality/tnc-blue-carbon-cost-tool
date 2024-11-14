@@ -6,6 +6,12 @@ import * as SliderPrimitive from "@radix-ui/react-slider";
 
 import { cn } from "@/lib/utils";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 const Thumb = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Thumb>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb>
@@ -48,23 +54,51 @@ Slider.displayName = SliderPrimitive.Root.displayName;
 
 const RangeSlider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <SliderPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative flex w-full touch-none select-none items-center",
-      className,
-    )}
-    {...props}
-  >
-    <SliderPrimitive.Track className={SLIDER_TRACK_STYLES}>
-      <SliderPrimitive.Range className="absolute h-full bg-primary" />
-    </SliderPrimitive.Track>
-    <Thumb />
-    <Thumb />
-  </SliderPrimitive.Root>
-));
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> & {
+    format?: (v: number) => number | string;
+  }
+>(({ className, format = (v: number) => v, ...props }, ref) => {
+  const [values, setValues] = React.useState([
+    props.defaultValue?.[0] || 0,
+    props.defaultValue?.[1] || 0,
+  ]);
+
+  return (
+    <SliderPrimitive.Root
+      ref={ref}
+      className={cn(
+        "relative flex w-full touch-none select-none items-center",
+        className,
+      )}
+      {...props}
+      onValueChange={(newValues) => {
+        setValues(newValues);
+        props?.onValueChange?.(newValues);
+      }}
+    >
+      <SliderPrimitive.Track className={SLIDER_TRACK_STYLES}>
+        <SliderPrimitive.Range className="absolute h-full bg-primary" />
+      </SliderPrimitive.Track>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Thumb />
+        </TooltipTrigger>
+        <TooltipContent side="top" align="center">
+          {format(values[0])}
+        </TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Thumb />
+        </TooltipTrigger>
+        <TooltipContent side="top" align="center">
+          {format(values[1])}
+        </TooltipContent>
+      </Tooltip>
+    </SliderPrimitive.Root>
+  );
+});
 
 RangeSlider.displayName = SliderPrimitive.Root.displayName;
 

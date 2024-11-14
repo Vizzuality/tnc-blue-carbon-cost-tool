@@ -7,6 +7,7 @@ import { useSetAtom } from "jotai/index";
 import { XIcon } from "lucide-react";
 import { useDebounce } from "rooks";
 
+import { formatNumber } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
@@ -282,8 +283,12 @@ export default function ProjectsFilters() {
           step={1}
           minStepsBetweenThumbs={1}
           onValueChange={debouncedCostChange}
+          format={(v) => formatNumber(v, {})}
         />
-        <SliderLabels min={INITIAL_COST_RANGE[0]} max={INITIAL_COST_RANGE[1]} />
+        <SliderLabels
+          min={formatNumber(INITIAL_COST_RANGE[0])}
+          max={formatNumber(INITIAL_COST_RANGE[1])}
+        />
       </div>
 
       <div className="flex flex-col gap-3">
@@ -300,10 +305,11 @@ export default function ProjectsFilters() {
           step={1}
           minStepsBetweenThumbs={1}
           onValueChange={debouncedAbatementPotentialChange}
+          format={formatNumber}
         />
         <SliderLabels
-          min={INITIAL_ABATEMENT_POTENTIAL_RANGE[0]}
-          max={INITIAL_ABATEMENT_POTENTIAL_RANGE[1]}
+          min={formatNumber(INITIAL_ABATEMENT_POTENTIAL_RANGE[0])}
+          max={formatNumber(INITIAL_ABATEMENT_POTENTIAL_RANGE[1])}
         />
       </div>
     </section>

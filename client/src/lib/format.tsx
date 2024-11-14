@@ -11,6 +11,16 @@ export const formatCurrency = (
   }).format(value);
 };
 
+export const formatNumber = (
+  value: number,
+  options: Intl.NumberFormatOptions = {},
+) => {
+  return Intl.NumberFormat("en-US", {
+    style: "decimal",
+    ...options,
+  }).format(value);
+};
+
 export function renderCurrency(
   value: number,
   options: Intl.NumberFormatOptions = {},
