@@ -16,7 +16,7 @@ import SignUpForm from "./form";
 const SetPassword: FC = () => {
   return (
     <>
-      <Card variant="secondary">
+      <Card variant="secondary" className="p-6">
         <CardHeader className="space-y-4 pb-4">
           <CardTitle className="text-xl font-semibold">Set password</CardTitle>
           <CardDescription className="text-muted-foreground">

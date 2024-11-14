@@ -58,7 +58,7 @@ const DeleteAccount: FC<{ id: string }> = ({ id }) => {
   }, [session?.accessToken, toast]);
 
   return (
-    <Card variant="secondary">
+    <Card variant="secondary" className="p-6">
       <CardHeader className="space-y-4">
         <CardTitle id={id} className="text-xl font-semibold">
           Delete account
