@@ -143,6 +143,32 @@ export default function Map({
     };
   }, [bounds, isFlying]);
 
+  useEffect(() => {
+    if (!mapRef || !mapboxProps.interactiveLayerIds?.length) return;
+
+    const setPointerStyle = () => {
+      mapRef.getCanvas().style.cursor = "pointer";
+    };
+
+    const removePointerStyle = () => {
+      mapRef.getCanvas().style.cursor = "";
+    };
+
+    mapboxProps.interactiveLayerIds.forEach((layerId) => {
+      mapRef.on("mouseenter", layerId, setPointerStyle);
+      mapRef.on("mouseleave", layerId, removePointerStyle);
+    });
+
+    return () => {
+      if (!mapRef || !mapboxProps.interactiveLayerIds?.length) return;
+
+      mapboxProps.interactiveLayerIds.forEach((layerId) => {
+        mapRef.off("mouseenter", layerId, setPointerStyle);
+        mapRef.off("mouseleave", layerId, removePointerStyle);
+      });
+    };
+  }, [mapRef, mapboxProps]);
+
   return (
     <div className={cn("relative z-0 h-full w-full", className)}>
       <ReactMapGL
@@ -152,8 +178,6 @@ export default function Map({
         onMove={handleMapMove}
         onLoad={handleMapLoad}
         mapStyle={MAPBOX_STYLE}
-        maxZoom={10}
-        minZoom={0}
         {...mapboxProps}
         {...localViewState}
       >

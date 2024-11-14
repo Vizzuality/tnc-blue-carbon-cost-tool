@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
 
-import { TABLE_VIEWS } from "@/containers/projects/table/toolbar/table-selector";
+import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
 
 export const authKeys = createQueryKeys("auth", {
   resetPasswordToken: (token: string) => ["reset-password-token", token],

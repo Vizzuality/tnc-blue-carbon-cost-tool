@@ -1,3 +1,5 @@
+import { MapMouseEvent } from "react-map-gl";
+
 import { atom } from "jotai";
 
 export const projectsUIState = atom<{
@@ -5,3 +7,8 @@ export const projectsUIState = atom<{
 }>({
   filtersOpen: false,
 });
+
+export const popupAtom = atom<{
+  lngLat: MapMouseEvent["lngLat"];
+  features: MapMouseEvent["features"];
+} | null>(null);

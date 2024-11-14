@@ -21,12 +21,12 @@ import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
 import TablePagination, {
   PAGINATION_SIZE_OPTIONS,
-} from "@/containers/projects/table/pagination";
+} from "@/containers/overview/table/pagination";
 import {
   filtersToQueryParams,
   NO_DATA,
-} from "@/containers/projects/table/utils";
-import { TABLE_COLUMNS } from "@/containers/projects/table/view/key-costs/columns";
+} from "@/containers/overview/table/utils";
+import { TABLE_COLUMNS } from "@/containers/overview/table/view/key-costs/columns";
 
 import {
   Table,

@@ -1,9 +1,9 @@
 import { useTableView } from "@/app/(overview)/url-store";
 
-import ToolbarProjectsTable from "@/containers/projects/table/toolbar";
-import { KeyCostsTable } from "@/containers/projects/table/view/key-costs";
-import { OverviewTable } from "@/containers/projects/table/view/overview";
-import { ScoredCardPrioritizationTable } from "@/containers/projects/table/view/scorecard-prioritization";
+import ToolbarProjectsTable from "@/containers/overview/table/toolbar";
+import { KeyCostsTable } from "@/containers/overview/table/view/key-costs";
+import { OverviewTable } from "@/containers/overview/table/view/overview";
+import { ScoredCardPrioritizationTable } from "@/containers/overview/table/view/scorecard-prioritization";
 
 export default function TableVisualization() {
   const [tableView] = useTableView();

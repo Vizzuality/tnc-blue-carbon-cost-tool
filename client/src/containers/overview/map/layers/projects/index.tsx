@@ -8,7 +8,9 @@ import { geometriesKeys } from "@/lib/query-keys";
 
 import { useGlobalFilters } from "@/app/(overview)/url-store";
 
-import { generateColorRamp } from "@/containers/projects/map/layers/projects/utils";
+import { generateColorRamp } from "@/containers/overview/map/layers/projects/utils";
+
+export const LAYER_ID = "cost-abatement-layer";
 
 export default function ProjectsLayer() {
   const [filters] = useGlobalFilters();
@@ -52,7 +54,7 @@ export default function ProjectsLayer() {
     const colors = generateColorRamp(COLOR_NUMBER);
 
     const costAbatementLayer: FillLayerSpecification = {
-      id: "cost-abatement-layer",
+      id: LAYER_ID,
       type: "fill",
       source: costAbatementSource.id,
 
@@ -87,8 +89,9 @@ export default function ProjectsLayer() {
 
     return (
       <>
-        <Source {...costAbatementSource} />
-        <Layer {...costAbatementLayer} beforeId="custom-layers" />
+        <Source {...costAbatementSource}>
+          <Layer {...costAbatementLayer} beforeId="custom-layers" />
+        </Source>
       </>
     );
   }

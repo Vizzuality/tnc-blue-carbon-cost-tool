@@ -17,7 +17,7 @@ import {
   INITIAL_ABATEMENT_POTENTIAL_RANGE,
 } from "@/app/(overview)/constants";
 
-import { TABLE_VIEWS } from "@/containers/projects/table/toolbar/table-selector";
+import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
 
 const SUB_ACTIVITIES = RESTORATION_ACTIVITY_SUBTYPE;
 
@@ -37,7 +37,7 @@ export const filtersSchema = z.object({
 export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
   keyword: "",
   projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
-  priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
+  priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
   costRangeSelector: COST_TYPE_SELECTOR.NPV,
   countryCode: "",
   ecosystem: [],
