@@ -86,9 +86,15 @@ def calculate_cost_plan(
     increased_by = float(
         base_increase_df.loc[base_increase_df["ecosystem"] == ecosystem, base_key].values[0]
     )
+    base_size = float(
+        base_size_df.loc[
+            (base_size_df["ecosystem"] == ecosystem) & (base_size_df["activity"] == activity),
+            base_key,
+        ].values[0]
+    )
     starting_point_scaling = 500 if activity == "Restoration" else 20000
     size_difference = project_size_ha - starting_point_scaling
-    value = max(round(size_difference / base_cost_value), 0)
+    value = max(round(size_difference / base_size), 0)
     total_base_cost = base_cost_value + (increased_by * value * base_cost_value)
     return total_base_cost
 
