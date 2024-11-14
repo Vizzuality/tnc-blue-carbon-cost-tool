@@ -46,7 +46,7 @@ test.describe("Auth - Update Password", () => {
 
     await page.getByRole("button", { name: /update password/i }).click();
 
-    await page.getByRole("button", { name: /sign out/i }).click();
+    await page.getByRole("button", { name: /log out/i }).click();
 
     await expect(page).toHaveURL(/auth\/signin/);
 

@@ -54,11 +54,11 @@ test.describe("Auth - Sign Up", () => {
     await page.getByPlaceholder("Repeat the password").click();
     await page.getByPlaceholder("Repeat the password").fill(newPassword);
 
-    await page.getByRole("button", { name: /sign up/i }).click();
+    await page.getByRole("button", { name: /save/i }).click();
 
     await page.waitForURL("/auth/signin");
     await expect(
-      page.getByRole("heading", { name: "Welcome to Blue Carbon Cost" }),
+      page.getByText("Welcome to Blue Carbon Cost"),
     ).toBeVisible();
   });
 
@@ -75,6 +75,6 @@ test.describe("Auth - Sign Up", () => {
     ).toBeDisabled();
     await expect(page.getByPlaceholder("Create a password")).toBeDisabled();
     await expect(page.getByPlaceholder("Repeat the password")).toBeDisabled();
-    await expect(page.getByRole("button", { name: /sign up/i })).toBeDisabled();
+    await expect(page.getByRole("button", { name: /save/i })).toBeDisabled();
   });
 });
