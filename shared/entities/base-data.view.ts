@@ -1,6 +1,11 @@
-import { ViewColumn, ViewEntity } from "typeorm";
+import { ValueTransformer, ViewColumn, ViewEntity } from "typeorm";
 
-// TODO: Maybe this could be renamed to CostInputs
+export const decimalTransformer: ValueTransformer = {
+  to: (value: number | null) => value, // No necesitas transformar al guardar
+  from: (value: string | null): number | null =>
+    value !== null ? parseFloat(value) : null,
+};
+
 @ViewEntity({
   name: "base_data_view",
   expression: `
@@ -130,102 +135,150 @@ inner join
 	community_cash_flow ccf on ccf."country_code" = cae.country_code`,
 })
 export class BaseDataView {
-  @ViewColumn({ name: "country_code" })
+  @ViewColumn({ name: "country_code", transformer: decimalTransformer })
   countryCode: string;
 
-  @ViewColumn({ name: "ecosystem" })
+  @ViewColumn({ name: "ecosystem", transformer: decimalTransformer })
   ecosystem: string;
 
-  @ViewColumn({ name: "activity" })
+  @ViewColumn({ name: "activity", transformer: decimalTransformer })
   activity: string;
 
-  @ViewColumn({ name: "project_size_ha" })
+  @ViewColumn({ name: "project_size_ha", transformer: decimalTransformer })
   projectSizeHa: number;
 
-  @ViewColumn({ name: "feasibility_analysis" })
+  @ViewColumn({ name: "feasibility_analysis", transformer: decimalTransformer })
   feasibilityAnalysis: number;
 
-  @ViewColumn({ name: "conservation_planning_and_admin" })
+  @ViewColumn({
+    name: "conservation_planning_and_admin",
+    transformer: decimalTransformer,
+  })
   conservationPlanningAndAdmin: number;
 
-  @ViewColumn({ name: "data_collection_and_field_cost" })
+  @ViewColumn({
+    name: "data_collection_and_field_cost",
+    transformer: decimalTransformer,
+  })
   dataCollectionAndFieldCost: number;
 
-  @ViewColumn({ name: "community_representation" })
+  @ViewColumn({
+    name: "community_representation",
+    transformer: decimalTransformer,
+  })
   communityRepresentation: number;
 
-  @ViewColumn({ name: "blue_carbon_project_planning" })
+  @ViewColumn({
+    name: "blue_carbon_project_planning",
+    transformer: decimalTransformer,
+  })
   blueCarbonProjectPlanning: number;
 
-  @ViewColumn({ name: "establishing_carbon_rights" })
+  @ViewColumn({
+    name: "establishing_carbon_rights",
+    transformer: decimalTransformer,
+  })
   establishingCarbonRights: number;
 
-  @ViewColumn({ name: "financing_cost" })
+  @ViewColumn({ name: "financing_cost", transformer: decimalTransformer })
   financingCost: number;
 
-  @ViewColumn({ name: "validation" })
+  @ViewColumn({ name: "validation", transformer: decimalTransformer })
   validation: number;
 
-  @ViewColumn({ name: "implementation_labor_planting" })
+  @ViewColumn({
+    name: "implementation_labor_planting",
+    transformer: decimalTransformer,
+  })
   implementationLaborPlanting: number;
 
-  @ViewColumn({ name: "implementation_labor_hybrid" })
+  @ViewColumn({
+    name: "implementation_labor_hybrid",
+    transformer: decimalTransformer,
+  })
   implementationLaborHybrid: number;
 
-  @ViewColumn({ name: "implementation_labor_hydrology" })
+  @ViewColumn({
+    name: "implementation_labor_hydrology",
+    transformer: decimalTransformer,
+  })
   implementationLaborHydrology: number;
 
-  @ViewColumn({ name: "monitoring" })
+  @ViewColumn({ name: "monitoring", transformer: decimalTransformer })
   monitoring: number;
 
-  @ViewColumn({ name: "maintenance" })
+  @ViewColumn({ name: "maintenance", transformer: decimalTransformer })
   maintenance: number;
 
-  @ViewColumn({ name: "maintenance_duration" })
+  @ViewColumn({ name: "maintenance_duration", transformer: decimalTransformer })
   maintenanceDuration: number;
 
-  @ViewColumn({ name: "carbon_standard_fees" })
+  @ViewColumn({ name: "carbon_standard_fees", transformer: decimalTransformer })
   carbonStandardFees: number;
 
-  @ViewColumn({ name: "community_benefit_sharing_fund" })
+  @ViewColumn({
+    name: "community_benefit_sharing_fund",
+    transformer: decimalTransformer,
+  })
   communityBenefitSharingFund: number;
 
-  @ViewColumn({ name: "baseline_reassessment" })
+  @ViewColumn({
+    name: "baseline_reassessment",
+    transformer: decimalTransformer,
+  })
   baselineReassessment: number;
 
-  @ViewColumn({ name: "mrv" })
+  @ViewColumn({ name: "mrv", transformer: decimalTransformer })
   mrv: number;
 
-  @ViewColumn({ name: "long_term_project_operating_cost" })
+  @ViewColumn({
+    name: "long_term_project_operating_cost",
+    transformer: decimalTransformer,
+  })
   longTermProjectOperatingCost: number;
 
-  @ViewColumn({ name: "ecosystem_extent" })
+  @ViewColumn({ name: "ecosystem_extent", transformer: decimalTransformer })
   ecosystemExtent: number;
 
-  @ViewColumn({ name: "ecosystem_extent_historic" })
+  @ViewColumn({
+    name: "ecosystem_extent_historic",
+    transformer: decimalTransformer,
+  })
   ecosystemExtentHistoric: number;
 
-  @ViewColumn({ name: "ecosystem_loss_rate" })
+  @ViewColumn({ name: "ecosystem_loss_rate", transformer: decimalTransformer })
   ecosystemLossRate: number;
 
-  @ViewColumn({ name: "restorable_land" })
+  @ViewColumn({ name: "restorable_land", transformer: decimalTransformer })
   restorableLand: number;
 
-  @ViewColumn({ name: "tier_1_emission_factor" })
+  @ViewColumn({
+    name: "tier_1_emission_factor",
+    transformer: decimalTransformer,
+  })
   tier1EmissionFactor: number;
 
-  @ViewColumn({ name: "emission_factor_agb" })
+  @ViewColumn({ name: "emission_factor_agb", transformer: decimalTransformer })
   emissionFactorAgb: number;
 
-  @ViewColumn({ name: "emission_factor_soc" })
+  @ViewColumn({ name: "emission_factor_soc", transformer: decimalTransformer })
   emissionFactorSoc: number;
 
-  @ViewColumn({ name: "tier_1_sequestration_rate" })
+  @ViewColumn({
+    name: "tier_1_sequestration_rate",
+    transformer: decimalTransformer,
+  })
   tier1SequestrationRate: number;
 
-  @ViewColumn({ name: "tier_2_sequestration_rate" })
+  @ViewColumn({
+    name: "tier_2_sequestration_rate",
+    transformer: decimalTransformer,
+  })
   tier2SequestrationRate: number;
 
-  @ViewColumn({ name: "other_community_cash_flow" })
+  @ViewColumn({
+    name: "other_community_cash_flow",
+    transformer: decimalTransformer,
+  })
   otherCommunityCashFlow: string;
 }
