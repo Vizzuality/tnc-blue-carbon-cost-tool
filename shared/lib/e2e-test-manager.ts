@@ -67,7 +67,7 @@ export class E2eTestManager {
       user = await this.mocks().createUser();
     }
     await this.page.goto("/auth/signin");
-    await this.page.getByLabel("Email").fill(user.email);
+    await this.page.getByPlaceholder('Enter your email address').fill(user.email);
     await this.page.locator('input[type="password"]').fill(user.password);
     await this.page.getByRole("button", { name: /log in/i }).click();
     await this.page.waitForURL("/profile");
