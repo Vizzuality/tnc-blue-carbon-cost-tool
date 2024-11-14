@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, FormEvent, Suspense, useCallback, useRef } from "react";
+import { FC, FormEvent, useCallback, useRef } from "react";
 
 import { useForm } from "react-hook-form";
 
@@ -10,7 +10,7 @@ import { useParams, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordSchema } from "@shared/schemas/auth/login.schema";
 import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { client } from "@/lib/query-client";
@@ -34,7 +34,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useApiResponseToast } from "@/components/ui/toast/use-api-response-toast";
 
 const NewPasswordSchema = z
@@ -64,7 +63,7 @@ const NewPasswordForm: FC = () => {
     data: isValidToken,
     isFetching,
     isError,
-  } = useSuspenseQuery({
+  } = useQuery({
     queryKey: queryKeys.auth.resetPasswordToken(params.token).queryKey,
     queryFn: () => {
       return client.auth.validateToken.query({
@@ -118,16 +117,13 @@ const NewPasswordForm: FC = () => {
           Change your password
         </CardTitle>
         <CardDescription className="text-muted-foreground">
-          <Suspense fallback={<Skeleton className="h-4 rounded-md" />}>
-            {/* {!isValidToken ? (
-              <p className="text-sm text-destructive">
-                The token is invalid or has expired.
-              </p>
-            ) : (
-              <p>Please set a new password to secure your account.</p>
-            )} */}
-            <Skeleton className="h-4 rounded-md" />
-          </Suspense>
+          {!isValidToken ? (
+            <p className="text-sm text-destructive">
+              The token is invalid or has expired.
+            </p>
+          ) : (
+            <p>Please set a new password to secure your account.</p>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>
