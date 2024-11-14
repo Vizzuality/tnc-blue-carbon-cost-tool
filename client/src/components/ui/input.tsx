@@ -10,7 +10,7 @@ const inputVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-big-stone-950 text-big-stone-900 shadow border-border focus-visible:border-primary focus-visible:ring-sky-blue-300/40",
+          "bg-big-stone-950 text-big-stone-50 shadow border-border focus-visible:border-primary focus-visible:ring-sky-blue-300/40",
         ghost: "text-foreground border-0 focus-visible:ring-sky-blue-300/40",
       },
     },
