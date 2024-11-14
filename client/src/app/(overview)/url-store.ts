@@ -17,7 +17,7 @@ import {
   INITIAL_ABATEMENT_POTENTIAL_RANGE,
 } from "@/app/(overview)/constants";
 
-import { TABLE_VIEWS } from "@/containers/projects/table/toolbar/table-selector";
+import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
 
 const SUB_ACTIVITIES = RESTORATION_ACTIVITY_SUBTYPE;
 

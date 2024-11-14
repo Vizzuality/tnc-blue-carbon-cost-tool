@@ -23,12 +23,12 @@ import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
 import TablePagination, {
   PAGINATION_SIZE_OPTIONS,
-} from "@/containers/projects/table/pagination";
+} from "@/containers/overview/table/pagination";
 import {
   filtersToQueryParams,
   NO_DATA,
-} from "@/containers/projects/table/utils";
-import { columns } from "@/containers/projects/table/view/overview/columns";
+} from "@/containers/overview/table/utils";
+import { columns } from "@/containers/overview/table/view/overview/columns";
 
 type filterFields = z.infer<typeof projectsQuerySchema.shape.fields>;
 type sortFields = z.infer<typeof projectsQuerySchema.shape.sort>;

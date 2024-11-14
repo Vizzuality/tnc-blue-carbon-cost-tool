@@ -1,5 +1,5 @@
-import SearchProjectsTable from "@/containers/projects/table/toolbar/search";
-import TabsProjectsTable from "@/containers/projects/table/toolbar/table-selector";
+import SearchProjectsTable from "@/containers/overview/table/toolbar/search";
+import TabsProjectsTable from "@/containers/overview/table/toolbar/table-selector";
 
 import InfoButton from "@/components/ui/info-button";
 

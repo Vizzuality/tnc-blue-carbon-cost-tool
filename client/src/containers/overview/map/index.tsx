@@ -5,14 +5,14 @@ import { LayersIcon } from "lucide-react";
 
 import { popupAtom } from "@/app/(overview)/store";
 
-import Controls from "@/containers/projects/map/controls";
-import ZoomControl from "@/containers/projects/map/controls/zoom";
+import Controls from "@/containers/overview/map/controls";
+import ZoomControl from "@/containers/overview/map/controls/zoom";
 import ProjectsLayer, {
   LAYER_ID as COST_ABATEMENT_LAYER_ID,
-} from "@/containers/projects/map/layers/projects";
-import { MATRIX_COLORS } from "@/containers/projects/map/layers/projects/utils";
-import MatrixLegend from "@/containers/projects/map/legend/types/matrix";
-import CostAbatementPopup from "@/containers/projects/map/popup";
+} from "@/containers/overview/map/layers/projects";
+import { MATRIX_COLORS } from "@/containers/overview/map/layers/projects/utils";
+import MatrixLegend from "@/containers/overview/map/legend/types/matrix";
+import CostAbatementPopup from "@/containers/overview/map/popup";
 
 import Map from "@/components/map";
 import { Button } from "@/components/ui/button";
