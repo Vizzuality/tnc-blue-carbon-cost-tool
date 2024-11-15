@@ -1,6 +1,6 @@
 "use server";
 
-import { SignUpSchema } from "@shared/schemas/auth/sign-up.schema";
+import { CreateUserSchema } from "@shared/schemas/users/create-user.schema";
 
 import { client } from "@/lib/query-client";
 
@@ -14,7 +14,7 @@ export async function signUpAction(
   data: FormData,
 ): Promise<FormState> {
   const formData = Object.fromEntries(data);
-  const parsed = SignUpSchema.safeParse(formData);
+  const parsed = CreateUserSchema.safeParse(formData);
 
   if (!parsed.success) {
     return {
@@ -24,13 +24,14 @@ export async function signUpAction(
   }
 
   try {
-    const response = await client.auth.signUp.mutation({
+    const response = await client.auth.register.mutation({
       extraHeaders: {
         Authorization: `Bearer ${data.get("token")}`,
       },
       body: {
-        oneTimePassword: parsed.data.oneTimePassword,
-        newPassword: parsed.data.newPassword,
+        name: parsed.data.name,
+        partnerName: parsed.data.partnerName,
+        email: parsed.data.email,
       },
     });
 

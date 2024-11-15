@@ -3,7 +3,7 @@ import AuthLayout from "@/containers/auth-layout";
 
 export default async function SetPasswordPage() {
   return (
-    <AuthLayout className="space-y-2 pt-20">
+    <AuthLayout>
       <SetPassword />
     </AuthLayout>
   );

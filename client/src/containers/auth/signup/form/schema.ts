@@ -1,12 +1,10 @@
-import { SignUpSchema } from "@shared/schemas/auth/sign-up.schema";
+import { CreateUserSchema } from "@shared/schemas/users/create-user.schema";
 import { z } from "zod";
 
-export const signUpSchemaForm = SignUpSchema.and(
+export const signUpSchemaForm = CreateUserSchema.and(
   z.object({
-    repeatPassword: SignUpSchema.shape.newPassword,
-    token: z.string().min(1),
+    privacyPolicy: z.boolean().refine((value) => value === true, {
+      message: "The terms and conditions and privacy policy must be accepted",
+    }),
   }),
-).refine((data) => data.newPassword === data.repeatPassword, {
-  message: "Passwords must match",
-  path: ["repeatPassword"],
-});
+);
