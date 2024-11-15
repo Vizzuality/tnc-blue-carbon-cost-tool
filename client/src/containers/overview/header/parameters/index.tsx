@@ -9,6 +9,8 @@ import { FILTER_KEYS } from "@/app/(overview)/constants";
 import { useGlobalFilters } from "@/app/(overview)/url-store";
 import { filtersSchema } from "@/app/(overview)/url-store";
 
+import { INITIAL_COST_RANGE } from "@/containers/overview/filters/constants";
+
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -76,7 +78,13 @@ export default function ParametersProjects() {
     v: string,
     parameter: keyof Omit<z.infer<typeof filtersSchema>, "keyword">,
   ) => {
-    await setFilters((prev) => ({ ...prev, [parameter]: v }));
+    await setFilters((prev) => ({
+      ...prev,
+      [parameter]: v,
+      ...(parameter === "costRangeSelector" && {
+        costRange: INITIAL_COST_RANGE[v as COST_TYPE_SELECTOR],
+      }),
+    }));
   };
 
   return (
