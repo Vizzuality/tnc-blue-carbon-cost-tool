@@ -27,6 +27,35 @@ test.describe("Auth - Sign Up", () => {
   });
 
   test("an user signs up successfully", async ({ page }) => {
+    const user: Pick<User, "name" | "email" | "partnerName"> = {
+      name: "John Doe",
+      partnerName: "Jane Doe",
+      email: "johndoe@test.com",
+    };
+
+    await page.goto(`/auth/signup`);
+
+    await page.getByPlaceholder("Enter your name").fill(user.name);
+    await page.getByPlaceholder("Enter partner name").fill(user.partnerName);
+    await page.getByLabel("Email").fill(user.email);
+    await page.getByRole("checkbox").check();
+
+    await page.getByRole("button", { name: /Create account/i }).click();
+
+    await page.waitForURL("/auth/signin");
+    await expect(page.getByText("Welcome to Blue Carbon Cost")).toBeVisible();
+
+    const registeredUser = await testManager
+      .getDataSource()
+      .getRepository(User)
+      .findOne({ where: { email: user.email } });
+
+    expect(registeredUser?.isActive).toBe(false);
+  });
+
+  test("an user successfully finish signup process with OTP", async ({
+    page,
+  }) => {
     const user: Pick<User, "email" | "password" | "isActive"> = {
       email: "johndoe@test.com",
       password: "passwordpassword",
@@ -57,9 +86,7 @@ test.describe("Auth - Sign Up", () => {
     await page.getByRole("button", { name: /save/i }).click();
 
     await page.waitForURL("/auth/signin");
-    await expect(
-      page.getByText("Welcome to Blue Carbon Cost"),
-    ).toBeVisible();
+    await expect(page.getByText("Welcome to Blue Carbon Cost")).toBeVisible();
   });
 
   test("an user signs up with an invalid token", async ({ page }) => {

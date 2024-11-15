@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 
 export default function ConfirmEmailPage() {
   return (
-    <AuthLayout className="space-y-2 pt-20">
+    <AuthLayout>
       <ConfirmEmailForm />
       <Card variant="secondary" className="p-6">
         <p className="text-sm">

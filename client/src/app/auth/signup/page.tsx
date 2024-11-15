@@ -4,12 +4,12 @@ import { Metadata } from "next";
 
 import { auth } from "@/app/auth/api/[...nextauth]/config";
 
-import SignIn from "@/containers/auth/signin";
+import SignUp from "@/containers/auth/signup";
 import AuthLayout from "@/containers/auth-layout";
 
 export const metadata: Metadata = {
-  title: "Sign in",
-  description: "Sign in | Blue Carbon Cost Tool",
+  title: "Create an account",
+  description: "Create an account | Blue Carbon Cost Tool",
 };
 
 export default async function SignInPage() {
@@ -21,7 +21,7 @@ export default async function SignInPage() {
 
   return (
     <AuthLayout>
-      <SignIn />
+      <SignUp />
     </AuthLayout>
   );
 }
