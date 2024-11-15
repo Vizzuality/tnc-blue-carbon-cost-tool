@@ -46,6 +46,11 @@ export default function ProjectsFilters() {
     filters.costRange[1] || INITIAL_COST_RANGE[filters.costRangeSelector][1],
   ]);
 
+  const [abatementValueState, setAbatementValueState] = useState([
+    filters.abatementPotentialRange[0] || INITIAL_ABATEMENT_POTENTIAL_RANGE[0],
+    filters.abatementPotentialRange[1] || INITIAL_ABATEMENT_POTENTIAL_RANGE[1],
+  ]);
+
   const resetFilters = async () => {
     await setFilters((prev) => ({
       ...prev,
@@ -53,9 +58,19 @@ export default function ProjectsFilters() {
       ecosystem: INITIAL_FILTERS_STATE.ecosystem,
       activities: INITIAL_FILTERS_STATE.activity,
       activitySubtype: INITIAL_FILTERS_STATE.activitySubtype,
-      abatementPotential: INITIAL_FILTERS_STATE.abatementPotentialRange,
+      abatementPotentialRange: INITIAL_FILTERS_STATE.abatementPotentialRange,
       costRange: INITIAL_FILTERS_STATE.costRange,
     }));
+
+    setCostValuesState([
+      INITIAL_COST_RANGE[filters.costRangeSelector][0],
+      INITIAL_COST_RANGE[filters.costRangeSelector][1],
+    ]);
+
+    setAbatementValueState([
+      INITIAL_ABATEMENT_POTENTIAL_RANGE[0],
+      INITIAL_ABATEMENT_POTENTIAL_RANGE[1],
+    ]);
   };
   const closeFilters = () => {
     setFiltersOpen((prev) => ({ ...prev, filtersOpen: false }));
@@ -116,7 +131,7 @@ export default function ProjectsFilters() {
   }, 250);
 
   const debouncedAbatementPotentialChange = useDebounce(
-    async (abatementPotential: [number, number]) => {
+    async (abatementPotential: number[]) => {
       await setFilters((prev) => ({
         ...prev,
         abatementPotentialRange: abatementPotential,
@@ -331,8 +346,12 @@ export default function ProjectsFilters() {
           min={INITIAL_ABATEMENT_POTENTIAL_RANGE[0]}
           max={INITIAL_ABATEMENT_POTENTIAL_RANGE[1]}
           step={1}
+          value={abatementValueState}
           minStepsBetweenThumbs={1}
-          onValueChange={debouncedAbatementPotentialChange}
+          onValueChange={(v) => {
+            setAbatementValueState(v);
+            debouncedAbatementPotentialChange(v);
+          }}
           format={formatNumber}
         />
         <SliderLabels
