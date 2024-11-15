@@ -80,6 +80,8 @@ export class CalculationEngine {
           'mrv',
           'longTermProjectOperatingCost',
           'financingCost',
+          'implementationLaborPlanting',
+          'implementationLaborHydrology',
         ],
       });
     if (!costInputs) {

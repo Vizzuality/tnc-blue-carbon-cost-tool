@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import {
   ConservationProjectParamDto,
@@ -38,19 +38,7 @@ export class CustomProjectInputFactory {
       //return new ConservationProject(projectConfig);
       return this.createConservationProjectInput(dto, carbonInputs);
     } else if (dto.activity === ACTIVITY.RESTORATION) {
-      // Instanciaremos RestorationProject una vez esté implementado
-      //return new RestorationProject(projectConfig, baseData);
-    } else {
-      throw new Error('Invalid activity type');
-    }
-  }
-
-  createProjectInput(dto: CreateCustomProjectDto, carbonInputs: CarbonInputs) {
-    if (dto.activity === ACTIVITY.CONSERVATION) {
-      return this.createConservationProjectInput(dto, carbonInputs);
-    } else if (dto.activity === ACTIVITY.RESTORATION) {
-      // Instanciaremos RestorationProject una vez esté implementado
-      //return new RestorationProject(projectConfig, baseData);
+      throw new NotImplementedException('Restoration not implemented');
     } else {
       throw new Error('Invalid activity type');
     }
@@ -121,9 +109,10 @@ export class ConservationProjectInput {
     emissionFactorSoc: 0,
   };
 
-  costInputs: CostInputs;
+  costInputs: CostInputs = new CostInputs();
 
-  modelAssumptions: CustomProjectAssumptionsDto;
+  modelAssumptions: CustomProjectAssumptionsDto =
+    new CustomProjectAssumptionsDto();
 
   setLossRate(
     parameters: ConservationProjectParamDto,
