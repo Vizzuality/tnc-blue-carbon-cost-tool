@@ -124,10 +124,13 @@ export class TestManager {
       '../../../data/excel/data_ingestion_WIP.xlsm',
     );
     const fileBuffer = fs.readFileSync(testFilePath);
-    await this.request()
+    const upload = await this.request()
       .post(adminContract.uploadFile.path)
       .set('Authorization', `Bearer ${jwtToken}`)
       .attach('file', fileBuffer, 'data_ingestion_WIP.xlsm');
+    if (upload.status !== 201) {
+      throw new Error('Failed to upload Excel file for tests');
+    }
   }
 
   mocks() {

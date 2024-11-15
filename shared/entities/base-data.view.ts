@@ -1,7 +1,7 @@
 import { ValueTransformer, ViewColumn, ViewEntity } from "typeorm";
 
 export const decimalTransformer: ValueTransformer = {
-  to: (value: number | null) => value, // No necesitas transformar al guardar
+  to: (value: number | null) => value,
   from: (value: string | null): number | null =>
     value !== null ? parseFloat(value) : null,
 };
