@@ -4,7 +4,7 @@ import {
   DEFAULT_STUFF,
 } from '@api/modules/custom-projects/project-config.interface';
 import { BaseDataView } from '@shared/entities/base-data.view';
-import { CostInputs } from '@api/modules/custom-projects/cost-inputs.interface';
+import { CostInputsDeprecated } from '@api/modules/custom-projects/cost-inputs.interface';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 
 export class ConservationProject {
@@ -12,7 +12,7 @@ export class ConservationProject {
   activity: ACTIVITY.CONSERVATION;
   ecosystem: string;
   countryCode: string;
-  costInputs: CostInputs;
+  costInputs: CostInputsDeprecated;
   modelAssumptions?: ModelAssumptions;
   startingPointScaling: number =
     DEFAULT_STUFF.CONSERVATION_STARTING_POINT_SCALING;

@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ACTIVITY } from '@shared/entities/activity.enum';
-import { ConservationProject } from '@api/modules/custom-projects/conservation.project';
-import { ProjectConfig } from '@api/modules/custom-projects/project-config.interface';
 import {
   ConservationProjectParamDto,
   PROJECT_EMISSION_FACTORS,
@@ -12,15 +10,25 @@ import {
   CARBON_REVENUES_TO_COVER,
   CreateCustomProjectDto,
 } from '@api/modules/custom-projects/dto/create-custom-project-dto';
-import { CostInputs } from '@api/modules/custom-projects/cost-inputs.interface';
-import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
+import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
+import { CustomProjectAssumptionsDto } from '@api/modules/custom-projects/dto/project-assumptions.dto';
 
 export type ConservationProjectCarbonInputs = {
   lossRate: number;
   emissionFactor: number | null;
   emissionFactorAgb: number | null;
   emissionFactorSoc: number | null;
+};
+
+export type GeneralProjectInputs = {
+  projectName: CreateCustomProjectDto['projectName'];
+  countryCode: CreateCustomProjectDto['countryCode'];
+  activity: CreateCustomProjectDto['activity'];
+  ecosystem: CreateCustomProjectDto['ecosystem'];
+  projectSizeHa: CreateCustomProjectDto['projectSizeHa'];
+  initialCarbonPriceAssumption: CreateCustomProjectDto['initialCarbonPriceAssumption'];
+  carbonRevenuesToCover: CreateCustomProjectDto['carbonRevenuesToCover'];
 };
 
 @Injectable()
@@ -39,10 +47,7 @@ export class CustomProjectInputFactory {
 
   createProjectInput(dto: CreateCustomProjectDto, carbonInputs: CarbonInputs) {
     if (dto.activity === ACTIVITY.CONSERVATION) {
-      return this.createConservationProjectInput(
-        dto.parameters as ConservationProjectParamDto,
-        carbonInputs,
-      );
+      return this.createConservationProjectInput(dto, carbonInputs);
     } else if (dto.activity === ACTIVITY.RESTORATION) {
       // Instanciaremos RestorationProject una vez esté implementado
       //return new RestorationProject(projectConfig, baseData);
@@ -52,11 +57,43 @@ export class CustomProjectInputFactory {
   }
 
   private createConservationProjectInput(
-    parameters: ConservationProjectParamDto,
+    dto: CreateCustomProjectDto,
     carbonInputs: CarbonInputs,
-  ): ConservationProjectCarbonInputs {
+  ): ConservationProjectInput {
+    const {
+      parameters,
+      assumptions,
+      costInputs,
+      projectName,
+      projectSizeHa,
+      initialCarbonPriceAssumption,
+      activity,
+      carbonRevenuesToCover,
+      ecosystem,
+      countryCode,
+    } = dto;
+
     const conservationProjectInput: ConservationProjectInput =
       new ConservationProjectInput();
+    conservationProjectInput.setGeneralInputs({
+      projectName,
+      projectSizeHa,
+      initialCarbonPriceAssumption,
+      activity,
+      carbonRevenuesToCover,
+      ecosystem,
+      countryCode,
+    });
+    conservationProjectInput.setLossRate(
+      parameters as ConservationProjectParamDto,
+      carbonInputs,
+    );
+    conservationProjectInput.setEmissionFactor(
+      parameters as ConservationProjectParamDto,
+      carbonInputs,
+    );
+    conservationProjectInput.setCostInputs(costInputs);
+    conservationProjectInput.setModelAssumptions(assumptions);
 
     return conservationProjectInput;
   }
@@ -77,11 +114,16 @@ export class ConservationProjectInput {
 
   carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
 
-  carbonInputs: ConservationProjectCarbonInputs;
+  carbonInputs: ConservationProjectCarbonInputs = {
+    lossRate: 0,
+    emissionFactor: 0,
+    emissionFactorAgb: 0,
+    emissionFactorSoc: 0,
+  };
 
   costInputs: CostInputs;
 
-  modelAssumptions: ModelAssumptions;
+  modelAssumptions: CustomProjectAssumptionsDto;
 
   setLossRate(
     parameters: ConservationProjectParamDto,
@@ -113,14 +155,25 @@ export class ConservationProjectInput {
     return this;
   }
 
-  setModelAssumptions(modelAssumptions: ModelAssumptions): this {
+  setModelAssumptions(modelAssumptions: CustomProjectAssumptionsDto): this {
     this.modelAssumptions = modelAssumptions;
     return this;
   }
 
   setCostInputs(costInputs: CostInputs): this {
     this.costInputs = costInputs;
+    return this;
   }
 
-  setProject;
+  setGeneralInputs(generalInputs: GeneralProjectInputs): this {
+    this.projectName = generalInputs.projectName;
+    this.countryCode = generalInputs.countryCode;
+    this.activity = generalInputs.activity;
+    this.ecosystem = generalInputs.ecosystem;
+    this.projectSizeHa = generalInputs.projectSizeHa;
+    this.initialCarbonPriceAssumption =
+      generalInputs.initialCarbonPriceAssumption;
+    this.carbonRevenuesToCover = generalInputs.carbonRevenuesToCover;
+    return this;
+  }
 }

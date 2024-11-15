@@ -1,6 +1,6 @@
 import { ViewColumn } from 'typeorm';
 
-export interface CostInputs {
+export interface CostInputsDeprecated {
   feasibilityAnalysis: number;
   conservationPlanningAndAdmin: number;
   dataCollectionAndFieldCost: number;

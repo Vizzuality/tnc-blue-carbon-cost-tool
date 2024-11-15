@@ -7,8 +7,8 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { BaseDataView } from '@shared/entities/base-data.view';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
-import { DefaultCostInputsDto } from '@shared/dtos/custom-projects/default-cost-inputs.dto';
 import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
+import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 
 export type GetBaseData = {
   countryCode: Country['code'];
@@ -56,11 +56,10 @@ export class CalculationEngine {
 
   async getDefaultCostInputs(
     dto: GetDefaultCostInputsDto,
-  ): Promise<DefaultCostInputsDto> {
+  ): Promise<CostInputs> {
     const { countryCode, activity, ecosystem } = dto;
-    // TODO: In the UI we have "implementation labor", which in the calculations we actually set it as value, but in the base data view we have
-    //       this property as implementation_labor_activity_subtype (hydrology etc). Check with science!
-    const costInputs: DefaultCostInputsDto = await this.dataSource
+    // The coming CostInput has a implementation labor property which does not exist in the BaseDataView entity, so we use a partial type to avoid the error
+    const costInputs: Partial<CostInputs> = await this.dataSource
       .getRepository(BaseDataView)
       .findOne({
         where: { countryCode, activity, ecosystem },
@@ -88,6 +87,6 @@ export class CalculationEngine {
         `Could not find default Cost Inputs for country ${countryCode}, activity ${activity} and ecosystem ${ecosystem}`,
       );
     }
-    return costInputs;
+    return costInputs as CostInputs;
   }
 }

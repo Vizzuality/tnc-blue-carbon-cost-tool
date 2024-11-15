@@ -1,9 +1,32 @@
-import { CustomProject } from '@shared/entities/custom-project.entity';
 import { IsNumber } from 'class-validator';
 
-export class CustomProjectCapexCostInputsDto {
+export class CostInputs {
   @IsNumber()
-  feasibilityAnalisys: number;
+  financingCost: number;
+
+  @IsNumber()
+  monitoring: number;
+
+  @IsNumber()
+  maintenance: number;
+
+  @IsNumber()
+  communityBenefitSharingFund: number;
+
+  @IsNumber()
+  carbonStandardFees: number;
+
+  @IsNumber()
+  baselineReassessment: number;
+
+  @IsNumber()
+  mrv: number;
+
+  @IsNumber()
+  longTermProjectOperatingCost: number;
+
+  @IsNumber()
+  feasibilityAnalysis: number;
 
   @IsNumber()
   conservationPlanningAndAdmin: number;
@@ -25,36 +48,4 @@ export class CustomProjectCapexCostInputsDto {
 
   @IsNumber()
   implementationLabor: number;
-}
-
-export class CustomProjectOpexCostInputsDto {
-  @IsNumber()
-  monitoring: number;
-
-  @IsNumber()
-  maintenance: number;
-
-  @IsNumber()
-  communityBenefitShsharingFund: number;
-
-  @IsNumber()
-  carbonStandardFees: number;
-
-  @IsNumber()
-  baselineReassessment: number;
-
-  @IsNumber()
-  mrv: number;
-
-  @IsNumber()
-  longTermProjectOperating: number;
-}
-
-export class CustomProjectCostInputsDto {
-  @IsNumber()
-  financingCost: number;
-
-  capexCostInputs: CustomProjectCapexCostInputsDto;
-
-  opexCostInputs: CustomProjectOpexCostInputsDto;
 }

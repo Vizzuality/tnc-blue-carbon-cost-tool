@@ -6,12 +6,9 @@ import { DataSource, Repository } from 'typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CalculationEngine } from '@api/modules/calculations/calculation.engine';
 import { CustomProjectInputFactory } from '@api/modules/custom-projects/input-factory/custom-project-input.factory';
-import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
-import { ConservationCostCalculator } from '@api/modules/calculations/conservation-cost.calculator';
-import { DefaultCostInputsDto } from '@shared/dtos/custom-projects/default-cost-inputs.dto';
 import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
-import { BaseDataView } from '@shared/entities/base-data.view';
 import { DataRepository } from '@api/modules/calculations/data.repository';
+import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 
 type FindInput = {
   countryCode: CreateCustomProjectDto['countryCode'];
@@ -54,7 +51,10 @@ export class CustomProjectsService extends AppBaseService<
         activity,
       });
 
-    const projectInput = this.customProjectFactory.createProject();
+    const projectInput = this.customProjectFactory.createProject(
+      dto,
+      defaultCarbonInputs,
+    );
     // const { baseData, baseSize, baseIncrease, defaultAssumptions } =
     //   await this.calculationEngine.getBaseData({
     //     countryCode,
@@ -89,12 +89,12 @@ export class CustomProjectsService extends AppBaseService<
     //   yearBreakdown: calculator.getYearlyCostBreakdown(),
     // };
 
-    return defaultCarbonInputs;
+    return projectInput;
   }
 
   async getDefaultCostInputs(
     dto: GetDefaultCostInputsDto,
-  ): Promise<DefaultCostInputsDto> {
+  ): Promise<CostInputs> {
     return this.calculationEngine.getDefaultCostInputs(dto);
   }
 }
