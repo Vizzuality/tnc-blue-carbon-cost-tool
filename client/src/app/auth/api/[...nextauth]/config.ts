@@ -28,7 +28,6 @@ declare module "next-auth/jwt" {
   }
 }
 
-const cookiePrefix = process.env.NODE_ENV === "development" ? "dev" : "prod";
 const PROJECT_NAME = "tnc-blue-carbon";
 
 export const config = {
@@ -86,7 +85,7 @@ export const config = {
   },
   cookies: {
     sessionToken: {
-      name: `next-auth.session-token.${cookiePrefix}.${PROJECT_NAME}`,
+      name: `next-auth.session-token.${PROJECT_NAME}`,
       options: {
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -94,10 +93,10 @@ export const config = {
       },
     },
     callbackUrl: {
-      name: `next-auth.callback-url.${cookiePrefix}.${PROJECT_NAME}`,
+      name: `next-auth.callback-url.${PROJECT_NAME}`,
     },
     csrfToken: {
-      name: `next-auth.csrf-token.${cookiePrefix}.${PROJECT_NAME}`,
+      name: `next-auth.csrf-token.${PROJECT_NAME}`,
     },
   },
   pages: {
