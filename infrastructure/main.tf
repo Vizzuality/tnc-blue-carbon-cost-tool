@@ -135,6 +135,31 @@ module "dev" {
   }
 }
 
+module "staging" {
+  source                                        = "./modules/env"
+  domain                                        = "staging.blue-carbon-cost-tool.dev-vizzuality.com"
+  project                                       = var.project_name
+  environment                                   = "staging"
+  aws_region                                    = var.aws_region
+  vpc                                           = data.aws_vpc.default_vpc
+  subnet_ids                                    = local.subnets_with_ec2_instance_type_offering_ids
+  availability_zones                            = data.aws_availability_zones.azs_with_ec2_instance_type_offering.names
+  beanstalk_platform                            = "64bit Amazon Linux 2023 v4.3.6 running Docker"
+  beanstalk_tier                                = "WebServer"
+  ec2_instance_type                             = "t3.medium"
+  elasticbeanstalk_iam_service_linked_role_name = aws_iam_service_linked_role.elasticbeanstalk.name
+  cname_prefix                                  = "blue-carbon-cost-tool-staging-environment"
+  rds_instance_class = "db.t3.micro"
+  rds_engine_version = "15.7"
+  rds_backup_retention_period = 3
+  repo_name                                     = var.project_name
+  github_owner                                  = var.github_owner
+  github_token                                  = var.github_token
+  github_additional_environment_variables = {
+    JWT_EXPIRES_IN = "1d"
+  }
+}
+
 module "github" {
   source       = "./modules/github"
   repo_name    = var.project_name
