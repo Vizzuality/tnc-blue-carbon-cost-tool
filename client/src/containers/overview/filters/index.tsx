@@ -141,17 +141,6 @@ export default function ProjectsFilters() {
   );
 
   useEffect(() => {
-    const resetCosts = async () => {
-      await setFilters((prev) => ({
-        ...prev,
-        costRange: INITIAL_COST_RANGE[filters.costRangeSelector],
-      }));
-    };
-
-    resetCosts();
-  }, [filters.costRangeSelector, setFilters]);
-
-  useEffect(() => {
     setCostValuesState([
       filters.costRange[0] || INITIAL_COST_RANGE[filters.costRangeSelector][0],
       filters.costRange[1] || INITIAL_COST_RANGE[filters.costRangeSelector][1],
