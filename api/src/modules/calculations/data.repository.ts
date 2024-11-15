@@ -36,7 +36,6 @@ export class DataRepository extends Repository<BaseDataView> {
       ],
     });
 
-    console.log(defaultCarbonInputs);
     if (!defaultCarbonInputs) {
       throw new NotFoundException('Could not retrieve default carbon inputs');
     }
