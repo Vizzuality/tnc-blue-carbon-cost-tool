@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { ACTIVITY } from "@shared/entities/activity.enum";
@@ -12,10 +12,6 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
-import {
-  INITIAL_COST_RANGE,
-  INITIAL_ABATEMENT_POTENTIAL_RANGE,
-} from "@/app/(overview)/constants";
 import { projectsUIState } from "@/app/(overview)/store";
 import {
   INITIAL_FILTERS_STATE,
@@ -34,13 +30,21 @@ import {
 } from "@/components/ui/select";
 import { RangeSlider, SliderLabels } from "@/components/ui/slider";
 
-import { ACTIVITIES } from "./constants";
+import {
+  ACTIVITIES,
+  INITIAL_COST_RANGE,
+  INITIAL_ABATEMENT_POTENTIAL_RANGE,
+} from "./constants";
 
 export const FILTERS_SIDEBAR_WIDTH = 320;
 
 export default function ProjectsFilters() {
   const [filters, setFilters] = useGlobalFilters();
   const setFiltersOpen = useSetAtom(projectsUIState);
+  const [costValuesState, setCostValuesState] = useState([
+    filters.costRange[0] || INITIAL_COST_RANGE[filters.costRangeSelector][0],
+    filters.costRange[1] || INITIAL_COST_RANGE[filters.costRangeSelector][1],
+  ]);
 
   const resetFilters = async () => {
     await setFilters((prev) => ({
@@ -104,7 +108,7 @@ export default function ProjectsFilters() {
     }));
   };
 
-  const debouncedCostChange = useDebounce(async (cost: [number, number]) => {
+  const debouncedCostChange = useDebounce(async (cost: number[]) => {
     await setFilters((prev) => ({
       ...prev,
       costRange: cost,
@@ -120,6 +124,24 @@ export default function ProjectsFilters() {
     },
     250,
   );
+
+  useEffect(() => {
+    const resetCosts = async () => {
+      await setFilters((prev) => ({
+        ...prev,
+        costRange: INITIAL_COST_RANGE[filters.costRangeSelector],
+      }));
+    };
+
+    resetCosts();
+  }, [filters.costRangeSelector, setFilters]);
+
+  useEffect(() => {
+    setCostValuesState([
+      filters.costRange[0] || INITIAL_COST_RANGE[filters.costRangeSelector][0],
+      filters.costRange[1] || INITIAL_COST_RANGE[filters.costRangeSelector][1],
+    ]);
+  }, [filters.costRange, filters.costRangeSelector]);
 
   return (
     <section
@@ -275,19 +297,25 @@ export default function ProjectsFilters() {
         <Label htmlFor="costs">Cost ($)</Label>
         <RangeSlider
           defaultValue={[
-            filters.costRange[0] || INITIAL_COST_RANGE[0],
-            filters.costRange[1] || INITIAL_COST_RANGE[1],
+            filters.costRange[0] ||
+              INITIAL_COST_RANGE[filters.costRangeSelector][0],
+            filters.costRange[1] ||
+              INITIAL_COST_RANGE[filters.costRangeSelector][1],
           ]}
-          min={INITIAL_COST_RANGE[0]}
-          max={INITIAL_COST_RANGE[1]}
+          min={INITIAL_COST_RANGE[filters.costRangeSelector][0]}
+          max={INITIAL_COST_RANGE[filters.costRangeSelector][1]}
           step={1}
           minStepsBetweenThumbs={1}
-          onValueChange={debouncedCostChange}
+          value={costValuesState}
+          onValueChange={(v) => {
+            setCostValuesState(v);
+            debouncedCostChange(v);
+          }}
           format={(v) => formatNumber(v, {})}
         />
         <SliderLabels
-          min={formatNumber(INITIAL_COST_RANGE[0])}
-          max={formatNumber(INITIAL_COST_RANGE[1])}
+          min={formatNumber(INITIAL_COST_RANGE[filters.costRangeSelector][0])}
+          max={formatNumber(INITIAL_COST_RANGE[filters.costRangeSelector][1])}
         />
       </div>
 
