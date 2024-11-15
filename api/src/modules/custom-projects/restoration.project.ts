@@ -4,7 +4,7 @@ import {
   DEFAULT_STUFF,
 } from '@api/modules/custom-projects/project-config.interface';
 import { BaseDataView } from '@shared/entities/base-data.view';
-import { CostInputs } from '@api/modules/custom-projects/cost-inputs.interface';
+import { CostInputsDeprecated } from '@api/modules/custom-projects/cost-inputs.interface';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { RESTORATION_ACTIVITY_SUBTYPE } from '@shared/entities/projects.entity';
 
@@ -13,7 +13,7 @@ export class RestorationProject {
   activity: ACTIVITY.RESTORATION;
   ecosystem: string;
   countryCode: string;
-  costInputs: CostInputs;
+  costInputs: CostInputsDeprecated;
   modelAssumptions?: ModelAssumptions;
   startingPointScaling: number =
     DEFAULT_STUFF.RESTORATION_STARTING_POINT_SCALING;
