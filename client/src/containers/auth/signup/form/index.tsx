@@ -6,17 +6,13 @@ import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
-import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
-import { client } from "@/lib/query-client";
-import { queryKeys } from "@/lib/query-keys";
-
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -24,50 +20,29 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 import { signUpAction } from "./action";
 import { signUpSchemaForm } from "./schema";
 
-const SignUpForm: FC = () => {
+const TokenSignUpForm: FC = () => {
   const { push } = useRouter();
   const [status, formAction] = useFormState(signUpAction, {
     ok: undefined,
     message: "",
   });
-  const params = useParams<{ token: string }>();
 
   const formRef = useRef<HTMLFormElement>(null);
   const form = useForm<z.infer<typeof signUpSchemaForm>>({
     resolver: zodResolver(signUpSchemaForm),
     defaultValues: {
-      oneTimePassword: "",
-      newPassword: "",
-      repeatPassword: "",
-      token: params.token,
+      name: "",
+      partnerName: "",
+      email: "",
     },
     mode: "onSubmit",
-  });
-
-  const {
-    data: isValidToken,
-    isFetching,
-    isError,
-  } = useQuery({
-    queryKey: queryKeys.auth.resetPasswordToken(params.token).queryKey,
-    queryFn: () => {
-      return client.auth.validateToken.query({
-        headers: {
-          authorization: `Bearer ${params.token}`,
-        },
-        query: {
-          tokenType: TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION,
-        },
-      });
-    },
-    select: (data) => data.status === 200,
   });
 
   useEffect(() => {
@@ -76,23 +51,13 @@ const SignUpForm: FC = () => {
     }
   }, [status, push]);
 
-  const isDisabledByTokenValidation = !isValidToken || isFetching || isError;
-
   return (
     <>
-      {!isValidToken && !isFetching && (
-        <p className="text-center text-sm text-destructive">
-          The token is invalid or has expired.
-        </p>
-      )}
-      {status.ok === false && (
-        <p className="text-center text-sm text-destructive">{status.message}</p>
-      )}
       <Form {...form}>
         <form
           ref={formRef}
           action={formAction}
-          className="w-full space-y-4"
+          className="w-full space-y-6"
           onSubmit={(evt) => {
             evt.preventDefault();
             form.handleSubmit(() => {
@@ -102,15 +67,27 @@ const SignUpForm: FC = () => {
         >
           <FormField
             control={form.control}
-            name="oneTimePassword"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>One-Time Password</FormLabel>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input autoFocus placeholder="Enter your name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="partnerName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Partner</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter the One-Time Password received in your mail"
-                    required
-                    disabled={isDisabledByTokenValidation}
+                    autoFocus
+                    placeholder="Enter partner name"
                     {...field}
                   />
                 </FormControl>
@@ -120,65 +97,40 @@ const SignUpForm: FC = () => {
           />
           <FormField
             control={form.control}
-            name="newPassword"
-            render={({ field, fieldState }) => (
+            name="email"
+            render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <div className="relative flex items-center">
-                    <Input
-                      placeholder="Create a password"
-                      type="password"
-                      autoComplete="new-password"
-                      disabled={isDisabledByTokenValidation}
-                      {...field}
-                    />
-                  </div>
+                  <Input placeholder="Enter you email address" {...field} />
                 </FormControl>
-                {!fieldState.invalid && (
-                  <FormDescription>
-                    Password must contain at least 8 characters.
-                  </FormDescription>
-                )}
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="repeatPassword"
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <FormLabel>Repeat password</FormLabel>
-                <FormControl>
-                  <div className="relative flex items-center">
-                    <Input
-                      placeholder="Repeat the password"
-                      type="password"
-                      autoComplete="new-password"
-                      disabled={isDisabledByTokenValidation}
-                      {...field}
-                    />
-                  </div>
-                </FormControl>
-                {!fieldState.invalid && (
-                  <FormDescription>
-                    Password must contain at least 8 characters.
-                  </FormDescription>
-                )}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="token"
+            name="privacyPolicy"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input type="hidden" {...field} />
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      {...field}
+                      id={field.name}
+                      value="privacyPolicy"
+                      onCheckedChange={field.onChange}
+                    />
+                    <Label
+                      htmlFor={field.name}
+                      className="text-xs text-muted-foreground"
+                    >
+                      I agree with the terms and conditions and privacy policy
+                      of the Blue Carbon Cost Tool platform.
+                    </Label>
+                  </div>
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -190,9 +142,9 @@ const SignUpForm: FC = () => {
             <Button
               variant="secondary"
               type="submit"
-              disabled={!form.formState.isValid || isDisabledByTokenValidation}
+              disabled={!form.formState.isValid}
             >
-              Save
+              Create account
             </Button>
           </div>
         </form>
@@ -201,4 +153,4 @@ const SignUpForm: FC = () => {
   );
 };
 
-export default SignUpForm;
+export default TokenSignUpForm;

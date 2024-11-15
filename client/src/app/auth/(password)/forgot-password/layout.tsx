@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function ForgotPasswordLayout({ children }: PropsWithChildren) {
-  return <AuthLayout className="pt-20">{children}</AuthLayout>;
+  return <AuthLayout>{children}</AuthLayout>;
 }
