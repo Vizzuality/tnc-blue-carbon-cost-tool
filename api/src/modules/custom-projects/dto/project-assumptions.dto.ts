@@ -20,5 +20,5 @@ export class CustomProjectAssumptionsDto {
   restorationRate: number;
 
   @IsNumber()
-  restorationProjectLength: number;
+  projectLength: number;
 }
