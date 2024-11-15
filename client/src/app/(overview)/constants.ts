@@ -15,10 +15,3 @@ export const FILTER_KEYS = [
   "costRange",
   "abatementPotentialRange",
 ] as const;
-
-// ? cost and abatement potential ranges are hardcoded for now.
-// ? Ask data to figure out the correct values and hardcore them here.
-// export const INITIAL_COST_RANGE = [1200, 2300];
-// export const INITIAL_ABATEMENT_POTENTIAL_RANGE = [0, 100];
-export const INITIAL_COST_RANGE = [0, 120494811];
-export const INITIAL_ABATEMENT_POTENTIAL_RANGE = [0, 10199224];

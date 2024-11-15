@@ -12,11 +12,11 @@ import { parseAsJson, parseAsStringLiteral, useQueryState } from "nuqs";
 import { z } from "zod";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
+
 import {
   INITIAL_COST_RANGE,
   INITIAL_ABATEMENT_POTENTIAL_RANGE,
-} from "@/app/(overview)/constants";
-
+} from "@/containers/overview/filters/constants";
 import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
 
 const SUB_ACTIVITIES = RESTORATION_ACTIVITY_SUBTYPE;
@@ -43,7 +43,7 @@ export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
   ecosystem: [],
   activity: [],
   activitySubtype: [],
-  costRange: INITIAL_COST_RANGE,
+  costRange: INITIAL_COST_RANGE[COST_TYPE_SELECTOR.NPV],
   abatementPotentialRange: INITIAL_ABATEMENT_POTENTIAL_RANGE,
 };
 
