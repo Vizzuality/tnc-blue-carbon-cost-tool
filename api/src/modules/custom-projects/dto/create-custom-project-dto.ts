@@ -2,6 +2,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Length,
   Validate,
@@ -43,11 +44,13 @@ export class CreateCustomProjectDto {
   @IsEnum(CARBON_REVENUES_TO_COVER)
   carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
 
+  @IsOptional()
   @IsNotEmpty({
     message: 'Assumptions are required to create a custom project',
   })
   assumptions: CustomProjectAssumptionsDto;
 
+  @IsOptional()
   @IsNotEmpty({
     message: 'Cost inputs are required to create a custom project',
   })

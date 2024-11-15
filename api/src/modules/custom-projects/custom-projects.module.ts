@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CustomProjectsController } from './custom-projects.controller';
 import { CalculationsModule } from '@api/modules/calculations/calculations.module';
-import { CustomProjectFactory } from '@api/modules/custom-projects/custom-project.factory';
+import { CustomProjectInputFactory } from '@api/modules/custom-projects/input-factory/custom-project-input.factory';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { CustomProjectFactory } from '@api/modules/custom-projects/custom-projec
     CountriesModule,
     CalculationsModule,
   ],
-  providers: [CustomProjectsService, CustomProjectFactory],
+  providers: [CustomProjectsService, CustomProjectInputFactory],
   controllers: [CustomProjectsController],
 })
 export class CustomProjectsModule {}
