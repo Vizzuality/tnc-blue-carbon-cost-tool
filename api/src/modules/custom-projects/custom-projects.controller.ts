@@ -1,7 +1,5 @@
 import { Body, Controller, HttpStatus, ValidationPipe } from '@nestjs/common';
 import { CountriesService } from '@api/modules/countries/countries.service';
-import { DataSource } from 'typeorm';
-import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
@@ -12,7 +10,6 @@ import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-
 export class CustomProjectsController {
   constructor(
     private readonly countries: CountriesService,
-    public readonly dataSource: DataSource,
     private readonly customProjects: CustomProjectsService,
   ) {}
 
@@ -34,9 +31,7 @@ export class CustomProjectsController {
     return tsRestHandler(
       customProjectContract.getDefaultAssumptions,
       async () => {
-        const data = await this.dataSource
-          .getRepository(ModelAssumptions)
-          .find();
+        const data = await this.customProjects.getDefaultAssumptions();
         return { body: { data }, status: HttpStatus.OK };
       },
     );

@@ -9,6 +9,7 @@ import { CustomProjectInputFactory } from '@api/modules/custom-projects/input-fa
 import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
 import { DataRepository } from '@api/modules/calculations/data.repository';
 import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
+import { CustomProjectAssumptionsDto } from '@api/modules/custom-projects/dto/project-assumptions.dto';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -37,7 +38,7 @@ export class CustomProjectsService extends AppBaseService<
         activity,
       });
 
-    const projectInput = this.customProjectFactory.createProject(
+    const projectInput = this.customProjectFactory.createProjectInput(
       dto,
       defaultCarbonInputs,
     );
@@ -47,6 +48,16 @@ export class CustomProjectsService extends AppBaseService<
   async getDefaultCostInputs(
     dto: GetDefaultCostInputsDto,
   ): Promise<CostInputs> {
-    return this.calculationEngine.getDefaultCostInputs(dto);
+    return this.dataRepository.getDefaultCostInputs(dto);
+  }
+
+  async getDefaultAssumptions(): Promise<CustomProjectAssumptionsDto> {
+    const modelAssumptions =
+      await this.dataRepository.getDefaultModelAssumptions();
+    const projectAssumptions = new CustomProjectAssumptionsDto();
+    modelAssumptions.forEach((assumption) => {
+      projectAssumptions[assumption.name] = assumption.value;
+    });
+    return projectAssumptions;
   }
 }

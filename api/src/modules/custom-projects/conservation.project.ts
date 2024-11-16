@@ -145,6 +145,4 @@ export class ConservationProject {
       throw new Error('Invalid emission factor used option selected.');
     }
   }
-
-  // TODO: Implement getProjectParameters, if later we see that is usefull
 }
