@@ -6,6 +6,7 @@ import { CustomProject } from "@shared/entities/custom-project.entity";
 import { CreateCustomProjectDto } from "@api/modules/custom-projects/dto/create-custom-project-dto";
 import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-cost-inputs.schema";
 import { CostInputs } from "@api/modules/custom-projects/dto/project-cost-inputs.dto";
+import { CustomProjectAssumptionsDto } from "@api/modules/custom-projects/dto/project-assumptions.dto";
 
 // TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 
@@ -24,7 +25,7 @@ export const customProjectContract = contract.router({
     method: "GET",
     path: "/custom-projects/assumptions",
     responses: {
-      200: contract.type<ApiResponse<ModelAssumptions[]>>(),
+      200: contract.type<ApiResponse<CustomProjectAssumptionsDto>>(),
     },
     summary: "Get default model assumptions",
   },

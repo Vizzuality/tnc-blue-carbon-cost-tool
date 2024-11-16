@@ -33,9 +33,8 @@ export type GeneralProjectInputs = {
 
 @Injectable()
 export class CustomProjectInputFactory {
-  createProject(dto: CreateCustomProjectDto, carbonInputs: CarbonInputs) {
+  createProjectInput(dto: CreateCustomProjectDto, carbonInputs: CarbonInputs) {
     if (dto.activity === ACTIVITY.CONSERVATION) {
-      //return new ConservationProject(projectConfig);
       return this.createConservationProjectInput(dto, carbonInputs);
     } else if (dto.activity === ACTIVITY.RESTORATION) {
       throw new NotImplementedException('Restoration not implemented');
@@ -61,6 +60,8 @@ export class CustomProjectInputFactory {
       countryCode,
     } = dto;
 
+    const projectParams = parameters as ConservationProjectParamDto;
+
     const conservationProjectInput: ConservationProjectInput =
       new ConservationProjectInput();
     conservationProjectInput.setGeneralInputs({
@@ -72,14 +73,8 @@ export class CustomProjectInputFactory {
       ecosystem,
       countryCode,
     });
-    conservationProjectInput.setLossRate(
-      parameters as ConservationProjectParamDto,
-      carbonInputs,
-    );
-    conservationProjectInput.setEmissionFactor(
-      parameters as ConservationProjectParamDto,
-      carbonInputs,
-    );
+    conservationProjectInput.setLossRate(projectParams, carbonInputs);
+    conservationProjectInput.setEmissionFactor(projectParams, carbonInputs);
     conservationProjectInput.setCostInputs(costInputs);
     conservationProjectInput.setModelAssumptions(assumptions);
 
