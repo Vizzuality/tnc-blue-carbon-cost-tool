@@ -7,6 +7,8 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
 import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
+import { BaseSize } from '@shared/entities/base-size.entity';
+import { BaseIncrease } from '@shared/entities/base-increase.entity';
 
 export type CarbonInputs = {
   ecosystemLossRate: BaseDataView['ecosystemLossRate'];
@@ -21,6 +23,29 @@ export class DataRepository extends Repository<BaseDataView> {
     @InjectRepository(BaseDataView) private repo: Repository<BaseDataView>,
   ) {
     super(repo.target, repo.manager, repo.queryRunner);
+  }
+
+  async getDataForCalculation(dto: {
+    countryCode: string;
+    ecosystem: ECOSYSTEM;
+    activity: ACTIVITY;
+  }) {
+    const { countryCode, ecosystem, activity } = dto;
+    const defaultCarbonInputs = await this.getDefaultCarbonInputs({
+      countryCode,
+      ecosystem,
+      activity,
+    });
+    const { baseSize, baseIncrease } = await this.getBaseIncreaseAndSize({
+      ecosystem,
+      activity,
+    });
+
+    return {
+      defaultCarbonInputs,
+      baseSize,
+      baseIncrease,
+    };
   }
 
   async getDefaultCarbonInputs(dto: {
@@ -79,6 +104,27 @@ export class DataRepository extends Repository<BaseDataView> {
       );
     }
     return costInputs as CostInputs;
+  }
+
+  async getBaseIncreaseAndSize(params: {
+    ecosystem: ECOSYSTEM;
+    activity: ACTIVITY;
+  }): Promise<{ baseSize: BaseSize; baseIncrease: BaseIncrease }> {
+    const { ecosystem, activity } = params;
+    const baseSize = await this.repo.manager.getRepository(BaseSize).findOne({
+      where: { ecosystem, activity },
+    });
+    const baseIncrease = await this.repo.manager
+      .getRepository(BaseIncrease)
+      .findOne({ where: { ecosystem } });
+
+    if (!baseSize || !baseIncrease) {
+      throw new NotFoundException(
+        `Could not find base size or base increase for ecosystem ${ecosystem} and activity ${activity}`,
+      );
+    }
+
+    return { baseSize, baseIncrease };
   }
 
   async getDefaultModelAssumptions() {
