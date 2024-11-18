@@ -59,24 +59,36 @@ const UpdateEmailForm: FC = () => {
       const parsed = accountDetailsSchema.safeParse(formData);
 
       if (parsed.success) {
-        const response = await client.user.requestEmailUpdate.mutation({
-          body: {
-            newEmail: parsed.data.email,
-          },
-          extraHeaders: {
-            authorization: `Bearer ${session?.accessToken as string}`,
-          },
-        });
-
-        if (response.status === 200) {
-          updateSession(response.body);
-
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.user.me(session?.user?.id as string).queryKey,
+        try {
+          const response = await client.user.requestEmailUpdate.mutation({
+            body: {
+              newEmail: parsed.data.email,
+            },
+            extraHeaders: {
+              authorization: `Bearer ${session?.accessToken as string}`,
+            },
           });
 
+          if (response.status === 200) {
+            updateSession(response.body);
+
+            queryClient.invalidateQueries({
+              queryKey: queryKeys.user.me(session?.user?.id as string).queryKey,
+            });
+
+            toast({
+              description: "You will receive an email in your inbox.",
+            });
+          } else {
+            toast({
+              variant: "destructive",
+              description: "Something went wrong updating the email",
+            });
+          }
+        } catch (e) {
           toast({
-            description: "Your email has been updated successfully.",
+            variant: "destructive",
+            description: "Something went wrong updating the email",
           });
         }
       }

@@ -62,7 +62,7 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
         <h2 id="sidebar-nav-title" className="sr-only">
           User area navigation
         </h2>
-        <ol role="list">
+        <ol role="list" className="space-y-2">
           {navItems.map((o) => (
             <li key={`section-link-${o.id}`} role="listitem">
               <Link
