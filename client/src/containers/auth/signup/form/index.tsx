@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/toast/use-toast";
 
 import { signUpAction } from "./action";
 import { signUpSchemaForm } from "./schema";
@@ -33,6 +34,7 @@ const TokenSignUpForm: FC = () => {
     ok: undefined,
     message: "",
   });
+  const { toast } = useToast();
 
   const formRef = useRef<HTMLFormElement>(null);
   const form = useForm<z.infer<typeof signUpSchemaForm>>({
@@ -47,9 +49,13 @@ const TokenSignUpForm: FC = () => {
 
   useEffect(() => {
     if (status.ok) {
+      toast({
+        description:
+          "Sign up successful! Please check your email to verify your account.",
+      });
       push("/auth/signin");
     }
-  }, [status, push]);
+  }, [status, push, toast]);
 
   return (
     <>

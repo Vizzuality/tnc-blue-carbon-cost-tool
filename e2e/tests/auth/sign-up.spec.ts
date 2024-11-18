@@ -42,8 +42,18 @@ test.describe("Auth - Sign Up", () => {
 
     await page.getByRole("button", { name: /Create account/i }).click();
 
+    await expect(
+      // Has to be a more specific selector targeting the notification list item
+      page.getByRole("list").getByRole("status").filter({
+        hasText:
+          "Sign up successful! Please check your email to verify your account.",
+      }),
+    ).toBeVisible();
+
     await page.waitForURL("/auth/signin");
-    await expect(page.getByText("Welcome to Blue Carbon Cost")).toBeVisible();
+    await expect(
+      page.getByText("Welcome to Blue Carbon Cost", { exact: true }),
+    ).toBeVisible();
 
     const registeredUser = await testManager
       .getDataSource()
