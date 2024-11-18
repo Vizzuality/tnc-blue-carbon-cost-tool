@@ -1,5 +1,7 @@
 "use server";
 
+import { headers } from "next/headers";
+
 import { CreateUserSchema } from "@shared/schemas/users/create-user.schema";
 
 import { client } from "@/lib/query-client";
@@ -24,9 +26,11 @@ export async function signUpAction(
   }
 
   try {
+    const headersList = headers();
     const response = await client.auth.register.mutation({
       extraHeaders: {
         Authorization: `Bearer ${data.get("token")}`,
+        origin: headersList.get("host") || undefined,
       },
       body: {
         name: parsed.data.name,
@@ -35,11 +39,12 @@ export async function signUpAction(
       },
     });
 
-    if (response.status === 401) {
+    if (response.status !== 201) {
       return {
         ok: false,
         message:
-          response.body.errors?.map(({ title }) => title) ?? "unknown error",
+          response.body.errors?.map(({ title }) => title).join("\n") ??
+          "unknown error",
       };
     }
   } catch (error: Error | unknown) {
