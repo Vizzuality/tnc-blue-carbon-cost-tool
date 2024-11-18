@@ -12,6 +12,7 @@ import ProfileSidebar from "@/containers/profile/profile-sidebar";
 import { intersectingAtom } from "@/containers/profile/store";
 import UserDetails from "@/containers/profile/user-details";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import DeleteAccount from "src/containers/profile/delete-account";
 
@@ -73,7 +74,9 @@ export default function Profile() {
       },
     );
 
-    const sections = Array.from(ref.current.children);
+    const sections = Array.from(
+      ref.current.querySelector("#profile-sections-container")?.children || [],
+    );
     sections.forEach((section) => observer.observe(section));
 
     return () => observer.disconnect();
@@ -92,16 +95,15 @@ export default function Profile() {
             navItems={sections.map((s) => ({ id: s.id, name: s.title }))}
           />
         </div>
-        <div
-          ref={ref}
-          className="w-full space-y-2 overflow-y-auto scroll-smooth pb-20 pl-16 pr-20"
-        >
-          {sections.map(({ Component, ...rest }) => (
-            <ProfileSection key={rest.id} {...rest}>
-              <Component />
-            </ProfileSection>
-          ))}
-        </div>
+        <ScrollArea ref={ref} className="pr-6">
+          <div id="profile-sections-container" className="space-y-2 pb-20">
+            {sections.map(({ Component, ...rest }) => (
+              <ProfileSection key={rest.id} {...rest}>
+                <Component />
+              </ProfileSection>
+            ))}
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );
