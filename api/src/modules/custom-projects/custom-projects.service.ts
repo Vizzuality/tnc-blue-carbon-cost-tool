@@ -45,7 +45,6 @@ export class CustomProjectsService extends AppBaseService<
     );
     // TODO: Don't know where this values should come from. i.e default project length comes from the assumptions based on activity? In the python calcs, the same
     //       value is used regardless of the activity.
-
     const DEFAULT_PROJECT_LENGTH = 40;
     const CONSERVATION_STARTING_POINT_SCALING = 500;
     const RESTORATION_STARTING_POINT_SCALING = 20000;
@@ -58,8 +57,7 @@ export class CustomProjectsService extends AppBaseService<
       baseIncrease,
     );
 
-    calculator.initializeCostPlans();
-    calculator.calculateCosts();
+    calculator.initializeCostPlans().calculateCosts();
     return calculator.costPlans;
   }
 

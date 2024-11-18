@@ -1,4 +1,5 @@
 import { ValueTransformer, ViewColumn, ViewEntity } from "typeorm";
+import { PROJECT_DEVELOPMENT_TYPE } from "@api/modules/custom-projects/dto/project-cost-inputs.dto";
 
 export const decimalTransformer: ValueTransformer = {
   to: (value: number | null) => value,
@@ -278,7 +279,6 @@ export class BaseDataView {
 
   @ViewColumn({
     name: "other_community_cash_flow",
-    transformer: decimalTransformer,
   })
-  otherCommunityCashFlow: string;
+  otherCommunityCashFlow: string | PROJECT_DEVELOPMENT_TYPE;
 }
