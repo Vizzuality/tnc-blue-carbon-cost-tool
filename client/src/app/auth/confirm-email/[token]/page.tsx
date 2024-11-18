@@ -16,6 +16,7 @@ export default function ConfirmEmailPage() {
             Didn&apos;t receive your email?
           </span>
           <Button variant="link" className="p-0 text-primary" asChild>
+            {/* TODO: Add correct implementation when API call is available */}
             <Link href="/auth/signin">Resend email</Link>
           </Button>
         </p>
