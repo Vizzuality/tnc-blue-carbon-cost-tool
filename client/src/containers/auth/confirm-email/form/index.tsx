@@ -9,7 +9,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
 import { RequestEmailUpdateSchema } from "@shared/schemas/users/request-email-update.schema";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { client } from "@/lib/query-client";
@@ -52,7 +52,7 @@ const NewPasswordForm: FC = () => {
     data: isValidToken,
     isFetching,
     isError,
-  } = useQuery({
+  } = useSuspenseQuery({
     queryKey: queryKeys.auth.confirmEmailToken(params.token).queryKey,
     queryFn: () => {
       return client.auth.validateToken.query({
@@ -105,15 +105,13 @@ const NewPasswordForm: FC = () => {
         <CardTitle className="text-xl font-semibold">
           Confirm your email
         </CardTitle>
-        <CardDescription className="text-muted-foreground">
-          {!isValidToken ? (
+        {!isValidToken && (
+          <CardDescription className="text-muted-foreground">
             <p className="text-sm text-destructive">
               The token is invalid or has expired.
             </p>
-          ) : (
-            <p>To create your account please fill in the details bellow.</p>
-          )}
-        </CardDescription>
+          </CardDescription>
+        )}
       </CardHeader>
       <CardContent>
         <Form {...form}>
