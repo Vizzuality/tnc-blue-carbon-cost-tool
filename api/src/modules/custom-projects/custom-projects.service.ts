@@ -47,16 +47,20 @@ export class CustomProjectsService extends AppBaseService<
     //       value is used regardless of the activity.
 
     const DEFAULT_PROJECT_LENGTH = 40;
+    const CONSERVATION_STARTING_POINT_SCALING = 500;
+    const RESTORATION_STARTING_POINT_SCALING = 20000;
 
     const calculator = new CostCalculator(
       projectInput,
       DEFAULT_PROJECT_LENGTH,
+      CONSERVATION_STARTING_POINT_SCALING,
       baseSize,
       baseIncrease,
     );
 
     calculator.initializeCostPlans();
-    return calculator;
+    calculator.calculateCosts();
+    return calculator.costPlans;
   }
 
   async getDefaultCostInputs(
