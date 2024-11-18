@@ -298,7 +298,7 @@ export default function ProjectsFilters() {
         </ul>
       </div>
       <div className="flex flex-col gap-3">
-        <Label htmlFor="costs">Cost ($)</Label>
+        <Label htmlFor="costs">Cost ($/tCO2e)</Label>
         <RangeSlider
           defaultValue={[
             filters.costRange[0] ||
@@ -324,7 +324,9 @@ export default function ProjectsFilters() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <Label htmlFor="abatement_potential">Abatement Potential ($)</Label>
+        <Label htmlFor="abatement_potential">
+          Abatement Potential (tCO2e/yr)
+        </Label>
         <RangeSlider
           defaultValue={[
             filters.abatementPotentialRange[0] ||
