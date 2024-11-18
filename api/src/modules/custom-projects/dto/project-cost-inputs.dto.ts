@@ -1,4 +1,9 @@
-import { IsNumber } from 'class-validator';
+import { IsEnum, IsNumber } from 'class-validator';
+
+export enum PROJECT_DEVELOPMENT_TYPE {
+  DEVELOPMENT = 'Development',
+  NON_DEVELOPMENT = 'Non-Development',
+}
 
 export class CostInputs {
   @IsNumber()
@@ -48,4 +53,7 @@ export class CostInputs {
 
   @IsNumber()
   implementationLabor: number;
+
+  @IsEnum(PROJECT_DEVELOPMENT_TYPE)
+  otherCommunityCashFlow: PROJECT_DEVELOPMENT_TYPE | string;
 }

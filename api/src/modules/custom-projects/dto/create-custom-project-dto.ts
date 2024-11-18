@@ -6,6 +6,7 @@ import {
   IsString,
   Length,
   Validate,
+  ValidateNested,
 } from 'class-validator';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
@@ -14,7 +15,7 @@ import { RestorationProjectParamsDto } from '@api/modules/custom-projects/dto/re
 import { CustomProjectAssumptionsDto } from '@api/modules/custom-projects/dto/project-assumptions.dto';
 import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { ProjectParamsValidator } from '@api/modules/custom-projects/validation/project-params.validator';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export enum CARBON_REVENUES_TO_COVER {
   OPEX = 'Opex',
@@ -44,16 +45,18 @@ export class CreateCustomProjectDto {
   @IsEnum(CARBON_REVENUES_TO_COVER)
   carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
 
-  @IsOptional()
+  @ValidateNested()
+  @Type(() => CustomProjectAssumptionsDto)
   @IsNotEmpty({
     message: 'Assumptions are required to create a custom project',
   })
   assumptions: CustomProjectAssumptionsDto;
 
-  @IsOptional()
   @IsNotEmpty({
     message: 'Cost inputs are required to create a custom project',
   })
+  @ValidateNested()
+  @Type(() => CostInputs)
   costInputs: CostInputs;
 
   @IsNotEmpty()
