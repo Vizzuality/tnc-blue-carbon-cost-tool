@@ -1,6 +1,8 @@
 import { ConservationProject } from '@api/modules/custom-projects/conservation.project';
 import { SequestrationRatesCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class RevenueProfitCalculator {
   private project: ConservationProject;
   private sequestrationCreditsCalculator: SequestrationRatesCalculator;

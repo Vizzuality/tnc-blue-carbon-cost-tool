@@ -1,7 +1,9 @@
 import { ConservationProject } from '@api/modules/custom-projects/conservation.project';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { RESTORATION_ACTIVITY_SUBTYPE } from '@shared/entities/projects.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class SequestrationRatesCalculator {
   // TODO: This should accept both Conservation and Restoration
   private project: ConservationProject;

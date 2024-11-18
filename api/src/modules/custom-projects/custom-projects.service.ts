@@ -10,6 +10,7 @@ import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-defaul
 import { DataRepository } from '@api/modules/calculations/data.repository';
 import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { CustomProjectAssumptionsDto } from '@api/modules/custom-projects/dto/project-assumptions.dto';
+import { CostCalculator } from '@api/modules/calculations/cost.calculator';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -31,8 +32,8 @@ export class CustomProjectsService extends AppBaseService<
 
   async create(dto: CreateCustomProjectDto): Promise<any> {
     const { countryCode, ecosystem, activity } = dto;
-    const defaultCarbonInputs =
-      await this.dataRepository.getDefaultCarbonInputs({
+    const { defaultCarbonInputs, baseIncrease, baseSize } =
+      await this.dataRepository.getDataForCalculation({
         countryCode,
         ecosystem,
         activity,
@@ -42,7 +43,20 @@ export class CustomProjectsService extends AppBaseService<
       dto,
       defaultCarbonInputs,
     );
-    return projectInput;
+    // TODO: Don't know where this values should come from. i.e default project length comes from the assumptions based on activity? In the python calcs, the same
+    //       value is used regardless of the activity.
+
+    const DEFAULT_PROJECT_LENGTH = 40;
+
+    const calculator = new CostCalculator(
+      projectInput,
+      DEFAULT_PROJECT_LENGTH,
+      baseSize,
+      baseIncrease,
+    );
+
+    calculator.initializeCostPlans();
+    return calculator;
   }
 
   async getDefaultCostInputs(
