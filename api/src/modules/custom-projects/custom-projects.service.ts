@@ -11,6 +11,7 @@ import { DataRepository } from '@api/modules/calculations/data.repository';
 import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { CustomProjectAssumptionsDto } from '@api/modules/custom-projects/dto/project-assumptions.dto';
 import { CostCalculator } from '@api/modules/calculations/cost.calculator';
+import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -59,6 +60,10 @@ export class CustomProjectsService extends AppBaseService<
 
     calculator.initializeCostPlans().calculateCosts();
     return calculator.costPlans;
+  }
+
+  async saveCustomProject(dto: CustomProjectSnapshotDto): Promise<void> {
+    await this.repo.save(CustomProject.fromCustomProjectSnapshotDTO(dto));
   }
 
   async getDefaultCostInputs(

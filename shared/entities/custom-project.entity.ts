@@ -1,3 +1,4 @@
+import { CustomProjectSnapshotDto } from "@api/modules/custom-projects/dto/custom-project-snapshot.dto";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 /**
@@ -12,55 +13,163 @@ export class CustomProject {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: "project_name", type: "varchar", length: 255 })
-  projectName: string;
+  @Column({ name: "project_length", type: "decimal" })
+  projectLength: number;
 
-  @Column({ name: "cost_per_tCO2e", type: "varchar", length: 50 })
-  costPerTCO2e: string;
-
-  @Column({ name: "cost_per_ha", type: "varchar", length: 50 })
-  costPerHa: string;
-
-  @Column({ name: "npv_covering_cost", type: "varchar", length: 50 })
-  npvCoveringCost: string;
-
-  @Column({ name: "irr_cover_opex", type: "varchar", length: 50 })
-  irrWhenPricedToCoverOpex: string;
-
-  @Column({ name: "irr_cover_total_costs", type: "varchar", length: 50 })
-  irrWhenPricedToCoverTotalCosts: string;
-
-  @Column({ name: "total_cost_npv", type: "varchar", length: 50 })
-  totalCostNpv: string;
-
-  @Column({ name: "capex_npv", type: "varchar", length: 50 })
-  capitalExpenditureNpv: string;
-
-  @Column({ name: "opex_npv", type: "varchar", length: 50 })
-  operatingExpenditureNpv: string;
-
-  @Column({ name: "credits_issued", type: "varchar", length: 50 })
-  creditsIssued: string;
-
-  @Column({ name: "total_revenue_npv", type: "varchar", length: 50 })
-  totalRevenueNpv: string;
-
-  @Column({ name: "total_revenue_non_discounted", type: "varchar", length: 50 })
-  totalRevenueNonDiscounted: string;
-
-  @Column({ name: "financing_cost", type: "varchar", length: 50 })
-  financingCost: string;
-
-  @Column({ name: "funding_gap_npv", type: "varchar", length: 50 })
-  fundingGapNpv: string;
-
-  @Column({ name: "funding_gap_per_tCO2e", type: "varchar", length: 50 })
-  fundingGapPerTCO2eNpv: string;
+  // CAPEX costs (for each year)
+  @Column({ name: "feasibility_analysis", type: "decimal", array: true })
+  feasibilityAnalysis: number[];
 
   @Column({
-    name: "community_benefit_sharing_fund_percentage",
-    type: "varchar",
-    length: 50,
+    name: "conservation_planning_and_admin",
+    type: "decimal",
+    array: true,
   })
-  communityBenefitSharingFundPercentage: string;
+  conservationPlanningAndAdmin: number[];
+
+  @Column({
+    name: "data_collection_and_field_cost",
+    type: "decimal",
+    array: true,
+  })
+  dataCollectionAndFieldCost: number[];
+
+  @Column({ name: "community_representation", type: "decimal", array: true })
+  communityRepresentation: number[];
+
+  @Column({
+    name: "blue_carbon_project_planning",
+    type: "decimal",
+    array: true,
+  })
+  blueCarbonProjectPlanning: number[];
+
+  @Column({ name: "establishing_carbon_rights", type: "decimal", array: true })
+  establishingCarbonRights: number[];
+
+  @Column({ name: "validation", type: "decimal", array: true })
+  validation: number[];
+
+  @Column({ name: "implementation_labor", type: "decimal", array: true })
+  implementationLabor: number[];
+
+  @Column({ name: "total_capex", type: "decimal", array: true })
+  totalCapex: number[];
+
+  // OPEX costs (for each year)
+  @Column({ name: "monitoring", type: "decimal", array: true })
+  monitoring: number[];
+
+  @Column({ name: "maintenance", type: "decimal", array: true })
+  maintenance: number[];
+
+  @Column({
+    name: "community_benefit_sharing_fund",
+    type: "decimal",
+    array: true,
+  })
+  communitySharingFund: number[];
+
+  @Column({ name: "carbon_standard_fees", type: "decimal", array: true })
+  carbonStandardFees: number[];
+
+  @Column({ name: "baseline_reassessment", type: "decimal", array: true })
+  baselineReassessment: number[];
+
+  @Column({ name: "mrv", type: "decimal", array: true })
+  mrv: number[];
+
+  @Column({
+    name: "long_term_project_operating_cost",
+    type: "decimal",
+    array: true,
+  })
+  longTermProjectOperatingCost: number[];
+
+  @Column({ name: "total_opex", type: "decimal", array: true })
+  totalOpex: number[];
+
+  // Total costs (for each year)
+  @Column({ name: "total_costs", type: "decimal", array: true })
+  totalCosts: number[];
+
+  @Column({ name: "est_credits_issued", type: "decimal", array: true })
+  estCreditsIssued: number[];
+
+  @Column({ name: "est_revenue", type: "decimal", array: true })
+  estRevenue: number[];
+
+  @Column({
+    name: "annual_net_income_rev_less_opex",
+    type: "decimal",
+    array: true,
+  })
+  annualNetIncomeRevLessOpex: number[];
+
+  @Column({
+    name: "cumulative_net_income_rev_less_opex",
+    type: "decimal",
+    array: true,
+  })
+  cummulativeNetIncomeRevLessOpex: number[];
+
+  @Column({ name: "funding_gap", type: "decimal", array: true })
+  fundingGap: number[];
+
+  @Column({ name: "irr_opex", type: "decimal", array: true })
+  irrOpex: number[];
+
+  @Column({ name: "irr_total_cost", type: "decimal", array: true })
+  irrTotalCost: number[];
+
+  @Column({ name: "irr_annual_net_income", type: "decimal", array: true })
+  irrAnnualNetIncome: number[];
+
+  @Column({ name: "annual_net_cash_flow", type: "decimal", array: true })
+  annualNetCashFlow: number[];
+
+  static fromCustomProjectSnapshotDTO(
+    dto: CustomProjectSnapshotDto
+  ): CustomProject {
+    const customProject = new CustomProject();
+    customProject.projectLength = dto.inputSnapshot.assumptions.projectLength;
+    customProject.feasibilityAnalysis = dto.outputSnapshot.feasiabilityAnalysis;
+    customProject.conservationPlanningAndAdmin =
+      dto.outputSnapshot.conservationPlanningAndAdmin;
+    customProject.dataCollectionAndFieldCost =
+      dto.outputSnapshot.dataCollectionAndFieldCost;
+    customProject.communityRepresentation =
+      dto.outputSnapshot.communityRepresentation;
+    customProject.blueCarbonProjectPlanning =
+      dto.outputSnapshot.blueCarbonProjectPlanning;
+    customProject.establishingCarbonRights =
+      dto.outputSnapshot.establishingCarbonRights;
+    customProject.validation = dto.outputSnapshot.validation;
+    customProject.implementationLabor = dto.outputSnapshot.implementationLabor;
+    customProject.totalCapex = dto.outputSnapshot.totalCapex;
+    customProject.monitoring = dto.outputSnapshot.monitoring;
+    customProject.maintenance = dto.outputSnapshot.maintenance;
+    customProject.communitySharingFund =
+      dto.outputSnapshot.communityBenefitSharingFund;
+    customProject.carbonStandardFees = dto.outputSnapshot.carbonStandardFees;
+    customProject.baselineReassessment =
+      dto.outputSnapshot.baselineReassessment;
+    customProject.mrv = dto.outputSnapshot.mrv;
+    customProject.longTermProjectOperatingCost =
+      dto.outputSnapshot.longTermProjectOperatingCost;
+    customProject.totalOpex = dto.outputSnapshot.totalOpex;
+    customProject.totalCosts = dto.outputSnapshot.totalCapex;
+    customProject.estCreditsIssued = dto.outputSnapshot.estCreditsIssued;
+    customProject.estRevenue = dto.outputSnapshot.estRevenue;
+    customProject.annualNetIncomeRevLessOpex =
+      dto.outputSnapshot.annualNetIncomeRevLessOpex;
+    customProject.cummulativeNetIncomeRevLessOpex =
+      dto.outputSnapshot.cummulativeNetIncomeRevLessOpex;
+    customProject.fundingGap = dto.outputSnapshot.fundingGap;
+    customProject.irrOpex = dto.outputSnapshot.irrOpex;
+    customProject.irrTotalCost = dto.outputSnapshot.irrTotalCost;
+    customProject.irrAnnualNetIncome = dto.outputSnapshot.irrAnnualNetIncome;
+    customProject.annualNetCashFlow = dto.outputSnapshot.annualNetCashFlow;
+    return customProject;
+  }
 }
