@@ -96,6 +96,7 @@ export class DataRepository extends Repository<BaseDataView> {
         'financingCost',
         'implementationLaborPlanting',
         'implementationLaborHydrology',
+        'otherCommunityCashFlow',
       ],
     });
     if (!costInputs) {
