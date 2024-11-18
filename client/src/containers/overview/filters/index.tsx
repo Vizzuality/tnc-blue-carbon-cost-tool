@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { useSetAtom } from "jotai/index";
+import { useAtom, useSetAtom } from "jotai/index";
 import { XIcon } from "lucide-react";
 import { useDebounce } from "rooks";
 
@@ -12,7 +12,7 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
-import { projectsUIState } from "@/app/(overview)/store";
+import { popupAtom, projectsUIState } from "@/app/(overview)/store";
 import {
   INITIAL_FILTERS_STATE,
   useGlobalFilters,
@@ -50,9 +50,18 @@ export default function ProjectsFilters() {
     filters.abatementPotentialRange[0] || INITIAL_ABATEMENT_POTENTIAL_RANGE[0],
     filters.abatementPotentialRange[1] || INITIAL_ABATEMENT_POTENTIAL_RANGE[1],
   ]);
+  const [popup, setPopup] = useAtom(popupAtom);
+  const updateFilters = async (
+    updater: (
+      prev: typeof INITIAL_FILTERS_STATE,
+    ) => typeof INITIAL_FILTERS_STATE,
+  ) => {
+    await setFilters(updater);
+    if (popup) setPopup(null);
+  };
 
   const resetFilters = async () => {
-    await setFilters((prev) => ({
+    await updateFilters((prev) => ({
       ...prev,
       countryCode: INITIAL_FILTERS_STATE.countryCode,
       ecosystem: INITIAL_FILTERS_STATE.ecosystem,
@@ -91,7 +100,7 @@ export default function ProjectsFilters() {
     isChecked: CheckedState,
     ecosystem: ECOSYSTEM,
   ) => {
-    await setFilters((prev) => ({
+    await updateFilters((prev) => ({
       ...prev,
       ecosystem: isChecked
         ? [...prev.ecosystem, ecosystem]
@@ -103,7 +112,7 @@ export default function ProjectsFilters() {
     isChecked: CheckedState,
     activity: ACTIVITY,
   ) => {
-    await setFilters((prev) => ({
+    await updateFilters((prev) => ({
       ...prev,
       activity: isChecked
         ? [...prev.activity, activity]
@@ -115,7 +124,7 @@ export default function ProjectsFilters() {
     isChecked: CheckedState,
     subActivity: (typeof filters.activitySubtype)[number],
   ) => {
-    await setFilters((prev) => ({
+    await updateFilters((prev) => ({
       ...prev,
       activitySubtype: isChecked
         ? [...prev.activitySubtype, subActivity]
@@ -124,7 +133,7 @@ export default function ProjectsFilters() {
   };
 
   const debouncedCostChange = useDebounce(async (cost: number[]) => {
-    await setFilters((prev) => ({
+    await updateFilters((prev) => ({
       ...prev,
       costRange: cost,
     }));
@@ -132,7 +141,7 @@ export default function ProjectsFilters() {
 
   const debouncedAbatementPotentialChange = useDebounce(
     async (abatementPotential: number[]) => {
-      await setFilters((prev) => ({
+      await updateFilters((prev) => ({
         ...prev,
         abatementPotentialRange: abatementPotential,
       }));
@@ -194,7 +203,7 @@ export default function ProjectsFilters() {
           defaultValue={filters.countryCode || "all"}
           value={filters.countryCode || "all"}
           onValueChange={async (v) => {
-            await setFilters((prev) => ({
+            await updateFilters((prev) => ({
               ...prev,
               countryCode: v === "all" ? "" : v,
             }));
