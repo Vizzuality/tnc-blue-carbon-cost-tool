@@ -13,7 +13,7 @@ import {
 interface ProfileSectionProps extends PropsWithChildren {
   id: string;
   title: string;
-  description: string | React.ReactNode;
+  description?: string | React.ReactNode;
 }
 
 const ProfileSection: FC<ProfileSectionProps> = ({
@@ -27,9 +27,11 @@ const ProfileSection: FC<ProfileSectionProps> = ({
       <Card variant="secondary" className="p-6">
         <CardHeader className="space-y-4">
           <CardTitle className="text-xl font-semibold">{title}</CardTitle>
-          <CardDescription className="text-muted-foreground">
-            {description}
-          </CardDescription>
+          {description && (
+            <CardDescription className="text-muted-foreground">
+              {description}
+            </CardDescription>
+          )}
         </CardHeader>
         <CardContent className="spacey-y-6">{children}</CardContent>
       </Card>
