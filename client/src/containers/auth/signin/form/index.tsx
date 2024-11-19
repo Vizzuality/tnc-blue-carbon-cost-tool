@@ -25,7 +25,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const SignInForm: FC = () => {
+interface SignInFormProps {
+  onSignIn?: () => void;
+}
+const SignInForm: FC<SignInFormProps> = ({ onSignIn }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
@@ -51,7 +54,11 @@ const SignInForm: FC = () => {
           });
 
           if (response?.ok) {
-            router.push(searchParams.get("callbackUrl") ?? "/profile");
+            if (onSignIn) {
+              onSignIn();
+            } else {
+              router.push(searchParams.get("callbackUrl") ?? "/profile");
+            }
           }
 
           if (!response?.ok) {
@@ -64,7 +71,7 @@ const SignInForm: FC = () => {
         }
       })(evt);
     },
-    [form, router, searchParams],
+    [form, router, searchParams, onSignIn],
   );
 
   return (
