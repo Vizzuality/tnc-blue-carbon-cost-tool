@@ -33,6 +33,7 @@ import { ImplementationLaborCostResource } from "./resources/implementation-labo
 import { BaseSizeResource } from "./resources/base-size/base-size.resource.js";
 import { BaseIncreaseResource } from "./resources/base-increase/base-increase.resource.js";
 import { ModelAssumptionResource } from "./resources/model-assumptions/model-assumptions.resource.js";
+import { UserUploadedData } from "@shared/entities/user-project-data.entity.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -93,6 +94,16 @@ const start = async () => {
           icon: "Globe",
         },
       },
+      {
+        resource: UserUploadedData,
+        name: "UserUploadedData",
+        options: {
+          navigation: {
+            name: "Data Management",
+            icon: "Database",
+          },
+        },
+      },
     ],
     locale: {
       language: "en",
@@ -119,7 +130,7 @@ const start = async () => {
 
   app.listen(PORT, () => {
     console.log(
-      `AdminJS started on http://localhost:${PORT}${admin.options.rootPath}`
+      `AdminJS started on http://localhost:${PORT}${admin.options.rootPath}`,
     );
   });
 };

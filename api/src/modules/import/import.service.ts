@@ -8,6 +8,12 @@ import { ImportRepository } from '@api/modules/import/import.repostiory';
 import { EventBus } from '@nestjs/cqrs';
 import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 import { ImportEvent } from '@api/modules/import/events/import.event';
+import { DataSource } from 'typeorm';
+import {
+  userDataInputJson,
+  userDataMapJsonToEntity,
+} from '@api/modules/import/services/user-data-parser';
+import { UserUploadedData } from '@shared/entities/user-project-data.entity';
 
 @Injectable()
 export class ImportService {
@@ -24,6 +30,7 @@ export class ImportService {
     private readonly importRepo: ImportRepository,
     private readonly preprocessor: EntityPreprocessor,
     private readonly eventBus: EventBus,
+    private readonly dataSource: DataSource,
   ) {}
 
   async import(fileBuffer: Buffer, userId: string) {
@@ -43,5 +50,14 @@ export class ImportService {
 
   registerImportEvent(userId: string, eventType: typeof this.eventMap) {
     this.eventBus.publish(new ImportEvent(eventType, userId, {}));
+  }
+
+  async importDataProvidedByPartner(fileBuffers: Buffer[], userId: string) {
+    const { costInputs } = await this.excelParser.parseUserExcels(fileBuffers);
+    const mapped = userDataMapJsonToEntity(userDataInputJson, userId);
+    const savedData = await this.dataSource
+      .getRepository(UserUploadedData)
+      .save(mapped);
+    return savedData;
   }
 }
