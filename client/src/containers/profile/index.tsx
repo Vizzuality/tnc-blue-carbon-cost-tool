@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useSetAtom } from "jotai";
 
 import CustomProjects from "@/containers/profile/custom-projects";
+import FileUpload from "@/containers/profile/file-upload";
 import ProfileSection from "@/containers/profile/profile-section";
 import ProfileSidebar from "@/containers/profile/profile-sidebar";
 import { intersectingAtom } from "@/containers/profile/store";
@@ -36,6 +37,11 @@ const sections = [
       </>
     ),
     Component: CustomProjects,
+  },
+  {
+    id: "data-upload",
+    title: "Data upload",
+    Component: FileUpload,
   },
   {
     id: "delete-account",
