@@ -148,7 +148,7 @@ const start = async () => {
 
   const router = AdminJSExpress.buildRouter(admin);
 
-  app.use(admin.options.rootPath, router);
+  app.use(admin.options.rootPath, adminRouter);
 
   app.listen(PORT, () => {
     console.log(
