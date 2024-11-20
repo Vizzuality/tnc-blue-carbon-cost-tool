@@ -33,7 +33,7 @@ import { ImplementationLaborCostResource } from "./resources/implementation-labo
 import { BaseSizeResource } from "./resources/base-size/base-size.resource.js";
 import { BaseIncreaseResource } from "./resources/base-increase/base-increase.resource.js";
 import { ModelAssumptionResource } from "./resources/model-assumptions/model-assumptions.resource.js";
-import { UserUploadedData } from "@shared/entities/user-project-data.entity.js";
+import { UserUploadCostInputs } from "@shared/entities/user-project-data.entity.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -60,6 +60,16 @@ const start = async () => {
     componentLoader,
     resources: [
       UserResource,
+      {
+        resource: UserUploadCostInputs,
+        name: "UserUploadCostInputs",
+        options: {
+          navigation: {
+            name: "User Data",
+            icon: "File",
+          },
+        },
+      },
       ProjectSizeResource,
       FeasibilityAnalysisResource,
       ConservationAndPlanningAdminResource,
@@ -96,6 +106,18 @@ const start = async () => {
         },
       },
     ],
+    locale: {
+      language: "en",
+      translations: {
+        en: {
+          labels: {
+            User: "Users",
+            Country: "Countries",
+            Project: "Projects",
+          },
+        },
+      },
+    },
   });
 
   const adminRouter = AdminJSExpress.buildAuthenticatedRouter(admin, {
