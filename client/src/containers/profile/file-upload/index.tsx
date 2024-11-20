@@ -3,26 +3,50 @@ import React, { FC, useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { FilePlusIcon, XIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 
+import { client } from "@/lib/query-client";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/toast/use-toast";
 
+// Array should be in this order
+const REQUIRED_FILES = [
+  "carbon-input-template.xlsx",
+  "cost-input-template.xlsx",
+];
 const EXCEL_EXTENSIONS = [".xlsx", ".xls"];
 const MAX_FILES = 2;
 
 const FileUpload: FC = () => {
   const [files, setFiles] = useState<File[]>([]);
+  const { data: session } = useSession();
   const { toast } = useToast();
-  const onDropAccepted = useCallback((acceptedFiles: File[]) => {
-    setFiles((prevFiles) => {
-      const remainingSlots = MAX_FILES - prevFiles.length;
-      const filesToAdd = acceptedFiles.slice(0, remainingSlots);
-      return [...prevFiles, ...filesToAdd];
-    });
-  }, []);
+  const onDropAccepted = useCallback(
+    (acceptedFiles: File[]) => {
+      const validFiles = acceptedFiles.filter((file) =>
+        REQUIRED_FILES.includes(file.name),
+      );
+
+      if (validFiles.length !== acceptedFiles.length) {
+        return toast({
+          variant: "destructive",
+          description:
+            "Only carbon-input-template.xlsx and cost-input-template.xlsx files are allowed",
+        });
+      }
+
+      setFiles((prevFiles) => {
+        const remainingSlots = MAX_FILES - prevFiles.length;
+        const filesToAdd = acceptedFiles.slice(0, remainingSlots);
+        return [...prevFiles, ...filesToAdd];
+      });
+    },
+    [toast],
+  );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDropAccepted,
     accept: {
@@ -38,10 +62,53 @@ const FileUpload: FC = () => {
   const removeFile = (fileToRemove: File) => {
     setFiles((prevFiles) => prevFiles.filter((file) => file !== fileToRemove));
   };
-  const handleUploadClick = () => {
-    // TODO: Adde API call when available
-    setFiles([]);
-    toast({ description: "Your files has been uploaded successfully." });
+  const handleUploadClick = async () => {
+    const fileNames = files.map((file) => file.name);
+    const missingFiles = REQUIRED_FILES.filter(
+      (name) => !fileNames.includes(name),
+    );
+
+    if (missingFiles.length > 0) {
+      return toast({
+        variant: "destructive",
+        description: `Missing required file${missingFiles.length > 1 ? "s" : ""}: ${missingFiles.join(", ")}`,
+      });
+    }
+
+    const formData = new FormData();
+    const sortedFiles = REQUIRED_FILES.map(
+      (name) => files.find((file) => file.name === name)!,
+    );
+
+    sortedFiles.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    try {
+      const response = await client.user.uploadData.mutation({
+        body: formData,
+        extraHeaders: {
+          authorization: `Bearer ${session?.accessToken as string}`,
+        },
+      });
+
+      if (response.status === 201) {
+        toast({ description: "Your files has been uploaded successfully." });
+        setFiles([]);
+      } else {
+        toast({
+          variant: "destructive",
+          description:
+            response.body.errors?.[0].title ||
+            "Something went wrong uploading your files",
+        });
+      }
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        description: "Something went wrong uploading your files",
+      });
+    }
   };
 
   return (
