@@ -10,10 +10,13 @@ import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 import { ImportEvent } from '@api/modules/import/events/import.event';
 import { DataSource } from 'typeorm';
 import {
-  userDataInputJson,
-  userDataMapJsonToEntity,
+  userDataConservationInputMapJsonToEntity,
+  userDataCostInputsMapJsonToEntity,
+  userDataRestorationInputMapJsonToEntity,
 } from '@api/modules/import/services/user-data-parser';
-import { UserUploadCostInputs } from '@shared/entities/user-project-data.entity';
+import { UserUploadCostInputs } from '@shared/entities/users/user-upload-cost-inputs.entity';
+import { UserUploadRestorationInputs } from '@shared/entities/users/user-upload-restoration-inputs.entity';
+import { UserUploadConservationInputs } from '@shared/entities/users/user-upload-conservation-inputs.entity';
 
 @Injectable()
 export class ImportService {
@@ -53,11 +56,34 @@ export class ImportService {
   }
 
   async importDataProvidedByPartner(fileBuffers: Buffer[], userId: string) {
-    const { costInputs } = await this.excelParser.parseUserExcels(fileBuffers);
-    const mapped = userDataMapJsonToEntity(userDataInputJson, userId);
-    const savedData = await this.dataSource
-      .getRepository(UserUploadCostInputs)
-      .save(mapped);
-    return savedData;
+    // TODO: Debt, add event handling
+    const { costInputs, carbonInputs } =
+      await this.excelParser.parseUserExcels(fileBuffers);
+    const mappedCostInputs = userDataCostInputsMapJsonToEntity(
+      costInputs,
+      userId,
+    );
+    const mappedRestorationInputs = userDataRestorationInputMapJsonToEntity(
+      carbonInputs.restoration,
+      userId,
+    );
+    const mappedConservationInputs = userDataConservationInputMapJsonToEntity(
+      carbonInputs.conservation,
+      userId,
+    );
+    await this.dataSource.transaction(async (manager) => {
+      const userCostInputsRepo = manager.getRepository(UserUploadCostInputs);
+      const userRestorationInputsRepo = manager.getRepository(
+        UserUploadRestorationInputs,
+      );
+      const userConservationInputsRepo = manager.getRepository(
+        UserUploadConservationInputs,
+      );
+      await userCostInputsRepo.save(mappedCostInputs);
+      await userRestorationInputsRepo.save(mappedRestorationInputs);
+      await userConservationInputsRepo.save(mappedConservationInputs);
+    });
+    //
+    return carbonInputs;
   }
 }

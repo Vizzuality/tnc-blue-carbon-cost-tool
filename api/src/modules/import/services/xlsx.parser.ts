@@ -25,35 +25,24 @@ export class XlsxParser implements ExcelParserInterface {
   async parseUserExcels(data: Buffer[]) {
     const carbonInputs: WorkBook = read(data[0]);
     const costInputs: WorkBook = read(data[1]);
-    const CARBON_INPUTS_SHEETS = ['Restoration', 'Conservation'];
-    const COST_INPUTS_SHEETS = ['Input'];
-    const parsedCarbonInputs: any = {};
-    let parsedCostInputs: WorkSheet;
-    //
-    // for (const sheetName of CARBON_INPUTS_SHEETS) {
-    //   const sheet: WorkSheet = carbonInputs.Sheets[sheetName];
-    //   const parsedSheet = utils.sheet_to_json(sheet, {
-    //     raw: true,
-    //   });
-    //   parsedCarbonInputs[sheetName] = parsedSheet;
-    // }
 
-    for (const sheetName of COST_INPUTS_SHEETS) {
-      parsedCostInputs = costInputs.Sheets[sheetName];
-      //= utils.sheet_to_json(sheet, { header: 4 });
-      //parsedCostInputs[sheetName] = parsedSheet;
-    }
-    const result: Record<string, string> = {};
+    const restorationSheet: WorkSheet = carbonInputs.Sheets['Restoration'];
+    const conservationSheet: WorkSheet = carbonInputs.Sheets['Conservation'];
+    const restoration = parseRestorationSheet(restorationSheet);
+    const costInputSheet = costInputs.Sheets['Input'];
+    const conservation = parseConservationSheet(conservationSheet);
+
+    const costInput: Record<string, string> = {};
     const keysToIgnore = [
       'Input data into blue shade cells',
       'General information',
       'Project information',
     ];
 
-    Object.keys(parsedCostInputs).forEach((cellKey) => {
+    Object.keys(costInputSheet).forEach((cellKey) => {
       if (!cellKey.startsWith('B')) return; // Ignore cells that are not in column B
 
-      const questionCell = parsedCostInputs[cellKey];
+      const questionCell = costInputSheet[cellKey];
       const question = questionCell?.v;
 
       if (question && !keysToIgnore.includes(question)) {
@@ -61,16 +50,70 @@ export class XlsxParser implements ExcelParserInterface {
         const rowIndex = cellKey.match(/\d+/)?.[0]; // extract row number from cell key
         const answerCellKey = `C${rowIndex}`;
         const answerCell =
-          parsedCostInputs[answerCellKey] || parsedCostInputs[`D${rowIndex}`];
+          costInputSheet[answerCellKey] || costInputSheet[`D${rowIndex}`];
 
         const answer = answerCell?.v || 'No value provided';
-        result[question] = answer;
+        costInput[question] = answer;
       }
     });
 
     return {
-      //carbonInputs: parsedCarbonInputs,
-      costInputs: result,
+      carbonInputs: { restoration, conservation },
+      costInputs: costInput,
     };
   }
+}
+
+function parseRestorationSheet(sheet: WorkSheet): Record<string, any> {
+  const result: Record<string, any> = {};
+
+  const keysToIgnore = [
+    'Sub-national / project sequestration information',
+    'General information',
+  ];
+
+  Object.keys(sheet).forEach((cellKey) => {
+    if (!cellKey.startsWith('B')) return;
+
+    const questionCell = sheet[cellKey];
+    const question = questionCell?.v;
+
+    if (question && !keysToIgnore.includes(question)) {
+      const rowIndex = cellKey.match(/\d+/)?.[0];
+      const answerCellKey = `C${rowIndex}`;
+      const answerCell = sheet[answerCellKey];
+
+      const answer = answerCell?.v || 'No value provided';
+      result[question] = answer;
+    }
+  });
+
+  return result;
+}
+
+function parseConservationSheet(sheet: WorkSheet): Record<string, any> {
+  const result: Record<string, any> = {};
+
+  const keysToIgnore = [
+    'Sub-national / project sequestration information',
+    'General information',
+  ];
+
+  Object.keys(sheet).forEach((cellKey) => {
+    if (!cellKey.startsWith('B')) return;
+
+    const questionCell = sheet[cellKey];
+    const question = questionCell?.v;
+
+    if (question && !keysToIgnore.includes(question)) {
+      const rowIndex = cellKey.match(/\d+/)?.[0];
+      const answerCellKey = `C${rowIndex}`;
+      const answerCell = sheet[answerCellKey];
+
+      const answer = answerCell?.v || 'No value provided';
+      result[question] = answer;
+    }
+  });
+
+  return result;
 }
