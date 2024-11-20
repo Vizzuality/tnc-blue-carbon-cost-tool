@@ -13,7 +13,7 @@ export class UserUploadCostInputs extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @ManyToOne(() => User, (user) => user.uploadedData)
+  @ManyToOne(() => User, (user) => user.uploadedCostInputs)
   @JoinColumn({ name: "user_id" })
   user: User;
 

@@ -8,7 +8,9 @@ import {
 } from "typeorm";
 import { Exclude } from "class-transformer";
 import { ROLES } from "@shared/entities/users/roles.enum";
-import { UserUploadCostInputs } from "@shared/entities/user-project-data.entity";
+import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-inputs.entity";
+import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity";
+import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity";
 
 // TODO: For future reference:
 // https://github.com/typeorm/typeorm/issues/2897
@@ -46,5 +48,11 @@ export class User extends BaseEntity {
   createdAt: Date;
 
   @OneToMany("UserUploadCostInputs", "user")
-  uploadedData: UserUploadCostInputs[];
+  uploadedCostInputs: UserUploadCostInputs[];
+
+  @OneToMany("UserUploadRestorationInputs", "user")
+  userUploadRestorationInputs: UserUploadRestorationInputs[];
+
+  @OneToMany("UserUploadConservationInputs", "user")
+  userUploadConservationInputs: UserUploadConservationInputs[];
 }

@@ -1,60 +1,10 @@
 // I feel dirty doing this...
 
-import { UserUploadCostInputs } from '@shared/entities/user-project-data.entity';
+import { UserUploadCostInputs } from '@shared/entities/users/user-upload-cost-inputs.entity';
+import { UserUploadRestorationInputs } from '@shared/entities/users/user-upload-restoration-inputs.entity';
+import { UserUploadConservationInputs } from '@shared/entities/users/user-upload-conservation-inputs.entity';
 
-export const userDataInputJson = {
-  'Program name (if willing to share)': 'test name',
-  'Intended length of project': 2000,
-  Country: 'Basque Country',
-  Currency: 'Euro',
-  'Project start year': 1,
-  'Project activity': 'Conservation',
-  Ecosystem: 'Mangrove',
-  'Project size': 'something',
-  'Validation standard / accrediting organization': 'Verra',
-  'Number of local individuals who own, work, and/or live in the project site (e.g., land tenure)':
-    'land tenure',
-  'City / province / region / state of project': 'Azpeiti',
-  'Intended alternative use of land': 'commercial',
-  'Land ownership before project': 'private',
-  'SDGs benefitted / co-benefitted': 'sdg',
-  'Project eligible for voluntary carbon credits?': 'no',
-  'Are you willing to speak with us about your carbon credit pricing?': 'yes',
-  'Are you able to provide additional detailed cost documentation for the project?':
-    'yes',
-  'Cost categories ': 'Detailed activities...',
-  'Establishing community engagement / buy-in': 1,
-  'Conservation project planning & administration ': 2,
-  'Carbon project planning & administration': 3,
-  'Land cost': 4,
-  'Financing cost': 5,
-  'Materials (e.g., seeds, fertilizer, seedlings)': 6,
-  'Materials (e.g., machinery, equipment, etc.)': 7,
-  'Project labor / activity': 8,
-  'Engineering / construction intervention': 9,
-  'Ongoing community engagement': 10,
-  'Other project running cost': 11,
-  'Project monitoring': 12,
-  '1) Other cost (please specify activities)': 13,
-  '2) Other cost (please specify activities)': 14,
-  '3) Other cost (please specify activities)': 15,
-  'Project site cumulative sequestration / carbon stock': 'something',
-  'Please describe in detail the project activity (e.g., planted mangrove seedlings, set up perimeter around conservation area)':
-    'question 1',
-  'When you kicked off the project, how did you spend to engage the community...':
-    'question 2',
-  'How did you acquire the rights to establish the project on the land?...':
-    'question 3',
-  'What was the hourly wage rate paid for labor? How many hours worked for each activity?':
-    'question 4',
-  'Please describe the ongoing community engagement for your project.':
-    'question 5',
-  'Did you undertake any engineering / construction interventions for your project?':
-    'question 6',
-};
-
-// Función para transformar el JSON
-export function userDataMapJsonToEntity(
+export function userDataCostInputsMapJsonToEntity(
   inputJson: Record<string, any>,
   userId: string,
 ): Partial<UserUploadCostInputs> {
@@ -135,6 +85,66 @@ export function userDataMapJsonToEntity(
       inputJson[
         'Did you undertake any engineering / construction interventions for your project?'
       ],
+    user: { id: userId } as any,
+  };
+}
+
+export function userDataRestorationInputMapJsonToEntity(
+  data: Record<string, any>,
+  userId: string,
+): Partial<UserUploadRestorationInputs> {
+  return {
+    projectName: data['Project name'],
+    country: data['Country'],
+    cityOrRegion: data['City / province / region / state of project'],
+    projectStartYear: data['Project start year'],
+    mostRecentYearOfData: data['Most recent year of data collection'],
+    ecosystem: data['Ecosystem'],
+    projectActivity: data['Project activity']?.toString(), // Convertir a string si es numérico
+    projectSizeAreaStudied: data['Project size / area studied'],
+    categories: data['Categories'],
+    projectArea: data['Project area '],
+    abovegroundBiomassStock: data['Aboveground biomass stock'],
+    belowgroundBiomassStock: data['Belowground biomass stock '],
+    soilOrganicCarbonStock: data['Soil organic carbon stock '],
+    methaneEmissions: data['Methane emissions '],
+    nitrousOxideEmissions: data['Nitrous oxide emissions '],
+    abovegroundBiomassEmissionsFactor:
+      data['Aboveground biomass emissions factor'],
+    belowgroundBiomassEmissionsFactor:
+      data['Belowground biomass emissions factor'],
+    soilOrganicCarbonEmissionsFactor:
+      data['Soil organic carbon emissions factor '],
+    user: { id: userId } as any,
+  };
+}
+
+export function userDataConservationInputMapJsonToEntity(
+  data: Record<string, any>,
+  userId: string,
+): Partial<UserUploadConservationInputs> {
+  return {
+    projectName: data['Project name'],
+    country: data['Country'],
+    cityOrRegion: data['City / province / region / state of project'],
+    projectStartYear: data['Project start year'],
+    mostRecentYearOfData: data['Most recent year of data collection'],
+    ecosystem: data['Ecosystem'],
+    projectActivity: data['Project activity']?.toString(), // Convertir a string si es numérico
+    projectSizeAreaStudied: data['Project size / area studied'],
+    categories: data['Categories'],
+    projectArea: data['Project area '],
+    abovegroundBiomassStock: data['Aboveground biomass stock'],
+    belowgroundBiomassStock: data['Belowground biomass stock '],
+    soilOrganicCarbonStock: data['Soil organic carbon stock '],
+    methaneEmissions: data['Methane emissions '],
+    nitrousOxideEmissions: data['Nitrous oxide emissions '],
+    abovegroundBiomassEmissionsFactor:
+      data['Aboveground biomass emissions factor'],
+    belowgroundBiomassEmissionsFactor:
+      data['Belowground biomass emissions factor'],
+    soilOrganicCarbonEmissionsFactor:
+      data['Soil organic carbon emissions factor '],
     user: { id: userId } as any,
   };
 }

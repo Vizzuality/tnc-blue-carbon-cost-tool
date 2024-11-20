@@ -33,7 +33,9 @@ import { ImplementationLaborCostResource } from "./resources/implementation-labo
 import { BaseSizeResource } from "./resources/base-size/base-size.resource.js";
 import { BaseIncreaseResource } from "./resources/base-increase/base-increase.resource.js";
 import { ModelAssumptionResource } from "./resources/model-assumptions/model-assumptions.resource.js";
-import { UserUploadCostInputs } from "@shared/entities/user-project-data.entity.js";
+import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-inputs.entity.js";
+import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity.js";
+import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -63,6 +65,26 @@ const start = async () => {
       {
         resource: UserUploadCostInputs,
         name: "UserUploadCostInputs",
+        options: {
+          navigation: {
+            name: "User Data",
+            icon: "File",
+          },
+        },
+      },
+      {
+        resource: UserUploadConservationInputs,
+        name: "UserUploadConservationInputs",
+        options: {
+          navigation: {
+            name: "User Data",
+            icon: "File",
+          },
+        },
+      },
+      {
+        resource: UserUploadRestorationInputs,
+        name: "UserUploadRestorationInputs",
         options: {
           navigation: {
             name: "User Data",
@@ -100,7 +122,6 @@ const start = async () => {
         resource: Country,
         name: "Country",
         options: {
-          id: "Countries",
           parent: databaseNavigation,
           icon: "Globe",
         },

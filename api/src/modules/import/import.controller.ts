@@ -20,7 +20,6 @@ import { Multer } from 'multer';
 import { GetUser } from '@api/modules/auth/decorators/get-user.decorator';
 import { User } from '@shared/entities/users/user.entity';
 import { usersContract } from '@shared/contracts/users.contract';
-import { Public } from '@api/modules/auth/decorators/is-public.decorator';
 
 @Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -45,7 +44,6 @@ export class ImportController {
     });
   }
 
-  //@Public()
   @UseInterceptors(FilesInterceptor('files', 2))
   @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
   @TsRestHandler(usersContract.uploadData)
@@ -54,7 +52,6 @@ export class ImportController {
     @UploadedFiles() files: Array<Express.Multer.File>,
   ): Promise<any> {
     return tsRestHandler(usersContract.uploadData, async () => {
-      console.log(files);
       const [file1, file2] = files;
       const [file1Buffer, file2Buffer] = [file1.buffer, file2.buffer];
       const data = await this.service.importDataProvidedByPartner(
