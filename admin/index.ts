@@ -90,33 +90,12 @@ const start = async () => {
         resource: Country,
         name: "Country",
         options: {
+          id: "Countries",
           parent: databaseNavigation,
           icon: "Globe",
         },
       },
-      {
-        resource: UserUploadedData,
-        name: "UserUploadedData",
-        options: {
-          navigation: {
-            name: "Data Management",
-            icon: "Database",
-          },
-        },
-      },
     ],
-    locale: {
-      language: "en",
-      translations: {
-        en: {
-          labels: {
-            User: "Users",
-            Country: "Countries",
-            Project: "Projects",
-          },
-        },
-      },
-    },
   });
 
   const adminRouter = AdminJSExpress.buildAuthenticatedRouter(admin, {
@@ -126,7 +105,7 @@ const start = async () => {
 
   const router = AdminJSExpress.buildRouter(admin);
 
-  app.use(admin.options.rootPath, adminRouter);
+  app.use(admin.options.rootPath, router);
 
   app.listen(PORT, () => {
     console.log(
