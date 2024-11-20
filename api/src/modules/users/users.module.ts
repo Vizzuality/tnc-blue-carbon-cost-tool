@@ -4,11 +4,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@shared/entities/users/user.entity';
 import { UsersController } from '@api/modules/users/users.controller';
 import { AuthModule } from '@api/modules/auth/auth.module';
-import { UserUploadedData } from '@shared/entities/user-project-data.entity';
+import { UserUploadCostInputs } from '@shared/entities/user-project-data.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, UserUploadedData]),
+    TypeOrmModule.forFeature([User, UserUploadCostInputs]),
     forwardRef(() => AuthModule),
   ],
   providers: [UsersService],

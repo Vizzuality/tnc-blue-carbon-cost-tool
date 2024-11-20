@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import { Exclude } from "class-transformer";
 import { ROLES } from "@shared/entities/users/roles.enum";
-import { UserUploadedData } from "@shared/entities/user-project-data.entity";
+import { UserUploadCostInputs } from "@shared/entities/user-project-data.entity";
 
 // TODO: For future reference:
 // https://github.com/typeorm/typeorm/issues/2897
@@ -45,9 +45,6 @@ export class User extends BaseEntity {
   @CreateDateColumn({ name: "created_at", type: "timestamp" })
   createdAt: Date;
 
-  // @OneToMany(
-  //   () => UserUploadedData,
-  //   (userUploadedData) => userUploadedData.user,
-  // )
-  // uploadedData: UserUploadedData[];
+  @OneToMany("UserUploadCostInputs", "user")
+  uploadedData: UserUploadCostInputs[];
 }

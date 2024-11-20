@@ -1,6 +1,6 @@
 // I feel dirty doing this...
 
-import { UserUploadedData } from '@shared/entities/user-project-data.entity';
+import { UserUploadCostInputs } from '@shared/entities/user-project-data.entity';
 
 export const userDataInputJson = {
   'Program name (if willing to share)': 'test name',
@@ -57,7 +57,7 @@ export const userDataInputJson = {
 export function userDataMapJsonToEntity(
   inputJson: Record<string, any>,
   userId: string,
-): Partial<UserUploadedData> {
+): Partial<UserUploadCostInputs> {
   return {
     programName: inputJson['Program name (if willing to share)'],
     intendedLengthOfProject: inputJson['Intended length of project'],

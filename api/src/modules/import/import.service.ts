@@ -13,7 +13,7 @@ import {
   userDataInputJson,
   userDataMapJsonToEntity,
 } from '@api/modules/import/services/user-data-parser';
-import { UserUploadedData } from '@shared/entities/user-project-data.entity';
+import { UserUploadCostInputs } from '@shared/entities/user-project-data.entity';
 
 @Injectable()
 export class ImportService {
@@ -56,7 +56,7 @@ export class ImportService {
     const { costInputs } = await this.excelParser.parseUserExcels(fileBuffers);
     const mapped = userDataMapJsonToEntity(userDataInputJson, userId);
     const savedData = await this.dataSource
-      .getRepository(UserUploadedData)
+      .getRepository(UserUploadCostInputs)
       .save(mapped);
     return savedData;
   }

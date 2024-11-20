@@ -8,12 +8,12 @@ import {
 } from "typeorm";
 import { User } from "@shared/entities/users/user.entity";
 
-@Entity("user_uploaded_data")
-export class UserUploadedData extends BaseEntity {
+@Entity("user_upload_cost_inputs")
+export class UserUploadCostInputs extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @ManyToOne(() => User, (user) => user.uploadedData, { nullable: false })
+  @ManyToOne(() => User, (user) => user.uploadedData)
   @JoinColumn({ name: "user_id" })
   user: User;
 
