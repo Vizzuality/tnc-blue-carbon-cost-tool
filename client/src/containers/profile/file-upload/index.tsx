@@ -129,7 +129,7 @@ const FileUpload: FC = () => {
           <p className="text-sm">
             {files.length < MAX_FILES
               ? "Drop files, or click to upload"
-              : "Max amount of files exceeded"}
+              : "You've attached the maximum of 2 files"}
           </p>
         </div>
       </Card>

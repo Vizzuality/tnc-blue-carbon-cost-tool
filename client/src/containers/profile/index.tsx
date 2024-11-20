@@ -97,12 +97,12 @@ export default function Profile() {
       },
       {
         root: ref.current,
-        threshold: 0,
+        threshold: 0.1,
         /**
          * This rootMargin creates a horizontal line vertically centered
          * that will help trigger an intersection at that the very point.
          */
-        rootMargin: "-50% 0% -50% 0%",
+        rootMargin: "-20% 0% -60% 0%",
       },
     );
 
@@ -121,14 +121,12 @@ export default function Profile() {
         <h2 className="text-2xl font-medium">User area</h2>
       </div>
 
-      <div className="grid h-full grid-cols-[317px_1fr] gap-6 overflow-hidden pl-4">
-        <div className="h-full">
-          <ProfileSidebar
-            navItems={sections.map((s) => ({ id: s.id, name: s.title }))}
-          />
-        </div>
+      <div className="relative grid h-full grid-cols-[317px_1fr] gap-6 overflow-hidden pl-4">
+        <ProfileSidebar
+          navItems={sections.map((s) => ({ id: s.id, name: s.title }))}
+        />
         <ScrollArea ref={ref} className="pr-6">
-          <div id="profile-sections-container" className="space-y-2 pb-20">
+          <div id="profile-sections-container" className="space-y-2 pb-80">
             {sections.map(({ Component, ...rest }) => (
               <ProfileSection key={rest.id} {...rest}>
                 <Component />
