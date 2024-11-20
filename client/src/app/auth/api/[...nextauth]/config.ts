@@ -28,8 +28,6 @@ declare module "next-auth/jwt" {
   }
 }
 
-const PROJECT_NAME = "tnc-blue-carbon";
-
 export const config = {
   providers: [
     Credentials({
@@ -81,22 +79,6 @@ export const config = {
         user: token.user,
         accessToken: token.accessToken,
       };
-    },
-  },
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token.${PROJECT_NAME}`,
-      options: {
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-      },
-    },
-    callbackUrl: {
-      name: `next-auth.callback-url.${PROJECT_NAME}`,
-    },
-    csrfToken: {
-      name: `next-auth.csrf-token.${PROJECT_NAME}`,
     },
   },
   pages: {
