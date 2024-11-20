@@ -58,7 +58,7 @@ export class ImportController {
         [file1Buffer, file2Buffer],
         user.id,
       );
-      return { body: data, status: HttpStatus.OK };
+      return { body: data, status: HttpStatus.CREATED };
     });
   }
 }
