@@ -65,6 +65,7 @@ export const usersContract = contract.router({
     responses: {
       201: contract.type<any>(),
     },
-    body: contract.type<{ thumbnail: File }>(),
+    contentType: "multipart/form-data",
+    body: contract.type<FormData>(),
   },
 });
