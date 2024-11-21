@@ -5,25 +5,11 @@ import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions-d-t.o';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
-
-export enum ECOSYSTEM_RESTORATION_RATE_NAMES {
-  MANGROVE = 'Mangrove restoration rate',
-  SEAGRASS = 'Seagrass restoration rate',
-  SALT_MARSH = 'Salt marsh restoration rate',
-}
-
-export enum ACTIVITY_PROJECT_LENGTH_NAMES {
-  CONSERVATION = 'Conservation project length',
-  RESTORATION = 'Restoration project length',
-}
-
-export const COMMON_OVERRIDABLE_ASSUMPTION_NAMES = [
-  'Baseline reassessment frequency',
-  'Buffer',
-  'Carbon price increase',
-  'Discount rate',
-  'Verification frequency',
-] as const;
+import {
+  ACTIVITY_PROJECT_LENGTH_NAMES,
+  COMMON_OVERRIDABLE_ASSUMPTION_NAMES,
+  ECOSYSTEM_RESTORATION_RATE_NAMES,
+} from '@shared/schemas/assumptions/assumptions.enums';
 
 @Injectable()
 export class AssumptionsRepository extends Repository<ModelAssumptions> {
