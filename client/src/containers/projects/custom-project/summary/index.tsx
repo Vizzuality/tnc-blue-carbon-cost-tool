@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-const ProjectSummary: FC = () => {
+const CustomProjectSummary: FC = () => {
   return (
     <div className="bg-background p-6">
       <h2>Summary</h2>
@@ -8,4 +8,4 @@ const ProjectSummary: FC = () => {
   );
 };
 
-export default ProjectSummary;
+export default CustomProjectSummary;
