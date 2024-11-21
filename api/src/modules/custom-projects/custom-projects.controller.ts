@@ -5,6 +5,7 @@ import { ControllerResponse } from '@api/types/controller-response.type';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
 import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
+import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
 
 @Controller()
 export class CustomProjectsController {
@@ -60,6 +61,23 @@ export class CustomProjectsController {
         return {
           status: 201,
           body: { data: customProject },
+        };
+      },
+    );
+  }
+
+  @TsRestHandler(customProjectContract.snapshotCustomProject)
+  async snapshot(
+    @Body(new ValidationPipe({ enableDebugMessages: true, transform: true }))
+    dto: CustomProjectSnapshotDto,
+  ): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.snapshotCustomProject,
+      async ({ body }) => {
+        await this.customProjects.saveCustomProject(dto);
+        return {
+          status: 201,
+          body: null,
         };
       },
     );

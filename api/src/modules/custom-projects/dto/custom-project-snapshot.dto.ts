@@ -7,14 +7,6 @@ import {
 } from 'class-validator';
 import { CreateCustomProjectDto } from './create-custom-project-dto';
 
-export class CustomProjectSnapshotDto {
-  @IsNotEmpty()
-  inputSnapshot: CreateCustomProjectDto;
-
-  @IsNotEmpty()
-  outputSnapshot: CustomProjectOutputSnapshot;
-}
-
 export class CustomPrpjectAnnualProjectCashFlowDto {
   @IsArray()
   feasiabilityAnalysis: number[];
@@ -158,10 +150,6 @@ export class CustomProjectCostDetailEntry {
   @IsNumber()
   sensitiveAnalysis: number;
 }
-export class CustomProjectCostDetailsDto {
-  @IsArray()
-  costDetails: CustomProjectCostDetailEntry[];
-}
 
 export class CustomProjectOutputSnapshot {
   @IsNumber()
@@ -173,6 +161,14 @@ export class CustomProjectOutputSnapshot {
   @IsNotEmpty()
   projectSummary: CustomProjectSummaryDto;
 
+  @IsArray()
+  costDetails: CustomProjectCostDetailEntry[];
+}
+
+export class CustomProjectSnapshotDto {
   @IsNotEmpty()
-  costDetails: CustomProjectCostDetailsDto;
+  inputSnapshot: CreateCustomProjectDto;
+
+  @IsNotEmpty()
+  outputSnapshot: CustomProjectOutputSnapshot;
 }
