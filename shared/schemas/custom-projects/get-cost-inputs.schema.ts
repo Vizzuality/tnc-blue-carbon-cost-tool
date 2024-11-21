@@ -7,3 +7,8 @@ export const GetDefaultCostInputsSchema = z.object({
   ecosystem: z.nativeEnum(ECOSYSTEM),
   activity: z.nativeEnum(ACTIVITY),
 });
+
+export const GetAssumptionsSchema = z.object({
+  ecosystem: z.nativeEnum(ECOSYSTEM),
+  activity: z.nativeEnum(ACTIVITY),
+});
