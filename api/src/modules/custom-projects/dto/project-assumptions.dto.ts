@@ -1,6 +1,6 @@
 import { IsNumber } from 'class-validator';
 
-export class CustomProjectAssumptionsDto {
+export class OverridableAssumptions {
   @IsNumber()
   verificationFrequency: number;
 
