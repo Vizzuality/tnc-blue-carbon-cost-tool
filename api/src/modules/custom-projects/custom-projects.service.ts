@@ -10,7 +10,7 @@ import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-defaul
 import { DataRepository } from '@api/modules/calculations/data.repository';
 import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { CostCalculator } from '@api/modules/calculations/cost.calculator';
-import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions-d-t.o';
+import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 
 @Injectable()

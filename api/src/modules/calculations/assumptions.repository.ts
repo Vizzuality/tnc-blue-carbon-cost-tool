@@ -2,7 +2,7 @@ import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
-import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions-d-t.o';
+import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import {

@@ -16,3 +16,16 @@ export const COMMON_OVERRIDABLE_ASSUMPTION_NAMES = [
   "Discount rate",
   "Verification frequency",
 ] as const;
+
+export const ASSUMPTIONS_NAME_TO_DTO_MAP = {
+  "Baseline reassessment frequency": "baselineReassessmentFrequency",
+  Buffer: "buffer",
+  "Carbon price increase": "carbonPriceIncrease",
+  "Discount rate": "discountRate",
+  "Verification frequency": "verificationFrequency",
+  "Mangrove restoration rate": "restorationRate",
+  "Seagrass restoration rate": "restorationRate",
+  "Salt marsh restoration rate": "restorationRate",
+  "Conservation project length": "projectLength",
+  "Restoration project length": "projectLength",
+} as const;

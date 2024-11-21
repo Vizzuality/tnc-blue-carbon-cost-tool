@@ -6,11 +6,8 @@ import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
 import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
-import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
-import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
-import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions-d-t.o';
 
 export type CarbonInputs = {
   ecosystemLossRate: BaseDataView['ecosystemLossRate'];
