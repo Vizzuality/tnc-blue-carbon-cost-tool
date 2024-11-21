@@ -2,10 +2,6 @@ import { TestManager } from '../../utils/test-manager';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ACTIVITY } from '@shared/entities/activity.enum';
-import {
-  ACTIVITY_PROJECT_LENGTH_NAMES,
-  ECOSYSTEM_RESTORATION_RATE_NAMES,
-} from '@api/modules/calculations/assumptions.repository';
 
 describe('Create Custom Projects - Setup', () => {
   let testManager: TestManager;
