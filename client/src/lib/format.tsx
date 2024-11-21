@@ -30,13 +30,12 @@ export const renderAbatementCurrency = (
   const [, amount] = formatted.match(/^(\D*)(.+)$/)!.slice(1);
   return (
     <>
-     <span
-      className={"inline-block align-top text-xs text-muted-foreground"}
-    >
-      tCO2e/yr &nbsp;
-    </span>
-    {amount}
-    </>);
+      <span className={"inline-block align-top text-xs text-muted-foreground"}>
+        tCO2e/yr &nbsp;
+      </span>
+      {amount}
+    </>
+  );
 };
 
 export function renderCurrency(
@@ -57,7 +56,7 @@ export function renderCurrency(
 }
 
 /**
- * Converts a large numeric value into a compact format with an "M" suffix 
+ * Converts a large numeric value into a compact format with an "M" suffix
  * representing millions.
  *
  * @param {number} value - The numeric value to be converted.

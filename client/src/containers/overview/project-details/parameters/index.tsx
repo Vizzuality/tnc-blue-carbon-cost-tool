@@ -3,10 +3,14 @@ import {
   COST_TYPE_SELECTOR,
   PROJECT_PRICE_TYPE,
 } from "@shared/entities/projects.entity";
-import { z } from "zod";
 import { parseAsJson, useQueryState } from "nuqs";
+import { z } from "zod";
 
-import { FILTER_KEYS, INITIAL_ABATEMENT_POTENTIAL_RANGE, INITIAL_COST_RANGE } from "@/app/(overview)/constants";
+import {
+  FILTER_KEYS,
+  INITIAL_ABATEMENT_POTENTIAL_RANGE,
+  INITIAL_COST_RANGE,
+} from "@/app/(overview)/constants";
 import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { Label } from "@/components/ui/label";

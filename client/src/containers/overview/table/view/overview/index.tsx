@@ -5,7 +5,6 @@ import { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { projectsQuerySchema } from "@shared/contracts/projects.contract";
 import { keepPreviousData } from "@tanstack/react-query";
-import { useAtom } from "jotai";
 import {
   flexRender,
   getCoreRowModel,
@@ -13,6 +12,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { useAtom } from "jotai";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { z } from "zod";
 
@@ -20,9 +20,9 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
+import { projectDetailsAtom } from "@/app/(overview)/store";
 import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
-import { projectDetailsAtom } from "@/app/(overview)/store";
 import ProjectDetails from "@/containers/overview/project-details";
 import {
   filtersToQueryParams,
@@ -110,8 +110,7 @@ export function OverviewTable() {
 
   return (
     <>
-      <ProjectDetails
-      />
+      <ProjectDetails />
       <Table>
         <TableHeader className="sticky top-0">
           {table.getHeaderGroups().map((headerGroup) => (

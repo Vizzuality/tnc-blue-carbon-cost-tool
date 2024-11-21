@@ -13,7 +13,10 @@ export const popupAtom = atom<{
   features: MapMouseEvent["features"];
 } | null>(null);
 
-export const projectDetailsAtom = atom<{ isOpen: boolean; projectName: string }>({
+export const projectDetailsAtom = atom<{
+  isOpen: boolean;
+  projectName: string;
+}>({
   isOpen: false,
   projectName: "",
 });

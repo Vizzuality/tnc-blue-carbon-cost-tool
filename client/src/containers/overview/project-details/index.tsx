@@ -1,22 +1,26 @@
-import { ChevronUp, ChevronDown, Plus } from "lucide-react";
 import { useAtom } from "jotai";
+import { ChevronUp, ChevronDown, Plus } from "lucide-react";
+
+import {
+  renderCurrency,
+  formatCurrency,
+  renderAbatementCurrency,
+} from "@/lib/format";
 
 import { projectDetailsAtom } from "@/app/(overview)/store";
-import { renderCurrency, formatCurrency, renderAbatementCurrency } from "@/lib/format";
 
-import BarChart from "@/components/ui/bar-chart";
 import ParametersProjects from "@/containers/overview/project-details/parameters";
 
+import BarChart from "@/components/ui/bar-chart";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Label } from "@/components/ui/label";
-
 
 //////// ScoreIndicator component ////////
 interface ScoreIndicatorProps {
@@ -151,13 +155,13 @@ export default function ProjectDetails() {
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    
                     <Label
                       htmlFor="totalProjectCost"
-                      className="font-medium text-md"
+                      className="text-md font-medium"
                       tooltip={{
                         title: "Total project cost",
-                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
+                        content:
+                          "Refers to the summary of Capital Expenditure and Operating Expenditure",
                       }}
                     >
                       <h3 className="text-md">Total project cost</h3>
@@ -169,7 +173,7 @@ export default function ProjectDetails() {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-4 min-h-[160px]">
+              <div className="flex min-h-[160px] gap-4">
                 <div className="flex flex-col justify-between">
                   <div>
                     <span className="text-xl font-normal">
@@ -216,10 +220,11 @@ export default function ProjectDetails() {
                   <div className="flex items-center gap-2">
                     <Label
                       htmlFor="totalProjectCost"
-                      className="font-medium text-md"
+                      className="text-md font-medium"
                       tooltip={{
                         title: "Total project cost",
-                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
+                        content:
+                          "Refers to the summary of Capital Expenditure and Operating Expenditure",
                       }}
                     >
                       <h3 className="text-md">Total project cost</h3>
@@ -231,7 +236,7 @@ export default function ProjectDetails() {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-4 min-h-[160px]">
+              <div className="flex min-h-[160px] gap-4">
                 <div className="flex flex-col justify-between">
                   <div>
                     <span className="text-xl font-normal">
@@ -277,15 +282,16 @@ export default function ProjectDetails() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Label
-                      htmlFor="abatementPotential"
-                      className="font-medium text-md"
-                      tooltip={{
-                        title: "Abatement potential",
-                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
-                      }}
-                    >
-                      <h3 className="text-md">Abatement potential</h3>
-                    </Label>
+                    htmlFor="abatementPotential"
+                    className="text-md font-medium"
+                    tooltip={{
+                      title: "Abatement potential",
+                      content:
+                        "Refers to the summary of Capital Expenditure and Operating Expenditure",
+                    }}
+                  >
+                    <h3 className="text-md">Abatement potential</h3>
+                  </Label>
                 </div>
                 <span className="text-xl font-normal">
                   {renderAbatementCurrency(projectData.abatement)}
@@ -300,15 +306,16 @@ export default function ProjectDetails() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Label
-                      htmlFor="overallScore"
-                      className="font-medium text-md"
-                      tooltip={{
-                        title: "Overall score",
-                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
-                      }}
-                    >
-                      <h3 className="text-md">Overall score</h3>
-                    </Label>
+                    htmlFor="overallScore"
+                    className="text-md font-medium"
+                    tooltip={{
+                      title: "Overall score",
+                      content:
+                        "Refers to the summary of Capital Expenditure and Operating Expenditure",
+                    }}
+                  >
+                    <h3 className="text-md">Overall score</h3>
+                  </Label>
                 </div>
               </div>
               <div className="mt-4 space-y-2">
@@ -323,18 +330,21 @@ export default function ProjectDetails() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Label
-                      htmlFor="scorecardRatings"
-                      className="font-medium text-md"
-                      tooltip={{
-                        title: "Scorecard ratings",
-                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
-                      }}
-                    >
-                      <h3 className="text-md">Scorecard ratings</h3>
-                    </Label>
+                  htmlFor="scorecardRatings"
+                  className="text-md font-medium"
+                  tooltip={{
+                    title: "Scorecard ratings",
+                    content:
+                      "Refers to the summary of Capital Expenditure and Operating Expenditure",
+                  }}
+                >
+                  <h3 className="text-md">Scorecard ratings</h3>
+                </Label>
               </div>
               <div className="flex items-center gap-2">
-                <Label className="text-xs text-big-stone-200">Compare with a different project</Label>
+                <Label className="text-xs text-big-stone-200">
+                  Compare with a different project
+                </Label>
                 <Button
                   variant="outline"
                   className="h-8 w-8 p-0 hover:bg-transparent"
@@ -354,7 +364,9 @@ export default function ProjectDetails() {
                       score={item.rating as "High" | "Medium" | "Low"}
                     />
                   </div>
-                  {projectData.scorecard.length !== index + 1 && <hr className="m-0" />}
+                  {projectData.scorecard.length !== index + 1 && (
+                    <hr className="m-0" />
+                  )}
                 </>
               ))}
             </div>
@@ -364,18 +376,21 @@ export default function ProjectDetails() {
             <div className="flex items-center justify-between p-4 py-2">
               <div className="flex items-center gap-2">
                 <Label
-                      htmlFor="costEstimates"
-                      className="font-medium text-md"
-                      tooltip={{
-                        title: "Cost estimates",
-                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
-                      }}
-                    >
-                      <h3 className="text-md">Cost estimates</h3>
-                    </Label>
+                  htmlFor="costEstimates"
+                  className="text-md font-medium"
+                  tooltip={{
+                    title: "Cost estimates",
+                    content:
+                      "Refers to the summary of Capital Expenditure and Operating Expenditure",
+                  }}
+                >
+                  <h3 className="text-md">Cost estimates</h3>
+                </Label>
               </div>
               <div className="flex items-center gap-2">
-              <Label className="text-xs text-big-stone-200">Compare with a different project</Label>
+                <Label className="text-xs text-big-stone-200">
+                  Compare with a different project
+                </Label>
                 <Button
                   variant="outline"
                   className="h-8 w-8 p-0 hover:bg-transparent"
