@@ -1,28 +1,22 @@
 import { ChevronUp, ChevronDown, Plus } from "lucide-react";
+import { useAtom } from "jotai";
 
-import { parseCurrency, formatCurrency } from "@/lib/format";
+import { projectDetailsAtom } from "@/app/(overview)/store";
+import { renderCurrency, formatCurrency, renderAbatementCurrency } from "@/lib/format";
 
-import BarChart from "@/containers/overview/project-details/bar-chart";
+import BarChart from "@/components/ui/bar-chart";
 import ParametersProjects from "@/containers/overview/project-details/parameters";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import InfoButton from "@/components/ui/info-button";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { Label } from "@/components/ui/label";
 
-const Currency = ({ value }: { value: number }) => {
-  const [symbol, amount] = parseCurrency(value);
-  return (
-    <span>
-      <sup className="text-big-stone-200">{symbol}</sup> {amount}
-    </span>
-  );
-};
 
 //////// ScoreIndicator component ////////
 interface ScoreIndicatorProps {
@@ -119,19 +113,14 @@ const projectData = {
   ],
 };
 
-interface IProjectDetailsProps {
-  projectName: string;
-  open: boolean;
-  setIsOpen: (open: boolean) => void;
-}
+export default function ProjectDetails() {
+  const [projectDetails, setProjectDetails] = useAtom(projectDetailsAtom);
 
-export default function ProjectDetails({
-  projectName,
-  open,
-  setIsOpen,
-}: IProjectDetailsProps) {
+  const handleOpenDetails = (open: boolean) =>
+    setProjectDetails({ ...projectDetails, isOpen: open });
+
   return (
-    <Sheet open={open} onOpenChange={setIsOpen}>
+    <Sheet open={projectDetails.isOpen} onOpenChange={handleOpenDetails}>
       <SheetContent className="overflow-y-scroll sm:max-w-[50%]">
         <SheetHeader className="space-y-6">
           <div className="flex gap-4">
@@ -150,7 +139,7 @@ export default function ProjectDetails({
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <SheetTitle>{projectName}</SheetTitle>
+              <SheetTitle>{projectDetails.projectName}</SheetTitle>
             </div>
           </div>
           <ParametersProjects />
@@ -162,20 +151,29 @@ export default function ProjectDetails({
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-md font-medium">Total project cost</h3>
-                    <InfoButton title="Refers to the summary of Capital Expenditure and Operating Expenditure" />
+                    
+                    <Label
+                      htmlFor="totalProjectCost"
+                      className="font-medium text-md"
+                      tooltip={{
+                        title: "Total project cost",
+                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
+                      }}
+                    >
+                      <h3 className="text-md">Total project cost</h3>
+                    </Label>
                   </div>
-                  <div className="text-sm">
+                  <div className="text-sm text-big-stone-200">
                     Refers to the summary of Capital Expenditure and Operating
                     Expenditure
                   </div>
                 </div>
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-4 min-h-[160px]">
                 <div className="flex flex-col justify-between">
                   <div>
                     <span className="text-xl font-normal">
-                      <Currency value={projectData.totalCost} />
+                      {renderCurrency(projectData.totalCost)}
                     </span>
                   </div>
                   <div className="mt-4 space-y-2">
@@ -216,20 +214,28 @@ export default function ProjectDetails({
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-md font-medium">Total project cost</h3>
-                    <InfoButton title="Refers to the summary of Capital Expenditure and Operating Expenditure" />
+                    <Label
+                      htmlFor="totalProjectCost"
+                      className="font-medium text-md"
+                      tooltip={{
+                        title: "Total project cost",
+                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
+                      }}
+                    >
+                      <h3 className="text-md">Total project cost</h3>
+                    </Label>
                   </div>
-                  <div className="text-sm">
+                  <div className="text-sm text-big-stone-200">
                     Refers to the summary of Capital Expenditure and Operating
                     Expenditure
                   </div>
                 </div>
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-4 min-h-[160px]">
                 <div className="flex flex-col justify-between">
                   <div>
                     <span className="text-xl font-normal">
-                      <Currency value={projectData.totalCost} />
+                      {renderCurrency(projectData.totalCost)}
                     </span>
                   </div>
                   <div className="mt-4 space-y-2">
@@ -270,14 +276,22 @@ export default function ProjectDetails({
             <Card className="w-3/4 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-md font-medium">Abatement potential</h3>
-                  <InfoButton title="Refers to the summary of Capital Expenditure and Operating Expenditure" />
+                  <Label
+                      htmlFor="abatementPotential"
+                      className="font-medium text-md"
+                      tooltip={{
+                        title: "Abatement potential",
+                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
+                      }}
+                    >
+                      <h3 className="text-md">Abatement potential</h3>
+                    </Label>
                 </div>
                 <span className="text-xl font-normal">
-                  <Currency value={projectData.abatement} />
+                  {renderAbatementCurrency(projectData.abatement)}
                 </span>
               </div>
-              <div className="mt-4 space-y-2 text-sm">
+              <div className="mt-4 space-y-2 text-sm text-big-stone-200">
                 <p>Estimation of total CO2 expected during the project.</p>
               </div>
             </Card>
@@ -285,8 +299,16 @@ export default function ProjectDetails({
             <Card className="w-1/4 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-md font-medium">Overall score</h3>
-                  <InfoButton title="Refers to the summary of Capital Expenditure and Operating Expenditure" />
+                  <Label
+                      htmlFor="overallScore"
+                      className="font-medium text-md"
+                      tooltip={{
+                        title: "Overall score",
+                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
+                      }}
+                    >
+                      <h3 className="text-md">Overall score</h3>
+                    </Label>
                 </div>
               </div>
               <div className="mt-4 space-y-2">
@@ -297,16 +319,22 @@ export default function ProjectDetails({
             </Card>
           </div>
 
-          <Card className="p-4">
+          <Card className="p-4 pb-0 pt-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <h3 className="text-md font-medium">Scorecard ratings</h3>
-                <InfoButton title="Refers to the summary of Capital Expenditure and Operating Expenditure" />
+                <Label
+                      htmlFor="scorecardRatings"
+                      className="font-medium text-md"
+                      tooltip={{
+                        title: "Scorecard ratings",
+                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
+                      }}
+                    >
+                      <h3 className="text-md">Scorecard ratings</h3>
+                    </Label>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                  Compare with a different project
-                </Button>
+                <Label className="text-xs text-big-stone-200">Compare with a different project</Label>
                 <Button
                   variant="outline"
                   className="h-8 w-8 p-0 hover:bg-transparent"
@@ -315,9 +343,10 @@ export default function ProjectDetails({
                 </Button>
               </div>
             </div>
-            <div className="mt-4">
-              {projectData.scorecard.map((item) => (
+            <div className="mt-2">
+              {projectData.scorecard.map((item, index) => (
                 <>
+                  {index === 0 && <hr className="m-0" />}
                   <div key={item.name} className="flex">
                     <div className="w-2/3 content-center py-2">{item.name}</div>
                     <ScoreIndicator
@@ -325,22 +354,28 @@ export default function ProjectDetails({
                       score={item.rating as "High" | "Medium" | "Low"}
                     />
                   </div>
-                  <hr className="m-0" />
+                  {projectData.scorecard.length !== index + 1 && <hr className="m-0" />}
                 </>
               ))}
             </div>
           </Card>
 
           <Card className="p-0">
-            <div className="flex items-center justify-between p-4">
+            <div className="flex items-center justify-between p-4 py-2">
               <div className="flex items-center gap-2">
-                <h3 className="text-md font-medium">Cost estimates</h3>
-                <InfoButton title="Refers to the summary of Capital Expenditure and Operating Expenditure" />
+                <Label
+                      htmlFor="costEstimates"
+                      className="font-medium text-md"
+                      tooltip={{
+                        title: "Cost estimates",
+                        content: 'Refers to the summary of Capital Expenditure and Operating Expenditure',
+                      }}
+                    >
+                      <h3 className="text-md">Cost estimates</h3>
+                    </Label>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                  Compare with a different project
-                </Button>
+              <Label className="text-xs text-big-stone-200">Compare with a different project</Label>
                 <Button
                   variant="outline"
                   className="h-8 w-8 p-0 hover:bg-transparent"
@@ -349,7 +384,7 @@ export default function ProjectDetails({
                 </Button>
               </div>
             </div>
-            <div className="mt-4">
+            <div>
               {projectData.costEstimates.map((estimate) => (
                 <div key={estimate.name}>
                   <div className="flex bg-big-stone-900 px-2">

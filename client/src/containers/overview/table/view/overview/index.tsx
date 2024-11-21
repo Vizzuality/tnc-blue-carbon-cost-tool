@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { projectsQuerySchema } from "@shared/contracts/projects.contract";
 import { keepPreviousData } from "@tanstack/react-query";
+import { useAtom } from "jotai";
 import {
   flexRender,
   getCoreRowModel,
@@ -21,6 +22,7 @@ import { cn } from "@/lib/utils";
 
 import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
+import { projectDetailsAtom } from "@/app/(overview)/store";
 import ProjectDetails from "@/containers/overview/project-details";
 import {
   filtersToQueryParams,
@@ -46,8 +48,7 @@ import TablePagination, {
 export function OverviewTable() {
   const [tableView] = useTableView();
   const [filters] = useGlobalFilters();
-  const [projectName, setProjectName] = useState<string>("");
-  const [openDetails, setOpenDetails] = useState(false);
+  const [, setProjectDetails] = useAtom(projectDetailsAtom);
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "projectName",
@@ -110,9 +111,6 @@ export function OverviewTable() {
   return (
     <>
       <ProjectDetails
-        open={openDetails}
-        setIsOpen={setOpenDetails}
-        projectName={projectName}
       />
       <Table>
         <TableHeader className="sticky top-0">
@@ -165,8 +163,10 @@ export function OverviewTable() {
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 onClick={() => {
-                  setOpenDetails(true);
-                  setProjectName(row.original.projectName ?? "");
+                  setProjectDetails({
+                    isOpen: true,
+                    projectName: row.original.projectName ?? "",
+                  });
                 }}
               >
                 {row.getVisibleCells().map((cell) => (

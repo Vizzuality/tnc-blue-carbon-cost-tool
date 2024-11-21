@@ -11,24 +11,6 @@ export const formatCurrency = (
   }).format(value);
 };
 
-/**
- * Parses a currency value into its symbol and amount components
- * @param value - The numeric value to parse
- * @param options - Optional Intl.NumberFormatOptions for currency formatting
- * @returns A tuple containing [currencySymbol, amount] as strings
- * @example
- * parseCurrency(1234.56) // returns ['$', '1,234']
- */
-export const parseCurrency = (
-  value: number,
-  options: Intl.NumberFormatOptions = {},
-) => {
-  let formatted = formatCurrency(value, options);
-  formatted = formatted.replace(/\.\d+/, "");
-  const [symbol, amount] = formatted.match(/^(\D*)(.+)$/)!.slice(1);
-  return [symbol.trim(), amount];
-};
-
 export const formatNumber = (
   value: number,
   options: Intl.NumberFormatOptions = {},
@@ -37,6 +19,24 @@ export const formatNumber = (
     style: "decimal",
     ...options,
   }).format(value);
+};
+
+export const renderAbatementCurrency = (
+  value: number,
+  options: Intl.NumberFormatOptions = {},
+) => {
+  let formatted = formatCurrency(value, options);
+  formatted = formatted.replace(/\.\d+/, "");
+  const [, amount] = formatted.match(/^(\D*)(.+)$/)!.slice(1);
+  return (
+    <>
+     <span
+      className={"inline-block align-top text-xs text-muted-foreground"}
+    >
+      tCO2e/yr &nbsp;
+    </span>
+    {amount}
+    </>);
 };
 
 export function renderCurrency(
@@ -55,3 +55,17 @@ export function renderCurrency(
     </span>
   );
 }
+
+/**
+ * Converts a large numeric value into a compact format with an "M" suffix 
+ * representing millions.
+ *
+ * @param {number} value - The numeric value to be converted.
+ * @returns {string} - The formatted string representing the value in millions with one decimal place.
+ *
+ * @example
+ * toCompactAmount(38023789); // Returns "38.0M"
+ */
+export const toCompactAmount = (value: number) => {
+  return `${(value / 1_000_000).toFixed(1)}M`;
+};

@@ -4,9 +4,9 @@ import {
   PROJECT_PRICE_TYPE,
 } from "@shared/entities/projects.entity";
 import { z } from "zod";
+import { parseAsJson, useQueryState } from "nuqs";
 
-import { FILTER_KEYS } from "@/app/(overview)/constants";
-import { useGlobalFilters } from "@/app/(overview)/url-store";
+import { FILTER_KEYS, INITIAL_ABATEMENT_POTENTIAL_RANGE, INITIAL_COST_RANGE } from "@/app/(overview)/constants";
 import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { Label } from "@/components/ui/label";
@@ -17,6 +17,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
+  keyword: "",
+  projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
+  priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+  costRangeSelector: COST_TYPE_SELECTOR.NPV,
+  countryCode: "",
+  ecosystem: [],
+  activity: [],
+  activitySubtype: [],
+  costRange: INITIAL_COST_RANGE,
+  abatementPotentialRange: INITIAL_ABATEMENT_POTENTIAL_RANGE,
+};
+
 export const PROJECT_PARAMETERS = [
   {
     key: FILTER_KEYS[1],
@@ -69,8 +83,15 @@ export const PROJECT_PARAMETERS = [
   },
 ] as const;
 
+function useFilters() {
+  return useQueryState(
+    "filters",
+    parseAsJson(filtersSchema.parse).withDefault(INITIAL_FILTERS_STATE),
+  );
+}
+
 export default function ParametersProjects() {
-  const [filters, setFilters] = useGlobalFilters();
+  const [filters, setFilters] = useFilters();
 
   const handleParameters = async (
     v: string,
