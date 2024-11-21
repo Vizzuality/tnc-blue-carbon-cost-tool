@@ -1,135 +1,21 @@
 import {
-  IsEnum,
   IsNotEmpty,
   IsNumber,
-  IsString,
   IsArray,
+  IsString,
+  IsOptional,
 } from 'class-validator';
-import { ACTIVITY } from '@shared/entities/activity.enum';
-import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
-import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
-import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
+import { CreateCustomProjectDto } from './create-custom-project-dto';
 
 export class CustomProjectSnapshotDto {
   @IsNotEmpty()
-  inputSnapshot: InputSnapshot;
+  inputSnapshot: CreateCustomProjectDto;
 
   @IsNotEmpty()
-  outputSnapshot: OutputSnapshot;
+  outputSnapshot: CustomProjectOutputSnapshot;
 }
 
-export class CostInputsDto {
-  @IsNumber()
-  feasibilityAnalysis: number;
-
-  @IsNumber()
-  conservationPlanningAndAdmin: number;
-
-  @IsNumber()
-  dataCollectionAndFieldCost: number;
-
-  @IsNumber()
-  communityRepresentation: number;
-
-  @IsNumber()
-  blueCarbonProjectPlanning: number;
-
-  @IsNumber()
-  establishingCarbonRights: number;
-
-  @IsNumber()
-  financingCost: number;
-
-  @IsNumber()
-  validation: number;
-
-  @IsNumber()
-  implementationLaborHybrid: number;
-
-  @IsNumber()
-  monitoring: number;
-
-  @IsNumber()
-  maintenance: number;
-
-  @IsNumber()
-  carbonStandardFees: number;
-
-  @IsNumber()
-  communityBenefitSharingFund: number;
-
-  @IsNumber()
-  baselineReassessment: number;
-
-  @IsNumber()
-  mrv: number;
-
-  @IsNumber()
-  longTermProjectOperatingCost: number;
-}
-
-export class AssumptionDto {
-  @IsNumber()
-  verificationFrequency: number;
-
-  @IsNumber()
-  baselineReassessmentFrequency: number;
-
-  @IsNumber()
-  discountRate: number;
-
-  @IsNumber()
-  restorationRate: number;
-
-  @IsNumber()
-  carbonPriceIncrease: number;
-
-  @IsNumber()
-  buffer: number;
-
-  @IsNumber()
-  projectLength: number;
-}
-
-export class InputSnapshot {
-  @IsString()
-  countryCode: string;
-
-  @IsString()
-  projectName: string;
-
-  @IsEnum(ACTIVITY)
-  activity: ACTIVITY;
-
-  @IsEnum(ECOSYSTEM)
-  ecosystem: ECOSYSTEM;
-
-  @IsNumber()
-  projectSizeHa: number;
-
-  @IsNumber()
-  initialCarbonPriceAssumption: number;
-
-  @IsString()
-  carbonRevenuesToCover: string;
-
-  @IsEnum(LOSS_RATE_USED)
-  lossRateUsed: LOSS_RATE_USED;
-
-  @IsEnum(EMISSION_FACTORS_TIER_TYPES)
-  emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES;
-
-  @IsNotEmpty()
-  costInputs: CostInputsDto;
-
-  @IsNotEmpty()
-  assumptions: AssumptionDto;
-}
-
-export class OutputSnapshot {
-  @IsNumber()
-  projectLength: number;
-
+export class CustomPrpjectAnnualProjectCashFlowDto {
   @IsArray()
   feasiabilityAnalysis: number[];
 
@@ -212,4 +98,81 @@ export class OutputSnapshot {
 
   @IsArray()
   annualNetCashFlow: number[];
+}
+
+export class CustomProjectSummaryDto {
+  @IsNumber()
+  costPerTCO2e: number;
+
+  @IsNumber()
+  costPerHa: number;
+
+  @IsNumber()
+  leftoverAfterOpexTotalCost: number;
+
+  @IsNumber()
+  irrCoveringOpex: number;
+
+  @IsNumber()
+  irrCoveringTotalCost: number;
+
+  @IsNumber()
+  totalCost: number;
+
+  @IsNumber()
+  capitalExpenditure: number;
+
+  @IsNumber()
+  operatingExpenditure: number;
+
+  @IsNumber()
+  creditsIssued: number;
+
+  @IsNumber()
+  totalRevenue: number;
+
+  @IsNumber()
+  nonDiscountedTotalRevenue: number;
+
+  @IsNumber()
+  financingCost: number;
+
+  @IsNumber()
+  foundingGap: number;
+
+  @IsNumber()
+  foundingGapPerTCO2e: number;
+
+  @IsNumber()
+  communityBenefitSharingFundRevenuePc: number;
+}
+
+export class CustomProjectCostDetailEntry {
+  @IsString()
+  costName: string;
+
+  @IsNumber()
+  costValue: number;
+
+  @IsOptional()
+  @IsNumber()
+  sensitiveAnalysis: number;
+}
+export class CustomProjectCostDetailsDto {
+  @IsArray()
+  costDetails: CustomProjectCostDetailEntry[];
+}
+
+export class CustomProjectOutputSnapshot {
+  @IsNumber()
+  projectLength: number;
+
+  @IsNotEmpty()
+  annualProjectCashFlow: CustomPrpjectAnnualProjectCashFlowDto;
+
+  @IsNotEmpty()
+  projectSummary: CustomProjectSummaryDto;
+
+  @IsNotEmpty()
+  costDetails: CustomProjectCostDetailsDto;
 }
