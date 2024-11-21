@@ -4,11 +4,9 @@ import { Country } from "@shared/entities/country.entity";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { CustomProject } from "@shared/entities/custom-project.entity";
 import { CreateCustomProjectDto } from "@api/modules/custom-projects/dto/create-custom-project-dto";
-import {
-  GetAssumptionsSchema,
-  GetDefaultCostInputsSchema,
-} from "@shared/schemas/custom-projects/get-cost-inputs.schema";
+import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-cost-inputs.schema";
 import { CostInputs } from "@api/modules/custom-projects/dto/project-cost-inputs.dto";
+import { GetAssumptionsSchema } from "@shared/schemas/assumptions/get-assumptions.schema";
 
 const contract = initContract();
 export const customProjectContract = contract.router({
