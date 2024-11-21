@@ -6,6 +6,7 @@ import { DataRepository } from '@api/modules/calculations/data.repository';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { BaseSize } from '@shared/entities/base-size.entity';
+import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { BaseSize } from '@shared/entities/base-size.entity';
       BaseSize,
     ]),
   ],
-  providers: [CalculationEngine, DataRepository],
-  exports: [CalculationEngine, DataRepository],
+  providers: [CalculationEngine, DataRepository, AssumptionsRepository],
+  exports: [CalculationEngine, DataRepository, AssumptionsRepository],
 })
 export class CalculationsModule {}

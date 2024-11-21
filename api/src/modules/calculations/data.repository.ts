@@ -9,6 +9,8 @@ import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
+import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
+import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions-d-t.o';
 
 export type CarbonInputs = {
   ecosystemLossRate: BaseDataView['ecosystemLossRate'];
@@ -21,6 +23,7 @@ export type CarbonInputs = {
 export class DataRepository extends Repository<BaseDataView> {
   constructor(
     @InjectRepository(BaseDataView) private repo: Repository<BaseDataView>,
+    private readonly assumptionsRepository: AssumptionsRepository,
   ) {
     super(repo.target, repo.manager, repo.queryRunner);
   }
@@ -126,9 +129,5 @@ export class DataRepository extends Repository<BaseDataView> {
     }
 
     return { baseSize, baseIncrease };
-  }
-
-  async getDefaultModelAssumptions() {
-    return this.repo.manager.getRepository(ModelAssumptions).find();
   }
 }
