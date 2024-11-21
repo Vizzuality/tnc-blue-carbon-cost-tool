@@ -23,7 +23,6 @@ export type CarbonInputs = {
 export class DataRepository extends Repository<BaseDataView> {
   constructor(
     @InjectRepository(BaseDataView) private repo: Repository<BaseDataView>,
-    private readonly assumptionsRepository: AssumptionsRepository,
   ) {
     super(repo.target, repo.manager, repo.queryRunner);
   }

@@ -2,6 +2,10 @@ import { TestManager } from '../../utils/test-manager';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ACTIVITY } from '@shared/entities/activity.enum';
+import {
+  ACTIVITY_PROJECT_LENGTH_NAMES,
+  ECOSYSTEM_RESTORATION_RATE_NAMES,
+} from '@api/modules/calculations/assumptions.repository';
 
 describe('Create Custom Projects - Setup', () => {
   let testManager: TestManager;
@@ -20,19 +24,37 @@ describe('Create Custom Projects - Setup', () => {
     await testManager.close();
   });
 
+  describe('Get Overridable Model Assumptions', () => {
+    test('Should return overridable model assumptions based on ecosystem and activity', async () => {
+      const response = await testManager
+        .request()
+        .get(customProjectContract.getDefaultAssumptions.path)
+        .query({
+          ecosystem: ECOSYSTEM.MANGROVE,
+          activity: ACTIVITY.CONSERVATION,
+        });
+
+      expect(response.body.data).toHaveLength(7);
+      expect(response.body.data.map((assumptions) => assumptions.name)).toEqual(
+        [
+          'Baseline reassessment frequency',
+          'Buffer',
+          'Carbon price increase',
+          'Conservation project length',
+          'Discount rate',
+          'Mangrove restoration rate',
+          'Verification frequency',
+        ],
+      );
+    });
+  });
+
   test('Should return the list of countries that are available to create a custom project', async () => {
     const response = await testManager
       .request()
       .get(customProjectContract.getAvailableCountries.path);
 
     expect(response.body.data).toHaveLength(9);
-  });
-  test('Should return default model assumptions', async () => {
-    const response = await testManager
-      .request()
-      .get(customProjectContract.getDefaultAssumptions.path);
-
-    expect(response.body.data).toHaveLength(18);
   });
 
   test('Should return default cost inputs given required filters', async () => {
