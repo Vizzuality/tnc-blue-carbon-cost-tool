@@ -12,7 +12,7 @@ import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ConservationProjectParamDto } from '@api/modules/custom-projects/dto/conservation-project-params.dto';
 import { RestorationProjectParamsDto } from '@api/modules/custom-projects/dto/restoration-project-params.dto';
 import { OverridableAssumptions } from '@api/modules/custom-projects/dto/project-assumptions.dto';
-import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
+import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { ProjectParamsValidator } from '@api/modules/custom-projects/validation/project-params.validator';
 import { Transform, Type } from 'class-transformer';
 
@@ -55,8 +55,8 @@ export class CreateCustomProjectDto {
     message: 'Cost inputs are required to create a custom project',
   })
   @ValidateNested()
-  @Type(() => CostInputs)
-  costInputs: CostInputs;
+  @Type(() => OverridableCostInputs)
+  costInputs: OverridableCostInputs;
 
   @IsNotEmpty()
   @Transform(injectEcosystemToParams)

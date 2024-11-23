@@ -6,7 +6,7 @@ import { RestorationProjectInput } from '@api/modules/custom-projects/input-fact
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import {
-  CostInputs,
+  OverridableCostInputs,
   PROJECT_DEVELOPMENT_TYPE,
 } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 
@@ -29,7 +29,7 @@ type CostPlanMap = {
 //   ) {}
 // }
 
-type CostPlans = Record<keyof CostInputs, CostPlanMap>;
+type CostPlans = Record<keyof OverridableCostInputs, CostPlanMap>;
 
 export enum COST_KEYS {
   FEASIBILITY_ANALYSIS = 'feasibilityAnalysis',

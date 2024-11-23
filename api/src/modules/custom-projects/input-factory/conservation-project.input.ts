@@ -1,7 +1,7 @@
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { CARBON_REVENUES_TO_COVER } from '@api/modules/custom-projects/dto/create-custom-project-dto';
-import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
+import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { OverridableAssumptions } from '@api/modules/custom-projects/dto/project-assumptions.dto';
 import {
   ConservationProjectParamDto,
@@ -36,7 +36,7 @@ export class ConservationProjectInput {
     emissionFactorSoc: 0,
   };
 
-  costInputs: CostInputs = new CostInputs();
+  costInputs: OverridableCostInputs = new OverridableCostInputs();
 
   modelAssumptions: OverridableAssumptions = new OverridableAssumptions();
 
@@ -75,7 +75,7 @@ export class ConservationProjectInput {
     return this;
   }
 
-  setCostInputs(costInputs: CostInputs): this {
+  setCostInputs(costInputs: OverridableCostInputs): this {
     this.costInputs = costInputs;
     return this;
   }
