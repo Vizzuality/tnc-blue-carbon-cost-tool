@@ -64,7 +64,7 @@ export function ScoredCardPrioritizationTable() {
         ...filtersToQueryParams(filters),
 
         filter: {
-          activitySubtype: [""],
+          restorationActivity: [""],
         },
         // fields: TABLE_COLUMNS.map((column) => column.accessorKey),
         // ...(sorting.length > 0 && {

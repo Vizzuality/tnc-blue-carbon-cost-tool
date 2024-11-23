@@ -5,10 +5,12 @@ import {
   Project,
   PROJECT_PRICE_TYPE,
   PROJECT_SIZE_FILTER,
-  RESTORATION_ACTIVITY_SUBTYPE,
 } from "@shared/entities/projects.entity";
 import { Country } from "@shared/entities/country.entity";
-import { ACTIVITY } from "@shared/entities/activity.enum";
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 export const createUser = async (
