@@ -1,4 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { CustomProjectSnapshotDto } from "@api/modules/custom-projects/dto/custom-project-snapshot.dto";
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { ACTIVITY } from "@shared/entities/activity.enum";
+import { Country } from "@shared/entities/country.entity";
 
 /**
  * @description: This entity is to save Custom Projects (that are calculated, and can be saved only by registered users. Most likely, we don't need to add these as a resource
@@ -9,58 +19,36 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: "custom_projects" })
 export class CustomProject {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-  @Column({ name: "project_name", type: "varchar", length: 255 })
-  projectName: string;
+  @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "country_code" })
+  countryCode: Country;
 
-  @Column({ name: "cost_per_tCO2e", type: "varchar", length: 50 })
-  costPerTCO2e: string;
+  @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
+  ecosystem: ECOSYSTEM;
 
-  @Column({ name: "cost_per_ha", type: "varchar", length: 50 })
-  costPerHa: string;
+  @Column({ name: "activity", enum: ACTIVITY, type: "enum" })
+  activity: ACTIVITY;
 
-  @Column({ name: "npv_covering_cost", type: "varchar", length: 50 })
-  npvCoveringCost: string;
+  @Column({ name: "input_snapshot", type: "jsonb" })
+  input_snapshot: any;
 
-  @Column({ name: "irr_cover_opex", type: "varchar", length: 50 })
-  irrWhenPricedToCoverOpex: string;
+  @Column({ name: "output_snapshot", type: "jsonb" })
+  output_snapshot: any;
 
-  @Column({ name: "irr_cover_total_costs", type: "varchar", length: 50 })
-  irrWhenPricedToCoverTotalCosts: string;
-
-  @Column({ name: "total_cost_npv", type: "varchar", length: 50 })
-  totalCostNpv: string;
-
-  @Column({ name: "capex_npv", type: "varchar", length: 50 })
-  capitalExpenditureNpv: string;
-
-  @Column({ name: "opex_npv", type: "varchar", length: 50 })
-  operatingExpenditureNpv: string;
-
-  @Column({ name: "credits_issued", type: "varchar", length: 50 })
-  creditsIssued: string;
-
-  @Column({ name: "total_revenue_npv", type: "varchar", length: 50 })
-  totalRevenueNpv: string;
-
-  @Column({ name: "total_revenue_non_discounted", type: "varchar", length: 50 })
-  totalRevenueNonDiscounted: string;
-
-  @Column({ name: "financing_cost", type: "varchar", length: 50 })
-  financingCost: string;
-
-  @Column({ name: "funding_gap_npv", type: "varchar", length: 50 })
-  fundingGapNpv: string;
-
-  @Column({ name: "funding_gap_per_tCO2e", type: "varchar", length: 50 })
-  fundingGapPerTCO2eNpv: string;
-
-  @Column({
-    name: "community_benefit_sharing_fund_percentage",
-    type: "varchar",
-    length: 50,
-  })
-  communityBenefitSharingFundPercentage: string;
+  static fromCustomProjectSnapshotDTO(
+    dto: CustomProjectSnapshotDto
+  ): CustomProject {
+    const customProject = new CustomProject();
+    customProject.countryCode = {
+      code: dto.inputSnapshot.countryCode,
+    } as Country;
+    customProject.ecosystem = dto.inputSnapshot.ecosystem;
+    customProject.activity = dto.inputSnapshot.activity;
+    customProject.input_snapshot = dto.inputSnapshot;
+    customProject.output_snapshot = dto.outputSnapshot;
+    return customProject;
+  }
 }

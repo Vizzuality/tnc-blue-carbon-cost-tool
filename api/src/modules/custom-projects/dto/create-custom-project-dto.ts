@@ -64,6 +64,7 @@ export class CreateCustomProjectDto {
   parameters: ConservationProjectParamDto | RestorationProjectParamsDto;
 }
 
+// @ts-ignore: TS7031
 function injectEcosystemToParams({ obj, value }) {
   // Helper to inject the ecosystem into the parameters object so we can perform further validations that are specific to
   // the activity type

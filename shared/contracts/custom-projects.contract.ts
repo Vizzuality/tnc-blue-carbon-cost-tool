@@ -1,12 +1,15 @@
 import { initContract } from "@ts-rest/core";
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { Country } from "@shared/entities/country.entity";
-import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { CustomProject } from "@shared/entities/custom-project.entity";
 import { CreateCustomProjectDto } from "@api/modules/custom-projects/dto/create-custom-project-dto";
 import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-cost-inputs.schema";
+import { CustomProjectSnapshotDto } from "@api/modules/custom-projects/dto/custom-project-snapshot.dto";
+
+// TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 import { OverridableCostInputs } from "@api/modules/custom-projects/dto/project-cost-inputs.dto";
 import { GetAssumptionsSchema } from "@shared/schemas/assumptions/get-assumptions.schema";
+import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 
 const contract = initContract();
 export const customProjectContract = contract.router({
@@ -43,6 +46,14 @@ export const customProjectContract = contract.router({
       201: contract.type<ApiResponse<CustomProject>>(),
     },
     body: contract.type<CreateCustomProjectDto>(),
+  },
+  snapshotCustomProject: {
+    method: "POST",
+    path: "/custom-projects/snapshots",
+    responses: {
+      201: contract.type<null>(),
+    },
+    body: contract.type<CustomProjectSnapshotDto>(),
   },
 });
 

@@ -10,6 +10,7 @@ import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overr
 import { DataRepository } from '@api/modules/calculations/data.repository';
 import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { CostCalculator } from '@api/modules/calculations/cost.calculator';
+import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
 import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 
@@ -60,6 +61,10 @@ export class CustomProjectsService extends AppBaseService<
 
     calculator.initializeCostPlans().calculateCosts();
     return calculator.costPlans;
+  }
+
+  async saveCustomProject(dto: CustomProjectSnapshotDto): Promise<void> {
+    await this.repo.save(CustomProject.fromCustomProjectSnapshotDTO(dto));
   }
 
   async getDefaultCostInputs(
