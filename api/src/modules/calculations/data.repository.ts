@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ACTIVITY } from '@shared/entities/activity.enum';
-import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
+import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overridable-cost-inputs.dto';
 import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
@@ -69,8 +69,8 @@ export class DataRepository extends Repository<BaseDataView> {
     return defaultCarbonInputs;
   }
 
-  async getDefaultCostInputs(
-    dto: GetDefaultCostInputsDto,
+  async getOverridableCostInputs(
+    dto: GetOverridableCostInputs,
   ): Promise<OverridableCostInputs> {
     const { countryCode, activity, ecosystem } = dto;
     // The coming CostInput has a implementation labor property which does not exist in the BaseDataView entity, so we use a partial type to avoid the error

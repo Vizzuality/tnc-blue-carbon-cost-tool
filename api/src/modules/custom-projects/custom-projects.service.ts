@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CalculationEngine } from '@api/modules/calculations/calculation.engine';
 import { CustomProjectInputFactory } from '@api/modules/custom-projects/input-factory/custom-project-input.factory';
-import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
+import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overridable-cost-inputs.dto';
 import { DataRepository } from '@api/modules/calculations/data.repository';
 import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { CostCalculator } from '@api/modules/calculations/cost.calculator';
@@ -63,9 +63,9 @@ export class CustomProjectsService extends AppBaseService<
   }
 
   async getDefaultCostInputs(
-    dto: GetDefaultCostInputsDto,
+    dto: GetOverridableCostInputs,
   ): Promise<OverridableCostInputs> {
-    return this.dataRepository.getDefaultCostInputs(dto);
+    return this.dataRepository.getOverridableCostInputs(dto);
   }
 
   async getDefaultAssumptions(dto: GetOverridableAssumptionsDTO) {
