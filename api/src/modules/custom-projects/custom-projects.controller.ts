@@ -31,8 +31,9 @@ export class CustomProjectsController {
   async getAssumptions(): Promise<ControllerResponse> {
     return tsRestHandler(
       customProjectContract.getDefaultAssumptions,
-      async () => {
-        const data = await this.customProjects.getDefaultAssumptions();
+      async ({ query }) => {
+        const data: any =
+          await this.customProjects.getDefaultAssumptions(query);
         return { body: { data }, status: HttpStatus.OK };
       },
     );

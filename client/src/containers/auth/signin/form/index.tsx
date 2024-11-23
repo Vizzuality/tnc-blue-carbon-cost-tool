@@ -4,12 +4,15 @@ import { FC, FormEvent, useCallback, useRef, useState } from "react";
 
 import { useForm } from "react-hook-form";
 
+import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LogInSchema } from "@shared/schemas/auth/login.schema";
 import { signIn } from "next-auth/react";
 import { z } from "zod";
+
+import EmailInput from "@/containers/auth/email-input";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -66,26 +69,27 @@ const SignInForm: FC = () => {
 
   return (
     <Form {...form}>
-      <form ref={formRef} className="w-full space-y-8" onSubmit={handleSignIn}>
+      <form ref={formRef} className="w-full space-y-6" onSubmit={handleSignIn}>
         <FormField
           control={form.control}
           name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input autoFocus placeholder="Enter your email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => <EmailInput {...field} />}
         />
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <div className="flex items-center justify-between">
+                <FormLabel>Password</FormLabel>
+                <Button
+                  variant="link"
+                  className="p-0 font-normal text-muted-foreground"
+                  asChild
+                >
+                  <Link href="/auth/forgot-password">Forgot password?</Link>
+                </Button>
+              </div>
               <FormControl>
                 <div className="relative flex items-center">
                   <Input
@@ -103,8 +107,8 @@ const SignInForm: FC = () => {
         {errorMessage && (
           <div className="text-center text-destructive">{errorMessage}</div>
         )}
-        <div className="space-y-2 px-8">
-          <Button variant="secondary" type="submit" className="w-full">
+        <div className="flex justify-end">
+          <Button variant="default" type="submit">
             Log in
           </Button>
         </div>

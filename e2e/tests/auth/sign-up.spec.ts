@@ -27,6 +27,45 @@ test.describe("Auth - Sign Up", () => {
   });
 
   test("an user signs up successfully", async ({ page }) => {
+    const user: Pick<User, "name" | "email" | "partnerName"> = {
+      name: "John Doe",
+      partnerName: "Jane Doe",
+      email: "johndoe@test.com",
+    };
+
+    await page.goto(`/auth/signup`);
+
+    await page.getByPlaceholder("Enter your name").fill(user.name);
+    await page.getByPlaceholder("Enter partner name").fill(user.partnerName);
+    await page.getByLabel("Email").fill(user.email);
+    await page.getByRole("checkbox").check();
+
+    await page.getByRole("button", { name: /Create account/i }).click();
+
+    await expect(
+      // Has to be a more specific selector targeting the notification list item
+      page.getByRole("list").getByRole("status").filter({
+        hasText:
+          "Sign up successful! Please check your email to verify your account.",
+      }),
+    ).toBeVisible();
+
+    await page.waitForURL("/auth/signin");
+    await expect(
+      page.getByText("Welcome to Blue Carbon Cost", { exact: true }),
+    ).toBeVisible();
+
+    const registeredUser = await testManager
+      .getDataSource()
+      .getRepository(User)
+      .findOne({ where: { email: user.email } });
+
+    expect(registeredUser?.isActive).toBe(false);
+  });
+
+  test("an user successfully finish signup process with OTP", async ({
+    page,
+  }) => {
     const user: Pick<User, "email" | "password" | "isActive"> = {
       email: "johndoe@test.com",
       password: "passwordpassword",
@@ -54,12 +93,10 @@ test.describe("Auth - Sign Up", () => {
     await page.getByPlaceholder("Repeat the password").click();
     await page.getByPlaceholder("Repeat the password").fill(newPassword);
 
-    await page.getByRole("button", { name: /sign up/i }).click();
+    await page.getByRole("button", { name: /save/i }).click();
 
     await page.waitForURL("/auth/signin");
-    await expect(
-      page.getByRole("heading", { name: "Welcome to Blue Carbon Cost" }),
-    ).toBeVisible();
+    await expect(page.getByText("Welcome to Blue Carbon Cost")).toBeVisible();
   });
 
   test("an user signs up with an invalid token", async ({ page }) => {
@@ -75,6 +112,6 @@ test.describe("Auth - Sign Up", () => {
     ).toBeDisabled();
     await expect(page.getByPlaceholder("Create a password")).toBeDisabled();
     await expect(page.getByPlaceholder("Repeat the password")).toBeDisabled();
-    await expect(page.getByRole("button", { name: /sign up/i })).toBeDisabled();
+    await expect(page.getByRole("button", { name: /save/i })).toBeDisabled();
   });
 });

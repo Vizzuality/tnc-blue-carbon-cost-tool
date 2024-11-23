@@ -4,6 +4,7 @@ import { FC, FormEvent, useCallback, useRef } from "react";
 
 import { useForm } from "react-hook-form";
 
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,6 +17,13 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -103,86 +111,92 @@ const NewPasswordForm: FC = () => {
   const isDisabled = isFetching || isError || !isValidToken;
 
   return (
-    <div className="space-y-8 rounded-2xl py-6">
-      <div className="space-y-4 px-6">
-        <h2 className="text-xl font-semibold">Create new password</h2>
-        {!isValidToken && (
-          <p className="text-sm text-destructive">
-            The token is invalid or has expired.
-          </p>
-        )}
-      </div>
-      <Form {...form}>
-        <form
-          ref={formRef}
-          className="w-full space-y-8"
-          onSubmit={handleForgotPassword}
-        >
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <FormLabel>New password</FormLabel>
-                <FormControl>
-                  <div className="relative flex items-center">
-                    <Input
-                      placeholder="*******"
-                      type="password"
-                      autoComplete="new-password"
-                      disabled={isDisabled}
-                      {...field}
-                    />
-                  </div>
-                </FormControl>
-                {!fieldState.invalid && (
-                  <FormDescription>
-                    Password must contain at least 8 characters.
-                  </FormDescription>
-                )}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="repeatPassword"
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <FormLabel>Repeat password</FormLabel>
-                <FormControl>
-                  <div className="relative flex items-center">
-                    <Input
-                      placeholder="*******"
-                      type="password"
-                      autoComplete="new-password"
-                      disabled={isDisabled}
-                      {...field}
-                    />
-                  </div>
-                </FormControl>
-                {!fieldState.invalid && (
-                  <FormDescription>
-                    Password must contain at least 8 characters.
-                  </FormDescription>
-                )}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="space-y-2 px-6">
-            <Button
-              variant="secondary"
-              type="submit"
-              className="w-full"
-              disabled={isDisabled}
-            >
-              Change password
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+    <Card variant="secondary" className="p-6">
+      <CardHeader className="space-y-4">
+        <CardTitle className="text-xl font-semibold">
+          Change your password
+        </CardTitle>
+        <CardDescription className="text-muted-foreground">
+          {!isValidToken ? (
+            <p className="text-sm text-destructive">
+              The token is invalid or has expired.
+            </p>
+          ) : (
+            <p>Please set a new password to secure your account.</p>
+          )}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            ref={formRef}
+            className="w-full space-y-8"
+            onSubmit={handleForgotPassword}
+          >
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>New password</FormLabel>
+                  <FormControl>
+                    <div className="relative flex items-center">
+                      <Input
+                        placeholder="*******"
+                        type="password"
+                        autoComplete="new-password"
+                        disabled={isDisabled}
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  {!fieldState.invalid && (
+                    <FormDescription>
+                      Password must contain at least 8 characters.
+                    </FormDescription>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="repeatPassword"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Repeat password</FormLabel>
+                  <FormControl>
+                    <div className="relative flex items-center">
+                      <Input
+                        placeholder="*******"
+                        type="password"
+                        autoComplete="new-password"
+                        disabled={isDisabled}
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  {!fieldState.invalid && (
+                    <FormDescription>
+                      Password must contain at least 8 characters.
+                    </FormDescription>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" asChild>
+                <Link href="/auth/signin">Cancel</Link>
+              </Button>
+              <Button type="submit" disabled={isDisabled}>
+                Change password
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 

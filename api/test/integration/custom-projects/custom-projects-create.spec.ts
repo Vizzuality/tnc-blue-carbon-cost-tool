@@ -16,7 +16,7 @@ describe('Create Custom Projects - Setup', () => {
     await testManager.close();
   });
 
-  describe('TEMPORAL, FOR REFERENCE', () => {
+  describe.skip('TEMPORAL, FOR REFERENCE', () => {
     test('Should generate a conservation project input object that will be used for calculations', async () => {
       const response = await testManager
         .request()

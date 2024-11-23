@@ -2,7 +2,6 @@
 
 import { FC, useCallback } from "react";
 
-import { Trash2Icon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 
 import { client } from "@/lib/query-client";
@@ -52,44 +51,41 @@ const DeleteAccount: FC = () => {
   }, [session?.accessToken, toast]);
 
   return (
-    <div className="px-8">
-      <AlertDialog>
+    <AlertDialog>
+      <div className="flex justify-end">
         <AlertDialogTrigger asChild>
-          <Button
-            type="button"
-            variant="destructive"
-            className="group w-full space-x-2"
-          >
-            <span>Delete account</span>
-            <Trash2Icon className="h-4 w-4 text-destructive group-hover:text-red-600" />
+          <Button type="button" variant="destructive">
+            Delete account
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Account deletion</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel asChild>
-              <Button type="button">Cancel</Button>
-            </AlertDialogCancel>
-            <AlertDialogAction asChild>
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={onDeleteAccount}
-                className="bg-destructive text-foreground hover:bg-red-600 hover:text-white"
-              >
-                Delete account
-              </Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+      </div>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete my account</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel asChild>
+            <Button variant="outline" type="button">
+              Cancel
+            </Button>
+          </AlertDialogCancel>
+          <AlertDialogAction asChild>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={onDeleteAccount}
+              className="bg-destructive text-foreground hover:bg-red-600 hover:text-white"
+            >
+              Delete account
+            </Button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

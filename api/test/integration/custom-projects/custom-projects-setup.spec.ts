@@ -20,6 +20,31 @@ describe('Create Custom Projects - Setup', () => {
     await testManager.close();
   });
 
+  describe('Get Overridable Model Assumptions', () => {
+    test('Should return overridable model assumptions based on ecosystem and activity', async () => {
+      const response = await testManager
+        .request()
+        .get(customProjectContract.getDefaultAssumptions.path)
+        .query({
+          ecosystem: ECOSYSTEM.MANGROVE,
+          activity: ACTIVITY.CONSERVATION,
+        });
+
+      expect(response.body.data).toHaveLength(7);
+      expect(response.body.data.map((assumptions) => assumptions.name)).toEqual(
+        [
+          'Baseline reassessment frequency',
+          'Buffer',
+          'Carbon price increase',
+          'Conservation project length',
+          'Discount rate',
+          'Mangrove restoration rate',
+          'Verification frequency',
+        ],
+      );
+    });
+  });
+
   test('Should return the list of countries that are available to create a custom project', async () => {
     const response = await testManager
       .request()
@@ -54,7 +79,7 @@ describe('Create Custom Projects - Setup', () => {
       establishingCarbonRights: 46666.666666666664,
       financingCost: 0.05,
       validation: 50000,
-      implementationLaborHybrid: null,
+      implementationLabor: 0,
       monitoring: 8400,
       maintenance: 0.0833,
       carbonStandardFees: 0.2,

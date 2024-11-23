@@ -1,9 +1,9 @@
-import { ACTIVITY } from '@shared/entities/activity.enum';
-import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import {
-  PROJECT_PRICE_TYPE,
+  ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
-} from '@shared/entities/projects.entity';
+} from '@shared/entities/activity.enum';
+import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
+import { PROJECT_PRICE_TYPE } from '@shared/entities/projects.entity';
 
 export type ExcelProjects = {
   project_name: string;

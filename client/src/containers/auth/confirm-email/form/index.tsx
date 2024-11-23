@@ -9,13 +9,20 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
 import { RequestEmailUpdateSchema } from "@shared/schemas/users/request-email-update.schema";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -45,7 +52,7 @@ const NewPasswordForm: FC = () => {
     data: isValidToken,
     isFetching,
     isError,
-  } = useQuery({
+  } = useSuspenseQuery({
     queryKey: queryKeys.auth.confirmEmailToken(params.token).queryKey,
     queryFn: () => {
       return client.auth.validateToken.query({
@@ -93,46 +100,47 @@ const NewPasswordForm: FC = () => {
   const isDisabled = isFetching || isError || !isValidToken;
 
   return (
-    <div className="space-y-8 rounded-2xl py-6">
-      <div className="space-y-4 px-6">
-        <h2 className="text-xl font-semibold">Confirm email</h2>
+    <Card variant="secondary" className="p-6">
+      <CardHeader className="space-y-4">
+        <CardTitle className="text-xl font-semibold">
+          Confirm your email
+        </CardTitle>
         {!isValidToken && (
-          <p className="text-sm text-destructive">
-            The token is invalid or has expired.
-          </p>
+          <CardDescription className="text-muted-foreground">
+            <p className="text-sm text-destructive">
+              The token is invalid or has expired.
+            </p>
+          </CardDescription>
         )}
-      </div>
-      <Form {...form}>
-        <form
-          ref={formRef}
-          className="w-full space-y-8"
-          onSubmit={handleEmailConfirmation}
-        >
-          <FormField
-            control={form.control}
-            name="newEmail"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input type="hidden" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="space-y-2 px-6">
-            <Button
-              variant="secondary"
-              type="submit"
-              className="w-full"
-              disabled={isDisabled}
-            >
-              Confirm email
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            ref={formRef}
+            className="w-full space-y-8"
+            onSubmit={handleEmailConfirmation}
+          >
+            <FormField
+              control={form.control}
+              name="newEmail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input type="hidden" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex justify-end">
+              <Button type="submit" disabled={isDisabled}>
+                Confirm email
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 

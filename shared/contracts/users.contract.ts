@@ -3,18 +3,18 @@ import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { User } from "@shared/entities/users/user.entity";
 import { UserDto } from "@shared/dtos/users/user.dto";
 import { z } from "zod";
-import { UpdateUserDto } from "@shared/dtos/users/update-user.dto";
-import { JSONAPIError } from '@shared/dtos/json-api.error';
+import { JSONAPIError } from "@shared/dtos/json-api.error";
 
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { UpdateUserPasswordSchema } from "@shared/schemas/users/update-password.schema";
 import { RequestEmailUpdateSchema } from "@shared/schemas/users/request-email-update.schema";
+import { UpdateUserSchema } from "@shared/schemas/users/update-user.schema";
 
 const contract = initContract();
 export const usersContract = contract.router({
   findMe: {
-    method: 'GET',
-    path: '/users/me',
+    method: "GET",
+    path: "/users/me",
     responses: {
       200: contract.type<ApiResponse<UserDto>>(),
       401: contract.type<JSONAPIError>(),
@@ -30,7 +30,7 @@ export const usersContract = contract.router({
     responses: {
       200: contract.type<ApiResponse<UserDto>>(),
     },
-    body: contract.type<UpdateUserDto>(),
+    body: UpdateUserSchema,
     summary: "Update an existing user",
   },
   updatePassword: {
@@ -57,5 +57,15 @@ export const usersContract = contract.router({
       200: null,
     },
     body: null,
+  },
+
+  uploadData: {
+    method: "POST",
+    path: "/users/upload-data",
+    responses: {
+      201: contract.type<any>(),
+    },
+    contentType: "multipart/form-data",
+    body: contract.type<FormData>(),
   },
 });

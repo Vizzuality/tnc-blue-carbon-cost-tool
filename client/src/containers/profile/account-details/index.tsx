@@ -26,7 +26,7 @@ import { useToast } from "@/components/ui/toast/use-toast";
 
 import { accountDetailsSchema } from "./schema";
 
-const UpdateEmailForm: FC = () => {
+const AccountDetailsForm: FC = () => {
   const queryClient = useQueryClient();
   const { data: session, update: updateSession } = useSession();
   const formRef = useRef<HTMLFormElement>(null);
@@ -115,7 +115,7 @@ const UpdateEmailForm: FC = () => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Your name</FormLabel>
               <FormControl>
                 <div className="relative flex items-center">
                   <Input
@@ -154,17 +154,17 @@ const UpdateEmailForm: FC = () => {
           )}
         />
 
-        <Button
-          variant="secondary"
-          type="submit"
-          className="w-full"
-          // disabled={!form.formState.isValid}
-        >
-          Update
-        </Button>
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" type="button" onClick={() => form.reset()}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={!form.formState.isDirty}>
+            Save
+          </Button>
+        </div>
       </form>
     </Form>
   );
 };
 
-export default UpdateEmailForm;
+export default AccountDetailsForm;

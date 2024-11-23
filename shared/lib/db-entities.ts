@@ -30,6 +30,9 @@ import { BaseSize } from "@shared/entities/base-size.entity";
 import { BaseIncrease } from "@shared/entities/base-increase.entity";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { CustomProject } from "@shared/entities/custom-project.entity";
+import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-inputs.entity";
+import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity";
+import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -64,4 +67,7 @@ export const COMMON_DATABASE_ENTITIES = [
   BaseIncrease,
   ModelAssumptions,
   CustomProject,
+  UserUploadCostInputs,
+  UserUploadRestorationInputs,
+  UserUploadConservationInputs,
 ];

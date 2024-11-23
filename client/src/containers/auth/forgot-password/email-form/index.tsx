@@ -4,22 +4,25 @@ import { FC, FormEvent, useCallback, useRef } from "react";
 
 import { useForm } from "react-hook-form";
 
+import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EmailSchema } from "@shared/schemas/auth/login.schema";
 import { z } from "zod";
 
 import { client } from "@/lib/query-client";
 
+import EmailInput from "@/containers/auth/email-input";
+
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Form, FormField } from "@/components/ui/form";
 import { useApiResponseToast } from "@/components/ui/toast/use-api-response-toast";
 
 const ForgotPasswordEmailForm: FC = () => {
@@ -62,41 +65,36 @@ const ForgotPasswordEmailForm: FC = () => {
   );
 
   return (
-    <div className="space-y-8 rounded-2xl py-6">
-      <div className="space-y-4 px-6">
-        <h2 className="text-xl font-semibold">Reset your password</h2>
-        <p className="text-xs text-muted-foreground">
+    <Card variant="secondary" className="p-6">
+      <CardHeader className="space-y-4">
+        <CardTitle className="text-xl font-semibold">Reset password</CardTitle>
+        <CardDescription className="text-muted-foreground">
           Enter your email address, and we&apos;ll send you a link to get back
           into your account.
-        </p>
-      </div>
-      <Form {...form}>
-        <form
-          ref={formRef}
-          className="w-full space-y-8"
-          onSubmit={handleForgotPassword}
-        >
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input autoFocus placeholder="Enter your email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="space-y-2 px-6">
-            <Button variant="secondary" type="submit" className="w-full">
-              Send link
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            ref={formRef}
+            className="w-full space-y-8"
+            onSubmit={handleForgotPassword}
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => <EmailInput {...field} />}
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" asChild>
+                <Link href="/auth/signin">Cancel</Link>
+              </Button>
+              <Button type="submit">Send link</Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 

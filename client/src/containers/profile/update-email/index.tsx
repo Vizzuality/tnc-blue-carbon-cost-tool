@@ -59,24 +59,36 @@ const UpdateEmailForm: FC = () => {
       const parsed = accountDetailsSchema.safeParse(formData);
 
       if (parsed.success) {
-        const response = await client.user.requestEmailUpdate.mutation({
-          body: {
-            newEmail: parsed.data.email,
-          },
-          extraHeaders: {
-            authorization: `Bearer ${session?.accessToken as string}`,
-          },
-        });
-
-        if (response.status === 200) {
-          updateSession(response.body);
-
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.user.me(session?.user?.id as string).queryKey,
+        try {
+          const response = await client.user.requestEmailUpdate.mutation({
+            body: {
+              newEmail: parsed.data.email,
+            },
+            extraHeaders: {
+              authorization: `Bearer ${session?.accessToken as string}`,
+            },
           });
 
+          if (response.status === 200) {
+            updateSession(response.body);
+
+            queryClient.invalidateQueries({
+              queryKey: queryKeys.user.me(session?.user?.id as string).queryKey,
+            });
+
+            toast({
+              description: "You will receive an email in your inbox.",
+            });
+          } else {
+            toast({
+              variant: "destructive",
+              description: "Something went wrong updating the email",
+            });
+          }
+        } catch (e) {
           toast({
-            description: "Your email has been updated successfully.",
+            variant: "destructive",
+            description: "Something went wrong updating the email",
           });
         }
       }
@@ -99,7 +111,7 @@ const UpdateEmailForm: FC = () => {
     <Form {...form}>
       <form
         ref={formRef}
-        className="flex w-full items-center justify-between space-x-4"
+        className="w-full space-y-4"
         onSubmit={(evt) => {
           form.handleSubmit(() => {
             onSubmit(new FormData(formRef.current!));
@@ -110,8 +122,8 @@ const UpdateEmailForm: FC = () => {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="flex w-full items-center space-x-4 space-y-0">
-              <FormLabel>Email</FormLabel>
+            <FormItem>
+              <FormLabel>Your email</FormLabel>
               <FormControl>
                 <div className="relative flex w-full items-center">
                   <Input
@@ -132,13 +144,11 @@ const UpdateEmailForm: FC = () => {
           )}
         />
 
-        <Button
-          variant="secondary"
-          type="submit"
-          disabled={!form.formState.isValid}
-        >
-          Update email
-        </Button>
+        <div className="flex justify-end">
+          <Button type="submit" disabled={!form.formState.isValid}>
+            Update email
+          </Button>
+        </div>
       </form>
     </Form>
   );

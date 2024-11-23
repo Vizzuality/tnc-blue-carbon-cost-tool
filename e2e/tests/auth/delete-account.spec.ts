@@ -44,7 +44,7 @@ test.describe("Auth - Delete Account", () => {
 
     await page.waitForURL('/auth/signin');
 
-    await page.getByLabel("Email").fill(user.email);
+    await page.getByPlaceholder('Enter your email address').fill(user.email);
     await page.locator('input[type="password"]').fill(user.password);
     await page.getByRole("button", { name: /log in/i }).click();
 

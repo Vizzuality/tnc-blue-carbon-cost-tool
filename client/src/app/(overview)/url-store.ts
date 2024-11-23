@@ -8,10 +8,12 @@ import {
   PROJECT_PRICE_TYPE,
   PROJECT_SIZE_FILTER,
 } from "@shared/entities/projects.entity";
+import { useAtom } from "jotai";
 import { parseAsJson, parseAsStringLiteral, useQueryState } from "nuqs";
 import { z } from "zod";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
+import { popupAtom } from "@/app/(overview)/store";
 
 import {
   INITIAL_COST_RANGE,
@@ -48,10 +50,22 @@ export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
 };
 
 export function useGlobalFilters() {
-  return useQueryState(
+  const [popup, setPopup] = useAtom(popupAtom);
+  const [filters, setFilters] = useQueryState(
     "filters",
     parseAsJson(filtersSchema.parse).withDefault(INITIAL_FILTERS_STATE),
   );
+
+  const updateFilters = async (
+    updater: (
+      prev: typeof INITIAL_FILTERS_STATE,
+    ) => typeof INITIAL_FILTERS_STATE,
+  ) => {
+    await setFilters(updater);
+    if (popup) setPopup(null);
+  };
+
+  return [filters, updateFilters] as const;
 }
 
 export function useTableView() {

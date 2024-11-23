@@ -2,16 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
 import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CalculationEngine } from '@api/modules/calculations/calculation.engine';
 import { CustomProjectInputFactory } from '@api/modules/custom-projects/input-factory/custom-project-input.factory';
-import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
+import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overridable-cost-inputs.dto';
 import { DataRepository } from '@api/modules/calculations/data.repository';
-import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
-import { CustomProjectAssumptionsDto } from '@api/modules/custom-projects/dto/project-assumptions.dto';
+import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { CostCalculator } from '@api/modules/calculations/cost.calculator';
 import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
+import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
+import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -25,8 +26,8 @@ export class CustomProjectsService extends AppBaseService<
     public readonly repo: Repository<CustomProject>,
     public readonly calculationEngine: CalculationEngine,
     public readonly dataRepository: DataRepository,
+    public readonly assumptionsRepository: AssumptionsRepository,
     public readonly customProjectFactory: CustomProjectInputFactory,
-    public readonly dataSource: DataSource,
   ) {
     super(repo, 'customProject', 'customProjects');
   }
@@ -67,18 +68,12 @@ export class CustomProjectsService extends AppBaseService<
   }
 
   async getDefaultCostInputs(
-    dto: GetDefaultCostInputsDto,
-  ): Promise<CostInputs> {
-    return this.dataRepository.getDefaultCostInputs(dto);
+    dto: GetOverridableCostInputs,
+  ): Promise<OverridableCostInputs> {
+    return this.dataRepository.getOverridableCostInputs(dto);
   }
 
-  async getDefaultAssumptions(): Promise<CustomProjectAssumptionsDto> {
-    const modelAssumptions =
-      await this.dataRepository.getDefaultModelAssumptions();
-    const projectAssumptions = new CustomProjectAssumptionsDto();
-    modelAssumptions.forEach((assumption) => {
-      projectAssumptions[assumption.name] = assumption.value;
-    });
-    return projectAssumptions;
+  async getDefaultAssumptions(dto: GetOverridableAssumptionsDTO) {
+    return this.assumptionsRepository.getOverridableModelAssumptions(dto);
   }
 }
