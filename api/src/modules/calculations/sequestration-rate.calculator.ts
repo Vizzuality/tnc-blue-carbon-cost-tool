@@ -1,6 +1,9 @@
 import { ConservationProject } from '@api/modules/custom-projects/conservation.project';
-import { ACTIVITY } from '@shared/entities/activity.enum';
-import { RESTORATION_ACTIVITY_SUBTYPE } from '@shared/entities/projects.entity';
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from '@shared/entities/activity.enum';
+
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

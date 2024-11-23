@@ -1,4 +1,7 @@
-import { ACTIVITY } from '@shared/entities/activity.enum';
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from '@shared/entities/activity.enum';
 import {
   RestorationProjectConfig,
   DEFAULT_STUFF,
@@ -6,7 +9,6 @@ import {
 import { BaseDataView } from '@shared/entities/base-data.view';
 import { CostInputsDeprecated } from '@api/modules/custom-projects/cost-inputs.interface';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
-import { RESTORATION_ACTIVITY_SUBTYPE } from '@shared/entities/projects.entity';
 
 export class RestorationProject {
   name: string;

@@ -9,7 +9,7 @@ import {
 
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "./ecosystem.enum";
-import { ACTIVITY } from "./activity.enum";
+import { ACTIVITY, RESTORATION_ACTIVITY_SUBTYPE } from "./activity.enum";
 
 export enum PROJECT_SIZE_FILTER {
   SMALL = "Small",
@@ -25,12 +25,6 @@ export enum PROJECT_PRICE_TYPE {
 export enum COST_TYPE_SELECTOR {
   TOTAL = "total",
   NPV = "npv",
-}
-
-export enum RESTORATION_ACTIVITY_SUBTYPE {
-  HYBRID = "Hybrid",
-  HYDROLOGY = "Hydrology",
-  PLANTING = "Planting",
 }
 
 @Entity("projects")
@@ -57,12 +51,12 @@ export class Project extends BaseEntity {
 
   // TODO: We need to make this a somehow enum, as a subactivity of restoration, that can be null for conservation, and can represent all restoration activities
   @Column({
-    name: "activity_subtype",
+    name: "restoration_activity",
     type: "varchar",
     length: 255,
     nullable: true,
   })
-  activitySubtype: RESTORATION_ACTIVITY_SUBTYPE;
+  restorationActivity: RESTORATION_ACTIVITY_SUBTYPE;
 
   @Column({ name: "project_size", type: "decimal" })
   projectSize: number;

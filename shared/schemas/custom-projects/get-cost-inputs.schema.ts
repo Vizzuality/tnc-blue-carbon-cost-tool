@@ -1,13 +1,16 @@
 import { z } from "zod";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { ACTIVITY } from "@shared/entities/activity.enum";
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
 
 export const GetDefaultCostInputsSchema = z
   .object({
     countryCode: z.string().min(3).max(3),
     ecosystem: z.nativeEnum(ECOSYSTEM),
     activity: z.nativeEnum(ACTIVITY),
-    restorationActivity: z.nativeEnum(ECOSYSTEM).optional(),
+    restorationActivity: z.nativeEnum(RESTORATION_ACTIVITY_SUBTYPE).optional(),
   })
   .superRefine((data, ctx) => {
     if (

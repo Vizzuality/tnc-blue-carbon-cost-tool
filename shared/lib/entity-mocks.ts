@@ -13,7 +13,7 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 export const createUser = async (
   dataSource: DataSource,
-  additionalData?: Partial<User>
+  additionalData?: Partial<User>,
 ): Promise<User> => {
   const salt = await genSalt();
   const usedPassword = additionalData?.password ?? "12345678";
@@ -30,7 +30,7 @@ export const createUser = async (
 
 export const createProject = async (
   dataSource: DataSource,
-  additionalData?: DeepPartial<Project>
+  additionalData?: DeepPartial<Project>,
 ): Promise<Project> => {
   const countries = await dataSource.getRepository(Country).find();
   if (!countries.length) {
@@ -41,7 +41,7 @@ export const createProject = async (
     countryCode: countries[0].code,
     activity: ACTIVITY.CONSERVATION,
     ecosystem: ECOSYSTEM.MANGROVE,
-    activitySubtype: RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
+    restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
     projectSize: 100,
     projectSizeFilter: PROJECT_SIZE_FILTER.LARGE,
     abatementPotential: 100,
