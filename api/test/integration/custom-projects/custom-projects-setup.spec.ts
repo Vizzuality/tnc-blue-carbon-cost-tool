@@ -32,7 +32,7 @@ describe('Create Custom Projects - Setup', () => {
       .request()
       .get(customProjectContract.getDefaultAssumptions.path);
 
-    expect(response.body.data).toHaveLength(18);
+    expect(Object.keys(response.body.data)).toHaveLength(21);
   });
 
   test('Should return default cost inputs given required filters', async () => {
