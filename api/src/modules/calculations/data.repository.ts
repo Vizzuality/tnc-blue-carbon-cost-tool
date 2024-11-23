@@ -5,7 +5,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { GetDefaultCostInputsDto } from '@shared/dtos/custom-projects/get-default-cost-inputs.dto';
-import { CostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
+import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 
@@ -71,10 +71,10 @@ export class DataRepository extends Repository<BaseDataView> {
 
   async getDefaultCostInputs(
     dto: GetDefaultCostInputsDto,
-  ): Promise<CostInputs> {
+  ): Promise<OverridableCostInputs> {
     const { countryCode, activity, ecosystem } = dto;
     // The coming CostInput has a implementation labor property which does not exist in the BaseDataView entity, so we use a partial type to avoid the error
-    const costInputs: Partial<CostInputs> = await this.findOne({
+    const costInputs: Partial<OverridableCostInputs> = await this.findOne({
       where: { countryCode, activity, ecosystem },
       select: [
         'feasibilityAnalysis',
@@ -84,7 +84,10 @@ export class DataRepository extends Repository<BaseDataView> {
         'blueCarbonProjectPlanning',
         'establishingCarbonRights',
         'validation',
+        // TODO: this has to be filtered by sub-activity
         'implementationLaborHybrid',
+        'implementationLaborPlanting',
+        'implementationLaborHydrology',
         'monitoring',
         'maintenance',
         'communityBenefitSharingFund',
@@ -93,9 +96,6 @@ export class DataRepository extends Repository<BaseDataView> {
         'mrv',
         'longTermProjectOperatingCost',
         'financingCost',
-        'implementationLaborPlanting',
-        'implementationLaborHydrology',
-        'otherCommunityCashFlow',
       ],
     });
     if (!costInputs) {
@@ -103,7 +103,7 @@ export class DataRepository extends Repository<BaseDataView> {
         `Could not find default Cost Inputs for country ${countryCode}, activity ${activity} and ecosystem ${ecosystem}`,
       );
     }
-    return costInputs as CostInputs;
+    return costInputs as OverridableCostInputs;
   }
 
   async getBaseIncreaseAndSize(params: {

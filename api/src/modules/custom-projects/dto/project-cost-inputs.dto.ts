@@ -5,7 +5,7 @@ export enum PROJECT_DEVELOPMENT_TYPE {
   NON_DEVELOPMENT = 'Non-Development',
 }
 
-export class CostInputs {
+export class OverridableCostInputs {
   @IsNumber()
   financingCost: number;
 
@@ -54,6 +54,7 @@ export class CostInputs {
   @IsNumber()
   implementationLabor: number;
 
+  // TODO: this is not overridable, remove
   @IsEnum(PROJECT_DEVELOPMENT_TYPE)
   otherCommunityCashFlow: PROJECT_DEVELOPMENT_TYPE | string;
 }
