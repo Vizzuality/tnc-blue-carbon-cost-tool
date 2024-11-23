@@ -41,10 +41,10 @@ export class ProjectParamsValidator implements ValidatorConstraintInterface {
     return validationErrors.length === 0;
   }
 
-  private formatErrors(errors: ValidationError[]): any[] {
-    const formattedErrors = [];
+  private formatErrors(errors: ValidationError[]): string[] {
+    const formattedErrors: string[] = [];
     errors.forEach((error) => {
-      Object.values(error.constraints).forEach((constraint) => {
+      Object.values(error.constraints || {}).forEach((constraint) => {
         formattedErrors.push(constraint);
       });
     });
