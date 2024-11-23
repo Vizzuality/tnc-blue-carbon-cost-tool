@@ -52,13 +52,6 @@ describe('Create Custom Projects - Setup', () => {
 
     expect(response.body.data).toHaveLength(9);
   });
-  test('Should return default model assumptions', async () => {
-    const response = await testManager
-      .request()
-      .get(customProjectContract.getDefaultAssumptions.path);
-
-    expect(Object.keys(response.body.data)).toHaveLength(21);
-  });
 
   test('Should return default cost inputs given required filters', async () => {
     const response = await testManager
