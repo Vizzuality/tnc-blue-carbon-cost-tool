@@ -165,8 +165,9 @@ export class CostCalculator {
     const totalBaseCost = this.getTotalBaseCost(
       COST_KEYS.COMMUNITY_REPRESENTATION,
     );
-    const projectDevelopmentType =
-      this.projectInput.costInputs.otherCommunityCashFlow;
+    // TODO: TO avoid type crash, fix after cost calculator has all required inputs
+    const projectDevelopmentType = 'Development';
+    //  this.projectInput.costInputs.otherCommunityCashFlow;
     const initialCost =
       projectDevelopmentType === PROJECT_DEVELOPMENT_TYPE.DEVELOPMENT
         ? 0

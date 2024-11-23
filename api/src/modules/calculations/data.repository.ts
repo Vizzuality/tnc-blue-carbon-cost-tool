@@ -1,9 +1,12 @@
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { BaseDataView } from '@shared/entities/base-data.view';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
-import { ACTIVITY } from '@shared/entities/activity.enum';
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from '@shared/entities/activity.enum';
 import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overridable-cost-inputs.dto';
 import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { BaseSize } from '@shared/entities/base-size.entity';
@@ -15,6 +18,24 @@ export type CarbonInputs = {
   emissionFactorAgb: BaseDataView['emissionFactorAgb'];
   emissionFactorSoc: BaseDataView['emissionFactorSoc'];
 };
+
+const COMMON_OVERRIDABLE_COST_INPUTS = [
+  'feasibilityAnalysis',
+  'conservationPlanningAndAdmin',
+  'dataCollectionAndFieldCost',
+  'communityRepresentation',
+  'blueCarbonProjectPlanning',
+  'establishingCarbonRights',
+  'validation',
+  'monitoring',
+  'maintenance',
+  'communityBenefitSharingFund',
+  'carbonStandardFees',
+  'baselineReassessment',
+  'mrv',
+  'longTermProjectOperatingCost',
+  'financingCost',
+];
 
 @Injectable()
 export class DataRepository extends Repository<BaseDataView> {
@@ -73,37 +94,21 @@ export class DataRepository extends Repository<BaseDataView> {
     dto: GetOverridableCostInputs,
   ): Promise<OverridableCostInputs> {
     const { countryCode, activity, ecosystem } = dto;
-    // The coming CostInput has a implementation labor property which does not exist in the BaseDataView entity, so we use a partial type to avoid the error
-    const costInputs: Partial<OverridableCostInputs> = await this.findOne({
-      where: { countryCode, activity, ecosystem },
-      select: [
-        'feasibilityAnalysis',
-        'conservationPlanningAndAdmin',
-        'dataCollectionAndFieldCost',
-        'communityRepresentation',
-        'blueCarbonProjectPlanning',
-        'establishingCarbonRights',
-        'validation',
-        // TODO: this has to be filtered by sub-activity
-        'implementationLaborHybrid',
-        'implementationLaborPlanting',
-        'implementationLaborHydrology',
-        'monitoring',
-        'maintenance',
-        'communityBenefitSharingFund',
-        'carbonStandardFees',
-        'baselineReassessment',
-        'mrv',
-        'longTermProjectOperatingCost',
-        'financingCost',
-      ],
+    const queryBuilder = this.createQueryBuilder().where({
+      countryCode,
+      activity,
+      ecosystem,
     });
+
+    const selectQueryBuilder = this.buildSelect(queryBuilder, dto);
+
+    const costInputs = await selectQueryBuilder.getRawOne();
     if (!costInputs) {
       throw new NotFoundException(
         `Could not find default Cost Inputs for country ${countryCode}, activity ${activity} and ecosystem ${ecosystem}`,
       );
     }
-    return costInputs as OverridableCostInputs;
+    return costInputs;
   }
 
   async getBaseIncreaseAndSize(params: {
@@ -125,5 +130,42 @@ export class DataRepository extends Repository<BaseDataView> {
     }
 
     return { baseSize, baseIncrease };
+  }
+
+  /**
+   * As of now, only implementation labor has to be dynamically selected based on the restoration activity, if the activity is Restoration
+   * If the activity is Conservation, the implementation labor should be null or 0
+   */
+  private buildSelect(
+    queryBuilder: SelectQueryBuilder<BaseDataView>,
+    dto: GetOverridableCostInputs,
+  ) {
+    let implementationLaborToSelect: string;
+    if (dto.activity === ACTIVITY.RESTORATION) {
+      switch (dto.restorationActivity) {
+        case RESTORATION_ACTIVITY_SUBTYPE.HYBRID:
+          implementationLaborToSelect = 'implementationLaborHybrid';
+          break;
+        case RESTORATION_ACTIVITY_SUBTYPE.PLANTING:
+          implementationLaborToSelect = 'implementationLaborPlanting';
+          break;
+        case RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY:
+          implementationLaborToSelect = 'implementationLaborHydrology';
+          break;
+      }
+      queryBuilder.select(
+        queryBuilder.alias + '.' + implementationLaborToSelect,
+        'implementationLabor',
+      );
+    }
+    // Set implementation labor to 0 if the activity is Conservation, since there is no implementation labor data for Conservation
+    if (dto.activity === ACTIVITY.CONSERVATION) {
+      queryBuilder.select('0', 'implementationLabor');
+    }
+    for (const name of COMMON_OVERRIDABLE_COST_INPUTS) {
+      queryBuilder.addSelect(queryBuilder.alias + '.' + name, name);
+    }
+
+    return queryBuilder;
   }
 }

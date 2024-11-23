@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export enum PROJECT_DEVELOPMENT_TYPE {
   DEVELOPMENT = 'Development',
@@ -53,8 +53,4 @@ export class OverridableCostInputs {
 
   @IsNumber()
   implementationLabor: number;
-
-  // TODO: this is not overridable, remove
-  @IsEnum(PROJECT_DEVELOPMENT_TYPE)
-  otherCommunityCashFlow: PROJECT_DEVELOPMENT_TYPE | string;
 }
