@@ -1107,7 +1107,7 @@ export class EntityPreprocessor {
       project.countryCode = row.country_code;
       project.ecosystem = row.ecosystem;
       project.activity = row.activity;
-      project.activitySubtype = row.activity_type;
+      project.restorationActivity = row.activity_type;
       project.projectSize = row.project_size_ha;
       project.projectSizeFilter = row.project_size_filter;
       project.abatementPotential = row.aAbatement_potential;

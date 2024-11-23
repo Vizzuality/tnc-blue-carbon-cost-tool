@@ -3,8 +3,10 @@ import { DEFAULT_STUFF } from '@api/modules/custom-projects/project-config.inter
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { SequestrationRatesCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
-import { RESTORATION_ACTIVITY_SUBTYPE } from '@shared/entities/projects.entity';
-import { ACTIVITY } from '@shared/entities/activity.enum';
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from '@shared/entities/activity.enum';
 import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculators';
 import { Finance } from 'financejs';
 
