@@ -162,8 +162,13 @@ export class DataRepository extends Repository<BaseDataView> {
     if (dto.activity === ACTIVITY.CONSERVATION) {
       queryBuilder.select('0', 'implementationLabor');
     }
+    // Since we are using aliases and selecting columns that are not in the entity, the transformer does not get triggered
+    // So we manually parse the values to float
     for (const name of COMMON_OVERRIDABLE_COST_INPUTS) {
-      queryBuilder.addSelect(queryBuilder.alias + '.' + name, name);
+      queryBuilder.addSelect(
+        queryBuilder.alias + '.' + name + ' :: float',
+        name,
+      );
     }
 
     return queryBuilder;
