@@ -1,5 +1,6 @@
 import { ResourceWithOptions } from "adminjs";
 import { FeasibilityAnalysis } from "@shared/entities/cost-inputs/feasability-analysis.entity.js";
+import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 
 export const FeasibilityAnalysisResource: ResourceWithOptions = {
   resource: FeasibilityAnalysis,
@@ -11,6 +12,9 @@ export const FeasibilityAnalysisResource: ResourceWithOptions = {
     navigation: {
       name: "Data Management",
       icon: "Database",
+    },
+    properties: {
+      ...GLOBAL_COMMON_PROPERTIES,
     },
   },
 };

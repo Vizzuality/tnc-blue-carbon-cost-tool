@@ -1,6 +1,6 @@
 import { ResourceWithOptions } from "adminjs";
 import { ProjectSize } from "@shared/entities/cost-inputs/project-size.entity.js";
-
+import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 export const ProjectSizeResource: ResourceWithOptions = {
   resource: ProjectSize,
   options: {
@@ -11,6 +11,9 @@ export const ProjectSizeResource: ResourceWithOptions = {
     navigation: {
       name: "Data Management",
       icon: "Database",
+    },
+    properties: {
+      ...GLOBAL_COMMON_PROPERTIES,
     },
   },
 };

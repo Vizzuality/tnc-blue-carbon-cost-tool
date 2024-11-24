@@ -1,6 +1,6 @@
 import { ResourceWithOptions } from "adminjs";
 import { EcosystemLoss } from "@shared/entities/carbon-inputs/ecosystem-loss.entity.js";
-
+import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 export const EcosystemLossResource: ResourceWithOptions = {
   resource: EcosystemLoss,
   options: {
@@ -11,6 +11,9 @@ export const EcosystemLossResource: ResourceWithOptions = {
     navigation: {
       name: "Data Management",
       icon: "Database",
+    },
+    properties: {
+      ...GLOBAL_COMMON_PROPERTIES,
     },
   },
 };

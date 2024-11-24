@@ -1,6 +1,6 @@
 import { ResourceWithOptions } from "adminjs";
 import { Maintenance } from "@shared/entities/cost-inputs/maintenance.entity.js";
-
+import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 export const MaintenanceResource: ResourceWithOptions = {
   resource: Maintenance,
   options: {
@@ -11,6 +11,9 @@ export const MaintenanceResource: ResourceWithOptions = {
     navigation: {
       name: "Data Management",
       icon: "Database",
+    },
+    properties: {
+      ...GLOBAL_COMMON_PROPERTIES,
     },
   },
 };
