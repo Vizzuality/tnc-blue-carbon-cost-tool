@@ -60,7 +60,10 @@ export class CustomProjectsService extends AppBaseService<
     );
 
     calculator.initializeCostPlans().calculateCosts();
-    return calculator.costPlans;
+    const assumptions1 =
+      await this.assumptionsRepository.getNonOverridableModelAssumptions();
+    return assumptions1;
+    //return calculator.costPlans;
   }
 
   async saveCustomProject(dto: CustomProjectSnapshotDto): Promise<void> {
