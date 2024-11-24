@@ -1,9 +1,9 @@
+import { atom, useAtom } from "jotai";
 import {
   PROJECT_SIZE_FILTER,
   COST_TYPE_SELECTOR,
   PROJECT_PRICE_TYPE,
 } from "@shared/entities/projects.entity";
-import { parseAsJson, useQueryState } from "nuqs";
 import { z } from "zod";
 
 import {
@@ -34,6 +34,9 @@ const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
   costRange: INITIAL_COST_RANGE,
   abatementPotentialRange: INITIAL_ABATEMENT_POTENTIAL_RANGE,
 };
+
+// Create a Jotai atom with the initial state
+const filtersAtom = atom(INITIAL_FILTERS_STATE);
 
 export const PROJECT_PARAMETERS = [
   {
@@ -88,20 +91,17 @@ export const PROJECT_PARAMETERS = [
 ] as const;
 
 function useFilters() {
-  return useQueryState(
-    "filters",
-    parseAsJson(filtersSchema.parse).withDefault(INITIAL_FILTERS_STATE),
-  );
+  return useAtom(filtersAtom);
 }
 
 export default function ParametersProjects() {
   const [filters, setFilters] = useFilters();
 
-  const handleParameters = async (
+  const handleParameters = (
     v: string,
     parameter: keyof Omit<z.infer<typeof filtersSchema>, "keyword">,
   ) => {
-    await setFilters((prev) => ({ ...prev, [parameter]: v }));
+    setFilters((prev) => ({ ...prev, [parameter]: v }));
   };
 
   return (

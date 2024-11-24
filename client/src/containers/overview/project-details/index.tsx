@@ -1,5 +1,6 @@
 import { useAtom } from "jotai";
-import { ChevronUp, ChevronDown, Plus } from "lucide-react";
+import Link from "next/link";
+import { ChevronUp, ChevronDown, Plus, NotebookPen } from "lucide-react";
 
 import {
   renderCurrency,
@@ -21,6 +22,45 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+const CreateProjectDetails = () => (
+  <Dialog>
+    <DialogTrigger asChild>
+      <Button>
+        <NotebookPen className="h-4 w-4" />
+        Create Custom Project
+      </Button>
+    </DialogTrigger>
+    <DialogContent className="sm:max-w-md">
+      <DialogHeader className="flex flex-row items-center gap-2">
+        <NotebookPen className="h-6 w-6 text-sky-blue-300" />
+        <DialogTitle className="!m-0">Create a Custom Project</DialogTitle>
+      </DialogHeader>
+      <DialogDescription>
+        By creating a custom project you will generate a customizable version
+        where you can edit all parameters to fit your specific needs.
+      </DialogDescription>
+      <DialogFooter>
+        <DialogClose>
+          <Button variant="outline">Cancel</Button>
+        </DialogClose>
+        <Button>
+          <Link href={"/projects/new"}>Create</Link>
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+);
 
 //////// ScoreIndicator component ////////
 interface ScoreIndicatorProps {
@@ -149,7 +189,7 @@ export default function ProjectDetails() {
           <ParametersProjects />
         </SheetHeader>
 
-        <div className="mt-6 space-y-6">
+        <div className="mb-12 mt-6 space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <Card className="flex flex-col gap-4 p-4">
               <div className="flex flex-col gap-2">
@@ -429,6 +469,19 @@ export default function ProjectDetails() {
               ))}
             </div>
           </Card>
+        </div>
+
+        <div className="fixed bottom-0 flex w-[calc(75%-48px)] w-full flex-wrap justify-between gap-4 bg-background py-2 sm:max-w-[calc(50%-48px)]">
+          <div className="text-xs">
+            <div>
+              Values considered for a{" "}
+              <span className="font-bold">small project (40 ha).</span>
+            </div>
+            <div>For more detailed analysis, create a custom project.</div>
+          </div>
+          <div>
+            <CreateProjectDetails />
+          </div>
         </div>
       </SheetContent>
     </Sheet>
