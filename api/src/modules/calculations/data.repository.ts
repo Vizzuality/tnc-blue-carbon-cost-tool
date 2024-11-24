@@ -12,11 +12,18 @@ import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 
-export type CarbonInputs = {
+/**
+ * Additional data that is required to perform calculations, which is not overridable by the user. Better naming and clustering of concepts would be great
+ */
+export type AdditionalBaseData = {
   ecosystemLossRate: BaseDataView['ecosystemLossRate'];
   tier1EmissionFactor: BaseDataView['tier1EmissionFactor'];
   emissionFactorAgb: BaseDataView['emissionFactorAgb'];
   emissionFactorSoc: BaseDataView['emissionFactorSoc'];
+  financingCost: BaseDataView['financingCost'];
+  maintenanceDuration: BaseDataView['maintenanceDuration'];
+  communityBenefitSharingFund: BaseDataView['communityBenefitSharingFund'];
+  otherCommunityCashFlow: BaseDataView['otherCommunityCashFlow'];
 };
 
 const COMMON_OVERRIDABLE_COST_INPUTS = [
@@ -51,7 +58,7 @@ export class DataRepository extends Repository<BaseDataView> {
     activity: ACTIVITY;
   }) {
     const { countryCode, ecosystem, activity } = dto;
-    const defaultCarbonInputs = await this.getDefaultCarbonInputs({
+    const defaultCarbonInputs = await this.getAdditionalBaseData({
       countryCode,
       ecosystem,
       activity,
@@ -68,11 +75,11 @@ export class DataRepository extends Repository<BaseDataView> {
     };
   }
 
-  async getDefaultCarbonInputs(dto: {
+  async getAdditionalBaseData(dto: {
     countryCode: string;
     ecosystem: ECOSYSTEM;
     activity: ACTIVITY;
-  }): Promise<CarbonInputs> {
+  }): Promise<AdditionalBaseData> {
     const { countryCode, ecosystem, activity } = dto;
     const defaultCarbonInputs = await this.findOne({
       where: { countryCode, activity, ecosystem },
@@ -81,6 +88,10 @@ export class DataRepository extends Repository<BaseDataView> {
         'tier1EmissionFactor',
         'emissionFactorAgb',
         'emissionFactorSoc',
+        'financingCost',
+        'maintenanceDuration',
+        'communityBenefitSharingFund',
+        'otherCommunityCashFlow',
       ],
     });
 
