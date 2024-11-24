@@ -12,7 +12,10 @@ import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-
 import { CostCalculator } from '@api/modules/calculations/cost.calculator';
 import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
 import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
-import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
+import {
+  AssumptionsRepository,
+  ModelAssumptionsForCalculations,
+} from '@api/modules/calculations/assumptions.repository';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -34,13 +37,17 @@ export class CustomProjectsService extends AppBaseService<
 
   async create(dto: CreateCustomProjectDto): Promise<any> {
     const { countryCode, ecosystem, activity } = dto;
-    const { defaultCarbonInputs, baseIncrease, baseSize } =
+    const { defaultCarbonInputs, baseIncrease, baseSize, assumptions } =
       await this.dataRepository.getDataForCalculation({
         countryCode,
         ecosystem,
         activity,
       });
 
+    const allAssumptions: ModelAssumptionsForCalculations = {
+      ...dto.assumptions,
+      ...assumptions,
+    };
     const projectInput = this.customProjectFactory.createProjectInput(
       dto,
       defaultCarbonInputs,
