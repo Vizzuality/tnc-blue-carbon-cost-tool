@@ -1110,11 +1110,13 @@ export class EntityPreprocessor {
       project.restorationActivity = row.activity_type;
       project.projectSize = row.project_size_ha;
       project.projectSizeFilter = row.project_size_filter;
-      project.abatementPotential = row.aAbatement_potential;
-      project.totalCostNPV = row.total_cost_NPV;
+      project.abatementPotential = row.abatement_potential;
+      project.totalCostNPV = row.total_cost_npv;
       project.totalCost = row.total_cost;
-      project.costPerTCO2eNPV = row['$/tCO2e (NPV)'];
-      project.costPerTCO2e = row['$/tCO2e'];
+      // TODO: This has dissapeared from the excel file and it is required for filtering, setting a fake value for now
+      //project.costPerTCO2eNPV = row['$/tCO2e (NPV)'];
+      project.costPerTCO2eNPV = row.cost_per_tco2e;
+      project.costPerTCO2e = row.cost_per_tco2e;
       project.initialPriceAssumption = row.initial_price_assumption;
       project.priceType = row.price_type;
 
