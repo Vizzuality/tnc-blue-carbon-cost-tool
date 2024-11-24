@@ -11,6 +11,8 @@ import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overr
 import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
+import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
+import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 
 /**
  * Additional data that is required to perform calculations, which is not overridable by the user. Better naming and clustering of concepts would be great
@@ -48,6 +50,7 @@ const COMMON_OVERRIDABLE_COST_INPUTS = [
 export class DataRepository extends Repository<BaseDataView> {
   constructor(
     @InjectRepository(BaseDataView) private repo: Repository<BaseDataView>,
+    private assumptionsRepository: AssumptionsRepository,
   ) {
     super(repo.target, repo.manager, repo.queryRunner);
   }
@@ -67,11 +70,14 @@ export class DataRepository extends Repository<BaseDataView> {
       ecosystem,
       activity,
     });
+    const assumptions =
+      await this.assumptionsRepository.getNonOverridableModelAssumptions();
 
     return {
       defaultCarbonInputs,
       baseSize,
       baseIncrease,
+      assumptions,
     };
   }
 
