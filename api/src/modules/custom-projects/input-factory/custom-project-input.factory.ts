@@ -1,7 +1,7 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ConservationProjectParamDto } from '@api/modules/custom-projects/dto/conservation-project-params.dto';
-import { CarbonInputs } from '@api/modules/calculations/data.repository';
+import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 
 import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
@@ -25,7 +25,10 @@ export type GeneralProjectInputs = {
 
 @Injectable()
 export class CustomProjectInputFactory {
-  createProjectInput(dto: CreateCustomProjectDto, carbonInputs: CarbonInputs) {
+  createProjectInput(
+    dto: CreateCustomProjectDto,
+    carbonInputs: AdditionalBaseData,
+  ) {
     if (dto.activity === ACTIVITY.CONSERVATION) {
       return this.createConservationProjectInput(dto, carbonInputs);
     } else if (dto.activity === ACTIVITY.RESTORATION) {
@@ -37,7 +40,7 @@ export class CustomProjectInputFactory {
 
   private createConservationProjectInput(
     dto: CreateCustomProjectDto,
-    carbonInputs: CarbonInputs,
+    carbonInputs: AdditionalBaseData,
   ): ConservationProjectInput {
     const {
       parameters,

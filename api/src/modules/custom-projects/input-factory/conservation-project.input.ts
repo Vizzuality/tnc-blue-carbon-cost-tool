@@ -7,7 +7,7 @@ import {
   ConservationProjectParamDto,
   PROJECT_EMISSION_FACTORS,
 } from '@api/modules/custom-projects/dto/conservation-project-params.dto';
-import { CarbonInputs } from '@api/modules/calculations/data.repository';
+import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
 import {
   ConservationProjectCarbonInputs,
@@ -42,7 +42,7 @@ export class ConservationProjectInput {
 
   setLossRate(
     parameters: ConservationProjectParamDto,
-    carbonInputs: CarbonInputs,
+    carbonInputs: AdditionalBaseData,
   ): this {
     if (parameters.lossRateUsed === LOSS_RATE_USED.NATIONAL_AVERAGE) {
       this.carbonInputs.lossRate = carbonInputs.ecosystemLossRate;
@@ -55,7 +55,7 @@ export class ConservationProjectInput {
 
   setEmissionFactor(
     parameters: ConservationProjectParamDto,
-    carbonInputs: CarbonInputs,
+    carbonInputs: AdditionalBaseData,
   ): this {
     if (parameters.emissionFactorUsed === PROJECT_EMISSION_FACTORS.TIER_1) {
       this.carbonInputs.emissionFactor = carbonInputs.tier1EmissionFactor;
