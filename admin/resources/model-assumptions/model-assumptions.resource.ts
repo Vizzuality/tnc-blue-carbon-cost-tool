@@ -1,5 +1,6 @@
 import { ResourceWithOptions } from "adminjs";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity.js";
+import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 
 export const ModelAssumptionResource: ResourceWithOptions = {
   resource: ModelAssumptions,
@@ -11,6 +12,9 @@ export const ModelAssumptionResource: ResourceWithOptions = {
     navigation: {
       name: "Data Management",
       icon: "Database",
+    },
+    properties: {
+      ...GLOBAL_COMMON_PROPERTIES,
     },
   },
 };

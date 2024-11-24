@@ -1,5 +1,6 @@
 import { ResourceWithOptions } from "adminjs";
 import { CarbonStandardFees } from "@shared/entities/cost-inputs/carbon-standard-fees.entity.js";
+import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 
 export const CarbonStandardFeesResource: ResourceWithOptions = {
   resource: CarbonStandardFees,
@@ -11,6 +12,9 @@ export const CarbonStandardFeesResource: ResourceWithOptions = {
     navigation: {
       name: "Data Management",
       icon: "Database",
+    },
+    properties: {
+      ...GLOBAL_COMMON_PROPERTIES,
     },
   },
 };

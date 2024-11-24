@@ -1,5 +1,6 @@
 import { ResourceWithOptions } from "adminjs";
 import { MonitoringCost } from "@shared/entities/cost-inputs/monitoring.entity.js";
+import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 
 export const MonitoringCostResource: ResourceWithOptions = {
   resource: MonitoringCost,
@@ -11,6 +12,9 @@ export const MonitoringCostResource: ResourceWithOptions = {
     navigation: {
       name: "Data Management",
       icon: "Database",
+    },
+    properties: {
+      ...GLOBAL_COMMON_PROPERTIES,
     },
   },
 };

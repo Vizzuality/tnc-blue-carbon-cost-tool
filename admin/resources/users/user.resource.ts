@@ -1,6 +1,7 @@
 import { ResourceWithOptions } from "adminjs";
 import { User } from "@shared/entities/users/user.entity.js";
 import { createUserAction } from "./user.actions.js";
+import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 
 export const UserResource: ResourceWithOptions = {
   resource: User,
@@ -10,7 +11,7 @@ export const UserResource: ResourceWithOptions = {
       icon: "User",
     },
     properties: {
-      id: { isVisible: false, isId: true },
+      ...GLOBAL_COMMON_PROPERTIES,
       password: { isVisible: false },
       isActive: { isVisible: false },
       email: { isRequired: true },

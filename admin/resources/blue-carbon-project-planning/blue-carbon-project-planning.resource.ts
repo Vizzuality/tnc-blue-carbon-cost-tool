@@ -1,5 +1,6 @@
 import { BlueCarbonProjectPlanning } from "@shared/entities/cost-inputs/blue-carbon-project-planning.entity.js";
 import { ResourceWithOptions } from "adminjs";
+import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 
 export const BlueCarbonProjectPlanningResource: ResourceWithOptions = {
   resource: BlueCarbonProjectPlanning,
@@ -25,6 +26,9 @@ export const BlueCarbonProjectPlanningResource: ResourceWithOptions = {
       },
       blueCarbon: {
         isVisible: { list: true, show: true, edit: false, filter: true },
+      },
+      properties: {
+        ...GLOBAL_COMMON_PROPERTIES,
       },
     },
     sort: {
