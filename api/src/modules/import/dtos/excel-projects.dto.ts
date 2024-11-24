@@ -15,11 +15,12 @@ export type ExcelProjects = {
   activity_type: RESTORATION_ACTIVITY_SUBTYPE;
   project_size_ha: number;
   project_size_filter: string;
-  aAbatement_potential: number;
-  total_cost_NPV: number;
+  abatement_potential: number;
+  total_cost_npv: number;
   total_cost: number;
+  // TODO: This column has dissapeared from the excel sheet
   '$/tCO2e (NPV)': number;
-  '$/tCO2e': number;
+  cost_per_tco2e: number;
   initial_price_assumption: string;
   price_type: PROJECT_PRICE_TYPE;
 };
