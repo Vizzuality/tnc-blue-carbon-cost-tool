@@ -11,7 +11,6 @@ import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overr
 import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
-import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 
 /**
@@ -61,7 +60,7 @@ export class DataRepository extends Repository<BaseDataView> {
     activity: ACTIVITY;
   }) {
     const { countryCode, ecosystem, activity } = dto;
-    const defaultCarbonInputs = await this.getAdditionalBaseData({
+    const additionalBaseData = await this.getAdditionalBaseData({
       countryCode,
       ecosystem,
       activity,
@@ -70,14 +69,14 @@ export class DataRepository extends Repository<BaseDataView> {
       ecosystem,
       activity,
     });
-    const assumptions =
+    const additionalAssumptions =
       await this.assumptionsRepository.getNonOverridableModelAssumptions();
 
     return {
-      defaultCarbonInputs,
+      additionalBaseData,
       baseSize,
       baseIncrease,
-      assumptions,
+      additionalAssumptions,
     };
   }
 
@@ -87,7 +86,7 @@ export class DataRepository extends Repository<BaseDataView> {
     activity: ACTIVITY;
   }): Promise<AdditionalBaseData> {
     const { countryCode, ecosystem, activity } = dto;
-    const defaultCarbonInputs = await this.findOne({
+    const additionalBaseData = await this.findOne({
       where: { countryCode, activity, ecosystem },
       select: [
         'ecosystemLossRate',
@@ -101,10 +100,10 @@ export class DataRepository extends Repository<BaseDataView> {
       ],
     });
 
-    if (!defaultCarbonInputs) {
+    if (!additionalBaseData) {
       throw new NotFoundException('Could not retrieve default carbon inputs');
     }
-    return defaultCarbonInputs;
+    return additionalBaseData;
   }
 
   async getOverridableCostInputs(

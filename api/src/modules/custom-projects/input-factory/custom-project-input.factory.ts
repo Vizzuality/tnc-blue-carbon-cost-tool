@@ -5,6 +5,11 @@ import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 
 import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
+import {
+  ModelAssumptionsForCalculations,
+  NonOverridableModelAssumptions,
+} from '@api/modules/calculations/assumptions.repository';
+import { BaseDataView } from '@shared/entities/base-data.view';
 
 export type ConservationProjectCarbonInputs = {
   lossRate: number;
@@ -27,10 +32,15 @@ export type GeneralProjectInputs = {
 export class CustomProjectInputFactory {
   createProjectInput(
     dto: CreateCustomProjectDto,
-    carbonInputs: AdditionalBaseData,
+    additionalBaseData: AdditionalBaseData,
+    additionalAssumptions: NonOverridableModelAssumptions,
   ) {
     if (dto.activity === ACTIVITY.CONSERVATION) {
-      return this.createConservationProjectInput(dto, carbonInputs);
+      return this.createConservationProjectInput(
+        dto,
+        additionalBaseData,
+        additionalAssumptions,
+      );
     } else if (dto.activity === ACTIVITY.RESTORATION) {
       throw new NotImplementedException('Restoration not implemented');
     } else {
@@ -40,7 +50,8 @@ export class CustomProjectInputFactory {
 
   private createConservationProjectInput(
     dto: CreateCustomProjectDto,
-    carbonInputs: AdditionalBaseData,
+    additionalBaseData: AdditionalBaseData,
+    additionalAssumptions: NonOverridableModelAssumptions,
   ): ConservationProjectInput {
     const {
       parameters,
@@ -68,10 +79,19 @@ export class CustomProjectInputFactory {
       ecosystem,
       countryCode,
     });
-    conservationProjectInput.setLossRate(projectParams, carbonInputs);
-    conservationProjectInput.setEmissionFactor(projectParams, carbonInputs);
-    conservationProjectInput.setCostInputs(costInputs);
-    conservationProjectInput.setModelAssumptions(assumptions);
+    conservationProjectInput.setLossRate(projectParams, additionalBaseData);
+    conservationProjectInput.setEmissionFactor(
+      projectParams,
+      additionalBaseData,
+    );
+    conservationProjectInput.setCostAndCarbonInputs(
+      costInputs,
+      additionalBaseData,
+    );
+    conservationProjectInput.setModelAssumptions(
+      assumptions,
+      additionalAssumptions,
+    );
 
     return conservationProjectInput;
   }
