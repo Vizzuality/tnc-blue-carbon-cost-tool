@@ -72,17 +72,17 @@ const ProjectCost: FC = () => {
             />
           </div>
           <Graph
-            summary={{
-              totalCost: mockData.totalCost,
-              capEx: {
+            total={mockData.totalCost}
+            segments={[
+              {
                 value: mockData.capEx,
                 colorClass: "bg-sky-blue-500",
               },
-              opEx: {
+              {
                 value: mockData.opExRevenue,
                 colorClass: "bg-sky-blue-200",
               },
-            }}
+            ]}
           />
         </div>
       </CardContent>

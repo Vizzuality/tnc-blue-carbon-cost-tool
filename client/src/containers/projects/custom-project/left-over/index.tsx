@@ -57,17 +57,14 @@ const LeftOver: FC = () => {
             />
           </div>
           <Graph
-            leftOver={{
-              leftover: mockData.leftover,
-              totalRevenue: {
-                value: mockData.totalRevenue,
-                colorClass: "bg-yellow-500",
-              },
-              opEx: {
+            total={mockData.totalRevenue}
+            segments={[
+              {
                 value: mockData.opExRevenue,
                 colorClass: "bg-sky-blue-200",
               },
-            }}
+            ]}
+            leftover={mockData.leftover}
           />
         </div>
       </CardContent>
