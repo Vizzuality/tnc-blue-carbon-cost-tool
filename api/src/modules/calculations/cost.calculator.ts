@@ -14,23 +14,9 @@ type CostPlanMap = {
   [year: number]: number;
 };
 
-// @Injectable()
-// export class CostCalculatorToImplement {
-//   constructor(
-//     private readonly sequestrationRateCalculator: SequestrationRatesCalculator,
-//     private readonly revenueProfitCalculator: RevenueProfitCalculator,
-//   ) {}
-//
-//   private createCostPlan(defaultProjectLength: number): CostPlan {}
-//
-//   calculateConservationProjectCosts(
-//     projectInput: ConservationProjectInput,
-//     defaultProjectLength: number,
-//   ) {}
-// }
-
 type CostPlans = Record<keyof OverridableCostInputs, CostPlanMap>;
 
+// TODO: Strongly type this to bound it to existing types
 export enum COST_KEYS {
   FEASIBILITY_ANALYSIS = 'feasibilityAnalysis',
   CONSERVATION_PLANNING_AND_ADMIN = 'conservationPlanningAndAdmin',
