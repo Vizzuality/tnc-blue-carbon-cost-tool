@@ -3,16 +3,9 @@ import { FC } from "react";
 import { renderCurrency } from "@/lib/format";
 
 interface GraphProps {
-  summary?: {
-    totalCost: number;
-    capEx: GraphSegment;
-    opEx: GraphSegment;
-  };
-  leftOver?: {
-    leftover: number;
-    totalRevenue: GraphSegment;
-    opEx: GraphSegment;
-  };
+  total: number;
+  segments: GraphSegment[];
+  leftover?: number;
 }
 
 interface GraphSegment {
@@ -25,8 +18,8 @@ const getSize = (value: number, total: number) => {
   return `${Math.max(percentage, 0)}%`;
 };
 
-const Graph: FC<GraphProps> = ({ leftOver, summary }) => {
-  if (leftOver) {
+const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
+  if (leftover) {
     return (
       <div className="relative h-full min-h-[150px] w-full max-w-[400px] overflow-hidden rounded-md">
         <div className="absolute flex h-full w-full flex-row gap-1 rounded-md">
@@ -35,12 +28,12 @@ const Graph: FC<GraphProps> = ({ leftOver, summary }) => {
               height: "100%",
               width: "100%",
             }}
-            className={`relative h-full rounded-md transition-all duration-300 ease-in-out ${leftOver.totalRevenue.colorClass}`}
+            className="relative h-full rounded-md bg-yellow-500 transition-all duration-300 ease-in-out"
           >
             <div className="absolute bottom-1 left-0 right-0 mx-1">
               <div className="rounded-md bg-white/30 px-1.5 py-0.5 text-center text-xs font-semibold text-secondary-foreground">
                 {renderCurrency(
-                  leftOver.totalRevenue.value,
+                  total,
                   {
                     notation: "compact",
                     maximumFractionDigits: 1,
@@ -51,32 +44,32 @@ const Graph: FC<GraphProps> = ({ leftOver, summary }) => {
             </div>
           </div>
           <div className="flex h-full w-full flex-col gap-1 rounded-md">
-            <div
-              style={{
-                height: getSize(
-                  leftOver.opEx.value,
-                  leftOver.totalRevenue.value,
-                ),
-                width: "100%",
-              }}
-              className={`relative h-full rounded-md transition-all duration-300 ease-in-out ${leftOver.opEx.colorClass}`}
-            >
-              <div className="absolute bottom-1 left-0 right-0 mx-1">
-                <div className="rounded-md bg-white/30 px-1.5 py-0.5 text-center text-xs font-semibold text-secondary-foreground">
-                  {renderCurrency(
-                    leftOver.opEx.value,
-                    {
-                      notation: "compact",
-                      maximumFractionDigits: 1,
-                    },
-                    "first-letter:text-secondary-foreground",
-                  )}
+            {segments.map(({ value, colorClass }) => (
+              <div
+                key={`graph-segment-${colorClass}-${value}`}
+                style={{
+                  height: getSize(value, total),
+                  width: "100%",
+                }}
+                className={`relative h-full rounded-md transition-all duration-300 ease-in-out ${colorClass}`}
+              >
+                <div className="absolute bottom-1 left-0 right-0 mx-1">
+                  <div className="rounded-md bg-white/30 px-1.5 py-0.5 text-center text-xs font-semibold text-secondary-foreground">
+                    {renderCurrency(
+                      value,
+                      {
+                        notation: "compact",
+                        maximumFractionDigits: 1,
+                      },
+                      "first-letter:text-secondary-foreground",
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
             <div
               style={{
-                height: getSize(leftOver.leftover, leftOver.totalRevenue.value),
+                height: getSize(leftover, total),
                 width: "100%",
               }}
               className={`relative h-full rounded-md border border-dashed border-white`}
@@ -87,20 +80,21 @@ const Graph: FC<GraphProps> = ({ leftOver, summary }) => {
     );
   }
 
-  if (summary) {
-    return (
-      <div className="relative h-40 max-w-[200px] flex-1 overflow-hidden">
-        <div className="flex h-full flex-col gap-1">
+  return (
+    <div className="relative h-40 max-w-[200px] flex-1 overflow-hidden">
+      <div className="flex h-full flex-col gap-1">
+        {segments.map(({ value, colorClass }) => (
           <div
+            key={`graph-segment-${colorClass}-${value}`}
             style={{
-              height: getSize(summary.capEx.value, summary.totalCost),
+              height: getSize(value, total),
             }}
-            className={`relative min-h-[30px] rounded-md px-6 transition-all duration-300 ease-in-out ${summary.capEx.colorClass}`}
+            className={`relative min-h-[30px] rounded-md px-6 transition-all duration-300 ease-in-out ${colorClass}`}
           >
             <div className="absolute bottom-1 left-0 right-0 mx-1">
               <div className="rounded-sm bg-white/50 px-1.5 py-0.5 text-center text-xs font-semibold text-big-stone-950">
                 {renderCurrency(
-                  summary.capEx.value,
+                  value,
                   {
                     notation: "compact",
                     maximumFractionDigits: 1,
@@ -110,31 +104,10 @@ const Graph: FC<GraphProps> = ({ leftOver, summary }) => {
               </div>
             </div>
           </div>
-          <div
-            style={{
-              height: getSize(summary.opEx.value, summary.totalCost),
-            }}
-            className={`relative min-h-[30px] rounded-md px-6 transition-all duration-300 ease-in-out ${summary.opEx.colorClass}`}
-          >
-            <div className="absolute bottom-1 left-0 right-0 mx-1">
-              <div className="rounded-sm bg-white/50 px-1.5 py-0.5 text-center text-xs font-semibold text-big-stone-950">
-                {renderCurrency(
-                  summary.opEx.value,
-                  {
-                    notation: "compact",
-                    maximumFractionDigits: 1,
-                  },
-                  "first-letter:text-secondary-foreground",
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 };
 
 interface GraphLegendItem {
