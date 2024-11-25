@@ -75,12 +75,10 @@ const ProjectCost: FC = () => {
               totalCost: mockData.totalCost,
               capEx: {
                 value: mockData.capEx,
-                label: "CapEx",
                 colorClass: "bg-sky-blue-500",
               },
               opEx: {
                 value: mockData.opExRevenue,
-                label: "OpEx",
                 colorClass: "bg-sky-blue-200",
               },
             }}

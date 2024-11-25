@@ -61,12 +61,10 @@ const LeftOver: FC = () => {
               leftover: mockData.leftover,
               totalRevenue: {
                 value: mockData.totalRevenue,
-                label: "Total Revenue",
                 colorClass: "bg-yellow-500",
               },
               opEx: {
                 value: mockData.opExRevenue,
-                label: "OpEx",
                 colorClass: "bg-sky-blue-200",
               },
             }}
