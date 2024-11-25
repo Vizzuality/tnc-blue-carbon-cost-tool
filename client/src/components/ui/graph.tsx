@@ -3,13 +3,18 @@ import { FC } from "react";
 import { renderCurrency } from "@/lib/format";
 
 interface GraphProps {
+  /** The total value that represents 100% of the graph */
   total: number;
+  /** Array of segments to be visualized in the graph, each with a value and color */
   segments: GraphSegment[];
+  /** Optional value that, when provided, shows a split view with total on left and segments with leftover on right */
   leftover?: number;
 }
 
 interface GraphSegment {
+  /** Numerical value of the segment */
   value: number;
+  /** Tailwind CSS color class to be applied to the segment */
   colorClass: string;
 }
 
@@ -18,6 +23,12 @@ const getSize = (value: number, total: number) => {
   return `${Math.max(percentage, 0)}%`;
 };
 
+/**
+ * A responsive graph component that visualizes numerical data as vertical segments
+ * Has two display modes:
+ * 1. Standard mode: Shows segments stacked vertically
+ * 2. Split mode (when leftover is provided): Shows total on left and segments with leftover on right
+ */
 const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
   if (leftover) {
     return (
