@@ -70,7 +70,9 @@ export class DataRepository extends Repository<BaseDataView> {
       activity,
     });
     const additionalAssumptions =
-      await this.assumptionsRepository.getNonOverridableModelAssumptions();
+      await this.assumptionsRepository.getNonOverridableModelAssumptions(
+        activity,
+      );
 
     return {
       additionalBaseData,

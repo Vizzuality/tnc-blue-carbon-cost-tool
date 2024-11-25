@@ -22,9 +22,12 @@ const NON_OVERRIDABLE_ASSUMPTION_NAMES_MAP = {
   'Loan repayment schedule': 'loanRepaymentSchedule',
   'Soil Organic carbon release length': 'soilOrganicCarbonReleaseLength',
   'Planting success rate': 'plantingSuccessRate',
-  'Starting point scaling - restoration': 'restorationStartingPointScaling',
-  'Starting point scaling - conservation': 'conservationStartingPointScaling',
   'Default project length': 'defaultProjectLength',
+};
+
+const SCALING_POINTS_MAP = {
+  [ACTIVITY.CONSERVATION]: 'Starting point scaling - conservation',
+  [ACTIVITY.RESTORATION]: 'Starting point scaling - restoration',
 };
 
 @Injectable()
@@ -70,19 +73,23 @@ export class AssumptionsRepository extends Repository<ModelAssumptions> {
     return assumptions;
   }
 
-  async getNonOverridableModelAssumptions(): Promise<NonOverridableModelAssumptions> {
+  async getNonOverridableModelAssumptions(
+    activity: ACTIVITY,
+  ): Promise<NonOverridableModelAssumptions> {
     const NON_OVERRIDABLE_ASSUMPTION_NAMES = Object.keys(
       NON_OVERRIDABLE_ASSUMPTION_NAMES_MAP,
     );
+    const scalingPointToSelect = SCALING_POINTS_MAP[activity];
     const assumptions: ModelAssumptions[] = await this.createQueryBuilder(
       'model_assumptions',
     )
       .select(['name', 'value'])
       .where({
-        name: In(NON_OVERRIDABLE_ASSUMPTION_NAMES),
+        name: In([...NON_OVERRIDABLE_ASSUMPTION_NAMES, scalingPointToSelect]),
       })
       .getRawMany();
-    if (assumptions.length !== NON_OVERRIDABLE_ASSUMPTION_NAMES.length) {
+    // To account for global non overridable assumptions + 1 dynamically selected assumption, the scaling point
+    if (assumptions.length !== NON_OVERRIDABLE_ASSUMPTION_NAMES.length + 1) {
       throw new Error(
         'Not all required non-overridable assumptions were found',
       );
@@ -93,6 +100,9 @@ export class AssumptionsRepository extends Repository<ModelAssumptions> {
       const propertyName = NON_OVERRIDABLE_ASSUMPTION_NAMES_MAP[item.name];
       if (propertyName) {
         acc[propertyName] = parseFloat(item.value);
+      }
+      if (Object.values(SCALING_POINTS_MAP).includes(item.name)) {
+        acc.startingPointScaling = parseFloat(item.value);
       }
       return acc;
     }, {} as NonOverridableModelAssumptions);
@@ -112,8 +122,7 @@ export class NonOverridableModelAssumptions {
   loanRepaymentSchedule: number;
   soilOrganicCarbonReleaseLength: number;
   plantingSuccessRate: number;
-  restorationStartingPointScaling: number;
-  conservationStartingPointScaling: number;
+  startingPointScaling: number;
   defaultProjectLength: number;
 }
 
