@@ -17,7 +17,6 @@ interface GraphProps {
 
 interface GraphSegment {
   value: number;
-  label: string;
   colorClass: string;
 }
 
