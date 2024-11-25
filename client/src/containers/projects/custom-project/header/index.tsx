@@ -1,8 +1,10 @@
 import { FC } from "react";
 
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { LayoutListIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+
+import { cn } from "@/lib/utils";
 
 import { projectsUIState } from "@/app/(overview)/store";
 
@@ -14,7 +16,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast/use-toast";
 
 const CustomProjectHeader: FC = () => {
-  const setProjectSummaryOpen = useSetAtom(projectsUIState);
+  const [{ projectSummaryOpen }, setProjectSummaryOpen] =
+    useAtom(projectsUIState);
   const { data: session } = useSession();
   const { toast } = useToast();
   const handleSaveButtonClick = () => {
@@ -36,7 +39,9 @@ const CustomProjectHeader: FC = () => {
           }}
         >
           <LayoutListIcon className="h-4 w-4" />
-          <span>Project summary</span>
+          <span className={cn({ hidden: projectSummaryOpen })}>
+            Project summary
+          </span>
         </Button>
         <CustomProjectParameters />
         {session ? (
