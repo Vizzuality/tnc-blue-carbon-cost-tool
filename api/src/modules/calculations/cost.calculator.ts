@@ -34,7 +34,7 @@ export enum COST_KEYS {
   MAINTENANCE = 'maintenance',
 }
 
-type ProjectInput = ConservationProjectInput | RestorationProjectInput;
+export type ProjectInput = ConservationProjectInput | RestorationProjectInput;
 
 export class CostCalculator {
   projectInput: ProjectInput;
@@ -52,8 +52,7 @@ export class CostCalculator {
   ) {
     this.projectInput = projectInput;
     this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
-    this.startingPointScaling =
-      projectInput.assumptions.conservationStartingPointScaling;
+    this.startingPointScaling = projectInput.assumptions.startingPointScaling;
     this.baseIncrease = baseIncrease;
     this.baseSize = baseSize;
   }

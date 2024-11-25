@@ -1,11 +1,11 @@
 import { ConservationProject } from '@api/modules/custom-projects/conservation.project';
-import { SequestrationRatesCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
+import { SequestrationRatesCalculatorDEPRECATED } from '@api/modules/calculations/DEPRECATED-sequestration-rate.calculator';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class RevenueProfitCalculator {
   private project: ConservationProject;
-  private sequestrationCreditsCalculator: SequestrationRatesCalculator;
+  private sequestrationCreditsCalculator: SequestrationRatesCalculatorDEPRECATED;
   private projectLength: number;
   private defaultProjectLength: number;
 
@@ -13,7 +13,7 @@ export class RevenueProfitCalculator {
     project: ConservationProject,
     projectLength: number,
     defaultProjectLength: number,
-    sequestrationCreditsCalculator: SequestrationRatesCalculator,
+    sequestrationCreditsCalculator: SequestrationRatesCalculatorDEPRECATED,
   ) {
     this.project = project;
     this.sequestrationCreditsCalculator = sequestrationCreditsCalculator;
