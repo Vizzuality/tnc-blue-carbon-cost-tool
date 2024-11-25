@@ -2,11 +2,7 @@ import { ChartNoAxesColumnIcon, Table2Icon } from "lucide-react";
 
 import { useProjectCashFlowView } from "@/app/projects/[id]/store";
 
-import {
-  Tabs as ShadcnTabs,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const CASH_FLOW_VIEWS = ["chart", "table"] as const;
 
@@ -21,11 +17,11 @@ export const CASH_FLOW_TABS = [
   },
 ] as const;
 
-export default function Tabs() {
+export default function CashFlowTabs() {
   const [view, setView] = useProjectCashFlowView();
 
   return (
-    <ShadcnTabs
+    <Tabs
       defaultValue={view}
       onValueChange={async (v) => {
         await setView(v as typeof view);
@@ -38,6 +34,6 @@ export default function Tabs() {
           </TabsTrigger>
         ))}
       </TabsList>
-    </ShadcnTabs>
+    </Tabs>
   );
 }
