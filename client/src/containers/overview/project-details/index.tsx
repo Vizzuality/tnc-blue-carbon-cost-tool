@@ -165,7 +165,7 @@ export default function ProjectDetails() {
 
   return (
     <Sheet open={projectDetails.isOpen} onOpenChange={handleOpenDetails}>
-      <SheetContent className="overflow-y-scroll sm:max-w-[50%]">
+      <SheetContent className="overflow-y-scroll sm:max-w-[50%] pb-0">
         <SheetHeader className="space-y-6">
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
@@ -189,7 +189,7 @@ export default function ProjectDetails() {
           <ParametersProjects />
         </SheetHeader>
 
-        <div className="mb-12 mt-6 space-y-6">
+        <div className="mb-8 mt-6 space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <Card className="flex flex-col gap-4 p-4">
               <div className="flex flex-col gap-2">
@@ -442,7 +442,7 @@ export default function ProjectDetails() {
             <div>
               {projectData.costEstimates.map((estimate) => (
                 <div key={estimate.name}>
-                  <div className="flex bg-big-stone-900 px-2">
+                  <div className="flex bg-big-stone-900 px-2 last:rounded-bl-lg last:rounded-br-lg">
                     <div className="w-2/3 content-center py-2 pl-2 font-medium">
                       {estimate.name}
                     </div>
@@ -464,14 +464,13 @@ export default function ProjectDetails() {
                       </div>
                     </div>
                   ))}
-                  <hr className="m-0" />
                 </div>
               ))}
             </div>
           </Card>
         </div>
 
-        <div className="fixed bottom-0 flex w-[calc(75%-48px)] w-full flex-wrap justify-between gap-4 bg-background py-2 sm:max-w-[calc(50%-48px)]">
+        <div className="sticky bottom-0 w-full flex-wrap justify-between gap-4 bg-background py-2 flex border-t border-t-sky-900">
           <div className="text-xs">
             <div>
               Values considered for a{" "}

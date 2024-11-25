@@ -22,20 +22,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
-  keyword: "",
+const INITIAL_FILTERS_STATE: Partial<z.infer<typeof filtersSchema>> = {
   projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
   priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
-  costRangeSelector: COST_TYPE_SELECTOR.NPV,
-  countryCode: "",
-  ecosystem: [],
-  activity: [],
-  activitySubtype: [],
   costRange: INITIAL_COST_RANGE,
-  abatementPotentialRange: INITIAL_ABATEMENT_POTENTIAL_RANGE,
 };
 
-// Create a Jotai atom with the initial state
 const filtersAtom = atom(INITIAL_FILTERS_STATE);
 
 export const PROJECT_PARAMETERS = [
