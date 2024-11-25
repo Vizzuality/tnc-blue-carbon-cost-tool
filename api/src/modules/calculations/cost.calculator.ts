@@ -61,14 +61,13 @@ export class CostCalculator {
   costPlans: CostPlans;
   constructor(
     projectInput: ProjectInput,
-    defaultProjectLength: number,
-    startingPointScaling: number,
     baseSize: BaseSize,
     baseIncrease: BaseIncrease,
   ) {
     this.projectInput = projectInput;
-    this.defaultProjectLength = defaultProjectLength;
-    this.startingPointScaling = startingPointScaling;
+    this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
+    this.startingPointScaling =
+      projectInput.assumptions.conservationStartingPointScaling;
     this.baseIncrease = baseIncrease;
     this.baseSize = baseSize;
   }
@@ -107,7 +106,7 @@ export class CostCalculator {
   }
 
   private getTotalBaseCost(costType: COST_KEYS): number {
-    const baseCost = this.projectInput.costInputs[costType];
+    const baseCost = this.projectInput.costAndCarbonInputs[costType];
     const increasedBy: number = this.baseIncrease[costType];
     const sizeDifference =
       this.projectInput.projectSizeHa - this.startingPointScaling;
@@ -216,7 +215,7 @@ export class CostCalculator {
     for (let year = -4; year <= this.defaultProjectLength; year++) {
       if (year !== 0) {
         monitoringCostPlan[year] =
-          year >= 1 && year <= this.projectInput.modelAssumptions.projectLength
+          year >= 1 && year <= this.projectInput.assumptions.projectLength
             ? totalBaseCost
             : 0;
       }
@@ -245,15 +244,15 @@ export class CostCalculator {
   calculateCosts() {
     // @ts-ignore
     this.costPlans = {
-      // feasibilityAnalysis: this.feasibilityAnalysisCosts(),
-      // conservationPlanningAndAdmin: this.conservationPlanningAndAdminCosts(),
-      // dataCollectionAndFieldCost: this.dataCollectionAndFieldCosts(),
-      // blueCarbonProjectPlanning: this.blueCarbonProjectPlanningCosts(),
-      // communityRepresentation: this.communityRepresentationCosts(),
-      // establishingCarbonRights: this.establishingCarbonRightsCosts(),
-      // validation: this.validationCosts(),
-      // implementationLabor: this.implementationLaborCosts(),
-      // monitoring: this.calculateMonitoringCosts(),
+      feasibilityAnalysis: this.feasibilityAnalysisCosts(),
+      conservationPlanningAndAdmin: this.conservationPlanningAndAdminCosts(),
+      dataCollectionAndFieldCost: this.dataCollectionAndFieldCosts(),
+      blueCarbonProjectPlanning: this.blueCarbonProjectPlanningCosts(),
+      communityRepresentation: this.communityRepresentationCosts(),
+      establishingCarbonRights: this.establishingCarbonRightsCosts(),
+      validation: this.validationCosts(),
+      implementationLabor: this.implementationLaborCosts(),
+      monitoring: this.calculateMonitoringCosts(),
       maintenance: this.calculateMaintenanceCosts(),
     };
   }

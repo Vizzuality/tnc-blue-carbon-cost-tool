@@ -12,10 +12,7 @@ import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-
 import { CostCalculator } from '@api/modules/calculations/cost.calculator';
 import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
 import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
-import {
-  AssumptionsRepository,
-  ModelAssumptionsForCalculations,
-} from '@api/modules/calculations/assumptions.repository';
+import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -37,40 +34,27 @@ export class CustomProjectsService extends AppBaseService<
 
   async create(dto: CreateCustomProjectDto): Promise<any> {
     const { countryCode, ecosystem, activity } = dto;
-    const { defaultCarbonInputs, baseIncrease, baseSize, assumptions } =
-      await this.dataRepository.getDataForCalculation({
-        countryCode,
-        ecosystem,
-        activity,
-      });
+    const {
+      additionalBaseData,
+      baseIncrease,
+      baseSize,
+      additionalAssumptions,
+    } = await this.dataRepository.getDataForCalculation({
+      countryCode,
+      ecosystem,
+      activity,
+    });
 
-    const allAssumptions: ModelAssumptionsForCalculations = {
-      ...dto.assumptions,
-      ...assumptions,
-    };
     const projectInput = this.customProjectFactory.createProjectInput(
       dto,
-      defaultCarbonInputs,
+      additionalBaseData,
+      additionalAssumptions,
     );
-    // TODO: Don't know where this values should come from. i.e default project length comes from the assumptions based on activity? In the python calcs, the same
-    //       value is used regardless of the activity.
-    const DEFAULT_PROJECT_LENGTH = 40;
-    const CONSERVATION_STARTING_POINT_SCALING = 500;
-    const RESTORATION_STARTING_POINT_SCALING = 20000;
 
-    const calculator = new CostCalculator(
-      projectInput,
-      DEFAULT_PROJECT_LENGTH,
-      CONSERVATION_STARTING_POINT_SCALING,
-      baseSize,
-      baseIncrease,
-    );
+    const calculator = new CostCalculator(projectInput, baseSize, baseIncrease);
 
     calculator.initializeCostPlans().calculateCosts();
-    const assumptions1 =
-      await this.assumptionsRepository.getNonOverridableModelAssumptions();
-    return assumptions1;
-    //return calculator.costPlans;
+    return calculator.costPlans;
   }
 
   async saveCustomProject(dto: CustomProjectSnapshotDto): Promise<void> {
