@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 
 import { LAYOUT_TRANSITIONS } from "@/app/(overview)/constants";
-import { projectsUIState } from "@/app/(overview)/store";
+import { projectsUIState } from "@/app/projects/[id]/store";
 
 import AnnualProjectCashFlow from "@/containers/projects/custom-project/annual-project-cash-flow";
 import ProjectCost from "@/containers/projects/custom-project/cost";

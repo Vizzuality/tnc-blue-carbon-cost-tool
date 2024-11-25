@@ -5,10 +5,12 @@ import {
 import { z } from "zod";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
-import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { INITIAL_COST_RANGE } from "@/containers/overview/filters/constants";
-import { useGlobalFilters } from "@/containers/projects/url-store";
+import {
+  filtersSchema,
+  useCustomProjectFilters,
+} from "@/containers/projects/url-store";
 
 import { Label } from "@/components/ui/label";
 import {
@@ -53,7 +55,7 @@ export const PROJECT_PARAMETERS = [
 ] as const;
 
 export default function CustomProjectParameters() {
-  const [filters, setFilters] = useGlobalFilters();
+  const [filters, setFilters] = useCustomProjectFilters();
 
   const handleParameters = async (
     v: string,

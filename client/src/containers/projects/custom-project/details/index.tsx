@@ -4,7 +4,7 @@ import { useAtomValue } from "jotai";
 
 import { cn } from "@/lib/utils";
 
-import { projectsUIState } from "@/app/(overview)/store";
+import { projectsUIState } from "@/app/projects/[id]/store";
 
 import DetailItem from "@/containers/projects/custom-project/details/detail-item";
 import mockData from "@/containers/projects/custom-project/mock-data";

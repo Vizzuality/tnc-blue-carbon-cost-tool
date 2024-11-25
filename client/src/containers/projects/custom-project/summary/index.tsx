@@ -3,7 +3,7 @@ import { FC } from "react";
 import { useSetAtom } from "jotai";
 import { XIcon } from "lucide-react";
 
-import { projectsUIState } from "@/app/(overview)/store";
+import { projectsUIState } from "@/app/projects/[id]/store";
 
 import { SUMMARY_SIDEBAR_WIDTH } from "@/containers/projects/custom-project";
 import mockData from "@/containers/projects/custom-project/mock-data";
@@ -41,7 +41,7 @@ const ProjectSummary: FC = () => {
         {mockData.summary.map(({ name, tooltip, unit, value }) => (
           <div
             key={name}
-            className="flex justify-between border-b border-dashed"
+            className="flex justify-between border-b border-dashed py-1.5"
           >
             <div className="flex items-center gap-2">
               <div className="text-sm font-normal">{name}</div>

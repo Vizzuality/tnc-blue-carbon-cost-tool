@@ -1,3 +1,4 @@
+// TODO: tooltip info will go to constants/tooltip-info.ts
 const tooltip = {
   title: "Info",
   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",

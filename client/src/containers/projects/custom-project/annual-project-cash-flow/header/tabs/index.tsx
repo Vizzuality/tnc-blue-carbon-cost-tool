@@ -1,4 +1,6 @@
-import { useProjectCashFlowView } from "@/containers/projects/custom-project/store";
+import { ChartNoAxesColumnIcon, Table2Icon } from "lucide-react";
+
+import { useProjectCashFlowView } from "@/app/projects/[id]/store";
 
 import {
   Tabs as ShadcnTabs,
@@ -10,17 +12,18 @@ export const CASH_FLOW_VIEWS = ["chart", "table"] as const;
 
 export const CASH_FLOW_TABS = [
   {
-    label: "chart",
+    Icon: <ChartNoAxesColumnIcon className="h-4 w-4" />,
     value: CASH_FLOW_VIEWS[0],
   },
   {
-    label: "table",
+    Icon: <Table2Icon className="h-4 w-4" />,
     value: CASH_FLOW_VIEWS[1],
   },
 ] as const;
 
 export default function Tabs() {
   const [view, setView] = useProjectCashFlowView();
+
   return (
     <ShadcnTabs
       defaultValue={view}
@@ -29,9 +32,9 @@ export default function Tabs() {
       }}
     >
       <TabsList>
-        {CASH_FLOW_TABS.map(({ label, value }) => (
+        {CASH_FLOW_TABS.map(({ Icon, value }) => (
           <TabsTrigger key={value} value={value}>
-            {label}
+            {Icon}
           </TabsTrigger>
         ))}
       </TabsList>

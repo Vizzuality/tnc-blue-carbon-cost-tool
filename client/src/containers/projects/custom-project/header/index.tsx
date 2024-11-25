@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 
 import { cn } from "@/lib/utils";
 
-import { projectsUIState } from "@/app/(overview)/store";
+import { projectsUIState } from "@/app/projects/[id]/store";
 
 import AuthDialog from "@/containers/auth/dialog";
 import CustomProjectParameters from "@/containers/projects/custom-project/header/parameters";
