@@ -2,9 +2,10 @@ import { FC } from "react";
 
 import { useAtom } from "jotai";
 
+import { showCostDetailsAtom } from "@/app/projects/[id]/store";
+
 import CostDetailsParameters from "@/containers/projects/custom-project/cost-details/parameters";
 import CostDetailTable from "@/containers/projects/custom-project/cost-details/table";
-import { showCostDetailsAtom } from "@/containers/projects/custom-project/store";
 
 import InfoButton from "@/components/ui/info-button";
 import {

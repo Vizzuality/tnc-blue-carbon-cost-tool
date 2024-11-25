@@ -4,8 +4,9 @@ import { useSetAtom } from "jotai";
 
 import { renderCurrency } from "@/lib/format";
 
+import { showCostDetailsAtom } from "@/app/projects/[id]/store";
+
 import mockData from "@/containers/projects/custom-project/mock-data";
-import { showCostDetailsAtom } from "@/containers/projects/custom-project/store";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
