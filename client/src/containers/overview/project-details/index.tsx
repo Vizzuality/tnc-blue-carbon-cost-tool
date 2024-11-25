@@ -1,5 +1,6 @@
-import { useAtom } from "jotai";
 import Link from "next/link";
+
+import { useAtom } from "jotai";
 import { ChevronUp, ChevronDown, Plus, NotebookPen } from "lucide-react";
 
 import {
@@ -15,13 +16,6 @@ import ParametersProjects from "@/containers/overview/project-details/parameters
 import BarChart from "@/components/ui/bar-chart";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import {
   Dialog,
   DialogContent,
@@ -32,6 +26,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 const CreateProjectDetails = () => (
   <Dialog>
@@ -165,7 +166,7 @@ export default function ProjectDetails() {
 
   return (
     <Sheet open={projectDetails.isOpen} onOpenChange={handleOpenDetails}>
-      <SheetContent className="overflow-y-scroll sm:max-w-[50%] pb-0">
+      <SheetContent className="overflow-y-scroll pb-0 sm:max-w-[50%]">
         <SheetHeader className="space-y-6">
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
@@ -470,7 +471,7 @@ export default function ProjectDetails() {
           </Card>
         </div>
 
-        <div className="sticky bottom-0 w-full flex-wrap justify-between gap-4 bg-background py-2 flex border-t border-t-sky-900">
+        <div className="sticky bottom-0 flex w-full flex-wrap justify-between gap-4 border-t border-t-sky-900 bg-background py-2">
           <div className="text-xs">
             <div>
               Values considered for a{" "}
