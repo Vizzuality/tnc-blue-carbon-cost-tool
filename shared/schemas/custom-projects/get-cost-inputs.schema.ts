@@ -29,9 +29,8 @@ export const GetDefaultCostInputsSchema = z
       data.restorationActivity === undefined
     ) {
       ctx.addIssue({
-        path: ["restorationActivitySubtype"],
-        message:
-          "restorationActivitySubtype is required when activity is RESTORATION",
+        path: ["restorationActivity"],
+        message: "restorationActivity is required when activity is RESTORATION",
         code: z.ZodIssueCode.custom,
       });
     }

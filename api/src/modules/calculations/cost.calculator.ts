@@ -10,7 +10,7 @@ import {
   PROJECT_DEVELOPMENT_TYPE,
 } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 
-type CostPlanMap = {
+export type CostPlanMap = {
   [year: number]: number;
 };
 
