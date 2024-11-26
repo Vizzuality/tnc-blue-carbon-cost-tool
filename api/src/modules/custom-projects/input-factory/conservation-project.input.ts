@@ -32,7 +32,11 @@ export class ConservationProjectInput {
   carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
 
   // TODO: Below are not ALL properties of BaseDataView, type properly once the whole flow is clear
-  costAndCarbonInputs: Partial<BaseDataView>;
+  // costAndCarbonInputs:
+  //   | Partial<BaseDataView>
+  //   | (OverridableCostInputs & AdditionalBaseData);
+
+  costAndCarbonInputs: OverridableCostInputs & AdditionalBaseData;
 
   lossRate: number;
 
