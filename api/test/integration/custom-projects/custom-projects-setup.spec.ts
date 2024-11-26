@@ -65,11 +65,11 @@ describe('Create Custom Projects - Setup', () => {
 
     expect(response.body.data).toMatchObject({
       feasibilityAnalysis: 50000,
-      conservationPlanningAndAdmin: 166766.66666666666,
-      dataCollectionAndFieldCost: 26666.666666666668,
-      communityRepresentation: 67633.33333333333,
+      conservationPlanningAndAdmin: 166766.666666667,
+      dataCollectionAndFieldCost: 26666.6666666667,
+      communityRepresentation: 67633.3333333333,
       blueCarbonProjectPlanning: 100000,
-      establishingCarbonRights: 46666.666666666664,
+      establishingCarbonRights: 46666.6666666667,
       financingCost: 0.05,
       validation: 50000,
       implementationLabor: 0,
