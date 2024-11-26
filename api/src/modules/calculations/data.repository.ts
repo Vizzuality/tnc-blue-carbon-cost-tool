@@ -25,6 +25,7 @@ export type AdditionalBaseData = {
   maintenanceDuration: BaseDataView['maintenanceDuration'];
   communityBenefitSharingFund: BaseDataView['communityBenefitSharingFund'];
   otherCommunityCashFlow: BaseDataView['otherCommunityCashFlow'];
+  tier1SequestrationRate: BaseDataView['tier1SequestrationRate'];
 };
 
 const COMMON_OVERRIDABLE_COST_INPUTS = [
