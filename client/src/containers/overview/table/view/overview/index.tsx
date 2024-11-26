@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { projectDetailsAtom } from "@/app/(overview)/store";
 import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
+import ProjectDetails from "@/containers/overview/project-details";
 import {
   filtersToQueryParams,
   NO_DATA,
