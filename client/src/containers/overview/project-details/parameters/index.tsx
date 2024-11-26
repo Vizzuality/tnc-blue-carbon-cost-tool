@@ -6,7 +6,7 @@ import {
 import { atom, useAtom } from "jotai";
 import { z } from "zod";
 
-import { FILTER_KEYS, INITIAL_COST_RANGE } from "@/app/(overview)/constants";
+import { FILTER_KEYS } from "@/app/(overview)/constants";
 import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { Label } from "@/components/ui/label";
@@ -21,7 +21,7 @@ import {
 const INITIAL_FILTERS_STATE: Partial<z.infer<typeof filtersSchema>> = {
   projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
   priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
-  costRange: INITIAL_COST_RANGE,
+  costRangeSelector: COST_TYPE_SELECTOR.NPV,
 };
 
 const filtersAtom = atom(INITIAL_FILTERS_STATE);
