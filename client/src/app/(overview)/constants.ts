@@ -11,7 +11,7 @@ export const FILTER_KEYS = [
   "countryCode",
   "ecosystem",
   "activity",
-  "activitySubtype",
+  "restorationActivity",
   "costRange",
   "abatementPotentialRange",
 ] as const;
