@@ -36,6 +36,7 @@ import { ModelAssumptionResource } from "./resources/model-assumptions/model-ass
 import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-inputs.entity.js";
 import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity.js";
 import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity.js";
+import { GLOBAL_COMMON_PROPERTIES } from "./resources/common/common.resources.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -70,6 +71,9 @@ const start = async () => {
             name: "User Data",
             icon: "File",
           },
+          properties: {
+            ...GLOBAL_COMMON_PROPERTIES,
+          }
         },
       },
       {
@@ -80,6 +84,9 @@ const start = async () => {
             name: "User Data",
             icon: "File",
           },
+          properties: {
+            ...GLOBAL_COMMON_PROPERTIES,
+          }
         },
       },
       {
@@ -90,6 +97,9 @@ const start = async () => {
             name: "User Data",
             icon: "File",
           },
+          properties: {
+            ...GLOBAL_COMMON_PROPERTIES,
+          }
         },
       },
       ProjectSizeResource,
