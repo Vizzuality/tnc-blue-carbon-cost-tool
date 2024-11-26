@@ -16,6 +16,7 @@ interface DetailItemProps {
   unit?: string;
   countryCode?: string;
   subValues?: SubValue[];
+  numberFormatOptions?: Intl.NumberFormatOptions;
 }
 
 const formatValue = (value?: string | number) => {
@@ -31,6 +32,7 @@ const DetailItem: FC<DetailItemProps> = ({
   unit,
   countryCode,
   subValues,
+  numberFormatOptions = {},
 }) => {
   const isMetric = unit && typeof value === "number";
 
@@ -50,7 +52,7 @@ const DetailItem: FC<DetailItemProps> = ({
             value={value}
             unit={unit}
             isCurrency={unit === "$"}
-            numberFormatOptions={{ maximumFractionDigits: 0 }}
+            numberFormatOptions={numberFormatOptions}
             compactUnit
           />
         ) : (
