@@ -53,8 +53,8 @@ export class CustomProjectsService extends AppBaseService<
 
     const calculator = new CostCalculator(projectInput, baseSize, baseIncrease);
 
-    calculator.initializeCostPlans().calculateCosts();
-    return calculator.costPlans;
+    const costPlans = calculator.initializeCostPlans().calculateCosts();
+    return costPlans;
   }
 
   async saveCustomProject(dto: CustomProjectSnapshotDto): Promise<void> {
