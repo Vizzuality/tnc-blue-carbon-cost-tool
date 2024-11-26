@@ -44,7 +44,7 @@ export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
   countryCode: "",
   ecosystem: [],
   activity: [],
-  activitySubtype: [],
+  restorationActivity: [],
   costRange: INITIAL_COST_RANGE[COST_TYPE_SELECTOR.NPV],
   abatementPotentialRange: INITIAL_ABATEMENT_POTENTIAL_RANGE,
 };
