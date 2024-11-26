@@ -18,8 +18,7 @@ export type ExcelProjects = {
   abatement_potential: number;
   total_cost_npv: number;
   total_cost: number;
-  // TODO: This column has dissapeared from the excel sheet
-  '$/tCO2e (NPV)': number;
+  cost_per_tco2e_npv: number;
   cost_per_tco2e: number;
   initial_price_assumption: string;
   price_type: PROJECT_PRICE_TYPE;
