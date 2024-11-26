@@ -3,7 +3,7 @@ import { SequestrationRatesCalculatorDEPRECATED } from '@api/modules/calculation
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class RevenueProfitCalculator {
+export class RevenueProfitCalculatorDEPRECATED {
   private project: ConservationProject;
   private sequestrationCreditsCalculator: SequestrationRatesCalculatorDEPRECATED;
   private projectLength: number;

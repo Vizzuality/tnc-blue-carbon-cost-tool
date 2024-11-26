@@ -4,22 +4,37 @@ import {
   ProjectInput,
 } from '@api/modules/calculations/cost.calculator';
 import { ACTIVITY } from '@shared/entities/activity.enum';
+import { OverridableAssumptions } from '@api/modules/custom-projects/dto/project-assumptions.dto';
+import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
+import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 
 @Injectable()
 export class SequestrationRateCalculator {
   projectInput: ProjectInput;
+  activity: ACTIVITY;
+  defaultProjectLength: number;
+  projectLength: number;
+  buffer: OverridableAssumptions['buffer'];
+  plantingSuccessRate: NonOverridableModelAssumptions['plantingSuccessRate'];
+  tier1SequestrationRate: AdditionalBaseData['tier1SequestrationRate'];
+  restorationRate: OverridableAssumptions['restorationRate'];
+  soilOrganicCarbonReleaseLength: NonOverridableModelAssumptions['soilOrganicCarbonReleaseLength'];
   constructor(projectInput: ProjectInput) {
     this.projectInput = projectInput;
+    this.activity = projectInput.activity;
+    this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
+    this.projectLength = projectInput.assumptions.projectLength;
+    this.buffer = projectInput.assumptions.buffer;
+    this.plantingSuccessRate = projectInput.assumptions.plantingSuccessRate;
+    this.tier1SequestrationRate =
+      projectInput.costAndCarbonInputs.tier1SequestrationRate;
+    this.restorationRate = projectInput.assumptions.restorationRate;
   }
 
   calculateEstCreditsIssued(): CostPlanMap {
     const estCreditsIssuedPlan: { [year: number]: number } = {};
 
-    for (
-      let year = -1;
-      year <= this.projectInput.assumptions.defaultProjectLength;
-      year++
-    ) {
+    for (let year = -1; year <= this.defaultProjectLength; year++) {
       if (year !== 0) {
         estCreditsIssuedPlan[year] = 0;
       }
@@ -30,10 +45,9 @@ export class SequestrationRateCalculator {
 
     for (const yearStr in estCreditsIssuedPlan) {
       const year = Number(yearStr);
-      if (year <= this.projectInput.assumptions.defaultProjectLength) {
+      if (year <= this.defaultProjectLength) {
         estCreditsIssuedPlan[year] =
-          netEmissionsReductions[year] *
-          (1 - this.projectInput.assumptions.buffer);
+          netEmissionsReductions[year] * (1 - this.buffer);
       } else {
         estCreditsIssuedPlan[year] = 0;
       }
@@ -45,23 +59,19 @@ export class SequestrationRateCalculator {
   calculateNetEmissionsReductions(): CostPlanMap {
     let netEmissionReductionsPlan: { [year: number]: number } = {};
 
-    for (
-      let year = -1;
-      year <= this.projectInput.assumptions.defaultProjectLength;
-      year++
-    ) {
+    for (let year = -1; year <= this.defaultProjectLength; year++) {
       if (year !== 0) {
         netEmissionReductionsPlan[year] = 0;
       }
     }
 
-    if (this.projectInput.activity === ACTIVITY.CONSERVATION) {
+    if (this.activity === ACTIVITY.CONSERVATION) {
       netEmissionReductionsPlan = this._calculateConservationEmissions(
         netEmissionReductionsPlan,
       );
     }
 
-    if (this.projectInput.activity === ACTIVITY.RESTORATION) {
+    if (this.activity === ACTIVITY.RESTORATION) {
       netEmissionReductionsPlan = this._calculateRestorationEmissions(
         netEmissionReductionsPlan,
       );
@@ -78,7 +88,7 @@ export class SequestrationRateCalculator {
     for (const yearStr in netEmissionReductionsPlan) {
       const year = Number(yearStr);
 
-      if (year <= this.projectInput.assumptions.projectLength) {
+      if (year <= this.projectLength) {
         if (year === -1) {
           netEmissionReductionsPlan[year] = 0;
         } else {
@@ -103,7 +113,7 @@ export class SequestrationRateCalculator {
 
     for (const yearStr in netEmissionReductionsPlan) {
       const year = Number(yearStr);
-      if (year <= this.projectInput.assumptions.projectLength) {
+      if (year <= this.projectLength) {
         if (year === -1) {
           netEmissionReductionsPlan[year] = 0;
           // } else if (this.projectInput.restoration_activity === 'Planting') {
@@ -133,8 +143,7 @@ export class SequestrationRateCalculator {
     sequestrationRate: number,
     year: number,
   ): number {
-    const plantingSuccessRate: number =
-      this.projectInput.assumptions.plantingSuccessRate;
+    const plantingSuccessRate: number = this.plantingSuccessRate;
 
     if (year === 1) {
       return (
@@ -154,20 +163,16 @@ export class SequestrationRateCalculator {
   calculateBaselineEmissions(): CostPlanMap {
     // TODO: This is validated previously, but letting it here until we understand what value should we provide for Restoration,
     //       as all costs are calculated for both types. Maybe this is an internal method and the value is set in another place.
-    if (this.projectInput.activity !== ACTIVITY.CONSERVATION) {
+    if (this.activity !== ACTIVITY.CONSERVATION) {
       console.error('Baseline emissions cannot be calculated for restoration.');
     }
 
     const { emissionFactorAgb, emissionFactorSoc, emissionFactor } =
       this.projectInput;
-    const { tier1SequestrationRate } = this.projectInput.costAndCarbonInputs;
+    const tier1SequestrationRate = this.tier1SequestrationRate;
 
     const baselineEmissionPlan: { [year: number]: number } = {};
-    for (
-      let year = 1;
-      year <= this.projectInput.assumptions.defaultProjectLength;
-      year++
-    ) {
+    for (let year = 1; year <= this.defaultProjectLength; year++) {
       if (year !== 0) {
         baselineEmissionPlan[year] = 0;
       }
@@ -181,7 +186,7 @@ export class SequestrationRateCalculator {
     for (const yearStr in baselineEmissionPlan) {
       const year = Number(yearStr);
       let value: number = 0;
-      if (year <= this.projectInput.assumptions.projectLength) {
+      if (year <= this.projectLength) {
         if (emissionFactorSoc && emissionFactorAgb) {
           value =
             emissionFactorAgb * annualAvoidedLoss[year] +
@@ -204,11 +209,7 @@ export class SequestrationRateCalculator {
   calculateAreaRestoredOrConserved(): CostPlanMap {
     const cumulativeHaRestoredInYear: CostPlanMap = {};
 
-    for (
-      let year = -1;
-      year <= this.projectInput.assumptions.defaultProjectLength;
-      year++
-    ) {
+    for (let year = -1; year <= this.defaultProjectLength; year++) {
       if (year !== 0) {
         cumulativeHaRestoredInYear[year] = 0;
       }
@@ -217,15 +218,11 @@ export class SequestrationRateCalculator {
     for (const yearStr in cumulativeHaRestoredInYear) {
       const year = Number(yearStr);
 
-      if (year > this.projectInput.assumptions.projectLength) {
+      if (year > this.projectLength) {
         cumulativeHaRestoredInYear[year] = 0;
-      } else if (this.projectInput.activity === ACTIVITY.RESTORATION) {
-        if (
-          this.projectInput.assumptions.restorationRate <
-          this.projectInput.projectSizeHa
-        ) {
-          cumulativeHaRestoredInYear[year] =
-            this.projectInput.assumptions.restorationRate;
+      } else if (this.activity === ACTIVITY.RESTORATION) {
+        if (this.restorationRate < this.projectInput.projectSizeHa) {
+          cumulativeHaRestoredInYear[year] = this.restorationRate;
         } else {
           cumulativeHaRestoredInYear[year] = this.projectInput.projectSizeHa;
         }
@@ -238,7 +235,7 @@ export class SequestrationRateCalculator {
   }
 
   calculateCumulativeLossRate(): CostPlanMap {
-    if (this.projectInput.activity !== ACTIVITY.CONSERVATION) {
+    if (this.activity !== ACTIVITY.CONSERVATION) {
       console.error(
         'Cumulative loss rate cannot be calculated for restoration.',
       );
@@ -249,11 +246,7 @@ export class SequestrationRateCalculator {
 
     const cumulativeLossRate: CostPlanMap = {};
 
-    for (
-      let year = 1;
-      year <= this.projectInput.assumptions.defaultProjectLength;
-      year++
-    ) {
+    for (let year = 1; year <= this.defaultProjectLength; year++) {
       cumulativeLossRate[year] = 0;
     }
 
@@ -263,7 +256,7 @@ export class SequestrationRateCalculator {
     for (const yearStr in cumulativeLossRate) {
       const year = Number(yearStr);
 
-      if (year <= this.projectInput.assumptions.projectLength) {
+      if (year <= this.projectLength) {
         if (year === 1) {
           cumulativeLossRate[year] = annualAvoidedLoss[year];
         } else {
@@ -279,7 +272,7 @@ export class SequestrationRateCalculator {
   }
 
   calculateCumulativeLossRateIncorporatingSOCReleaseTime(): CostPlanMap {
-    if (this.projectInput.activity !== ACTIVITY.CONSERVATION) {
+    if (this.activity !== ACTIVITY.CONSERVATION) {
       throw new Error(
         'La tasa de pérdida acumulada solo puede calcularse para proyectos de conservación.',
       );
@@ -287,11 +280,7 @@ export class SequestrationRateCalculator {
 
     const cumulativeLossRateIncorporatingSOC: CostPlanMap = {};
 
-    for (
-      let year = 1;
-      year <= this.projectInput.assumptions.defaultProjectLength;
-      year++
-    ) {
+    for (let year = 1; year <= this.defaultProjectLength; year++) {
       cumulativeLossRateIncorporatingSOC[year] = 0;
     }
 
@@ -300,12 +289,9 @@ export class SequestrationRateCalculator {
     for (const yearStr in cumulativeLossRateIncorporatingSOC) {
       const year = Number(yearStr);
 
-      if (year <= this.projectInput.assumptions.projectLength) {
-        if (
-          year > this.projectInput.assumptions.soilOrganicCarbonReleaseLength
-        ) {
-          const offsetYear =
-            year - this.projectInput.assumptions.soilOrganicCarbonReleaseLength;
+      if (year <= this.projectLength) {
+        if (year > this.soilOrganicCarbonReleaseLength) {
+          const offsetYear = year - this.soilOrganicCarbonReleaseLength;
           const offsetValue = cumulativeLoss[offsetYear];
           cumulativeLossRateIncorporatingSOC[year] =
             cumulativeLoss[year] - offsetValue;
@@ -321,7 +307,7 @@ export class SequestrationRateCalculator {
   }
 
   calculateAnnualAvoidedLoss(): CostPlanMap {
-    if (this.projectInput.activity !== ACTIVITY.CONSERVATION) {
+    if (this.activity !== ACTIVITY.CONSERVATION) {
       throw new Error(
         'Annual avoided loss can only be calculated for conservation projects.',
       );
@@ -331,18 +317,14 @@ export class SequestrationRateCalculator {
       this.calculateProjectedLoss();
 
     const annualAvoidedLoss: { [year: number]: number } = {};
-    for (
-      let year = 1;
-      year <= this.projectInput.assumptions.defaultProjectLength;
-      year++
-    ) {
+    for (let year = 1; year <= this.defaultProjectLength; year++) {
       annualAvoidedLoss[year] = 0;
     }
 
     for (const yearStr in annualAvoidedLoss) {
       const year = Number(yearStr);
 
-      if (year <= this.projectInput.assumptions.projectLength) {
+      if (year <= this.projectLength) {
         if (year === 1) {
           annualAvoidedLoss[year] =
             (projectedLoss[year] - projectedLoss[-1]) * -1;
@@ -359,7 +341,7 @@ export class SequestrationRateCalculator {
   }
 
   calculateProjectedLoss(): { [year: number]: number } {
-    if (this.projectInput.activity !== ACTIVITY.CONSERVATION) {
+    if (this.activity !== ACTIVITY.CONSERVATION) {
       throw new Error(
         'Projected loss can only be calculated for conservation projects.',
       );
@@ -370,11 +352,7 @@ export class SequestrationRateCalculator {
 
     const annualProjectedLoss: { [year: number]: number } = {};
 
-    for (
-      let year = -1;
-      year <= this.projectInput.assumptions.defaultProjectLength;
-      year++
-    ) {
+    for (let year = -1; year <= this.defaultProjectLength; year++) {
       if (year !== 0) {
         annualProjectedLoss[year] = 0;
       }
@@ -383,7 +361,7 @@ export class SequestrationRateCalculator {
     for (const yearStr in annualProjectedLoss) {
       const year = Number(yearStr);
 
-      if (year <= this.projectInput.assumptions.projectLength) {
+      if (year <= this.projectLength) {
         if (year === -1) {
           annualProjectedLoss[year] = projectSizeHa;
         } else {
