@@ -12,3 +12,11 @@ export const popupAtom = atom<{
   lngLat: MapMouseEvent["lngLat"];
   features: MapMouseEvent["features"];
 } | null>(null);
+
+export const projectDetailsAtom = atom<{
+  isOpen: boolean;
+  projectName: string;
+}>({
+  isOpen: false,
+  projectName: "",
+});

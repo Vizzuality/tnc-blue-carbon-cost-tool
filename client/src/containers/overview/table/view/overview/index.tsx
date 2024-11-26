@@ -12,6 +12,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { useAtom } from "jotai";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { z } from "zod";
 
@@ -19,12 +20,10 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
+import { projectDetailsAtom } from "@/app/(overview)/store";
 import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
-import TablePagination, {
-  PAGINATION_SIZE_OPTIONS,
-} from "@/components/ui/table-pagination";
-
+import ProjectDetails from "@/containers/overview/project-details";
 import {
   filtersToQueryParams,
   NO_DATA,
@@ -42,10 +41,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import TablePagination, {
+  PAGINATION_SIZE_OPTIONS,
+} from "@/components/ui/table-pagination";
 
 export function OverviewTable() {
   const [tableView] = useTableView();
   const [filters] = useGlobalFilters();
+  const [, setProjectDetails] = useAtom(projectDetailsAtom);
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "projectName",
@@ -107,6 +110,7 @@ export function OverviewTable() {
 
   return (
     <>
+      <ProjectDetails />
       <Table>
         <TableHeader className="sticky top-0">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -154,8 +158,15 @@ export function OverviewTable() {
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                className="cursor-pointer"
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                onClick={() => {
+                  setProjectDetails({
+                    isOpen: true,
+                    projectName: row.original.projectName ?? "",
+                  });
+                }}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
