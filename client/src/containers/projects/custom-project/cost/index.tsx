@@ -49,7 +49,7 @@ const ProjectCost: FC = () => {
       </CardHeader>
 
       <CardContent className="px-4 pb-4">
-        <div className="flex justify-between gap-[100px]">
+        <div className="flex justify-between gap-4">
           <div className="flex max-w-[148px] flex-1 flex-col justify-between">
             <div>
               <span className="text-xl font-normal">

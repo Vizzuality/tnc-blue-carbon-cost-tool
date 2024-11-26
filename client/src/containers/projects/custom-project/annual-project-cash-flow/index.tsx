@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 
 const AnnualProjectCashFlow: FC = () => {
   return (
-    <Card variant="secondary">
+    <Card variant="secondary" className="p-0">
       <Header />
     </Card>
   );
