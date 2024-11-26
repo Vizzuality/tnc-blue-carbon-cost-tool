@@ -29,7 +29,7 @@ const {
   initialCarbonPrice,
   emissionFactors,
 } = mockData;
-export const SUMMARY_SIDEBAR_WIDTH = 460;
+export const SUMMARY_SIDEBAR_WIDTH = 400;
 const CustomProject: FC = () => {
   const { projectSummaryOpen } = useAtomValue(projectsUIState);
   const { open: navOpen } = useSidebar();
