@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
 
-@Entity("model_assumptions_registry")
+@Entity("model_assumptions")
 export class ModelAssumptions extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
