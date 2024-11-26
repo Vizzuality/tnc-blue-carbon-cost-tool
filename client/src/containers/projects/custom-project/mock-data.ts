@@ -1,3 +1,10 @@
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
+import { CARBON_REVENUES_TO_COVER } from "@shared/entities/carbon-revenues-to-cover.enum";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+
 // TODO: tooltip info will go to constants/tooltip-info.ts
 const tooltip = {
   title: "Info",
@@ -5,12 +12,26 @@ const tooltip = {
 };
 
 const mockData = {
+  country: { code: "ID", name: "Indonesia" },
+  projectSize: 20,
+  projectLength: 20,
+  ecosystem: ECOSYSTEM.SEAGRASS,
+  activity: ACTIVITY.CONSERVATION,
+  subActivity: RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
+  lossRate: -0.1,
+  carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.OPEX,
+  initialCarbonPrice: 30,
   totalCost: 38023789,
   capEx: 1500000,
   opEx: 36500000,
   leftover: 4106132,
   totalRevenue: 40600000,
   opExRevenue: 36500000,
+  emissionFactors: {
+    emissionFactor: 355,
+    emissionFactorAGB: 355,
+    emissionFactorSOC: 72,
+  },
   details: [
     [
       {
