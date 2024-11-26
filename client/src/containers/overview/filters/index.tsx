@@ -57,7 +57,7 @@ export default function ProjectsFilters() {
       countryCode: INITIAL_FILTERS_STATE.countryCode,
       ecosystem: INITIAL_FILTERS_STATE.ecosystem,
       activities: INITIAL_FILTERS_STATE.activity,
-      activitySubtype: INITIAL_FILTERS_STATE.activitySubtype,
+      restorationActivity: INITIAL_FILTERS_STATE.restorationActivity,
       abatementPotentialRange: INITIAL_FILTERS_STATE.abatementPotentialRange,
       costRange: INITIAL_FILTERS_STATE.costRange,
     }));
@@ -113,13 +113,13 @@ export default function ProjectsFilters() {
 
   const handleSubActivityChange = async (
     isChecked: CheckedState,
-    subActivity: (typeof filters.activitySubtype)[number],
+    subActivity: (typeof filters.restorationActivity)[number],
   ) => {
     await setFilters((prev) => ({
       ...prev,
-      activitySubtype: isChecked
-        ? [...prev.activitySubtype, subActivity]
-        : prev.activitySubtype.filter((e) => e !== subActivity),
+      restorationActivity: isChecked
+        ? [...prev.restorationActivity, subActivity]
+        : prev.restorationActivity.filter((e) => e !== subActivity),
     }));
   };
 
@@ -279,7 +279,7 @@ export default function ProjectsFilters() {
                       <CheckboxWrapper
                         label={subActivity.label}
                         id={subActivity.value}
-                        checked={filters.activitySubtype.includes(
+                        checked={filters.restorationActivity.includes(
                           subActivity.value,
                         )}
                         onCheckedChange={async (isChecked) => {

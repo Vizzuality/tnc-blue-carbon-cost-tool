@@ -18,7 +18,7 @@ export enum PROJECT_SIZE_FILTER {
 }
 
 export enum PROJECT_PRICE_TYPE {
-  OPEN_BREAK_EVEN_PRICE = "Opex breakeven price",
+  OPEN_BREAK_EVEN_PRICE = "Opex breakeven",
   MARKET_PRICE = "Market price",
 }
 
