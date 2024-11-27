@@ -107,13 +107,17 @@ export class CostCalculator {
     const costPerTCO2e =
       totalCreditsIssued != 0 ? totalCapex / totalCreditsIssued : 0;
     const costPerHa = totalNPV / this.projectInput.projectSizeHa;
+    const npvCoveringCosts =
+      this.projectInput.carbonRevenuesToCover === 'Opex'
+        ? totalRevenueNPV - totalOpexNPV
+        : totalRevenueNPV - totalNPV;
     // return {
     //   costPlans: this.costPlans,
     //   capexTotalCostPlan: this.capexTotalCostPlan,
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
     return {
-      costPerHa,
+      npvCoveringCosts,
     };
   }
 
