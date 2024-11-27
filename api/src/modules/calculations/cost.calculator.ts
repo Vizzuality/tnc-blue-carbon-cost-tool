@@ -103,6 +103,8 @@ export class CostCalculator {
     const creditsIssuedPlan =
       this.sequestrationRateCalculator.calculateEstCreditsIssuedPlan();
     const totalCreditsIssued = sum(Object.values(creditsIssuedPlan));
+    const costPerTCO2e =
+      totalCreditsIssued != 0 ? totalCapex / totalCreditsIssued : 0;
 
     // return {
     //   costPlans: this.costPlans,
@@ -110,7 +112,7 @@ export class CostCalculator {
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
     return {
-      totalCreditsIssued,
+      costPerTCO2e,
     };
   }
 
