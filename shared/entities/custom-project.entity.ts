@@ -9,6 +9,7 @@ import {
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { Country } from "@shared/entities/country.entity";
+import { User } from "@shared/entities/users/user.entity";
 
 /**
  * @description: This entity is to save Custom Projects (that are calculated, and can be saved only by registered users. Most likely, we don't need to add these as a resource
@@ -21,6 +22,13 @@ import { Country } from "@shared/entities/country.entity";
 export class CustomProject {
   @PrimaryGeneratedColumn("uuid")
   id: string;
+
+  @Column({ name: "project_name" })
+  projectName: string;
+
+  @ManyToOne(() => User, (user) => user.customProjects, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "user_id" })
+  user: User;
 
   @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
   @JoinColumn({ name: "country_code" })
@@ -39,7 +47,7 @@ export class CustomProject {
   output_snapshot: any;
 
   static fromCustomProjectSnapshotDTO(
-    dto: CustomProjectSnapshotDto
+    dto: CustomProjectSnapshotDto,
   ): CustomProject {
     const customProject = new CustomProject();
     customProject.countryCode = {
