@@ -129,8 +129,13 @@ export class CostCalculator {
     //   capexTotalCostPlan: this.capexTotalCostPlan,
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
+    const npvToUse =
+      this.projectInput.carbonRevenuesToCover === 'Opex'
+        ? totalOpexNPV
+        : totalNPV;
+    const fundingGap = this.calculateFundingGap(npvToUse, totalRevenueNPV);
     return {
-      totalCommunityBenefitSharingFund,
+      fundingGap,
     };
   }
 
