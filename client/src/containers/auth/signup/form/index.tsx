@@ -89,11 +89,11 @@ const TokenSignUpForm: FC = () => {
             name="partnerName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Partner</FormLabel>
+                <FormLabel>Organization</FormLabel>
                 <FormControl>
                   <Input
                     autoFocus
-                    placeholder="Enter partner name"
+                    placeholder="Enter organization name"
                     {...field}
                   />
                 </FormControl>
