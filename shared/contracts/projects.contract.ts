@@ -1,3 +1,4 @@
+import { ProjectScorecard } from "./../entities/project-scorecard.entity";
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
 import {
@@ -13,6 +14,7 @@ import { BaseEntity } from "typeorm";
 const contract = initContract();
 
 export type ProjectType = Omit<Project, keyof BaseEntity>;
+export type ProjectScorecardType = Omit<ProjectScorecard, keyof BaseEntity>;
 
 export const otherFilters = z.object({
   costRange: z.coerce.number().array().optional(),
@@ -48,6 +50,19 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiResponse<CountryWithNoGeometry[]>>(),
     },
+  },
+  getProjectsScorecard: {
+    method: "GET",
+    path: "/projects/scorecard",
+    responses: {
+      200: contract.type<ApiPaginationResponse<ProjectScorecardType>>(),
+    },
+    query: getProjectsQuerySchema.pick({
+      filter: true,
+      costRange: true,
+      abatementPotentialRange: true,
+      costRangeSelector: true,
+    }),
   },
   getProjectsMap: {
     method: "GET",

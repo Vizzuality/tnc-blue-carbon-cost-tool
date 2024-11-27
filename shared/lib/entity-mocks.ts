@@ -12,6 +12,8 @@ import {
   RESTORATION_ACTIVITY_SUBTYPE,
 } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { ProjectScorecard } from "@shared/entities/project-scorecard.entity";
+import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 
 export const createUser = async (
   dataSource: DataSource,
@@ -58,4 +60,31 @@ export const createProject = async (
   return dataSource
     .getRepository(Project)
     .save({ ...defaultProjectData, ...additionalData });
+};
+
+export const createProjectScorecard = async (
+  dataSource: DataSource,
+  additionalData?: DeepPartial<ProjectScorecard>,
+): Promise<ProjectScorecard> => {
+  const countries = await dataSource.getRepository(Country).find();
+  if (!countries.length) {
+    throw new Error("No countries in the database");
+  }
+  const defaultProjectScorecardData: Partial<ProjectScorecard> = {
+    countryCode: countries[0].code,
+    ecosystem: ECOSYSTEM.MANGROVE,
+    financialFeasibility: PROJECT_SCORE.HIGH,
+    legalFeasibility: PROJECT_SCORE.LOW,
+    implementationFeasibility: PROJECT_SCORE.MEDIUM,
+    socialFeasibility: PROJECT_SCORE.HIGH,
+    securityRating: PROJECT_SCORE.LOW,
+    availabilityOfExperiencedLabor: PROJECT_SCORE.MEDIUM,
+    availabilityOfAlternatingFunding: PROJECT_SCORE.HIGH,
+    coastalProtectionBenefits: PROJECT_SCORE.LOW,
+    biodiversityBenefit: PROJECT_SCORE.HIGH,
+  };
+
+  return dataSource
+    .getRepository(ProjectScorecard)
+    .save({ ...defaultProjectScorecardData, ...additionalData });
 };

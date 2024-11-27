@@ -26,6 +26,70 @@ describe('Projects', () => {
     await testManager.close();
   });
 
+  describe('Get Projects Scorecards', () => {
+    test('Should return a list of Projects Scorecards', async () => {
+      const projects: Project[] = [];
+      for (const country of countriesInDb.slice(0, 5)) {
+        projects.push(
+          await testManager
+            .mocks()
+            .createProject({ countryCode: country.code }),
+        );
+      }
+
+      for (const project of projects) {
+        await testManager.mocks().createProjectScorecard({
+          countryCode: project.countryCode,
+          ecosystem: project.ecosystem,
+        });
+      }
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjectsScorecard.path)
+        .query({ disablePagination: true });
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body.length).toBe(projects.length);
+    });
+
+    test.only('Should return a filtered list of Projects Scorecards', async () => {
+      const numProjects = 5;
+      const projects: Project[] = [];
+      const countryCodes: string[] = countriesInDb
+        .slice(0, numProjects)
+        .map((country) => country.code);
+      const totalCostNPVs = [25, 15, 45, 10, 30];
+
+      for (let i = 0; i < numProjects; i++) {
+        projects.push(
+          await testManager.mocks().createProject({
+            countryCode: countryCodes[i],
+            totalCostNPV: totalCostNPVs[i],
+          }),
+        );
+      }
+
+      for (const project of projects) {
+        await testManager.mocks().createProjectScorecard({
+          countryCode: project.countryCode,
+          ecosystem: project.ecosystem,
+        });
+      }
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjectsScorecard.path)
+        .query({
+          costRangeSelector: 'npv',
+          costRange: [12, 26],
+        });
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body.length).toBe(2);
+    });
+  });
+
   describe('Get Projects', () => {
     test('Should return a list of Projects', async () => {
       const projects: Project[] = [];

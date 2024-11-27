@@ -12,7 +12,7 @@ export type ProjectGeoProperties = z.infer<typeof ProjectGeoPropertiesSchema>;
 
 export type ProjectMap = FeatureCollection<Geometry, ProjectGeoProperties>;
 
-export type ProjectMapFilters = {
+export type ProjectFilters = {
   countryCode?: string[];
   totalCost?: number[];
   abatementPotential?: number[];
@@ -23,7 +23,7 @@ export type ProjectMapFilters = {
   priceType?: PROJECT_PRICE_TYPE;
 };
 
-export type OtherMapFilters = {
+export type OtherProjectFilters = {
   costRange?: number[];
   abatementPotentialRange?: number[];
   costRangeSelector?: "total" | "npv";

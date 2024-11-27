@@ -3,10 +3,11 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  OtherMapFilters,
+  OtherProjectFilters,
   ProjectMap,
-  ProjectMapFilters,
+  ProjectFilters,
 } from '@shared/dtos/projects/projects-map.dto';
+import { ProjectScorecardView } from '@shared/entities/project-scorecard.view';
 
 @Injectable()
 export class ProjectsMapRepository extends Repository<Project> {
@@ -18,8 +19,8 @@ export class ProjectsMapRepository extends Repository<Project> {
   }
 
   async getProjectsMap(
-    filters?: ProjectMapFilters,
-    otherFilters?: OtherMapFilters,
+    filters?: ProjectFilters,
+    otherFilters?: OtherProjectFilters,
   ): Promise<ProjectMap> {
     const geoQueryBuilder = this.manager.createQueryBuilder();
     geoQueryBuilder
@@ -67,8 +68,8 @@ export class ProjectsMapRepository extends Repository<Project> {
 
   private applyFilters(
     queryBuilder: SelectQueryBuilder<Project>,
-    filters: ProjectMapFilters = {},
-    otherFilters: OtherMapFilters = {},
+    filters: ProjectFilters = {},
+    otherFilters: OtherProjectFilters = {},
   ) {
     const {
       countryCode,
@@ -153,7 +154,6 @@ export class ProjectsMapRepository extends Repository<Project> {
       );
     }
 
-    // TODO: Pending to apply "parameter" filters (size, price type, NPV vs non-NPV)...
     return queryBuilder;
   }
 }
