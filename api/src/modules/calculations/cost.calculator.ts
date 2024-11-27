@@ -93,14 +93,21 @@ export class CostCalculator {
       this.opexTotalCostPlan,
       this.projectInput.assumptions.discountRate,
     );
+    const estimatedRevenuePlan =
+      this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
+    const totalRevenue = sum(Object.values(estimatedRevenuePlan));
+    const totalRevenueNPV = this.calculateNpv(
+      estimatedRevenuePlan,
+      this.projectInput.assumptions.discountRate,
+    );
     // return {
     //   costPlans: this.costPlans,
     //   capexTotalCostPlan: this.capexTotalCostPlan,
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
     return {
-      totalOpex,
-      totalOpexNPV,
+      totalRevenue,
+      totalRevenueNPV,
     };
   }
 
@@ -383,7 +390,7 @@ export class CostCalculator {
     }
 
     const estimatedRevenue: CostPlanMap =
-      this.revenueProfitCalculator.calculateEstimatedRevenue();
+      this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
 
     for (const yearStr in communityBenefitSharingFundCostPlan) {
       const year = Number(yearStr);
@@ -625,7 +632,7 @@ export class CostCalculator {
     const totalCapex = sum(Object.values(this.capexTotalCostPlan));
     const totalOpex = sum(Object.values(this.opexTotalCostPlan));
     const estimatedRevenue =
-      this.revenueProfitCalculator.calculateEstimatedRevenue();
+      this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
     const totalRevenue = sum(Object.values(estimatedRevenue));
     const totalRevenueNPV = this.calculateNpv(
       estimatedRevenue,

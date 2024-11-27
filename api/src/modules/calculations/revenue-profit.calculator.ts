@@ -22,7 +22,7 @@ export class RevenueProfitCalculator {
     );
   }
 
-  calculateEstimatedRevenue(): CostPlanMap {
+  calculateEstimatedRevenuePlan(): CostPlanMap {
     const estimatedRevenuePlan: CostPlanMap = {};
 
     for (let year = -4; year <= this.defaultProjectLength; year++) {
@@ -58,7 +58,7 @@ export class RevenueProfitCalculator {
     capexTotalCostPlan: CostPlanMap,
     opexTotalCostPlan: CostPlanMap,
   ): { [year: number]: number } {
-    const estimatedRevenue = this.calculateEstimatedRevenue();
+    const estimatedRevenue = this.calculateEstimatedRevenuePlan();
 
     const costPlans = {
       capexTotal: {} as CostPlanMap,
@@ -108,7 +108,7 @@ export class RevenueProfitCalculator {
       costPlans.opex_total[Number(yearStr)] = -amount;
     }
 
-    const estimatedRevenue = this.calculateEstimatedRevenue();
+    const estimatedRevenue = this.calculateEstimatedRevenuePlan();
 
     const annualNetIncome: { [year: number]: number } = {};
 
