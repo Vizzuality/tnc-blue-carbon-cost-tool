@@ -111,13 +111,15 @@ export class CostCalculator {
       this.projectInput.carbonRevenuesToCover === 'Opex'
         ? totalRevenueNPV - totalOpexNPV
         : totalRevenueNPV - totalNPV;
+    const financingCost =
+      this.projectInput.costAndCarbonInputs.financingCost * totalCapex;
     // return {
     //   costPlans: this.costPlans,
     //   capexTotalCostPlan: this.capexTotalCostPlan,
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
     return {
-      npvCoveringCosts,
+      financingCost,
     };
   }
 
