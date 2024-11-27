@@ -71,7 +71,7 @@ export class CustomProjectsService extends AppBaseService<
     //   sequestrationRateCalculator,
     // );
     return {
-      costDetails: calculator.getCostDetails(costPlans),
+      summary: calculator.getSummary(costPlans),
     };
   }
 
