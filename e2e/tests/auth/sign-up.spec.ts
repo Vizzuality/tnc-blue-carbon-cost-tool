@@ -36,7 +36,7 @@ test.describe("Auth - Sign Up", () => {
     await page.goto(`/auth/signup`);
 
     await page.getByPlaceholder("Enter your name").fill(user.name);
-    await page.getByPlaceholder("Enter partner name").fill(user.partnerName);
+    await page.getByPlaceholder("Enter organisation name").fill(user.partnerName);
     await page.getByLabel("Email").fill(user.email);
     await page.getByRole("checkbox").check();
 
