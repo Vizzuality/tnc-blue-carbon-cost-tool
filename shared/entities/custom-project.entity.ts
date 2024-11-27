@@ -16,6 +16,11 @@ import { type CustomProjectOutput } from "@shared/dtos/custom-projects/custom-pr
  *        to other entities that  (i.e User)
  */
 
+export enum CARBON_REVENUES_TO_COVER {
+  OPEX = "Opex",
+  CAPEX_AND_OPEX = "Capex and Opex",
+}
+
 @Entity({ name: "custom_projects" })
 export class CustomProject {
   @PrimaryGeneratedColumn("uuid")
