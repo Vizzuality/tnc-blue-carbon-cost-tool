@@ -113,13 +113,16 @@ export class CostCalculator {
         : totalRevenueNPV - totalNPV;
     const financingCost =
       this.projectInput.costAndCarbonInputs.financingCost * totalCapex;
+    const fundingGapNPV = npvCoveringCosts < 0 ? npvCoveringCosts * -1 : 0;
+    const fundingGapPerTCO2e =
+      totalCreditsIssued != 0 ? fundingGapNPV / totalCreditsIssued : 0;
     // return {
     //   costPlans: this.costPlans,
     //   capexTotalCostPlan: this.capexTotalCostPlan,
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
     return {
-      financingCost,
+      fundingGapPerTCO2e,
     };
   }
 
