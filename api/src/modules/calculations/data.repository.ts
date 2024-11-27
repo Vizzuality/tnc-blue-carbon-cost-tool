@@ -100,6 +100,7 @@ export class DataRepository extends Repository<BaseDataView> {
         'maintenanceDuration',
         'communityBenefitSharingFund',
         'otherCommunityCashFlow',
+        'tier1SequestrationRate',
       ],
     });
 

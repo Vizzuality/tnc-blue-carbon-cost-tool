@@ -4,6 +4,7 @@ import {
   CostPlans,
 } from '@api/modules/calculations/cost.calculator';
 import { sum } from 'lodash';
+import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
 
 export class SummaryGenerator {
   costs: CostPlans;
@@ -13,11 +14,13 @@ export class SummaryGenerator {
   totalCapexNPV: number;
   totalOpexNPV: number;
   totalNPV: number;
+  sequestrationRateCalculator: SequestrationRateCalculator;
   constructor(
     costs: CostPlans,
     capexCostPlan: CostPlanMap,
     opexCostPlan: CostPlanMap,
     discountRate: number,
+    sequestrationRateCalculator: SequestrationRateCalculator,
   ) {
     this.costs = costs;
     this.capexCostPlan = capexCostPlan;
@@ -26,6 +29,7 @@ export class SummaryGenerator {
     this.totalCapexNPV = this.calculateNpv(capexCostPlan, discountRate);
     this.totalOpexNPV = sum(Object.values(opexCostPlan));
     this.totalNPV = this.totalCapexNPV + this.totalOpexNPV;
+    this.sequestrationRateCalculator = sequestrationRateCalculator;
   }
   calculateNpv(
     costPlan: CostPlanMap,
@@ -159,6 +163,28 @@ export class SummaryGenerator {
           totalCost: this.totalOpexNPV + this.totalCapexNPV,
         },
       },
+    };
+  }
+
+  getSummary(): any {
+    return {
+      '$/tCO2e (total cost, NPV': null,
+      '$/ha': null,
+      'Leftover after OpEx / total cost': null,
+      'NPV covering cost': null,
+      'IRR when priced to cover OpEx': null,
+      'IRR when priced to cover total cost': null,
+      'Total cost (NPV)': this.totalNPV,
+      'Capital expenditure (NPV)': this.totalCapexNPV,
+      'Operating expenditure (NPV)': this.totalOpexNPV,
+      'Credits issued': null,
+      'Total revenue (NPV)': null,
+      'Total revenue (non-discounted)': null,
+      'Financing cost': null,
+      'Funding gap': null,
+      'Funding gap (NPV)': null,
+      'Funding gap per tCO2e (NPV)': null,
+      'Community benefit sharing fund': null,
     };
   }
 }
