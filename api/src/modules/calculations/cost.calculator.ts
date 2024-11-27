@@ -11,16 +11,12 @@ import {
 } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculator';
 import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
-import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 
 export type CostPlanMap = {
   [year: number]: number;
 };
 
-type CostPlans = Record<
-  keyof OverridableCostInputs & AdditionalBaseData,
-  CostPlanMap
->;
+export type CostPlans = Record<keyof OverridableCostInputs, CostPlanMap>;
 
 // TODO: Strongly type this to bound it to existing types
 export enum COST_KEYS {
@@ -583,6 +579,8 @@ export class CostCalculator {
       baselineReassessment: this.baseLineReassessmentCosts(),
       mrv: this.mrvCosts(),
       longTermProjectOperatingCost: this.longTermProjectOperatingCosts(),
+      // Financing cost is calculated using total capex which is calculated in the summary generator
+      financingCost: null,
     };
     return this.costPlans;
   }

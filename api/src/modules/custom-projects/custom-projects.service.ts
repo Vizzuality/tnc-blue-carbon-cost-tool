@@ -13,6 +13,7 @@ import { CostCalculator } from '@api/modules/calculations/cost.calculator';
 import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
 import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
+import { SummaryGenerator } from '@api/modules/calculations/summary.generator';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -54,7 +55,16 @@ export class CustomProjectsService extends AppBaseService<
     const calculator = new CostCalculator(projectInput, baseSize, baseIncrease);
 
     const costPlans = calculator.initializeCostPlans().calculateCosts();
-    return costPlans;
+    const summary = new SummaryGenerator(
+      costPlans,
+      calculator.capexTotalCostPlan,
+      calculator.opexTotalCostPlan,
+      projectInput.assumptions.discountRate,
+    );
+    return {
+      summary: summary.getCostEstimates(),
+      costPlans,
+    };
   }
 
   async saveCustomProject(dto: CustomProjectSnapshotDto): Promise<void> {
