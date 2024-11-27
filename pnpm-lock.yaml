@@ -146,6 +146,9 @@ importers:
       financejs:
         specifier: ^4.1.0
         version: 4.1.0
+      financial:
+        specifier: ^0.2.4
+        version: 0.2.4
       jsonapi-serializer:
         specifier: ^3.6.9
         version: 3.6.9
@@ -4894,6 +4897,10 @@ packages:
 
   financejs@4.1.0:
     resolution: {integrity: sha512-IE/SpTfCRsdl4TZWCGLo6/NNeg0q0QjU9eOoIxy7BWPCAH2truL3uqK+Kwu3f3kLd1trJK5vRKO+KGRNwNIzfg==}
+
+  financial@0.2.4:
+    resolution: {integrity: sha512-FNmbPW7o8oARCEJVOqb311oZp639fsnCkNltrXXahuqei7O8rm5QLTHEDbreRrrZAAmXjTGx5I8T0yPI3yyd9A==}
+    engines: {node: '>=18'}
 
   find-cache-dir@2.1.0:
     resolution: {integrity: sha512-Tq6PixE0w/VMFfCgbONnkiQIVol/JJL7nRMi20fqzA4NRs9AfeqMGeRdPi3wIhYkxjeBaWh2rxwapn5Tu3IqOQ==}
@@ -13609,6 +13616,8 @@ snapshots:
       - supports-color
 
   financejs@4.1.0: {}
+
+  financial@0.2.4: {}
 
   find-cache-dir@2.1.0:
     dependencies:

@@ -57,7 +57,7 @@ export class RevenueProfitCalculator {
   calculateAnnualNetCashFlow(
     capexTotalCostPlan: CostPlanMap,
     opexTotalCostPlan: CostPlanMap,
-  ): { [year: number]: number } {
+  ): CostPlanMap {
     const estimatedRevenue = this.calculateEstimatedRevenuePlan();
 
     const costPlans = {

@@ -12,6 +12,7 @@ import {
 import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculator';
 import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
 import { sum } from 'lodash';
+import { irr } from 'financial';
 
 export type CostPlanMap = {
   [year: number]: number;
@@ -124,18 +125,36 @@ export class CostCalculator {
       totalRevenueNPV === 0
         ? 0
         : totalCommunityBenefitSharingFundNPV / totalRevenueNPV;
-    // return {
-    //   costPlans: this.costPlans,
-    //   capexTotalCostPlan: this.capexTotalCostPlan,
-    //   opexTotalCostPlan: this.opexTotalCostPlan,
-    // };
+
     const npvToUse =
       this.projectInput.carbonRevenuesToCover === 'Opex'
         ? totalOpexNPV
         : totalNPV;
     const fundingGap = this.calculateFundingGap(npvToUse, totalRevenueNPV);
+    //// WE GOOD UP TO HERE
+    const annualNetCashFlow =
+      this.revenueProfitCalculator.calculateAnnualNetCashFlow(
+        this.capexTotalCostPlan,
+        this.opexTotalCostPlan,
+      );
+    const annualNetIncome =
+      this.revenueProfitCalculator.calculateAnnualNetIncome(
+        this.capexTotalCostPlan,
+      );
+    const IRROpex = this.calculateIrr(
+      annualNetCashFlow,
+      annualNetIncome,
+      false,
+    );
+    const IRRTotalCost = this.calculateIrr(
+      annualNetCashFlow,
+      annualNetIncome,
+      true,
+    );
+
     return {
-      fundingGap,
+      IRROpex,
+      IRRTotalCost,
     };
   }
 
@@ -801,32 +820,9 @@ export class CostCalculator {
       ? Object.values(netCashFlow)
       : Object.values(netIncome);
 
-    const calculateIrrFromCashFlows = (cashFlows: number[]): number => {
-      const guess = 0.1;
-      const maxIterations = 1000;
-      const precision = 1e-6;
+    const internalRateOfReturn = irr(cashFlowArray);
 
-      let irr = guess;
-      for (let i = 0; i < maxIterations; i++) {
-        let npv = 0;
-        let npvDerivative = 0;
-
-        for (let t = 0; t < cashFlows.length; t++) {
-          npv += cashFlows[t] / Math.pow(1 + irr, t);
-          npvDerivative -= (t * cashFlows[t]) / Math.pow(1 + irr, t + 1);
-        }
-
-        const newIrr = irr - npv / npvDerivative;
-        if (Math.abs(newIrr - irr) < precision) {
-          return newIrr;
-        }
-        irr = newIrr;
-      }
-
-      console.error('IRR calculation did not converge');
-    };
-
-    return calculateIrrFromCashFlows(cashFlowArray);
+    return internalRateOfReturn;
   }
 
   calculateCostPlans(): this {
