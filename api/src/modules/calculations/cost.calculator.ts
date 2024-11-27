@@ -52,9 +52,9 @@ export class CostCalculator {
   capexTotalCostPlan: CostPlanMap;
   opexTotalCostPlan: CostPlanMap;
   costPlans: CostPlans;
+  restOfStuff: Record<any, any>;
   totalCapexNPV: number;
   totalOpexNPV: number;
-  totalNPV: number;
   revenueProfitCalculator: RevenueProfitCalculator;
   sequestrationRateCalculator: SequestrationRateCalculator;
   constructor(
@@ -153,8 +153,119 @@ export class CostCalculator {
     );
 
     return {
+      totalOpex,
+      totalCapex,
+      totalCapexNPV,
+      totalOpexNPV,
       IRROpex,
       IRRTotalCost,
+    };
+  }
+
+  getCostDetails(stuff: any): any {
+    const discountRate = this.projectInput.assumptions.discountRate;
+    const { totalOpex, totalCapex, totalCapexNPV, totalOpexNPV } = stuff;
+    return {
+      total: {
+        capitalExpenditure: totalCapex,
+        totalCost: totalCapex + totalCapex,
+        operationExpenditure: totalOpex,
+        feasibilityAnalysis: sum(
+          Object.values(this.costPlans.feasibilityAnalysis),
+        ),
+        conservationPlanningAndAdmin: sum(
+          Object.values(this.costPlans.conservationPlanningAndAdmin),
+        ),
+        dataCollectionAndFieldCost: sum(
+          Object.values(this.costPlans.dataCollectionAndFieldCost),
+        ),
+        communityRepresentation: sum(
+          Object.values(this.costPlans.communityRepresentation),
+        ),
+        blueCarbonProjectPlanning: sum(
+          Object.values(this.costPlans.blueCarbonProjectPlanning),
+        ),
+        establishingCarbonRights: sum(
+          Object.values(this.costPlans.establishingCarbonRights),
+        ),
+        validation: sum(Object.values(this.costPlans.validation)),
+        implementationLabor: sum(
+          Object.values(this.costPlans.implementationLabor),
+        ),
+
+        monitoring: sum(Object.values(this.costPlans.monitoring)),
+        maintenance: sum(Object.values(this.costPlans.maintenance)),
+        communityBenefitSharingFund: sum(
+          Object.values(this.costPlans.communityBenefitSharingFund),
+        ),
+        carbonStandardFees: sum(
+          Object.values(this.costPlans.carbonStandardFees),
+        ),
+        baselineReassessment: sum(
+          Object.values(this.costPlans.baselineReassessment),
+        ),
+        mrv: sum(Object.values(this.costPlans.mrv)),
+        longTermProjectOperatingCost: sum(
+          Object.values(this.costPlans.longTermProjectOperatingCost),
+        ),
+      },
+      npv: {
+        capitalExpenditure: totalCapexNPV,
+        operationalExpenditure: totalOpexNPV,
+        totalCost: totalOpexNPV + totalCapexNPV,
+        feasibilityAnalysis: this.calculateNpv(
+          this.costPlans.feasibilityAnalysis,
+          discountRate,
+        ),
+        conservationPlanningAndAdmin: this.calculateNpv(
+          this.costPlans.conservationPlanningAndAdmin,
+          discountRate,
+        ),
+        dataCollectionAndFieldCost: this.calculateNpv(
+          this.costPlans.dataCollectionAndFieldCost,
+          discountRate,
+        ),
+        communityRepresentation: this.calculateNpv(
+          this.costPlans.communityRepresentation,
+          discountRate,
+        ),
+        blueCarbonProjectPlanning: this.calculateNpv(
+          this.costPlans.blueCarbonProjectPlanning,
+          discountRate,
+        ),
+        establishingCarbonRights: this.calculateNpv(
+          this.costPlans.establishingCarbonRights,
+          discountRate,
+        ),
+        validation: this.calculateNpv(this.costPlans.validation, discountRate),
+        implementationLabor: this.calculateNpv(
+          this.costPlans.implementationLabor,
+          discountRate,
+        ),
+        operationExpenditure: this.totalOpexNPV,
+        monitoring: this.calculateNpv(this.costPlans.monitoring, discountRate),
+        maintenance: this.calculateNpv(
+          this.costPlans.maintenance,
+          discountRate,
+        ),
+        communityBenefitSharingFund: this.calculateNpv(
+          this.costPlans.communityBenefitSharingFund,
+          discountRate,
+        ),
+        carbonStandardFees: this.calculateNpv(
+          this.costPlans.carbonStandardFees,
+          discountRate,
+        ),
+        baselineReassessment: this.calculateNpv(
+          this.costPlans.baselineReassessment,
+          discountRate,
+        ),
+        mrv: this.calculateNpv(this.costPlans.mrv, discountRate),
+        longTermProjectOperatingCost: this.calculateNpv(
+          this.costPlans.longTermProjectOperatingCost,
+          discountRate,
+        ),
+      },
     };
   }
 
@@ -666,100 +777,6 @@ export class CostCalculator {
     }
   }
 
-  calculateCosts() {
-    this.totalCapexNPV = this.calculateNpv(
-      this.opexTotalCostPlan,
-      this.projectInput.assumptions.discountRate,
-    );
-    this.totalOpexNPV = this.calculateNpv(
-      this.opexTotalCostPlan,
-      this.projectInput.assumptions.discountRate,
-    );
-    this.totalNPV = this.totalCapexNPV + this.totalOpexNPV;
-    const totalCapex = sum(Object.values(this.capexTotalCostPlan));
-    const totalOpex = sum(Object.values(this.opexTotalCostPlan));
-    const estimatedRevenue =
-      this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
-    const totalRevenue = sum(Object.values(estimatedRevenue));
-    const totalRevenueNPV = this.calculateNpv(
-      estimatedRevenue,
-      this.projectInput.assumptions.discountRate,
-    );
-    const totalCreditsPlan =
-      this.sequestrationRateCalculator.calculateEstCreditsIssuedPlan();
-    const creditsIssued = sum(Object.values(totalCreditsPlan));
-    const costPerTCO2e = creditsIssued != 0 ? totalCapex / creditsIssued : 0;
-    const costPerHa = this.totalNPV / this.projectInput.projectSizeHa;
-    const npvCoveringCosts =
-      this.projectInput.carbonRevenuesToCover === 'Opex'
-        ? totalRevenueNPV - this.totalOpexNPV
-        : totalRevenueNPV - this.totalNPV;
-    const financingCost =
-      this.projectInput.costAndCarbonInputs.financingCost * totalCapex;
-    const fundingGapNPV = npvCoveringCosts < 0 ? npvCoveringCosts * -1 : 0;
-    const funding_gap_per_tco2_NPV =
-      creditsIssued != 0 ? fundingGapNPV / creditsIssued : 0;
-    const total_community_benefit_sharing_fund_NPV = this.calculateNpv(
-      this.costPlans.communityBenefitSharingFund,
-      this.projectInput.assumptions.discountRate,
-    );
-    const community_benefit_sharing_fund =
-      totalRevenueNPV === 0
-        ? 0
-        : total_community_benefit_sharing_fund_NPV / totalRevenueNPV;
-    const referenceNPV =
-      this.projectInput.carbonRevenuesToCover === 'Opex'
-        ? this.totalOpexNPV
-        : this.totalNPV;
-    const funding_gap = this.calculateFundingGap(referenceNPV, totalRevenueNPV);
-    const IRR_opex = this.calculateIrr(
-      this.revenueProfitCalculator.calculateAnnualNetCashFlow(
-        this.capexTotalCostPlan,
-        this.opexTotalCostPlan,
-      ),
-      this.revenueProfitCalculator.calculateAnnualNetIncome(
-        this.capexTotalCostPlan,
-      ),
-      false,
-    );
-    const IRR_total_cost = this.calculateIrr(
-      this.revenueProfitCalculator.calculateAnnualNetCashFlow(
-        this.capexTotalCostPlan,
-        this.opexTotalCostPlan,
-      ),
-      this.revenueProfitCalculator.calculateAnnualNetIncome(
-        this.capexTotalCostPlan,
-      ),
-      true,
-    );
-
-    return {
-      costPlans: this.costPlans,
-      rest: {
-        financingCost,
-        totalCapex,
-        totalOpex,
-        totalNPV: this.totalNPV,
-        totalCapexNPV: this.totalCapexNPV,
-        totalOpexNPV: this.totalOpexNPV,
-        totalRevenueNPV,
-        creditsIssued,
-        costPerTCO2e,
-        costPerHa,
-        npvCoveringCosts,
-        fundingGapNPV,
-        funding_gap_per_tco2_NPV,
-        total_community_benefit_sharing_fund_NPV,
-        community_benefit_sharing_fund,
-        referenceNPV,
-        funding_gap,
-        IRR_opex,
-        IRR_total_cost,
-        totalRevenue,
-      },
-    };
-  }
-
   calculateCapexTotalPlan() {
     const costs = [
       this.costPlans.feasibilityAnalysis,
@@ -846,31 +863,115 @@ export class CostCalculator {
     return this;
   }
 
-  // communityBenefitSharingFundPlan():CostPlanMap {
-  //
-  //   const baseCost: number = this.projectInput.costAndCarbonInputs.communityBenefitSharingFund
-  //
-  //
-  //   let communityBenefitSharingFundCostPlan: CostPlanMap = {};
-  //   for (let year = -4; year <= this.projectInput.assumptions.defaultProjectLength; year++) {
-  //     if (year !== 0) {
-  //       communityBenefitSharingFundCostPlan[year] = 0;
-  //     }
-  //   }
-  //
-  //   const estimatedRevenuePlan: CostPlanMap = this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
-  //
-  //
-  //   for (const year in communityBenefitSharingFundCostPlan) {
-  //     const yearNum = Number(year);
-  //     if (yearNum <= this.projectInput.assumptions.projectLength) {
-  //       communityBenefitSharingFundCostPlan[yearNum] =
-  //           estimatedRevenuePlan[yearNum] * baseCost;
-  //     } else {
-  //       communityBenefitSharingFundCostPlan[yearNum] = 0;
-  //     }
-  //   }
-  //
-  //   return communityBenefitSharingFundCostPlan;
+  // TODO: strongly type this and share it
+  // getCostEstimates(stuff: any): any {
+  //   return {
+  //     costEstimatesUds: {
+  //       total: {
+  //         capitalExpenditure: sum(Object.values(this.capexCostPlan)),
+  //         feasibilityAnalysis: sum(
+  //           Object.values(this.costs.feasibilityAnalysis),
+  //         ),
+  //         conservationPlanningAndAdmin: sum(
+  //           Object.values(this.costs.conservationPlanningAndAdmin),
+  //         ),
+  //         dataCollectionAndFieldCost: sum(
+  //           Object.values(this.costs.dataCollectionAndFieldCost),
+  //         ),
+  //         communityRepresentation: sum(
+  //           Object.values(this.costs.communityRepresentation),
+  //         ),
+  //         blueCarbonProjectPlanning: sum(
+  //           Object.values(this.costs.blueCarbonProjectPlanning),
+  //         ),
+  //         establishingCarbonRights: sum(
+  //           Object.values(this.costs.establishingCarbonRights),
+  //         ),
+  //         validation: sum(Object.values(this.costs.validation)),
+  //         implementationLabor: sum(
+  //           Object.values(this.costs.implementationLabor),
+  //         ),
+  //         operationExpenditure: sum(Object.values(this.opexCostPlan)),
+  //         monitoring: sum(Object.values(this.costs.monitoring)),
+  //         maintenance: sum(Object.values(this.costs.maintenance)),
+  //         communityBenefitSharingFund: sum(
+  //           Object.values(this.costs.communityBenefitSharingFund),
+  //         ),
+  //         carbonStandardFees: sum(Object.values(this.costs.carbonStandardFees)),
+  //         baselineReassessment: sum(
+  //           Object.values(this.costs.baselineReassessment),
+  //         ),
+  //         mrv: sum(Object.values(this.costs.mrv)),
+  //         longTermProjectOperatingCost: sum(
+  //           Object.values(this.costs.longTermProjectOperatingCost),
+  //         ),
+  //         totalCost:
+  //           sum(Object.values(this.capexCostPlan)) +
+  //           sum(Object.values(this.opexCostPlan)),
+  //       },
+  //       npv: {
+  //         capitalExpenditure: this.totalCapexNPV,
+  //         feasibilityAnalysis: this.calculateNpv(
+  //           this.costs.feasibilityAnalysis,
+  //           this.discountRate,
+  //         ),
+  //         conservationPlanningAndAdmin: this.calculateNpv(
+  //           this.costs.conservationPlanningAndAdmin,
+  //           this.discountRate,
+  //         ),
+  //         dataCollectionAndFieldCost: this.calculateNpv(
+  //           this.costs.dataCollectionAndFieldCost,
+  //           this.discountRate,
+  //         ),
+  //         communityRepresentation: this.calculateNpv(
+  //           this.costs.communityRepresentation,
+  //           this.discountRate,
+  //         ),
+  //         blueCarbonProjectPlanning: this.calculateNpv(
+  //           this.costs.blueCarbonProjectPlanning,
+  //           this.discountRate,
+  //         ),
+  //         establishingCarbonRights: this.calculateNpv(
+  //           this.costs.establishingCarbonRights,
+  //           this.discountRate,
+  //         ),
+  //         validation: this.calculateNpv(
+  //           this.costs.validation,
+  //           this.discountRate,
+  //         ),
+  //         implementationLabor: this.calculateNpv(
+  //           this.costs.implementationLabor,
+  //           this.discountRate,
+  //         ),
+  //         operationExpenditure: this.totalOpexNPV,
+  //         monitoring: this.calculateNpv(
+  //           this.costs.monitoring,
+  //           this.discountRate,
+  //         ),
+  //         maintenance: this.calculateNpv(
+  //           this.costs.maintenance,
+  //           this.discountRate,
+  //         ),
+  //         communityBenefitSharingFund: this.calculateNpv(
+  //           this.costs.communityBenefitSharingFund,
+  //           this.discountRate,
+  //         ),
+  //         carbonStandardFees: this.calculateNpv(
+  //           this.costs.carbonStandardFees,
+  //           this.discountRate,
+  //         ),
+  //         baselineReassessment: this.calculateNpv(
+  //           this.costs.baselineReassessment,
+  //           this.discountRate,
+  //         ),
+  //         mrv: this.calculateNpv(this.costs.mrv, this.discountRate),
+  //         longTermProjectOperatingCost: this.calculateNpv(
+  //           this.costs.longTermProjectOperatingCost,
+  //           this.discountRate,
+  //         ),
+  //         totalCost: this.totalOpexNPV + this.totalCapexNPV,
+  //       },
+  //     },
+  //   };
   // }
 }
