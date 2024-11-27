@@ -912,6 +912,7 @@ export class CostCalculator {
       baselineReassessment: this.baseLineReassessmentCosts(),
       mrv: this.mrvCosts(),
       longTermProjectOperatingCost: this.longTermProjectOperatingCosts(),
+      opexTotalCostPlan: this.opexTotalCostPlan,
     };
     return this;
   }
