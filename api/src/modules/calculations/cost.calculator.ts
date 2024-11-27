@@ -93,6 +93,7 @@ export class CostCalculator {
       this.opexTotalCostPlan,
       this.projectInput.assumptions.discountRate,
     );
+    const totalNPV = totalCapexNPV + totalOpexNPV;
     const estimatedRevenuePlan =
       this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
     const totalRevenue = sum(Object.values(estimatedRevenuePlan));
@@ -105,14 +106,14 @@ export class CostCalculator {
     const totalCreditsIssued = sum(Object.values(creditsIssuedPlan));
     const costPerTCO2e =
       totalCreditsIssued != 0 ? totalCapex / totalCreditsIssued : 0;
-
+    const costPerHa = totalNPV / this.projectInput.projectSizeHa;
     // return {
     //   costPlans: this.costPlans,
     //   capexTotalCostPlan: this.capexTotalCostPlan,
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
     return {
-      costPerTCO2e,
+      costPerHa,
     };
   }
 
