@@ -116,13 +116,17 @@ export class CostCalculator {
     const fundingGapNPV = npvCoveringCosts < 0 ? npvCoveringCosts * -1 : 0;
     const fundingGapPerTCO2e =
       totalCreditsIssued != 0 ? fundingGapNPV / totalCreditsIssued : 0;
+    const totalCommunityBenefitSharingFundNPV = this.calculateNpv(
+      this.communityBenefitAndSharingCosts(),
+      this.projectInput.assumptions.discountRate,
+    );
     // return {
     //   costPlans: this.costPlans,
     //   capexTotalCostPlan: this.capexTotalCostPlan,
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
     return {
-      fundingGapPerTCO2e,
+      totalCommunityBenefitSharingFundNPV,
     };
   }
 
@@ -836,4 +840,32 @@ export class CostCalculator {
     };
     return this;
   }
+
+  // communityBenefitSharingFundPlan():CostPlanMap {
+  //
+  //   const baseCost: number = this.projectInput.costAndCarbonInputs.communityBenefitSharingFund
+  //
+  //
+  //   let communityBenefitSharingFundCostPlan: CostPlanMap = {};
+  //   for (let year = -4; year <= this.projectInput.assumptions.defaultProjectLength; year++) {
+  //     if (year !== 0) {
+  //       communityBenefitSharingFundCostPlan[year] = 0;
+  //     }
+  //   }
+  //
+  //   const estimatedRevenuePlan: CostPlanMap = this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
+  //
+  //
+  //   for (const year in communityBenefitSharingFundCostPlan) {
+  //     const yearNum = Number(year);
+  //     if (yearNum <= this.projectInput.assumptions.projectLength) {
+  //       communityBenefitSharingFundCostPlan[yearNum] =
+  //           estimatedRevenuePlan[yearNum] * baseCost;
+  //     } else {
+  //       communityBenefitSharingFundCostPlan[yearNum] = 0;
+  //     }
+  //   }
+  //
+  //   return communityBenefitSharingFundCostPlan;
+  // }
 }
