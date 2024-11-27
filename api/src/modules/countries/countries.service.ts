@@ -16,7 +16,7 @@ export class CountriesService extends AppBaseService<
     @InjectRepository(Country)
     private readonly countryRepository: Repository<Country>,
   ) {
-    super(countryRepository, 'country', 'countries');
+    super(countryRepository, 'country', 'countries', 'code');
   }
 
   async getAvailableCountriesToCreateACustomProject(): Promise<Country[]> {

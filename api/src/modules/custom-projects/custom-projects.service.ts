@@ -14,6 +14,7 @@ import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
 import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
+import { CountriesService } from '@api/modules/countries/countries.service';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -29,6 +30,7 @@ export class CustomProjectsService extends AppBaseService<
     public readonly dataRepository: DataRepository,
     public readonly assumptionsRepository: AssumptionsRepository,
     public readonly customProjectFactory: CustomProjectInputFactory,
+    private readonly countries: CountriesService,
   ) {
     super(repo, 'customProject', 'customProjects');
   }
@@ -44,6 +46,9 @@ export class CustomProjectsService extends AppBaseService<
       countryCode,
       ecosystem,
       activity,
+    });
+    const country = await this.countries.getById(countryCode, {
+      fields: ['code', 'name'],
     });
 
     const projectInput = this.customProjectFactory.createProjectInput(
@@ -63,16 +68,37 @@ export class CustomProjectsService extends AppBaseService<
 
     const costPlans = calculator.initializeCostPlans();
 
-    // const summary = new SummaryGenerator(
-    //   costPlans,
-    //   calculator.capexTotalCostPlan,
-    //   calculator.opexTotalCostPlan,
-    //   projectInput.assumptions.discountRate,
-    //   sequestrationRateCalculator,
-    // );
-    return {
+    const projectOutput = {
+      projectName: dto.projectName,
+      country,
+      projectSize: dto.projectSizeHa,
+      ecosystem: dto.ecosystem,
+      activity: dto.activity,
+      lossRate: projectInput.lossRate,
+      carbonRevenuesToCover: projectInput.carbonRevenuesToCover,
+      initialCarbonPrice: projectInput.initialCarbonPriceAssumption,
+      emissionFactors: {
+        emissionFactor: projectInput.emissionFactor,
+        emissionFactorAgb: projectInput.emissionFactorAgb,
+        emissionFactorSoc: projectInput.emissionFactorSoc,
+      },
+      totalProjectCost: {
+        total: {
+          total: costPlans.totalCapex + costPlans.totalOpex,
+          capex: costPlans.totalCapex,
+          opex: costPlans.totalOpex,
+        },
+        npv: {
+          total: costPlans.totalCapexNPV + costPlans.totalOpexNPV,
+          capex: costPlans.totalCapexNPV,
+          opex: costPlans.totalOpexNPV,
+        },
+      },
+
       summary: calculator.getSummary(costPlans),
+      costDetails: calculator.getCostDetails(costPlans),
     };
+    return projectOutput;
   }
 
   async saveCustomProject(dto: CustomProjectSnapshotDto): Promise<void> {
