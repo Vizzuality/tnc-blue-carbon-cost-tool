@@ -11,12 +11,16 @@ import {
 } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculator';
 import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
+import { sum } from 'lodash';
 
 export type CostPlanMap = {
   [year: number]: number;
 };
 
-export type CostPlans = Record<keyof OverridableCostInputs, CostPlanMap>;
+export type CostPlans = Record<
+  keyof OverridableCostInputs | string,
+  CostPlanMap
+>;
 
 // TODO: Strongly type this to bound it to existing types
 export enum COST_KEYS {
@@ -47,12 +51,16 @@ export class CostCalculator {
   capexTotalCostPlan: CostPlanMap;
   opexTotalCostPlan: CostPlanMap;
   costPlans: CostPlans;
+  totalCapexNPV: number;
+  totalOpexNPV: number;
+  totalNPV: number;
   revenueProfitCalculator: RevenueProfitCalculator;
   sequestrationRateCalculator: SequestrationRateCalculator;
   constructor(
     projectInput: ProjectInput,
     baseSize: BaseSize,
     baseIncrease: BaseIncrease,
+    sequestrationRateCalculator: SequestrationRateCalculator,
   ) {
     this.projectInput = projectInput;
     this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
@@ -62,9 +70,7 @@ export class CostCalculator {
     this.revenueProfitCalculator = new RevenueProfitCalculator(
       this.projectInput,
     );
-    this.sequestrationRateCalculator = new SequestrationRateCalculator(
-      this.projectInput,
-    );
+    this.sequestrationRateCalculator = sequestrationRateCalculator;
   }
 
   initializeCostPlans() {
@@ -74,7 +80,23 @@ export class CostCalculator {
     this.opexTotalCostPlan = this.initializeTotalCostPlan(
       this.defaultProjectLength,
     );
-    return this;
+    this.calculateCostPlans();
+    this.calculateCapexTotalPlan();
+    this.calculateOpexTotalPlan();
+    const totalCapex = sum(Object.values(this.capexTotalCostPlan));
+    const totalCapexNPV = this.calculateNpv(
+      this.capexTotalCostPlan,
+      this.projectInput.assumptions.discountRate,
+    );
+    // return {
+    //   costPlans: this.costPlans,
+    //   capexTotalCostPlan: this.capexTotalCostPlan,
+    //   opexTotalCostPlan: this.opexTotalCostPlan,
+    // };
+    return {
+      totalCapex,
+      totalCapexNPV,
+    };
   }
 
   /**
@@ -553,6 +575,29 @@ export class CostCalculator {
     return longTermProjectOperatingCostPlan;
   }
 
+  calculateNpv(
+    costPlan: CostPlanMap,
+    discountRate: number,
+    actualYear: number = -4,
+  ): number {
+    let npv = 0;
+
+    for (const yearStr in costPlan) {
+      const year = Number(yearStr);
+      const cost = costPlan[year];
+
+      if (year === actualYear) {
+        npv += cost;
+      } else if (year > 0) {
+        npv += cost / Math.pow(1 + discountRate, year + (-actualYear - 1));
+      } else {
+        npv += cost / Math.pow(1 + discountRate, -actualYear + year);
+      }
+    }
+
+    return npv;
+  }
+
   private throwIfValueIsNotValid(value: number, costKey: COST_KEYS): void {
     if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
       console.error(
@@ -563,6 +608,188 @@ export class CostCalculator {
   }
 
   calculateCosts() {
+    this.totalCapexNPV = this.calculateNpv(
+      this.opexTotalCostPlan,
+      this.projectInput.assumptions.discountRate,
+    );
+    this.totalOpexNPV = this.calculateNpv(
+      this.opexTotalCostPlan,
+      this.projectInput.assumptions.discountRate,
+    );
+    this.totalNPV = this.totalCapexNPV + this.totalOpexNPV;
+    const totalCapex = sum(Object.values(this.capexTotalCostPlan));
+    const totalOpex = sum(Object.values(this.opexTotalCostPlan));
+    const estimatedRevenue =
+      this.revenueProfitCalculator.calculateEstimatedRevenue();
+    const totalRevenue = sum(Object.values(estimatedRevenue));
+    const totalRevenueNPV = this.calculateNpv(
+      estimatedRevenue,
+      this.projectInput.assumptions.discountRate,
+    );
+    const totalCreditsPlan =
+      this.sequestrationRateCalculator.calculateEstCreditsIssued();
+    const creditsIssued = sum(Object.values(totalCreditsPlan));
+    const costPerTCO2e = creditsIssued != 0 ? totalCapex / creditsIssued : 0;
+    const costPerHa = this.totalNPV / this.projectInput.projectSizeHa;
+    const npvCoveringCosts =
+      this.projectInput.carbonRevenuesToCover === 'Opex'
+        ? totalRevenueNPV - this.totalOpexNPV
+        : totalRevenueNPV - this.totalNPV;
+    const financingCost =
+      this.projectInput.costAndCarbonInputs.financingCost * totalCapex;
+    const fundingGapNPV = npvCoveringCosts < 0 ? npvCoveringCosts * -1 : 0;
+    const funding_gap_per_tco2_NPV =
+      creditsIssued != 0 ? fundingGapNPV / creditsIssued : 0;
+    const total_community_benefit_sharing_fund_NPV = this.calculateNpv(
+      this.costPlans.communityBenefitSharingFund,
+      this.projectInput.assumptions.discountRate,
+    );
+    const community_benefit_sharing_fund =
+      totalRevenueNPV === 0
+        ? 0
+        : total_community_benefit_sharing_fund_NPV / totalRevenueNPV;
+    const referenceNPV =
+      this.projectInput.carbonRevenuesToCover === 'Opex'
+        ? this.totalOpexNPV
+        : this.totalNPV;
+    const funding_gap = this.calculateFundingGap(referenceNPV, totalRevenueNPV);
+    const IRR_opex = this.calculateIrr(
+      this.revenueProfitCalculator.calculateAnnualNetCashFlow(
+        this.capexTotalCostPlan,
+        this.opexTotalCostPlan,
+      ),
+      this.revenueProfitCalculator.calculateAnnualNetIncome(
+        this.capexTotalCostPlan,
+      ),
+      false,
+    );
+    const IRR_total_cost = this.calculateIrr(
+      this.revenueProfitCalculator.calculateAnnualNetCashFlow(
+        this.capexTotalCostPlan,
+        this.opexTotalCostPlan,
+      ),
+      this.revenueProfitCalculator.calculateAnnualNetIncome(
+        this.capexTotalCostPlan,
+      ),
+      true,
+    );
+
+    return {
+      costPlans: this.costPlans,
+      rest: {
+        financingCost,
+        totalCapex,
+        totalOpex,
+        totalNPV: this.totalNPV,
+        totalCapexNPV: this.totalCapexNPV,
+        totalOpexNPV: this.totalOpexNPV,
+        totalRevenueNPV,
+        creditsIssued,
+        costPerTCO2e,
+        costPerHa,
+        npvCoveringCosts,
+        fundingGapNPV,
+        funding_gap_per_tco2_NPV,
+        total_community_benefit_sharing_fund_NPV,
+        community_benefit_sharing_fund,
+        referenceNPV,
+        funding_gap,
+        IRR_opex,
+        IRR_total_cost,
+        totalRevenue,
+      },
+    };
+  }
+
+  calculateCapexTotalPlan() {
+    const costs = [
+      this.costPlans.feasibilityAnalysis,
+      this.costPlans.conservationPlanningAndAdmin,
+      this.costPlans.dataCollectionAndFieldCost,
+      this.costPlans.blueCarbonProjectPlanning,
+      this.costPlans.communityRepresentation,
+      this.costPlans.establishingCarbonRights,
+      this.costPlans.validation,
+      this.costPlans.implementationLabor,
+    ];
+    for (const cost of costs) {
+      this.aggregateCosts(cost, this.capexTotalCostPlan);
+    }
+    return this;
+  }
+
+  calculateOpexTotalPlan() {
+    const costs = [
+      this.costPlans.monitoring,
+      this.costPlans.maintenance,
+      this.costPlans.communityBenefitSharingFund,
+      this.costPlans.carbonStandardFees,
+      this.costPlans.baselineReassessment,
+      this.costPlans.mrv,
+      this.costPlans.longTermProjectOperatingCost,
+    ];
+    for (const cost of costs) {
+      this.aggregateCosts(cost, this.opexTotalCostPlan);
+    }
+    return this;
+  }
+
+  aggregateCosts(
+    costPlan: CostPlanMap,
+    totalCostPlan: CostPlanMap,
+  ): CostPlanMap {
+    for (const year in costPlan) {
+      if (totalCostPlan[year] === undefined) {
+        totalCostPlan[year] = 0;
+      }
+      totalCostPlan[year] += costPlan[year];
+    }
+    return totalCostPlan;
+  }
+  calculateFundingGap(referenceNpv: number, totalRevenueNpv: number): number {
+    const value = totalRevenueNpv - referenceNpv;
+    const fundingGap = value > 0 ? 0 : value * -1;
+    return fundingGap;
+  }
+
+  calculateIrr(
+    netCashFlow: CostPlanMap,
+    netIncome: CostPlanMap,
+    useCapex: boolean = false,
+  ): number {
+    const cashFlowArray = useCapex
+      ? Object.values(netCashFlow)
+      : Object.values(netIncome);
+
+    const calculateIrrFromCashFlows = (cashFlows: number[]): number => {
+      const guess = 0.1;
+      const maxIterations = 1000;
+      const precision = 1e-6;
+
+      let irr = guess;
+      for (let i = 0; i < maxIterations; i++) {
+        let npv = 0;
+        let npvDerivative = 0;
+
+        for (let t = 0; t < cashFlows.length; t++) {
+          npv += cashFlows[t] / Math.pow(1 + irr, t);
+          npvDerivative -= (t * cashFlows[t]) / Math.pow(1 + irr, t + 1);
+        }
+
+        const newIrr = irr - npv / npvDerivative;
+        if (Math.abs(newIrr - irr) < precision) {
+          return newIrr;
+        }
+        irr = newIrr;
+      }
+
+      console.error('IRR calculation did not converge');
+    };
+
+    return calculateIrrFromCashFlows(cashFlowArray);
+  }
+
+  calculateCostPlans(): this {
     this.costPlans = {
       feasibilityAnalysis: this.feasibilityAnalysisCosts(),
       conservationPlanningAndAdmin: this.conservationPlanningAndAdminCosts(),
@@ -579,9 +806,7 @@ export class CostCalculator {
       baselineReassessment: this.baseLineReassessmentCosts(),
       mrv: this.mrvCosts(),
       longTermProjectOperatingCost: this.longTermProjectOperatingCosts(),
-      // Financing cost is calculated using total capex which is calculated in the summary generator
-      financingCost: null,
     };
-    return this.costPlans;
+    return this;
   }
 }

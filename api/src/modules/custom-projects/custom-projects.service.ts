@@ -13,7 +13,7 @@ import { CostCalculator } from '@api/modules/calculations/cost.calculator';
 import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
 import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
-import { SummaryGenerator } from '@api/modules/calculations/summary.generator';
+import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -51,18 +51,26 @@ export class CustomProjectsService extends AppBaseService<
       additionalBaseData,
       additionalAssumptions,
     );
-
-    const calculator = new CostCalculator(projectInput, baseSize, baseIncrease);
-
-    const costPlans = calculator.initializeCostPlans().calculateCosts();
-    const summary = new SummaryGenerator(
-      costPlans,
-      calculator.capexTotalCostPlan,
-      calculator.opexTotalCostPlan,
-      projectInput.assumptions.discountRate,
+    const sequestrationRateCalculator = new SequestrationRateCalculator(
+      projectInput,
     );
+    const calculator = new CostCalculator(
+      projectInput,
+      baseSize,
+      baseIncrease,
+      sequestrationRateCalculator,
+    );
+
+    const costPlans = calculator.initializeCostPlans();
+
+    // const summary = new SummaryGenerator(
+    //   costPlans,
+    //   calculator.capexTotalCostPlan,
+    //   calculator.opexTotalCostPlan,
+    //   projectInput.assumptions.discountRate,
+    //   sequestrationRateCalculator,
+    // );
     return {
-      summary: summary.getCostEstimates(),
       costPlans,
     };
   }
