@@ -88,14 +88,19 @@ export class CostCalculator {
       this.capexTotalCostPlan,
       this.projectInput.assumptions.discountRate,
     );
+    const totalOpex = sum(Object.values(this.opexTotalCostPlan));
+    const totalOpexNPV = this.calculateNpv(
+      this.opexTotalCostPlan,
+      this.projectInput.assumptions.discountRate,
+    );
     // return {
     //   costPlans: this.costPlans,
     //   capexTotalCostPlan: this.capexTotalCostPlan,
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
     return {
-      totalCapex,
-      totalCapexNPV,
+      totalOpex,
+      totalOpexNPV,
     };
   }
 
