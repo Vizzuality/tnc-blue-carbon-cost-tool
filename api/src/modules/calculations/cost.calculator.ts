@@ -157,14 +157,67 @@ export class CostCalculator {
       totalCapex,
       totalCapexNPV,
       totalOpexNPV,
+      totalNPV,
+      costPerTCO2e,
+      costPerHa,
+      npvCoveringCosts,
+      totalCreditsIssued,
       IRROpex,
       IRRTotalCost,
+      totalRevenueNPV,
+      totalRevenue,
+      financingCost,
+      fundingGap,
+      fundingGapNPV,
+      fundingGapPerTCO2e,
+      totalCommunityBenefitSharingFund,
+    };
+  }
+
+  getSummary(stuff: any): any {
+    const {
+      costPerTCO2e,
+      costPerHa,
+      npvCoveringCosts,
+      IRROpex,
+      IRRTotalCost,
+      totalNPV,
+      totalCapexNPV,
+      totalOpexNPV,
+      totalCreditsIssued,
+      totalRevenueNPV,
+      totalRevenue,
+      financingCost,
+      fundingGap,
+      fundingGapNPV,
+      fundingGapPerTCO2e,
+      totalCommunityBenefitSharingFund,
+    } = stuff;
+    return {
+      '$/tCO2e (total cost, NPV': costPerTCO2e,
+      '$/ha': costPerHa,
+      'NPV covering cost': npvCoveringCosts,
+      'Leftover after OpEx / total cost': null,
+      'IRR when priced to cover OpEx': IRROpex,
+      'IRR when priced to cover total cost': IRRTotalCost,
+      'Total cost (NPV)': totalNPV,
+      'Capital expenditure (NPV)': totalCapexNPV,
+      'Operating expenditure (NPV)': totalOpexNPV,
+      'Credits issued': totalCreditsIssued,
+      'Total revenue (NPV)': totalRevenueNPV,
+      'Total revenue (non-discounted)': totalRevenue,
+      'Financing cost': financingCost,
+      'Funding gap': fundingGap,
+      'Funding gap (NPV)': fundingGapNPV,
+      'Funding gap per tCO2e (NPV)': fundingGapPerTCO2e,
+      'Community benefit sharing fund': totalCommunityBenefitSharingFund,
     };
   }
 
   getCostDetails(stuff: any): any {
     const discountRate = this.projectInput.assumptions.discountRate;
-    const { totalOpex, totalCapex, totalCapexNPV, totalOpexNPV } = stuff;
+    const { totalOpex, totalCapex, totalCapexNPV, totalOpexNPV, totalNPV } =
+      stuff;
     return {
       total: {
         capitalExpenditure: totalCapex,
@@ -212,7 +265,7 @@ export class CostCalculator {
       npv: {
         capitalExpenditure: totalCapexNPV,
         operationalExpenditure: totalOpexNPV,
-        totalCost: totalOpexNPV + totalCapexNPV,
+        totalCost: totalNPV,
         feasibilityAnalysis: this.calculateNpv(
           this.costPlans.feasibilityAnalysis,
           discountRate,
