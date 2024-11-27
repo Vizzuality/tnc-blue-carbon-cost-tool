@@ -117,16 +117,20 @@ export class CostCalculator {
     const fundingGapPerTCO2e =
       totalCreditsIssued != 0 ? fundingGapNPV / totalCreditsIssued : 0;
     const totalCommunityBenefitSharingFundNPV = this.calculateNpv(
-      this.communityBenefitAndSharingCosts(),
+      this.costPlans.communityBenefitSharingFund,
       this.projectInput.assumptions.discountRate,
     );
+    const totalCommunityBenefitSharingFund =
+      totalRevenueNPV === 0
+        ? 0
+        : totalCommunityBenefitSharingFundNPV / totalRevenueNPV;
     // return {
     //   costPlans: this.costPlans,
     //   capexTotalCostPlan: this.capexTotalCostPlan,
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
     return {
-      totalCommunityBenefitSharingFundNPV,
+      totalCommunityBenefitSharingFund,
     };
   }
 
