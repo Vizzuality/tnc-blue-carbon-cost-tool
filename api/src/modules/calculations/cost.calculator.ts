@@ -100,14 +100,17 @@ export class CostCalculator {
       estimatedRevenuePlan,
       this.projectInput.assumptions.discountRate,
     );
+    const creditsIssuedPlan =
+      this.sequestrationRateCalculator.calculateEstCreditsIssuedPlan();
+    const totalCreditsIssued = sum(Object.values(creditsIssuedPlan));
+
     // return {
     //   costPlans: this.costPlans,
     //   capexTotalCostPlan: this.capexTotalCostPlan,
     //   opexTotalCostPlan: this.opexTotalCostPlan,
     // };
     return {
-      totalRevenue,
-      totalRevenueNPV,
+      totalCreditsIssued,
     };
   }
 
@@ -422,7 +425,7 @@ export class CostCalculator {
     }
 
     const estimatedCreditsIssued: CostPlanMap =
-      this.sequestrationRateCalculator.calculateEstCreditsIssued();
+      this.sequestrationRateCalculator.calculateEstCreditsIssuedPlan();
 
     for (const yearStr in carbonStandardFeesCostPlan) {
       const year = Number(yearStr);
@@ -639,7 +642,7 @@ export class CostCalculator {
       this.projectInput.assumptions.discountRate,
     );
     const totalCreditsPlan =
-      this.sequestrationRateCalculator.calculateEstCreditsIssued();
+      this.sequestrationRateCalculator.calculateEstCreditsIssuedPlan();
     const creditsIssued = sum(Object.values(totalCreditsPlan));
     const costPerTCO2e = creditsIssued != 0 ? totalCapex / creditsIssued : 0;
     const costPerHa = this.totalNPV / this.projectInput.projectSizeHa;

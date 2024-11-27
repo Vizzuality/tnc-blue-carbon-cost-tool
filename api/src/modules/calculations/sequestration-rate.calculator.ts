@@ -31,7 +31,7 @@ export class SequestrationRateCalculator {
     this.restorationRate = projectInput.assumptions.restorationRate;
   }
 
-  calculateEstCreditsIssued(): CostPlanMap {
+  calculateEstCreditsIssuedPlan(): CostPlanMap {
     const estCreditsIssuedPlan: { [year: number]: number } = {};
 
     for (let year = -1; year <= this.defaultProjectLength; year++) {
