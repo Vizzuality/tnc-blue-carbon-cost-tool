@@ -97,8 +97,9 @@ export class CustomProjectsService extends AppBaseService<
 
       summary: calculator.getSummary(costPlans),
       costDetails: calculator.getCostDetails(costPlans),
+      breakdown: calculator.getYearlyBreakdown(),
     };
-    return projectOutput;
+    return projectOutput.breakdown;
   }
 
   async saveCustomProject(dto: CustomProjectSnapshotDto): Promise<void> {

@@ -31,7 +31,7 @@ export class SequestrationRateCalculator {
     this.restorationRate = projectInput.assumptions.restorationRate;
   }
 
-  calculateEstCreditsIssuedPlan(): CostPlanMap {
+  calculateEstimatedCreditsIssuedPlan(): CostPlanMap {
     const estCreditsIssuedPlan: { [year: number]: number } = {};
 
     for (let year = -1; year <= this.defaultProjectLength; year++) {
@@ -274,7 +274,7 @@ export class SequestrationRateCalculator {
   calculateCumulativeLossRateIncorporatingSOCReleaseTime(): CostPlanMap {
     if (this.activity !== ACTIVITY.CONSERVATION) {
       throw new Error(
-        'La tasa de pérdida acumulada solo puede calcularse para proyectos de conservación.',
+        'Cumulative loss rate incorporating SOC cannot be calculated for restoration projects.',
       );
     }
 

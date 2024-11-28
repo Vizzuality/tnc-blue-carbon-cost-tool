@@ -11,7 +11,7 @@ import {
 } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculator';
 import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
-import { sum } from 'lodash';
+import { parseInt, sum } from 'lodash';
 import { irr } from 'financial';
 
 export type CostPlanMap = {
@@ -22,6 +22,13 @@ export type CostPlans = Record<
   keyof OverridableCostInputs | string,
   CostPlanMap
 >;
+
+export type YearlyBreakdown = {
+  costName: keyof OverridableCostInputs;
+  totalCost: number;
+  totalNPV: number;
+  costValues: CostPlanMap;
+};
 
 // TODO: Strongly type this to bound it to existing types
 export enum COST_KEYS {
@@ -103,7 +110,7 @@ export class CostCalculator {
       this.projectInput.assumptions.discountRate,
     );
     const creditsIssuedPlan =
-      this.sequestrationRateCalculator.calculateEstCreditsIssuedPlan();
+      this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
     const totalCreditsIssued = sum(Object.values(creditsIssuedPlan));
     const costPerTCO2e =
       totalCreditsIssued != 0 ? totalCapex / totalCreditsIssued : 0;
@@ -320,6 +327,110 @@ export class CostCalculator {
         ),
       },
     };
+  }
+
+  getYearlyBreakdown(): any {
+    // const costPlans: CostPlans & {
+    //   capexTotalCostPlan: CostPlanMap;
+    //   opexTotalCostPlan: CostPlanMap;
+    // } = structuredClone(this.costPlans);
+
+    const costPlans: any = structuredClone(this.costPlans);
+    const discountRate = this.projectInput.assumptions.discountRate;
+
+    // Values to negative for some magical scientific reason that I am too dumb to understand
+    for (const value of Object.values(costPlans)) {
+      for (const [year, cost] of Object.entries(value)) {
+        value[year] = -cost;
+      }
+    }
+    const capexTotalCostPlan = costPlans.capexTotalCostPlan;
+    const opexTotalCostPlan = costPlans.opexTotalCostPlan;
+    // Get a summed cost plan for capex and opex
+    const totalCostPlan = Object.keys({
+      ...capexTotalCostPlan,
+      ...opexTotalCostPlan,
+    }).reduce((acc, year: string) => {
+      const capexValue = capexTotalCostPlan[year] || 0;
+      const opexValue = opexTotalCostPlan[year] || 0;
+      acc[year] = capexValue + opexValue;
+      return acc;
+    }, {} as CostPlanMap);
+
+    const estimatedRevenuePlan =
+      this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
+    const creditsIssuedPlan =
+      this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
+    const annualNetCashFlow =
+      this.revenueProfitCalculator.calculateAnnualNetCashFlow(
+        capexTotalCostPlan,
+        opexTotalCostPlan,
+      );
+    const annualNetIncome =
+      this.revenueProfitCalculator.calculateAnnualNetIncome(opexTotalCostPlan);
+    const cumulativeNetIncomePlan: CostPlanMap = {};
+    const cumulativeNetIncomeCapexOpex: CostPlanMap = {};
+    for (let year = -4; year <= this.defaultProjectLength; year++) {
+      if (year !== 0) {
+        if (year === -4) {
+          cumulativeNetIncomePlan[year] = annualNetIncome[year];
+          cumulativeNetIncomeCapexOpex[year] = annualNetCashFlow[year];
+        } else {
+          const costPlanOpex = {};
+          const costPlanCapexOpex = {};
+          for (const year in annualNetIncome) {
+            if (parseInt(year) <= 0 && parseInt(year) >= -4) {
+              costPlanOpex[year] = annualNetIncome[year];
+            }
+          }
+          for (const year in annualNetCashFlow) {
+            if (parseInt(year) <= 0 && parseInt(year) >= -4) {
+              costPlanCapexOpex[year] = annualNetCashFlow[year];
+            }
+          }
+          cumulativeNetIncomePlan[year] =
+            annualNetIncome[-4] + this.calculateNpv(costPlanOpex, discountRate);
+          cumulativeNetIncomeCapexOpex[year] =
+            annualNetCashFlow[-4] +
+            this.calculateNpv(costPlanCapexOpex, discountRate);
+        }
+      }
+    }
+
+    const yearNormalizedCostPlans: CostPlans =
+      this.normalizeCostPlan(costPlans);
+
+    const yearlyBreakdown: YearlyBreakdown[] = [];
+    for (const costName in yearNormalizedCostPlans) {
+      const costValues = yearNormalizedCostPlans[costName];
+      const totalCost = sum(Object.values(costValues));
+      const totalNPV = this.calculateNpv(costValues, discountRate);
+      yearlyBreakdown.push({
+        costName: costName as keyof OverridableCostInputs,
+        totalCost,
+        totalNPV,
+        costValues,
+      });
+    }
+
+    return yearlyBreakdown;
+  }
+
+  /**
+   * @description: Normalize the cost plans for each cost type to have the same length of years
+   */
+  private normalizeCostPlan(costPlans: CostPlans) {
+    const startYear = -4;
+    const endYear = this.projectInput.assumptions.projectLength;
+    const normalizedCostPlans: CostPlans = {};
+    for (const planName in costPlans) {
+      const plan = costPlans[planName];
+      normalizedCostPlans[planName] = {};
+      for (let year = startYear; year <= endYear; year++) {
+        normalizedCostPlans[planName][year] = plan[year] || 0;
+      }
+    }
+    return normalizedCostPlans;
   }
 
   /**
@@ -633,7 +744,7 @@ export class CostCalculator {
     }
 
     const estimatedCreditsIssued: CostPlanMap =
-      this.sequestrationRateCalculator.calculateEstCreditsIssuedPlan();
+      this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
 
     for (const yearStr in carbonStandardFeesCostPlan) {
       const year = Number(yearStr);
@@ -913,119 +1024,8 @@ export class CostCalculator {
       mrv: this.mrvCosts(),
       longTermProjectOperatingCost: this.longTermProjectOperatingCosts(),
       opexTotalCostPlan: this.opexTotalCostPlan,
+      capexTotalCostPlan: this.capexTotalCostPlan,
     };
     return this;
   }
-
-  // TODO: strongly type this and share it
-  // getCostEstimates(stuff: any): any {
-  //   return {
-  //     costEstimatesUds: {
-  //       total: {
-  //         capitalExpenditure: sum(Object.values(this.capexCostPlan)),
-  //         feasibilityAnalysis: sum(
-  //           Object.values(this.costs.feasibilityAnalysis),
-  //         ),
-  //         conservationPlanningAndAdmin: sum(
-  //           Object.values(this.costs.conservationPlanningAndAdmin),
-  //         ),
-  //         dataCollectionAndFieldCost: sum(
-  //           Object.values(this.costs.dataCollectionAndFieldCost),
-  //         ),
-  //         communityRepresentation: sum(
-  //           Object.values(this.costs.communityRepresentation),
-  //         ),
-  //         blueCarbonProjectPlanning: sum(
-  //           Object.values(this.costs.blueCarbonProjectPlanning),
-  //         ),
-  //         establishingCarbonRights: sum(
-  //           Object.values(this.costs.establishingCarbonRights),
-  //         ),
-  //         validation: sum(Object.values(this.costs.validation)),
-  //         implementationLabor: sum(
-  //           Object.values(this.costs.implementationLabor),
-  //         ),
-  //         operationExpenditure: sum(Object.values(this.opexCostPlan)),
-  //         monitoring: sum(Object.values(this.costs.monitoring)),
-  //         maintenance: sum(Object.values(this.costs.maintenance)),
-  //         communityBenefitSharingFund: sum(
-  //           Object.values(this.costs.communityBenefitSharingFund),
-  //         ),
-  //         carbonStandardFees: sum(Object.values(this.costs.carbonStandardFees)),
-  //         baselineReassessment: sum(
-  //           Object.values(this.costs.baselineReassessment),
-  //         ),
-  //         mrv: sum(Object.values(this.costs.mrv)),
-  //         longTermProjectOperatingCost: sum(
-  //           Object.values(this.costs.longTermProjectOperatingCost),
-  //         ),
-  //         totalCost:
-  //           sum(Object.values(this.capexCostPlan)) +
-  //           sum(Object.values(this.opexCostPlan)),
-  //       },
-  //       npv: {
-  //         capitalExpenditure: this.totalCapexNPV,
-  //         feasibilityAnalysis: this.calculateNpv(
-  //           this.costs.feasibilityAnalysis,
-  //           this.discountRate,
-  //         ),
-  //         conservationPlanningAndAdmin: this.calculateNpv(
-  //           this.costs.conservationPlanningAndAdmin,
-  //           this.discountRate,
-  //         ),
-  //         dataCollectionAndFieldCost: this.calculateNpv(
-  //           this.costs.dataCollectionAndFieldCost,
-  //           this.discountRate,
-  //         ),
-  //         communityRepresentation: this.calculateNpv(
-  //           this.costs.communityRepresentation,
-  //           this.discountRate,
-  //         ),
-  //         blueCarbonProjectPlanning: this.calculateNpv(
-  //           this.costs.blueCarbonProjectPlanning,
-  //           this.discountRate,
-  //         ),
-  //         establishingCarbonRights: this.calculateNpv(
-  //           this.costs.establishingCarbonRights,
-  //           this.discountRate,
-  //         ),
-  //         validation: this.calculateNpv(
-  //           this.costs.validation,
-  //           this.discountRate,
-  //         ),
-  //         implementationLabor: this.calculateNpv(
-  //           this.costs.implementationLabor,
-  //           this.discountRate,
-  //         ),
-  //         operationExpenditure: this.totalOpexNPV,
-  //         monitoring: this.calculateNpv(
-  //           this.costs.monitoring,
-  //           this.discountRate,
-  //         ),
-  //         maintenance: this.calculateNpv(
-  //           this.costs.maintenance,
-  //           this.discountRate,
-  //         ),
-  //         communityBenefitSharingFund: this.calculateNpv(
-  //           this.costs.communityBenefitSharingFund,
-  //           this.discountRate,
-  //         ),
-  //         carbonStandardFees: this.calculateNpv(
-  //           this.costs.carbonStandardFees,
-  //           this.discountRate,
-  //         ),
-  //         baselineReassessment: this.calculateNpv(
-  //           this.costs.baselineReassessment,
-  //           this.discountRate,
-  //         ),
-  //         mrv: this.calculateNpv(this.costs.mrv, this.discountRate),
-  //         longTermProjectOperatingCost: this.calculateNpv(
-  //           this.costs.longTermProjectOperatingCost,
-  //           this.discountRate,
-  //         ),
-  //         totalCost: this.totalOpexNPV + this.totalCapexNPV,
-  //       },
-  //     },
-  //   };
-  // }
 }
