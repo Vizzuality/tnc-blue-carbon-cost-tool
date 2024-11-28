@@ -31,7 +31,6 @@
     "class-transformer": "catalog:",
     "class-validator": "catalog:",
     "dotenv": "16.4.5",
-    "financejs": "^4.1.0",
     "financial": "^0.2.4",
     "jsonapi-serializer": "^3.6.9",
     "lodash": "^4.17.21",
