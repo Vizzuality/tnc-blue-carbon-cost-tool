@@ -10,6 +10,8 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { Country } from "@shared/entities/country.entity";
 import { User } from "@shared/entities/users/user.entity";
+import { CreateCustomProjectDto } from "@api/modules/custom-projects/dto/create-custom-project-dto";
+import { CustomProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
 
 /**
  * @description: This entity is to save Custom Projects (that are calculated, and can be saved only by registered users. Most likely, we don't need to add these as a resource
@@ -21,18 +23,18 @@ import { User } from "@shared/entities/users/user.entity";
 @Entity({ name: "custom_projects" })
 export class CustomProject {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id?: string;
 
   @Column({ name: "project_name" })
   projectName: string;
 
   @ManyToOne(() => User, (user) => user.customProjects, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
-  user: User;
+  user?: User;
 
   @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
   @JoinColumn({ name: "country_code" })
-  countryCode: Country;
+  country: Country;
 
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
   ecosystem: ECOSYSTEM;
@@ -41,22 +43,24 @@ export class CustomProject {
   activity: ACTIVITY;
 
   @Column({ name: "input_snapshot", type: "jsonb" })
-  input_snapshot: any;
+  input: CreateCustomProjectDto;
 
   @Column({ name: "output_snapshot", type: "jsonb" })
-  output_snapshot: any;
+  output: CustomProjectOutput;
 
   static fromCustomProjectSnapshotDTO(
     dto: CustomProjectSnapshotDto,
+    user: User,
   ): CustomProject {
     const customProject = new CustomProject();
-    customProject.countryCode = {
+    customProject.country = {
       code: dto.inputSnapshot.countryCode,
     } as Country;
     customProject.ecosystem = dto.inputSnapshot.ecosystem;
     customProject.activity = dto.inputSnapshot.activity;
-    customProject.input_snapshot = dto.inputSnapshot;
-    customProject.output_snapshot = dto.outputSnapshot;
+    customProject.input = dto.inputSnapshot;
+    customProject.output = dto.outputSnapshot;
+    customProject.user = user;
     return customProject;
   }
 }
