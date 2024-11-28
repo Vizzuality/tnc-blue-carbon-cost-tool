@@ -32,7 +32,7 @@ export class RevenueProfitCalculator {
     }
 
     const estimatedCreditsIssued =
-      this.sequestrationCreditsCalculator.calculateEstCreditsIssuedPlan();
+      this.sequestrationCreditsCalculator.calculateEstimatedCreditsIssuedPlan();
 
     for (const yearStr in estimatedRevenuePlan) {
       const year = Number(yearStr);
