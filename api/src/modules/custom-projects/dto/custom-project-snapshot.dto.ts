@@ -6,6 +6,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { CreateCustomProjectDto } from './create-custom-project-dto';
+import { CustomProjectOutput } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
 export class CustomPrpjectAnnualProjectCashFlowDto {
   @IsArray()
@@ -170,5 +171,5 @@ export class CustomProjectSnapshotDto {
   inputSnapshot: CreateCustomProjectDto;
 
   @IsNotEmpty()
-  outputSnapshot: CustomProjectOutputSnapshot;
+  outputSnapshot: CustomProjectOutput;
 }

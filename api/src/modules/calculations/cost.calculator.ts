@@ -13,22 +13,17 @@ import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profi
 import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
 import { parseInt, sum } from 'lodash';
 import { irr } from 'financial';
-
-export type CostPlanMap = {
-  [year: number]: number;
-};
+import {
+  CostPlanMap,
+  CustomProjectCostDetails,
+  CustomProjectSummary,
+  YearlyBreakdown,
+} from '@shared/dtos/custom-projects/custom-project-output.dto';
 
 export type CostPlans = Record<
   keyof OverridableCostInputs | string,
   CostPlanMap
 >;
-
-export type YearlyBreakdown = {
-  costName: keyof OverridableCostInputs;
-  totalCost: number;
-  totalNPV: number;
-  costValues: CostPlanMap;
-};
 
 // TODO: Strongly type this to bound it to existing types
 export enum COST_KEYS {
@@ -59,8 +54,6 @@ export class CostCalculator {
   capexTotalCostPlan: CostPlanMap;
   opexTotalCostPlan: CostPlanMap;
   costPlans: CostPlans;
-  restOfStuff: Record<any, any>;
-  totalCapexNPV: number;
   totalOpexNPV: number;
   revenueProfitCalculator: RevenueProfitCalculator;
   sequestrationRateCalculator: SequestrationRateCalculator;
@@ -181,7 +174,7 @@ export class CostCalculator {
     };
   }
 
-  getSummary(stuff: any): any {
+  getSummary(stuff: any): CustomProjectSummary {
     const {
       costPerTCO2e,
       costPerHa,
@@ -201,7 +194,7 @@ export class CostCalculator {
       totalCommunityBenefitSharingFund,
     } = stuff;
     return {
-      '$/tCO2e (total cost, NPV': costPerTCO2e,
+      '$/tCO2e (total cost, NPV)': costPerTCO2e,
       '$/ha': costPerHa,
       'NPV covering cost': npvCoveringCosts,
       'Leftover after OpEx / total cost': null,
@@ -221,13 +214,17 @@ export class CostCalculator {
     };
   }
 
-  getCostDetails(stuff: any): any {
+  getCostDetails(stuff: any): {
+    total: CustomProjectCostDetails;
+    npv: CustomProjectCostDetails;
+  } {
     const discountRate = this.projectInput.assumptions.discountRate;
     const { totalOpex, totalCapex, totalCapexNPV, totalOpexNPV, totalNPV } =
       stuff;
     return {
       total: {
         capitalExpenditure: totalCapex,
+        operationalExpenditure: totalOpex,
         totalCost: totalCapex + totalCapex,
         operationExpenditure: totalOpex,
         feasibilityAnalysis: sum(
@@ -347,6 +344,7 @@ export class CostCalculator {
     const capexTotalCostPlan = costPlans.capexTotalCostPlan;
     const opexTotalCostPlan = costPlans.opexTotalCostPlan;
     // Get a summed cost plan for capex and opex
+    // TODO: totalCostPlan, estimatedRevenue and creditsIssued are yet to be included in the breakdown
     const totalCostPlan = Object.keys({
       ...capexTotalCostPlan,
       ...opexTotalCostPlan,

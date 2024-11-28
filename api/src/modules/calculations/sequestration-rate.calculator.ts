@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import {
-  CostPlanMap,
-  ProjectInput,
-} from '@api/modules/calculations/cost.calculator';
+import { ProjectInput } from '@api/modules/calculations/cost.calculator';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { OverridableAssumptions } from '@api/modules/custom-projects/dto/project-assumptions.dto';
 import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
+import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
 @Injectable()
 export class SequestrationRateCalculator {
