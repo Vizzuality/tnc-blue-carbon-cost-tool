@@ -8,7 +8,10 @@ import {
 import { dataSource } from "../../datasource.js";
 import { Project } from "@shared/entities/projects.entity.js";
 import { Country } from "@shared/entities/country.entity.js";
-import { COMMON_RESOURCE_LIST_PROPERTIES, GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
+import {
+  COMMON_RESOURCE_LIST_PROPERTIES,
+  GLOBAL_COMMON_PROPERTIES,
+} from "../common/common.resources.js";
 
 export const ProjectsResource: ResourceWithOptions = {
   resource: Project,
@@ -25,7 +28,7 @@ export const ProjectsResource: ResourceWithOptions = {
       "totalCostNPV",
       "costPerTCO2eNPV",
       "initialPriceAssumption",
-      "activitySubtype",
+      "restorationActivity",
       "projectSizeFilter",
       "priceType",
     ],
@@ -42,7 +45,7 @@ export const ProjectsResource: ResourceWithOptions = {
         after: async (
           request: ActionRequest,
           response: ActionResponse,
-          context: ActionContext
+          context: ActionContext,
         ) => {
           const { records } = context;
           const projectDataRepo = dataSource.getRepository(Project);
@@ -53,7 +56,7 @@ export const ProjectsResource: ResourceWithOptions = {
             .addSelect("project.projectName", "projectName")
             .addSelect("project.ecosystem", "ecosystem")
             .addSelect("project.activity", "activity")
-            .addSelect("project.activitySubtype", "activitySubtype")
+            .addSelect("project.restorationActivity", "restorationActivity")
             .addSelect("country.name", "countryName")
             .addSelect("project.projectSize", "projectSize")
             .addSelect("project.projectSizeFilter", "projectSizeFilter")
@@ -65,7 +68,7 @@ export const ProjectsResource: ResourceWithOptions = {
             .addSelect("project.priceType", "priceType")
             .addSelect(
               "project.initialPriceAssumption",
-              "initialPriceAssumption"
+              "initialPriceAssumption",
             );
 
           if (records?.length) {
