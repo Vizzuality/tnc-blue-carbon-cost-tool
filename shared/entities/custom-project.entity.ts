@@ -1,4 +1,3 @@
-import { CustomProjectSnapshotDto } from "@api/modules/custom-projects/dto/custom-project-snapshot.dto";
 import {
   Column,
   Entity,
@@ -10,8 +9,7 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { Country } from "@shared/entities/country.entity";
 import { User } from "@shared/entities/users/user.entity";
-import { CreateCustomProjectDto } from "@api/modules/custom-projects/dto/create-custom-project-dto";
-import { CustomProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
+import { type CustomProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
 
 /**
  * @description: This entity is to save Custom Projects (that are calculated, and can be saved only by registered users. Most likely, we don't need to add these as a resource
@@ -43,24 +41,9 @@ export class CustomProject {
   activity: ACTIVITY;
 
   @Column({ name: "input_snapshot", type: "jsonb" })
-  input: CreateCustomProjectDto;
+  // TODO: this should be the infered type of the zod schema
+  input: any;
 
   @Column({ name: "output_snapshot", type: "jsonb" })
   output: CustomProjectOutput;
-
-  static fromCustomProjectSnapshotDTO(
-    dto: CustomProjectSnapshotDto,
-    user: User,
-  ): CustomProject {
-    const customProject = new CustomProject();
-    customProject.country = {
-      code: dto.inputSnapshot.countryCode,
-    } as Country;
-    customProject.ecosystem = dto.inputSnapshot.ecosystem;
-    customProject.activity = dto.inputSnapshot.activity;
-    customProject.input = dto.inputSnapshot;
-    customProject.output = dto.outputSnapshot;
-    customProject.user = user;
-    return customProject;
-  }
 }

@@ -118,11 +118,8 @@ export class CustomProjectsService extends AppBaseService<
     return projectOutput;
   }
 
-  async saveCustomProject(
-    dto: CustomProjectSnapshotDto,
-    user: User,
-  ): Promise<void> {
-    await this.repo.save(CustomProject.fromCustomProjectSnapshotDTO(dto, user));
+  async saveCustomProject(dto: CustomProject, user: User): Promise<void> {
+    await this.repo.save({ ...dto, user });
   }
 
   async getDefaultCostInputs(
