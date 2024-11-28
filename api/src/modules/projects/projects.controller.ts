@@ -6,9 +6,10 @@ import { ProjectsService } from '@api/modules/projects/projects.service';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { CountryWithNoGeometry } from '@shared/entities/country.entity';
 import { ProjectsMapRepository } from '@api/modules/projects/projects-map.repository';
+import { ProjectsScorecardRepository } from '@api/modules/projects/projects-scorecard.repository';
 import {
-  OtherMapFilters,
-  ProjectMapFilters,
+  OtherProjectFilters,
+  ProjectFilters,
 } from '@shared/dtos/projects/projects-map.dto';
 
 @Controller()
@@ -17,6 +18,7 @@ export class ProjectsController {
     private readonly projectsService: ProjectsService,
     private readonly countryService: CountriesService,
     private readonly projectMapRepository: ProjectsMapRepository,
+    private readonly projectsScorecardRepository: ProjectsScorecardRepository,
   ) {}
 
   @TsRestHandler(projectsContract.getProjects)
@@ -25,6 +27,28 @@ export class ProjectsController {
       const data = await this.projectsService.findAllPaginated(query);
       return { body: data, status: HttpStatus.OK };
     });
+  }
+
+  @TsRestHandler(projectsContract.getProjectsScorecard)
+  async getProjectsScorecard(): ControllerResponse {
+    return tsRestHandler(
+      projectsContract.getProjectsScorecard,
+      async ({ query }) => {
+        const { filter } = query;
+        const otherFilters: OtherProjectFilters = {
+          costRange: query.costRange,
+          abatementPotentialRange: query.abatementPotentialRange,
+          costRangeSelector: query.costRangeSelector,
+        };
+
+        const data =
+          await this.projectsScorecardRepository.getProjectsScorecard(
+            filter as unknown as ProjectFilters,
+            otherFilters,
+          );
+        return { body: data, status: HttpStatus.OK } as any;
+      },
+    );
   }
 
   @TsRestHandler(projectsContract.getProjectCountries)
@@ -50,13 +74,13 @@ export class ProjectsController {
   async getProjectsMap(): ControllerResponse {
     return tsRestHandler(projectsContract.getProjectsMap, async ({ query }) => {
       const { filter } = query;
-      const otherFilters: OtherMapFilters = {
+      const otherFilters: OtherProjectFilters = {
         costRange: query.costRange,
         abatementPotentialRange: query.abatementPotentialRange,
         costRangeSelector: query.costRangeSelector,
       };
       const data = await this.projectMapRepository.getProjectsMap(
-        filter as unknown as ProjectMapFilters,
+        filter as unknown as ProjectFilters,
         otherFilters,
       );
       return { body: data, status: HttpStatus.OK } as any;

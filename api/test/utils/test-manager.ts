@@ -13,7 +13,11 @@ import { IEmailServiceToken } from '@api/modules/notifications/email/email-servi
 import { MockEmailService } from './mocks/mock-email.service';
 import { ROLES } from '@shared/entities/users/roles.enum';
 
-import { createProject, createUser } from '@shared/lib/entity-mocks';
+import {
+  createProject,
+  createUser,
+  createProjectScorecard,
+} from '@shared/lib/entity-mocks';
 import {
   clearTablesByEntities,
   clearTestDataFromDatabase,
@@ -24,6 +28,7 @@ import * as fs from 'fs';
 import { Project } from '@shared/entities/projects.entity';
 import { adminContract } from '@shared/contracts/admin.contract';
 import { Country } from '@shared/entities/country.entity';
+import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate
  * common testing utilities
@@ -139,6 +144,9 @@ export class TestManager {
         createUser(this.getDataSource(), additionalData),
       createProject: async (additionalData?: Partial<Project>) =>
         createProject(this.getDataSource(), additionalData),
+      createProjectScorecard: async (
+        additionalData?: Partial<ProjectScorecard>,
+      ) => createProjectScorecard(this.getDataSource(), additionalData),
     };
   }
 }
