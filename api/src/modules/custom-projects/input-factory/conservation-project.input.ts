@@ -10,7 +10,6 @@ import {
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
 import { GeneralProjectInputs } from '@api/modules/custom-projects/input-factory/custom-project-input.factory';
-import { BaseDataView } from '@shared/entities/base-data.view';
 import {
   ModelAssumptionsForCalculations,
   NonOverridableModelAssumptions,

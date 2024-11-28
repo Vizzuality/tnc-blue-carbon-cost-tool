@@ -1,6 +1,4 @@
-import { ConservationProjectInput } from "@api/modules/custom-projects/input-factory/conservation-project.input";
-
-import { OverridableCostInputs } from "@api/modules/custom-projects/dto/project-cost-inputs.dto";
+import { OverridableCostInputs } from "@shared/dtos/custom-projects/cost.inputs";
 
 export type CustomProjectSummary = {
   "$/tCO2e (total cost, NPV)": number;
@@ -66,11 +64,11 @@ export class RestorationProjectOutput {
 }
 
 export class ConservationProjectOutput {
-  lossRate: ConservationProjectInput["lossRate"];
+  lossRate: number;
   emissionFactors: {
-    emissionFactor: ConservationProjectInput["emissionFactor"];
-    emissionFactorAgb: ConservationProjectInput["emissionFactorAgb"];
-    emissionFactorSoc: ConservationProjectInput["emissionFactorSoc"];
+    emissionFactor: number;
+    emissionFactorAgb: number;
+    emissionFactorSoc: number;
   };
   totalProjectCost: {
     total: {

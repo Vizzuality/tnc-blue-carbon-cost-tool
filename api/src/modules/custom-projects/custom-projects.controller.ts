@@ -82,15 +82,11 @@ export class CustomProjectsController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
   @TsRestHandler(customProjectContract.snapshotCustomProject)
-  async snapshot(
-    @Body(new ValidationPipe({ enableDebugMessages: true, transform: true }))
-    dto: CustomProjectSnapshotDto,
-    @GetUser() user: User,
-  ): Promise<ControllerResponse> {
+  async snapshot(@GetUser() user: User): Promise<ControllerResponse> {
     return tsRestHandler(
       customProjectContract.snapshotCustomProject,
       async ({ body }) => {
-        await this.customProjects.saveCustomProject(dto, user);
+        await this.customProjects.saveCustomProject(body, user);
         return {
           status: 201,
           body: null,
