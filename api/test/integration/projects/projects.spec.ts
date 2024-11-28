@@ -2,6 +2,7 @@ import { TestManager } from '../../utils/test-manager';
 import { HttpStatus } from '@nestjs/common';
 import { projectsContract } from '@shared/contracts/projects.contract';
 import { Country } from '@shared/entities/country.entity';
+import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 import { Project } from '@shared/entities/projects.entity';
 
 describe('Projects', () => {
@@ -19,6 +20,10 @@ describe('Projects', () => {
 
   afterEach(async () => {
     await testManager.getDataSource().getRepository(Project).delete({});
+    await testManager
+      .getDataSource()
+      .getRepository(ProjectScorecard)
+      .delete({});
   });
 
   afterAll(async () => {
@@ -53,7 +58,7 @@ describe('Projects', () => {
       expect(response.body.length).toBe(projects.length);
     });
 
-    test.only('Should return a filtered list of Projects Scorecards', async () => {
+    test('Should return a filtered list of Projects Scorecards', async () => {
       const numProjects = 5;
       const projects: Project[] = [];
       const countryCodes: string[] = countriesInDb
@@ -84,7 +89,6 @@ describe('Projects', () => {
           costRangeSelector: 'npv',
           costRange: [12, 26],
         });
-
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.length).toBe(2);
     });

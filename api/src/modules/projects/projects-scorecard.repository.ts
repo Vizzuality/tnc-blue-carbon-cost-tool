@@ -4,12 +4,13 @@ import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   OtherProjectFilters,
-  ProjectMap,
   ProjectFilters,
 } from '@shared/dtos/projects/projects-map.dto';
 
+import { ProjectScorecardDto } from '@shared/dtos/projects/projects-scorecard.dto';
+
 @Injectable()
-export class ProjectsMapRepository extends Repository<Project> {
+export class ProjectsScorecardRepository extends Repository<Project> {
   constructor(
     @InjectRepository(Project)
     private readonly projectRepo: Repository<Project>,
@@ -17,55 +18,48 @@ export class ProjectsMapRepository extends Repository<Project> {
     super(projectRepo.target, projectRepo.manager, projectRepo.queryRunner);
   }
 
-  async getProjectsMap(
+  async getProjectsScorecard(
     filters?: ProjectFilters,
     otherFilters?: OtherProjectFilters,
-  ): Promise<ProjectMap> {
-    const geoQueryBuilder = this.manager.createQueryBuilder();
-    geoQueryBuilder
+  ): Promise<ProjectScorecardDto[]> {
+    const queryBuilder = this.manager.createQueryBuilder();
+    queryBuilder
       .select(
-        `
-    json_build_object(
-        'type', 'FeatureCollection',
-        'features', json_agg(
-            json_build_object(
-                'type', 'Feature',
-                'geometry', ST_AsGeoJSON(country.geometry)::jsonb, 
-                'properties', json_build_object(
-                    'country', country.name,
-                    'abatementPotential', filtered_projects.total_abatement_potential,
-                    'cost', filtered_projects.total_cost
-                )
-            )
-        )
-    ) as geojson
-    `,
+        `p.country_code AS countryCode,
+	p.ecosystem AS ecosystem,
+    p.activity AS activity,
+    p.restoration_activity AS activitySubtype,
+    p.project_name AS projectName,
+	ps.financial_feasibility AS financialFeasibility,
+    ps.legal_feasibility AS legalFeasibility,
+    ps.implementation_feasibility AS implementationFeasibility,
+    ps.social_feasibility AS socialFeasibility,
+    ps.security_rating AS securityRating,
+    ps.availability_of_experienced_labor AS availabilityOfExperiencedLabor,
+    ps.availability_of_alternating_funding AS availabilityOfAlternatingFunding,
+    ps.coastal_protection_benefits AS coastalProtectionBenefits,
+    ps.biodiversity_benefit AS biodiversityBenefit,
+    p.abatement_potential AS abatementPotential,
+    p.total_cost AS totalCost,
+    p.total_cost_npv AS totalCostNPV`,
       )
-      .from('countries', 'country')
-      .innerJoin(
-        (subQuery) => {
-          subQuery
-            .select('p.country_code')
-            .from(Project, 'p')
-            .addSelect(
-              'SUM(p.abatement_potential)',
-              'total_abatement_potential',
-            )
-            .groupBy('p.country_code');
-
-          return this.applyFilters(subQuery, filters, otherFilters);
-        },
-        'filtered_projects',
-        'filtered_projects.country_code = country.code',
+      .from('projects', 'p')
+      .leftJoin(
+        'project_scorecard',
+        'ps',
+        'p.country_code = ps.country_code and ps."ecosystem"::VARCHAR = p."ecosystem"::VARCHAR',
       );
 
-    const { geojson } = await geoQueryBuilder.getRawOne<{
-      geojson: ProjectMap;
-    }>();
-    return geojson;
+    const projectScorecards = await this.applyScorecardFilters(
+      queryBuilder,
+      filters,
+      otherFilters,
+    ).getRawMany();
+
+    return projectScorecards;
   }
 
-  private applyFilters(
+  private applyScorecardFilters(
     queryBuilder: SelectQueryBuilder<Project>,
     filters: ProjectFilters = {},
     otherFilters: OtherProjectFilters = {},
@@ -77,54 +71,45 @@ export class ProjectsMapRepository extends Repository<Project> {
       activity,
       activitySubtype,
       ecosystem,
-      projectSizeFilter,
-      priceType,
     } = filters;
     const { costRange, abatementPotentialRange, costRangeSelector } =
       otherFilters;
-
-    if (costRangeSelector === 'npv') {
-      queryBuilder.addSelect('SUM(p.total_cost_npv)', 'total_cost');
-    } else {
-      queryBuilder.addSelect('SUM(p.total_cost)', 'total_cost');
-    }
-
     if (countryCode?.length) {
-      queryBuilder.andWhere('p.countryCode IN (:...countryCodes)', {
+      queryBuilder.andWhere('countryCode IN (:...countryCodes)', {
         countryCodes: countryCode,
       });
     }
     if (totalCost?.length) {
       const maxTotalCost = Math.max(...totalCost);
-      queryBuilder.andWhere('p.totalCost <= :maxTotalCost', {
+      queryBuilder.andWhere('totalCost <= :maxTotalCost', {
         maxTotalCost,
       });
     }
     if (abatementPotential?.length) {
       const maxAbatementPotential = Math.max(...abatementPotential);
-      queryBuilder.andWhere('p.abatementPotential <= :maxAbatementPotential', {
+      queryBuilder.andWhere('p.abatement_potential <= :maxAbatementPotential', {
         maxAbatementPotential,
       });
     }
     if (activity) {
-      queryBuilder.andWhere('p.activity IN (:...activity)', {
+      queryBuilder.andWhere('activity IN (:...activity)', {
         activity,
       });
     }
     if (activitySubtype?.length) {
-      queryBuilder.andWhere('p.activitySubtype IN (:...activitySubtype)', {
+      queryBuilder.andWhere('p.restoration_activity IN (:...activitySubtype)', {
         activitySubtype,
       });
     }
 
     if (ecosystem) {
-      queryBuilder.andWhere('p.ecosystem IN (:...ecosystem)', {
+      queryBuilder.andWhere('ecosystem IN (:...ecosystem)', {
         ecosystem,
       });
     }
     if (abatementPotentialRange) {
       queryBuilder.andWhere(
-        'p.abatementPotential >= :minAP AND p.abatementPotential <= :maxAP',
+        'p.abatemen_potential >= :minAP AND p.abatement_potential <= :maxAP',
         {
           minAP: Math.min(...abatementPotentialRange),
           maxAP: Math.max(...abatementPotentialRange),
@@ -136,11 +121,11 @@ export class ProjectsMapRepository extends Repository<Project> {
       let filteredCostColumn: string;
       switch (costRangeSelector) {
         case 'npv':
-          filteredCostColumn = 'p.totalCostNPV';
+          filteredCostColumn = 'p.total_cost_npv';
           break;
         case 'total':
         default:
-          filteredCostColumn = 'p.totalCost';
+          filteredCostColumn = 'p.total_cost';
           break;
       }
 
