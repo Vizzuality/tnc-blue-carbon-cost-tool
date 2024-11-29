@@ -27,10 +27,17 @@ import { ImplementationLaborCost } from '@shared/entities/cost-inputs/implementa
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
+import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 
 @Injectable()
 export class ImportRepository {
   constructor(private readonly dataSource: DataSource) {}
+
+  async importProjectScorecard(projectScorecards: ProjectScorecard[]) {
+    return this.dataSource.transaction(async (manager) => {
+      await manager.save(projectScorecards);
+    });
+  }
 
   async ingest(importData: {
     projects: Project[];

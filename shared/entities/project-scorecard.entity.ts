@@ -12,7 +12,6 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 
 @Entity("project_scorecard")
-@Unique(["country", "ecosystem"])
 export class ProjectScorecard extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -25,30 +24,52 @@ export class ProjectScorecard extends BaseEntity {
   @JoinColumn({ name: "country_code" })
   country: Country;
 
-  @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
+  @Column({ name: "ecosystem", enum: ECOSYSTEM, nullable: true, type: "enum" })
   ecosystem: ECOSYSTEM;
 
-  @Column({ name: "financial_feasibility", enum: PROJECT_SCORE, type: "enum" })
+  @Column({
+    name: "financial_feasibility",
+    nullable: true,
+    enum: PROJECT_SCORE,
+    type: "enum",
+  })
   financialFeasibility: PROJECT_SCORE;
 
-  @Column({ name: "legal_feasibility", enum: PROJECT_SCORE, type: "enum" })
+  @Column({
+    name: "legal_feasibility",
+    nullable: true,
+    enum: PROJECT_SCORE,
+    type: "enum",
+  })
   legalFeasibility: PROJECT_SCORE;
 
   @Column({
     name: "implementation_feasibility",
+    nullable: true,
     enum: PROJECT_SCORE,
     type: "enum",
   })
   implementationFeasibility: PROJECT_SCORE;
 
-  @Column({ name: "social_feasibility", enum: PROJECT_SCORE, type: "enum" })
+  @Column({
+    name: "social_feasibility",
+    nullable: true,
+    enum: PROJECT_SCORE,
+    type: "enum",
+  })
   socialFeasibility: PROJECT_SCORE;
 
-  @Column({ name: "security_rating", enum: PROJECT_SCORE, type: "enum" })
+  @Column({
+    name: "security_rating",
+    nullable: true,
+    enum: PROJECT_SCORE,
+    type: "enum",
+  })
   securityRating: PROJECT_SCORE;
 
   @Column({
     name: "availability_of_experienced_labor",
+    nullable: true,
     enum: PROJECT_SCORE,
     type: "enum",
   })
@@ -56,6 +77,7 @@ export class ProjectScorecard extends BaseEntity {
 
   @Column({
     name: "availability_of_alternating_funding",
+    nullable: true,
     enum: PROJECT_SCORE,
     type: "enum",
   })
@@ -63,11 +85,17 @@ export class ProjectScorecard extends BaseEntity {
 
   @Column({
     name: "coastal_protection_benefits",
+    nullable: true,
     enum: PROJECT_SCORE,
     type: "enum",
   })
   coastalProtectionBenefits: PROJECT_SCORE;
 
-  @Column({ name: "biodiversity_benefit", enum: PROJECT_SCORE, type: "enum" })
+  @Column({
+    name: "biodiversity_benefit",
+    nullable: true,
+    enum: PROJECT_SCORE,
+    type: "enum",
+  })
   biodiversityBenefit: PROJECT_SCORE;
 }

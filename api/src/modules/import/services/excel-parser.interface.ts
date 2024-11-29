@@ -28,6 +28,7 @@ export const SHEETS_TO_PARSE = [
   'base_size_table',
   'base_increase',
   'Model assumptions',
+  'Data_ingestion',
 ] as const;
 
 export interface ExcelParserInterface {
