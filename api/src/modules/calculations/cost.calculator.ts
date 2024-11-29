@@ -61,6 +61,7 @@ export class CostCalculator {
     projectInput: ProjectInput,
     baseSize: BaseSize,
     baseIncrease: BaseIncrease,
+    revenueProfitCalculator: RevenueProfitCalculator,
     sequestrationRateCalculator: SequestrationRateCalculator,
   ) {
     this.projectInput = projectInput;
@@ -68,9 +69,7 @@ export class CostCalculator {
     this.startingPointScaling = projectInput.assumptions.startingPointScaling;
     this.baseIncrease = baseIncrease;
     this.baseSize = baseSize;
-    this.revenueProfitCalculator = new RevenueProfitCalculator(
-      this.projectInput,
-    );
+    this.revenueProfitCalculator = revenueProfitCalculator;
     this.sequestrationRateCalculator = sequestrationRateCalculator;
   }
 

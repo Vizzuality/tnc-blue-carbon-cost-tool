@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CustomProjectsController } from './custom-projects.controller';
 import { CalculationsModule } from '@api/modules/calculations/calculations.module';
-import { CustomProjectInputFactory } from '@api/modules/custom-projects/input-factory/custom-project-input.factory';
+import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import { SaveCustomProjectEventHandler } from '@api/modules/custom-projects/events/handlers/save-custom-project.handler';
 
 @Module({
@@ -16,7 +16,7 @@ import { SaveCustomProjectEventHandler } from '@api/modules/custom-projects/even
   ],
   providers: [
     CustomProjectsService,
-    CustomProjectInputFactory,
+    CustomProjectFactory,
     SaveCustomProjectEventHandler,
   ],
   controllers: [CustomProjectsController],
