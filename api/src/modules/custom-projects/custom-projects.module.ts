@@ -6,6 +6,7 @@ import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CustomProjectsController } from './custom-projects.controller';
 import { CalculationsModule } from '@api/modules/calculations/calculations.module';
 import { CustomProjectInputFactory } from '@api/modules/custom-projects/input-factory/custom-project-input.factory';
+import { SaveCustomProjectEventHandler } from '@api/modules/custom-projects/events/handlers/save-custom-project.handler';
 
 @Module({
   imports: [
@@ -13,7 +14,11 @@ import { CustomProjectInputFactory } from '@api/modules/custom-projects/input-fa
     CountriesModule,
     CalculationsModule,
   ],
-  providers: [CustomProjectsService, CustomProjectInputFactory],
+  providers: [
+    CustomProjectsService,
+    CustomProjectInputFactory,
+    SaveCustomProjectEventHandler,
+  ],
   controllers: [CustomProjectsController],
 })
 export class CustomProjectsModule {}

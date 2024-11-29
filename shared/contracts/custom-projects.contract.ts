@@ -7,7 +7,6 @@ import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-
 import { OverridableCostInputs } from "@api/modules/custom-projects/dto/project-cost-inputs.dto";
 import { GetAssumptionsSchema } from "@shared/schemas/assumptions/get-assumptions.schema";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
-import { CustomProjectSnapshotDto } from "@api/modules/custom-projects/dto/custom-project-snapshot.dto";
 
 const contract = initContract();
 export const customProjectContract = contract.router({
@@ -45,7 +44,7 @@ export const customProjectContract = contract.router({
     },
     body: contract.type<CreateCustomProjectDto>(),
   },
-  snapshotCustomProject: {
+  saveCustomProject: {
     method: "POST",
     path: "/custom-projects/save",
     responses: {
