@@ -21,4 +21,12 @@ export const adminContract = contract.router({
     },
     body: contract.type<any>(),
   },
+  uploadProjectScorecard: {
+    method: "POST",
+    path: "/admin/upload/scorecard",
+    responses: {
+      201: contract.type<any>(),
+    },
+    body: contract.type<any>(),
+  },
 });
