@@ -11,7 +11,6 @@ import { ControllerResponse } from '@api/types/controller-response.type';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
 import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
-import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
 import { GetUser } from '@api/decorators/get-user.decorator';
 import { User } from '@shared/entities/users/user.entity';
 import { AuthGuard } from '@nestjs/passport';

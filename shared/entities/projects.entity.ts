@@ -61,7 +61,6 @@ export class Project extends BaseEntity {
   @Column({ name: "project_size", type: "decimal" })
   projectSize: number;
 
-  // TODO: We could potentially remove this column from the database and excel, and have a threshold to filter by
   @Column({
     name: "project_size_filter",
     type: "enum",

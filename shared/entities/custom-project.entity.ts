@@ -26,6 +26,21 @@ export class CustomProject {
   @Column({ name: "project_name" })
   projectName: string;
 
+  @Column({ name: "total_cost_npv", type: "decimal", nullable: true })
+  totalCostNPV: number;
+
+  @Column({ name: "total_cost", type: "decimal", nullable: true })
+  totalCost: number;
+
+  @Column({ name: "project_size", type: "decimal" })
+  projectSize: number;
+
+  @Column({ name: "project_length", type: "decimal" })
+  projectLength: number;
+
+  @Column({ name: "abatement_potential", type: "decimal", nullable: true })
+  abatementPotential: number;
+
   @ManyToOne(() => User, (user) => user.customProjects, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user?: User;
