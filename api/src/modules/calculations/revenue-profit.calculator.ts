@@ -10,14 +10,15 @@ export class RevenueProfitCalculator {
   defaultProjectLength: number;
   carbonPrice: number;
   carbonPriceIncrease: number;
-  constructor(projectInput: ProjectInput) {
+  constructor(
+    projectInput: ProjectInput,
+    sequestrationRateCalculator: SequestrationRateCalculator,
+  ) {
     this.projectLength = projectInput.assumptions.projectLength;
     this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
     this.carbonPrice = projectInput.assumptions.carbonPrice;
     this.carbonPriceIncrease = projectInput.assumptions.carbonPriceIncrease;
-    this.sequestrationCreditsCalculator = new SequestrationRateCalculator(
-      projectInput,
-    );
+    this.sequestrationCreditsCalculator = sequestrationRateCalculator;
   }
 
   calculateEstimatedRevenuePlan(): CostPlanMap {

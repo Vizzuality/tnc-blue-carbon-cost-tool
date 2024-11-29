@@ -9,7 +9,7 @@ import {
 } from '@api/modules/custom-projects/dto/conservation-project-params.dto';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
-import { GeneralProjectInputs } from '@api/modules/custom-projects/input-factory/custom-project-input.factory';
+import { GeneralProjectInputs } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import {
   ModelAssumptionsForCalculations,
   NonOverridableModelAssumptions,

@@ -10,6 +10,10 @@ import {
   NonOverridableModelAssumptions,
 } from '@api/modules/calculations/assumptions.repository';
 import { BaseDataView } from '@shared/entities/base-data.view';
+import { CostOutput } from '@api/modules/calculations/calculation.engine';
+import { ProjectInput } from '@api/modules/calculations/cost.calculator';
+import { CustomProject } from '@shared/entities/custom-project.entity';
+import { Country } from '@shared/entities/country.entity';
 
 export type ConservationProjectCarbonInputs = {
   lossRate: number;
@@ -29,7 +33,7 @@ export type GeneralProjectInputs = {
 };
 
 @Injectable()
-export class CustomProjectInputFactory {
+export class CustomProjectFactory {
   createProjectInput(
     dto: CreateCustomProjectDto,
     additionalBaseData: AdditionalBaseData,
@@ -94,5 +98,51 @@ export class CustomProjectInputFactory {
     );
 
     return conservationProjectInput;
+  }
+
+  createProject(
+    dto: CreateCustomProjectDto,
+    input: ProjectInput,
+    output: CostOutput,
+  ): CustomProject {
+    const { costPlans, summary, costDetails, yearlyBreakdown } = output;
+    const customProject = new CustomProject();
+    customProject.projectName = dto.projectName;
+    customProject.country = { code: dto.countryCode } as Country;
+    customProject.totalCostNPV =
+      costPlans.totalCapexNPV + costPlans.totalOpexNPV;
+    customProject.totalCost = costPlans.totalCapex + costPlans.totalOpex;
+    customProject.projectSize = dto.projectSizeHa;
+    customProject.projectLength = dto.assumptions.projectLength;
+    customProject.ecosystem = dto.ecosystem;
+    customProject.activity = dto.activity;
+    customProject.output = {
+      lossRate: input.lossRate,
+      carbonRevenuesToCover: input.carbonRevenuesToCover,
+      initialCarbonPrice: input.initialCarbonPriceAssumption,
+      emissionFactors: {
+        emissionFactor: input.emissionFactor,
+        emissionFactorAgb: input.emissionFactorAgb,
+        emissionFactorSoc: input.emissionFactorSoc,
+      },
+      totalProjectCost: {
+        total: {
+          total: costPlans.totalCapex + costPlans.totalOpex,
+          capex: costPlans.totalCapex,
+          opex: costPlans.totalOpex,
+        },
+        npv: {
+          total: costPlans.totalCapexNPV + costPlans.totalOpexNPV,
+          capex: costPlans.totalCapexNPV,
+          opex: costPlans.totalOpexNPV,
+        },
+      },
+      summary,
+      costDetails,
+      yearlyBreakdown,
+    };
+    customProject.input = dto;
+
+    return customProject;
   }
 }
