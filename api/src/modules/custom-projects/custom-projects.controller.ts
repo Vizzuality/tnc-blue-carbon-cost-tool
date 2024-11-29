@@ -80,10 +80,10 @@ export class CustomProjectsController {
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
-  @TsRestHandler(customProjectContract.snapshotCustomProject)
+  @TsRestHandler(customProjectContract.saveCustomProject)
   async snapshot(@GetUser() user: User): Promise<ControllerResponse> {
     return tsRestHandler(
-      customProjectContract.snapshotCustomProject,
+      customProjectContract.saveCustomProject,
       async ({ body }) => {
         await this.customProjects.saveCustomProject(body, user);
         return {

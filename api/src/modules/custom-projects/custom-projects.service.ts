@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
 import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,6 +19,8 @@ import { AssumptionsRepository } from '@api/modules/calculations/assumptions.rep
 import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { User } from '@shared/entities/users/user.entity';
+import { EventBus } from '@nestjs/cqrs';
+import { SaveCustomProjectEvent } from '@api/modules/custom-projects/events/save-custom-project.event';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -23,6 +29,7 @@ export class CustomProjectsService extends AppBaseService<
   unknown,
   unknown
 > {
+  logger = new Logger(CustomProjectsService.name);
   constructor(
     @InjectRepository(CustomProject)
     public readonly repo: Repository<CustomProject>,
@@ -31,6 +38,7 @@ export class CustomProjectsService extends AppBaseService<
     public readonly assumptionsRepository: AssumptionsRepository,
     public readonly customProjectFactory: CustomProjectInputFactory,
     private readonly countries: CountriesService,
+    private readonly eventBus: EventBus,
   ) {
     super(repo, 'customProject', 'customProjects');
   }
@@ -114,7 +122,16 @@ export class CustomProjectsService extends AppBaseService<
   }
 
   async saveCustomProject(dto: CustomProject, user: User): Promise<void> {
-    await this.repo.save({ ...dto, user });
+    try {
+      await this.repo.save({ ...dto, user });
+      this.eventBus.publish(new SaveCustomProjectEvent(user.id, true));
+    } catch (error) {
+      this.logger.error(`Error saving custom project: ${error}`);
+      this.eventBus.publish(new SaveCustomProjectEvent(user.id, false, error));
+      throw new ServiceUnavailableException(
+        `Custom project could not be saved, please try again later`,
+      );
+    }
   }
 
   async getDefaultCostInputs(

@@ -21,7 +21,7 @@ describe('Snapshot Custom Projects', () => {
     test.skip('Should persist a custom project in the DB', async () => {
       const response = await testManager
         .request()
-        .post(customProjectContract.snapshotCustomProject.path)
+        .post(customProjectContract.saveCustomProject.path)
         .send({
           inputSnapshot: {
             countryCode: 'IND',

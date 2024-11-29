@@ -7,6 +7,8 @@ export enum API_EVENT_TYPES {
   EXCEL_IMPORT_FAILED = 'system.excel_import.failed',
   EXCEL_IMPORT_SUCCESS = 'system.excel_import.success',
   EXCEL_IMPORT_STARTED = 'system.excel_import.started',
+  CUSTOM_PROJECT_SAVED = 'custom_project.saved',
+  ERROR_SAVING_CUSTOM_PROJECT = 'custom_project.error_saving',
   // More events to come....
 }
 
