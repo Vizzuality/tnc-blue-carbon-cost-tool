@@ -10,7 +10,6 @@ import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overr
 import { DataRepository } from '@api/modules/calculations/data.repository';
 import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { CostCalculator } from '@api/modules/calculations/cost.calculator';
-import { CustomProjectSnapshotDto } from './dto/custom-project-snapshot.dto';
 import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
@@ -73,15 +72,11 @@ export class CustomProjectsService extends AppBaseService<
     //       sortable, so we might need to define as first class properties in the entity
     const projectOutput: CustomProject & {
       abatementPotential: number;
-      totalNPV: number;
-      totalCost: number;
-      projectSize: number;
-      projectLength: number;
     } = {
       projectName: dto.projectName,
       abatementPotential: null, // We still dont know how to calculate this
       country,
-      totalNPV: costPlans.totalCapexNPV + costPlans.totalOpexNPV,
+      totalCostNPV: costPlans.totalCapexNPV + costPlans.totalOpexNPV,
       totalCost: costPlans.totalCapex + costPlans.totalOpex,
       projectSize: dto.projectSizeHa,
       projectLength: dto.assumptions.projectLength,
