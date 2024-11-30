@@ -73,7 +73,7 @@ const start = async () => {
           },
           properties: {
             ...GLOBAL_COMMON_PROPERTIES,
-          }
+          },
         },
       },
       {
@@ -86,7 +86,7 @@ const start = async () => {
           },
           properties: {
             ...GLOBAL_COMMON_PROPERTIES,
-          }
+          },
         },
       },
       {
@@ -99,7 +99,7 @@ const start = async () => {
           },
           properties: {
             ...GLOBAL_COMMON_PROPERTIES,
-          }
+          },
         },
       },
       ProjectSizeResource,

@@ -12,10 +12,8 @@ import { User } from "@shared/entities/users/user.entity";
 import { type CustomProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
 
 /**
- * @description: This entity is to save Custom Projects (that are calculated, and can be saved only by registered users. Most likely, we don't need to add these as a resource
- * in the backoffice because privacy reasons.
- *
- * The shape defined here is probably wrong, it's only based on the output of the prototype in the notebooks, and it will only serve as a learning resource.
+ * @note: This entity does not extend BaseEntity as it won't be used in the backoffice. However, it has to be added to the BO datasource due to its relation
+ *        to other entities that  (i.e User)
  */
 
 @Entity({ name: "custom_projects" })
@@ -23,7 +21,7 @@ export class CustomProject {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column({ name: "project_name" })
+  @Column({ type: "varchar", name: "project_name" })
   projectName: string;
 
   @Column({ name: "total_cost_npv", type: "decimal", nullable: true })

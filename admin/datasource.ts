@@ -32,10 +32,12 @@ import { ModelAssumptions } from "@shared/entities/model-assumptions.entity.js";
 import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-inputs.entity.js";
 import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity.js";
 import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity.js";
+import { CustomProject } from "@shared/entities/custom-project.entity.js";
 
 // TODO: If we import the COMMON_DATABASE_ENTITIES from shared, we get an error where DataSouce is not set for a given entity
 export const ADMINJS_ENTITIES = [
   User,
+  CustomProject,
   UserUploadCostInputs,
   UserUploadRestorationInputs,
   UserUploadConservationInputs,
