@@ -15,5 +15,7 @@ export const ProjectSizeResource: ResourceWithOptions = {
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
     },
+    // filterProperties: ["countryCode", "ecosystem", "activity", "sizeHa"],
+    listProperties: ["countryCode", "ecosystem", "activity", "sizeHa"],
   },
 };
