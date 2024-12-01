@@ -38,6 +38,8 @@ import { UserUploadConservationInputs } from "@shared/entities/users/user-upload
 import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity.js";
 import { GLOBAL_COMMON_PROPERTIES } from "./resources/common/common.resources.js";
 
+// ...
+
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
   Resource: AdminJSTypeorm.Resource,
@@ -59,6 +61,11 @@ const start = async () => {
   };
 
   const admin = new AdminJS({
+    branding: {
+      companyName: "Blue Carbon Cost",
+      withMadeWithLove: false,
+      logo: false,
+    },
     rootPath: "/admin",
     componentLoader,
     resources: [
@@ -145,6 +152,14 @@ const start = async () => {
             User: "Users",
             Country: "Countries",
             Project: "Projects",
+            ProjectSize: "Project Sizes",
+          },
+          resources: {
+            ProjectSize: {
+              properties: {
+                countryCode: "Country",
+              },
+            },
           },
         },
       },
@@ -158,7 +173,7 @@ const start = async () => {
 
   const router = AdminJSExpress.buildRouter(admin);
 
-  app.use(admin.options.rootPath, adminRouter);
+  app.use(admin.options.rootPath, router);
 
   app.listen(PORT, () => {
     console.log(
