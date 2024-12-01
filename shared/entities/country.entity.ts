@@ -50,6 +50,7 @@ export class Country extends BaseEntity {
     srid: 4326,
     // TODO: Make it nullable false once we have all the data
     nullable: true,
+    select: false,
   })
   geometry: Geometry;
 }
