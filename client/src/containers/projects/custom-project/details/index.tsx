@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
-import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
+import { CARBON_REVENUES_TO_COVER } from "@shared/entities/carbon-revenues-to-cover.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 import DetailItem from "@/containers/projects/custom-project/details/detail-item";
