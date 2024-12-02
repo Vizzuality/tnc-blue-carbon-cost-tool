@@ -13,7 +13,7 @@ export const CountryResource: ResourceWithOptions = {
     },
     sort: {
       sortBy: "name",
-      direction: "desc",
+      direction: "asc",
     },
     navigation: {
       name: "Data Management",
