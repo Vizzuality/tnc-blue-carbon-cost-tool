@@ -26,7 +26,7 @@ export class CustomProject {
   @PrimaryGeneratedColumn("uuid")
   id?: string;
 
-  @Column({ type: "varchar", name: "project_name" })
+  @Column({ name: "project_name", type: "varchar" })
   projectName: string;
 
   @Column({ name: "total_cost_npv", type: "decimal", nullable: true })

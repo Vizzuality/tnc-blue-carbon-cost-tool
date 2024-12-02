@@ -1,9 +1,12 @@
 import "reflect-metadata";
-import AdminJS, { ComponentLoader } from "adminjs";
+import AdminJS, { BaseAuthProvider, ComponentLoader } from "adminjs";
 import AdminJSExpress from "@adminjs/express";
-import express from "express";
+import express, { Request, Response } from "express";
 import * as AdminJSTypeorm from "@adminjs/typeorm";
 import { dataSource } from "./datasource.js";
+import pg from "pg";
+import connectPgSimple from "connect-pg-simple";
+import session from "express-session";
 import { AuthProvider } from "./providers/auth.provider.js";
 import { UserResource } from "./resources/users/user.resource.js";
 import { FeasibilityAnalysisResource } from "./resources/feasability-analysis/feasability-analysis.resource.js";
@@ -36,6 +39,7 @@ import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-in
 import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity.js";
 import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity.js";
 import { GLOBAL_COMMON_PROPERTIES } from "./resources/common/common.resources.js";
+import { BACKOFFICE_SESSIONS_TABLE } from "@shared/entities/users/backoffice-session.js";
 import { CountryResource } from "./resources/countries/country.resource.js";
 
 AdminJS.registerAdapter({
@@ -164,12 +168,45 @@ const start = async () => {
     },
   });
 
-  const adminRouter = AdminJSExpress.buildAuthenticatedRouter(admin, {
-    provider: authProvider,
-    cookiePassword: "some-secret",
+  const PgStore = connectPgSimple(session);
+  const sessionStore = new PgStore({
+    pool: new pg.Pool({
+      host: process.env.DB_HOST || "localhost",
+      user: process.env.DB_USERNAME || "blue-carbon-cost",
+      password: process.env.DB_PASSWORD || "blue-carbon-cost",
+      database: process.env.DB_NAME || "blc-dev",
+      port: 5432
+    }),    
+    tableName: BACKOFFICE_SESSIONS_TABLE,
   });
 
-  const router = AdminJSExpress.buildRouter(admin);
+  const customRouter = express.Router();
+  // Redirect to the app's login page
+  customRouter.get('/login', (req, res) => {
+    res.redirect('/auth/signin');
+  });
+
+  const sessionCookieName = process.env.BACKOFFICE_SESSION_COOKIE_NAME as string;
+  const sessionCookieSecret = process.env.BACKOFFICE_SESSION_COOKIE_SECRET as string;
+  const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
+    admin,
+    {
+      provider: authProvider as BaseAuthProvider<unknown>,
+      cookieName: sessionCookieName,
+      cookiePassword: sessionCookieSecret,
+    },
+    customRouter,
+    {
+      store: sessionStore,
+      secret: sessionCookieSecret,
+      saveUninitialized: false,
+      resave: false,
+      cookie: {
+        secure: false,
+        maxAge: undefined,
+      }
+    }
+  );
 
   app.use(admin.options.rootPath, adminRouter);
 
