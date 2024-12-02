@@ -14,6 +14,9 @@ export const FinancingCostResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      financingCostCapexPercent: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
     },
   },
 };

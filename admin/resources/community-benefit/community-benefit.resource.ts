@@ -15,6 +15,9 @@ export const CommunityBenefitResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      communityBenefitSharingFund: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
     },
   },
 };

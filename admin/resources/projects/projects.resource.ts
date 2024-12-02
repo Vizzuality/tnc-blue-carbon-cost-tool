@@ -18,20 +18,26 @@ export const ProjectsResource: ResourceWithOptions = {
   options: {
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
-      ...COMMON_RESOURCE_LIST_PROPERTIES,
+      projectSize: {
+        isVisible: { list: true, show: true, edit: true, filter: false },
+      },
+      abatementPotential: {
+        isVisible: { list: true, show: true, edit: true, filter: false },
+      },
+      totalCostNPV: {
+        isVisible: { list: true, show: true, edit: true, filter: false },
+      },
+      totalCost: {
+        isVisible: { list: true, show: true, edit: true, filter: false },
+      },
+      costPerTCO2eNPV: {
+        isVisible: { list: true, show: true, edit: true, filter: false },
+      },
+      costPerTCO2e: {
+        isVisible: { list: true, show: true, edit: true, filter: false },
+      },
     },
-    listProperties: [
-      "projectName",
-      "projectSize",
-      "projectSizeFilter",
-      "abatementPotential",
-      "totalCostNPV",
-      "costPerTCO2eNPV",
-      "initialPriceAssumption",
-      "restorationActivity",
-      "projectSizeFilter",
-      "priceType",
-    ],
+
     sort: {
       sortBy: "projectName",
       direction: "asc",

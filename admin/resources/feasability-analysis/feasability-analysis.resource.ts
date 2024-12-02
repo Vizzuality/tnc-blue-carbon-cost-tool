@@ -15,6 +15,9 @@ export const FeasibilityAnalysisResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      analysisCost: {
+        isVisible: { list: true, show: true, edit: true, filter: false },
+      },
     },
   },
 };

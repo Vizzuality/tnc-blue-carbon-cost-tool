@@ -14,6 +14,9 @@ export const ValidationCostResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      validationCost: {
+        isVisible: { list: true, show: true, edit: true, filter: false },
+      },
     },
   },
 };

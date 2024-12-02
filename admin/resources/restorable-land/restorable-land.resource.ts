@@ -14,6 +14,9 @@ export const RestorableLandResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      restorableLand: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
     },
   },
 };

@@ -12,6 +12,17 @@ export const SequestrationRateResource: ResourceWithOptions = {
       name: "Data Management",
       icon: "Database",
     },
-    properties: GLOBAL_COMMON_PROPERTIES,
+    properties: {
+      ...GLOBAL_COMMON_PROPERTIES,
+      tier1Factor: {
+        isVisible: { list: false, show: true, filter: false, edit: true },
+      },
+      tier2Factor: {
+        isVisible: { list: false, show: true, filter: false, edit: true },
+      },
+      sequestrationRate: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
+    },
   },
 };

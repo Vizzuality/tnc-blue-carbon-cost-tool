@@ -15,6 +15,9 @@ export const CarbonStandardFeesResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      carbonStandardFee: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
     },
   },
 };
