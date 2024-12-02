@@ -2,7 +2,7 @@ import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
 } from "@shared/entities/activity.enum";
-import { CARBON_REVENUES_TO_COVER } from "@shared/entities/carbon-revenues-to-cover.enum";
+import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 // TODO: tooltip info will go to constants/tooltip-info.ts
