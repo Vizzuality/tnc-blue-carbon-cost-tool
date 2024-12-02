@@ -14,8 +14,11 @@ export const ProjectSizeResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      sizeHa: {
+        type: "number",
+        isVisible: { list: true, show: true, edit: true, filter: true },
+        description: "Size in hectares",
+      },
     },
-    // filterProperties: ["countryCode", "ecosystem", "activity", "sizeHa"],
-    listProperties: ["countryCode", "ecosystem", "activity", "sizeHa"],
   },
 };

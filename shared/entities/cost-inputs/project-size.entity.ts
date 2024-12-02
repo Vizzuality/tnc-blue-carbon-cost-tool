@@ -19,7 +19,6 @@ export class ProjectSize extends BaseEntity {
 
   @ManyToOne(() => Country, (country) => country.code, {
     onDelete: "CASCADE",
-    eager: true,
   })
   @JoinColumn({ name: "country_code" })
   country: Country;
@@ -33,6 +32,6 @@ export class ProjectSize extends BaseEntity {
   @Column({ name: "activity", enum: ACTIVITY, type: "enum" })
   activity: ACTIVITY;
 
-  @Column("decimal", { name: "size" })
+  @Column({ name: "size", type: "decimal" })
   sizeHa: number;
 }
