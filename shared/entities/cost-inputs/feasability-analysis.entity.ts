@@ -20,6 +20,9 @@ export class FeasibilityAnalysis extends BaseEntity {
   @JoinColumn({ name: "country_code" })
   country: Country;
 
+  @Column({ name: "country_code", type: "char", length: 3 })
+  countryCode: string;
+
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
   ecosystem: ECOSYSTEM;
 

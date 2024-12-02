@@ -19,6 +19,9 @@ export class FinancingCost extends BaseEntity {
   @JoinColumn({ name: "country_code" })
   country: Country;
 
+  @Column({ name: "country_code", type: "char", length: 3 })
+  countryCode: string;
+
   @Column("decimal", { name: "financing_cost_capex_percent" })
   financingCostCapexPercent: number;
 }

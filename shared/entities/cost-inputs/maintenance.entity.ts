@@ -19,6 +19,9 @@ export class Maintenance extends BaseEntity {
   @JoinColumn({ name: "country_code" })
   country: Country;
 
+  @Column({ name: "country_code", type: "char", length: 3 })
+  countryCode: string;
+
   @Column("decimal", { name: "maintenance_cost_pc_of_impl_labor_cost" })
   maintenanceCost: number;
 
