@@ -33,10 +33,8 @@ const DeleteAccount: FC = () => {
       });
 
       if (status === 200) {
-        signOut({ callbackUrl: "/auth/signin" });
-      }
-
-      if (status === 400 || status === 401) {
+        signOut({ callbackUrl: "/auth/signin", redirect: true });
+      } else if (status === 400 || status === 401) {
         toast({
           variant: "destructive",
           description: body.errors?.[0].title,

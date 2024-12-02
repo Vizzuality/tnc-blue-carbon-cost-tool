@@ -19,7 +19,6 @@ function makeQueryClient() {
 const client = initQueryClient(router, {
   validateResponse: true,
   baseUrl: process.env.NEXT_PUBLIC_API_URL as string,
-  credentials: "include",
 });
 
 export { client, makeQueryClient };
