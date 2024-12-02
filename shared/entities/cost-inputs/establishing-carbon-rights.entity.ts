@@ -19,6 +19,9 @@ export class CarbonRights extends BaseEntity {
   @JoinColumn({ name: "country_code" })
   country: Country;
 
+  @Column({ name: "country_code", type: "char", length: 3 })
+  countryCode: string;
+
   @Column("decimal", { name: "carbon_rights_cost" })
   carbonRightsCost: number;
 }
