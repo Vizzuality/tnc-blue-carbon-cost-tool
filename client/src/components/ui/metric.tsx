@@ -8,7 +8,7 @@ interface MetricProps {
   /** The numeric value to display
    * undefined -> renders "-"
    */
-  value?: number;
+  value?: number | null;
   /** Unit to display (e.g. "kg", "%", "m²") */
   unit: string;
   /** Optional CSS classes to apply to the wrapper */

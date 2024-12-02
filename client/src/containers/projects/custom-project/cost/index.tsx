@@ -6,14 +6,17 @@ import { renderCurrency } from "@/lib/format";
 
 import { showCostDetailsAtom } from "@/app/projects/[id]/store";
 
-import mockData from "@/containers/projects/custom-project/mock-data";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Graph, GraphLegend } from "@/components/ui/graph";
 import { Label } from "@/components/ui/label";
 
-const ProjectCost: FC = () => {
+interface ProjectCostProps {
+  total: number;
+  capex: number;
+  opex: number;
+}
+const ProjectCost: FC<ProjectCostProps> = ({ total, capex, opex }) => {
   const setShowCostDetails = useSetAtom(showCostDetailsAtom);
 
   return (
@@ -53,7 +56,7 @@ const ProjectCost: FC = () => {
           <div className="flex max-w-[148px] flex-1 flex-col justify-between">
             <div>
               <span className="text-xl font-normal">
-                {renderCurrency(mockData.totalCost)}
+                {renderCurrency(total)}
               </span>
             </div>
             <GraphLegend
@@ -72,14 +75,14 @@ const ProjectCost: FC = () => {
             />
           </div>
           <Graph
-            total={mockData.totalCost}
+            total={total}
             segments={[
               {
-                value: mockData.capEx,
+                value: capex,
                 colorClass: "bg-sky-blue-500",
               },
               {
-                value: mockData.opExRevenue,
+                value: opex,
                 colorClass: "bg-sky-blue-200",
               },
             ]}
