@@ -6,7 +6,6 @@ import { ProjectsService } from '@api/modules/projects/projects.service';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { CountryWithNoGeometry } from '@shared/entities/country.entity';
 import { ProjectsMapRepository } from '@api/modules/projects/projects-map.repository';
-import { ProjectsScorecardRepository } from '@api/modules/projects/projects-scorecard.repository';
 import {
   OtherProjectFilters,
   ProjectFilters,
@@ -18,7 +17,6 @@ export class ProjectsController {
     private readonly projectsService: ProjectsService,
     private readonly countryService: CountriesService,
     private readonly projectMapRepository: ProjectsMapRepository,
-    private readonly projectsScorecardRepository: ProjectsScorecardRepository,
   ) {}
 
   @TsRestHandler(projectsContract.getProjects)
@@ -41,11 +39,10 @@ export class ProjectsController {
           costRangeSelector: query.costRangeSelector,
         };
 
-        const data =
-          await this.projectsScorecardRepository.getProjectsScorecard(
-            filter as unknown as ProjectFilters,
-            otherFilters,
-          );
+        const data = await this.projectsService.getProjectsScorecard(
+          filter as unknown as ProjectFilters,
+          otherFilters,
+        );
         return { body: data, status: HttpStatus.OK } as any;
       },
     );
