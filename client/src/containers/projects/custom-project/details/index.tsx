@@ -20,9 +20,9 @@ interface ProjectDetailsProps {
   carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
   initialCarbonPrice: number;
   emissionFactors: {
-    emissionFactor: number;
-    emissionFactorAGB: number;
-    emissionFactorSOC: number;
+    emissionFactor: number | null;
+    emissionFactorAgb: number;
+    emissionFactorSoc: number;
   };
 }
 
@@ -94,12 +94,12 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({
             subValues={[
               {
                 label: "AGB",
-                value: emissionFactors.emissionFactorAGB,
+                value: emissionFactors.emissionFactorAgb,
                 unit: "tCO2e/ha/yr",
               },
               {
                 label: "SOC",
-                value: emissionFactors.emissionFactorSOC,
+                value: emissionFactors.emissionFactorSoc,
                 unit: "tCO2e/ha/yr",
               },
             ]}

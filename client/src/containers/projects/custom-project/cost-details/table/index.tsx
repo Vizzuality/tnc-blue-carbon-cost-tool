@@ -13,7 +13,6 @@ import { ChevronsUpDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { columns } from "@/containers/projects/custom-project/cost-details/table/columns";
-import mockData from "@/containers/projects/custom-project/mock-data";
 
 import {
   Table,
@@ -30,10 +29,17 @@ export interface CostItem {
   value: number;
 }
 
-const CostDetailTable: FC = () => {
+interface CostDetailTableProps {
+  data: {
+    costName: string;
+    label: string;
+    value: string;
+  }[];
+}
+const CostDetailTable: FC<CostDetailTableProps> = ({ data }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
-    data: mockData.costDetails,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -99,16 +105,28 @@ const CostDetailTable: FC = () => {
                 className={cn({
                   "divide-background border-b-background": true,
                   "bg-big-stone-950 hover:bg-big-stone-950":
-                    row.original.name === "capitalExpenditure" ||
-                    row.original.name === "operatingExpenditure" ||
-                    row.original.name === "totalCost",
+                    row.original.costName === "capitalExpenditure" ||
+                    row.original.costName === "operatingExpenditure" ||
+                    row.original.costName === "totalCost",
                 })}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                {row.getVisibleCells().map((cell) => {
+                  console.log(cell);
+                  return (
+                    <TableCell
+                      key={cell.id}
+                      className={cn({
+                        "px-4": cell.column.id === "value",
+                        "text-big-stone-200": cell.column.id === "label",
+                      })}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))
           ) : (

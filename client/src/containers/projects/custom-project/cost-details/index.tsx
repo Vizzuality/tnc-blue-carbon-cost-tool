@@ -15,7 +15,14 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-const CostDetails: FC = () => {
+interface CostDetailsProps {
+  data: {
+    costName: string;
+    label: string;
+    value: string;
+  }[];
+}
+const CostDetails: FC<CostDetailsProps> = ({ data }) => {
   const [isVisible, setIsVisible] = useAtom(showCostDetailsAtom);
 
   return (
@@ -28,7 +35,7 @@ const CostDetails: FC = () => {
           </SheetTitle>
         </SheetHeader>
         <CostDetailsParameters />
-        <CostDetailTable />
+        <CostDetailTable data={data} />
       </SheetContent>
     </Sheet>
   );

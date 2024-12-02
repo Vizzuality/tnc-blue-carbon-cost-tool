@@ -5,7 +5,10 @@ import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 
 import { LAYOUT_TRANSITIONS } from "@/app/(overview)/constants";
-import { projectsUIState } from "@/app/projects/[id]/store";
+import {
+  costDetailsFilterAtom,
+  projectsUIState,
+} from "@/app/projects/[id]/store";
 
 import AnnualProjectCashFlow from "@/containers/projects/custom-project/annual-project-cash-flow";
 import ProjectCost from "@/containers/projects/custom-project/cost";
@@ -15,8 +18,10 @@ import CustomProjectHeader from "@/containers/projects/custom-project/header";
 import LeftOver from "@/containers/projects/custom-project/left-over";
 import mockData from "@/containers/projects/custom-project/mock-data";
 import ProjectSummary from "@/containers/projects/custom-project/summary";
+import { useCustomProjectFilters } from "@/containers/projects/url-store";
 
 import { useSidebar } from "@/components/ui/sidebar";
+import { formatCurrency } from "@/lib/format";
 
 const {
   country,
@@ -28,11 +33,37 @@ const {
   carbonRevenuesToCover,
   initialCarbonPrice,
   emissionFactors,
-} = mockData;
-export const SUMMARY_SIDEBAR_WIDTH = 400;
+  totalProjectCost,
+  summary,
+  costDetails,
+  leftover,
+} = mockData.data;
+const costDetailsData = {
+  total: Object.keys(costDetails.total).map((k) => ({
+    costName: k,
+    label: k,
+    value: formatCurrency(
+      costDetails.total[k as keyof typeof costDetails.total],
+      { maximumFractionDigits: 0 },
+    ),
+  })),
+  npv: Object.keys(costDetails.npv).map((k) => ({
+    costName: k,
+    label: k,
+    value: formatCurrency(costDetails.npv[k as keyof typeof costDetails.npv], {
+      maximumFractionDigits: 0,
+    }),
+  })),
+};
+export const SUMMARY_SIDEBAR_WIDTH = 460;
 const CustomProject: FC = () => {
+  const [{ costRangeSelector }] = useCustomProjectFilters();
+  const costDetailsRangeSelector = useAtomValue(costDetailsFilterAtom);
   const { projectSummaryOpen } = useAtomValue(projectsUIState);
   const { open: navOpen } = useSidebar();
+  const projectCostProps = totalProjectCost[costRangeSelector];
+  const costDetailsProps = costDetailsData[costDetailsRangeSelector];
+  const leftOverProps = leftover[costRangeSelector];
 
   return (
     <motion.div
@@ -56,7 +87,7 @@ const CustomProject: FC = () => {
         transition={LAYOUT_TRANSITIONS}
         className="overflow-hidden"
       >
-        <ProjectSummary />
+        <ProjectSummary data={summary} />
       </motion.aside>
       <div className="mx-3 flex flex-1 flex-col">
         <CustomProjectHeader />
@@ -72,9 +103,9 @@ const CustomProject: FC = () => {
             initialCarbonPrice={initialCarbonPrice}
             emissionFactors={emissionFactors}
           />
-          <ProjectCost />
-          <LeftOver />
-          <CostDetails />
+          <ProjectCost {...projectCostProps} />
+          <LeftOver {...leftOverProps} />
+          <CostDetails data={costDetailsProps} />
         </div>
         <AnnualProjectCashFlow />
       </div>

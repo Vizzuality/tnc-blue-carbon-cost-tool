@@ -1,3 +1,4 @@
+import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { atom } from "jotai";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 
@@ -9,10 +10,13 @@ export const projectsUIState = atom<{
   projectSummaryOpen: false,
 });
 export const showCostDetailsAtom = atom<boolean>(false);
+export const costDetailsFilterAtom = atom<COST_TYPE_SELECTOR>(
+  COST_TYPE_SELECTOR.TOTAL,
+);
 
-export function useProjectCashFlowView() {
+export function useProjectCashFlowTab() {
   return useQueryState(
-    "cashflow",
+    "cashflowTab",
     parseAsStringLiteral(CASH_FLOW_VIEWS).withDefault("chart"),
   );
 }

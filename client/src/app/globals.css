@@ -4,7 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -50,6 +49,11 @@ body {
     --sidebar-accent-foreground: 192, 86%, 69%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 212, 57%, 24%;
+    --chart-1: 150 43% 61%;
+    --chart-2: 194 88% 43%;
+    --chart-3: 191 87% 82%;
+    --chart-4: 50 80% 58%;
+    --chart-5: 213 73% 97%;
   }
 }
 
@@ -65,31 +69,52 @@ body {
 /* mapbox styles */
 .mapboxgl-popup-anchor-top {
   .mapboxgl-popup-tip {
-    @apply !border-b-popover !z-10 relative;
+    @apply relative !z-10 !border-b-popover;
   }
 }
 
 .mapboxgl-popup-anchor-bottom {
   .mapboxgl-popup-tip {
-    @apply !border-t-popover !z-10 relative;
+    @apply relative !z-10 !border-t-popover;
   }
 }
 
 .mapboxgl-popup-anchor-left {
   .mapboxgl-popup-tip {
-    @apply !border-r-popover !z-10 relative;
+    @apply relative !z-10 !border-r-popover;
   }
 }
 
 .mapboxgl-popup-anchor-right {
   .mapboxgl-popup-tip {
-    @apply !border-l-popover !z-10 relative;
+    @apply relative !z-10 !border-l-popover;
   }
 }
 
 .mapboxgl-popup-content {
-  @apply !bg-popover !rounded-md border border-border text-big-stone-50 shadow-md;
+  @apply !rounded-md border border-border !bg-popover text-big-stone-50 shadow-md;
 }
 .mapboxgl-popup-close-button {
   @apply hidden;
+}
+
+/* cashflow chart */
+.cashflow-chart {
+  .recharts-cartesian-grid-vertical line {
+    stroke-dasharray: 3, 3;
+
+    &:nth-last-child(1),
+    &:nth-last-child(2) {
+      stroke: transparent;
+    }
+  }
+
+  .recharts-cartesian-grid-horizontal line {
+    stroke-dasharray: 0;
+
+    &:first-of-type,
+    &:last-of-type {
+      stroke: transparent;
+    }
+  }
 }

@@ -2,13 +2,17 @@ import { FC } from "react";
 
 import { renderCurrency } from "@/lib/format";
 
-import mockData from "@/containers/projects/custom-project/mock-data";
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Graph, GraphLegend } from "@/components/ui/graph";
 import { Label } from "@/components/ui/label";
 
-const LeftOver: FC = () => {
+interface LeftoverProps {
+  total: number;
+  leftover: number;
+  opex: number;
+}
+
+const LeftOver: FC<LeftoverProps> = ({ total, leftover, opex }) => {
   return (
     <Card variant="secondary" className="flex-1 p-0">
       <CardHeader className="p-4">
@@ -38,7 +42,7 @@ const LeftOver: FC = () => {
           <div className="flex max-w-[148px] flex-1 flex-col justify-between">
             <div>
               <span className="text-xl font-normal">
-                {renderCurrency(mockData.leftover)}
+                {renderCurrency(leftover)}
               </span>
             </div>
             <GraphLegend
@@ -57,14 +61,14 @@ const LeftOver: FC = () => {
             />
           </div>
           <Graph
-            total={mockData.totalRevenue}
+            total={total}
             segments={[
               {
-                value: mockData.opExRevenue,
+                value: opex,
                 colorClass: "bg-sky-blue-200",
               },
             ]}
-            leftover={mockData.leftover}
+            leftover={leftover}
           />
         </div>
       </CardContent>

@@ -1,8 +1,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
 
-import { CostItem } from "@/containers/projects/custom-project/cost-details/table";
-
-const columnHelper = createColumnHelper<CostItem>();
+const columnHelper = createColumnHelper<{
+  costName: string;
+  label: string;
+  value: string;
+}>();
 
 export const columns = [
   columnHelper.accessor("label", {
@@ -12,9 +14,5 @@ export const columns = [
   columnHelper.accessor("value", {
     enableSorting: true,
     header: () => <span>Cost $/tCo2</span>,
-  }),
-  columnHelper.accessor("value", {
-    enableSorting: true,
-    header: () => <span>Sensitive analysis</span>,
   }),
 ];
