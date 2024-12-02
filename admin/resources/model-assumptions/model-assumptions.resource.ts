@@ -15,6 +15,9 @@ export const ModelAssumptionResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      name: {
+        isVisible: { list: true, show: true, filter: true, edit: false },
+      },
     },
   },
 };
