@@ -6,7 +6,6 @@ import * as AdminJSTypeorm from "@adminjs/typeorm";
 import { dataSource } from "./datasource.js";
 import { AuthProvider } from "./providers/auth.provider.js";
 import { UserResource } from "./resources/users/user.resource.js";
-import { Country } from "@shared/entities/country.entity.js";
 import { FeasibilityAnalysisResource } from "./resources/feasability-analysis/feasability-analysis.resource.js";
 import { ConservationAndPlanningAdminResource } from "./resources/conservation-and-planning-admin/conservation-and-planning-admin.resource.js";
 import { CommunityRepresentationResource } from "./resources/community-representation/community-representation.resource.js";
@@ -48,6 +47,10 @@ const PORT = 1000;
 export const API_URL = process.env.API_URL || "http://localhost:4000";
 
 const componentLoader = new ComponentLoader();
+
+const Components = {
+  Dashboard: componentLoader.add("Dashboard", "./components/dashboard"),
+};
 const authProvider = new AuthProvider();
 
 const start = async () => {
@@ -64,6 +67,9 @@ const start = async () => {
       companyName: "Blue Carbon Cost",
       withMadeWithLove: false,
       logo: false,
+    },
+    dashboard: {
+      component: Components.Dashboard,
     },
     rootPath: "/admin",
     componentLoader,
@@ -165,7 +171,7 @@ const start = async () => {
 
   const router = AdminJSExpress.buildRouter(admin);
 
-  app.use(admin.options.rootPath, router);
+  app.use(admin.options.rootPath, adminRouter);
 
   app.listen(PORT, () => {
     console.log(
