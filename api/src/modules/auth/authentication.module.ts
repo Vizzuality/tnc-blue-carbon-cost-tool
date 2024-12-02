@@ -14,9 +14,12 @@ import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 import { ConfirmAccountStrategy } from '@api/modules/auth/strategies/confirm-account.strategy';
 import { PasswordManager } from '@api/modules/auth/services/password.manager';
 import { EmailConfirmationJwtStrategy } from '@api/modules/auth/strategies/email-update.strategy';
+import { BackOfficeSession } from '@shared/entities/users/backoffice-session';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([BackOfficeSession]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ApiConfigModule],

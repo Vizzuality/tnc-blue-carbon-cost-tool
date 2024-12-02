@@ -1,5 +1,5 @@
 import { BaseAuthProvider, LoginHandlerOptions } from "adminjs";
-
+import type { Response } from "express";
 import { ROLES } from "@shared/entities/users/roles.enum.js";
 import { UserDto, UserWithAccessToken } from "@shared/dtos/users/user.dto.js";
 import { API_URL } from "../index.js";
@@ -31,5 +31,13 @@ export class AuthProvider extends BaseAuthProvider {
 
   private isAdmin(user: UserDto) {
     return user.role === ROLES.ADMIN;
+  }
+
+  override async handleLogout({res}: {res: Response}) {
+    // Remove auth cookies
+    res.setHeader('Set-Cookie', [
+      `backoffice=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly`,
+      `next-auth.session-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly`,
+    ]);
   }
 }

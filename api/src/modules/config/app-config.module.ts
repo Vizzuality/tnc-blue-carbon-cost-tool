@@ -19,6 +19,26 @@ import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
         resolveConfigPath(`shared/config/.env.${process.env.NODE_ENV}`),
         resolveConfigPath(`shared/config/.env`),
       ],
+      validate(config) {
+        const expectedVariables = [
+          'BACKOFFICE_SESSION_COOKIE_NAME',
+          'BACKOFFICE_SESSION_COOKIE_SECRET',
+        ];
+
+        const missingVariables = [];
+        for (const expectedVariable of expectedVariables) {
+          if (config[expectedVariable] === undefined) {
+            missingVariables.push(expectedVariable);
+          }
+        }
+
+        if (missingVariables.length > 0) {
+          throw new Error(
+            `Missing required environment variables: ${missingVariables.join(', ')}`,
+          );
+        }
+        return config;
+      },
     }),
     DatabaseModule,
   ],

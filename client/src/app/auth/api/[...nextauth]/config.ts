@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { UserWithAccessToken } from "@shared/dtos/users/user.dto";
 import { LogInSchema } from "@shared/schemas/auth/login.schema";
 import type {
@@ -36,13 +37,27 @@ export const config = {
         let access: UserWithAccessToken | null = null;
 
         const { email, password } = await LogInSchema.parseAsync(credentials);
-
         const response = await client.auth.login.mutation({
           body: {
             email,
             password,
           },
         });
+
+        // Check if adminjs was set in the response
+        const setCookieHeaders = response.headers.get("set-cookie");
+        if (setCookieHeaders !== null) {
+          const [cookieName, cookieValue] = decodeURIComponent(setCookieHeaders)
+            .split(";")[0]
+            .split("=");
+
+          const cookieStore = cookies();
+          cookieStore.set(cookieName, cookieValue, {
+            path: "/",
+            sameSite: "lax",
+            httpOnly: true,
+          });
+        }
 
         if (response.status === 201) {
           access = response.body;

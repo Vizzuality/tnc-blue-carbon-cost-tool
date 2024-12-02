@@ -77,6 +77,34 @@ describe('Sign In', () => {
     expect(response.body.accessToken).toBeDefined();
   });
 
+  test('Should return 201 an access token and set a backoffice cookie when an admin user successfully signs in', async () => {
+    // Given a user exists with valid credentials
+    const user = await testManager.mocks().createUser({
+      role: ROLES.ADMIN,
+      email: 'test@test.com',
+      isActive: true,
+      password: '12345678',
+    });
+
+    // And the user tries to sign in with valid credentials
+    const response = await testManager
+      .request()
+      .post(authContract.login.path)
+      .send({
+        email: 'test@test.com',
+        password: '12345678',
+      });
+
+    // We should get back OK response and an access token
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body.accessToken).toBeDefined();
+    const setCookieHeader = response.headers['set-cookie'];
+    expect(setCookieHeader).toHaveLength(1);
+    expect(decodeURIComponent(setCookieHeader[0])).toMatch(
+      /^backoffice=s:[^\s]+\.[^\s]+;/,
+    );
+  });
+
   test('Should return UNAUTHORIZED when trying to sign in with an inactive account', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({

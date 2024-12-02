@@ -1,3 +1,5 @@
+// Does not work without * as uid
+import * as uid from 'uid-safe';
 import {
   ConflictException,
   Injectable,
@@ -21,6 +23,13 @@ import { RequestEmailUpdateDto } from '@shared/dtos/users/request-email-update.d
 import { SendEmailConfirmationEmailCommand } from '@api/modules/notifications/email/commands/send-email-confirmation-email.command';
 import { PasswordManager } from '@api/modules/auth/services/password.manager';
 import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
+import { Repository } from 'typeorm';
+import {
+  BACKOFFICE_SESSIONS_TABLE,
+  BackOfficeSession,
+} from '@shared/entities/users/backoffice-session';
+import { ROLES } from '@shared/entities/users/roles.enum';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthenticationService {
@@ -31,6 +40,8 @@ export class AuthenticationService {
     private readonly commandBus: CommandBus,
     private readonly eventBus: EventBus,
     private readonly passwordManager: PasswordManager,
+    @InjectRepository(BackOfficeSession)
+    private readonly backOfficeSessionRepository: Repository<BackOfficeSession>,
   ) {}
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
@@ -81,9 +92,67 @@ export class AuthenticationService {
     };
   }
 
-  async logIn(user: User): Promise<UserWithAccessToken> {
+  private async createBackOfficeSession(
+    user: User,
+    accessToken: string,
+  ): Promise<BackOfficeSession> {
+    // We replicate what adminjs does by default using postgres as session storage (the default in memory session storage is not production ready)
+    // This implementation is not compatible with many devices per user
+    await this.backOfficeSessionRepository
+      .createQueryBuilder()
+      .delete()
+      .from(BACKOFFICE_SESSIONS_TABLE)
+      .where(`sess -> 'adminUser' ->> 'id' = :id`, { id: user.id })
+      .execute();
+
+    const currentDate = new Date();
+    const sessionExpirationDate = new Date(
+      Date.UTC(
+        currentDate.getUTCFullYear() + 1,
+        currentDate.getUTCMonth(),
+        currentDate.getUTCDate(),
+        currentDate.getUTCHours(),
+        currentDate.getUTCMinutes(),
+        currentDate.getUTCSeconds(),
+      ),
+    );
+    const backofficeSession: BackOfficeSession = {
+      sid: uid.sync(24),
+      sess: {
+        cookie: {
+          secure: false,
+          httpOnly: true,
+          path: '/',
+        },
+        adminUser: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          partnerName: user.partnerName,
+          isActive: true,
+          role: user.role,
+          createdAt: user.createdAt,
+          accessToken,
+        },
+      },
+      expire: sessionExpirationDate,
+    };
+    await this.backOfficeSessionRepository.insert(backofficeSession);
+    return backofficeSession;
+  }
+
+  async logIn(user: User): Promise<[UserWithAccessToken, BackOfficeSession?]> {
     const { accessToken } = await this.jwtManager.signAccessToken(user.id);
-    return { user, accessToken };
+    if (user.role !== ROLES.ADMIN) {
+      return [{ user, accessToken }];
+    }
+
+    // An adminjs session needs to be created for the admin user
+    const backofficeSession = await this.createBackOfficeSession(
+      user,
+      accessToken,
+    );
+    return [{ user, accessToken }, backofficeSession];
   }
 
   async signUp(user: User, signUpDto: SignUpDto): Promise<void> {

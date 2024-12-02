@@ -1,3 +1,6 @@
+import "reflect-metadata";
+import dotenv from "dotenv";
+dotenv.config({ path: `../shared/config/.env` });
 import { DataSource } from "typeorm";
 import { User } from "@shared/entities/users/user.entity.js";
 import { ApiEventsEntity } from "@api/modules/api-events/api-events.entity.js";
@@ -32,6 +35,7 @@ import { ModelAssumptions } from "@shared/entities/model-assumptions.entity.js";
 import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-inputs.entity.js";
 import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity.js";
 import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity.js";
+import { BackOfficeSession } from "@shared/entities/users/backoffice-session.js";
 import { CustomProject } from "@shared/entities/custom-project.entity.js";
 
 // TODO: If we import the COMMON_DATABASE_ENTITIES from shared, we get an error where DataSouce is not set for a given entity
@@ -70,6 +74,8 @@ export const ADMINJS_ENTITIES = [
   BaseSize,
   BaseIncrease,
   ModelAssumptions,
+  CustomProject,
+  BackOfficeSession
 ];
 
 export const dataSource = new DataSource({
