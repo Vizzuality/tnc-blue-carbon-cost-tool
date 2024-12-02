@@ -5,7 +5,12 @@ import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 export const ConservationAndPlanningAdminResource: ResourceWithOptions = {
   resource: ConservationPlanningAndAdmin,
   options: {
-    properties: {...GLOBAL_COMMON_PROPERTIES},
+    properties: {
+      ...GLOBAL_COMMON_PROPERTIES,
+      planningCost: {
+        isVisible: { list: true, show: true, edit: true, filter: false },
+      },
+    },
     sort: {
       sortBy: "planningCost",
       direction: "desc",

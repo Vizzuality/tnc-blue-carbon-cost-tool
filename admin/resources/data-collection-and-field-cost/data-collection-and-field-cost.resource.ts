@@ -15,6 +15,9 @@ export const DataCollectionAndFieldCostResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      fieldCost: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
     },
   },
 };

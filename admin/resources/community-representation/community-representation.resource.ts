@@ -15,6 +15,9 @@ export const CommunityRepresentationResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      liaisonCost: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
     },
   },
 };

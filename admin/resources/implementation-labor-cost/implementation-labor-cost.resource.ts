@@ -15,6 +15,15 @@ export const ImplementationLaborCostResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      plantingCost: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
+      hybridCost: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
+      hydrologyCost: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
     },
   },
 };

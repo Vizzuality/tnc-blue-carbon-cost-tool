@@ -14,6 +14,9 @@ export const MaintenanceResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      monitoringCost: {
+        isVisible: { show: true, edit: true, list: true, filter: false },
+      },
     },
   },
 };

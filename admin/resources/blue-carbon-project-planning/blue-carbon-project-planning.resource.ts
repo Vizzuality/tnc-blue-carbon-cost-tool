@@ -6,29 +6,18 @@ export const BlueCarbonProjectPlanningResource: ResourceWithOptions = {
   resource: BlueCarbonProjectPlanning,
   options: {
     properties: {
-      id: {
-        isVisible: { list: false, show: false, edit: false, filter: false },
-      },
-      country: {
-        isVisible: { list: true, show: true, edit: true, filter: true },
-      },
-      inputSelection: {
-        isVisible: { list: true, show: true, edit: true, filter: true },
-      },
+      ...GLOBAL_COMMON_PROPERTIES,
       input1: {
-        isVisible: { list: true, show: true, edit: true, filter: true },
+        isVisible: { show: false, edit: true, filter: false, list: true },
       },
       input2: {
-        isVisible: { list: true, show: true, edit: true, filter: true },
+        isVisible: { show: false, edit: true, filter: false, list: true },
       },
       input3: {
-        isVisible: { list: true, show: true, edit: true, filter: true },
+        isVisible: { show: false, edit: true, filter: false, list: true },
       },
       blueCarbon: {
-        isVisible: { list: true, show: true, edit: false, filter: true },
-      },
-      properties: {
-        ...GLOBAL_COMMON_PROPERTIES,
+        isVisible: { show: true, edit: true, filter: false, list: true },
       },
     },
     sort: {

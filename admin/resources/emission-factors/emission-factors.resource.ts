@@ -14,6 +14,24 @@ export const EmissionFactorsResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
-    },  
+      emissionFactor: {
+        isVisible: { show: true, edit: true, list: true, filter: false },
+      },
+      AGB: {
+        isVisible: { show: true, edit: true, list: true, filter: false },
+      },
+      SOC: {
+        isVisible: { show: true, edit: true, list: true, filter: false },
+      },
+      global: {
+        isVisible: { show: true, edit: true, list: true, filter: false },
+      },
+      t2CountrySpecificAGB: {
+        isVisible: { show: true, edit: true, list: true, filter: false },
+      },
+      t2CountrySpecificSOC: {
+        isVisible: { show: true, edit: true, list: true, filter: false },
+      },
+    },
   },
 };

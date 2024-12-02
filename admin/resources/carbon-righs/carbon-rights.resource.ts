@@ -15,6 +15,9 @@ export const CarbonRightsResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      carbonRightsCost: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
     },
   },
 };

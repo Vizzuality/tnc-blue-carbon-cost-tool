@@ -14,6 +14,9 @@ export const EcosystemLossResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      ecosystemLossRate: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
     },
   },
 };

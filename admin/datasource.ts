@@ -85,4 +85,5 @@ export const dataSource = new DataSource({
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }
       : false,
+  logging: true,
 });

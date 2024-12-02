@@ -15,6 +15,9 @@ export const MonitoringCostResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      monitoringCost: {
+        isVisible: { list: true, show: true, filter: false, edit: true },
+      },
     },
   },
 };
