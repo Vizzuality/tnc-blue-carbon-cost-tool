@@ -1,13 +1,5 @@
-import {
-  ActionContext,
-  ActionRequest,
-  ActionResponse,
-  BaseRecord,
-  ResourceWithOptions,
-} from "adminjs";
-import { dataSource } from "../../datasource.js";
+import { ResourceWithOptions } from "adminjs";
 import { Project } from "@shared/entities/projects.entity.js";
-import { Country } from "@shared/entities/country.entity.js";
 import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
 
 export const ProjectsResource: ResourceWithOptions = {
