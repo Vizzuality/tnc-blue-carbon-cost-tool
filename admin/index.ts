@@ -37,8 +37,7 @@ import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-in
 import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity.js";
 import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity.js";
 import { GLOBAL_COMMON_PROPERTIES } from "./resources/common/common.resources.js";
-
-// ...
+import { CountryResource } from "./resources/countries/country.resource.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -135,14 +134,7 @@ const start = async () => {
       BaseSizeResource,
       BaseIncreaseResource,
       ModelAssumptionResource,
-      {
-        resource: Country,
-        name: "Country",
-        options: {
-          parent: databaseNavigation,
-          icon: "Globe",
-        },
-      },
+      CountryResource,
     ],
     locale: {
       language: "en",
