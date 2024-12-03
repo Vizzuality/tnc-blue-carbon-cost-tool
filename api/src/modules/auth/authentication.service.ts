@@ -117,7 +117,7 @@ export class AuthenticationService {
       ),
     );
     const backofficeSession: BackOfficeSession = {
-      sid: uid.sync(24),
+      sid: await uid(24),
       sess: {
         cookie: {
           secure: false,
