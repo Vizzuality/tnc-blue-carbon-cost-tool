@@ -140,7 +140,7 @@ export default function ToolbarProjectsTable() {
                 </TabsList>
               </div>
 
-              <div className="h-full overflow-y-auto">
+              <div className="h-full overflow-y-hidden">
                 <TabsContent
                   value="general"
                   className="mt-4 h-full space-y-4 text-sm data-[state=inactive]:hidden"
