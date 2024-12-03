@@ -7,13 +7,13 @@ import Link from "next/link";
 import { useSetAtom } from "jotai";
 
 import CustomProjects from "@/containers/profile/custom-projects";
-import FileUpload from "@/containers/profile/file-upload";
+import FileUpload, { EXCEL_FILES } from "@/containers/profile/file-upload";
+import FileUploadDescription from "@/containers/profile/file-upload/description";
 import ProfileSection from "@/containers/profile/profile-section";
 import ProfileSidebar from "@/containers/profile/profile-sidebar";
 import { intersectingAtom } from "@/containers/profile/store";
 import UserDetails from "@/containers/profile/user-details";
 
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import DeleteAccount from "src/containers/profile/delete-account";
@@ -40,33 +40,9 @@ const sections = [
     Component: CustomProjects,
   },
   {
-    id: "data-upload",
-    title: "Data upload",
-    description: (
-      <>
-        <p>
-          Download the required templates, fill them in, and upload the
-          completed files below.
-        </p>
-
-        <ol className="flex gap-4">
-          <li>
-            <Button variant="link" className="p-0" asChild>
-              <a href="/forms/carbon-input-template.xlsx">
-                carbon-input-template.xlsx
-              </a>
-            </Button>
-          </li>
-          <li>
-            <Button variant="link" className="p-0" asChild>
-              <a href="/forms/cost-input-template.xlsx">
-                cost-input-template.xlsx
-              </a>
-            </Button>
-          </li>
-        </ol>
-      </>
-    ),
+    id: "share-information",
+    title: "Share information",
+    description: <FileUploadDescription files={EXCEL_FILES} />,
     Component: FileUpload,
   },
   {
