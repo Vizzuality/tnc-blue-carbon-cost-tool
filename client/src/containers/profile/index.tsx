@@ -7,7 +7,8 @@ import Link from "next/link";
 import { useSetAtom } from "jotai";
 
 import CustomProjects from "@/containers/profile/custom-projects";
-import FileUpload, { EXCEL_FILES } from "@/containers/profile/file-upload";
+import DeleteAccount from "@/containers/profile/delete-account";
+import FileUpload, { TEMPLATE_FILES } from "@/containers/profile/file-upload";
 import FileUploadDescription from "@/containers/profile/file-upload/description";
 import ProfileSection from "@/containers/profile/profile-section";
 import ProfileSidebar from "@/containers/profile/profile-sidebar";
@@ -16,7 +17,6 @@ import UserDetails from "@/containers/profile/user-details";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import DeleteAccount from "src/containers/profile/delete-account";
 
 const sections = [
   {
@@ -42,7 +42,7 @@ const sections = [
   {
     id: "share-information",
     title: "Share information",
-    description: <FileUploadDescription files={EXCEL_FILES} />,
+    description: <FileUploadDescription files={TEMPLATE_FILES} />,
     Component: FileUpload,
   },
   {
