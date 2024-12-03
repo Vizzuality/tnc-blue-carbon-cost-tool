@@ -13,18 +13,18 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/toast/use-toast";
 
 // Array should be in this order
-export const EXCEL_FILES = [
+export const TEMPLATE_FILES = [
   {
     name: "carbon-input-template.xlsx",
-    path: "/forms/carbon-input-template.xlsx",
+    path: "/templates/carbon-input-template.xlsx",
   },
   {
     name: "cost-input-template.xlsx",
-    path: "/forms/cost-input-template.xlsx",
+    path: "/templates/cost-input-template.xlsx",
   },
 ];
 
-const REQUIRED_FILE_NAMES = EXCEL_FILES.map((f) => f.name);
+const REQUIRED_FILE_NAMES = TEMPLATE_FILES.map((f) => f.name);
 const EXCEL_EXTENSIONS = [".xlsx", ".xls"];
 const MAX_FILES = 2;
 
