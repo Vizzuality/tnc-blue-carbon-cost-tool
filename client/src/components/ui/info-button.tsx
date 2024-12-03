@@ -3,8 +3,6 @@ import * as React from "react";
 
 import { InfoIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,10 +16,10 @@ import {
 export default function InfoButton({
   title,
   children,
-  classNames,
+  className,
 }: PropsWithChildren<{
   title?: string;
-  classNames?: string;
+  className?: string;
 }>) {
   return (
     <Dialog>
@@ -30,7 +28,7 @@ export default function InfoButton({
           <InfoIcon className="h-7 w-7 text-foreground hover:text-muted-foreground" />
         </Button>
       </DialogTrigger>
-      <DialogContent className={cn(classNames)}>
+      <DialogContent className={className}>
         <DialogHeader>
           {title && <DialogTitle>{title}</DialogTitle>}
           <DialogContentContainer>{children}</DialogContentContainer>
