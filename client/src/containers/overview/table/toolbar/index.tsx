@@ -67,7 +67,7 @@ export default function ToolbarProjectsTable() {
       <SearchProjectsTable />
       <TabsProjectsTable />
       <div className="flex flex-1 items-center justify-end space-x-2">
-        <InfoButton classNames="max-w-[fit-content]" title="Table details">
+        <InfoButton className="max-w-[fit-content]" title="Table details">
           <div className="relative flex h-[600px] w-[auto] flex-col">
             <Tabs
               defaultValue="general"
