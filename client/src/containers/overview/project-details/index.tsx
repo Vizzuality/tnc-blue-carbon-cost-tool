@@ -63,7 +63,6 @@ const CreateProjectDetails = () => (
   </Dialog>
 );
 
-//////// ScoreIndicator component ////////
 interface ScoreIndicatorProps {
   score: "High" | "Medium" | "Low";
   className?: string;
@@ -382,6 +381,17 @@ export default function ProjectDetails() {
                   <h3 className="text-md">Scorecard ratings</h3>
                 </Label>
               </div>
+              {/*<div className="flex items-center gap-2">*/}
+              {/*  <Label className="text-xs text-big-stone-200">*/}
+              {/*    Compare with a different project*/}
+              {/*  </Label>*/}
+              {/*  <Button*/}
+              {/*    variant="outline"*/}
+              {/*    className="h-8 w-8 p-0 hover:bg-transparent"*/}
+              {/*  >*/}
+              {/*    <Plus className="h-4 w-4" />*/}
+              {/*  </Button>*/}
+              {/*</div>*/}
             </div>
             <div className="mt-2">
               {projectData.scorecard.map((item, index) => (
@@ -417,6 +427,17 @@ export default function ProjectDetails() {
                   <h3 className="text-md">Cost estimates</h3>
                 </Label>
               </div>
+              {/*<div className="flex items-center gap-2">*/}
+              {/*  <Label className="text-xs text-big-stone-200">*/}
+              {/*    Compare with a different project*/}
+              {/*  </Label>*/}
+              {/*  <Button*/}
+              {/*    variant="outline"*/}
+              {/*    className="h-8 w-8 p-0 hover:bg-transparent"*/}
+              {/*  >*/}
+              {/*    <Plus className="h-4 w-4" />*/}
+              {/*  </Button>*/}
+              {/*</div>*/}
             </div>
             <div>
               {projectData.costEstimates.map((estimate) => (
