@@ -13,11 +13,17 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ScorecardMetric {
   name: string;
   description: string;
   weight: number;
+}
+
+interface KeyCost {
+  name: string;
+  description: string | keyof typeof KEY_COSTS;
 }
 
 const SCORECARD_METRICS: ScorecardMetric[] = [
@@ -61,6 +67,38 @@ const SCORECARD_METRICS: ScorecardMetric[] = [
   },
 ];
 
+const KEY_COSTS_DATA: KeyCost[] = [
+  {
+    name: "Implementation labor",
+    description: "IMPLEMENTATION_LABOR",
+  },
+  {
+    name: "Community benefit sharing fund",
+    description: "COMMUNITY_BENEFIT_SHARING_FUND",
+  },
+  {
+    name: "Monitoring and maintenance",
+    description: "MONITORING_AND_MAINTENANCE",
+  },
+  {
+    name: "Community representation/liaison",
+    description: "COMMUNITY_REPRESENTATION",
+  },
+  {
+    name: "Conservation planning and admin",
+    description:
+      "Approximated as the salaries of a project manager and a program coordinator. 20% of the salaries is added to account for meetings/ expenses. 75% of these approximations are considered here and 25% of these costs are applied for community representation/ liaison",
+  },
+  {
+    name: "Long-term project operating",
+    description: "LONG_TERM_OPERATING",
+  },
+  {
+    name: "Carbon standard fees",
+    description: "CARBON_STANDARD_FEES",
+  },
+];
+
 export default function ToolbarProjectsTable() {
   return (
     <div className="flex items-center justify-between px-5 py-3">
@@ -77,7 +115,7 @@ export default function ToolbarProjectsTable() {
                 <TabsList className="w-full justify-start space-x-6 divide-x-0 divide-sky-blue-300 rounded-none border border-l-0 border-r-0 border-t-0 bg-transparent p-0">
                   <TabsTrigger
                     value="general"
-                    className="data-[state=active]:border-b-2 data-[state=active]:border-sky-blue-300 data-[state=active]:bg-transparent"
+                    className="ml-0 px-0 data-[state=active]:border-b-2 data-[state=active]:border-sky-blue-300 data-[state=active]:bg-transparent"
                   >
                     General
                   </TabsTrigger>
@@ -105,7 +143,7 @@ export default function ToolbarProjectsTable() {
               <div className="h-full overflow-y-auto">
                 <TabsContent
                   value="general"
-                  className="mt-4 h-full space-y-4 data-[state=inactive]:hidden"
+                  className="mt-4 h-full space-y-4 text-sm data-[state=inactive]:hidden"
                 >
                   <p>
                     This table offers three distinct views, showcasing example
@@ -118,7 +156,7 @@ export default function ToolbarProjectsTable() {
 
                 <TabsContent
                   value="overview"
-                  className="mt-4 h-full space-y-4 data-[state=inactive]:hidden"
+                  className="mt-4 h-full space-y-4 text-sm data-[state=inactive]:hidden"
                 >
                   <p>
                     In addition to economic feasibility and abatement potential,
@@ -148,98 +186,135 @@ export default function ToolbarProjectsTable() {
                   value="scorecard"
                   className="mt-4 h-full space-y-4 data-[state=inactive]:hidden"
                 >
-                  <div className="space-y-6">
-                    <div>
-                      <p className="mb-4">
-                        In addition to economic feasibility and abatement
-                        potential, this table includes{" "}
-                        <span className="font-medium">
-                          qualitative, non-economic scores
-                        </span>
-                        , which may vary by country or ecosystem. Each
-                        project&apos;s overall score combines these non-economic
-                        scores with economic feasibility and abatement potential
-                        to give a comprehensive evaluation. These scores add
-                        additional insights for project assessment.
-                      </p>
-                      <p className="mb-6">
-                        Each metric can go from a scale from low to high:
-                      </p>
-                      <div className="mb-8 grid grid-cols-3 gap-4 text-center">
-                        <div className="rounded-md bg-low p-4 text-sky-blue-950">
-                          <div className="font-medium">Low</div>
-                          <div className="text-sm">Description of low</div>
-                        </div>
-                        <div className="rounded-md bg-medium p-4 text-sky-blue-950">
-                          <div className="font-medium">Medium</div>
-                          <div className="text-sm">Description</div>
-                        </div>
-                        <div className="rounded-md bg-high p-4 text-sky-blue-950">
-                          <div className="font-medium">High</div>
-                          <div className="text-sm">Description</div>
+                  <ScrollArea className="h-full px-4">
+                    <div className="space-y-6 text-sm">
+                      <div>
+                        <p className="mb-4">
+                          In addition to economic feasibility and abatement
+                          potential, this table includes{" "}
+                          <span className="font-medium">
+                            qualitative, non-economic scores
+                          </span>
+                          , which may vary by country or ecosystem. Each
+                          project&apos;s overall score combines these
+                          non-economic scores with economic feasibility and
+                          abatement potential to give a comprehensive
+                          evaluation. These scores add additional insights for
+                          project assessment.
+                        </p>
+                        <p className="mb-6">
+                          Each metric can go from a scale from low to high:
+                        </p>
+                        <div className="mb-8 grid grid-cols-3 gap-2 text-center">
+                          <div className="height[fit-content] rounded-md bg-low p-2 text-sky-blue-950">
+                            <div className="font-medium">Low</div>
+                            <div className="text-sm">Description of low</div>
+                          </div>
+                          <div className="height[fit-content] rounded-md bg-medium p-2 text-sky-blue-950">
+                            <div className="font-medium">Medium</div>
+                            <div className="text-sm">Description</div>
+                          </div>
+                          <div className="height[fit-content] rounded-md bg-high p-2 text-sky-blue-950">
+                            <div className="font-medium">High</div>
+                            <div className="text-sm">Description</div>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Metric</TableHead>
-                          <TableHead>Description</TableHead>
-                          <TableHead className="w-24 text-right">
-                            Weight
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {SCORECARD_METRICS.map((metric) => (
-                          <TableRow key={metric.name}>
-                            <TableCell className="font-medium">
-                              {metric.name}
-                            </TableCell>
-                            <TableCell>
-                              {
-                                SCORECARD_PRIORITIZATION[
-                                  metric.description as keyof typeof SCORECARD_PRIORITIZATION
-                                ]
-                              }
-                            </TableCell>
-                            <TableCell className="text-right">
-                              {metric.weight}
-                            </TableCell>
+                      <Table className="rounded-md border">
+                        <TableHeader>
+                          <TableRow className="divide-x-0 text-xs">
+                            <TableHead className="border-r-0">Metric</TableHead>
+                            <TableHead className="border-r-0">
+                              Description
+                            </TableHead>
+                            <TableHead className="w-24 border-r-0 text-right">
+                              Weight
+                            </TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
+                        </TableHeader>
+                        <TableBody>
+                          {SCORECARD_METRICS.map((metric) => (
+                            <TableRow key={metric.name} className="divide-x-0">
+                              <TableCell className="border-r-0 font-medium">
+                                {metric.name}
+                              </TableCell>
+                              <TableCell className="border-r-0">
+                                {
+                                  SCORECARD_PRIORITIZATION[
+                                    metric.description as keyof typeof SCORECARD_PRIORITIZATION
+                                  ]
+                                }
+                              </TableCell>
+                              <TableCell className="border-r-0 text-right">
+                                {metric.weight}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </ScrollArea>
                 </TabsContent>
 
                 <TabsContent
                   value="costs"
                   className="mt-4 h-full space-y-4 data-[state=inactive]:hidden"
                 >
-                  <p>
-                    This table provides an overview of the most significant cost
-                    components for typical blue carbon projects, categorized by
-                    country, ecosystem, and activity. This table enables easy
-                    comparison of these essential cost components.
-                  </p>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <h3 className="font-medium">Implementation labor</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {KEY_COSTS.IMPLEMENTATION_LABOR}
-                      </p>
+                  <ScrollArea className="h-full px-4">
+                    <div className="space-y-6">
+                      <div>
+                        <p className="mb-4 text-sm">
+                          This table provides an overview of the most
+                          significant cost components for typical blue carbon
+                          projects, categorized by country, ecosystem, and
+                          activity. This table enables easy comparison of these
+                          essential cost components.
+                        </p>
+                        <p className="mb-6 text-sm">
+                          Each metric is color coded depending on the minimum
+                          range for each metric.
+                        </p>
+                        <div className="mb-8 flex flex-col gap-2">
+                          <div className="h-4 w-full bg-gradient-to-r from-[#E7C4B1] via-[#EEE0BD] to-[#C7DBBC]" />
+                          <div className="flex justify-between text-sm text-muted-foreground">
+                            <span>Min value</span>
+                            <span>Max value</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <Table className="rounded-md border">
+                        <TableHeader>
+                          <TableRow className="divide-x-0 text-xs">
+                            <TableHead className="border-r-0">Metric</TableHead>
+                            <TableHead className="border-r-0">
+                              Description
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {KEY_COSTS_DATA.map((cost) => (
+                            <TableRow className="divide-x-0" key={cost.name}>
+                              <TableCell className="border-r-0 font-medium">
+                                {cost.name}
+                              </TableCell>
+                              <TableCell className="border-r-0">
+                                {typeof cost.description === "string" &&
+                                !KEY_COSTS[
+                                  cost.description as keyof typeof KEY_COSTS
+                                ]
+                                  ? cost.description
+                                  : KEY_COSTS[
+                                      cost.description as keyof typeof KEY_COSTS
+                                    ]}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </div>
-                    <div className="space-y-2">
-                      <h3 className="font-medium">
-                        Community benefit sharing fund
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {KEY_COSTS.COMMUNITY_BENEFIT_SHARING_FUND}
-                      </p>
-                    </div>
-                  </div>
+                  </ScrollArea>
                 </TabsContent>
               </div>
             </Tabs>
