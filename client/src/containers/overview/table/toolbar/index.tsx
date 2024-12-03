@@ -4,6 +4,7 @@ import SearchProjectsTable from "@/containers/overview/table/toolbar/search";
 import TabsProjectsTable from "@/containers/overview/table/toolbar/table-selector";
 
 import InfoButton from "@/components/ui/info-button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table,
   TableHeader,
@@ -13,7 +14,6 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ScorecardMetric {
   name: string;
