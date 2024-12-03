@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 import { SCORECARD_PRIORITIZATION, KEY_COSTS } from "@/constants/tooltip";
 
 import SearchProjectsTable from "@/containers/overview/table/toolbar/search";
@@ -99,42 +101,42 @@ const KEY_COSTS_DATA: KeyCost[] = [
   },
 ];
 
+const TABS_TRIGGER_CLASSES =
+  "border-b-2 border-transparent transition-colors data-[state=active]:!border-sky-blue-300 data-[state=active]:bg-transparent";
+
 export default function ToolbarProjectsTable() {
   return (
     <div className="flex items-center justify-between px-5 py-3">
       <SearchProjectsTable />
       <TabsProjectsTable />
       <div className="flex flex-1 items-center justify-end space-x-2">
-        <InfoButton className="max-w-[fit-content]" title="Table details">
+        <InfoButton title="Table details">
           <div className="relative flex h-[600px] w-[auto] flex-col">
             <Tabs
               defaultValue="general"
               className="flex h-full w-full flex-col"
             >
               <div className="sticky top-0 z-10 bg-background pb-4">
-                <TabsList className="w-full justify-start space-x-6 divide-x-0 divide-sky-blue-300 rounded-none border border-l-0 border-r-0 border-t-0 bg-transparent p-0">
+                <TabsList className="w-full justify-start space-x-6 divide-x-0 divide-transparent rounded-none border border-l-0 border-r-0 border-t-0 bg-transparent p-0">
                   <TabsTrigger
                     value="general"
-                    className="ml-0 px-0 data-[state=active]:border-b-2 data-[state=active]:border-sky-blue-300 data-[state=active]:bg-transparent"
+                    className={cn(TABS_TRIGGER_CLASSES, "ml-0 px-0")}
                   >
                     General
                   </TabsTrigger>
                   <TabsTrigger
                     value="overview"
-                    className="data-[state=active]:border-b-2 data-[state=active]:border-sky-blue-300 data-[state=active]:bg-transparent"
+                    className={TABS_TRIGGER_CLASSES}
                   >
                     Overview table
                   </TabsTrigger>
                   <TabsTrigger
                     value="scorecard"
-                    className="data-[state=active]:border-b-2 data-[state=active]:border-sky-blue-300 data-[state=active]:bg-transparent"
+                    className={TABS_TRIGGER_CLASSES}
                   >
                     Scorecard prioritization table
                   </TabsTrigger>
-                  <TabsTrigger
-                    value="costs"
-                    className="data-[state=active]:border-b-2 data-[state=active]:border-sky-blue-300 data-[state=active]:bg-transparent"
-                  >
+                  <TabsTrigger value="costs" className={TABS_TRIGGER_CLASSES}>
                     Key costs table
                   </TabsTrigger>
                 </TabsList>

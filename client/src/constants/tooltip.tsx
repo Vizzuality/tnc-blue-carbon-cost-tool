@@ -36,9 +36,24 @@ export const KEY_COSTS = {
   IMPLEMENTATION_LABOR:
     "Only applicable to restoration. The costs associated with labor and materials required for rehabilitating the degraded area (hydrology, planting or hybrid)",
   COMMUNITY_BENEFIT_SHARING_FUND:
-    "The creation of a fund to compensate for alternative livelihoods, and opportunity cost. The objective of the fund is to meet the community&apos;s socioeconomic and financial priorities, which can be realized through goods, services, infrastructure, and/or cash (e.g., textbooks, desalination plant).",
-  MONITORING_AND_MAINTENANCE:
-    "&bull; Monitoring: The expenses related to individuals moving throughout the project site to prevent degradation and report necessary actions/changes.\n&bull; Maintenance: Only applicable to restoration. The costs associated with the physical upkeep of the original implementation, such as pest control, removing blockages, and rebuilding small portions.",
+    "The creation of a fund to compensate for alternative livelihoods, and opportunity cost. The objective of the fund is to meet the community's socioeconomic and financial priorities, which can be realized through goods, services, infrastructure, and/or cash (e.g., textbooks, desalination plant).",
+  MONITORING_AND_MAINTENANCE: (
+    <>
+      <ul className="space-y-2">
+        <li>
+          Monitoring: The expenses related to individuals moving throughout the
+          project site to prevent degradation and report necessary
+          actions/changes.
+        </li>
+        <li>
+          Maintenance: Only applicable to restoration. The costs associated with
+          the physical upkeep of the original implementation, such as pest
+          control, removing blockages, and rebuilding small portions.
+        </li>
+        <li></li>
+      </ul>
+    </>
+  ),
   COMMUNITY_REPRESENTATION:
     "Efforts aimed at obtaining community buy-in, including assessing community needs, obtaining free, prior, and informed consent, conducting stakeholder surveys, and providing education about blue carbon.",
   CONSERVATION_PLANNING:
