@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { useAtom } from "jotai";
-import { ChevronUp, ChevronDown, Plus, NotebookPen } from "lucide-react";
+import { ChevronUp, ChevronDown, NotebookPen } from "lucide-react";
 
 import {
   renderCurrency,
