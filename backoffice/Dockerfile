@@ -37,5 +37,5 @@ RUN pnpm install
 
 EXPOSE 1000
 
-# Comando para ejecutar AdminJS en producción
-CMD ["pnpm", "admin:prod"]
+
+CMD ["pnpm", "backoffice:prod"]
