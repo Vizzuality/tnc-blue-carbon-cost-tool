@@ -146,6 +146,8 @@ jobs:
             AWS_SES_ACCESS_KEY_SECRET=${{ secrets.AWS_SES_ACCESS_KEY_SECRET }}
             AWS_SES_DOMAIN=${{ secrets.AWS_SES_DOMAIN }}
             AWS_REGION=${{ secrets.AWS_REGION }}
+            BACKOFFICE_SESSION_COOKIE_NAME=${{ vars.BACKOFFICE_SESSION_COOKIE_NAME }}
+            BACKOFFICE_SESSION_COOKIE_SECRET=${{ secrets.BACKOFFICE_SESSION_COOKIE_SECRET }}
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -205,6 +207,8 @@ jobs:
             DB_USERNAME=${{ secrets.DB_USERNAME }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+            BACKOFFICE_SESSION_COOKIE_NAME=${{ vars.BACKOFFICE_SESSION_COOKIE_NAME }}
+            BACKOFFICE_SESSION_COOKIE_SECRET=${{ secrets.BACKOFFICE_SESSION_COOKIE_SECRET }}
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
