@@ -23,7 +23,7 @@ WORKDIR /app
 
 
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json ./
-COPY admin ./admin
+COPY backoffice ./backoffice
 COPY shared ./shared
 COPY api ./api
 
