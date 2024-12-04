@@ -68,7 +68,7 @@ export class CustomProjectsController {
   ): Promise<ControllerResponse> {
     return tsRestHandler(
       customProjectContract.createCustomProject,
-      async ({ body }) => {
+      async () => {
         const customProject = await this.customProjects.create(dto as any);
         return {
           status: 201,
@@ -90,6 +90,44 @@ export class CustomProjectsController {
           status: 201,
           body: null,
         };
+      },
+    );
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @TsRestHandler(customProjectContract.getCustomProject)
+  async getCustomProjectById(
+    @GetUser() user: User,
+  ): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.getCustomProject,
+      async ({ params: { id }, query }) => {
+        const data = await this.customProjects.getById(id, query, { user });
+        return { body: { data }, status: HttpStatus.OK };
+      },
+    );
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @TsRestHandler(customProjectContract.getCustomProjects)
+  async getCustomProjects(@GetUser() user: User): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.getCustomProjects,
+      async ({ query }) => {
+        try {
+          const { data, metadata } = await this.customProjects.findAllPaginated(
+            query,
+            undefined,
+            {
+              user,
+            },
+          );
+          return { body: { data, metadata }, status: HttpStatus.OK };
+        } catch (e) {
+          console.error(e);
+        }
       },
     );
   }

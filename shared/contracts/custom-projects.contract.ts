@@ -1,5 +1,9 @@
 import { initContract } from "@ts-rest/core";
-import { ApiResponse } from "@shared/dtos/global/api-response.dto";
+import {
+  ApiPaginationResponse,
+  ApiResponse,
+  ErrorResponse,
+} from "@shared/dtos/global/api-response.dto";
 import { Country } from "@shared/entities/country.entity";
 import { CustomProject } from "@shared/entities/custom-project.entity";
 import { CreateCustomProjectDto } from "@api/modules/custom-projects/dto/create-custom-project-dto";
@@ -7,6 +11,10 @@ import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-
 import { OverridableCostInputs } from "@api/modules/custom-projects/dto/project-cost-inputs.dto";
 import { GetAssumptionsSchema } from "@shared/schemas/assumptions/get-assumptions.schema";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
+import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
+
+export const customProjecsQuerySchema =
+  generateEntityQuerySchema(CustomProject);
 
 const contract = initContract();
 export const customProjectContract = contract.router({
@@ -43,6 +51,25 @@ export const customProjectContract = contract.router({
       201: contract.type<ApiResponse<CustomProject>>(),
     },
     body: contract.type<CreateCustomProjectDto>(),
+  },
+  getCustomProjects: {
+    method: "GET",
+    path: "/custom-projects",
+    query: customProjecsQuerySchema,
+    responses: {
+      200: contract.type<ApiPaginationResponse<CustomProject>>(),
+      401: contract.type<ErrorResponse>(),
+    },
+  },
+  getCustomProject: {
+    method: "GET",
+    path: "/custom-projects/:id",
+    query: customProjecsQuerySchema,
+    responses: {
+      200: contract.type<ApiResponse<CustomProject>>(),
+      401: contract.type<ErrorResponse>(),
+      404: contract.type<null>(),
+    },
   },
   saveCustomProject: {
     method: "POST",

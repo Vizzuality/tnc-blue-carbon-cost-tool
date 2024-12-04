@@ -14,6 +14,8 @@ import {
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ProjectScorecard } from "@shared/entities/project-scorecard.entity";
 import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
+import { CustomProject } from "@shared/entities/custom-project.entity";
+import { CustomProjectStub } from "api/test/utils/stubs/custom-project.stub";
 
 export const createUser = async (
   dataSource: DataSource,
@@ -87,4 +89,19 @@ export const createProjectScorecard = async (
   return dataSource
     .getRepository(ProjectScorecard)
     .save({ ...defaultProjectScorecardData, ...additionalData });
+};
+
+export const createCustomProject = async (
+  dataSource: DataSource,
+  additionalData: { user: User } & Partial<CustomProject>,
+): Promise<CustomProject> => {
+  const countries = await dataSource.getRepository(Country).find();
+  if (!countries.length) {
+    throw new Error("No countries in the database");
+  }
+
+  return dataSource.getRepository(CustomProject).save({
+    ...CustomProjectStub.DEFAULT_CONSERVATION_CUSTOM_PROJECT,
+    ...additionalData,
+  });
 };
