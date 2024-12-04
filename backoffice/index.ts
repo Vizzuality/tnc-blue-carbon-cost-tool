@@ -58,6 +58,21 @@ const Components = {
 const authProvider = new AuthProvider();
 
 const start = async () => {
+  const PgStore = connectPgSimple(session);
+  const sessionStore = new PgStore({
+    pool: new pg.Pool({
+      host: process.env.DB_HOST || "localhost",
+      user: process.env.DB_USERNAME || "blue-carbon-cost",
+      password: process.env.DB_PASSWORD || "blue-carbon-cost",
+      database: process.env.DB_NAME || "blc-dev",
+      port: 5432,
+      ssl:
+        process.env.NODE_ENV === "production"
+          ? { rejectUnauthorized: false }
+          : false,
+    }),
+    tableName: BACKOFFICE_SESSIONS_TABLE,
+  });
   await dataSource.initialize();
   const app = express();
 
@@ -168,26 +183,16 @@ const start = async () => {
     },
   });
 
-  const PgStore = connectPgSimple(session);
-  const sessionStore = new PgStore({
-    pool: new pg.Pool({
-      host: process.env.DB_HOST || "localhost",
-      user: process.env.DB_USERNAME || "blue-carbon-cost",
-      password: process.env.DB_PASSWORD || "blue-carbon-cost",
-      database: process.env.DB_NAME || "blc-dev",
-      port: 5432
-    }),    
-    tableName: BACKOFFICE_SESSIONS_TABLE,
-  });
-
   const customRouter = express.Router();
   // Redirect to the app's login page
-  customRouter.get('/login', (req, res) => {
-    res.redirect('/auth/signin');
+  customRouter.get("/login", (req, res) => {
+    res.redirect("/auth/signin");
   });
 
-  const sessionCookieName = process.env.BACKOFFICE_SESSION_COOKIE_NAME as string;
-  const sessionCookieSecret = process.env.BACKOFFICE_SESSION_COOKIE_SECRET as string;
+  const sessionCookieName = process.env
+    .BACKOFFICE_SESSION_COOKIE_NAME as string;
+  const sessionCookieSecret = process.env
+    .BACKOFFICE_SESSION_COOKIE_SECRET as string;
   const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
     admin,
     {
@@ -204,8 +209,8 @@ const start = async () => {
       cookie: {
         secure: false,
         maxAge: undefined,
-      }
-    }
+      },
+    },
   );
 
   app.use(admin.options.rootPath, adminRouter);
