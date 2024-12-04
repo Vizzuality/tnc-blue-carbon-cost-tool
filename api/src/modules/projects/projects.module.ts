@@ -6,12 +6,13 @@ import { ProjectsService } from './projects.service';
 import { CountriesModule } from '@api/modules/countries/countries.module';
 import { ProjectsMapRepository } from '@api/modules/projects/projects-map.repository';
 import { ProjectScorecardView } from '@shared/entities/project-scorecard.view';
+import { ProjectsScorecardService } from './projects-scorecard.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Project, ProjectScorecardView]),
     CountriesModule,
   ],
   controllers: [ProjectsController],
-  providers: [ProjectsService, ProjectsMapRepository],
+  providers: [ProjectsService, ProjectsMapRepository, ProjectsScorecardService],
 })
 export class ProjectsModule {}

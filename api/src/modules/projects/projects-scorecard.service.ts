@@ -1,31 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
-import { Project } from '@shared/entities/projects.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { z } from 'zod';
 import { getProjectsQuerySchema } from '@shared/contracts/projects.contract';
+import { ProjectScorecardView } from '@shared/entities/project-scorecard.view';
+import {
+  OtherProjectFilters,
+  ProjectFilters,
+} from '@shared/dtos/projects/projects-map.dto';
 
 export type ProjectFetchSpecificacion = z.infer<typeof getProjectsQuerySchema>;
 
 @Injectable()
-export class ProjectsService extends AppBaseService<
-  Project,
+export class ProjectsScorecardService extends AppBaseService<
+  ProjectScorecardView,
   unknown,
   unknown,
   unknown
 > {
   constructor(
-    @InjectRepository(Project)
-    public readonly projectRepository: Repository<Project>,
+    @InjectRepository(ProjectScorecardView)
+    private readonly projectScorecardRepo: Repository<ProjectScorecardView>,
   ) {
-    super(projectRepository, 'project', 'projects');
+    super(projectScorecardRepo, 'project_scorecard', 'project_scorecards');
   }
 
   async extendFindAllQuery(
-    query: SelectQueryBuilder<Project>,
+    query: SelectQueryBuilder<ProjectScorecardView>,
     fetchSpecification: ProjectFetchSpecificacion,
-  ): Promise<SelectQueryBuilder<Project>> {
+  ): Promise<SelectQueryBuilder<ProjectScorecardView>> {
     // Filter by project name
     if (fetchSpecification.partialProjectName) {
       query = query.andWhere('project_name ILIKE :projectName', {

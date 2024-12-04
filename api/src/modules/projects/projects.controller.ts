@@ -1,3 +1,4 @@
+import { ProjectsScorecardService } from './projects-scorecard.service';
 import { Controller, HttpStatus } from '@nestjs/common';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
@@ -16,6 +17,7 @@ export class ProjectsController {
   constructor(
     private readonly projectsService: ProjectsService,
     private readonly countryService: CountriesService,
+    private readonly projectsScorecardService: ProjectsScorecardService,
     private readonly projectMapRepository: ProjectsMapRepository,
   ) {}
 
@@ -32,18 +34,9 @@ export class ProjectsController {
     return tsRestHandler(
       projectsContract.getProjectsScorecard,
       async ({ query }) => {
-        const { filter } = query;
-        const otherFilters: OtherProjectFilters = {
-          costRange: query.costRange,
-          abatementPotentialRange: query.abatementPotentialRange,
-          costRangeSelector: query.costRangeSelector,
-        };
-
-        const data = await this.projectsService.getProjectsScorecard(
-          filter as unknown as ProjectFilters,
-          otherFilters,
-        );
-        return { body: data, status: HttpStatus.OK } as any;
+        const data =
+          await this.projectsScorecardService.findAllPaginated(query);
+        return { body: data, status: HttpStatus.OK };
       },
     );
   }

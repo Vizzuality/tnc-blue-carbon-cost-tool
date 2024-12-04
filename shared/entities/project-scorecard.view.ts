@@ -36,61 +36,46 @@ ON
 	ps."ecosystem"::VARCHAR = p."ecosystem"::VARCHAR`,
 })
 export class ProjectScorecardView {
-  @ViewColumn({ name: "country_code", transformer: decimalTransformer })
+  @ViewColumn({ name: "country_code" })
   countryCode: string;
 
-  @ViewColumn({ name: "ecosystem", transformer: decimalTransformer })
+  @ViewColumn({ name: "ecosystem" })
   ecosystem: string;
 
-  @ViewColumn({ name: "activity", transformer: decimalTransformer })
+  @ViewColumn({ name: "activity" })
   activity: string;
 
-  @ViewColumn({ name: "activity_subtype", transformer: decimalTransformer })
+  @ViewColumn({ name: "activity_subtype" })
   activitySubtype: string;
 
-  @ViewColumn({ name: "project_name", transformer: decimalTransformer })
+  @ViewColumn({ name: "project_name" })
   projectName: string;
 
-  @ViewColumn({
-    name: "financial_feasibility",
-    transformer: decimalTransformer,
-  })
+  @ViewColumn({ name: "financial_feasibility" })
   financialFeasibility: string;
 
-  @ViewColumn({ name: "legal_feasibility", transformer: decimalTransformer })
+  @ViewColumn({ name: "legal_feasibility" })
   legalFeasibility: string;
 
-  @ViewColumn({
-    name: "implementation_feasibility",
-    transformer: decimalTransformer,
-  })
+  @ViewColumn({ name: "implementation_feasibility" })
   implementationFeasibility: string;
 
-  @ViewColumn({ name: "social_feasibility", transformer: decimalTransformer })
+  @ViewColumn({ name: "social_feasibility" })
   socialFeasibility: string;
 
-  @ViewColumn({ name: "security_rating", transformer: decimalTransformer })
+  @ViewColumn({ name: "security_rating" })
   securityRating: string;
 
-  @ViewColumn({
-    name: "availability_of_experienced_labor",
-    transformer: decimalTransformer,
-  })
+  @ViewColumn({ name: "availability_of_experienced_labor" })
   availabilityOfExperiencedLabor: string;
 
-  @ViewColumn({
-    name: "availability_of_alternating_funding",
-    transformer: decimalTransformer,
-  })
+  @ViewColumn({ name: "availability_of_alternating_funding" })
   availabilityOfAlternatingFunding: string;
 
-  @ViewColumn({
-    name: "coastal_protection_benefits",
-    transformer: decimalTransformer,
-  })
+  @ViewColumn({ name: "coastal_protection_benefits" })
   coastalProtectionBenefits: string;
 
-  @ViewColumn({ name: "biodiversity_benefit", transformer: decimalTransformer })
+  @ViewColumn({ name: "biodiversity_benefit" })
   biodiversityBenefit: string;
 
   @ViewColumn({ name: "abatement_potential", transformer: decimalTransformer })
