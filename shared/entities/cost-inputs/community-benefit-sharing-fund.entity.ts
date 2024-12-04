@@ -19,6 +19,9 @@ export class CommunityBenefitSharingFund extends BaseEntity {
   @JoinColumn({ name: "country_code" })
   country: Country;
 
+  @Column({ name: "country_code", type: "char", length: 3 })
+  countryCode: string;
+
   @Column("decimal", { name: "community_benefit_sharing_fund_pc_of_revenue" })
   communityBenefitSharingFund: number;
 }

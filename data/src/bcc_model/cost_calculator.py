@@ -34,14 +34,15 @@ class CostCalculator:
         }
 
         # Calculate Capital expenditure (NPV)
-        self.capex_cost_plan = self.calculate_capex_total()
-        self.total_capex = sum(self.capex_cost_plan.values())
-        self.total_capex_NPV = calculate_npv(self.capex_cost_plan, self.project.discount_rate)
+        self.capex_cost_plan = self.calculate_capex_total() # done
+        self.opex_cost_plan = self.calculate_opex_total()  # done
+        self.total_capex = sum(self.capex_cost_plan.values()) # done
+        self.total_capex_NPV = calculate_npv(self.capex_cost_plan, self.project.discount_rate) # done
         # Operating expenditure (NPV)
-        self.opex_cost_plan = self.calculate_opex_total()
-        self.total_opex = sum(self.opex_cost_plan.values())
-        self.total_opex_NPV = calculate_npv(self.opex_cost_plan, self.project.discount_rate)
-        self.total_NPV = self.total_capex_NPV + self.total_opex_NPV
+
+        self.total_opex = sum(self.opex_cost_plan.values()) # done
+        self.total_opex_NPV = calculate_npv(self.opex_cost_plan, self.project.discount_rate) # done
+        self.total_NPV = self.total_capex_NPV + self.total_opex_NPV # done
         # Calculate estimated revenue (NPV)
         self.estimated_revenue_plan = self.revenue_profit_calculator.calculate_est_revenue()
         # Total revenue (non-discounted)

@@ -4,7 +4,7 @@ packages:
   - 'shared/**'
   - 'e2e/**'
   - 'data/**'
-  - 'admin/**'
+  - 'backoffice/**'
 
 
 catalog:

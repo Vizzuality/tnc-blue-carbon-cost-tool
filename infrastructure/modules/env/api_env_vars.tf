@@ -14,6 +14,11 @@ resource "random_password" "email_confirmation_token_secret" {
   special          = true
   override_special = "!#%&*()-_=+[]{}<>:?"
 }
+resource "random_password" "backoffice_session_cookie_secret" {
+  length           = 32
+  special          = true
+  override_special = "!#%&*()-_=+[]{}<>:?"
+}
 
 resource "aws_iam_access_key" "email_user_access_key" {
   user = module.email.iam_user.name
@@ -37,8 +42,10 @@ locals {
     AWS_SES_ACCESS_KEY_ID = aws_iam_access_key.email_user_access_key.id
     AWS_SES_ACCESS_KEY_SECRET = aws_iam_access_key.email_user_access_key.secret
     AWS_SES_DOMAIN = module.email.mail_from_domain
+    BACKOFFICE_SESSION_COOKIE_SECRET = random_password.backoffice_session_cookie_secret.result
+
   }
   api_env_vars = {
-
+    BACKOFFICE_SESSION_COOKIE_NAME = "backoffice"
   }
 }

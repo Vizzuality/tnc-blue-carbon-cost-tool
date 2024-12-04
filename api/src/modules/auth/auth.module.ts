@@ -6,6 +6,7 @@ import { AuthenticationModule } from '@api/modules/auth/authentication.module';
 import { RequestPasswordRecoveryCommandHandler } from '@api/modules/auth/commands/request-password-recovery-command.handler';
 import { NewUserEventHandler } from '@api/modules/admin/events/handlers/new-user-event.handler';
 import { PasswordRecoveryRequestedEventHandler } from '@api/modules/auth/events/handlers/password-recovery-requested.handler';
+import { BackofficeService } from './backoffice.service';
 
 @Module({
   imports: [AuthenticationModule, NotificationsModule],
@@ -15,6 +16,7 @@ import { PasswordRecoveryRequestedEventHandler } from '@api/modules/auth/events/
     RequestPasswordRecoveryCommandHandler,
     NewUserEventHandler,
     PasswordRecoveryRequestedEventHandler,
+    BackofficeService,
   ],
   exports: [AuthenticationModule, AuthMailer],
 })

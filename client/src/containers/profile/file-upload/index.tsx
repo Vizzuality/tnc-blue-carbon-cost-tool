@@ -2,7 +2,7 @@ import React, { FC, useCallback, useState } from "react";
 
 import { useDropzone } from "react-dropzone";
 
-import { FilePlusIcon, XIcon } from "lucide-react";
+import { FileUpIcon, XIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { client } from "@/lib/query-client";
@@ -13,10 +13,18 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/toast/use-toast";
 
 // Array should be in this order
-const REQUIRED_FILES = [
-  "carbon-input-template.xlsx",
-  "cost-input-template.xlsx",
+export const TEMPLATE_FILES = [
+  {
+    name: "carbon-input-template.xlsx",
+    path: "/templates/carbon-input-template.xlsx",
+  },
+  {
+    name: "cost-input-template.xlsx",
+    path: "/templates/cost-input-template.xlsx",
+  },
 ];
+
+const REQUIRED_FILE_NAMES = TEMPLATE_FILES.map((f) => f.name);
 const EXCEL_EXTENSIONS = [".xlsx", ".xls"];
 const MAX_FILES = 2;
 
@@ -27,7 +35,7 @@ const FileUpload: FC = () => {
   const onDropAccepted = useCallback(
     (acceptedFiles: File[]) => {
       const validFiles = acceptedFiles.filter((file) =>
-        REQUIRED_FILES.includes(file.name),
+        REQUIRED_FILE_NAMES.includes(file.name),
       );
 
       if (validFiles.length !== acceptedFiles.length) {
@@ -64,7 +72,7 @@ const FileUpload: FC = () => {
   };
   const handleUploadClick = async () => {
     const fileNames = files.map((file) => file.name);
-    const missingFiles = REQUIRED_FILES.filter(
+    const missingFiles = REQUIRED_FILE_NAMES.filter(
       (name) => !fileNames.includes(name),
     );
 
@@ -76,7 +84,7 @@ const FileUpload: FC = () => {
     }
 
     const formData = new FormData();
-    const sortedFiles = REQUIRED_FILES.map(
+    const sortedFiles = REQUIRED_FILE_NAMES.map(
       (name) => files.find((file) => file.name === name)!,
     );
 
@@ -117,19 +125,24 @@ const FileUpload: FC = () => {
         {...getRootProps()}
         variant="secondary"
         className={cn({
-          "select-none border-dashed p-10 transition-colors": true,
+          "select-none border bg-big-stone-950 p-10 transition-colors": true,
           "bg-card": isDragActive,
           "cursor-pointer hover:bg-card": files.length < MAX_FILES,
           "cursor-not-allowed opacity-50": files.length >= MAX_FILES,
         })}
       >
-        <input {...getInputProps()} />
+        <input id="share-information-input" {...getInputProps()} />
         <div className="flex flex-col items-center gap-2">
-          <FilePlusIcon className="h-5 w-5" />
+          <FileUpIcon className="h-5 w-5" strokeWidth={1} />
           <p className="text-sm">
-            {files.length < MAX_FILES
-              ? "Drop files, or click to upload"
-              : "You've attached the maximum of 2 files"}
+            {files.length < MAX_FILES ? (
+              <>
+                Drag and drop the files or&nbsp;
+                <span className="text-primary">click</span> to upload
+              </>
+            ) : (
+              "You've attached the maximum of 2 files"
+            )}
           </p>
         </div>
       </Card>

@@ -44,6 +44,25 @@ export class ImportController {
     });
   }
 
+  @TsRestHandler(adminContract.uploadProjectScorecard)
+  @UseInterceptors(FileInterceptor('file'))
+  @RequiredRoles(ROLES.ADMIN)
+  async uploadProjectScorecard(
+    @UploadXlsm() file: Express.Multer.File,
+    @GetUser() user: User,
+  ): Promise<ControllerResponse> {
+    return tsRestHandler(adminContract.uploadProjectScorecard, async () => {
+      const importedData = await this.service.importProjectScorecard(
+        file.buffer,
+        user.id,
+      );
+      return {
+        status: 201,
+        body: importedData,
+      };
+    });
+  }
+
   @UseInterceptors(FilesInterceptor('files', 2))
   @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
   @TsRestHandler(usersContract.uploadData)

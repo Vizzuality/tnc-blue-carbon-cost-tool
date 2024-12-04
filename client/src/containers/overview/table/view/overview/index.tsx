@@ -30,9 +30,6 @@ import {
 } from "@/containers/overview/table/utils";
 import { columns } from "@/containers/overview/table/view/overview/columns";
 
-type filterFields = z.infer<typeof projectsQuerySchema.shape.fields>;
-type sortFields = z.infer<typeof projectsQuerySchema.shape.sort>;
-
 import {
   Table,
   TableBody,
@@ -44,6 +41,9 @@ import {
 import TablePagination, {
   PAGINATION_SIZE_OPTIONS,
 } from "@/components/ui/table-pagination";
+
+type filterFields = z.infer<typeof projectsQuerySchema.shape.fields>;
+type sortFields = z.infer<typeof projectsQuerySchema.shape.sort>;
 
 export function OverviewTable() {
   const [tableView] = useTableView();

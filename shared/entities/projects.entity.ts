@@ -52,8 +52,8 @@ export class Project extends BaseEntity {
   // TODO: We need to make this a somehow enum, as a subactivity of restoration, that can be null for conservation, and can represent all restoration activities
   @Column({
     name: "restoration_activity",
-    type: "varchar",
-    length: 255,
+    type: "enum",
+    enum: RESTORATION_ACTIVITY_SUBTYPE,
     nullable: true,
   })
   restorationActivity: RESTORATION_ACTIVITY_SUBTYPE;
@@ -61,7 +61,6 @@ export class Project extends BaseEntity {
   @Column({ name: "project_size", type: "decimal" })
   projectSize: number;
 
-  // TODO: We could potentially remove this column from the database and excel, and have a threshold to filter by
   @Column({
     name: "project_size_filter",
     type: "enum",

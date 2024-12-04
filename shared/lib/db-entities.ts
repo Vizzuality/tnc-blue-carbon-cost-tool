@@ -35,6 +35,7 @@ import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-
 import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity";
 import { ProjectScorecard } from "@shared/entities/project-scorecard.entity";
 import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
+import { BackOfficeSession } from "@shared/entities/users/backoffice-session";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -74,4 +75,5 @@ export const COMMON_DATABASE_ENTITIES = [
   UserUploadConservationInputs,
   ProjectScorecard,
   ProjectScorecardView,
+  BackOfficeSession,
 ];

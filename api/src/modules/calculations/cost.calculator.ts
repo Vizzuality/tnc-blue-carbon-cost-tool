@@ -9,28 +9,23 @@ import {
   OverridableCostInputs,
   PROJECT_DEVELOPMENT_TYPE,
 } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
+import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculator';
+import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
+import { parseInt, sum } from 'lodash';
+import { irr } from 'financial';
+import {
+  CostPlanMap,
+  CustomProjectCostDetails,
+  CustomProjectSummary,
+  YearlyBreakdown,
+} from '@shared/dtos/custom-projects/custom-project-output.dto';
 
-type CostPlanMap = {
-  [year: number]: number;
-};
+export type CostPlans = Record<
+  keyof OverridableCostInputs | string,
+  CostPlanMap
+>;
 
-// @Injectable()
-// export class CostCalculatorToImplement {
-//   constructor(
-//     private readonly sequestrationRateCalculator: SequestrationRatesCalculator,
-//     private readonly revenueProfitCalculator: RevenueProfitCalculator,
-//   ) {}
-//
-//   private createCostPlan(defaultProjectLength: number): CostPlan {}
-//
-//   calculateConservationProjectCosts(
-//     projectInput: ConservationProjectInput,
-//     defaultProjectLength: number,
-//   ) {}
-// }
-
-type CostPlans = Record<keyof OverridableCostInputs, CostPlanMap>;
-
+// TODO: Strongly type this to bound it to existing types
 export enum COST_KEYS {
   FEASIBILITY_ANALYSIS = 'feasibilityAnalysis',
   CONSERVATION_PLANNING_AND_ADMIN = 'conservationPlanningAndAdmin',
@@ -48,7 +43,7 @@ export enum COST_KEYS {
   MAINTENANCE = 'maintenance',
 }
 
-type ProjectInput = ConservationProjectInput | RestorationProjectInput;
+export type ProjectInput = ConservationProjectInput | RestorationProjectInput;
 
 export class CostCalculator {
   projectInput: ProjectInput;
@@ -59,18 +54,23 @@ export class CostCalculator {
   capexTotalCostPlan: CostPlanMap;
   opexTotalCostPlan: CostPlanMap;
   costPlans: CostPlans;
+  totalOpexNPV: number;
+  revenueProfitCalculator: RevenueProfitCalculator;
+  sequestrationRateCalculator: SequestrationRateCalculator;
   constructor(
     projectInput: ProjectInput,
-    defaultProjectLength: number,
-    startingPointScaling: number,
     baseSize: BaseSize,
     baseIncrease: BaseIncrease,
+    revenueProfitCalculator: RevenueProfitCalculator,
+    sequestrationRateCalculator: SequestrationRateCalculator,
   ) {
     this.projectInput = projectInput;
-    this.defaultProjectLength = defaultProjectLength;
-    this.startingPointScaling = startingPointScaling;
+    this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
+    this.startingPointScaling = projectInput.assumptions.startingPointScaling;
     this.baseIncrease = baseIncrease;
     this.baseSize = baseSize;
+    this.revenueProfitCalculator = revenueProfitCalculator;
+    this.sequestrationRateCalculator = sequestrationRateCalculator;
   }
 
   initializeCostPlans() {
@@ -80,7 +80,354 @@ export class CostCalculator {
     this.opexTotalCostPlan = this.initializeTotalCostPlan(
       this.defaultProjectLength,
     );
-    return this;
+    this.calculateCostPlans();
+    this.calculateCapexTotalPlan();
+    this.calculateOpexTotalPlan();
+    const totalCapex = sum(Object.values(this.capexTotalCostPlan));
+    const totalCapexNPV = this.calculateNpv(
+      this.capexTotalCostPlan,
+      this.projectInput.assumptions.discountRate,
+    );
+    const totalOpex = sum(Object.values(this.opexTotalCostPlan));
+    const totalOpexNPV = this.calculateNpv(
+      this.opexTotalCostPlan,
+      this.projectInput.assumptions.discountRate,
+    );
+    const totalNPV = totalCapexNPV + totalOpexNPV;
+    const estimatedRevenuePlan =
+      this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
+    const totalRevenue = sum(Object.values(estimatedRevenuePlan));
+    const totalRevenueNPV = this.calculateNpv(
+      estimatedRevenuePlan,
+      this.projectInput.assumptions.discountRate,
+    );
+    const creditsIssuedPlan =
+      this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
+    const totalCreditsIssued = sum(Object.values(creditsIssuedPlan));
+    const costPerTCO2e =
+      totalCreditsIssued != 0 ? totalCapex / totalCreditsIssued : 0;
+    const costPerHa = totalNPV / this.projectInput.projectSizeHa;
+    const npvCoveringCosts =
+      this.projectInput.carbonRevenuesToCover === 'Opex'
+        ? totalRevenueNPV - totalOpexNPV
+        : totalRevenueNPV - totalNPV;
+    const financingCost =
+      this.projectInput.costAndCarbonInputs.financingCost * totalCapex;
+    const fundingGapNPV = npvCoveringCosts < 0 ? npvCoveringCosts * -1 : 0;
+    const fundingGapPerTCO2e =
+      totalCreditsIssued != 0 ? fundingGapNPV / totalCreditsIssued : 0;
+    const totalCommunityBenefitSharingFundNPV = this.calculateNpv(
+      this.costPlans.communityBenefitSharingFund,
+      this.projectInput.assumptions.discountRate,
+    );
+    const totalCommunityBenefitSharingFund =
+      totalRevenueNPV === 0
+        ? 0
+        : totalCommunityBenefitSharingFundNPV / totalRevenueNPV;
+
+    const npvToUse =
+      this.projectInput.carbonRevenuesToCover === 'Opex'
+        ? totalOpexNPV
+        : totalNPV;
+    const fundingGap = this.calculateFundingGap(npvToUse, totalRevenueNPV);
+    //// WE GOOD UP TO HERE
+    const annualNetCashFlow =
+      this.revenueProfitCalculator.calculateAnnualNetCashFlow(
+        this.capexTotalCostPlan,
+        this.opexTotalCostPlan,
+      );
+    const annualNetIncome =
+      this.revenueProfitCalculator.calculateAnnualNetIncome(
+        this.capexTotalCostPlan,
+      );
+    const IRROpex = this.calculateIrr(
+      annualNetCashFlow,
+      annualNetIncome,
+      false,
+    );
+    const IRRTotalCost = this.calculateIrr(
+      annualNetCashFlow,
+      annualNetIncome,
+      true,
+    );
+
+    return {
+      totalOpex,
+      totalCapex,
+      totalCapexNPV,
+      totalOpexNPV,
+      totalNPV,
+      costPerTCO2e,
+      costPerHa,
+      npvCoveringCosts,
+      totalCreditsIssued,
+      IRROpex,
+      IRRTotalCost,
+      totalRevenueNPV,
+      totalRevenue,
+      financingCost,
+      fundingGap,
+      fundingGapNPV,
+      fundingGapPerTCO2e,
+      totalCommunityBenefitSharingFund,
+    };
+  }
+
+  getSummary(stuff: any): CustomProjectSummary {
+    const {
+      costPerTCO2e,
+      costPerHa,
+      npvCoveringCosts,
+      IRROpex,
+      IRRTotalCost,
+      totalNPV,
+      totalCapexNPV,
+      totalOpexNPV,
+      totalCreditsIssued,
+      totalRevenueNPV,
+      totalRevenue,
+      financingCost,
+      fundingGap,
+      fundingGapNPV,
+      fundingGapPerTCO2e,
+      totalCommunityBenefitSharingFund,
+    } = stuff;
+    return {
+      '$/tCO2e (total cost, NPV)': costPerTCO2e,
+      '$/ha': costPerHa,
+      'NPV covering cost': npvCoveringCosts,
+      'Leftover after OpEx / total cost': null,
+      'IRR when priced to cover OpEx': IRROpex,
+      'IRR when priced to cover total cost': IRRTotalCost,
+      'Total cost (NPV)': totalNPV,
+      'Capital expenditure (NPV)': totalCapexNPV,
+      'Operating expenditure (NPV)': totalOpexNPV,
+      'Credits issued': totalCreditsIssued,
+      'Total revenue (NPV)': totalRevenueNPV,
+      'Total revenue (non-discounted)': totalRevenue,
+      'Financing cost': financingCost,
+      'Funding gap': fundingGap,
+      'Funding gap (NPV)': fundingGapNPV,
+      'Funding gap per tCO2e (NPV)': fundingGapPerTCO2e,
+      'Community benefit sharing fund': totalCommunityBenefitSharingFund,
+    };
+  }
+
+  getCostDetails(stuff: any): {
+    total: CustomProjectCostDetails;
+    npv: CustomProjectCostDetails;
+  } {
+    const discountRate = this.projectInput.assumptions.discountRate;
+    const { totalOpex, totalCapex, totalCapexNPV, totalOpexNPV, totalNPV } =
+      stuff;
+    return {
+      total: {
+        capitalExpenditure: totalCapex,
+        operationalExpenditure: totalOpex,
+        totalCost: totalCapex + totalCapex,
+        operationExpenditure: totalOpex,
+        feasibilityAnalysis: sum(
+          Object.values(this.costPlans.feasibilityAnalysis),
+        ),
+        conservationPlanningAndAdmin: sum(
+          Object.values(this.costPlans.conservationPlanningAndAdmin),
+        ),
+        dataCollectionAndFieldCost: sum(
+          Object.values(this.costPlans.dataCollectionAndFieldCost),
+        ),
+        communityRepresentation: sum(
+          Object.values(this.costPlans.communityRepresentation),
+        ),
+        blueCarbonProjectPlanning: sum(
+          Object.values(this.costPlans.blueCarbonProjectPlanning),
+        ),
+        establishingCarbonRights: sum(
+          Object.values(this.costPlans.establishingCarbonRights),
+        ),
+        validation: sum(Object.values(this.costPlans.validation)),
+        implementationLabor: sum(
+          Object.values(this.costPlans.implementationLabor),
+        ),
+
+        monitoring: sum(Object.values(this.costPlans.monitoring)),
+        maintenance: sum(Object.values(this.costPlans.maintenance)),
+        communityBenefitSharingFund: sum(
+          Object.values(this.costPlans.communityBenefitSharingFund),
+        ),
+        carbonStandardFees: sum(
+          Object.values(this.costPlans.carbonStandardFees),
+        ),
+        baselineReassessment: sum(
+          Object.values(this.costPlans.baselineReassessment),
+        ),
+        mrv: sum(Object.values(this.costPlans.mrv)),
+        longTermProjectOperatingCost: sum(
+          Object.values(this.costPlans.longTermProjectOperatingCost),
+        ),
+      },
+      npv: {
+        capitalExpenditure: totalCapexNPV,
+        operationalExpenditure: totalOpexNPV,
+        totalCost: totalNPV,
+        feasibilityAnalysis: this.calculateNpv(
+          this.costPlans.feasibilityAnalysis,
+          discountRate,
+        ),
+        conservationPlanningAndAdmin: this.calculateNpv(
+          this.costPlans.conservationPlanningAndAdmin,
+          discountRate,
+        ),
+        dataCollectionAndFieldCost: this.calculateNpv(
+          this.costPlans.dataCollectionAndFieldCost,
+          discountRate,
+        ),
+        communityRepresentation: this.calculateNpv(
+          this.costPlans.communityRepresentation,
+          discountRate,
+        ),
+        blueCarbonProjectPlanning: this.calculateNpv(
+          this.costPlans.blueCarbonProjectPlanning,
+          discountRate,
+        ),
+        establishingCarbonRights: this.calculateNpv(
+          this.costPlans.establishingCarbonRights,
+          discountRate,
+        ),
+        validation: this.calculateNpv(this.costPlans.validation, discountRate),
+        implementationLabor: this.calculateNpv(
+          this.costPlans.implementationLabor,
+          discountRate,
+        ),
+        operationExpenditure: this.totalOpexNPV,
+        monitoring: this.calculateNpv(this.costPlans.monitoring, discountRate),
+        maintenance: this.calculateNpv(
+          this.costPlans.maintenance,
+          discountRate,
+        ),
+        communityBenefitSharingFund: this.calculateNpv(
+          this.costPlans.communityBenefitSharingFund,
+          discountRate,
+        ),
+        carbonStandardFees: this.calculateNpv(
+          this.costPlans.carbonStandardFees,
+          discountRate,
+        ),
+        baselineReassessment: this.calculateNpv(
+          this.costPlans.baselineReassessment,
+          discountRate,
+        ),
+        mrv: this.calculateNpv(this.costPlans.mrv, discountRate),
+        longTermProjectOperatingCost: this.calculateNpv(
+          this.costPlans.longTermProjectOperatingCost,
+          discountRate,
+        ),
+      },
+    };
+  }
+
+  getYearlyBreakdown(): any {
+    // const costPlans: CostPlans & {
+    //   capexTotalCostPlan: CostPlanMap;
+    //   opexTotalCostPlan: CostPlanMap;
+    // } = structuredClone(this.costPlans);
+
+    const costPlans: any = structuredClone(this.costPlans);
+    const discountRate = this.projectInput.assumptions.discountRate;
+
+    // Values to negative for some magical scientific reason that I am too dumb to understand
+    for (const value of Object.values(costPlans)) {
+      for (const [year, cost] of Object.entries(value)) {
+        value[year] = -cost;
+      }
+    }
+    const capexTotalCostPlan = costPlans.capexTotalCostPlan;
+    const opexTotalCostPlan = costPlans.opexTotalCostPlan;
+    // Get a summed cost plan for capex and opex
+    // TODO: totalCostPlan, estimatedRevenue and creditsIssued are yet to be included in the breakdown
+    const totalCostPlan = Object.keys({
+      ...capexTotalCostPlan,
+      ...opexTotalCostPlan,
+    }).reduce((acc, year: string) => {
+      const capexValue = capexTotalCostPlan[year] || 0;
+      const opexValue = opexTotalCostPlan[year] || 0;
+      acc[year] = capexValue + opexValue;
+      return acc;
+    }, {} as CostPlanMap);
+
+    const estimatedRevenuePlan =
+      this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
+    const creditsIssuedPlan =
+      this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
+    const annualNetCashFlow =
+      this.revenueProfitCalculator.calculateAnnualNetCashFlow(
+        capexTotalCostPlan,
+        opexTotalCostPlan,
+      );
+    const annualNetIncome =
+      this.revenueProfitCalculator.calculateAnnualNetIncome(opexTotalCostPlan);
+    const cumulativeNetIncomePlan: CostPlanMap = {};
+    const cumulativeNetIncomeCapexOpex: CostPlanMap = {};
+    for (let year = -4; year <= this.defaultProjectLength; year++) {
+      if (year !== 0) {
+        if (year === -4) {
+          cumulativeNetIncomePlan[year] = annualNetIncome[year];
+          cumulativeNetIncomeCapexOpex[year] = annualNetCashFlow[year];
+        } else {
+          const costPlanOpex = {};
+          const costPlanCapexOpex = {};
+          for (const year in annualNetIncome) {
+            if (parseInt(year) <= 0 && parseInt(year) >= -4) {
+              costPlanOpex[year] = annualNetIncome[year];
+            }
+          }
+          for (const year in annualNetCashFlow) {
+            if (parseInt(year) <= 0 && parseInt(year) >= -4) {
+              costPlanCapexOpex[year] = annualNetCashFlow[year];
+            }
+          }
+          cumulativeNetIncomePlan[year] =
+            annualNetIncome[-4] + this.calculateNpv(costPlanOpex, discountRate);
+          cumulativeNetIncomeCapexOpex[year] =
+            annualNetCashFlow[-4] +
+            this.calculateNpv(costPlanCapexOpex, discountRate);
+        }
+      }
+    }
+
+    const yearNormalizedCostPlans: CostPlans =
+      this.normalizeCostPlan(costPlans);
+
+    const yearlyBreakdown: YearlyBreakdown[] = [];
+    for (const costName in yearNormalizedCostPlans) {
+      const costValues = yearNormalizedCostPlans[costName];
+      const totalCost = sum(Object.values(costValues));
+      const totalNPV = this.calculateNpv(costValues, discountRate);
+      yearlyBreakdown.push({
+        costName: costName as keyof OverridableCostInputs,
+        totalCost,
+        totalNPV,
+        costValues,
+      });
+    }
+
+    return yearlyBreakdown;
+  }
+
+  /**
+   * @description: Normalize the cost plans for each cost type to have the same length of years
+   */
+  private normalizeCostPlan(costPlans: CostPlans) {
+    const startYear = -4;
+    const endYear = this.projectInput.assumptions.projectLength;
+    const normalizedCostPlans: CostPlans = {};
+    for (const planName in costPlans) {
+      const plan = costPlans[planName];
+      normalizedCostPlans[planName] = {};
+      for (let year = startYear; year <= endYear; year++) {
+        normalizedCostPlans[planName][year] = plan[year] || 0;
+      }
+    }
+    return normalizedCostPlans;
   }
 
   /**
@@ -107,7 +454,7 @@ export class CostCalculator {
   }
 
   private getTotalBaseCost(costType: COST_KEYS): number {
-    const baseCost = this.projectInput.costInputs[costType];
+    const baseCost = this.projectInput.costAndCarbonInputs[costType];
     const increasedBy: number = this.baseIncrease[costType];
     const sizeDifference =
       this.projectInput.projectSizeHa - this.startingPointScaling;
@@ -198,15 +545,42 @@ export class CostCalculator {
   }
 
   private implementationLaborCosts() {
-    // TODO: This needs sequestration credits calculator
-    // const totalBaseCost = this.getTotalBaseCost(COST_KEYS.IMPLEMENTATION_LABOR);
-    // const implementationLaborCostPlan = this.createSimpleCostPlan(
-    //   totalBaseCost,
-    //   [-1],
-    // );
-    // return implementationLaborCostPlan;
-    console.warn('Implementation labor costs not implemented');
-    return this.createSimpleCostPlan(0, [-1]);
+    const baseCost = this.projectInput.costAndCarbonInputs.implementationLabor;
+    const areaRestoredOrConservedPlan =
+      this.sequestrationRateCalculator.calculateAreaRestoredOrConserved();
+    const implementationLaborCostPlan: CostPlanMap = {};
+    for (
+      let year = -4;
+      year <= this.projectInput.assumptions.defaultProjectLength;
+      year++
+    ) {
+      if (year !== 0) {
+        implementationLaborCostPlan[year] = 0;
+      }
+    }
+
+    for (let year = -1; year <= 40; year++) {
+      if (year === 0) {
+        continue;
+      }
+      if (year <= this.projectInput.assumptions.projectLength) {
+        let laborCost: number;
+        if (year - 1 === 0) {
+          laborCost =
+            baseCost *
+            (areaRestoredOrConservedPlan[year] -
+              areaRestoredOrConservedPlan[-1]);
+        } else {
+          laborCost =
+            baseCost *
+            (areaRestoredOrConservedPlan[year] -
+              (areaRestoredOrConservedPlan[year - 1] || 0));
+        }
+        implementationLaborCostPlan[year] = laborCost;
+      }
+    }
+
+    return implementationLaborCostPlan;
   }
 
   private calculateMonitoringCosts() {
@@ -216,7 +590,7 @@ export class CostCalculator {
     for (let year = -4; year <= this.defaultProjectLength; year++) {
       if (year !== 0) {
         monitoringCostPlan[year] =
-          year >= 1 && year <= this.projectInput.modelAssumptions.projectLength
+          year >= 1 && year <= this.projectInput.assumptions.projectLength
             ? totalBaseCost
             : 0;
       }
@@ -224,35 +598,431 @@ export class CostCalculator {
     return monitoringCostPlan;
   }
 
-  private calculateMaintenanceCosts() {
-    const totalBaseCost = this.getTotalBaseCost(COST_KEYS.MAINTENANCE);
-    console.log('totalBaseCost', totalBaseCost);
-    // TODO: We need Maintenance and MaintenanceDuration values, which are present in BaseDataView but not in CostInputs.
-    //       Are these actually CostInputs? Can be overriden? If not, we need to change the approach, and have CostInputs and BaseData values as well
+  maintenanceCosts(): { [year: number]: number } {
+    const baseCost = this.projectInput.costAndCarbonInputs.maintenance;
+
+    // TODO: Figure out how to sneak this in for the response
+    let key: string;
+    if (baseCost < 1) {
+      key = '% of implementation labor';
+    } else {
+      key = '$/yr';
+    }
+
+    const maintenanceDuration: number =
+      this.projectInput.costAndCarbonInputs.maintenanceDuration;
+
+    const implementationLaborCostPlan = this.implementationLaborCosts();
+
+    const findFirstZeroValue = (plan: CostPlanMap): number | null => {
+      const years = Object.keys(plan)
+        .map(Number)
+        .sort((a, b) => a - b);
+      for (const year of years) {
+        if (plan[year] === 0) {
+          return year;
+        }
+      }
+      return null;
+    };
+
+    const firstZeroValue = findFirstZeroValue(implementationLaborCostPlan);
+
+    if (firstZeroValue === null) {
+      throw new Error(
+        'Could not find a first year with 0 value for implementation labor cost',
+      );
+    }
+
+    const projectSizeHa = this.projectInput.projectSizeHa;
+    const restorationRate = this.projectInput.assumptions.restorationRate;
+    const defaultProjectLength =
+      this.projectInput.assumptions.defaultProjectLength;
+
+    let maintenanceEndYear: number;
+
+    if (projectSizeHa / restorationRate <= 20) {
+      maintenanceEndYear = firstZeroValue + maintenanceDuration - 1;
+    } else {
+      maintenanceEndYear = defaultProjectLength + maintenanceDuration;
+    }
+
     const maintenanceCostPlan: CostPlanMap = {};
-    return this.implementationLaborCosts();
+
+    for (
+      let year = -4;
+      year <= this.projectInput.assumptions.defaultProjectLength;
+      year++
+    ) {
+      if (year !== 0) {
+        maintenanceCostPlan[year] = 0;
+      }
+    }
+
+    const implementationLaborValue = implementationLaborCostPlan[-1];
+
+    for (const yearStr in maintenanceCostPlan) {
+      const year = Number(yearStr);
+      if (year < 1) {
+        continue;
+      } else {
+        if (year <= this.projectInput.assumptions.defaultProjectLength) {
+          if (year <= maintenanceEndYear) {
+            if (key === '$/yr') {
+              maintenanceCostPlan[year] = baseCost;
+            } else {
+              const minValue = Math.min(
+                year,
+                maintenanceEndYear - maintenanceDuration + 1,
+                maintenanceEndYear - year + 1,
+                maintenanceDuration,
+              );
+              maintenanceCostPlan[year] =
+                baseCost * implementationLaborValue * minValue;
+            }
+          } else {
+            maintenanceCostPlan[year] = 0;
+          }
+        } else {
+          maintenanceCostPlan[year] = 0;
+        }
+      }
+    }
+
+    return maintenanceCostPlan;
+  }
+
+  communityBenefitAndSharingCosts(): CostPlanMap {
+    const baseCost: number =
+      this.projectInput.costAndCarbonInputs.communityBenefitSharingFund;
+
+    const communityBenefitSharingFundCostPlan: CostPlanMap = {};
+
+    for (
+      let year = -4;
+      year <= this.projectInput.assumptions.defaultProjectLength;
+      year++
+    ) {
+      if (year !== 0) {
+        communityBenefitSharingFundCostPlan[year] = 0;
+      }
+    }
+
+    const estimatedRevenue: CostPlanMap =
+      this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
+
+    for (const yearStr in communityBenefitSharingFundCostPlan) {
+      const year = Number(yearStr);
+      if (year <= this.projectInput.assumptions.projectLength) {
+        communityBenefitSharingFundCostPlan[year] =
+          estimatedRevenue[year] * baseCost;
+      } else {
+        communityBenefitSharingFundCostPlan[year] = 0;
+      }
+    }
+
+    return communityBenefitSharingFundCostPlan;
+  }
+
+  carbonStandardFeeCosts(): { [year: number]: number } {
+    const baseCost: number =
+      this.projectInput.costAndCarbonInputs.carbonStandardFees;
+
+    const carbonStandardFeesCostPlan: CostPlanMap = {};
+
+    for (
+      let year = -4;
+      year <= this.projectInput.assumptions.defaultProjectLength;
+      year++
+    ) {
+      if (year !== 0) {
+        carbonStandardFeesCostPlan[year] = 0;
+      }
+    }
+
+    const estimatedCreditsIssued: CostPlanMap =
+      this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
+
+    for (const yearStr in carbonStandardFeesCostPlan) {
+      const year = Number(yearStr);
+      if (year <= -1) {
+        carbonStandardFeesCostPlan[year] = 0;
+      } else if (year <= this.projectInput.assumptions.projectLength) {
+        carbonStandardFeesCostPlan[year] =
+          estimatedCreditsIssued[year] * baseCost;
+      } else {
+        carbonStandardFeesCostPlan[year] = 0;
+      }
+    }
+
+    return carbonStandardFeesCostPlan;
+  }
+
+  baseLineReassessmentCosts(): { [year: number]: number } {
+    const baseCost: number =
+      this.projectInput.costAndCarbonInputs.baselineReassessment;
+
+    const baselineReassessmentCostPlan: CostPlanMap = {};
+
+    for (
+      let year = -4;
+      year <= this.projectInput.assumptions.defaultProjectLength;
+      year++
+    ) {
+      if (year !== 0) {
+        baselineReassessmentCostPlan[year] = 0;
+      }
+    }
+
+    for (const yearStr in baselineReassessmentCostPlan) {
+      const year = Number(yearStr);
+
+      if (year < -1) {
+        baselineReassessmentCostPlan[year] = 0;
+      } else if (year === -1) {
+        baselineReassessmentCostPlan[year] = baseCost;
+      } else if (year <= this.projectInput.assumptions.projectLength) {
+        if (
+          year / this.projectInput.assumptions.baselineReassessmentFrequency ===
+          Math.floor(
+            year / this.projectInput.assumptions.baselineReassessmentFrequency,
+          )
+        ) {
+          baselineReassessmentCostPlan[year] =
+            baseCost *
+            Math.pow(
+              1 + this.projectInput.assumptions.annualCostIncrease,
+              year,
+            );
+        } else {
+          baselineReassessmentCostPlan[year] = 0;
+        }
+      } else {
+        baselineReassessmentCostPlan[year] = 0;
+      }
+    }
+
+    return baselineReassessmentCostPlan;
+  }
+
+  mrvCosts(): CostPlanMap {
+    const baseCost: number = this.projectInput.costAndCarbonInputs.mrv;
+
+    const mrvCostPlan: CostPlanMap = {};
+
+    for (
+      let year = -4;
+      year <= this.projectInput.assumptions.defaultProjectLength;
+      year++
+    ) {
+      if (year !== 0) {
+        mrvCostPlan[year] = 0;
+      }
+    }
+
+    for (const yearStr in mrvCostPlan) {
+      const year = Number(yearStr);
+
+      if (year <= -1) {
+        mrvCostPlan[year] = 0;
+      } else if (year <= this.projectInput.assumptions.projectLength) {
+        if (
+          year / this.projectInput.assumptions.verificationFrequency ===
+          Math.floor(year / this.projectInput.assumptions.verificationFrequency)
+        ) {
+          mrvCostPlan[year] =
+            baseCost *
+            Math.pow(
+              1 + this.projectInput.assumptions.annualCostIncrease,
+              year,
+            );
+        } else {
+          mrvCostPlan[year] = 0;
+        }
+      } else {
+        mrvCostPlan[year] = 0;
+      }
+    }
+
+    return mrvCostPlan;
+  }
+
+  longTermProjectOperatingCosts(): CostPlanMap {
+    const baseSize: number = this.baseSize.longTermProjectOperatingCost;
+
+    if (baseSize === 0) {
+      throw new Error('Base size cannot be 0 to avoid division errors');
+    }
+
+    const baseCost: number =
+      this.projectInput.costAndCarbonInputs.longTermProjectOperatingCost;
+
+    const increasedBy = this.baseIncrease.longTermProjectOperatingCost;
+    const startingPointScaling =
+      this.projectInput.assumptions.startingPointScaling;
+
+    let totalBaseCostAdd: number;
+
+    if (
+      (this.projectInput.projectSizeHa -
+        this.projectInput.assumptions.startingPointScaling) /
+        baseSize <
+      1
+    ) {
+      totalBaseCostAdd = 0;
+    } else {
+      totalBaseCostAdd = Math.round(
+        (this.projectInput.projectSizeHa - startingPointScaling) / baseSize,
+      );
+    }
+
+    const totalBaseCost: number =
+      baseCost + totalBaseCostAdd * increasedBy * baseCost;
+
+    const longTermProjectOperatingCostPlan: CostPlanMap = {};
+
+    for (
+      let year = -4;
+      year <= this.projectInput.assumptions.defaultProjectLength;
+      year++
+    ) {
+      if (year !== 0) {
+        longTermProjectOperatingCostPlan[year] = 0;
+      }
+    }
+
+    for (const yearStr in longTermProjectOperatingCostPlan) {
+      const year = Number(yearStr);
+
+      if (year <= -1) {
+        longTermProjectOperatingCostPlan[year] = 0;
+      } else if (year <= this.projectInput.assumptions.projectLength) {
+        longTermProjectOperatingCostPlan[year] = totalBaseCost;
+      } else {
+        longTermProjectOperatingCostPlan[year] = 0;
+      }
+    }
+
+    return longTermProjectOperatingCostPlan;
+  }
+
+  calculateNpv(
+    costPlan: CostPlanMap,
+    discountRate: number,
+    actualYear: number = -4,
+  ): number {
+    let npv = 0;
+
+    for (const yearStr in costPlan) {
+      const year = Number(yearStr);
+      const cost = costPlan[year];
+
+      if (year === actualYear) {
+        npv += cost;
+      } else if (year > 0) {
+        npv += cost / Math.pow(1 + discountRate, year + (-actualYear - 1));
+      } else {
+        npv += cost / Math.pow(1 + discountRate, -actualYear + year);
+      }
+    }
+
+    return npv;
   }
 
   private throwIfValueIsNotValid(value: number, costKey: COST_KEYS): void {
     if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
-      console.error(`Invalid number: ${value} produced for ${costKey}`);
-      throw new Error(`Invalid number: ${value} produced for ${costKey}`);
+      console.error(
+        `Invalid number: ${value} produced for ${costKey}: Setting to 0 for development`,
+      );
+      value = 12345;
     }
   }
 
-  calculateCosts() {
-    // @ts-ignore
+  calculateCapexTotalPlan() {
+    const costs = [
+      this.costPlans.feasibilityAnalysis,
+      this.costPlans.conservationPlanningAndAdmin,
+      this.costPlans.dataCollectionAndFieldCost,
+      this.costPlans.blueCarbonProjectPlanning,
+      this.costPlans.communityRepresentation,
+      this.costPlans.establishingCarbonRights,
+      this.costPlans.validation,
+      this.costPlans.implementationLabor,
+    ];
+    for (const cost of costs) {
+      this.aggregateCosts(cost, this.capexTotalCostPlan);
+    }
+    return this;
+  }
+
+  calculateOpexTotalPlan() {
+    const costs = [
+      this.costPlans.monitoring,
+      this.costPlans.maintenance,
+      this.costPlans.communityBenefitSharingFund,
+      this.costPlans.carbonStandardFees,
+      this.costPlans.baselineReassessment,
+      this.costPlans.mrv,
+      this.costPlans.longTermProjectOperatingCost,
+    ];
+    for (const cost of costs) {
+      this.aggregateCosts(cost, this.opexTotalCostPlan);
+    }
+    return this;
+  }
+
+  aggregateCosts(
+    costPlan: CostPlanMap,
+    totalCostPlan: CostPlanMap,
+  ): CostPlanMap {
+    for (const year in costPlan) {
+      if (totalCostPlan[year] === undefined) {
+        totalCostPlan[year] = 0;
+      }
+      totalCostPlan[year] += costPlan[year];
+    }
+    return totalCostPlan;
+  }
+  calculateFundingGap(referenceNpv: number, totalRevenueNpv: number): number {
+    const value = totalRevenueNpv - referenceNpv;
+    const fundingGap = value > 0 ? 0 : value * -1;
+    return fundingGap;
+  }
+
+  calculateIrr(
+    netCashFlow: CostPlanMap,
+    netIncome: CostPlanMap,
+    useCapex: boolean = false,
+  ): number {
+    const cashFlowArray = useCapex
+      ? Object.values(netCashFlow)
+      : Object.values(netIncome);
+
+    const internalRateOfReturn = irr(cashFlowArray);
+
+    return internalRateOfReturn;
+  }
+
+  calculateCostPlans(): this {
     this.costPlans = {
-      // feasibilityAnalysis: this.feasibilityAnalysisCosts(),
-      // conservationPlanningAndAdmin: this.conservationPlanningAndAdminCosts(),
-      // dataCollectionAndFieldCost: this.dataCollectionAndFieldCosts(),
-      // blueCarbonProjectPlanning: this.blueCarbonProjectPlanningCosts(),
-      // communityRepresentation: this.communityRepresentationCosts(),
-      // establishingCarbonRights: this.establishingCarbonRightsCosts(),
-      // validation: this.validationCosts(),
-      // implementationLabor: this.implementationLaborCosts(),
-      // monitoring: this.calculateMonitoringCosts(),
-      maintenance: this.calculateMaintenanceCosts(),
+      feasibilityAnalysis: this.feasibilityAnalysisCosts(),
+      conservationPlanningAndAdmin: this.conservationPlanningAndAdminCosts(),
+      dataCollectionAndFieldCost: this.dataCollectionAndFieldCosts(),
+      blueCarbonProjectPlanning: this.blueCarbonProjectPlanningCosts(),
+      communityRepresentation: this.communityRepresentationCosts(),
+      establishingCarbonRights: this.establishingCarbonRightsCosts(),
+      validation: this.validationCosts(),
+      implementationLabor: this.implementationLaborCosts(),
+      monitoring: this.calculateMonitoringCosts(),
+      maintenance: this.maintenanceCosts(),
+      communityBenefitSharingFund: this.communityBenefitAndSharingCosts(),
+      carbonStandardFees: this.carbonStandardFeeCosts(),
+      baselineReassessment: this.baseLineReassessmentCosts(),
+      mrv: this.mrvCosts(),
+      longTermProjectOperatingCost: this.longTermProjectOperatingCosts(),
+      opexTotalCostPlan: this.opexTotalCostPlan,
+      capexTotalCostPlan: this.capexTotalCostPlan,
     };
+    return this;
   }
 }

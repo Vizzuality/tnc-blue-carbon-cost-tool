@@ -16,6 +16,7 @@
       "@shared/*": ["./shared/*"],
       "@data/*": ["./data/*"]
     },
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react"
   }
 }

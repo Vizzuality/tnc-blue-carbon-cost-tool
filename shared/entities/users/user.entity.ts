@@ -11,6 +11,7 @@ import { ROLES } from "@shared/entities/users/roles.enum";
 import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-inputs.entity";
 import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity";
 import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity";
+import { CustomProject } from "@shared/entities/custom-project.entity";
 
 // TODO: For future reference:
 // https://github.com/typeorm/typeorm/issues/2897
@@ -55,4 +56,7 @@ export class User extends BaseEntity {
 
   @OneToMany("UserUploadConservationInputs", "user")
   userUploadConservationInputs: UserUploadConservationInputs[];
+
+  @OneToMany("CustomProject", "user")
+  customProjects: CustomProject[];
 }

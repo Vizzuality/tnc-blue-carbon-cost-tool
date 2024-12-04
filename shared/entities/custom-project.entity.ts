@@ -1,4 +1,3 @@
-import { CustomProjectSnapshotDto } from "@api/modules/custom-projects/dto/custom-project-snapshot.dto";
 import {
   Column,
   Entity,
@@ -9,22 +8,49 @@ import {
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { Country } from "@shared/entities/country.entity";
+import { User } from "@shared/entities/users/user.entity";
+import { type CustomProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
 
 /**
- * @description: This entity is to save Custom Projects (that are calculated, and can be saved only by registered users. Most likely, we don't need to add these as a resource
- * in the backoffice because privacy reasons.
- *
- * The shape defined here is probably wrong, it's only based on the output of the prototype in the notebooks, and it will only serve as a learning resource.
+ * @note: This entity does not extend BaseEntity as it won't be used in the backoffice. However, it has to be added to the BO datasource due to its relation
+ *        to other entities that  (i.e User)
  */
+
+export enum CARBON_REVENUES_TO_COVER {
+  OPEX = "Opex",
+  CAPEX_AND_OPEX = "Capex and Opex",
+}
 
 @Entity({ name: "custom_projects" })
 export class CustomProject {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id?: string;
+
+  @Column({ name: "project_name", type: "varchar" })
+  projectName: string;
+
+  @Column({ name: "total_cost_npv", type: "decimal", nullable: true })
+  totalCostNPV: number;
+
+  @Column({ name: "total_cost", type: "decimal", nullable: true })
+  totalCost: number;
+
+  @Column({ name: "project_size", type: "decimal" })
+  projectSize: number;
+
+  @Column({ name: "project_length", type: "decimal" })
+  projectLength: number;
+
+  @Column({ name: "abatement_potential", type: "decimal", nullable: true })
+  abatementPotential: number;
+
+  @ManyToOne(() => User, (user) => user.customProjects, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "user_id" })
+  user?: User;
 
   @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
   @JoinColumn({ name: "country_code" })
-  countryCode: Country;
+  country: Country;
 
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
   ecosystem: ECOSYSTEM;
@@ -33,22 +59,9 @@ export class CustomProject {
   activity: ACTIVITY;
 
   @Column({ name: "input_snapshot", type: "jsonb" })
-  input_snapshot: any;
+  // TODO: this should be the infered type of the zod schema
+  input: any;
 
   @Column({ name: "output_snapshot", type: "jsonb" })
-  output_snapshot: any;
-
-  static fromCustomProjectSnapshotDTO(
-    dto: CustomProjectSnapshotDto
-  ): CustomProject {
-    const customProject = new CustomProject();
-    customProject.countryCode = {
-      code: dto.inputSnapshot.countryCode,
-    } as Country;
-    customProject.ecosystem = dto.inputSnapshot.ecosystem;
-    customProject.activity = dto.inputSnapshot.activity;
-    customProject.input_snapshot = dto.inputSnapshot;
-    customProject.output_snapshot = dto.outputSnapshot;
-    return customProject;
-  }
+  output: CustomProjectOutput;
 }

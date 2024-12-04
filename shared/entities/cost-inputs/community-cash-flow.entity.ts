@@ -24,6 +24,9 @@ export class CommunityCashFlow extends BaseEntity {
   @JoinColumn({ name: "country_code" })
   country: Country;
 
+  @Column({ name: "country_code", type: "char", length: 3 })
+  countryCode: string;
+
   @Column({ type: "enum", enum: COMMUNITY_CASH_FLOW_TYPES, nullable: true })
   cashflowType: COMMUNITY_CASH_FLOW_TYPES;
 }

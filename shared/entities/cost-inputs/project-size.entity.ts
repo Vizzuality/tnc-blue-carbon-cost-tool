@@ -17,9 +17,14 @@ export class ProjectSize extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @ManyToOne(() => Country, (country) => country.code, { onDelete: "CASCADE" })
+  @ManyToOne(() => Country, (country) => country.code, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "country_code" })
   country: Country;
+
+  @Column({ name: "country_code", type: "char", length: 3 })
+  countryCode: string;
 
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
   ecosystem: ECOSYSTEM;
@@ -27,6 +32,6 @@ export class ProjectSize extends BaseEntity {
   @Column({ name: "activity", enum: ACTIVITY, type: "enum" })
   activity: ACTIVITY;
 
-  @Column("decimal", { name: "size" })
+  @Column({ name: "size", type: "decimal" })
   sizeHa: number;
 }

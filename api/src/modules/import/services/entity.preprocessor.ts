@@ -69,6 +69,9 @@ import { ExcelModelAssumptions } from '../dtos/excel-model-assumptions.dto';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
+import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
+import { ExcelProjectScorecard } from '../dtos/excel-projects-scorecard.dto ';
+import { PROJECT_SCORE } from '@shared/entities/project-score.enum';
 
 export type ParsedDBEntities = {
   projects: Project[];
@@ -102,6 +105,10 @@ export type ParsedDBEntities = {
 
 @Injectable()
 export class EntityPreprocessor {
+  toProjectScorecardDbEntries(raw: {}): ProjectScorecard[] {
+    return this.processProjectScorecard(raw['Data_ingestion']);
+  }
+
   toDbEntities(raw: {
     Projects: ExcelProjects[];
     'Project size': ExcelProjectSize[];
@@ -1123,6 +1130,60 @@ export class EntityPreprocessor {
       parsedArray.push(project);
     });
     return parsedArray;
+  }
+
+  private processProjectScorecard(raw: ExcelProjectScorecard[]) {
+    const parsedArray: ProjectScorecard[] = [];
+    raw.forEach((row: ExcelProjectScorecard) => {
+      const projectScorecard = new ProjectScorecard();
+      projectScorecard.countryCode = row.country_code;
+      projectScorecard.ecosystem = row.ecosystem;
+      projectScorecard.financialFeasibility = PROJECT_SCORE.LOW;
+      projectScorecard.legalFeasibility = this.convertNumberToProjectScore(
+        row.legal_feasibility,
+      );
+
+      projectScorecard.implementationFeasibility =
+        this.convertNumberToProjectScore(row.implementation_risk_score);
+
+      projectScorecard.socialFeasibility = this.convertNumberToProjectScore(
+        row.social_feasibility,
+      );
+
+      projectScorecard.securityRating = this.convertNumberToProjectScore(
+        row.security_rating,
+      );
+
+      projectScorecard.availabilityOfExperiencedLabor =
+        this.convertNumberToProjectScore(row.availability_of_experienced_labor);
+
+      projectScorecard.availabilityOfAlternatingFunding =
+        this.convertNumberToProjectScore(
+          row.availability_of_alternative_funding,
+        );
+
+      projectScorecard.coastalProtectionBenefits =
+        this.convertNumberToProjectScore(row.coastal_protection_benefit);
+      projectScorecard.biodiversityBenefit = this.convertNumberToProjectScore(
+        row.biodiversity_benefit,
+      );
+
+      parsedArray.push(projectScorecard);
+    });
+
+    return parsedArray;
+  }
+
+  private convertNumberToProjectScore(value: number): PROJECT_SCORE {
+    if (value === 1) {
+      return PROJECT_SCORE.LOW;
+    }
+    if (value === 2) {
+      return PROJECT_SCORE.MEDIUM;
+    }
+    if (value === 3) {
+      return PROJECT_SCORE.HIGH;
+    }
   }
 
   private emptyStringToNull(value: any): any | null {

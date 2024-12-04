@@ -5,6 +5,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { User } from '@shared/entities/users/user.entity';
 import { LocalAuthGuard } from '@api/modules/auth/guards/local-auth.guard';
@@ -21,13 +22,18 @@ import { CommandBus } from '@nestjs/cqrs';
 import { RequestPasswordRecoveryCommand } from '@api/modules/auth/commands/request-password-recovery.command';
 import { EmailConfirmation } from '@api/modules/auth/strategies/email-update.strategy';
 import { ROLES } from '@shared/entities/users/roles.enum';
+import { Response } from 'express';
+import { ApiConfigService } from '../config/app-config.service';
+import { BackofficeService } from './backoffice.service';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthenticationController {
   constructor(
     private authService: AuthenticationService,
+    private readonly backofficeService: BackofficeService,
     private readonly commandBus: CommandBus,
+    private readonly configService: ApiConfigService,
   ) {}
 
   @Public()
@@ -48,9 +54,27 @@ export class AuthenticationController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @TsRestHandler(authContract.login)
-  async login(@GetUser() user: User): Promise<ControllerResponse> {
+  async login(
+    @GetUser() user: User,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<ControllerResponse> {
     return tsRestHandler(authContract.login, async () => {
-      const userWithAccessToken = await this.authService.logIn(user);
+      const [userWithAccessToken, backofficeSession] =
+        await this.authService.logIn(user);
+      if (backofficeSession !== undefined) {
+        const cookieName = this.configService.get(
+          'BACKOFFICE_SESSION_COOKIE_NAME',
+        );
+        const cookieValue =
+          this.backofficeService.generateCookieFromBackofficeSession(
+            backofficeSession,
+          );
+        res.cookie(cookieName, cookieValue, {
+          ...backofficeSession.sess.cookie,
+          sameSite: 'lax',
+        });
+      }
+
       return {
         body: userWithAccessToken,
         status: 201,

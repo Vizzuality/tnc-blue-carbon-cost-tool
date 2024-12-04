@@ -158,9 +158,9 @@ export default function ProjectsFilters() {
         <Button
           onClick={closeFilters}
           variant="ghost"
-          className="h-5 w-5 grow self-end p-0 hover:bg-transparent"
+          className="h-4 w-4 grow self-end p-0 hover:bg-transparent"
         >
-          <XIcon className="h-5 w-5 text-foreground hover:text-muted-foreground" />
+          <XIcon className="h-4 w-4 text-foreground hover:text-muted-foreground" />
         </Button>
         <div className="flex items-center gap-3">
           <h3 className="text-xl font-semibold">Filters</h3>

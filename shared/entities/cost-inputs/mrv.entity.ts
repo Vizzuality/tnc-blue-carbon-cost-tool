@@ -19,6 +19,9 @@ export class MRV extends BaseEntity {
   @JoinColumn({ name: "country_code" })
   country: Country;
 
+  @Column({ name: "country_code", type: "char", length: 3 })
+  countryCode: string;
+
   @Column("decimal", { name: "mrv_cost_per_event" })
   mrvCost: number;
 }

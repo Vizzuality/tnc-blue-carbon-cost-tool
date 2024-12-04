@@ -11,12 +11,21 @@ import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overr
 import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
+import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 
-export type CarbonInputs = {
+/**
+ * Additional data that is required to perform calculations, which is not overridable by the user. Better naming and clustering of concepts would be great
+ */
+export type AdditionalBaseData = {
   ecosystemLossRate: BaseDataView['ecosystemLossRate'];
   tier1EmissionFactor: BaseDataView['tier1EmissionFactor'];
   emissionFactorAgb: BaseDataView['emissionFactorAgb'];
   emissionFactorSoc: BaseDataView['emissionFactorSoc'];
+  financingCost: BaseDataView['financingCost'];
+  maintenanceDuration: BaseDataView['maintenanceDuration'];
+  communityBenefitSharingFund: BaseDataView['communityBenefitSharingFund'];
+  otherCommunityCashFlow: BaseDataView['otherCommunityCashFlow'];
+  tier1SequestrationRate: BaseDataView['tier1SequestrationRate'];
 };
 
 const COMMON_OVERRIDABLE_COST_INPUTS = [
@@ -41,6 +50,7 @@ const COMMON_OVERRIDABLE_COST_INPUTS = [
 export class DataRepository extends Repository<BaseDataView> {
   constructor(
     @InjectRepository(BaseDataView) private repo: Repository<BaseDataView>,
+    private assumptionsRepository: AssumptionsRepository,
   ) {
     super(repo.target, repo.manager, repo.queryRunner);
   }
@@ -51,7 +61,7 @@ export class DataRepository extends Repository<BaseDataView> {
     activity: ACTIVITY;
   }) {
     const { countryCode, ecosystem, activity } = dto;
-    const defaultCarbonInputs = await this.getDefaultCarbonInputs({
+    const additionalBaseData = await this.getAdditionalBaseData({
       countryCode,
       ecosystem,
       activity,
@@ -60,34 +70,44 @@ export class DataRepository extends Repository<BaseDataView> {
       ecosystem,
       activity,
     });
+    const additionalAssumptions =
+      await this.assumptionsRepository.getNonOverridableModelAssumptions(
+        activity,
+      );
 
     return {
-      defaultCarbonInputs,
+      additionalBaseData,
       baseSize,
       baseIncrease,
+      additionalAssumptions,
     };
   }
 
-  async getDefaultCarbonInputs(dto: {
+  async getAdditionalBaseData(dto: {
     countryCode: string;
     ecosystem: ECOSYSTEM;
     activity: ACTIVITY;
-  }): Promise<CarbonInputs> {
+  }): Promise<AdditionalBaseData> {
     const { countryCode, ecosystem, activity } = dto;
-    const defaultCarbonInputs = await this.findOne({
+    const additionalBaseData = await this.findOne({
       where: { countryCode, activity, ecosystem },
       select: [
         'ecosystemLossRate',
         'tier1EmissionFactor',
         'emissionFactorAgb',
         'emissionFactorSoc',
+        'financingCost',
+        'maintenanceDuration',
+        'communityBenefitSharingFund',
+        'otherCommunityCashFlow',
+        'tier1SequestrationRate',
       ],
     });
 
-    if (!defaultCarbonInputs) {
+    if (!additionalBaseData) {
       throw new NotFoundException('Could not retrieve default carbon inputs');
     }
-    return defaultCarbonInputs;
+    return additionalBaseData;
   }
 
   async getOverridableCostInputs(

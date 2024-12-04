@@ -16,8 +16,10 @@ import {
 export default function InfoButton({
   title,
   children,
+  className,
 }: PropsWithChildren<{
   title?: string;
+  className?: string;
 }>) {
   return (
     <Dialog>
@@ -26,7 +28,7 @@ export default function InfoButton({
           <InfoIcon className="h-7 w-7 text-foreground hover:text-muted-foreground" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className={className}>
         <DialogHeader>
           {title && <DialogTitle>{title}</DialogTitle>}
           <DialogContentContainer>{children}</DialogContentContainer>
