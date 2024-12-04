@@ -17,11 +17,11 @@ export class PaginationMeta {
     this.totalItems = paginationMeta.totalItems;
     this.totalPages = paginationMeta.totalPages;
     this.size =
-      typeof paginationMeta.size === 'string'
+      typeof paginationMeta.size === "string"
         ? parseInt(paginationMeta.size)
         : paginationMeta.size;
     this.page =
-      typeof paginationMeta.page === 'string'
+      typeof paginationMeta.page === "string"
         ? parseInt(paginationMeta.page)
         : paginationMeta.page;
   }
@@ -39,3 +39,5 @@ export class ApiPaginationResponse<T> {
   data: Partial<T>[];
   metadata?: PaginationMeta;
 }
+
+export type ErrorResponse = unknown;

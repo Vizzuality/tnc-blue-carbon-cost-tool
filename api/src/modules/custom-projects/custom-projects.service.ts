@@ -6,7 +6,7 @@ import {
 import { AppBaseService } from '@api/utils/app-base.service';
 import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CalculationEngine } from '@api/modules/calculations/calculation.engine';
 import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory/custom-project.factory';
@@ -18,6 +18,7 @@ import { AssumptionsRepository } from '@api/modules/calculations/assumptions.rep
 import { User } from '@shared/entities/users/user.entity';
 import { EventBus } from '@nestjs/cqrs';
 import { SaveCustomProjectEvent } from '@api/modules/custom-projects/events/save-custom-project.event';
+import { FetchSpecification } from 'nestjs-base-service';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -94,5 +95,33 @@ export class CustomProjectsService extends AppBaseService<
 
   async getDefaultAssumptions(dto: GetOverridableAssumptionsDTO) {
     return this.assumptionsRepository.getOverridableModelAssumptions(dto);
+  }
+
+  async extendGetByIdQuery(
+    query: SelectQueryBuilder<CustomProject>,
+    fetchSpecification?: FetchSpecification,
+    info?: { user: User },
+  ): Promise<SelectQueryBuilder<CustomProject>> {
+    const { user } = info;
+
+    query
+      .leftJoinAndSelect('customProject.user', 'user')
+      .andWhere('user.id = :userId', { userId: user.id });
+
+    return query;
+  }
+
+  async extendFindAllQuery(
+    query: SelectQueryBuilder<CustomProject>,
+    fetchSpecification: FetchSpecification,
+    info?: { user: User },
+  ): Promise<SelectQueryBuilder<CustomProject>> {
+    const { user } = info;
+
+    query
+      .leftJoinAndSelect('customProject.user', 'user')
+      .andWhere('user.id = :userId', { userId: user.id });
+
+    return query;
   }
 }

@@ -17,6 +17,7 @@ import {
   createProject,
   createUser,
   createProjectScorecard,
+  createCustomProject,
 } from '@shared/lib/entity-mocks';
 import {
   clearTablesByEntities,
@@ -29,6 +30,7 @@ import { Project } from '@shared/entities/projects.entity';
 import { adminContract } from '@shared/contracts/admin.contract';
 import { Country } from '@shared/entities/country.entity';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
+import { CustomProject } from '@shared/entities/custom-project.entity';
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate
  * common testing utilities
@@ -147,6 +149,9 @@ export class TestManager {
       createProjectScorecard: async (
         additionalData?: Partial<ProjectScorecard>,
       ) => createProjectScorecard(this.getDataSource(), additionalData),
+      createCustomProject: async (
+        additionalData?: { user: User } & Partial<CustomProject>,
+      ) => createCustomProject(this.getDataSource(), additionalData),
     };
   }
 }
