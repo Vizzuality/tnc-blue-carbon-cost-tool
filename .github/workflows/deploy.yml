@@ -155,28 +155,28 @@ jobs:
             ${{ steps.login-ecr.outputs.registry }}/${{ secrets.API_REPOSITORY_NAME }}:${{ github.sha }}
             ${{ steps.login-ecr.outputs.registry }}/${{ secrets.API_REPOSITORY_NAME }}:${{ needs.set_environment_name.outputs.env_name }}
 
-  build_admin:
+  build_backoffice:
     needs: [ set_environment_name ]
     environment:
       name: ${{ needs.set_environment_name.outputs.env_name }}
     runs-on: ubuntu-latest
-    name: Build Admin image and push to Amazon ECR
+    name: Build Backoffice image and push to Amazon ECR
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - uses: dorny/paths-filter@v3
-        id: admin-changes
+        id: backoffice-changes
         with:
           filters: |
-            admin:
-              - 'admin/**'
+            backoffice:
+              - 'backoffice/**'
               - '.github/workflows/**'
             shared:
               - 'shared/**'
 
       - name: Configure AWS credentials
-        if: ${{ github.event_name == 'workflow_dispatch' || steps.admin-changes.outputs.admin == 'true' }}
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.backoffice-changes.outputs.backoffice == 'true' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
@@ -184,18 +184,18 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
-        if: ${{ github.event_name == 'workflow_dispatch' || steps.admin-changes.outputs.admin == 'true' }}
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.backoffice-changes.outputs.backoffice == 'true' }}
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
         with:
           mask-password: 'true'
 
       - name: Set up Docker Buildx
-        if: ${{ github.event_name == 'workflow_dispatch' || steps.admin-changes.outputs.admin == 'true' }}
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.backoffice-changes.outputs.backoffice == 'true' }}
         uses: docker/setup-buildx-action@v3
 
       - name: Build, tag, and push Admin image to Amazon ECR
-        if: ${{ github.event_name == 'workflow_dispatch' || steps.admin-changes.outputs.admin == 'true' }}
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.backoffice-changes.outputs.backoffice == 'true' }}
         uses: docker/build-push-action@v6
         with:
           build-args: |
@@ -208,7 +208,7 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          file: ./admin/Dockerfile
+          file: ./backoffice/Dockerfile
           push: true
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ADMIN_REPOSITORY_NAME }}:${{ github.sha }}
@@ -217,7 +217,7 @@ jobs:
 
   deploy:
     name: Deploy Services to Amazon EBS
-    needs: [ set_environment_name, build_client, build_api, build_admin ]
+    needs: [ set_environment_name, build_client, build_api, build_backoffice]
     runs-on: ubuntu-latest
     environment:
       name: ${{ needs.set_environment_name.outputs.env_name }}
@@ -258,7 +258,7 @@ jobs:
               restart: always
               ports:
                 - 4000:4000
-            admin:
+            backoffice:
               image: $ECR_REGISTRY/$ECR_REPOSITORY_ADMIN:$IMAGE_TAG
               restart: always
               ports:
@@ -274,7 +274,7 @@ jobs:
               depends_on:
                 - api
                 - client
-                - admin
+                - backoffice
           EOF
 
       - name: Generate zip file
