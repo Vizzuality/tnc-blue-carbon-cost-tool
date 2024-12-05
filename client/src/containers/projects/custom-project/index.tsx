@@ -13,6 +13,7 @@ import {
 import AnnualProjectCashFlow from "@/containers/projects/custom-project/annual-project-cash-flow";
 import ProjectCost from "@/containers/projects/custom-project/cost";
 import CostDetails from "@/containers/projects/custom-project/cost-details";
+import { parseCostDetailsForTable } from "@/containers/projects/custom-project/cost-details/table/utils";
 import ProjectDetails from "@/containers/projects/custom-project/details";
 import CustomProjectHeader from "@/containers/projects/custom-project/header";
 import LeftOver from "@/containers/projects/custom-project/left-over";
@@ -21,8 +22,8 @@ import ProjectSummary from "@/containers/projects/custom-project/summary";
 import { useCustomProjectFilters } from "@/containers/projects/url-store";
 
 import { useSidebar } from "@/components/ui/sidebar";
-import { formatCurrency } from "@/lib/format";
 
+// Temporary use of mock data until we decide on state management
 const {
   country,
   projectSize,
@@ -39,22 +40,10 @@ const {
   leftover,
 } = mockData.data;
 const costDetailsData = {
-  total: Object.keys(costDetails.total).map((k) => ({
-    costName: k,
-    label: k,
-    value: formatCurrency(
-      costDetails.total[k as keyof typeof costDetails.total],
-      { maximumFractionDigits: 0 },
-    ),
-  })),
-  npv: Object.keys(costDetails.npv).map((k) => ({
-    costName: k,
-    label: k,
-    value: formatCurrency(costDetails.npv[k as keyof typeof costDetails.npv], {
-      maximumFractionDigits: 0,
-    }),
-  })),
+  total: parseCostDetailsForTable(costDetails.total),
+  npv: parseCostDetailsForTable(costDetails.npv),
 };
+
 export const SUMMARY_SIDEBAR_WIDTH = 460;
 const CustomProject: FC = () => {
   const [{ costRangeSelector }] = useCustomProjectFilters();

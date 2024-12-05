@@ -1,3 +1,4 @@
+import { YearlyBreakdown } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
@@ -43,7 +44,7 @@ const mockData = {
       },
     },
     summary: {
-      "$/tCO2e (total cost, NPV": 61.470410294099835,
+      "$/tCO2e (total cost, NPV)": 61.470410294099835,
       "$/ha": 2503.8542791885798,
       "NPV covering cost": -493830.3621939037,
       "Leftover after OpEx / total cost": null,
@@ -65,7 +66,7 @@ const mockData = {
       total: {
         capitalExpenditure: 1600616.6666666667,
         totalCost: 3201233.3333333335,
-        operationExpenditure: 1731584.9322168794,
+        operationalExpenditure: 1731584.9322168794,
         feasibilityAnalysis: 50000,
         conservationPlanningAndAdmin: 667066.6666666666,
         dataCollectionAndFieldCost: 80000,
@@ -648,7 +649,7 @@ const mockData = {
           "-1": -434616.6666666667,
         },
       },
-    ],
+    ] as YearlyBreakdown[],
   },
 };
 

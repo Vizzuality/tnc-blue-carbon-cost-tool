@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 
-import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,7 +7,6 @@ import {
   SortingState,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import { ChevronsUpDownIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -24,17 +22,13 @@ import {
 } from "@/components/ui/table";
 
 export interface CostItem {
-  name: string;
+  costName: string;
   label: string;
-  value: number;
+  value: string;
 }
 
 interface CostDetailTableProps {
-  data: {
-    costName: string;
-    label: string;
-    value: string;
-  }[];
+  data: CostItem[];
 }
 const CostDetailTable: FC<CostDetailTableProps> = ({ data }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -61,35 +55,9 @@ const CostDetailTable: FC<CostDetailTableProps> = ({ data }) => {
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={cn({
-                          "flex items-center justify-between": true,
-                          "cursor-pointer select-none":
-                            header.column.getCanSort(),
-                        })}
-                        onClick={header.column.getToggleSortingHandler()}
-                        title={
-                          header.column.getCanSort()
-                            ? header.column.getNextSortingOrder() === "asc"
-                              ? "Sort ascending"
-                              : header.column.getNextSortingOrder() === "desc"
-                                ? "Sort descending"
-                                : "Clear sort"
-                            : undefined
-                        }
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: <ChevronUpIcon className="h-4 w-4" />,
-                          desc: <ChevronDownIcon className="h-4 w-4" />,
-                        }[header.column.getIsSorted() as string] ?? (
-                          <ChevronsUpDownIcon className="h-4 w-4" />
-                        )}
-                      </div>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
                     )}
                   </TableHead>
                 );
@@ -106,27 +74,21 @@ const CostDetailTable: FC<CostDetailTableProps> = ({ data }) => {
                   "divide-background border-b-background": true,
                   "bg-big-stone-950 hover:bg-big-stone-950":
                     row.original.costName === "capitalExpenditure" ||
-                    row.original.costName === "operatingExpenditure" ||
+                    row.original.costName === "operationalExpenditure" ||
                     row.original.costName === "totalCost",
                 })}
               >
-                {row.getVisibleCells().map((cell) => {
-                  console.log(cell);
-                  return (
-                    <TableCell
-                      key={cell.id}
-                      className={cn({
-                        "px-4": cell.column.id === "value",
-                        "text-big-stone-200": cell.column.id === "label",
-                      })}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  );
-                })}
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell
+                    key={cell.id}
+                    className={cn({
+                      "px-4": cell.column.id === "value",
+                      "text-big-stone-200": cell.column.id === "label",
+                    })}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
               </TableRow>
             ))
           ) : (
