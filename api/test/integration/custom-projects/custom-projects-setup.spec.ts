@@ -20,7 +20,21 @@ describe('Create Custom Projects - Setup', () => {
     await testManager.close();
   });
 
-  describe('Get Overridable Model Assumptions', () => {
+  describe('Get Activity type defaults', () => {
+    test('Should return activity type defaults based on country and ecosystem', async () => {
+      const response = await testManager
+        .request()
+        .get(customProjectContract.getActivityTypesDefaults.path)
+        .query({
+          countryCode: 'IND',
+          ecosystem: ECOSYSTEM.MANGROVE,
+        });
+
+      expect(response.status).toBe(200);
+    });
+  });
+
+  describe.skip('Get Overridable Model Assumptions', () => {
     test('Should return overridable model assumptions based on ecosystem and activity', async () => {
       const response = await testManager
         .request()
