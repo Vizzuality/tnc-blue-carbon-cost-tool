@@ -5,7 +5,7 @@ import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 
 const DEFAULT_CONSERVATION_CUSTOM_PROJECT: CustomProject = {
   projectName: 'My custom project',
-  abatementPotential: null,
+  abatementPotential: undefined,
   country: {
     code: 'IND',
     name: 'India',
