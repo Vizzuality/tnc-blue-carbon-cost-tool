@@ -17,7 +17,7 @@ const PARAMETERS = [
   {
     key: FILTER_KEYS[3],
     label: "Cost type",
-    className: "",
+    className: "flex-1",
     options: [
       {
         label: COST_TYPE_SELECTOR.TOTAL,

@@ -13,8 +13,10 @@ import {
   tableData,
   columns,
 } from "@/containers/projects/custom-project/annual-project-cash-flow/table/columns";
+import { getBreakdownYears } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
+import mockData from "@/containers/projects/custom-project/mock-data";
 
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   TableBody,
   TableCell,
@@ -33,7 +35,7 @@ const CashFlowTable: FC = () => {
   });
   const table = useReactTable({
     data: tableData,
-    columns: columns,
+    columns: columns(getBreakdownYears(mockData.data.yearlyBreakdown)),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     state: {
@@ -44,7 +46,7 @@ const CashFlowTable: FC = () => {
 
   return (
     <div className="relative flex h-full flex-1 flex-col overflow-hidden">
-      <ScrollArea className="scroll-x-auto w-full">
+      <ScrollArea hasHorizontalScroll>
         <div className="table h-full w-full table-fixed">
           <table className="w-full caption-bottom text-sm">
             <TableHeader className="sticky top-0">
@@ -106,7 +108,6 @@ const CashFlowTable: FC = () => {
               )}
             </TableBody>
           </table>
-          <ScrollBar orientation="horizontal" className="" />
         </div>
       </ScrollArea>
       <TablePagination

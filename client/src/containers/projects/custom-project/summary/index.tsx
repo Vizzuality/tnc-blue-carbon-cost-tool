@@ -1,5 +1,6 @@
 import { FC } from "react";
 
+import { type CustomProjectSummary } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import { useSetAtom } from "jotai";
 import { XIcon } from "lucide-react";
 
@@ -13,10 +14,28 @@ import InfoButton from "@/components/ui/info-button";
 import Metric from "@/components/ui/metric";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+const customProjectSummaryUnitMap: Record<keyof CustomProjectSummary, string> =
+  {
+    "$/tCO2e (total cost, NPV)": "$",
+    "$/ha": "$",
+    "NPV covering cost": "$",
+    "Leftover after OpEx / total cost": "$",
+    "IRR when priced to cover OpEx": "%",
+    "IRR when priced to cover total cost": "%",
+    "Total cost (NPV)": "$",
+    "Capital expenditure (NPV)": "$",
+    "Operating expenditure (NPV)": "$",
+    "Credits issued": "",
+    "Total revenue (NPV)": "$",
+    "Total revenue (non-discounted)": "$",
+    "Financing cost": "$",
+    "Funding gap": "$",
+    "Funding gap (NPV)": "%",
+    "Funding gap per tCO2e (NPV)": "%",
+    "Community benefit sharing fund": "%",
+  } as const;
 interface ProjectSummaryProps {
-  data: {
-    [key: string]: number | null;
-  };
+  data: CustomProjectSummary;
 }
 const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
   const setProjectSummaryOpen = useSetAtom(projectsUIState);
@@ -44,20 +63,28 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
       </header>
       <ScrollArea className="flex-1 px-6">
         <ul className="space-y-1">
-          {Object.keys(data).map((key) => (
-            <div
-              key={key}
-              className="flex justify-between border-b border-dashed py-1.5"
-            >
-              <div className="flex items-center gap-2">
-                <div className="text-sm font-normal">{key}</div>
-                <InfoButton title="{tooltip.title}">tooltip.content</InfoButton>
+          {(Object.keys(data) as Array<keyof CustomProjectSummary>).map(
+            (key) => (
+              <div
+                key={key}
+                className="flex justify-between border-b border-dashed py-1.5"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="text-sm font-normal">{key}</div>
+                  <InfoButton title="{tooltip.title}">
+                    tooltip.content
+                  </InfoButton>
+                </div>
+                <div className="text-base font-medium">
+                  <Metric
+                    value={data[key]}
+                    unit={customProjectSummaryUnitMap[key]}
+                    unitBeforeValue
+                  />
+                </div>
               </div>
-              <div className="text-base font-medium">
-                <Metric value={data[key]} unit="$" unitBeforeValue />
-              </div>
-            </div>
-          ))}
+            ),
+          )}
         </ul>
       </ScrollArea>
       <div className="flex px-6">

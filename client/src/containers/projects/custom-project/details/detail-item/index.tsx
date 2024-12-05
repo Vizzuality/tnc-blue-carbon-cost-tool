@@ -2,6 +2,8 @@ import { FC } from "react";
 
 import ReactCountryFlag from "react-country-flag";
 
+import getCountryISO2 from "country-iso-3-to-2";
+
 import Metric from "@/components/ui/metric";
 
 interface SubValue {
@@ -43,7 +45,7 @@ const DetailItem: FC<DetailItemProps> = ({
         {countryCode && (
           <ReactCountryFlag
             className="h-[16px] w-[22px] rounded"
-            countryCode={countryCode}
+            countryCode={getCountryISO2(countryCode)}
             svg
           />
         )}

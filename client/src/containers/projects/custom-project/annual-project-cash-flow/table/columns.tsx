@@ -39,11 +39,11 @@ export const chartData = YEARS.map((y) => ({
 }));
 export const tableData = mockData.data.yearlyBreakdown;
 
-export const columns = [
+export const columns = (years: string[]) => [
   columnHelper.accessor("costName", {
     header: () => <span>Project</span>,
   }),
-  ...YEARS.map((year) =>
+  ...years.map((year) =>
     columnHelper.accessor(`costValues.${year}`, {
       header: () => <span>{year}</span>,
       cell: (info) => (

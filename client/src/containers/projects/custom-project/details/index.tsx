@@ -10,6 +10,7 @@ import FileEdit from "@/components/icons/file-edit";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+// Will refector this interface after we decide state management:
 interface ProjectDetailsProps {
   country: { code: string; name: string };
   projectSize: number;
