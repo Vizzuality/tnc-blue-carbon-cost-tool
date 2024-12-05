@@ -10,6 +10,7 @@ import {
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "./ecosystem.enum";
 import { ACTIVITY, RESTORATION_ACTIVITY_SUBTYPE } from "./activity.enum";
+import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 
 export enum PROJECT_SIZE_FILTER {
   SMALL = "Small",
@@ -98,4 +99,12 @@ export class Project extends BaseEntity {
     nullable: true,
   })
   priceType: PROJECT_PRICE_TYPE;
+
+  @Column({
+    type: "enum",
+    enum: PROJECT_SCORE,
+    default: PROJECT_SCORE.MEDIUM,
+    name: "score_card_rating",
+  })
+  scoreCardRating: PROJECT_SCORE;
 }
