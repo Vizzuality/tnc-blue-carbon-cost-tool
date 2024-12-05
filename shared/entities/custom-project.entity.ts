@@ -42,7 +42,7 @@ export class CustomProject {
   projectLength: number;
 
   @Column({ name: "abatement_potential", type: "decimal", nullable: true })
-  abatementPotential: number;
+  abatementPotential?: number;
 
   @ManyToOne(() => User, (user) => user.customProjects, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
