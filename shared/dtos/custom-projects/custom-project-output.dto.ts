@@ -32,7 +32,6 @@ export type CustomProjectCostDetails = {
   establishingCarbonRights: number;
   validation: number;
   implementationLabor: number;
-  operationExpenditure: number;
   monitoring: number;
   maintenance: number;
   communityBenefitSharingFund: number;

@@ -5,11 +5,7 @@ import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 
 import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
-import {
-  ModelAssumptionsForCalculations,
-  NonOverridableModelAssumptions,
-} from '@api/modules/calculations/assumptions.repository';
-import { BaseDataView } from '@shared/entities/base-data.view';
+import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
 import { CostOutput } from '@api/modules/calculations/calculation.engine';
 import { ProjectInput } from '@api/modules/calculations/cost.calculator';
 import { CustomProject } from '@shared/entities/custom-project.entity';

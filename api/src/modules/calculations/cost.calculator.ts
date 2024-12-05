@@ -225,7 +225,6 @@ export class CostCalculator {
         capitalExpenditure: totalCapex,
         operationalExpenditure: totalOpex,
         totalCost: totalCapex + totalCapex,
-        operationExpenditure: totalOpex,
         feasibilityAnalysis: sum(
           Object.values(this.costPlans.feasibilityAnalysis),
         ),
@@ -298,7 +297,6 @@ export class CostCalculator {
           this.costPlans.implementationLabor,
           discountRate,
         ),
-        operationExpenditure: this.totalOpexNPV,
         monitoring: this.calculateNpv(this.costPlans.monitoring, discountRate),
         maintenance: this.calculateNpv(
           this.costPlans.maintenance,
