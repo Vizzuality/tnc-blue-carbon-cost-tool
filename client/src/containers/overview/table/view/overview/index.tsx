@@ -31,7 +31,7 @@ import {
 import { columns } from "@/containers/overview/table/view/overview/columns";
 
 import {
-  Table,
+  ScrollableTable,
   TableBody,
   TableCell,
   TableHead,
@@ -112,7 +112,7 @@ export function OverviewTable() {
   return (
     <>
       <ProjectDetails />
-      <Table>
+      <ScrollableTable>
         <TableHeader className="sticky top-0">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="divide-background">
@@ -189,7 +189,7 @@ export function OverviewTable() {
             </TableRow>
           )}
         </TableBody>
-      </Table>
+      </ScrollableTable>
       <TablePagination
         onChangePagination={setPagination}
         pagination={{

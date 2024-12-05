@@ -16,8 +16,8 @@ import {
 import { getBreakdownYears } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
 import mockData from "@/containers/projects/custom-project/mock-data";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
+  ScrollableTable,
   TableBody,
   TableCell,
   TableHead,
@@ -46,70 +46,60 @@ const CashFlowTable: FC = () => {
 
   return (
     <div className="relative flex h-full flex-1 flex-col overflow-hidden">
-      <ScrollArea hasHorizontalScroll>
-        <div className="table h-full w-full table-fixed">
-          <table className="w-full caption-bottom text-sm">
-            <TableHeader className="sticky top-0">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="divide-background">
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead
-                        key={header.id}
-                        className={cn({
-                          "text-xs font-normal": true,
-                          "text-center": header.id !== "label",
-                        })}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} className="divide-x-0">
-                    {row.getVisibleCells().map((cell, index) => (
-                      <TableCell
-                        key={cell.id}
-                        className="px-2 py-2.5"
-                        style={
-                          index > 0
-                            ? {
-                                minWidth: cell.column.columnDef.size,
-                                maxWidth: cell.column.columnDef.size,
-                              }
-                            : undefined
-                        }
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
+      <ScrollableTable>
+        <TableHeader className="sticky top-0">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id} className="divide-background">
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead
+                    key={header.id}
+                    className={cn({
+                      "text-xs font-normal": true,
+                      "text-center": header.id !== "label",
+                    })}
                   >
-                    No results.
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id} className="divide-x-0">
+                {row.getVisibleCells().map((cell, index) => (
+                  <TableCell
+                    key={cell.id}
+                    className="px-2 py-2.5"
+                    style={
+                      index > 0
+                        ? {
+                            minWidth: cell.column.columnDef.size,
+                            maxWidth: cell.column.columnDef.size,
+                          }
+                        : undefined
+                    }
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </table>
-        </div>
-      </ScrollArea>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </ScrollableTable>
       <TablePagination
         onChangePagination={setPagination}
         pagination={{

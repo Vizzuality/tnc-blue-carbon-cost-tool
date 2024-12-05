@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
@@ -15,6 +17,22 @@ const Table = React.forwardRef<
   </div>
 ));
 Table.displayName = "Table";
+
+const ScrollableTable = React.forwardRef<
+  HTMLTableElement,
+  React.HTMLAttributes<HTMLTableElement>
+>(({ className, ...props }, ref) => (
+  <ScrollArea hasHorizontalScroll>
+    <div className="table h-full w-full table-fixed">
+      <table
+        ref={ref}
+        className={cn("w-full caption-bottom text-sm", className)}
+        {...props}
+      />
+    </div>
+  </ScrollArea>
+));
+ScrollableTable.displayName = "ScrollableTable";
 
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
@@ -110,6 +128,7 @@ TableCaption.displayName = "TableCaption";
 
 export {
   Table,
+  ScrollableTable,
   TableHeader,
   TableBody,
   TableFooter,
