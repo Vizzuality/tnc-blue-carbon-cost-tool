@@ -55,10 +55,12 @@ describe('Projects', () => {
         .query({ disablePagination: true });
 
       expect(response.status).toBe(HttpStatus.OK);
-      expect(response.body.length).toBe(projects.length);
+      expect(response.body.data.length).toBe(projects.length);
     });
+  });
 
-    test('Should return a filtered list of Projects Scorecards', async () => {
+  describe('Filters for Projects Scorecards', () => {
+    test('Projects Scorecards filtered by NPV', async () => {
       const numProjects = 5;
       const projects: Project[] = [];
       const countryCodes: string[] = countriesInDb
@@ -89,8 +91,96 @@ describe('Projects', () => {
           costRangeSelector: 'npv',
           costRange: [12, 26],
         });
+
       expect(response.status).toBe(HttpStatus.OK);
-      expect(response.body.length).toBe(2);
+      expect(response.body.data.length).toBe(2);
+
+      // check pagination
+      expect(response.body.metadata.totalItems).toBe(2);
+      expect(response.body.metadata.totalPages).toBe(1);
+      expect(response.body.metadata.page).toBe(1);
+    });
+
+    test('Projects Scorecards filtered by totalCost', async () => {
+      const numProjects = 5;
+      const projects: Project[] = [];
+      const countryCodes: string[] = countriesInDb
+        .slice(0, numProjects)
+        .map((country) => country.code);
+      const totalCosts = [25, 15, 45, 10, 30];
+
+      for (let i = 0; i < numProjects; i++) {
+        projects.push(
+          await testManager.mocks().createProject({
+            countryCode: countryCodes[i],
+            totalCost: totalCosts[i],
+          }),
+        );
+      }
+
+      for (const project of projects) {
+        await testManager.mocks().createProjectScorecard({
+          countryCode: project.countryCode,
+          ecosystem: project.ecosystem,
+        });
+      }
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjectsScorecard.path)
+        .query({
+          costRangeSelector: 'total',
+          costRange: [12, 26],
+        });
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body.data.length).toBe(2);
+
+      // check pagination
+      expect(response.body.metadata.totalItems).toBe(2);
+      expect(response.body.metadata.totalPages).toBe(1);
+      expect(response.body.metadata.page).toBe(1);
+    });
+
+    test('Projects Scorecards filtered by partia name', async () => {
+      const numProjects = 5;
+      const projects: Project[] = [];
+      const countryCodes: string[] = countriesInDb
+        .slice(0, numProjects)
+        .map((country) => country.code);
+      const projectNames = [
+        'Project aab',
+        'Project aaaabbbb',
+        'Project abb',
+        'Project cdef',
+        'Project xyz',
+      ];
+
+      for (let i = 0; i < numProjects; i++) {
+        projects.push(
+          await testManager.mocks().createProject({
+            countryCode: countryCodes[i],
+            projectName: projectNames[i],
+          }),
+        );
+      }
+
+      for (const project of projects) {
+        await testManager.mocks().createProjectScorecard({
+          countryCode: project.countryCode,
+          ecosystem: project.ecosystem,
+        });
+      }
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjectsScorecard.path)
+        .query({
+          partialProjectName: 'aab',
+        });
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body.data.length).toBe(2);
     });
   });
 

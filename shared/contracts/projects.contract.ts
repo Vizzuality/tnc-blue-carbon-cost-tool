@@ -10,6 +10,7 @@ import { CountryWithNoGeometry } from "@shared/entities/country.entity";
 import { ProjectMap } from "@shared/dtos/projects/projects-map.dto";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { BaseEntity } from "typeorm";
+import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
 
 const contract = initContract();
 
@@ -23,7 +24,13 @@ export const otherFilters = z.object({
   partialProjectName: z.string().optional(),
 });
 export const projectsQuerySchema = generateEntityQuerySchema(Project);
+export const projectScorecardQuerySchema =
+  generateEntityQuerySchema(ProjectScorecard);
+
 export const getProjectsQuerySchema = projectsQuerySchema.merge(otherFilters);
+export const getProjectScorecardQuerySchema =
+  projectScorecardQuerySchema.merge(otherFilters);
+
 export const projectsContract = contract.router({
   getProjects: {
     method: "GET",
@@ -32,6 +39,14 @@ export const projectsContract = contract.router({
       200: contract.type<ApiPaginationResponse<Project>>(),
     },
     query: getProjectsQuerySchema,
+  },
+  getProjectsScorecard: {
+    method: "GET",
+    path: "/projects/scorecard",
+    responses: {
+      200: contract.type<ApiPaginationResponse<ProjectScorecardView>>(),
+    },
+    query: getProjectScorecardQuerySchema,
   },
   getProject: {
     method: "GET",
@@ -50,19 +65,6 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiResponse<CountryWithNoGeometry[]>>(),
     },
-  },
-  getProjectsScorecard: {
-    method: "GET",
-    path: "/projects/scorecard",
-    responses: {
-      200: contract.type<ApiPaginationResponse<ProjectScorecardType>>(),
-    },
-    query: getProjectsQuerySchema.pick({
-      filter: true,
-      costRange: true,
-      abatementPotentialRange: true,
-      costRangeSelector: true,
-    }),
   },
   getProjectsMap: {
     method: "GET",
