@@ -58,7 +58,6 @@ export const customProjectContract = contract.router({
     query: customProjecsQuerySchema,
     responses: {
       200: contract.type<ApiPaginationResponse<CustomProject>>(),
-      401: contract.type<ErrorResponse>(),
     },
   },
   getCustomProject: {
@@ -67,8 +66,6 @@ export const customProjectContract = contract.router({
     query: customProjecsQuerySchema,
     responses: {
       200: contract.type<ApiResponse<CustomProject>>(),
-      401: contract.type<ErrorResponse>(),
-      404: contract.type<null>(),
     },
   },
   saveCustomProject: {
