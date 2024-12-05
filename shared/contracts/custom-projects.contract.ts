@@ -12,12 +12,24 @@ import { OverridableCostInputs } from "@api/modules/custom-projects/dto/project-
 import { GetAssumptionsSchema } from "@shared/schemas/assumptions/get-assumptions.schema";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
+import { GetActivityTypesDefaultsSchema } from "@shared/schemas/custom-projects/activity-types-defaults.schema";
+import { ActivityTypesDefaults } from "@shared/dtos/custom-projects/activity-types-defaults";
 
 export const customProjecsQuerySchema =
   generateEntityQuerySchema(CustomProject);
 
 const contract = initContract();
 export const customProjectContract = contract.router({
+  getActivityTypesDefaults: {
+    method: "GET",
+    path: "/custom-projects/activity-types-defaults",
+    query: GetActivityTypesDefaultsSchema,
+    responses: {
+      200: contract.type<ApiResponse<ActivityTypesDefaults>>(),
+    },
+    summary:
+      "Get default values for fields based on the selected country and ecosystem",
+  },
   getAvailableCountries: {
     method: "GET",
     path: "/custom-projects/available-countries",

@@ -12,6 +12,12 @@ import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
+import { GetActivityTypesDefaults } from '@shared/dtos/custom-projects/get-activity-types-defaults.dto';
+import {
+  ActivityTypesDefaults,
+  ConvervationActivityDefaults,
+  RestorationActivityDefaults,
+} from '@shared/dtos/custom-projects/activity-types-defaults';
 
 /**
  * Additional data that is required to perform calculations, which is not overridable by the user. Better naming and clustering of concepts would be great
@@ -108,6 +114,69 @@ export class DataRepository extends Repository<BaseDataView> {
       throw new NotFoundException('Could not retrieve default carbon inputs');
     }
     return additionalBaseData;
+  }
+
+  async getActivityTypesDefaults(
+    dto: GetActivityTypesDefaults,
+  ): Promise<ActivityTypesDefaults> {
+    const [conservationDefaults, restorationDefaults] = await Promise.all([
+      this.getConservationActivityDefaults(dto),
+      this.getRestorationActivityDefaults(dto),
+    ]);
+
+    const defaults: ActivityTypesDefaults = {
+      [ACTIVITY.CONSERVATION]: conservationDefaults,
+      [ACTIVITY.RESTORATION]: restorationDefaults,
+    };
+    return defaults;
+  }
+
+  private async getConservationActivityDefaults(
+    dto: GetActivityTypesDefaults,
+  ): Promise<ConvervationActivityDefaults> {
+    const { countryCode, ecosystem } = dto;
+
+    const result = await this.findOne({
+      where: { countryCode, ecosystem, activity: ACTIVITY.CONSERVATION },
+      select: [
+        'ecosystemLossRate',
+        'tier1EmissionFactor',
+        'emissionFactorAgb',
+        'emissionFactorSoc',
+      ],
+    });
+    if (result === null) return null;
+
+    return {
+      ecosystemLossRate: result.ecosystemLossRate,
+      emissionFactor: {
+        tier1: result.tier1EmissionFactor,
+        tier2: {
+          emissionFactorAgb: result.emissionFactorAgb,
+          emissionFactorSoc: result.emissionFactorSoc,
+        },
+      },
+    };
+  }
+
+  private async getRestorationActivityDefaults(
+    dto: GetActivityTypesDefaults,
+  ): Promise<RestorationActivityDefaults> {
+    const { countryCode, ecosystem } = dto;
+
+    const result = await this.findOne({
+      where: { countryCode, ecosystem, activity: ACTIVITY.RESTORATION },
+      select: ['activity', 'tier1SequestrationRate', 'tier2SequestrationRate'],
+    });
+    if (result === null) return null;
+
+    return {
+      activity: result.activity,
+      sequestrationRate: {
+        tier1: result.tier1SequestrationRate,
+        tier2: result.tier2SequestrationRate,
+      },
+    };
   }
 
   async getOverridableCostInputs(

@@ -19,6 +19,7 @@ import { User } from '@shared/entities/users/user.entity';
 import { EventBus } from '@nestjs/cqrs';
 import { SaveCustomProjectEvent } from '@api/modules/custom-projects/events/save-custom-project.event';
 import { FetchSpecification } from 'nestjs-base-service';
+import { GetActivityTypesDefaults } from '@shared/dtos/custom-projects/get-activity-types-defaults.dto';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -85,6 +86,10 @@ export class CustomProjectsService extends AppBaseService<
         `Custom project could not be saved, please try again later`,
       );
     }
+  }
+
+  async getActivityTypeDefaults(dto: GetActivityTypesDefaults) {
+    return this.dataRepository.getActivityTypesDefaults(dto);
   }
 
   async getDefaultCostInputs(

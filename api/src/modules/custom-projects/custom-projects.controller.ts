@@ -25,6 +25,17 @@ export class CustomProjectsController {
     private readonly customProjects: CustomProjectsService,
   ) {}
 
+  @TsRestHandler(customProjectContract.getActivityTypesDefaults)
+  async getActivityTypeDefaults(): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.getActivityTypesDefaults,
+      async ({ query }) => {
+        const data = await this.customProjects.getActivityTypeDefaults(query);
+        return { body: { data }, status: HttpStatus.OK };
+      },
+    );
+  }
+
   @TsRestHandler(customProjectContract.getAvailableCountries)
   async getAvailableCountriesToCreateACustomProject(): Promise<ControllerResponse> {
     return tsRestHandler(
