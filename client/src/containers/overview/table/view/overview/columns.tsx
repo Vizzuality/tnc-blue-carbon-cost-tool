@@ -5,6 +5,7 @@ import { z } from "zod";
 import { formatNumber } from "@/lib/format";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
+import { ScoreIndicator } from "@/components/ui/score-card";
 
 const columnHelper = createColumnHelper<Partial<ProjectType>>();
 
@@ -13,11 +14,17 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
     enableSorting: true,
     header: () => <span>Project Name</span>,
   }),
-  // ! omitting until is available in the API
-  // columnHelper.accessor("scorecard", {
-  //   enableSorting: true,
-  //   header: () => <span>Scorecard rating</span>,
-  // }),
+  columnHelper.accessor("scoreCardRating", {
+    enableSorting: true,
+    header: () => <span>Scorecard rating</span>,
+    cell: (props) => {
+      const value = props.getValue();
+      if (value === undefined) {
+        return "-";
+      }
+      return <ScoreIndicator score={value} />;
+    },
+  }),
   columnHelper.accessor(
     filters.costRangeSelector === "npv" ? "costPerTCO2eNPV" : "costPerTCO2e",
     {

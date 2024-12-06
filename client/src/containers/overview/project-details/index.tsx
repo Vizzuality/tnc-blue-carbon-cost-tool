@@ -27,6 +27,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { ScoreIndicator } from "@/components/ui/score-card";
 import {
   Sheet,
   SheetContent,
@@ -63,27 +64,6 @@ const CreateProjectDetails = () => (
   </Dialog>
 );
 
-interface ScoreIndicatorProps {
-  score: "High" | "Medium" | "Low";
-  className?: string;
-}
-
-const ScoreIndicator = ({ score, className = "" }: ScoreIndicatorProps) => {
-  const bgColorClass = {
-    High: "bg-high",
-    Medium: "bg-medium",
-    Low: "bg-low",
-  }[score];
-
-  return (
-    <div
-      className={`flex h-10 items-center justify-center font-medium text-deep-ocean ${bgColorClass} ${className}`}
-    >
-      {score}
-    </div>
-  );
-};
-
 //////// Legend component ////////
 const Legend = ({
   name,
@@ -117,15 +97,15 @@ const projectData = {
   totalRevenue: 40600000,
   opExRevenue: 36500000,
   abatement: 962991,
-  overallScore: "Medium",
+  overallScore: "medium",
   scorecard: [
-    { name: "Economic feasibility", rating: "High" },
-    { name: "Legal feasibility", rating: "Low" },
-    { name: "Implementation risk", rating: "High" },
-    { name: "Social feasibility", rating: "Medium" },
-    { name: "Security risk", rating: "Medium" },
-    { name: "Value for money", rating: "Low" },
-    { name: "Overall", rating: "Medium" },
+    { name: "Economic feasibility", rating: "high" },
+    { name: "Legal feasibility", rating: "low" },
+    { name: "Implementation risk", rating: "high" },
+    { name: "Social feasibility", rating: "medium" },
+    { name: "Security risk", rating: "medium" },
+    { name: "Value for money", rating: "low" },
+    { name: "Overall", rating: "medium" },
   ],
   costEstimates: [
     {
@@ -401,7 +381,7 @@ export default function ProjectDetails() {
                     <div className="w-2/3 content-center py-2">{item.name}</div>
                     <ScoreIndicator
                       className="w-1/3"
-                      score={item.rating as "High" | "Medium" | "Low"}
+                      score={item.rating as "high" | "medium" | "low"}
                     />
                   </div>
                   {projectData.scorecard.length !== index + 1 && (
