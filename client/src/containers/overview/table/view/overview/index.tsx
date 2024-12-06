@@ -86,6 +86,7 @@ export function OverviewTable() {
         costRangeSelector: filters.costRangeSelector,
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
+        partialProjectName: filters.keyword,
       },
     },
     {
