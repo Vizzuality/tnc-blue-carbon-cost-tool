@@ -17,7 +17,7 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
-import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
+import { useScorecardFilters, useTableView } from "@/app/(overview)/url-store";
 
 import {
   filtersToQueryParams,
@@ -39,9 +39,9 @@ import TablePagination, {
 
 export function ScoredCardPrioritizationTable() {
   const [tableView] = useTableView();
-  const [filters] = useGlobalFilters();
+  const [filters] = useScorecardFilters();
   const [sorting, setSorting] = useState<SortingState>([
-    {
+    { 
       id: "projectName",
       desc: true,
     },
@@ -50,21 +50,19 @@ export function ScoredCardPrioritizationTable() {
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
   });
-
   const queryKey = queryKeys.projects.all(tableView, {
     ...filters,
     sorting,
     pagination,
   }).queryKey;
 
-  const { data, isSuccess } = client.projects.getProjects.useQuery(
+  const { data, isSuccess } = client.projects.getProjectsScorecard.useQuery(
     queryKey,
     {
       query: {
         ...filtersToQueryParams(filters),
 
         filter: {
-          restorationActivity: [""],
         },
         // fields: TABLE_COLUMNS.map((column) => column.accessorKey),
         // ...(sorting.length > 0 && {
@@ -147,7 +145,7 @@ export function ScoredCardPrioritizationTable() {
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} className="p-0">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

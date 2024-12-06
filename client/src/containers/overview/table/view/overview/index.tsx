@@ -170,13 +170,21 @@ export function OverviewTable() {
                 }}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
+                    <TableCell
+                      key={cell.id}
+                      className={cn({
+                        "p-0": cell.column.id === "scoreCardRating",
+                      })}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                    cell.getContext(),
+                  )}
+                </TableCell>
+              ))}
+            </TableRow>
             ))
-          ) : (
+          ) : ( 
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
                 No results.
