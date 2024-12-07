@@ -3,6 +3,7 @@ import {
   RESTORATION_ACTIVITY_SUBTYPE,
 } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 import {
   COST_TYPE_SELECTOR,
   PROJECT_PRICE_TYPE,
@@ -20,7 +21,6 @@ import {
   INITIAL_ABATEMENT_POTENTIAL_RANGE,
 } from "@/containers/overview/filters/constants";
 import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
-import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 
 const SUB_ACTIVITIES = RESTORATION_ACTIVITY_SUBTYPE;
 
@@ -62,7 +62,9 @@ export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
   abatementPotentialRange: INITIAL_ABATEMENT_POTENTIAL_RANGE,
 };
 
-export const INITIAL_SCORECARD_FILTERS_STATE: z.infer<typeof scorecardFiltersSchema> = {
+export const INITIAL_SCORECARD_FILTERS_STATE: z.infer<
+  typeof scorecardFiltersSchema
+> = {
   availabilityOfExperiencedLabor: undefined,
   availabilityOfAlternatingFunding: undefined,
   coastalProtectionBenefits: undefined,
@@ -97,7 +99,9 @@ export function useScorecardFilters() {
   const [popup, setPopup] = useAtom(popupAtom);
   const [filters, setFilters] = useQueryState(
     "scorecardFilters",
-    parseAsJson(scorecardFiltersSchema.parse).withDefault(INITIAL_SCORECARD_FILTERS_STATE),
+    parseAsJson(scorecardFiltersSchema.parse).withDefault(
+      INITIAL_SCORECARD_FILTERS_STATE,
+    ),
   );
 
   const updateFilters = async (
