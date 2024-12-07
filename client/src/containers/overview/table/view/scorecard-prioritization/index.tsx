@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
 import { keepPreviousData } from "@tanstack/react-query";
 import {
   flexRender,
@@ -21,7 +22,7 @@ import { useScorecardFilters, useTableView } from "@/app/(overview)/url-store";
 
 import {
   filtersToQueryParams,
-  NO_DATA,
+  NO_SCORECARD_DATA,
 } from "@/containers/overview/table/utils";
 import { TABLE_COLUMNS } from "@/containers/overview/table/view/scorecard-prioritization/columns";
 
@@ -41,7 +42,7 @@ export function ScoredCardPrioritizationTable() {
   const [tableView] = useTableView();
   const [filters] = useScorecardFilters();
   const [sorting, setSorting] = useState<SortingState>([
-    { 
+    {
       id: "projectName",
       desc: true,
     },
@@ -50,7 +51,7 @@ export function ScoredCardPrioritizationTable() {
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
   });
-  const queryKey = queryKeys.projects.all(tableView, {
+  const queryKey = queryKeys.scorecardFilters.all(tableView, {
     ...filters,
     sorting,
     pagination,
@@ -61,26 +62,23 @@ export function ScoredCardPrioritizationTable() {
     {
       query: {
         ...filtersToQueryParams(filters),
-
-        filter: {
-        },
-        // fields: TABLE_COLUMNS.map((column) => column.accessorKey),
-        // ...(sorting.length > 0 && {
-        //   sort: sorting.map((sort) => `${sort.desc ? "" : "-"}${sort.id}`),
-        // }),
+        filter: {},
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
       },
     },
     {
       queryKey,
-      select: (data) => data.body,
+      select: (data) => ({
+        ...data.body,
+        data: data.body.data as ProjectScorecardView[],
+      }),
       placeholderData: keepPreviousData,
     },
   );
 
   const table = useReactTable({
-    data: isSuccess ? data.data : NO_DATA,
+    data: isSuccess ? data.data : NO_SCORECARD_DATA,
     columns: TABLE_COLUMNS,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
