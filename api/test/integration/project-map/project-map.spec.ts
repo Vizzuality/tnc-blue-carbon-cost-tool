@@ -1,6 +1,10 @@
 import { TestManager } from '../../utils/test-manager';
 import { HttpStatus } from '@nestjs/common';
-import { Project } from '@shared/entities/projects.entity';
+import {
+  Project,
+  PROJECT_PRICE_TYPE,
+  PROJECT_SIZE_FILTER,
+} from '@shared/entities/projects.entity';
 import { Country } from '@shared/entities/country.entity';
 import { projectsContract } from '@shared/contracts/projects.contract';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
@@ -219,6 +223,72 @@ describe('Project Map', () => {
       countries[0].name,
     );
     expect(response.body.features[1].properties.country).toBe(
+      countries[1].name,
+    );
+  });
+
+  test('Should return the geometries of the countries filtered by priceType', async () => {
+    const countries = await testManager
+      .getDataSource()
+      .getRepository(Country)
+      .find({ take: 2 });
+
+    await Promise.all([
+      testManager.mocks().createProject({
+        priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
+        countryCode: countries[0].code,
+      }),
+      testManager.mocks().createProject({
+        priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+        countryCode: countries[1].code,
+      }),
+    ]);
+
+    const response = await testManager
+      .request()
+      .get(projectsContract.getProjectsMap.path)
+      .query({
+        filter: { priceType: [PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE] },
+      });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body.features).toHaveLength(1);
+    expect(response.body.features[0].properties.country).toBe(
+      countries[1].name,
+    );
+  });
+
+  test('Should return the geometries of the countries filtered by projectSizeFilter', async () => {
+    const countries = await testManager
+      .getDataSource()
+      .getRepository(Country)
+      .find({ take: 2 });
+
+    await Promise.all([
+      testManager.mocks().createProject({
+        projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
+        priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
+        countryCode: countries[0].code,
+      }),
+      testManager.mocks().createProject({
+        projectSizeFilter: PROJECT_SIZE_FILTER.SMALL,
+        priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+        countryCode: countries[1].code,
+      }),
+    ]);
+
+    const response = await testManager
+      .request()
+      .get(projectsContract.getProjectsMap.path)
+      .query({
+        filter: {
+          projectSizeFilter: [PROJECT_SIZE_FILTER.SMALL],
+        },
+      });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body.features).toHaveLength(1);
+    expect(response.body.features[0].properties.country).toBe(
       countries[1].name,
     );
   });
