@@ -399,6 +399,8 @@ export class CostCalculator {
       creditsIssuedPlan,
       cumulativeNetIncomePlan,
       cumulativeNetIncomeCapexOpex,
+      annualNetCashFlow,
+      annualNetIncome,
     });
 
     const yearlyBreakdown: YearlyBreakdown[] = [];
