@@ -83,6 +83,22 @@ export class ProjectsMapRepository extends Repository<Project> {
     const { costRange, abatementPotentialRange, costRangeSelector } =
       otherFilters;
 
+    if (projectSizeFilter) {
+      for (const projectSize of projectSizeFilter) {
+        queryBuilder.andWhere('p.project_size_filter = :projectSizeFilter', {
+          projectSizeFilter: projectSize,
+        });
+      }
+    }
+
+    if (priceType) {
+      for (const type of priceType) {
+        queryBuilder.andWhere('p.price_type = :priceType', {
+          priceType: type,
+        });
+      }
+    }
+
     if (costRangeSelector === 'npv') {
       queryBuilder.addSelect('SUM(p.total_cost_npv)', 'total_cost');
     } else {
