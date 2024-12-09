@@ -392,8 +392,12 @@ export class CostCalculator {
       }
     }
 
-    const yearNormalizedCostPlans: CostPlans =
-      this.normalizeCostPlan(costPlans);
+    const yearNormalizedCostPlans: CostPlans = this.normalizeCostPlan({
+      ...costPlans,
+      totalCostPlan,
+      estimatedRevenuePlan,
+      creditsIssuedPlan,
+    });
 
     const yearlyBreakdown: YearlyBreakdown[] = [];
     for (const costName in yearNormalizedCostPlans) {
