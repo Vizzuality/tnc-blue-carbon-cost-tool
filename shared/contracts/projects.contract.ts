@@ -72,14 +72,12 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ProjectMap>(),
     },
-    // TODO: we need to define filters, they should probably match filters for Projects. Or we might want to pass only project ids, which
-    //       would be already filtered
-    //query: z.object({ countryCodes: z.string().array().optional() }).optional(),
     query: getProjectsQuerySchema.pick({
       filter: true,
       costRange: true,
       abatementPotentialRange: true,
       costRangeSelector: true,
+      partialProjectName: true,
     }),
   },
 });

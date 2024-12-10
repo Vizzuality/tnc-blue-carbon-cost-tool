@@ -68,6 +68,7 @@ export class ProjectsController {
         costRange: query.costRange,
         abatementPotentialRange: query.abatementPotentialRange,
         costRangeSelector: query.costRangeSelector,
+        partialProjectName: query.partialProjectName,
       };
       const data = await this.projectMapRepository.getProjectsMap(
         filter as unknown as ProjectFilters,

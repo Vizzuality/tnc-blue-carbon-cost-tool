@@ -32,6 +32,7 @@ export default function ProjectsLayer() {
         costRange: filters.costRange,
         abatementPotentialRange: filters.abatementPotentialRange,
         costRangeSelector: filters.costRangeSelector,
+        partialProjectName: filters.keyword,
       },
     },
     {
