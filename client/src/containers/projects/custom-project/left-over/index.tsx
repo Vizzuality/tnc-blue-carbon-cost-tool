@@ -2,6 +2,8 @@ import { FC } from "react";
 
 import { renderCurrency } from "@/lib/format";
 
+import { CUSTOM_PROJECT_OUTPUTS } from "@/constants/tooltip";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Graph, GraphLegend } from "@/components/ui/graph";
 import { Label } from "@/components/ui/label";
@@ -22,9 +24,8 @@ const LeftOver: FC<LeftoverProps> = ({ total, leftover, opex }) => {
               htmlFor="totalProjectCost"
               className="text-md font-medium"
               tooltip={{
-                title: "Total project cost",
-                content:
-                  "Refers to the summary of Capital Expenditure and Operating Expenditure",
+                title: "Leftover after OpEx",
+                content: CUSTOM_PROJECT_OUTPUTS.LEFTOVER_AFTER_OPEX,
               }}
             >
               <h3 className="text-md">Leftover after OpEx</h3>

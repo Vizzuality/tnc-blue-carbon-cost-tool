@@ -2,7 +2,9 @@ import { FC } from "react";
 
 import { useAtom } from "jotai";
 
-import { showCostDetailsAtom } from "@/app/projects/[id]/store";
+import { showCostDetailsAtom } from "@/app/projects/store";
+
+import { COST_DETAILS } from "@/constants/tooltip";
 
 import CostDetailsParameters from "@/containers/projects/custom-project/cost-details/parameters";
 import CostDetailTable from "@/containers/projects/custom-project/cost-details/table";
@@ -31,7 +33,12 @@ const CostDetails: FC<CostDetailsProps> = ({ data }) => {
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <h2 className="text-xl font-semibold">Cost details</h2>
-            <InfoButton title="tooltip title">tooltip.content</InfoButton>
+            <InfoButton
+              title="Cost details"
+              className="max-h-screen overflow-y-auto"
+            >
+              {COST_DETAILS}
+            </InfoButton>
           </SheetTitle>
         </SheetHeader>
         <CostDetailsParameters />

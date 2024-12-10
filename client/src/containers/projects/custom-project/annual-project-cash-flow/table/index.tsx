@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 
+import { YearlyBreakdown } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import {
   flexRender,
   getCoreRowModel,
@@ -14,7 +15,6 @@ import {
   columns,
 } from "@/containers/projects/custom-project/annual-project-cash-flow/table/columns";
 import { getBreakdownYears } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
-import mockData from "@/containers/projects/custom-project/mock-data";
 
 import {
   ScrollableTable,
@@ -28,14 +28,17 @@ import TablePagination, {
   PAGINATION_SIZE_OPTIONS,
 } from "@/components/ui/table-pagination";
 
-const CashFlowTable: FC = () => {
+interface CashFlowTableProps {
+  data: YearlyBreakdown[];
+}
+const CashFlowTable: FC<CashFlowTableProps> = ({ data }) => {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
   });
   const table = useReactTable({
-    data: tableData,
-    columns: columns(getBreakdownYears(mockData.data.yearlyBreakdown)),
+    data,
+    columns: columns(getBreakdownYears(data)),
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     state: {
@@ -56,7 +59,7 @@ const CashFlowTable: FC = () => {
                     key={header.id}
                     className={cn({
                       "text-xs font-normal": true,
-                      "text-center": header.id !== "label",
+                      "text-center": header.id !== "costName",
                     })}
                   >
                     {flexRender(
@@ -73,18 +76,17 @@ const CashFlowTable: FC = () => {
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id} className="divide-x-0">
-                {row.getVisibleCells().map((cell, index) => (
+                {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className="px-2 py-2.5"
-                    style={
-                      index > 0
-                        ? {
-                            minWidth: cell.column.columnDef.size,
-                            maxWidth: cell.column.columnDef.size,
-                          }
-                        : undefined
-                    }
+                    className={cn({
+                      "px-2 py-2.5": true,
+                      "text-center": cell.column.id !== "costName",
+                    })}
+                    style={{
+                      minWidth: cell.column.columnDef.size,
+                      maxWidth: cell.column.columnDef.size,
+                    }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>

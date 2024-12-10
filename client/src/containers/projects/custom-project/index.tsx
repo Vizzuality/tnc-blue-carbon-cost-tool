@@ -1,16 +1,18 @@
 "use client";
 import { FC } from "react";
 
+import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 
 import { LAYOUT_TRANSITIONS } from "@/app/(overview)/constants";
-import {
-  costDetailsFilterAtom,
-  projectsUIState,
-} from "@/app/projects/[id]/store";
+import { costDetailsFilterAtom, projectsUIState } from "@/app/projects/store";
 
 import AnnualProjectCashFlow from "@/containers/projects/custom-project/annual-project-cash-flow";
+import {
+  getBreakdownYears,
+  parseYearlyBreakdownForChart,
+} from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
 import ProjectCost from "@/containers/projects/custom-project/cost";
 import CostDetails from "@/containers/projects/custom-project/cost-details";
 import { parseCostDetailsForTable } from "@/containers/projects/custom-project/cost-details/table/utils";
@@ -23,34 +25,27 @@ import { useCustomProjectFilters } from "@/containers/projects/url-store";
 
 import { useSidebar } from "@/components/ui/sidebar";
 
-// Temporary use of mock data until we decide on state management
-const {
-  country,
-  projectSize,
-  projectLength,
-  ecosystem,
-  activity,
-  lossRate,
-  carbonRevenuesToCover,
-  initialCarbonPrice,
-  emissionFactors,
-  totalProjectCost,
-  summary,
-  costDetails,
-  leftover,
-} = mockData.data;
+// Temporary use of mock data until response from API is ready
+const { costDetails, leftover } = mockData.data;
 const costDetailsData = {
   total: parseCostDetailsForTable(costDetails.total),
   npv: parseCostDetailsForTable(costDetails.npv),
 };
 
 export const SUMMARY_SIDEBAR_WIDTH = 460;
-const CustomProject: FC = () => {
+
+interface CustomProjectProps {
+  data: InstanceType<typeof CustomProjectEntity>;
+}
+
+const CustomProject: FC<CustomProjectProps> = ({ data }) => {
   const [{ costRangeSelector }] = useCustomProjectFilters();
   const costDetailsRangeSelector = useAtomValue(costDetailsFilterAtom);
   const { projectSummaryOpen } = useAtomValue(projectsUIState);
   const { open: navOpen } = useSidebar();
-  const projectCostProps = totalProjectCost[costRangeSelector];
+  // TODO: should be replaced with correct type when available;
+  const output = data.output as any;
+  const projectCostProps = output.totalProjectCost[costRangeSelector];
   const costDetailsProps = costDetailsData[costDetailsRangeSelector];
   const leftOverProps = leftover[costRangeSelector];
 
@@ -76,27 +71,33 @@ const CustomProject: FC = () => {
         transition={LAYOUT_TRANSITIONS}
         className="overflow-hidden"
       >
-        <ProjectSummary data={summary} />
+        <ProjectSummary data={output.summary} />
       </motion.aside>
       <div className="mx-3 flex flex-1 flex-col">
         <CustomProjectHeader />
         <div className="mb-4 mt-2 flex gap-4">
           <ProjectDetails
-            country={country}
-            projectSize={projectSize}
-            projectLength={projectLength}
-            ecosystem={ecosystem}
-            activity={activity}
-            lossRate={lossRate}
-            carbonRevenuesToCover={carbonRevenuesToCover}
-            initialCarbonPrice={initialCarbonPrice}
-            emissionFactors={emissionFactors}
+            country={data.country}
+            projectSize={data.projectSize}
+            projectLength={data.projectLength}
+            ecosystem={data.ecosystem}
+            activity={data.activity}
+            lossRate={output.lossRate}
+            carbonRevenuesToCover={output.carbonRevenuesToCover}
+            initialCarbonPrice={output.initialCarbonPrice}
+            emissionFactors={output.emissionFactors}
           />
           <ProjectCost {...projectCostProps} />
           <LeftOver {...leftOverProps} />
           <CostDetails data={costDetailsProps} />
         </div>
-        <AnnualProjectCashFlow />
+        <AnnualProjectCashFlow
+          tableData={output.yearlyBreakdown}
+          chartData={parseYearlyBreakdownForChart(
+            output.yearlyBreakdown,
+            getBreakdownYears(output.yearlyBreakdown),
+          )}
+        />
       </div>
     </motion.div>
   );

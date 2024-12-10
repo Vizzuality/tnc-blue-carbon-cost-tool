@@ -4,7 +4,9 @@ import { useSetAtom } from "jotai";
 
 import { renderCurrency } from "@/lib/format";
 
-import { showCostDetailsAtom } from "@/app/projects/[id]/store";
+import { showCostDetailsAtom } from "@/app/projects/store";
+
+import { CUSTOM_PROJECT_OUTPUTS } from "@/constants/tooltip";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -28,8 +30,7 @@ const ProjectCost: FC<ProjectCostProps> = ({ total, capex, opex }) => {
               className="text-md font-medium"
               tooltip={{
                 title: "Total project cost",
-                content:
-                  "Refers to the summary of Capital Expenditure and Operating Expenditure",
+                content: CUSTOM_PROJECT_OUTPUTS.TOTAL_PROJECT_COST,
               }}
               asChild
             >

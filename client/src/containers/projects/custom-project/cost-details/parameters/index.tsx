@@ -2,7 +2,7 @@ import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { useAtom } from "jotai";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
-import { costDetailsFilterAtom } from "@/app/projects/[id]/store";
+import { costDetailsFilterAtom } from "@/app/projects/store";
 
 import { Label } from "@/components/ui/label";
 import {

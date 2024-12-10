@@ -1,41 +1,70 @@
-import { YearlyBreakdown } from "@shared/dtos/custom-projects/custom-project-output.dto";
+import {
+  CostPlanMap,
+  YearlyBreakdown,
+} from "@shared/dtos/custom-projects/custom-project-output.dto";
 
-function getBreakdownYears(data: YearlyBreakdown[]): string[] {
+function getBreakdownYears(data: YearlyBreakdown[]): number[] {
   if (data.length === 0) return [];
 
   return Object.keys(data[0].costValues)
-    .map((y) => y)
-    .sort((a, b) => Number(a) - Number(b));
+    .map((y) => Number(y))
+    .sort((a, b) => a - b);
 }
 
-// TODO: This functionality will be used when backend API response is updated
-// function parseYearlyBreakdownForChart(
-//   data: YearlyBreakdown[],
-//   years: string[],
-// ) {
-//   if (data.length === 0) return [];
+type ChartDataKeys =
+  | "estimatedRevenuePlan"
+  | "opexTotalCostPlan"
+  | "annualNetCashFlow"
+  | "cumulativeNetIncomePlan"
+  | "cumulativeNetIncomeCapexOpex";
 
-//   let estimatedRenevueValues = {};
-//   let annualNetCashFlowValues = {};
+type ChartData = Record<ChartDataKeys, CostPlanMap>;
+type YearlyBreakdownData = {
+  estimatedRevenuePlan: number;
+  opexTotalCostPlan: number;
+  annualNetCashFlow: number;
+  cumulativeNetIncomePlan: number;
+  cumulativeNetIncomeCapexOpex: number;
+  year: number;
+};
+type YearlyBreakdownChartData = YearlyBreakdownData[];
 
-//   data.forEach((d) => {
-//     switch (d.costName) {
-//       case "estimatedRenevue":
-//         estimatedRenevueValues = d.costValues;
-//         break;
-//       case "annualNetCashFlow":
-//         annualNetCashFlowValues = d.costValues;
-//         break;
-//       default:
-//         break;
-//     }
-//   });
+function parseYearlyBreakdownForChart(
+  data: YearlyBreakdown[],
+  years: number[],
+): YearlyBreakdownChartData {
+  if (data.length === 0) return [];
 
-//   return years.map((y) => ({
-//     year: y,
-//     estimatedRevenue: estimatedRenevueValues[y],
-//     annualNetCashFlow: annualNetCashFlowValues[y],
-//   }));
-// }
+  const chartData: ChartData = {
+    estimatedRevenuePlan: {},
+    opexTotalCostPlan: {},
+    annualNetCashFlow: {},
+    cumulativeNetIncomePlan: {},
+    cumulativeNetIncomeCapexOpex: {},
+  };
 
-export { getBreakdownYears };
+  // Populate chart data based on yearly breakdown
+  data.forEach(({ costName, costValues }) => {
+    if (costName in chartData) {
+      chartData[costName as ChartDataKeys] = costValues;
+    }
+  });
+
+  // Transform data for each year
+  return years.map((year) => ({
+    year,
+    ...Object.keys(chartData).reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: chartData[key as ChartDataKeys][year],
+      }),
+      {} as Record<ChartDataKeys, number>,
+    ),
+  }));
+}
+
+export {
+  getBreakdownYears,
+  parseYearlyBreakdownForChart,
+  type YearlyBreakdownChartData,
+};

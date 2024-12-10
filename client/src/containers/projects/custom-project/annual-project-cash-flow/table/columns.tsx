@@ -1,3 +1,4 @@
+import { OverridableCostInputs } from "@shared/dtos/custom-projects/cost.inputs";
 import { createColumnHelper } from "@tanstack/react-table";
 
 import { formatCurrency } from "@/lib/format";
@@ -29,6 +30,24 @@ const getRandomNumber = (type?: "negative" | "positive"): number => {
 };
 
 const columnHelper = createColumnHelper<TableRow>();
+const cashflowCostNameMap: Record<keyof OverridableCostInputs, string> = {
+  financingCost: "Financing cost",
+  monitoring: "Monitoring",
+  maintenance: "Maintenance",
+  communityBenefitSharingFund: "Community benefit sharing fund",
+  carbonStandardFees: "Carbon standard fees",
+  baselineReassessment: "Baseline reassessment",
+  mrv: "MRV",
+  longTermProjectOperatingCost: "Long-term project operating",
+  feasibilityAnalysis: "Feasibility analysis",
+  conservationPlanningAndAdmin: "Conservation planning and admin",
+  dataCollectionAndFieldCost: "Data collection and field costs",
+  communityRepresentation: "Community representation",
+  blueCarbonProjectPlanning: "Blue carbon project planning",
+  establishingCarbonRights: "Establishing carbon rights",
+  validation: "Validation",
+  implementationLabor: "Implementation labor",
+};
 
 export const chartData = YEARS.map((y) => ({
   year: y,
@@ -39,9 +58,14 @@ export const chartData = YEARS.map((y) => ({
 }));
 export const tableData = mockData.data.yearlyBreakdown;
 
-export const columns = (years: string[]) => [
+export const columns = (years: number[]) => [
   columnHelper.accessor("costName", {
     header: () => <span>Project</span>,
+    cell: (info) => (
+      <span>
+        {cashflowCostNameMap[info.getValue() as keyof OverridableCostInputs]}
+      </span>
+    ),
   }),
   ...years.map((year) =>
     columnHelper.accessor(`costValues.${year}`, {
