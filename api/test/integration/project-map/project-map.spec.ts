@@ -8,6 +8,7 @@ import {
 import { Country } from '@shared/entities/country.entity';
 import { projectsContract } from '@shared/contracts/projects.contract';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
+import { partial } from 'lodash';
 
 describe('Project Map', () => {
   let testManager: TestManager;
@@ -290,6 +291,41 @@ describe('Project Map', () => {
     expect(response.body.features).toHaveLength(1);
     expect(response.body.features[0].properties.country).toBe(
       countries[1].name,
+    );
+  });
+
+  test('Should return the geometries of the countries filtered by partialProjectName', async () => {
+    const countries = await testManager
+      .getDataSource()
+      .getRepository(Country)
+      .find({ take: 1 });
+
+    await Promise.all([
+      testManager.mocks().createProject({
+        projectName: 'MyProjectName',
+        projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
+        priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
+        countryCode: countries[0].code,
+      }),
+      testManager.mocks().createProject({
+        projectName: 'ShouldNotBeReturned',
+        projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
+        priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
+        countryCode: countries[0].code,
+      }),
+    ]);
+
+    const response = await testManager
+      .request()
+      .get(projectsContract.getProjectsMap.path)
+      .query({
+        partialProjectName: 'myproject',
+      });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body.features).toHaveLength(1);
+    expect(response.body.features[0].properties.country).toBe(
+      countries[0].name,
     );
   });
 });
