@@ -3,7 +3,6 @@ import {
   RESTORATION_ACTIVITY_SUBTYPE,
 } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 import {
   COST_TYPE_SELECTOR,
   PROJECT_PRICE_TYPE,
@@ -37,18 +36,6 @@ export const filtersSchema = z.object({
   [FILTER_KEYS[9]]: z.array(z.number()).length(2),
 });
 
-export const scorecardFiltersSchema = z.object({
-  availabilityOfExperiencedLabor: z.nativeEnum(PROJECT_SCORE).optional(),
-  availabilityOfAlternatingFunding: z.nativeEnum(PROJECT_SCORE).optional(),
-  coastalProtectionBenefits: z.nativeEnum(PROJECT_SCORE).optional(),
-  biodiversityBenefit: z.nativeEnum(PROJECT_SCORE).optional(),
-  financialFeasibility: z.nativeEnum(PROJECT_SCORE).optional(),
-  legalFeasibility: z.nativeEnum(PROJECT_SCORE).optional(),
-  implementationFeasibility: z.nativeEnum(PROJECT_SCORE).optional(),
-  socialFeasibility: z.nativeEnum(PROJECT_SCORE).optional(),
-  securityRating: z.nativeEnum(PROJECT_SCORE).optional(),
-});
-
 export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
   keyword: "",
   projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
@@ -62,20 +49,6 @@ export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
   abatementPotentialRange: INITIAL_ABATEMENT_POTENTIAL_RANGE,
 };
 
-export const INITIAL_SCORECARD_FILTERS_STATE: z.infer<
-  typeof scorecardFiltersSchema
-> = {
-  availabilityOfExperiencedLabor: undefined,
-  availabilityOfAlternatingFunding: undefined,
-  coastalProtectionBenefits: undefined,
-  biodiversityBenefit: undefined,
-  financialFeasibility: undefined,
-  legalFeasibility: undefined,
-  implementationFeasibility: undefined,
-  socialFeasibility: undefined,
-  securityRating: undefined,
-};
-
 export function useGlobalFilters() {
   const [popup, setPopup] = useAtom(popupAtom);
   const [filters, setFilters] = useQueryState(
@@ -87,27 +60,6 @@ export function useGlobalFilters() {
     updater: (
       prev: typeof INITIAL_FILTERS_STATE,
     ) => typeof INITIAL_FILTERS_STATE,
-  ) => {
-    await setFilters(updater);
-    if (popup) setPopup(null);
-  };
-
-  return [filters, updateFilters] as const;
-}
-
-export function useScorecardFilters() {
-  const [popup, setPopup] = useAtom(popupAtom);
-  const [filters, setFilters] = useQueryState(
-    "scorecardFilters",
-    parseAsJson(scorecardFiltersSchema.parse).withDefault(
-      INITIAL_SCORECARD_FILTERS_STATE,
-    ),
-  );
-
-  const updateFilters = async (
-    updater: (
-      prev: typeof INITIAL_SCORECARD_FILTERS_STATE,
-    ) => typeof INITIAL_SCORECARD_FILTERS_STATE,
   ) => {
     await setFilters(updater);
     if (popup) setPopup(null);

@@ -1,14 +1,10 @@
-import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
-import { Project } from "@shared/entities/projects.entity";
 import { z } from "zod";
 
-import {
-  filtersSchema,
-  scorecardFiltersSchema,
-} from "@/app/(overview)/url-store";
+import { filtersSchema } from "@/app/(overview)/url-store";
 
-export const NO_DATA: Project[] = [];
-export const NO_SCORECARD_DATA: ProjectScorecardView[] = [];
+import { scorecardFiltersSchema } from "./view/scorecard-prioritization/schema";
+
+export const NO_DATA = [];
 
 const OMITTED_FIELDS = [
   "keyword",
@@ -20,7 +16,8 @@ const OMITTED_FIELDS = [
 export const filtersToQueryParams = (
   filters: z.infer<typeof filtersSchema | typeof scorecardFiltersSchema>,
 ) => {
-  return Object.keys(filters)
+  debugger;
+  const queryParams = Object.keys(filters)
     .filter((key) => !OMITTED_FIELDS.includes(key))
     .reduce(
       (acc, key) => ({
@@ -31,4 +28,5 @@ export const filtersToQueryParams = (
       }),
       {},
     );
+  return queryParams;
 };

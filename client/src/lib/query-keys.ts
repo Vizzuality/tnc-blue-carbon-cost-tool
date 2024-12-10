@@ -5,10 +5,7 @@ import {
 import { PaginationState, SortingState } from "@tanstack/react-table";
 import { z } from "zod";
 
-import {
-  filtersSchema,
-  scorecardFiltersSchema,
-} from "@/app/(overview)/url-store";
+import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
 
@@ -25,22 +22,11 @@ export const geometriesKeys = createQueryKeys("geometries", {
   all: (filters: z.infer<typeof filtersSchema>) => [filters],
 });
 
-export const projectKeys = createQueryKeys("projects", {
-  all: (
+export const tableKeys = createQueryKeys("tables", {
+  all: <TFilters extends z.ZodTypeAny>(
     tableView: (typeof TABLE_VIEWS)[number],
-    filters?: z.infer<typeof filtersSchema> & {
-      sorting?: SortingState;
-      pagination?: PaginationState;
-    },
-  ) => ["all", tableView, filters],
-  id: (id: string) => [id],
-  countries: null,
-});
-
-export const scorecardFiltersKeys = createQueryKeys("scorecardFilters", {
-  all: (
-    tableView: (typeof TABLE_VIEWS)[number],
-    filters?: z.infer<typeof scorecardFiltersSchema> & {
+    schema: TFilters,
+    filters?: z.infer<TFilters> & {
       sorting?: SortingState;
       pagination?: PaginationState;
     },
@@ -53,6 +39,5 @@ export const queryKeys = mergeQueryKeys(
   authKeys,
   userKeys,
   geometriesKeys,
-  projectKeys,
-  scorecardFiltersKeys,
+  tableKeys,
 );

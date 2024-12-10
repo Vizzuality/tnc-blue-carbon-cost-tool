@@ -1,4 +1,5 @@
 import { ProjectType } from "@shared/contracts/projects.contract";
+import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 import { createColumnHelper } from "@tanstack/react-table";
 import { z } from "zod";
 
@@ -6,7 +7,7 @@ import { formatNumber } from "@/lib/format";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
 
-import { ScoreIndicator } from "@/components/ui/score-card";
+import { DEFAULT_BG_CLASSES, ScoreIndicator } from "@/components/ui/score-card";
 
 const columnHelper = createColumnHelper<Partial<ProjectType>>();
 
@@ -23,7 +24,11 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
       if (value === undefined) {
         return "-";
       }
-      return <ScoreIndicator score={value} />;
+      return (
+        <ScoreIndicator className={DEFAULT_BG_CLASSES[value as PROJECT_SCORE]}>
+          {value}
+        </ScoreIndicator>
+      );
     },
   }),
   columnHelper.accessor(
