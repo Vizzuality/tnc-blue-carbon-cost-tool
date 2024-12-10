@@ -17,9 +17,13 @@ import * as path from 'path';
 import { CountriesModule } from '@api/modules/countries/countries.module';
 import { ProjectsModule } from '@api/modules/projects/projects.module';
 import { CustomProjectsModule } from '@api/modules/custom-projects/custom-projects.module';
+import { TerminusModule } from '@nestjs/terminus';
+
+const NODE_ENV = process.env.NODE_ENV;
 
 @Module({
   imports: [
+    TerminusModule.forRoot({ logger: NODE_ENV === 'test' ? false : true }),
     TsRestModule.register({
       validateRequestQuery: true,
       validateRequestBody: true,
