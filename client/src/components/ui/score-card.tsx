@@ -1,27 +1,31 @@
-export type Score = "high" | "medium" | "low";
+import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
+
+import { cn } from "@/lib/utils";
 
 interface ScoreIndicatorProps {
-  score: Score;
   className?: string;
   children?: React.ReactNode;
+  bgColorClasses?: Record<PROJECT_SCORE, string>;
 }
 
+export const DEFAULT_BG_CLASSES = {
+  high: "bg-high",
+  medium: "bg-medium",
+  low: "bg-low",
+};
+
 export const ScoreIndicator = ({
-  score,
   children,
   className = "",
 }: ScoreIndicatorProps) => {
-  const bgColorClass = {
-    high: "bg-high",
-    medium: "bg-medium",
-    low: "bg-low",
-  }[score];
-
   return (
     <div
-      className={`flex h-10 items-center justify-center font-medium capitalize text-deep-ocean ${bgColorClass} ${className}`}
+      className={cn(
+        "flex h-10 items-center justify-center font-normal capitalize text-deep-ocean",
+        className,
+      )}
     >
-      {children ? children : score}
+      {children}
     </div>
   );
 };

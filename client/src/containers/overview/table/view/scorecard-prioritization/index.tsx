@@ -12,17 +12,20 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { useAtom } from "jotai";
 import { ChevronsUpDownIcon } from "lucide-react";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
-import { useScorecardFilters, useTableView } from "@/app/(overview)/url-store";
+import { projectDetailsAtom } from "@/app/(overview)/store";
+import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
+import ProjectDetails from "@/containers/overview/project-details";
 import {
   filtersToQueryParams,
-  NO_SCORECARD_DATA,
+  NO_DATA,
 } from "@/containers/overview/table/utils";
 import { TABLE_COLUMNS } from "@/containers/overview/table/view/scorecard-prioritization/columns";
 
@@ -38,9 +41,12 @@ import TablePagination, {
   PAGINATION_SIZE_OPTIONS,
 } from "@/components/ui/table-pagination";
 
+import { scorecardFiltersSchema } from "./schema";
+
 export function ScoredCardPrioritizationTable() {
   const [tableView] = useTableView();
-  const [filters] = useScorecardFilters();
+  const [filters] = useGlobalFilters();
+  const [, setProjectDetails] = useAtom(projectDetailsAtom);
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "projectName",
@@ -51,8 +57,8 @@ export function ScoredCardPrioritizationTable() {
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
   });
-  const queryKey = queryKeys.scorecardFilters.all(tableView, {
-    ...filters,
+  const queryKey = queryKeys.tables.all(tableView, scorecardFiltersSchema, {
+    filters,
     sorting,
     pagination,
   }).queryKey;
@@ -61,8 +67,7 @@ export function ScoredCardPrioritizationTable() {
     queryKey,
     {
       query: {
-        ...filtersToQueryParams(filters),
-        filter: {},
+        filter: filtersToQueryParams(filters),
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
       },
@@ -78,7 +83,7 @@ export function ScoredCardPrioritizationTable() {
   );
 
   const table = useReactTable({
-    data: isSuccess ? data.data : NO_SCORECARD_DATA,
+    data: isSuccess ? data.data : (NO_DATA as ProjectScorecardView[]),
     columns: TABLE_COLUMNS,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -141,9 +146,21 @@ export function ScoredCardPrioritizationTable() {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => {
+                  setProjectDetails({
+                    isOpen: true,
+                    projectName: row.original.projectName ?? "",
+                  });
+                }}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="p-0">
+                  <TableCell
+                    key={cell.id}
+                    className={cn({
+                      "p-0": cell.column.id !== "projectName",
+                    })}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -166,6 +183,7 @@ export function ScoredCardPrioritizationTable() {
           totalItems: data?.metadata?.totalItems ?? 0,
         }}
       />
+      <ProjectDetails />
     </>
   );
 }

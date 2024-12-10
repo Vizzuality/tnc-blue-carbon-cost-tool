@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 import { useAtom } from "jotai";
 import { ChevronUp, ChevronDown, NotebookPen } from "lucide-react";
 
@@ -8,6 +9,7 @@ import {
   formatCurrency,
   renderAbatementCurrency,
 } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 import { projectDetailsAtom } from "@/app/(overview)/store";
 
@@ -27,7 +29,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { ScoreIndicator } from "@/components/ui/score-card";
+import { ScoreIndicator, DEFAULT_BG_CLASSES } from "@/components/ui/score-card";
 import {
   Sheet,
   SheetContent,
@@ -380,9 +382,13 @@ export default function ProjectDetails() {
                   <div key={item.name} className="flex">
                     <div className="w-2/3 content-center py-2">{item.name}</div>
                     <ScoreIndicator
-                      className="w-1/3"
-                      score={item.rating as "high" | "medium" | "low"}
-                    />
+                      className={cn(
+                        "w-1/3",
+                        DEFAULT_BG_CLASSES[item.rating as PROJECT_SCORE],
+                      )}
+                    >
+                      {item.rating}
+                    </ScoreIndicator>
                   </div>
                   {projectData.scorecard.length !== index + 1 && (
                     <hr className="m-0" />

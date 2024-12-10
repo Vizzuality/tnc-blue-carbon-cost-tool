@@ -60,7 +60,7 @@ export function OverviewTable() {
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
   });
 
-  const queryKey = queryKeys.projects.all(tableView, {
+  const queryKey = queryKeys.tables.all(tableView, projectsQuerySchema, {
     ...filters,
     sorting,
     pagination,

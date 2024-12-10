@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import { projectsQuerySchema } from "@shared/contracts/projects.contract";
 import { keepPreviousData } from "@tanstack/react-query";
 import {
   flexRender,
@@ -51,7 +52,7 @@ export function KeyCostsTable() {
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
   });
 
-  const queryKey = queryKeys.projects.all(tableView, {
+  const queryKey = queryKeys.tables.all(tableView, projectsQuerySchema, {
     ...filters,
     sorting,
     pagination,
