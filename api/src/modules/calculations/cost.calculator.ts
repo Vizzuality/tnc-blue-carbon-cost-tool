@@ -17,6 +17,7 @@ import {
   CostPlanMap,
   CustomProjectCostDetails,
   CustomProjectSummary,
+  OutputCostNames,
   YearlyBreakdown,
 } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
@@ -409,7 +410,7 @@ export class CostCalculator {
       const totalCost = sum(Object.values(costValues));
       const totalNPV = this.calculateNpv(costValues, discountRate);
       yearlyBreakdown.push({
-        costName: costName as keyof OverridableCostInputs,
+        costName: costName as keyof OverridableCostInputs & OutputCostNames,
         totalCost,
         totalNPV,
         costValues,
