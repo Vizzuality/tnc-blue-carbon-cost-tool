@@ -1,6 +1,6 @@
 import { AppModule } from '@api/app.module';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
 import { logUserIn } from './user.auth';
@@ -50,7 +50,7 @@ export class TestManager {
     this.moduleFixture = moduleFixture;
   }
 
-  static async createTestManager() {
+  static async createTestManager(options: { logger?: Logger | false } = {}) {
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     })
@@ -59,6 +59,10 @@ export class TestManager {
       .compile();
     const dataSource = moduleFixture.get<DataSource>(getDataSourceToken());
     const testApp = moduleFixture.createNestApplication();
+    if (options.logger !== undefined) {
+      // Has to be called before init. Otherwise it has no effect.
+      testApp.useLogger(options.logger);
+    }
     // TODO: Add global validation or App level Zod when decided what to use
     //testApp.useGlobalPipes(new ValidationPipe());
     await testApp.init();

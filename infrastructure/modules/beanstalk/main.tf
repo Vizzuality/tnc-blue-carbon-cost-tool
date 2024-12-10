@@ -149,6 +149,11 @@ locals {
       name      = "SSLCertificateArns"
       value     = var.acm_certificate.arn
     },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthCheckPath"
+      value     = "/health"
+    }
   ]
 }
 

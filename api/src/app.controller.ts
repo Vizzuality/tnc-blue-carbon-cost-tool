@@ -1,12 +1,28 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import {
+  HealthCheck,
+  HealthCheckService,
+  TypeOrmHealthIndicator,
+} from '@nestjs/terminus';
+import { ControllerResponse } from '@api/types/controller-response.type';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly health: HealthCheckService,
+    private readonly db: TypeOrmHealthIndicator,
+  ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('/')
+  public root(): ControllerResponse {
+    return null;
+  }
+
+  @Get('/health')
+  @HealthCheck({ noCache: true })
+  public checkHealth(): ControllerResponse {
+    return this.health.check([
+      async () => this.db.pingCheck('database', { timeout: 1500 }),
+    ]);
   }
 }
