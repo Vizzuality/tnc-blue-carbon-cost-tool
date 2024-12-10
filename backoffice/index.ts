@@ -41,6 +41,9 @@ import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-
 import { GLOBAL_COMMON_PROPERTIES } from "./resources/common/common.resources.js";
 import { BACKOFFICE_SESSIONS_TABLE } from "@shared/entities/users/backoffice-session.js";
 import { CountryResource } from "./resources/countries/country.resource.js";
+import { DataIngestionResource } from "backoffice/resources/data-ingestion/data-ingestion.resource.js";
+import { FileUploadResource } from "backoffice/resources/data-ingestion/file-upload.resource.js";
+import { DataIngestionAdapter } from "backoffice/resources/data-ingestion/data-ingestion.adapter.js";
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -54,6 +57,7 @@ const componentLoader = new ComponentLoader();
 
 const Components = {
   Dashboard: componentLoader.add("Dashboard", "./components/dashboard"),
+  FileIngestion: componentLoader.add("FileIngestion", "./pages/file-ingestion"),
 };
 const authProvider = new AuthProvider();
 
@@ -160,6 +164,7 @@ const start = async () => {
       BaseIncreaseResource,
       ModelAssumptionResource,
       CountryResource,
+      DataIngestionResource
     ],
     locale: {
       language: "en",
@@ -181,6 +186,12 @@ const start = async () => {
         },
       },
     },
+    pages: {
+      fileIngestion: {
+        icon: 'Upload',
+        component: Components.FileIngestion,
+      }
+    }
   });
 
   const customRouter = express.Router();
@@ -212,7 +223,7 @@ const start = async () => {
       },
     },
   );
-
+  admin.watch()
   app.use(admin.options.rootPath, adminRouter);
 
   app.listen(PORT, () => {

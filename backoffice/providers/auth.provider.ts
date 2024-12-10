@@ -38,6 +38,7 @@ export class AuthProvider extends BaseAuthProvider {
     res.setHeader('Set-Cookie', [
       `backoffice=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly`,
       `next-auth.session-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly`,
+      `__Secure-next-auth.session-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly`,
     ]);
   }
 }
