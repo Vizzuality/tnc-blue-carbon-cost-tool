@@ -4,11 +4,12 @@ import { type CustomProjectSummary } from "@shared/dtos/custom-projects/custom-p
 import { useSetAtom } from "jotai";
 import { XIcon } from "lucide-react";
 
-import { projectsUIState } from "@/app/projects/[id]/store";
+import { projectsUIState } from "@/app/projects/store";
+
+import { PROJECT_SUMMARY } from "@/constants/tooltip";
 
 import { SUMMARY_SIDEBAR_WIDTH } from "@/containers/projects/custom-project";
 
-import FileEdit from "@/components/icons/file-edit";
 import { Button } from "@/components/ui/button";
 import InfoButton from "@/components/ui/info-button";
 import Metric from "@/components/ui/metric";
@@ -71,9 +72,7 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
               >
                 <div className="flex items-center gap-2">
                   <div className="text-sm font-normal">{key}</div>
-                  <InfoButton title="{tooltip.title}">
-                    tooltip.content
-                  </InfoButton>
+                  <InfoButton title={key}>{PROJECT_SUMMARY[key]}</InfoButton>
                 </div>
                 <div className="text-base font-medium">
                   <Metric
@@ -92,10 +91,11 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
           Calculations based on project setup parameters. For new calculations,
           edit project details.
         </p>
-        <Button type="button" variant="outline">
+        {/* TODO: Uncomment when feature is available */}
+        {/* <Button type="button" variant="outline">
           <FileEdit />
           <span>Edit Project</span>
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

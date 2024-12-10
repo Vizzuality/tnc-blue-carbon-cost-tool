@@ -13,7 +13,7 @@ import {
 
 import { formatCurrency } from "@/lib/format";
 
-import { chartData } from "@/containers/projects/custom-project/annual-project-cash-flow/table/columns";
+import { YearlyBreakdownChartData } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
 
 import {
   ChartContainer,
@@ -24,21 +24,26 @@ import {
 } from "@/components/ui/chart";
 
 const CHART_COLORS = {
-  estimatedRevenue: "hsl(var(--chart-1))",
-  totalOpEx: "hsl(var(--chart-2))",
+  estimatedRevenuePlan: "hsl(var(--chart-1))",
+  opexTotalCostPlan: "hsl(var(--chart-2))",
   annualNetCashFlow: "hsl(var(--chart-3))",
-  revenueOpEx: "hsl(var(--chart-4))",
+  cumulativeNetIncomeCapexOpex: "hsl(var(--chart-5))",
+  cumulativeNetIncomePlan: "hsl(var(--chart-4))",
 } as const;
 
-const CashflowChart: FC = () => {
+interface CashflowChartProps {
+  data: YearlyBreakdownChartData;
+}
+
+const CashflowChart: FC<CashflowChartProps> = ({ data }) => {
   return (
     <ChartContainer
       config={{
-        estimatedRevenue: {
+        estimatedRevenuePlan: {
           label: "Est revenue",
           color: "hsl(var(--chart-1))",
         },
-        totalOpEx: {
+        opexTotalCostPlan: {
           label: "Total OpEx",
           color: "hsl(var(--chart-2))",
         },
@@ -47,7 +52,12 @@ const CashflowChart: FC = () => {
           color: "hsl(var(--chart-3))",
           icon: () => <div className="h-[3px] w-[24px] bg-chart-3" />,
         },
-        revenueOpEx: {
+        cumulativeNetIncomeCapexOpex: {
+          label: "Annual net cash flow",
+          color: "hsl(var(--chart-3))",
+          icon: () => <div className="h-[3px] w-[24px] bg-chart-5" />,
+        },
+        cumulativeNetIncomePlan: {
           label: "Revenue OpEx",
           color: "hsl(var(--chart-4))",
           icon: () => <div className="h-[3px] w-[24px] bg-chart-4" />,
@@ -55,7 +65,7 @@ const CashflowChart: FC = () => {
       }}
       className="cashflow-chart min-h-[200px] w-full"
     >
-      <ComposedChart data={chartData} stackOffset="sign" accessibilityLayer>
+      <ComposedChart data={data} stackOffset="sign" accessibilityLayer>
         <CartesianGrid
           stroke="#194760"
           strokeDasharray="0 0"
@@ -75,14 +85,14 @@ const CashflowChart: FC = () => {
         />
         <Bar
           stackId="a"
-          dataKey="estimatedRevenue"
-          fill={CHART_COLORS.estimatedRevenue}
+          dataKey="estimatedRevenuePlan"
+          fill={CHART_COLORS.estimatedRevenuePlan}
           radius={[6, 6, 0, 0]}
         />
         <Bar
           stackId="a"
-          dataKey="totalOpEx"
-          fill={CHART_COLORS.totalOpEx}
+          dataKey="opexTotalCostPlan"
+          fill={CHART_COLORS.opexTotalCostPlan}
           radius={[6, 6, 0, 0]}
         />
         <Line
@@ -94,8 +104,15 @@ const CashflowChart: FC = () => {
         />
         <Line
           type="linear"
-          dataKey="revenueOpEx"
-          stroke={CHART_COLORS.revenueOpEx}
+          dataKey="cumulativeNetIncomeCapexOpex"
+          stroke={CHART_COLORS.cumulativeNetIncomeCapexOpex}
+          dot={false}
+          strokeWidth={2}
+        />
+        <Line
+          type="linear"
+          dataKey="cumulativeNetIncomePlan"
+          stroke={CHART_COLORS.cumulativeNetIncomePlan}
           dot={false}
           strokeWidth={2}
         />

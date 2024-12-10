@@ -41,7 +41,7 @@ export type CustomProjectCostDetails = {
   longTermProjectOperatingCost: number;
 };
 
-export type OutputCostNames = [
+export type OutputCostNames = keyof [
   "opexTotalCostPlan",
   "capexTotalCostPlan",
   "totalCostPlan",

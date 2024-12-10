@@ -1,6 +1,6 @@
 import { ChartNoAxesColumnIcon, Table2Icon } from "lucide-react";
 
-import { useProjectCashFlowTab } from "@/app/projects/[id]/url-store";
+import { useProjectCashFlowTab } from "@/app/projects/url-store";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 

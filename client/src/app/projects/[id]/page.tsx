@@ -1,5 +1,5 @@
-import CustomProject from "@/containers/projects/custom-project";
-
 export default function CustomProjectPage() {
-  return <CustomProject />;
+  return null;
+  // TODO: Add when API is ready
+  // return <CustomProject data={data from API} />;
 }
