@@ -17,6 +17,7 @@ export default function Search({
   className,
   autoFocus = false,
   showCloseIconAlways = false,
+  defaultValue = "",
 }: {
   placeholder?: string;
   onChange: (v: string | undefined) => void;
@@ -24,8 +25,9 @@ export default function Search({
   className?: HTMLDivElement["className"] | undefined;
   autoFocus?: HTMLInputElement["autofocus"] | undefined;
   showCloseIconAlways?: boolean | undefined;
+  defaultValue?: string | undefined;
 }) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(defaultValue);
 
   const debouncedOnChange = useDebounce((value: string | undefined) => {
     onChange(value);

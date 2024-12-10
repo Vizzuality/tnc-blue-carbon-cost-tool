@@ -5,7 +5,7 @@ import { useGlobalFilters } from "@/app/(overview)/url-store";
 import Search from "@/components/ui/search";
 
 export default function SearchProjectsTable() {
-  const [, setFilters] = useGlobalFilters();
+  const [{ keyword }, setFilters] = useGlobalFilters();
 
   const handleSearch = async (
     v: Parameters<ComponentProps<typeof Search>["onChange"]>[0],
@@ -18,6 +18,7 @@ export default function SearchProjectsTable() {
       placeholder="Search project"
       onChange={handleSearch}
       className="flex-1"
+      defaultValue={keyword}
     />
   );
 }
