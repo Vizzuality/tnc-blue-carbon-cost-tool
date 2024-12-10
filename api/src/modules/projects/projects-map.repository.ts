@@ -80,23 +80,32 @@ export class ProjectsMapRepository extends Repository<Project> {
       projectSizeFilter,
       priceType,
     } = filters;
-    const { costRange, abatementPotentialRange, costRangeSelector } =
-      otherFilters;
+    const {
+      costRange,
+      abatementPotentialRange,
+      costRangeSelector,
+      partialProjectName,
+    } = otherFilters;
+
+    if (partialProjectName) {
+      queryBuilder.andWhere('p.project_name ILIKE :partialProjectName', {
+        partialProjectName: `%${partialProjectName}%`,
+      });
+    }
 
     if (projectSizeFilter) {
-      for (const projectSize of projectSizeFilter) {
-        queryBuilder.andWhere('p.project_size_filter = :projectSizeFilter', {
-          projectSizeFilter: projectSize,
-        });
-      }
+      queryBuilder.andWhere(
+        'p.project_size_filter IN (:...projectSizeFilter)',
+        {
+          projectSizeFilter,
+        },
+      );
     }
 
     if (priceType) {
-      for (const type of priceType) {
-        queryBuilder.andWhere('p.price_type = :priceType', {
-          priceType: type,
-        });
-      }
+      queryBuilder.andWhere('p.price_type IN (:...priceType)', {
+        priceType,
+      });
     }
 
     if (costRangeSelector === 'npv') {

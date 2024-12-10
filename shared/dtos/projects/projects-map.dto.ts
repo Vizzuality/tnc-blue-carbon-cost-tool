@@ -27,4 +27,5 @@ export type OtherProjectFilters = {
   costRange?: number[];
   abatementPotentialRange?: number[];
   costRangeSelector?: "total" | "npv";
+  partialProjectName?: string;
 };
