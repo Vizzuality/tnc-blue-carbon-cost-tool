@@ -41,8 +41,20 @@ export type CustomProjectCostDetails = {
   longTermProjectOperatingCost: number;
 };
 
+export type OutputCostNames = [
+  "opexTotalCostPlan",
+  "capexTotalCostPlan",
+  "totalCostPlan",
+  "estimatedRevenuePlan",
+  "creditsIssuedPlan",
+  "cumulativeNetIncomePlan",
+  "cumulativeNetIncomeCapexOpex",
+  "annualNetCashFlow",
+  "annualNetIncome",
+];
+
 export type YearlyBreakdown = {
-  costName: keyof OverridableCostInputs;
+  costName: keyof OverridableCostInputs & OutputCostNames;
   totalCost: number;
   totalNPV: number;
   costValues: CostPlanMap;
