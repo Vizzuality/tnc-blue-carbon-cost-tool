@@ -1,6 +1,6 @@
 import {
   DotsHorizontalIcon,
-  ExclamationTriangleIcon,
+  // ExclamationTriangleIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { Table as TableInstance, Row } from "@tanstack/react-table";
