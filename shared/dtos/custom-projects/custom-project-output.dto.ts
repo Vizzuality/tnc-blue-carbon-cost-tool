@@ -1,4 +1,5 @@
 import { OverridableCostInputs } from "@shared/dtos/custom-projects/cost.inputs";
+import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 
 export type CustomProjectSummary = {
   "$/tCO2e (total cost, NPV)": number;
@@ -53,8 +54,11 @@ export type OutputCostNames = keyof [
   "annualNetIncome",
 ];
 
+export type YearlyBreakdownCostName = keyof OverridableCostInputs &
+  OutputCostNames;
+
 export type YearlyBreakdown = {
-  costName: keyof OverridableCostInputs & OutputCostNames;
+  costName: YearlyBreakdownCostName;
   totalCost: number;
   totalNPV: number;
   costValues: CostPlanMap;
@@ -81,6 +85,8 @@ export class ConservationProjectOutput {
     emissionFactorAgb: number;
     emissionFactorSoc: number;
   };
+  carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
+  initialCarbonPrice: number;
   totalProjectCost: {
     total: {
       total: number;

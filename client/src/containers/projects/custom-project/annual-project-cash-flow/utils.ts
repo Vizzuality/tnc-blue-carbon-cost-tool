@@ -14,17 +14,17 @@ function getBreakdownYears(data: YearlyBreakdown[]): number[] {
 type ChartDataKeys =
   | "estimatedRevenuePlan"
   | "opexTotalCostPlan"
+  | "capexTotalCostPlan"
   | "annualNetCashFlow"
-  | "cumulativeNetIncomePlan"
-  | "cumulativeNetIncomeCapexOpex";
+  | "cumulativeNetIncomePlan";
 
 type ChartData = Record<ChartDataKeys, CostPlanMap>;
 type YearlyBreakdownData = {
   estimatedRevenuePlan: number;
   opexTotalCostPlan: number;
+  capexTotalCostPlan: number;
   annualNetCashFlow: number;
   cumulativeNetIncomePlan: number;
-  cumulativeNetIncomeCapexOpex: number;
   year: number;
 };
 type YearlyBreakdownChartData = YearlyBreakdownData[];
@@ -38,9 +38,9 @@ function parseYearlyBreakdownForChart(
   const chartData: ChartData = {
     estimatedRevenuePlan: {},
     opexTotalCostPlan: {},
+    capexTotalCostPlan: {},
     annualNetCashFlow: {},
     cumulativeNetIncomePlan: {},
-    cumulativeNetIncomeCapexOpex: {},
   };
 
   // Populate chart data based on yearly breakdown

@@ -1,9 +1,11 @@
 import { FC } from "react";
 
+import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { useAtom } from "jotai";
 import { LayoutListIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
+import { client } from "@/lib/query-client";
 import { cn } from "@/lib/utils";
 
 import { projectsUIState } from "@/app/projects/store";
@@ -15,14 +17,40 @@ import Topbar from "@/containers/topbar";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast/use-toast";
 
-const CustomProjectHeader: FC = () => {
+interface CustomProjectHeaderProps {
+  data: InstanceType<typeof CustomProjectEntity>;
+}
+const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
   const [{ projectSummaryOpen }, setProjectSummaryOpen] =
     useAtom(projectsUIState);
   const { data: session } = useSession();
   const { toast } = useToast();
-  const handleSaveButtonClick = () => {
-    // TODO: Add API call when available
-    toast({ description: "Project updated successfully." });
+  const handleSaveButtonClick = async () => {
+    try {
+      const { status, body } =
+        await client.customProjects.saveCustomProject.mutation({
+          body: data,
+          extraHeaders: {
+            authorization: `Bearer ${session?.accessToken as string}`,
+          },
+        });
+
+      if (status === 201) {
+        toast({ description: "Project updated successfully." });
+      }
+
+      if (body?.errors) {
+        toast({
+          variant: "destructive",
+          description: body.errors[0].title,
+        });
+      }
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        description: "Something went wrong saving the project",
+      });
+    }
   };
 
   return (
