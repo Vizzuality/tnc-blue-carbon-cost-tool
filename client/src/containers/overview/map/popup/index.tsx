@@ -23,8 +23,8 @@ export default function CostAbatementPopup() {
       <table className="mt-2">
         <thead>
           <tr>
-            <th className={cn(HEADER_CLASSES, "pr-2")}>Cost</th>
-            <th className={cn(HEADER_CLASSES, "px-2")}>Abatement</th>
+            <th className={cn(HEADER_CLASSES, "pr-2")}>Cost (total, USD)</th>
+            <th className={cn(HEADER_CLASSES, "px-2")}>Abatement (tCO2e)</th>
           </tr>
         </thead>
         <tbody>
@@ -33,9 +33,7 @@ export default function CostAbatementPopup() {
               {renderCurrency(popup?.features?.[0]?.properties?.cost)}
             </td>
             <td className={cn(CELL_CLASSES, "px-2")}>
-              {renderCurrency(
-                popup?.features?.[0]?.properties?.abatementPotential,
-              )}
+              {popup?.features?.[0]?.properties?.abatementPotential}
             </td>
           </tr>
         </tbody>
