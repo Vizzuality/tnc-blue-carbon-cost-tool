@@ -54,6 +54,7 @@ const componentLoader = new ComponentLoader();
 
 const Components = {
   Dashboard: componentLoader.add("Dashboard", "./components/dashboard"),
+  FileIngestion: componentLoader.add("FileIngestion", "./components/pages/file-ingestion/page"),
 };
 const authProvider = new AuthProvider();
 
@@ -161,6 +162,12 @@ const start = async () => {
       ModelAssumptionResource,
       CountryResource,
     ],
+    pages: {
+      fileIngestion: {
+        icon: "File",
+        component: Components.FileIngestion,
+      }
+    },
     locale: {
       language: "en",
       translations: {
@@ -214,7 +221,7 @@ const start = async () => {
   );
 
   app.use(admin.options.rootPath, adminRouter);
-
+  admin.watch()
   app.listen(PORT, () => {
     console.log(
       `AdminJS started on http://localhost:${PORT}${admin.options.rootPath}`
