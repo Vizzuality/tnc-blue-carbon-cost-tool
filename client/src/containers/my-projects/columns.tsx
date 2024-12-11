@@ -26,10 +26,10 @@ const ActionsDropdown = () => (
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent className="w-50" align="end">
-      <DropdownMenuItem>
+      {/* <DropdownMenuItem>
         <ExclamationTriangleIcon className="mr-1 h-4 w-4" />
         Update selection
-      </DropdownMenuItem>
+      </DropdownMenuItem> */}
       <DropdownMenuItem>
         <TrashIcon className="mr-1 h-6 w-6" />
         Delete selection
