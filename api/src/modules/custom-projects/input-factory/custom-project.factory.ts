@@ -98,13 +98,17 @@ export class CustomProjectFactory {
 
   createProject(
     dto: CreateCustomProjectDto,
+    country: Country,
     input: ProjectInput,
     output: CostOutput,
   ): CustomProject {
     const { costPlans, summary, costDetails, yearlyBreakdown } = output;
     const customProject = new CustomProject();
     customProject.projectName = dto.projectName;
-    customProject.country = { code: dto.countryCode } as Country;
+    customProject.country = {
+      code: country.code,
+      name: country.name,
+    } as Country;
     customProject.totalCostNPV =
       costPlans.totalCapexNPV + costPlans.totalOpexNPV;
     customProject.totalCost = costPlans.totalCapex + costPlans.totalOpex;

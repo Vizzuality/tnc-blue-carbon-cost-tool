@@ -20,6 +20,7 @@ import { EventBus } from '@nestjs/cqrs';
 import { SaveCustomProjectEvent } from '@api/modules/custom-projects/events/save-custom-project.event';
 import { FetchSpecification } from 'nestjs-base-service';
 import { GetActivityTypesDefaults } from '@shared/dtos/custom-projects/get-activity-types-defaults.dto';
+import { Country } from '@shared/entities/country.entity';
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -48,6 +49,7 @@ export class CustomProjectsService extends AppBaseService<
       baseIncrease,
       baseSize,
       additionalAssumptions,
+      country,
     } = await this.dataRepository.getDataForCalculation({
       countryCode,
       ecosystem,
@@ -68,6 +70,7 @@ export class CustomProjectsService extends AppBaseService<
 
     const customProject = this.customProjectFactory.createProject(
       dto,
+      country,
       projectInput,
       costOutput,
     );

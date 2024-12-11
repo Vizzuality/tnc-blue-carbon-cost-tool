@@ -18,6 +18,7 @@ import {
   ConvervationActivityDefaults,
   RestorationActivityDefaults,
 } from '@shared/dtos/custom-projects/activity-types-defaults';
+import { Country } from '@shared/entities/country.entity';
 
 /**
  * Additional data that is required to perform calculations, which is not overridable by the user. Better naming and clustering of concepts would be great
@@ -81,11 +82,18 @@ export class DataRepository extends Repository<BaseDataView> {
         activity,
       );
 
+    const country = await this.repo
+      .createQueryBuilder('country')
+      .from(Country, 'country')
+      .where('country.code = :code', { code: countryCode })
+      .getOne();
+
     return {
       additionalBaseData,
       baseSize,
       baseIncrease,
       additionalAssumptions,
+      country,
     };
   }
 
