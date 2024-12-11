@@ -14,12 +14,12 @@ import { JwtManager } from '@api/modules/auth/services/jwt.manager';
 import { ConfirmAccountStrategy } from '@api/modules/auth/strategies/confirm-account.strategy';
 import { PasswordManager } from '@api/modules/auth/services/password.manager';
 import { EmailConfirmationJwtStrategy } from '@api/modules/auth/strategies/email-update.strategy';
-import { BackOfficeSession } from '@shared/entities/users/backoffice-session';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { BackofficeSessionStrategy } from '@api/modules/auth/strategies/backoffice-session.strategy';
+import { BackofficeService } from '@api/modules/backoffice/backoffice.service';
+import { BackofficeModule } from '@api/modules/backoffice/backoffice.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([BackOfficeSession]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ApiConfigModule],
@@ -33,6 +33,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       }),
     }),
     UsersModule,
+    BackofficeModule,
   ],
   providers: [
     AuthenticationService,
@@ -45,6 +46,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         return new JwtStrategy(users, config);
       },
       inject: [UsersService, ApiConfigService],
+    },
+    {
+      provide: BackofficeSessionStrategy,
+      useFactory: (
+        backofficeService: BackofficeService,
+        config: ApiConfigService,
+      ) => {
+        return new BackofficeSessionStrategy(backofficeService, config);
+      },
+      inject: [BackofficeService, ApiConfigService],
     },
     {
       provide: ResetPasswordJwtStrategy,
@@ -68,6 +79,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       inject: [UsersService, ApiConfigService],
     },
   ],
-  exports: [UsersModule, AuthenticationService, JwtManager],
+  exports: [UsersModule, BackofficeModule, AuthenticationService, JwtManager],
 })
 export class AuthenticationModule {}

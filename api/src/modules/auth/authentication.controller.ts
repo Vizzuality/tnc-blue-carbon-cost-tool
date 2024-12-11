@@ -24,7 +24,7 @@ import { EmailConfirmation } from '@api/modules/auth/strategies/email-update.str
 import { ROLES } from '@shared/entities/users/roles.enum';
 import { Response } from 'express';
 import { ApiConfigService } from '../config/app-config.service';
-import { BackofficeService } from './backoffice.service';
+import { BackofficeService } from '@api/modules/backoffice/backoffice.service';
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
