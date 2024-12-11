@@ -15,7 +15,7 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ProjectScorecard } from "@shared/entities/project-scorecard.entity";
 import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 import { CustomProject } from "@shared/entities/custom-project.entity";
-import { CustomProjectStub } from "api/test/utils/stubs/custom-project.stub";
+import { CustomProjectStub } from "@shared/lib/stubs/custom-project.stub";
 
 export const createUser = async (
   dataSource: DataSource,
