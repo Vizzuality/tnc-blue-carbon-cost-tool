@@ -6,7 +6,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from '@api/modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
 import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
 import { ROLES } from '@shared/entities/users/roles.enum';
@@ -20,9 +19,10 @@ import { Multer } from 'multer';
 import { GetUser } from '@api/modules/auth/decorators/get-user.decorator';
 import { User } from '@shared/entities/users/user.entity';
 import { usersContract } from '@shared/contracts/users.contract';
+import { JwtCookieAuthGuard } from '@api/modules/auth/guards/jwt-cookie-auth.guard';
 
 @Controller()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtCookieAuthGuard, RolesGuard)
 export class ImportController {
   constructor(private readonly service: ImportService) {}
   // TODO: File validation following:
