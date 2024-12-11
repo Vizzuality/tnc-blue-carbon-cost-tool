@@ -1,6 +1,7 @@
 "use client";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
+import { ConservationProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
@@ -19,18 +20,10 @@ import { parseCostDetailsForTable } from "@/containers/projects/custom-project/c
 import ProjectDetails from "@/containers/projects/custom-project/details";
 import CustomProjectHeader from "@/containers/projects/custom-project/header";
 import LeftOver from "@/containers/projects/custom-project/left-over";
-import mockData from "@/containers/projects/custom-project/mock-data";
 import ProjectSummary from "@/containers/projects/custom-project/summary";
 import { useCustomProjectFilters } from "@/containers/projects/url-store";
 
 import { useSidebar } from "@/components/ui/sidebar";
-
-// Temporary use of mock data until response from API is ready
-const { costDetails, leftover } = mockData.data;
-const costDetailsData = {
-  total: parseCostDetailsForTable(costDetails.total),
-  npv: parseCostDetailsForTable(costDetails.npv),
-};
 
 export const SUMMARY_SIDEBAR_WIDTH = 460;
 
@@ -44,10 +37,29 @@ const CustomProject: FC<CustomProjectProps> = ({ data }) => {
   const { projectSummaryOpen } = useAtomValue(projectsUIState);
   const { open: navOpen } = useSidebar();
   // TODO: should be replaced with correct type when available;
-  const output = data.output as any;
+  const output = data.output as ConservationProjectOutput;
   const projectCostProps = output.totalProjectCost[costRangeSelector];
-  const costDetailsProps = costDetailsData[costDetailsRangeSelector];
-  const leftOverProps = leftover[costRangeSelector];
+  const leftOverProps = output.leftover[costRangeSelector];
+  const costDetailsProps = useMemo(
+    () =>
+      ({
+        total: parseCostDetailsForTable(output.costDetails.total),
+        npv: parseCostDetailsForTable(output.costDetails.npv),
+      })[costDetailsRangeSelector],
+    [
+      costDetailsRangeSelector,
+      output.costDetails.total,
+      output.costDetails.npv,
+    ],
+  );
+  const chartData = useMemo(
+    () =>
+      parseYearlyBreakdownForChart(
+        output.yearlyBreakdown,
+        getBreakdownYears(output.yearlyBreakdown),
+      ),
+    [output.yearlyBreakdown],
+  );
 
   return (
     <motion.div
@@ -74,7 +86,7 @@ const CustomProject: FC<CustomProjectProps> = ({ data }) => {
         <ProjectSummary data={output.summary} />
       </motion.aside>
       <div className="mx-3 flex flex-1 flex-col">
-        <CustomProjectHeader />
+        <CustomProjectHeader data={data} />
         <div className="mb-4 mt-2 flex gap-4">
           <ProjectDetails
             country={data.country}
@@ -93,10 +105,7 @@ const CustomProject: FC<CustomProjectProps> = ({ data }) => {
         </div>
         <AnnualProjectCashFlow
           tableData={output.yearlyBreakdown}
-          chartData={parseYearlyBreakdownForChart(
-            output.yearlyBreakdown,
-            getBreakdownYears(output.yearlyBreakdown),
-          )}
+          chartData={chartData}
         />
       </div>
     </motion.div>

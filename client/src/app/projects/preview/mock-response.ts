@@ -1,18 +1,27 @@
-const mockResponse = {
+import { ACTIVITY } from "@shared/entities/activity.enum";
+import { Country } from "@shared/entities/country.entity";
+import {
+  CARBON_REVENUES_TO_COVER,
+  CustomProject as CustomProjectEntity,
+} from "@shared/entities/custom-project.entity";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+
+const mockResponse: { data: InstanceType<typeof CustomProjectEntity> } = {
   data: {
     projectName: "My custom project",
     country: {
       code: "IND",
-    },
+      name: "India",
+    } as Country,
     totalCostNPV: 2503854.27918858,
     totalCost: 3332201.598883546,
     projectSize: 1000,
     projectLength: 20,
-    ecosystem: "Mangrove",
-    activity: "Conservation",
+    ecosystem: "Mangrove" as ECOSYSTEM,
+    activity: "Conservation" as ACTIVITY,
     output: {
       lossRate: -0.0016,
-      carbonRevenuesToCover: "Opex",
+      carbonRevenuesToCover: "Opex" as CARBON_REVENUES_TO_COVER,
       initialCarbonPrice: 1000,
       emissionFactors: {
         emissionFactor: null,
@@ -29,6 +38,18 @@ const mockResponse = {
           total: 2503854.27918858,
           capex: 1505525.2721514185,
           opex: 998329.0070371614,
+        },
+      },
+      leftover: {
+        total: {
+          total: 30600000,
+          leftover: 4100000,
+          opex: 26500000,
+        },
+        npv: {
+          total: 40600000,
+          leftover: 4106132,
+          opex: 36500000,
         },
       },
       summary: {
@@ -906,6 +927,6 @@ const mockResponse = {
       },
     },
   },
-} as const;
+};
 
 export default mockResponse;

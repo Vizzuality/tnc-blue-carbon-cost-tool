@@ -10,10 +10,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
-import {
-  tableData,
-  columns,
-} from "@/containers/projects/custom-project/annual-project-cash-flow/table/columns";
+import { columns } from "@/containers/projects/custom-project/annual-project-cash-flow/table/columns";
 import { getBreakdownYears } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
 
 import {
@@ -107,7 +104,7 @@ const CashFlowTable: FC<CashFlowTableProps> = ({ data }) => {
         pagination={{
           ...pagination,
           totalPages: 0,
-          totalItems: tableData.length,
+          totalItems: data.length,
         }}
       />
     </div>

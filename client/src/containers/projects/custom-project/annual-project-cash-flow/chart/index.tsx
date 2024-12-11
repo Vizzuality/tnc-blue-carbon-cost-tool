@@ -26,9 +26,9 @@ import {
 const CHART_COLORS = {
   estimatedRevenuePlan: "hsl(var(--chart-1))",
   opexTotalCostPlan: "hsl(var(--chart-2))",
-  annualNetCashFlow: "hsl(var(--chart-3))",
-  cumulativeNetIncomeCapexOpex: "hsl(var(--chart-5))",
-  cumulativeNetIncomePlan: "hsl(var(--chart-4))",
+  capexTotalCostPlan: "hsl(var(--chart-3))",
+  annualNetCashFlow: "hsl(var(--chart-4)",
+  cumulativeNetIncomePlan: "hsl(var(--chart-5))",
 } as const;
 
 interface CashflowChartProps {
@@ -47,20 +47,19 @@ const CashflowChart: FC<CashflowChartProps> = ({ data }) => {
           label: "Total OpEx",
           color: "hsl(var(--chart-2))",
         },
+        capexTotalCostPlan: {
+          label: "Total CapEx",
+          color: "hsl(var(--chart-3))",
+        },
         annualNetCashFlow: {
           label: "Annual net cash flow",
-          color: "hsl(var(--chart-3))",
-          icon: () => <div className="h-[3px] w-[24px] bg-chart-3" />,
-        },
-        cumulativeNetIncomeCapexOpex: {
-          label: "Annual net cash flow",
-          color: "hsl(var(--chart-3))",
-          icon: () => <div className="h-[3px] w-[24px] bg-chart-5" />,
+          color: "hsl(var(--chart-4))",
+          icon: () => <div className="h-[3px] w-[24px] bg-chart-4" />,
         },
         cumulativeNetIncomePlan: {
           label: "Revenue OpEx",
-          color: "hsl(var(--chart-4))",
-          icon: () => <div className="h-[3px] w-[24px] bg-chart-4" />,
+          color: "hsl(var(--chart-5))",
+          icon: () => <div className="h-[3px] w-[24px] bg-chart-5" />,
         },
       }}
       className="cashflow-chart min-h-[200px] w-full"
@@ -95,17 +94,16 @@ const CashflowChart: FC<CashflowChartProps> = ({ data }) => {
           fill={CHART_COLORS.opexTotalCostPlan}
           radius={[6, 6, 0, 0]}
         />
+        <Bar
+          stackId="a"
+          dataKey="capexTotalCostPlan"
+          fill={CHART_COLORS.capexTotalCostPlan}
+          radius={[6, 6, 0, 0]}
+        />
         <Line
           type="linear"
           dataKey="annualNetCashFlow"
           stroke={CHART_COLORS.annualNetCashFlow}
-          dot={false}
-          strokeWidth={2}
-        />
-        <Line
-          type="linear"
-          dataKey="cumulativeNetIncomeCapexOpex"
-          stroke={CHART_COLORS.cumulativeNetIncomeCapexOpex}
           dot={false}
           strokeWidth={2}
         />

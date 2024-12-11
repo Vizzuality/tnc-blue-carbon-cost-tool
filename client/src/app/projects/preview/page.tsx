@@ -50,5 +50,5 @@ export default function CustomProjectPage() {
   // TODO: probably show a spinner or skeleton?
   if (!data) return null;
 
-  return <CustomProject data={data.data as any} />;
+  return <CustomProject data={data.data} />;
 }

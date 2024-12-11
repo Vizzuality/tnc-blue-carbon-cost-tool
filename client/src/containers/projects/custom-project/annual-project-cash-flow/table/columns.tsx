@@ -1,13 +1,7 @@
-import { OverridableCostInputs } from "@shared/dtos/custom-projects/cost.inputs";
+import { YearlyBreakdownCostName } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import { createColumnHelper } from "@tanstack/react-table";
 
 import { formatCurrency } from "@/lib/format";
-
-import mockData from "@/containers/projects/custom-project/mock-data";
-
-const YEARS = [
-  -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-] as const;
 
 interface CostValues {
   [key: string]: number;
@@ -20,17 +14,8 @@ interface TableRow {
   costValues: CostValues;
 }
 
-const getRandomNumber = (type?: "negative" | "positive"): number => {
-  if (!type)
-    return Math.sign(Math.random() - 0.5) * Math.round(Math.random() * 5000000);
-
-  if (type === "negative") return Math.round(Math.random() * -5000000);
-
-  return Math.round(Math.random() * 5000000);
-};
-
 const columnHelper = createColumnHelper<TableRow>();
-const cashflowCostNameMap: Record<keyof OverridableCostInputs, string> = {
+const cashflowCostNameMap: Record<YearlyBreakdownCostName, string> = {
   financingCost: "Financing cost",
   monitoring: "Monitoring",
   maintenance: "Maintenance",
@@ -47,23 +32,23 @@ const cashflowCostNameMap: Record<keyof OverridableCostInputs, string> = {
   establishingCarbonRights: "Establishing carbon rights",
   validation: "Validation",
   implementationLabor: "Implementation labor",
+  opexTotalCostPlan: "Total OpEx",
+  capexTotalCostPlan: "Total CapEx",
+  totalCostPlan: "Total Cost",
+  estimatedRevenuePlan: "Est. revenue",
+  creditsIssuedPlan: "Est. Credit issued",
+  cumulativeNetIncomePlan: "Revenue OpEx",
+  cumulativeNetIncomeCapexOpex: "Revenue CapEx + OpEx",
+  annualNetCashFlow: "Annual net cash flow",
+  annualNetIncome: "Revenue Opex",
 };
-
-export const chartData = YEARS.map((y) => ({
-  year: y,
-  estimatedRevenue: getRandomNumber("negative"),
-  totalOpEx: getRandomNumber("positive"),
-  annualNetCashFlow: getRandomNumber(),
-  revenueOpEx: getRandomNumber(),
-}));
-export const tableData = mockData.data.yearlyBreakdown;
 
 export const columns = (years: number[]) => [
   columnHelper.accessor("costName", {
     header: () => <span>Project</span>,
     cell: (info) => (
       <span>
-        {cashflowCostNameMap[info.getValue() as keyof OverridableCostInputs]}
+        {cashflowCostNameMap[info.getValue() as YearlyBreakdownCostName]}
       </span>
     ),
   }),
