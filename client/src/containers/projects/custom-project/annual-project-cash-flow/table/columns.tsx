@@ -3,6 +3,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 
 import { formatCurrency } from "@/lib/format";
 
+import { cashflowConfig } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
+
 interface CostValues {
   [key: string]: number;
 }
@@ -15,40 +17,13 @@ interface TableRow {
 }
 
 const columnHelper = createColumnHelper<TableRow>();
-const cashflowCostNameMap: Record<YearlyBreakdownCostName, string> = {
-  financingCost: "Financing cost",
-  monitoring: "Monitoring",
-  maintenance: "Maintenance",
-  communityBenefitSharingFund: "Community benefit sharing fund",
-  carbonStandardFees: "Carbon standard fees",
-  baselineReassessment: "Baseline reassessment",
-  mrv: "MRV",
-  longTermProjectOperatingCost: "Long-term project operating",
-  feasibilityAnalysis: "Feasibility analysis",
-  conservationPlanningAndAdmin: "Conservation planning and admin",
-  dataCollectionAndFieldCost: "Data collection and field costs",
-  communityRepresentation: "Community representation",
-  blueCarbonProjectPlanning: "Blue carbon project planning",
-  establishingCarbonRights: "Establishing carbon rights",
-  validation: "Validation",
-  implementationLabor: "Implementation labor",
-  opexTotalCostPlan: "Total OpEx",
-  capexTotalCostPlan: "Total CapEx",
-  totalCostPlan: "Total Cost",
-  estimatedRevenuePlan: "Est. revenue",
-  creditsIssuedPlan: "Est. Credit issued",
-  cumulativeNetIncomePlan: "Revenue OpEx",
-  cumulativeNetIncomeCapexOpex: "Revenue CapEx + OpEx",
-  annualNetCashFlow: "Annual net cash flow",
-  annualNetIncome: "Revenue Opex",
-};
 
 export const columns = (years: number[]) => [
   columnHelper.accessor("costName", {
     header: () => <span>Project</span>,
     cell: (info) => (
       <span>
-        {cashflowCostNameMap[info.getValue() as YearlyBreakdownCostName]}
+        {cashflowConfig[info.getValue() as YearlyBreakdownCostName].label}
       </span>
     ),
   }),

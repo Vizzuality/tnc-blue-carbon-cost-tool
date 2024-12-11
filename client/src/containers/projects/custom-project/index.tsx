@@ -13,6 +13,7 @@ import AnnualProjectCashFlow from "@/containers/projects/custom-project/annual-p
 import {
   getBreakdownYears,
   parseYearlyBreakdownForChart,
+  parseYearlyBreakdownForTable,
 } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
 import ProjectCost from "@/containers/projects/custom-project/cost";
 import CostDetails from "@/containers/projects/custom-project/cost-details";
@@ -60,6 +61,10 @@ const CustomProject: FC<CustomProjectProps> = ({ data }) => {
       ),
     [output.yearlyBreakdown],
   );
+  const tableData = useMemo(
+    () => parseYearlyBreakdownForTable(output.yearlyBreakdown),
+    [output.yearlyBreakdown],
+  );
 
   return (
     <motion.div
@@ -103,10 +108,7 @@ const CustomProject: FC<CustomProjectProps> = ({ data }) => {
           <LeftOver {...leftOverProps} />
           <CostDetails data={costDetailsProps} />
         </div>
-        <AnnualProjectCashFlow
-          tableData={output.yearlyBreakdown}
-          chartData={chartData}
-        />
+        <AnnualProjectCashFlow tableData={tableData} chartData={chartData} />
       </div>
     </motion.div>
   );
