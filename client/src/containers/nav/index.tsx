@@ -9,7 +9,7 @@ import {
   ClipboardListIcon,
   ServerCogIcon,
   UserIcon,
-  FileQuestionIcon,
+  // FileQuestionIcon,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -56,12 +56,12 @@ const navItems = {
     },
   ],
   footer: [
-    {
-      title: "Methodology",
-      url: "/methodology",
-      icon: FileQuestionIcon,
-      match: (pathname: string) => pathname === "/methodology",
-    },
+    // {
+    //   title: "Methodology",
+    //   url: "/methodology",
+    //   icon: FileQuestionIcon,
+    //   match: (pathname: string) => pathname === "/methodology",
+    // },
   ],
 };
 
