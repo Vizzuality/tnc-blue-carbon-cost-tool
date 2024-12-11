@@ -72,7 +72,18 @@ const CashFlowTable: FC<CashFlowTableProps> = ({ data }) => {
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} className="divide-x-0">
+              <TableRow
+                key={row.id}
+                className={cn({
+                  "divide-x-0": true,
+                  "bg-big-stone-950 hover:bg-big-stone-950":
+                    row.original.costName === "capexTotalCostPlan" ||
+                    row.original.costName === "opexTotalCostPlan" ||
+                    row.original.costName === "totalCost" ||
+                    row.original.costName === "estimatedRevenuePlan" ||
+                    row.original.costName === "annualNetCashFlow",
+                })}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}

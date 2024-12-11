@@ -42,20 +42,20 @@ export type CustomProjectCostDetails = {
   longTermProjectOperatingCost: number;
 };
 
-export type OutputCostNames = keyof [
-  "opexTotalCostPlan",
-  "capexTotalCostPlan",
-  "totalCostPlan",
-  "estimatedRevenuePlan",
-  "creditsIssuedPlan",
-  "cumulativeNetIncomePlan",
-  "cumulativeNetIncomeCapexOpex",
-  "annualNetCashFlow",
-  "annualNetIncome",
-];
+export type OutputCostNames =
+  | "opexTotalCostPlan"
+  | "capexTotalCostPlan"
+  | "totalCostPlan"
+  | "estimatedRevenuePlan"
+  | "creditsIssuedPlan"
+  | "cumulativeNetIncomePlan"
+  | "cumulativeNetIncomeCapexOpex"
+  | "annualNetCashFlow"
+  | "annualNetIncome";
 
-export type YearlyBreakdownCostName = keyof OverridableCostInputs &
-  OutputCostNames;
+export type YearlyBreakdownCostName =
+  | keyof InstanceType<typeof OverridableCostInputs>
+  | OutputCostNames;
 
 export type YearlyBreakdown = {
   costName: YearlyBreakdownCostName;
