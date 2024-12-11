@@ -75,7 +75,7 @@ export class ProjectsMapRepository extends Repository<Project> {
       totalCost,
       abatementPotential,
       activity,
-      activitySubtype,
+      restorationActivity,
       ecosystem,
       projectSizeFilter,
       priceType,
@@ -136,10 +136,13 @@ export class ProjectsMapRepository extends Repository<Project> {
         activity,
       });
     }
-    if (activitySubtype?.length) {
-      queryBuilder.andWhere('p.activitySubtype IN (:...activitySubtype)', {
-        activitySubtype,
-      });
+    if (restorationActivity?.length) {
+      queryBuilder.andWhere(
+        'p.restorationActivity IN (:...restorationActivity)',
+        {
+          restorationActivity,
+        },
+      );
     }
 
     if (ecosystem) {
