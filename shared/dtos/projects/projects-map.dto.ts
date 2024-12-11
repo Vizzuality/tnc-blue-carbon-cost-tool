@@ -5,7 +5,10 @@ import {
   PROJECT_PRICE_TYPE,
   PROJECT_SIZE_FILTER,
 } from "@shared/entities/projects.entity";
-import { ACTIVITY } from "@shared/entities/activity.enum";
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 export type ProjectGeoProperties = z.infer<typeof ProjectGeoPropertiesSchema>;
@@ -17,7 +20,7 @@ export type ProjectFilters = {
   totalCost?: number[];
   abatementPotential?: number[];
   activity?: ACTIVITY;
-  activitySubtype?: string[];
+  restorationActivity?: RESTORATION_ACTIVITY_SUBTYPE[];
   ecosystem?: ECOSYSTEM;
   projectSizeFilter?: PROJECT_SIZE_FILTER;
   priceType?: PROJECT_PRICE_TYPE;

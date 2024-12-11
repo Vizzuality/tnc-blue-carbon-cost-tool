@@ -8,7 +8,7 @@ import {
 import { Country } from '@shared/entities/country.entity';
 import { projectsContract } from '@shared/contracts/projects.contract';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
-import { partial } from 'lodash';
+import { RESTORATION_ACTIVITY_SUBTYPE } from '@shared/entities/activity.enum';
 
 describe('Project Map', () => {
   let testManager: TestManager;
@@ -326,6 +326,49 @@ describe('Project Map', () => {
     expect(response.body.features).toHaveLength(1);
     expect(response.body.features[0].properties.country).toBe(
       countries[0].name,
+    );
+  });
+
+  test('Should return the geometries of the countries filtered by restoration activity subtype', async () => {
+    const countries = await testManager
+      .getDataSource()
+      .getRepository(Country)
+      .find({ take: 3 });
+
+    await Promise.all([
+      testManager.mocks().createProject({
+        restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
+        countryCode: countries[0].code,
+      }),
+      testManager.mocks().createProject({
+        restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
+        countryCode: countries[1].code,
+      }),
+      testManager.mocks().createProject({
+        restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY,
+        countryCode: countries[2].code,
+      }),
+    ]);
+
+    const response = await testManager
+      .request()
+      .get(projectsContract.getProjectsMap.path)
+      .query({
+        filter: {
+          restorationActivity: [
+            RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
+            RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY,
+          ],
+        },
+      });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body.features).toHaveLength(2);
+    expect(response.body.features[0].properties.country).toBe(
+      countries[1].name,
+    );
+    expect(response.body.features[1].properties.country).toBe(
+      countries[2].name,
     );
   });
 });
