@@ -72,7 +72,9 @@ export class CustomProjectsController {
     );
   }
 
-  @TsRestHandler(customProjectContract.createCustomProject)
+  @TsRestHandler(customProjectContract.createCustomProject, {
+    validateRequestBody: false,
+  })
   async create(
     @Body(new ValidationPipe({ enableDebugMessages: true, transform: true }))
     dto: CreateCustomProjectDto,
