@@ -8,34 +8,36 @@ import DetailItem from "@/containers/projects/custom-project/details/detail-item
 
 import { Card } from "@/components/ui/card";
 
-// Will refector this interface after we decide state management:
 interface ProjectDetailsProps {
-  country: { code: string; name: string };
-  projectSize: number;
-  projectLength: number;
-  ecosystem: ECOSYSTEM;
-  activity: ACTIVITY;
-  lossRate: number;
-  carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
-  initialCarbonPrice: number;
-  emissionFactors: {
-    emissionFactor: number | null;
-    emissionFactorAgb: number;
-    emissionFactorSoc: number;
+  data: {
+    country: { code: string; name: string };
+    projectSize: number;
+    projectLength: number;
+    ecosystem: ECOSYSTEM;
+    activity: ACTIVITY;
+    lossRate: number;
+    carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
+    initialCarbonPrice: number;
+    emissionFactors: {
+      emissionFactor: number | null;
+      emissionFactorAgb: number;
+      emissionFactorSoc: number;
+    };
   };
 }
 
-const ProjectDetails: FC<ProjectDetailsProps> = ({
-  country,
-  projectSize,
-  projectLength,
-  ecosystem,
-  carbonRevenuesToCover,
-  activity,
-  initialCarbonPrice,
-  lossRate,
-  emissionFactors,
-}) => {
+const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
+  const {
+    country,
+    projectSize,
+    projectLength,
+    ecosystem,
+    carbonRevenuesToCover,
+    activity,
+    initialCarbonPrice,
+    lossRate,
+    emissionFactors,
+  } = data;
   return (
     <Card className="flex-1 space-y-1">
       <div className="flex items-center justify-between">
