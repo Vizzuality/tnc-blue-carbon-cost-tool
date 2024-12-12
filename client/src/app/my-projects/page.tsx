@@ -11,12 +11,6 @@ import { auth } from "@/app/auth/api/[...nextauth]/config";
 
 import MyProjectsView from "@/containers/my-projects";
 
-const filters = [
-  { label: "All", count: 15 },
-  { label: "Conservation", count: 5 },
-  { label: "Restoration", count: 10 },
-];
-
 export default async function MyProjects() {
   const queryClient = new QueryClient();
   const session = await auth();
@@ -36,7 +30,7 @@ export default async function MyProjects() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <MyProjectsView filters={filters} />
+      <MyProjectsView />
     </HydrationBoundary>
   );
 }

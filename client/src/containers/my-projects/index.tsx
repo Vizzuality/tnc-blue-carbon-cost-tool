@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import { ACTIVITY } from "@shared/entities/activity.enum";
 import {
   flexRender,
   getCoreRowModel,
@@ -40,11 +41,7 @@ const LAYOUT_TRANSITIONS = {
   ease: "easeInOut",
 };
 
-export default function MyProjectsView({
-  filters,
-}: {
-  filters: { label: string; count: number }[];
-}) {
+export default function MyProjectsView() {
   const { data: session } = useSession();
   const queryKey = queryKeys.customProjects.all.queryKey;
   const { data } = client.customProjects.getCustomProjects.useQuery(
@@ -91,6 +88,24 @@ export default function MyProjectsView({
     enableRowSelection: true,
     enableMultiRowSelection: true,
   });
+  const filters = useMemo(
+    () => [
+      { label: "All", count: data?.data?.length || 0 },
+      {
+        label: "Conservation",
+        count:
+          data?.data?.filter((p) => p.activity === ACTIVITY.CONSERVATION)
+            .length || 0,
+      },
+      {
+        label: "Restoration",
+        count:
+          data?.data?.filter((p) => p.activity === ACTIVITY.RESTORATION)
+            .length || 0,
+      },
+    ],
+    [data?.data],
+  );
 
   return (
     <motion.div
