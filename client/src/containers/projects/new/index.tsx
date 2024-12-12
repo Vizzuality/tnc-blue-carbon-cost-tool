@@ -3,10 +3,7 @@
 import { FormProvider, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ACTIVITY,
-  RESTORATION_ACTIVITY_SUBTYPE,
-} from "@shared/entities/activity.enum";
+import { ACTIVITY } from "@shared/entities/activity.enum";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
 import {
   CARBON_REVENUES_TO_COVER,
@@ -51,7 +48,6 @@ export const onSubmit = (data: CreateCustomProjectForm) => {
       ecosystem: data.ecosystem,
       activity: data.activity,
       countryCode: data.countryCode,
-      restorationActivity: data.parameters?.restorationActivity,
     }).queryKey,
   );
 
@@ -138,7 +134,6 @@ export default function CreateCustomProject() {
         projectSpecificEmissionFactor: 0,
         emissionFactorSOC: 0,
         emissionFactorAGB: 0,
-        // restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
       },
       assumptions: {
         baselineReassessmentFrequency: undefined,
