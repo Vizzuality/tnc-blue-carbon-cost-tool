@@ -7,6 +7,7 @@ import {
   RESTORATION_ACTIVITY_SUBTYPE,
 } from "@shared/entities/activity.enum";
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
@@ -59,6 +60,19 @@ export default function RestorationProjectDetails() {
     },
   );
 
+  const RESTORATION_ACTIVITY_OPTIONS = Object.values(
+    RESTORATION_ACTIVITY_SUBTYPE,
+  ).map((activity) => ({
+    value: activity,
+    label: activity,
+    disabled:
+      ecosystem === ECOSYSTEM.SEAGRASS &&
+      [
+        RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
+        RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY,
+      ].includes(activity),
+  }));
+
   return (
     <Card variant="secondary">
       <div className="flex flex-col gap-4">
@@ -93,13 +107,15 @@ export default function RestorationProjectDetails() {
                         <SelectValue placeholder="Select restoration activity type" />
                       </SelectTrigger>
                       <SelectContent>
-                        {Object.values(RESTORATION_ACTIVITY_SUBTYPE)?.map(
-                          (option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ),
-                        )}
+                        {RESTORATION_ACTIVITY_OPTIONS.map((option) => (
+                          <SelectItem
+                            key={option.value}
+                            value={option.value}
+                            disabled={option.disabled}
+                          >
+                            {option.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -132,6 +148,10 @@ export default function RestorationProjectDetails() {
                           v as SEQUESTRATION_RATE_TIER_TYPES,
                         );
                         await form.trigger("parameters.tierSelector");
+
+                        if (v === SEQUESTRATION_RATE_TIER_TYPES.TIER_2) {
+                          form.setValue("ecosystem", ECOSYSTEM.MANGROVE);
+                        }
                       }}
                     >
                       <SelectTrigger>
