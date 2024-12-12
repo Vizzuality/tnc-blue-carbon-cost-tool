@@ -1,12 +1,18 @@
 import { initContract } from "@ts-rest/core";
-import { ApiPaginationResponse, ApiResponse } from "@shared/dtos/global/api-response.dto";
+import {
+  ApiPaginationResponse,
+  ApiResponse,
+} from "@shared/dtos/global/api-response.dto";
 import { Country } from "@shared/entities/country.entity";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { CustomProject } from "@shared/entities/custom-project.entity";
 import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-cost-inputs.schema";
 import { GetAssumptionsSchema } from "@shared/schemas/assumptions/get-assumptions.schema";
 
-import { CreateCustomProjectSchema, InputCostsSchema } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import {
+  CreateCustomProjectSchema,
+  InputCostsSchema,
+} from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { z } from "zod";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { ActivityTypesDefaults } from "@shared/dtos/custom-projects/activity-types-defaults";
