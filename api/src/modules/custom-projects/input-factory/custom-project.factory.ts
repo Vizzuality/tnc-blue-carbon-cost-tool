@@ -137,6 +137,22 @@ export class CustomProjectFactory {
           opex: costPlans.totalOpexNPV,
         },
       },
+      leftover: {
+        total: {
+          total: costPlans.totalCapex + costPlans.totalOpex,
+          leftover:
+            costPlans.totalCapex +
+            costPlans.totalOpex -
+            costPlans.totalCapexNPV -
+            costPlans.totalOpexNPV,
+          opex: costPlans.totalOpex,
+        },
+        npv: {
+          total: costPlans.totalCapexNPV + costPlans.totalOpexNPV,
+          leftover: costPlans.totalCapexNPV + costPlans.totalOpexNPV,
+          opex: costPlans.totalOpexNPV,
+        },
+      },
       summary,
       costDetails,
       yearlyBreakdown,
