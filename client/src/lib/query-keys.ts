@@ -45,6 +45,7 @@ export const tableKeys = createQueryKeys("tables", {
 
 export const customProjectKeys = createQueryKeys("customProjects", {
   countries: null,
+  one: (id: string) => [id],
   assumptions: ({
     ecosystem,
     activity,
@@ -72,16 +73,11 @@ export const customProjectKeys = createQueryKeys("customProjects", {
   }) => ["defaultActivityTypes", ecosystem, countryCode],
 });
 
-export const customProjectKeys = createQueryKeys("customProjects", {
-  one: (id: string) => [id],
-});
-
 export const queryKeys = mergeQueryKeys(
   authKeys,
   userKeys,
   geometriesKeys,
   tableKeys,
   countriesKeys,
-  projectKeys,
   customProjectKeys,
 );
