@@ -56,28 +56,21 @@ export const RestorationCustomProjectSchema = z
   .object({
     restorationActivity: z.nativeEnum(RESTORATION_ACTIVITY_SUBTYPE),
     tierSelector: z.nativeEnum(SEQUESTRATION_RATE_TIER_TYPES),
-    projectSpecificLossRate: z
-      .number({ message: "Project Specific Loss Rate should be a message" })
-      .negative({ message: "Project Specific Loss Rate should be negative" }),
+    projectSpecificSequestrationRate: z
+      .number({ message: "Project Specific Rate should be a number" }),
     lossRateUsed: z.nativeEnum(LOSS_RATE_USED),
+    plantingSuccessRate: z.preprocess(parseNumber, z.number().nonnegative({
+      message: 'Planting Success Rate should be a non-negative number',
+    })),
   })
   .superRefine((data, ctx) => {
     if (
-      data.lossRateUsed === LOSS_RATE_USED.PROJECT_SPECIFIC &&
-      !data.projectSpecificLossRate
+      data.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 &&
+      !data.projectSpecificSequestrationRate
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `Project Specific Loss Rate is required when lossRateUsed is ${LOSS_RATE_USED.PROJECT_SPECIFIC}`,
-      });
-    }
-    if (
-      data.lossRateUsed === LOSS_RATE_USED.NATIONAL_AVERAGE &&
-      data.projectSpecificLossRate
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Project Specific Loss Rate should not be provided when lossRateUsed is ${LOSS_RATE_USED.NATIONAL_AVERAGE}`,
+        message: 'Project Specific Rate is required',
       });
     }
   });
