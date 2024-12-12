@@ -4,6 +4,7 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { ACTIVITY } from "@shared/entities/activity.enum";
+import { CustomProject } from "@shared/entities/custom-project.entity";
 import { Table as TableInstance, Row } from "@tanstack/react-table";
 
 import { formatCurrency } from "@/lib/format";
@@ -17,8 +18,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { CustomProject } from "./types"; // You might need to move types to a separate file
 
 const ActionsDropdown = () => (
   <DropdownMenu>
@@ -43,7 +42,7 @@ const ActionsDropdown = () => (
 export const columns = [
   {
     accessorKey: "projectName",
-    header: ({ table }: { table: TableInstance<CustomProject> }) => (
+    header: ({ table }: { table: TableInstance<Partial<CustomProject>> }) => (
       <div className="flex items-center gap-2">
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
@@ -79,7 +78,6 @@ export const columns = [
     header: "Total NPV Cost",
     cell: ({ getValue }: { getValue: () => string }) =>
       formatCurrency(Number(getValue()), { maximumFractionDigits: 0 }),
-    // `$ ${Number(getValue()).toLocaleString()}`,
   },
   {
     accessorKey: "abatementPotential",
