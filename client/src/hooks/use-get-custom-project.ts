@@ -10,13 +10,11 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
 
-import { CUSTOM_PROJECT_MOCK_QUERYKEY } from "@/app/projects/preview/page";
-
 export function useGetCustomProject(id?: string) {
   const { data: session } = useSession();
   const queryCache = useQueryClient().getQueryData<{
     data: InstanceType<typeof CustomProjectEntity>;
-  }>(CUSTOM_PROJECT_MOCK_QUERYKEY);
+  }>(queryKeys.customProjects.cached.queryKey);
   const getCustomProjectQuery = client.customProjects.getCustomProject.useQuery(
     queryKeys.customProjects.one(id || "").queryKey,
     {
