@@ -93,6 +93,18 @@ export class ConservationProjectOutput {
       opex: number;
     };
   };
+  leftover: {
+    total: {
+      total: number;
+      leftover: number;
+      opex: number;
+    };
+    npv: {
+      total: number;
+      leftover: number;
+      opex: number;
+    };
+  };
   summary: CustomProjectSummary;
   costDetails: {
     total: CustomProjectCostDetails;
