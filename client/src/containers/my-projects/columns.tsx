@@ -4,8 +4,8 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { ACTIVITY } from "@shared/entities/activity.enum";
-import { CustomProject } from "@shared/entities/custom-project.entity";
-import { Table as TableInstance, Row } from "@tanstack/react-table";
+import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
+import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
 
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+type CustomProject = Partial<CustomProjectEntity>;
+
+type CustomColumn = ColumnDef<CustomProject, keyof CustomProject> & {
+  className?: string;
+};
 
 const ActionsDropdown = () => (
   <DropdownMenu>
@@ -39,10 +45,10 @@ const ActionsDropdown = () => (
   </DropdownMenu>
 );
 
-export const columns = [
+export const columns: CustomColumn[] = [
   {
     accessorKey: "projectName",
-    header: ({ table }: { table: TableInstance<Partial<CustomProject>> }) => (
+    header: ({ table }: { table: TableInstance<CustomProject> }) => (
       <div className="flex items-center gap-2">
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
