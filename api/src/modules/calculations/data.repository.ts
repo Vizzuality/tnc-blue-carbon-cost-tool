@@ -82,11 +82,9 @@ export class DataRepository extends Repository<BaseDataView> {
         activity,
       );
 
-    const country = await this.repo
-      .createQueryBuilder('country')
-      .from(Country, 'country')
-      .where('country.code = :code', { code: countryCode })
-      .getOne();
+    const country = await this.manager
+      .getRepository(Country)
+      .findOne({ where: { code: countryCode } });
 
     return {
       additionalBaseData,
