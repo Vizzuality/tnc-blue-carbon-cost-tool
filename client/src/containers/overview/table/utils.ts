@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
 
-import { scorecardFiltersSchema } from "./view/scorecard-prioritization/schema";
+import { scorecardFiltersSchema } from "@/containers/overview/table/view/scorecard-prioritization/schema";
 
 export const NO_DATA = [];
 
@@ -16,8 +16,7 @@ const OMITTED_FIELDS = [
 export const filtersToQueryParams = (
   filters: z.infer<typeof filtersSchema | typeof scorecardFiltersSchema>,
 ) => {
-  debugger;
-  const queryParams = Object.keys(filters)
+  return Object.keys(filters)
     .filter((key) => !OMITTED_FIELDS.includes(key))
     .reduce(
       (acc, key) => ({
@@ -28,5 +27,4 @@ export const filtersToQueryParams = (
       }),
       {},
     );
-  return queryParams;
 };
