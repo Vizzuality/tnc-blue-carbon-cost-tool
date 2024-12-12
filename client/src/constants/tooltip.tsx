@@ -572,53 +572,38 @@ export const CUSTOM_PROJECT_OUTPUTS = {
 };
 
 export const PROJECT_SUMMARY: Record<keyof CustomProjectSummary, string> = {
-  // COST_PER_TCOE_NPV:
   "$/tCO2e (total cost, NPV)":
     "The NPV of the total cost (CAPEX & OPEX, excl. financing cost) divided by the total credits the project will generate.",
-  // COST_PER_HA:
   "$/ha":
     "The NPV of the total cost (CAPEX & OPEX, excl. financing cost) divided by the total ha of the project",
-  // NPV_COVERING_TOTAL_COST:
   "NPV covering cost":
     'The NPV of the carbon credit revenues subtracted by either the OPEX or the total cost (depending on parameter in "carbon revenues to cover")',
-  // IRR_WHEN_PRICED_TO_COVER_OPEX:
   "IRR when priced to cover OpEx":
     "The internal rate of return (IRR) calculated when carbon credits are priced to only cover the operating expenses (OPEX).",
-  // IRR_WHEN_PRICED_TO_COVER_TOTAL_COST:
   "IRR when priced to cover total cost":
     "The internal rate of return (IRR) calculated when carbon credits are priced to cover both capital (CAPEX) and operating expenses (OPEX).",
-  //TOTAL_COST_NPV:
   "Total cost (NPV)":
     "The NPV of the total cost associated with the hypothetical blue carbon project (incl. CAPEX and OPEX, excl. financing cost)",
-  // CAPITAL_EXPENDITURE_NPV:
   "Capital expenditure (NPV)":
     "The NPV of the CAPEX associated with the hypothetical blue carbon project",
-  // OPERATING_EXPENDITURE_NPV:
   "Operating expenditure (NPV)":
     "The NPV of the OPEX associated with the hypothetical blue carbon project",
-  // CREDITS_ISSUED:
   "Credits issued":
     "The carbon credits issued as part of the project. The buffer has already been subtracted from this total number",
-  // TOTAL_REVENUE_NPV:
   "Total revenue (NPV)": "The NPV of the carbon credit revenues",
-  // TOTAL_REVENUE_NON_DISCOUNTED:
   "Total revenue (non-discounted)": "The non-discounted carbon credit revenues",
-  // FINANCING_COST:
   "Financing cost":
     "The financing cost is the time, effort and cost associated with securing financing for the set up (pre-revenue) phase of the project. Calculated as the financing cost assumption (default 5%) multiplied by the non-discounted CAPEX total.",
-  // FUNDING_GAP_NPV:
   "Funding gap (NPV)":
     'The reverse of the "NPV covering OPEX" or "NPV covering total cost" metric.',
-  // FUNDING_GAP_PER_TCOE_NPV:
   "Funding gap per tCO2e (NPV)":
     'The reverse of the "NPV covering OPEX" or "NPV covering total cost" metric.',
-  // COMMUNITY_BENEFIT_SHARING_FUND:
   "Community benefit sharing fund":
     "The percentage of the revenues assumed to go back to the community as part of the community benefit sharing fund.",
-  // TODO:
-  "Leftover after OpEx / total cost": "",
-  // TODO:
-  "Funding gap": "",
+  "Leftover after OpEx / total cost":
+    "The remaining net revenue after accounting for all operating expenses (OPEX) associated with the project.",
+  "Funding gap":
+    'The reverse of the "NPV covering OPEX" or "NPV covering total cost" metric.',
 };
 
 export const COST_DETAILS = (
