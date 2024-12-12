@@ -13,7 +13,10 @@ import {
 } from "@tanstack/react-table";
 import { motion } from "framer-motion";
 import { ChevronsUpDownIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 
+import { client } from "@/lib/query-client";
+import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
 import Search from "@/components/ui/search";
@@ -31,7 +34,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { columns } from "./columns";
 import Header from "./header";
-import { CustomProject, CustomColumn } from "./types";
 
 const LAYOUT_TRANSITIONS = {
   duration: 0.2,
@@ -39,12 +41,24 @@ const LAYOUT_TRANSITIONS = {
 };
 
 export default function MyProjectsView({
-  data,
   filters,
 }: {
-  data: CustomProject[];
   filters: { label: string; count: number }[];
 }) {
+  const { data: session } = useSession();
+  const queryKey = queryKeys.customProjects.all.queryKey;
+  const { data } = client.customProjects.getCustomProjects.useQuery(
+    queryKey,
+    {
+      extraHeaders: {
+        authorization: `Bearer ${session?.accessToken as string}`,
+      },
+    },
+    {
+      select: (d) => d.body,
+      queryKey,
+    },
+  );
   const { open: navOpen } = useSidebar();
 
   const [sorting, setSorting] = useState<SortingState>([
@@ -60,10 +74,11 @@ export default function MyProjectsView({
   const [activeFilter, setActiveFilter] = useState("All");
 
   const table = useReactTable({
-    data: data.filter((project) =>
-      activeFilter === "All" ? true : project.type === activeFilter,
-    ),
-    columns: columns as CustomColumn[],
+    data:
+      data?.data.filter((project) =>
+        activeFilter === "All" ? true : project.activity === activeFilter,
+      ) || [],
+    columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
@@ -203,8 +218,8 @@ export default function MyProjectsView({
               onChangePagination={setPagination}
               pagination={{
                 ...pagination,
-                totalPages: 6 ?? 0, // make it dynamic
-                totalItems: 90 ?? 0, // make it dynamic
+                totalPages: data?.metadata?.totalPages || 0,
+                totalItems: data?.metadata?.totalItems || 0,
               }}
             />
           </div>

@@ -1,14 +1,15 @@
-import MyProjectsView from "@/containers/my-projects";
-import { CustomProject } from "@/containers/my-projects/types";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
-const MOCK_DATA: CustomProject[] = Array.from({ length: 15 }, (_, i) => ({
-  id: String(i + 1),
-  projectName: "My custom project",
-  location: "Location",
-  totalNPVCost: Math.floor(1000000 + Math.random() * 9000000),
-  abatementPotential: Math.floor(1000000 + Math.random() * 9000000),
-  type: i % 3 === 1 ? "Conservation" : "Restoration",
-}));
+import { client } from "@/lib/query-client";
+import { queryKeys } from "@/lib/query-keys";
+
+import { auth } from "@/app/auth/api/[...nextauth]/config";
+
+import MyProjectsView from "@/containers/my-projects";
 
 const filters = [
   { label: "All", count: 15 },
@@ -16,6 +17,26 @@ const filters = [
   { label: "Restoration", count: 10 },
 ];
 
-export default function MyProjects() {
-  return <MyProjectsView data={MOCK_DATA} filters={filters} />;
+export default async function MyProjects() {
+  const queryClient = new QueryClient();
+  const session = await auth();
+
+  await queryClient.prefetchQuery({
+    queryKey: queryKeys.customProjects.all.queryKey,
+    queryFn: () =>
+      client.customProjects.getCustomProjects.query({
+        query: {
+          include: ["country"],
+        },
+        extraHeaders: {
+          authorization: `Bearer ${session?.accessToken as string}`,
+        },
+      }),
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <MyProjectsView filters={filters} />
+    </HydrationBoundary>
+  );
 }

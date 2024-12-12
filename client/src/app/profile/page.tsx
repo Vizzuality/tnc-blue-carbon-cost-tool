@@ -21,6 +21,18 @@ export default async function ProfilePage() {
         },
       }),
   });
+  await queryClient.prefetchQuery({
+    queryKey: queryKeys.customProjects.all.queryKey,
+    queryFn: () =>
+      client.customProjects.getCustomProjects.query({
+        query: {
+          include: ["country"],
+        },
+        extraHeaders: {
+          authorization: `Bearer ${session?.accessToken as string}`,
+        },
+      }),
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

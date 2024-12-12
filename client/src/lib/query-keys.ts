@@ -45,6 +45,7 @@ export const tableKeys = createQueryKeys("tables", {
 
 export const customProjectKeys = createQueryKeys("customProjects", {
   cached: null,
+  all: null,
   countries: null,
   one: (id: string) => [id],
   assumptions: ({
