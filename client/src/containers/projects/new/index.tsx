@@ -139,6 +139,8 @@ export default function CreateCustomProject() {
         projectSpecificEmissionFactor: 0,
         emissionFactorSOC: 0,
         emissionFactorAGB: 0,
+        // @ts-expect-error fix later
+        plantingSuccessRate: 80,
       },
       assumptions: {
         baselineReassessmentFrequency: undefined,
