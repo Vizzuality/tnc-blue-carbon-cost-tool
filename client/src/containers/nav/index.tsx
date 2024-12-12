@@ -108,7 +108,7 @@ export default function MainNav() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-          {navItems.footer.map((item) => (
+          {/* {navItems.footer.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                 asChild
@@ -123,7 +123,7 @@ export default function MainNav() {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-          ))}
+          ))} */}
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild

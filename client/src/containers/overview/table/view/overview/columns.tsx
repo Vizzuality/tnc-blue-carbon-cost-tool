@@ -2,7 +2,7 @@ import { ProjectType } from "@shared/contracts/projects.contract";
 import { createColumnHelper } from "@tanstack/react-table";
 import { z } from "zod";
 
-import { formatNumber } from "@/lib/format";
+import { formatCurrency, formatNumber } from "@/lib/format";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
 
@@ -22,14 +22,14 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
     filters.costRangeSelector === "npv" ? "costPerTCO2eNPV" : "costPerTCO2e",
     {
       enableSorting: true,
-      header: () => <span>Cost $/tCo2</span>,
+      header: () => <span>Cost $(USD)/tCo2</span>,
       cell: (props) => {
         const value = props.getValue();
         if (value === null || value === undefined) {
           return "-";
         }
 
-        return formatNumber(value);
+        return formatCurrency(value);
       },
     },
   ),
