@@ -96,15 +96,17 @@ const CustomProject: FC<CustomProjectProps> = ({ id }) => {
         <CustomProjectHeader data={data} />
         <div className="mb-4 mt-2 flex gap-4">
           <ProjectDetails
-            country={data.country}
-            projectSize={data.projectSize}
-            projectLength={data.projectLength}
-            ecosystem={data.ecosystem}
-            activity={data.activity}
-            lossRate={output.lossRate}
-            carbonRevenuesToCover={output.carbonRevenuesToCover}
-            initialCarbonPrice={output.initialCarbonPrice}
-            emissionFactors={output.emissionFactors}
+            data={{
+              country: data.country,
+              projectSize: data.projectSize,
+              projectLength: data.projectLength,
+              ecosystem: data.ecosystem,
+              carbonRevenuesToCover: output.carbonRevenuesToCover,
+              activity: data.activity,
+              initialCarbonPrice: output.initialCarbonPrice,
+              lossRate: output.lossRate,
+              emissionFactors: output.emissionFactors,
+            }}
           />
           <ProjectCost {...projectCostProps} />
           <LeftOver {...leftOverProps} />
