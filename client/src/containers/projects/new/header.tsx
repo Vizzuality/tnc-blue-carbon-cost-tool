@@ -2,6 +2,8 @@
 
 import { useFormContext } from "react-hook-form";
 
+import { useRouter } from "next/navigation";
+
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +13,7 @@ import { onSubmit } from "./index";
 
 export default function Header() {
   const methods = useFormContext<CreateCustomProjectForm>();
+  const router = useRouter();
 
   return (
     <div className="flex items-center justify-between py-3 pr-6">
@@ -22,7 +25,10 @@ export default function Header() {
         <Button variant="secondary">Cancel</Button>
         <Button
           // disabled={!methods.formState.isValid}
-          onClick={methods.handleSubmit(onSubmit)}
+          onClick={() => {
+            methods.handleSubmit((data) => onSubmit(data))();
+            router.push("/projects/preview");
+          }}
         >
           Continue
         </Button>

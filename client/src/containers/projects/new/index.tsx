@@ -28,7 +28,7 @@ import ProjectSidebar from "@/containers/projects/new/sidebar";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export const onSubmit = (data: CreateCustomProjectForm) => {
+export const onSubmit = async (data: CreateCustomProjectForm) => {
   const queryClient = getQueryClient();
 
   const originalValues = { ...data };
@@ -97,7 +97,12 @@ export const onSubmit = (data: CreateCustomProjectForm) => {
     },
   };
 
-  client.customProjects.createCustomProject.mutation({ body: data });
+  const { status, body } =
+    await client.customProjects.createCustomProject.mutation({ body: data });
+
+  if (status === 201) {
+    queryClient.setQueryData(queryKeys.customProjects.cached.queryKey, body);
+  }
 };
 
 export default function CreateCustomProject() {
