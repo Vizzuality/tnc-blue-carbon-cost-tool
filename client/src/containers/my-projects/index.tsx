@@ -75,7 +75,7 @@ export default function MyProjectsView({
 
   const table = useReactTable({
     data:
-      data?.data.filter((project) =>
+      data?.data?.filter((project) =>
         activeFilter === "All" ? true : project.activity === activeFilter,
       ) || [],
     columns: columns,
