@@ -2,12 +2,13 @@
 import { FC, useMemo } from "react";
 
 import { ConservationProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
-import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 
 import { LAYOUT_TRANSITIONS } from "@/app/(overview)/constants";
 import { costDetailsFilterAtom, projectsUIState } from "@/app/projects/store";
+
+import { useGetCustomProject } from "@/hooks/use-get-custom-project";
 
 import AnnualProjectCashFlow from "@/containers/projects/custom-project/annual-project-cash-flow";
 import {
@@ -29,14 +30,15 @@ import { useSidebar } from "@/components/ui/sidebar";
 export const SUMMARY_SIDEBAR_WIDTH = 460;
 
 interface CustomProjectProps {
-  data: InstanceType<typeof CustomProjectEntity>;
+  id?: string;
 }
 
-const CustomProject: FC<CustomProjectProps> = ({ data }) => {
+const CustomProject: FC<CustomProjectProps> = ({ id }) => {
   const [{ costRangeSelector }] = useCustomProjectFilters();
   const costDetailsRangeSelector = useAtomValue(costDetailsFilterAtom);
   const { projectSummaryOpen } = useAtomValue(projectsUIState);
   const { open: navOpen } = useSidebar();
+  const data = useGetCustomProject(id);
   // TODO: should be replaced with correct type when available;
   const output = data.output as ConservationProjectOutput;
   const projectCostProps = output.totalProjectCost[costRangeSelector];
