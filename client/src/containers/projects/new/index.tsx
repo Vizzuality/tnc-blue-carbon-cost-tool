@@ -67,6 +67,14 @@ export const onSubmit = async (data: CreateCustomProjectForm) => {
 
   data = {
     ...originalValues,
+    parameters: {
+      ...originalValues.parameters,
+      // @ts-expect-error fix later
+      ...(originalValues.parameters?.plantingSuccessRate && {
+        // @ts-expect-error fix later
+        plantingSuccessRate: plantingSuccessRate / 100,
+      }),
+    },
     assumptions: {
       ...Object.keys(originalValues.assumptions ?? {}).reduce(
         (acc, assumptionKey) => {
