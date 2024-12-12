@@ -22,6 +22,10 @@ export const geometriesKeys = createQueryKeys("geometries", {
   all: (filters: z.infer<typeof filtersSchema>) => [filters],
 });
 
+export const countriesKeys = createQueryKeys("countries", {
+  all: null,
+});
+
 export const tableKeys = createQueryKeys("tables", {
   all: <TFilters extends z.ZodTypeAny>(
     tableView: (typeof TABLE_VIEWS)[number],
@@ -32,7 +36,6 @@ export const tableKeys = createQueryKeys("tables", {
     },
   ) => ["all", tableView, filters],
   id: (id: string) => [id],
-  countries: null,
 });
 
 export const queryKeys = mergeQueryKeys(
@@ -40,4 +43,5 @@ export const queryKeys = mergeQueryKeys(
   userKeys,
   geometriesKeys,
   tableKeys,
+  countriesKeys,
 );

@@ -5,13 +5,12 @@ import { cn } from "@/lib/utils";
 interface ScoreIndicatorProps {
   className?: string;
   children?: React.ReactNode;
-  bgColorClasses?: Record<PROJECT_SCORE, string>;
 }
 
-export const DEFAULT_BG_CLASSES = {
-  high: "bg-high",
-  medium: "bg-medium",
-  low: "bg-low",
+export const DEFAULT_BG_CLASSES: Record<PROJECT_SCORE, string> = {
+  [PROJECT_SCORE.HIGH]: "bg-high",
+  [PROJECT_SCORE.MEDIUM]: "bg-medium",
+  [PROJECT_SCORE.LOW]: "bg-low",
 };
 
 export const ScoreIndicator = ({

@@ -1,6 +1,7 @@
 import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 import { z } from "zod";
 
+// todo: replace this schema with the one coming from create-custom-project.schema.ts once implemented there.
 export const scorecardFiltersSchema = z.object({
   availabilityOfExperiencedLabor: z.nativeEnum(PROJECT_SCORE).optional(),
   availabilityOfAlternatingFunding: z.nativeEnum(PROJECT_SCORE).optional(),

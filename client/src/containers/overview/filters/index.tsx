@@ -76,7 +76,7 @@ export default function ProjectsFilters() {
     setFiltersOpen((prev) => ({ ...prev, filtersOpen: false }));
   };
 
-  const { queryKey } = queryKeys.tables.countries;
+  const { queryKey } = queryKeys.countries.all;
   const { data: countryOptions } = client.projects.getProjectCountries.useQuery(
     queryKey,
     {},
