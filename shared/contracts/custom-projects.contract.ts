@@ -18,8 +18,13 @@ import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { ActivityTypesDefaults } from "@shared/dtos/custom-projects/activity-types-defaults";
 import { GetActivityTypesDefaultsSchema } from "@shared/schemas/custom-projects/activity-types-defaults.schema";
 
-export const customProjecsQuerySchema =
-  generateEntityQuerySchema(CustomProject);
+export const customProjecsQuerySchema = generateEntityQuerySchema(
+  CustomProject,
+).merge(
+  z.object({
+    partialProjectName: z.string().optional(),
+  }),
+);
 
 const contract = initContract();
 export const customProjectContract = contract.router({
