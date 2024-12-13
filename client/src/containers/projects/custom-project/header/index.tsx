@@ -1,6 +1,6 @@
-import { FC, useCallback } from "react";
+import { FC, useCallback, useState } from "react";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { useAtom } from "jotai";
@@ -28,7 +28,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
     useAtom(projectsUIState);
   const { data: session } = useSession();
   const { toast } = useToast();
-  const router = useRouter();
+  const [saved, setSaved] = useState<boolean>(false);
   const SaveProject = useCallback(
     async (arg: Session | null = session) => {
       try {
@@ -42,7 +42,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
 
         if (status === 201) {
           toast({ description: "Project updated successfully." });
-          router.push("/my-projects");
+          setSaved(true);
         }
 
         if (body?.errors) {
@@ -58,13 +58,35 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
         });
       }
     },
-    [session, data, toast, router],
+    [session, data, toast],
   );
   const handleOnSignIn = useCallback(async () => {
     // session is undefined when onSignIn callback is called
     const session = await getSession();
     SaveProject(session);
   }, [SaveProject]);
+  let ButtonComponent = (
+    <AuthDialog
+      dialogTrigger={<Button type="button">Save project</Button>}
+      onSignIn={handleOnSignIn}
+    />
+  );
+
+  if (session) {
+    ButtonComponent = (
+      <Button type="button" onClick={() => SaveProject()}>
+        Save project
+      </Button>
+    );
+  }
+
+  if (saved) {
+    ButtonComponent = (
+      <Button asChild>
+        <Link href="/my-projects">My custom projects</Link>
+      </Button>
+    );
+  }
 
   return (
     <Topbar title="Custom project - v01" className="gap-4">
@@ -85,16 +107,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
           </span>
         </Button>
         <CustomProjectParameters />
-        {session ? (
-          <Button type="button" onClick={() => SaveProject()}>
-            Save project
-          </Button>
-        ) : (
-          <AuthDialog
-            dialogTrigger={<Button type="button">Save project</Button>}
-            onSignIn={handleOnSignIn}
-          />
-        )}
+        {ButtonComponent}
       </div>
     </Topbar>
   );
