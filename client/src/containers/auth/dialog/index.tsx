@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -31,6 +32,7 @@ const AuthDialog: FC<AuthDialogProps> = ({ dialogTrigger, onSignIn }) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Sign in</DialogTitle>
+          <DialogDescription />
         </DialogHeader>
         {showSignin ? <SignInForm onSignIn={onSignIn} /> : <SignUpForm />}
         <Separator />
