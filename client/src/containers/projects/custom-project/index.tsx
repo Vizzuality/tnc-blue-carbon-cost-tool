@@ -2,6 +2,7 @@
 import { FC, useMemo } from "react";
 
 import { ConservationProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
+import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 
@@ -34,11 +35,21 @@ interface CustomProjectProps {
 }
 
 const CustomProject: FC<CustomProjectProps> = ({ id }) => {
+  const data = useGetCustomProject(id);
+
+  // TODO: Maybe add a spinner/skeleton?
+  if (!data) return null;
+
+  return <CustomProjectView data={data} />;
+};
+
+const CustomProjectView: FC<{
+  data: InstanceType<typeof CustomProjectEntity>;
+}> = ({ data }) => {
   const [{ costRangeSelector }] = useCustomProjectFilters();
   const costDetailsRangeSelector = useAtomValue(costDetailsFilterAtom);
   const { projectSummaryOpen } = useAtomValue(projectsUIState);
   const { open: navOpen } = useSidebar();
-  const data = useGetCustomProject(id);
   // TODO: should be replaced with correct type when available;
   const output = data.output as ConservationProjectOutput;
   const projectCostProps = output.totalProjectCost[costRangeSelector];

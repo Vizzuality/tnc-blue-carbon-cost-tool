@@ -41,5 +41,5 @@ export function useGetCustomProject(id?: string) {
     }
   }, [queryCache, pathname, router]);
 
-  return data as CustomProjectEntity;
+  return data;
 }

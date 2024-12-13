@@ -1,12 +1,15 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
+
+import { useRouter } from "next/navigation";
 
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { useAtom } from "jotai";
 import { LayoutListIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { getSession, useSession } from "next-auth/react";
 
 import { client } from "@/lib/query-client";
-import { cn } from "@/lib/utils";
+import { cn, getAuthHeader } from "@/lib/utils";
 
 import { projectsUIState } from "@/app/projects/store";
 
@@ -25,33 +28,43 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
     useAtom(projectsUIState);
   const { data: session } = useSession();
   const { toast } = useToast();
-  const handleSaveButtonClick = async () => {
-    try {
-      const { status, body } =
-        await client.customProjects.saveCustomProject.mutation({
-          body: data,
-          extraHeaders: {
-            authorization: `Bearer ${session?.accessToken as string}`,
-          },
-        });
+  const router = useRouter();
+  const SaveProject = useCallback(
+    async (arg: Session | null = session) => {
+      try {
+        const { status, body } =
+          await client.customProjects.saveCustomProject.mutation({
+            body: data,
+            extraHeaders: {
+              ...getAuthHeader(arg?.accessToken as string),
+            },
+          });
 
-      if (status === 201) {
-        toast({ description: "Project updated successfully." });
-      }
+        if (status === 201) {
+          toast({ description: "Project updated successfully." });
+          router.push("/my-projects");
+        }
 
-      if (body?.errors) {
+        if (body?.errors) {
+          toast({
+            variant: "destructive",
+            description: body.errors[0].title,
+          });
+        }
+      } catch (e) {
         toast({
           variant: "destructive",
-          description: body.errors[0].title,
+          description: "Something went wrong saving the project",
         });
       }
-    } catch (e) {
-      toast({
-        variant: "destructive",
-        description: "Something went wrong saving the project",
-      });
-    }
-  };
+    },
+    [session, data, toast, router],
+  );
+  const handleOnSignIn = useCallback(async () => {
+    // session is undefined when onSignIn callback is called
+    const session = await getSession();
+    SaveProject(session);
+  }, [SaveProject]);
 
   return (
     <Topbar title="Custom project - v01" className="gap-4">
@@ -73,13 +86,13 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
         </Button>
         <CustomProjectParameters />
         {session ? (
-          <Button type="button" onClick={handleSaveButtonClick}>
+          <Button type="button" onClick={() => SaveProject()}>
             Save project
           </Button>
         ) : (
           <AuthDialog
             dialogTrigger={<Button type="button">Save project</Button>}
-            onSignIn={handleSaveButtonClick}
+            onSignIn={handleOnSignIn}
           />
         )}
       </div>
