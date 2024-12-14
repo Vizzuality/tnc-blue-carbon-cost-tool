@@ -83,33 +83,34 @@ export default function MainNav() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {!isLoading && navItems.main
-                .filter(
-                  (item) => !item.requireAuth || status === "authenticated"
-                )
-                .map((item) => {
-                  const isActive = item.match(pathname);
-                  return (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        asChild
-                        tooltip={{
-                          children: item.title,
-                          hidden: open,
-                        }}
-                        className={cn(
-                          isActive &&
-                            "bg-sidebar-accent text-sidebar-accent-foreground",
-                        )}
-                      >
-                        <Link href={item.url}>
-                          {item.icon && <item.icon />}
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
+              {!isLoading &&
+                navItems.main
+                  .filter(
+                    (item) => !item.requireAuth || status === "authenticated",
+                  )
+                  .map((item) => {
+                    const isActive = item.match(pathname);
+                    return (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton
+                          asChild
+                          tooltip={{
+                            children: item.title,
+                            hidden: open,
+                          }}
+                          className={cn(
+                            isActive &&
+                              "bg-sidebar-accent text-sidebar-accent-foreground",
+                          )}
+                        >
+                          <Link href={item.url}>
+                            {item.icon && <item.icon />}
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

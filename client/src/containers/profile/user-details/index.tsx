@@ -1,5 +1,7 @@
 import { FC, KeyboardEvent, useCallback, useRef } from "react";
-import { useForm } from "react-hook-form";
+
+import { useForm, UseFormReturn, FieldValues } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -9,6 +11,7 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -16,14 +19,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
+  // FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast/use-toast";
-import { Card } from "@/components/ui/card";
 
 import { accountDetailsSchema } from "../account-details/schema";
 import { changePasswordSchema } from "../edit-password/form/schema";
+import { accountDetailsSchema as emailSchema } from "../update-email/schema";
 
 const UserDetails: FC = () => {
   const queryClient = useQueryClient();
@@ -53,8 +56,8 @@ const UserDetails: FC = () => {
     mode: "onSubmit",
   });
 
-  const emailForm = useForm<z.infer<typeof accountDetailsSchema>>({
-    resolver: zodResolver(accountDetailsSchema),
+  const emailForm = useForm<z.infer<typeof emailSchema>>({
+    resolver: zodResolver(emailSchema),
     defaultValues: {
       email: user?.email,
     },
@@ -106,7 +109,7 @@ const UserDetails: FC = () => {
   const onSubmitEmail = useCallback(
     async (data: FormData) => {
       const formData = Object.fromEntries(data);
-      const parsed = accountDetailsSchema.safeParse(formData);
+      const parsed = emailSchema.safeParse(formData);
 
       if (parsed.success) {
         try {
@@ -185,7 +188,11 @@ const UserDetails: FC = () => {
   );
 
   const handleEnterKey = useCallback(
-    (evt: KeyboardEvent, form: any, onSubmit: (data: FormData) => Promise<void>) => {
+    <T extends FieldValues>(
+      evt: KeyboardEvent,
+      form: UseFormReturn<T>,
+      onSubmit: (data: FormData) => Promise<void>,
+    ) => {
       if (evt.code === "Enter" && form.formState.isValid) {
         form.handleSubmit(async () => {
           await onSubmit(new FormData(formRef.current!));
@@ -223,7 +230,9 @@ const UserDetails: FC = () => {
                         <Input
                           type="text"
                           autoComplete={field.name}
-                          onKeyDown={(e) => handleEnterKey(e, accountForm, onSubmitAccount)}
+                          onKeyDown={(e) =>
+                            handleEnterKey(e, accountForm, onSubmitAccount)
+                          }
                           {...field}
                         />
                       </div>
@@ -253,7 +262,11 @@ const UserDetails: FC = () => {
                 )}
               />
               <div className="flex justify-end gap-2">
-                <Button variant="outline" type="button" onClick={() => accountForm.reset()}>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => accountForm.reset()}
+                >
                   Cancel
                 </Button>
                 <Button type="submit" disabled={!accountForm.formState.isDirty}>
@@ -286,7 +299,9 @@ const UserDetails: FC = () => {
                         <Input
                           type="email"
                           autoComplete={field.name}
-                          onKeyDown={(e) => handleEnterKey(e, emailForm, onSubmitEmail)}
+                          onKeyDown={(e) =>
+                            handleEnterKey(e, emailForm, onSubmitEmail)
+                          }
                           placeholder={user?.email}
                           className="w-full"
                           {...field}
@@ -328,7 +343,9 @@ const UserDetails: FC = () => {
                         <Input
                           type="password"
                           autoComplete={field.name}
-                          onKeyDown={(e) => handleEnterKey(e, passwordForm, onSubmitPassword)}
+                          onKeyDown={(e) =>
+                            handleEnterKey(e, passwordForm, onSubmitPassword)
+                          }
                           {...field}
                         />
                       </div>
@@ -348,7 +365,9 @@ const UserDetails: FC = () => {
                         <Input
                           type="password"
                           autoComplete={field.name}
-                          onKeyDown={(e) => handleEnterKey(e, passwordForm, onSubmitPassword)}
+                          onKeyDown={(e) =>
+                            handleEnterKey(e, passwordForm, onSubmitPassword)
+                          }
                           {...field}
                         />
                       </div>
@@ -368,7 +387,9 @@ const UserDetails: FC = () => {
                         <Input
                           type="password"
                           autoComplete={field.name}
-                          onKeyDown={(e) => handleEnterKey(e, passwordForm, onSubmitPassword)}
+                          onKeyDown={(e) =>
+                            handleEnterKey(e, passwordForm, onSubmitPassword)
+                          }
                           {...field}
                         />
                       </div>
@@ -378,7 +399,10 @@ const UserDetails: FC = () => {
                 )}
               />
               <div className="flex justify-end">
-                <Button type="submit" disabled={!passwordForm.formState.isValid}>
+                <Button
+                  type="submit"
+                  disabled={!passwordForm.formState.isValid}
+                >
                   Update password
                 </Button>
               </div>
