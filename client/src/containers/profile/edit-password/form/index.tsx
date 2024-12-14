@@ -96,7 +96,7 @@ const SignUpForm: FC = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Your password</FormLabel>
               <FormControl>
                 <div className="relative flex items-center">
                   <Input

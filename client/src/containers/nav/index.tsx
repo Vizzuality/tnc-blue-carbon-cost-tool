@@ -47,6 +47,7 @@ const navItems = {
       url: "/my-projects",
       icon: ClipboardListIcon,
       match: (pathname: string) => pathname === "/my-projects",
+      requireAuth: true,
     },
     {
       title: "Admin",
@@ -70,6 +71,9 @@ export default function MainNav() {
   const { status } = useSession();
   const pathname = usePathname();
 
+  // Don't render nav items until authentication is determined
+  const isLoading = status === "loading";
+
   return (
     <Sidebar collapsible="icon" className="py-6">
       <SidebarHeader>
@@ -79,29 +83,33 @@ export default function MainNav() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.main.map((item) => {
-                const isActive = item.match(pathname);
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      tooltip={{
-                        children: item.title,
-                        hidden: open,
-                      }}
-                      className={cn(
-                        isActive &&
-                          "bg-sidebar-accent text-sidebar-accent-foreground",
-                      )}
-                    >
-                      <Link href={item.url}>
-                        {item.icon && <item.icon />}
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
+              {!isLoading && navItems.main
+                .filter(
+                  (item) => !item.requireAuth || status === "authenticated"
+                )
+                .map((item) => {
+                  const isActive = item.match(pathname);
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        tooltip={{
+                          children: item.title,
+                          hidden: open,
+                        }}
+                        className={cn(
+                          isActive &&
+                            "bg-sidebar-accent text-sidebar-accent-foreground",
+                        )}
+                      >
+                        <Link href={item.url}>
+                          {item.icon && <item.icon />}
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
