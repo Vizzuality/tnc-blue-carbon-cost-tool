@@ -101,7 +101,7 @@ export default function Profile() {
         <ProfileSidebar
           navItems={sections.map((s) => ({ id: s.id, name: s.title }))}
         />
-        <ScrollArea ref={ref} className="pr-6">
+        <ScrollArea ref={ref} className="pr-6" showGradient>
           <div id="profile-sections-container" className="space-y-2 pb-80">
             {sections.map(({ Component, ...rest }) => (
               <ProfileSection key={rest.id} {...rest}>
