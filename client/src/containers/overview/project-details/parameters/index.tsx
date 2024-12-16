@@ -20,7 +20,7 @@ import {
 
 const INITIAL_FILTERS_STATE: Partial<z.infer<typeof filtersSchema>> = {
   projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
-  priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+  priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
   costRangeSelector: COST_TYPE_SELECTOR.NPV,
 };
 
@@ -109,7 +109,13 @@ export default function ParametersProjects() {
             </SelectTrigger>
             <SelectContent>
               {parameter.options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  disabled={
+                    option.value === PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE
+                  }
+                >
                   {option.label}
                 </SelectItem>
               ))}

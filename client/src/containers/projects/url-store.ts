@@ -13,7 +13,7 @@ export const filtersSchema = z.object({
 });
 
 export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
-  priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+  priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
   costRangeSelector: COST_TYPE_SELECTOR.NPV,
 };
 
