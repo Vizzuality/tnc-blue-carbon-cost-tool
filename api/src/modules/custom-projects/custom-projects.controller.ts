@@ -82,7 +82,6 @@ export class CustomProjectsController {
     return tsRestHandler(
       customProjectContract.createCustomProject,
       async () => {
-        console.log('>>>>>>>>>>>>>> HERE');
         const customProject = await this.customProjects.create(dto as any);
         return {
           status: 201,
