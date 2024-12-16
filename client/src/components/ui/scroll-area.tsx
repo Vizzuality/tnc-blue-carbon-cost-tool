@@ -13,21 +13,33 @@ const ScrollArea = React.forwardRef<
      * When true, adds a horizontal scrollbar to the scroll area
      */
     hasHorizontalScroll?: boolean;
+    /**
+     * When true, adds a gradient to the bottom of the scroll area
+     */
+    showGradient?: boolean;
   }
->(({ className, children, hasHorizontalScroll, ...props }, ref) => (
-  <ScrollAreaPrimitive.Root
-    ref={ref}
-    className={cn("relative overflow-hidden", className)}
-    {...props}
-  >
-    <ScrollAreaPrimitive.Viewport className="relative h-full w-full scroll-smooth rounded-[inherit]">
-      {children}
-    </ScrollAreaPrimitive.Viewport>
-    <ScrollBar />
-    {hasHorizontalScroll && <ScrollBar orientation="horizontal" />}
-    <ScrollAreaPrimitive.Corner />
-  </ScrollAreaPrimitive.Root>
-));
+>(
+  (
+    { className, children, hasHorizontalScroll, showGradient, ...props },
+    ref,
+  ) => (
+    <ScrollAreaPrimitive.Root
+      ref={ref}
+      className={cn("relative overflow-hidden", className)}
+      {...props}
+    >
+      <ScrollAreaPrimitive.Viewport className="relative h-full w-full scroll-smooth rounded-[inherit]">
+        {children}
+      </ScrollAreaPrimitive.Viewport>
+      {showGradient && (
+        <div className="pointer-events-none absolute bottom-0 left-0 h-10 w-full bg-gradient-to-t from-big-stone-1000 to-big-stone-1000/0" />
+      )}
+      <ScrollBar />
+      {hasHorizontalScroll && <ScrollBar orientation="horizontal" />}
+      <ScrollAreaPrimitive.Corner />
+    </ScrollAreaPrimitive.Root>
+  ),
+);
 ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName;
 
 const ScrollBar = React.forwardRef<

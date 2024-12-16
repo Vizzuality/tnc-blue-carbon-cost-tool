@@ -4,7 +4,7 @@ import { ACTIVITY } from "@shared/entities/activity.enum";
 import { useSession } from "next-auth/react";
 
 import { client } from "@/lib/query-client";
-import { cn, getAuthHeader } from "@/lib/utils";
+import { getAuthHeader } from "@/lib/utils";
 
 import { DEFAULT_CUSTOM_PROJECTS_QUERY_KEY } from "@/app/my-projects/url-store";
 
@@ -16,24 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-const GRADIENT_STYLES =
-  "absolute inset-0 bg-gradient-to-t from-big-stone-1000 to-transparent opacity-100" as const;
-
-const CustomTableHead: FC<{
-  title: string;
-  className?: HTMLDivElement["className"];
-}> = ({ title, className }) => (
-  <TableHead
-    className={cn("relative w-[260px] bg-transparent font-normal", className)}
-  >
-    <div className="relative">
-      {title}
-      <div className={GRADIENT_STYLES}></div>
-    </div>
-    <div className={GRADIENT_STYLES}></div>
-  </TableHead>
-);
 
 const CustomProjects: FC = () => {
   const { data: session } = useSession();
@@ -61,8 +43,12 @@ const CustomProjects: FC = () => {
     <Table>
       <TableHeader>
         <TableRow className="divide-x-0">
-          <CustomTableHead title="Project type" />
-          <CustomTableHead title="Number of projects" className="text-center" />
+          <TableHead className="w-[260px] bg-transparent font-normal">
+            Project type
+          </TableHead>
+          <TableHead className="w-[260px] bg-transparent text-center font-normal">
+            Number of projects
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
