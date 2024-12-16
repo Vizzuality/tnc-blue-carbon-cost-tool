@@ -62,6 +62,7 @@ export const RestorationCustomProjectSchema = z
     plantingSuccessRate: z.preprocess(parseNumber, z.number().nonnegative({
       message: 'Planting Success Rate should be a non-negative number',
     })),
+    restorationYearlyBreakdown: z.array(z.preprocess(parseNumber, z.number()).optional()).optional(),
   })
   .superRefine((data, ctx) => {
     if (
@@ -82,7 +83,9 @@ export const AssumptionsSchema = z.object({
   restorationRate: z.preprocess(parseNumber, z.number().positive()).optional(),
   carbonPriceIncrease: z.preprocess(parseNumber, z.number().positive()).optional(),
   buffer: z.preprocess(parseNumber, z.number().positive()).optional(),
-  projectLength: z.preprocess(parseNumber, z.number().positive()).optional(),
+  projectLength: z.preprocess(parseNumber, z.number().positive().min(1).max(40, {
+    message: 'Project Length should be between 1 and 40 years',
+  })).optional(),
 });
 
 export const InputCostsSchema = z.object({

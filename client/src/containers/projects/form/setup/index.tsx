@@ -96,8 +96,6 @@ export default function SetupProjectForm() {
     disabled: isDisabled(ecosystem),
   }));
 
-  console.log(form.formState.errors);
-
   return (
     <Accordion type="single" collapsible defaultValue="assumptions">
       <AccordionItem value="assumptions" className="border-b-0">
