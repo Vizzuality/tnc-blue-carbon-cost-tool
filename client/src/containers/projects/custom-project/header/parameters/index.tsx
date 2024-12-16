@@ -26,6 +26,7 @@ export const PROJECT_PARAMETERS = [
     key: FILTER_KEYS[3],
     label: "Project size",
     className: "w-[125px]",
+    disabled: false,
     options: [
       {
         label: COST_TYPE_SELECTOR.NPV,
@@ -41,6 +42,7 @@ export const PROJECT_PARAMETERS = [
     key: FILTER_KEYS[2],
     label: "Carbon pricing type",
     className: "w-[195px]",
+    disabled: true,
     options: [
       {
         label: PROJECT_PRICE_TYPE.MARKET_PRICE,
@@ -81,19 +83,14 @@ export default function CustomProjectParameters() {
             onValueChange={(v) => {
               handleParameters(v, parameter.key);
             }}
+            disabled={parameter.disabled}
           >
             <SelectTrigger className={parameter.className}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {parameter.options.map((option) => (
-                <SelectItem
-                  key={option.value}
-                  value={option.value}
-                  disabled={
-                    option.value === PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE
-                  }
-                >
+                <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
               ))}
