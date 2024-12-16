@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { ComponentProps, useMemo, useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import { ACTIVITY } from "@shared/entities/activity.enum";
 import {
   flexRender,
   getCoreRowModel,
@@ -13,8 +14,13 @@ import {
 } from "@tanstack/react-table";
 import { motion } from "framer-motion";
 import { ChevronsUpDownIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 
+import { client } from "@/lib/query-client";
+import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
+
+import { useMyProjectsFilters } from "@/app/my-projects/url-store";
 
 import Search from "@/components/ui/search";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -26,44 +32,63 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import TablePagination from "@/components/ui/table-pagination";
+import TablePagination, {
+  PAGINATION_SIZE_OPTIONS,
+} from "@/components/ui/table-pagination";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { columns } from "./columns";
 import Header from "./header";
-import { CustomProject, CustomColumn } from "./types";
 
 const LAYOUT_TRANSITIONS = {
   duration: 0.2,
   ease: "easeInOut",
 };
 
-export default function MyProjectsView({
-  data,
-  filters,
-}: {
-  data: CustomProject[];
-  filters: { label: string; count: number }[];
-}) {
-  const { open: navOpen } = useSidebar();
-
+export default function MyProjectsView() {
+  const { data: session } = useSession();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
+  });
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "projectName",
       desc: false,
     },
   ]);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [filters, setFilters] = useMyProjectsFilters();
+  const queryKey = queryKeys.customProjects.all({
+    ...filters,
+    sorting,
+    pagination,
+  }).queryKey;
 
+  const { data } = client.customProjects.getCustomProjects.useQuery(
+    queryKey,
+    {
+      query: {
+        include: ["country"],
+        filter: {
+          activity: filters.activity,
+        },
+        partialProjectName: filters.keyword || undefined,
+        pageNumber: pagination.pageIndex + 1,
+        pageSize: pagination.pageSize,
+      },
+      extraHeaders: {
+        authorization: `Bearer ${session?.accessToken as string}`,
+      },
+    },
+    {
+      select: (d) => d.body,
+      queryKey,
+    },
+  );
+  const { open: navOpen } = useSidebar();
   const table = useReactTable({
-    data: data.filter((project) =>
-      activeFilter === "All" ? true : project.type === activeFilter,
-    ),
-    columns: columns as CustomColumn[],
+    data: data?.data || [],
+    columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
@@ -76,6 +101,52 @@ export default function MyProjectsView({
     enableRowSelection: true,
     enableMultiRowSelection: true,
   });
+  const AllProjectsQueryKey = queryKeys.customProjects.all({
+    sorting,
+    pagination,
+  }).queryKey;
+  const allProjectsQuery = client.customProjects.getCustomProjects.useQuery(
+    AllProjectsQueryKey,
+    {
+      query: {
+        include: ["country"],
+        pageNumber: pagination.pageIndex + 1,
+        pageSize: pagination.pageSize,
+      },
+      extraHeaders: {
+        authorization: `Bearer ${session?.accessToken as string}`,
+      },
+    },
+    {
+      select: (d) => d.body,
+      queryKey: AllProjectsQueryKey,
+    },
+  );
+  const activities = useMemo(
+    () => [
+      { label: "All", count: allProjectsQuery?.data?.data?.length || 0 },
+      {
+        label: "Conservation",
+        count:
+          allProjectsQuery?.data?.data?.filter(
+            (p) => p.activity === ACTIVITY.CONSERVATION,
+          ).length || 0,
+      },
+      {
+        label: "Restoration",
+        count:
+          allProjectsQuery?.data?.data?.filter(
+            (p) => p.activity === ACTIVITY.RESTORATION,
+          ).length || 0,
+      },
+    ],
+    [allProjectsQuery?.data?.data],
+  );
+  const handleSearch = async (
+    v: Parameters<ComponentProps<typeof Search>["onChange"]>[0],
+  ) => {
+    await setFilters((prev) => ({ ...prev, keyword: v }));
+  };
 
   return (
     <motion.div
@@ -89,11 +160,16 @@ export default function MyProjectsView({
         <div className="flex items-center justify-between py-4">
           <div className="flex gap-2 rounded-full bg-slate-900">
             <Tabs
-              defaultValue={filters[0].label}
-              onValueChange={setActiveFilter}
+              defaultValue={activities[0].label}
+              onValueChange={(v) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  activity: v === "All" ? [] : [v as ACTIVITY],
+                }))
+              }
             >
               <TabsList>
-                {filters.map(({ label, count }) => (
+                {activities.map(({ label, count }) => (
                   <TabsTrigger key={label} value={label}>
                     {label} ({count})
                   </TabsTrigger>
@@ -104,7 +180,8 @@ export default function MyProjectsView({
           <div className="flex gap-2">
             <Search
               placeholder="Search"
-              onChange={() => {}}
+              onChange={handleSearch}
+              defaultValue={filters?.keyword}
               className="flex-1"
             />
           </div>
@@ -203,8 +280,8 @@ export default function MyProjectsView({
               onChangePagination={setPagination}
               pagination={{
                 ...pagination,
-                totalPages: 6 ?? 0, // make it dynamic
-                totalItems: 90 ?? 0, // make it dynamic
+                totalPages: data?.metadata?.totalPages || 0,
+                totalItems: data?.metadata?.totalItems || 0,
               }}
             />
           </div>

@@ -45,6 +45,12 @@ export const tableKeys = createQueryKeys("tables", {
 
 export const customProjectKeys = createQueryKeys("customProjects", {
   cached: null,
+  all: <TFilters extends z.ZodTypeAny>(
+    filters?: z.infer<TFilters> & {
+      sorting?: SortingState;
+      pagination?: PaginationState;
+    },
+  ) => ["all", , filters],
   countries: null,
   one: (id: string) => [id],
   assumptions: ({

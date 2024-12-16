@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@/components/ui/button";
@@ -10,9 +12,11 @@ export default function Header() {
         <SidebarTrigger />
         <h1 className="text-2xl font-medium">My projects</h1>
       </div>
-      <Button variant="default">
-        <PlusCircledIcon className="mr-1 h-4 w-4" />
-        Project
+      <Button variant="default" asChild>
+        <Link href="/projects/new">
+          <PlusCircledIcon className="mr-1 h-4 w-4" />
+          Project
+        </Link>
       </Button>
     </div>
   );

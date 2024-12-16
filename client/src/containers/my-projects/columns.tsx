@@ -3,8 +3,11 @@ import {
   // ExclamationTriangleIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import { Table as TableInstance, Row } from "@tanstack/react-table";
+import { ACTIVITY } from "@shared/entities/activity.enum";
+import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
+import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
 
+import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -16,7 +19,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { CustomColumn, CustomProject } from "./types"; // You might need to move types to a separate file
+type CustomProject = Partial<CustomProjectEntity>;
+
+type CustomColumn = ColumnDef<CustomProject, keyof CustomProject> & {
+  className?: string;
+};
 
 const ActionsDropdown = () => (
   <DropdownMenu>
@@ -69,33 +76,33 @@ export const columns: CustomColumn[] = [
     ),
   },
   {
-    accessorKey: "location",
+    accessorKey: "country.name",
     header: "Location",
   },
   {
-    accessorKey: "totalNPVCost",
+    accessorKey: "totalCostNPV",
     header: "Total NPV Cost",
     cell: ({ getValue }: { getValue: () => string }) =>
-      `$ ${Number(getValue()).toLocaleString()}`,
+      formatCurrency(Number(getValue()), { maximumFractionDigits: 0 }),
   },
   {
     accessorKey: "abatementPotential",
     header: "Abatement potential",
-    cell: ({ getValue }: { getValue: () => string }) =>
-      Number(getValue()).toLocaleString(),
+    cell: ({ getValue }: { getValue: () => string }) => getValue(),
   },
   {
-    accessorKey: "type",
+    accessorKey: "activity",
     header: "Type",
     cell: ({ getValue }: { getValue: () => string }) => (
       <div className="flex justify-center">
         <span
-          className={cn(
-            "rounded-full border px-2 py-1 text-xs font-medium",
-            getValue() === "Conservation"
-              ? "border-sky-300 bg-blue-500/20 text-sky-blue-300"
-              : "border-mint-green-200 bg-green-500/20 text-mint-green-200",
-          )}
+          className={cn({
+            "rounded-full border px-2 py-1 text-xs font-medium": true,
+            "border-sky-300 bg-blue-500/20 text-sky-blue-300":
+              getValue() === ACTIVITY.CONSERVATION,
+            "border-mint-green-200 bg-green-500/20 text-mint-green-200":
+              getValue() === ACTIVITY.RESTORATION,
+          })}
         >
           {getValue()}
         </span>
