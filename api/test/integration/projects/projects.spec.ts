@@ -324,6 +324,38 @@ describe('Projects', () => {
     });
   });
 
+  test('Should return a list of filtered projects with maximum values', async () => {
+    await testManager.mocks().createProject({
+      id: 'e934e9fe-a79c-40a5-8254-8817851764ad',
+      projectName: 'PROJ_ABC',
+      totalCost: 100,
+      totalCostNPV: 50,
+      abatementPotential: 10,
+    });
+    await testManager.mocks().createProject({
+      id: 'e934e9fe-a79c-40a5-8254-8817851764ae',
+      projectName: 'PROJ_DEF',
+      totalCost: 200,
+      totalCostNPV: 100,
+      abatementPotential: 20,
+    });
+
+    const response = await testManager
+      .request()
+      .get(projectsContract.getProjects.path)
+      .query({
+        withMaximums: true,
+        partialProjectName: 'PROJ',
+      });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body.data).toHaveLength(2);
+    expect(response.body.maximums).toEqual({
+      maxAbatementPotential: 20,
+      maxTotalCost: 300,
+    });
+  });
+
   describe('Filters for Projects', () => {
     test('Should get a list of countries there are projects in', async () => {
       const fiveCountriesWithNoGeometry = countriesInDb

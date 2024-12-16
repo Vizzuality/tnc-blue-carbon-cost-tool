@@ -24,7 +24,9 @@ export class ProjectsController {
   @TsRestHandler(projectsContract.getProjects)
   async getProjects(): ControllerResponse {
     return tsRestHandler(projectsContract.getProjects, async ({ query }) => {
-      const data = await this.projectsService.findAllPaginated(query);
+      const data = query.withMaximums
+        ? await this.projectsService.findAllProjectsWithMaximums(query)
+        : await this.projectsService.findAllPaginated(query);
       return { body: data, status: HttpStatus.OK };
     });
   }

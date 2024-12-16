@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
 import { Project } from '@shared/entities/projects.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { z } from 'zod';
 import { getProjectsQuerySchema } from '@shared/contracts/projects.contract';
+import { PaginatedProjectsWithMaximums } from '@shared/dtos/projects/projects.dto';
 
 export type ProjectFetchSpecificacion = z.infer<typeof getProjectsQuerySchema>;
 
@@ -16,26 +17,49 @@ export class ProjectsService extends AppBaseService<
   unknown
 > {
   constructor(
+    @InjectDataSource()
+    private readonly dataSource: DataSource,
     @InjectRepository(Project)
     public readonly projectRepository: Repository<Project>,
   ) {
     super(projectRepository, 'project', 'projects');
   }
 
-  async extendFindAllQuery(
+  public async findAllProjectsWithMaximums(
+    query: ProjectFetchSpecificacion,
+  ): Promise<PaginatedProjectsWithMaximums> {
+    const qb = this.dataSource
+      .createQueryBuilder()
+      .select('MAX(abatement_potential)::integer', 'maxAbatementPotential')
+      .addSelect('MAX(total_cost + total_cost_npv)::integer', 'maxTotalCost')
+      .from(Project, 'project');
+    const totalsQuery = this.applySearchFiltersToQueryBuilder(qb, query);
+
+    const [maximums, { metadata, data }] = await Promise.all([
+      totalsQuery.getRawOne(),
+      this.findAllPaginated(query),
+    ]);
+    return {
+      metadata,
+      maximums,
+      data,
+    };
+  }
+
+  private applySearchFiltersToQueryBuilder(
     query: SelectQueryBuilder<Project>,
     fetchSpecification: ProjectFetchSpecificacion,
-  ): Promise<SelectQueryBuilder<Project>> {
+  ): SelectQueryBuilder<Project> {
     // Filter by project name
     if (fetchSpecification.partialProjectName) {
-      query = query.andWhere('project_name ILIKE :projectName', {
+      query.andWhere('project_name ILIKE :projectName', {
         projectName: `%${fetchSpecification.partialProjectName}%`,
       });
     }
 
     // Filter by abatement potential
     if (fetchSpecification.abatementPotentialRange) {
-      query = query.andWhere(
+      query.andWhere(
         'abatement_potential >= :minAP AND abatement_potential <= :maxAP',
         {
           minAP: Math.min(...fetchSpecification.abatementPotentialRange),
@@ -57,7 +81,7 @@ export class ProjectsService extends AppBaseService<
           break;
       }
 
-      query = query.andWhere(
+      query.andWhere(
         `${filteredCostColumn} >= :minCost AND ${filteredCostColumn} <= :maxCost`,
         {
           minCost: Math.min(...fetchSpecification.costRange),
@@ -65,7 +89,13 @@ export class ProjectsService extends AppBaseService<
         },
       );
     }
-
     return query;
+  }
+
+  async extendFindAllQuery(
+    query: SelectQueryBuilder<Project>,
+    fetchSpecification: ProjectFetchSpecificacion,
+  ): Promise<SelectQueryBuilder<Project>> {
+    return this.applySearchFiltersToQueryBuilder(query, fetchSpecification);
   }
 }
