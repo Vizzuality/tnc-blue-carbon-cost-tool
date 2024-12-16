@@ -23,18 +23,21 @@ export default function T1GlobalEmissionFactor() {
     countryCode,
   }).queryKey;
 
-  const { data } = client.customProjects.getActivityTypesDefaults.useQuery(
-    queryKey,
-    { query: { ecosystem, countryCode } },
-    {
+  const { data, isSuccess } =
+    client.customProjects.getActivityTypesDefaults.useQuery(
       queryKey,
-      enabled: !!ecosystem && !!countryCode,
-      select: (response) => {
-        const { data } = response.body;
-        return data[activity as ACTIVITY.CONSERVATION].emissionFactor.tier1;
+      { query: { ecosystem, countryCode } },
+      {
+        queryKey,
+        enabled: !!ecosystem && !!countryCode,
+        select: (response) => {
+          const { data } = response.body;
+          return data[activity as ACTIVITY.CONSERVATION].emissionFactor.tier1;
+        },
       },
-    },
-  );
+    );
+
+  if (!isSuccess) return null;
 
   return (
     <div className="flex">

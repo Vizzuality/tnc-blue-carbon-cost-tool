@@ -47,18 +47,19 @@ export default function RestorationProjectDetails() {
     countryCode,
   }).queryKey;
 
-  const { data } = client.customProjects.getActivityTypesDefaults.useQuery(
-    queryKey,
-    { query: { ecosystem, countryCode } },
-    {
+  const { data, isSuccess } =
+    client.customProjects.getActivityTypesDefaults.useQuery(
       queryKey,
-      enabled: !!ecosystem && !!countryCode,
-      select: (response) => {
-        const { data } = response.body;
-        return data[activity as ACTIVITY.RESTORATION].sequestrationRate;
+      { query: { ecosystem, countryCode } },
+      {
+        queryKey,
+        enabled: !!ecosystem && !!countryCode,
+        select: (response) => {
+          const { data } = response.body;
+          return data[activity as ACTIVITY.RESTORATION].sequestrationRate;
+        },
       },
-    },
-  );
+    );
 
   const RESTORATION_ACTIVITY_OPTIONS = Object.values(
     RESTORATION_ACTIVITY_SUBTYPE,
@@ -179,81 +180,88 @@ export default function RestorationProjectDetails() {
           <FormField
             control={form?.control}
             name="parameters.plantingSuccessRate"
-            render={({ field }) => (
-              <FormItem className="basis-1/2 space-y-2">
-                <FormLabel
-                  tooltip={{
-                    title: "Project Specific Emission Factor",
-                    content: "TBD",
-                  }}
-                >
-                  Project Specific Emission Factor
-                </FormLabel>
-                <FormControl className="relative after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['%']">
-                  <div className="relative flex flex-1 items-center">
-                    <Input
-                      {...field}
-                      className="w-full pr-12"
-                      type="number"
-                      min={0}
-                      onChange={(v) => {
-                        form.setValue(
-                          "parameters.plantingSuccessRate",
-                          Number(v.target.value),
-                        );
-                        // await form.trigger("parameters.plantingSuccessRate");
-                      }}
-                      readOnly
-                      disabled
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const { value, ...restField } = field;
+
+              return (
+                <FormItem className="basis-1/2 space-y-2">
+                  <FormLabel
+                    tooltip={{
+                      title: "Planting SuccessRate",
+                      content: "TBD",
+                    }}
+                  >
+                    Planting Success Rate
+                  </FormLabel>
+                  <FormControl className="relative after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['%']">
+                    <div className="relative flex flex-1 items-center">
+                      <Input
+                        {...restField}
+                        className="w-full pr-12"
+                        type="number"
+                        min={0}
+                        onChange={(v) => {
+                          form.setValue(
+                            "parameters.plantingSuccessRate",
+                            Number(v.target.value),
+                          );
+                        }}
+                        readOnly
+                        defaultValue={80}
+                        disabled
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
 
           <>
-            {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_1 && (
-              <div className="basis-1/2 space-y-2">
-                <FormLabel
-                  tooltip={{
-                    title: "IPCC default value",
-                    content: "TBD",
-                  }}
-                >
-                  IPCC default value
-                </FormLabel>
-                <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['??']">
-                  <Input
-                    className="w-full pr-32 text-muted-foreground"
-                    disabled
-                    readOnly
-                    value={data?.tier1}
-                  />
+            {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_1 &&
+              isSuccess && (
+                <div className="basis-1/2 space-y-2">
+                  <FormLabel
+                    tooltip={{
+                      title: "IPCC default value",
+                      content: "TBD",
+                    }}
+                  >
+                    IPCC default value
+                  </FormLabel>
+                  <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['??']">
+                    <Input
+                      className="w-full pr-32 text-muted-foreground"
+                      disabled
+                      readOnly
+                      value={data?.tier1}
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
-            {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_2 && (
-              <div className="basis-1/2 space-y-2">
-                <FormLabel
-                  tooltip={{
-                    title: "Country-specific rate",
-                    content: "TBD",
-                  }}
-                >
-                  Country-specific rate
-                </FormLabel>
-                <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['??']">
-                  <Input
-                    className="w-full pr-32 text-muted-foreground"
-                    disabled
-                    readOnly
-                    value={data?.tier2}
-                  />
+              )}
+            {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_2 &&
+              isSuccess && (
+                <div className="basis-1/2 space-y-2">
+                  <FormLabel
+                    tooltip={{
+                      title: "Country-specific rate",
+                      content: "TBD",
+                    }}
+                  >
+                    Country-specific rate
+                  </FormLabel>
+                  <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['??']">
+                    <Input
+                      className="w-full pr-32 text-muted-foreground"
+                      disabled
+                      readOnly
+                      value={data?.tier2}
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 && (
               <FormField
                 control={form?.control}

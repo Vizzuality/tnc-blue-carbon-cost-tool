@@ -57,8 +57,8 @@ export const RestorationCustomProjectSchema = z
     restorationActivity: z.nativeEnum(RESTORATION_ACTIVITY_SUBTYPE),
     tierSelector: z.nativeEnum(SEQUESTRATION_RATE_TIER_TYPES),
     projectSpecificSequestrationRate: z
-      .number({ message: "Project Specific Rate should be a number" }),
-    lossRateUsed: z.nativeEnum(LOSS_RATE_USED),
+      .number({ message: "Project Specific Rate should be a number" }).optional(),
+    // lossRateUsed: z.nativeEnum(LOSS_RATE_USED),
     plantingSuccessRate: z.preprocess(parseNumber, z.number().nonnegative({
       message: 'Planting Success Rate should be a non-negative number',
     })),

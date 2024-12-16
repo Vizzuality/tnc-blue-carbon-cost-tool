@@ -1,5 +1,6 @@
 import { useFormContext } from "react-hook-form";
 
+import { ACTIVITY } from "@shared/entities/activity.enum";
 import { COSTS_DTO_TO_NAME_MAP } from "@shared/schemas/assumptions/assumptions.enums";
 import {
   flexRender,
@@ -38,7 +39,10 @@ export default function OtherCostInputsTable() {
     ecosystem,
     countryCode,
     activity,
-    parameters: { restorationActivity },
+    parameters: {
+      // @ts-expect-error fix later
+      restorationActivity,
+    },
   } = form.getValues();
 
   const { queryKey } = queryKeys.customProjects.defaultCosts({

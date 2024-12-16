@@ -1,8 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 
 import CellValue from "@/containers/projects/form/cell-value";
-import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
 
 import { Label } from "@/components/ui/label";
 
@@ -27,14 +25,11 @@ export const COLUMNS = [
     cell: (props) => (
       <CellValue
         className="relative after:absolute after:right-6 after:top-1/2 after:inline-block after:-translate-y-1/2 after:text-sm after:text-muted-foreground after:content-['ha']"
-        name={`parameters.restorationYearlyBreakdown.${props.row.original.year}`}
+        // @ts-expect-error fix later
+        name={`parameters.restorationYearlyBreakdown.${props.row.original.year === -1 ? 0 : props.row.original.year}`}
         hasUnit
       />
     ),
-    // size: 75,
     maxSize: 55,
-    // cell: (props) => {
-    //   return <Label>{props.getValue()}</Label>;
-    // },
   }),
 ];
