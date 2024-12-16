@@ -43,6 +43,7 @@ export class CustomProjectsService extends AppBaseService<
   }
 
   async create(dto: CreateCustomProjectDto): Promise<any> {
+    console.log('>>>>>>>>>>>>>>> DTO', dto);
     const { countryCode, ecosystem, activity } = dto;
     const {
       additionalBaseData,
@@ -74,6 +75,7 @@ export class CustomProjectsService extends AppBaseService<
       projectInput,
       costOutput,
     );
+    console.log('>>>>>>>>>>>>>>> CUSTOM PROJECT', customProject);
 
     return customProject;
   }
