@@ -10,6 +10,7 @@ import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -95,17 +96,17 @@ export const columns: CustomColumn[] = [
     header: "Type",
     cell: ({ getValue }: { getValue: () => string }) => (
       <div className="flex justify-center">
-        <span
+        <Badge
+          variant="default"
           className={cn({
-            "rounded-full border px-2 py-1 text-xs font-medium": true,
-            "border-sky-300 bg-blue-500/20 text-sky-blue-300":
+            "border-sky-300 bg-blue-500/20 text-sky-blue-300 hover:bg-blue-500/20":
               getValue() === ACTIVITY.CONSERVATION,
-            "border-mint-green-200 bg-green-500/20 text-mint-green-200":
+            "border-mint-green-200 bg-green-500/20 text-mint-green-200 hover:bg-green-500/20":
               getValue() === ACTIVITY.RESTORATION,
           })}
         >
           {getValue()}
-        </span>
+        </Badge>
       </div>
     ),
   },

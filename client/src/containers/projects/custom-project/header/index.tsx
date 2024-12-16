@@ -3,6 +3,7 @@ import { FC, useCallback, useState } from "react";
 import Link from "next/link";
 
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { LayoutListIcon } from "lucide-react";
 import { Session } from "next-auth";
@@ -11,6 +12,7 @@ import { getSession, useSession } from "next-auth/react";
 import { client } from "@/lib/query-client";
 import { cn, getAuthHeader } from "@/lib/utils";
 
+import { DEFAULT_CUSTOM_PROJECTS_QUERY_KEY } from "@/app/my-projects/url-store";
 import { projectsUIState } from "@/app/projects/store";
 
 import AuthDialog from "@/containers/auth/dialog";
@@ -26,6 +28,7 @@ interface CustomProjectHeaderProps {
 const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
   const [{ projectSummaryOpen }, setProjectSummaryOpen] =
     useAtom(projectsUIState);
+  const queryClient = useQueryClient();
   const { data: session } = useSession();
   const { toast } = useToast();
   const [saved, setSaved] = useState<boolean>(false);
@@ -43,6 +46,9 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
         if (status === 201) {
           toast({ description: "Project updated successfully." });
           setSaved(true);
+          await queryClient.invalidateQueries({
+            queryKey: DEFAULT_CUSTOM_PROJECTS_QUERY_KEY,
+          });
         }
 
         if (body?.errors) {
@@ -58,7 +64,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
         });
       }
     },
-    [session, data, toast],
+    [session, data, toast, queryClient],
   );
   const handleOnSignIn = useCallback(async () => {
     // session is undefined when onSignIn callback is called

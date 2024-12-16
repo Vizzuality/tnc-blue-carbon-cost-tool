@@ -4,6 +4,7 @@ import { ComponentProps, useMemo, useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { ACTIVITY } from "@shared/entities/activity.enum";
+import { keepPreviousData } from "@tanstack/react-query";
 import {
   flexRender,
   getCoreRowModel,
@@ -18,7 +19,7 @@ import { useSession } from "next-auth/react";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
-import { cn } from "@/lib/utils";
+import { cn, getAuthHeader } from "@/lib/utils";
 
 import { useMyProjectsFilters } from "@/app/my-projects/url-store";
 
@@ -77,12 +78,13 @@ export default function MyProjectsView() {
         pageSize: pagination.pageSize,
       },
       extraHeaders: {
-        authorization: `Bearer ${session?.accessToken as string}`,
+        ...getAuthHeader(session?.accessToken as string),
       },
     },
     {
       select: (d) => d.body,
       queryKey,
+      placeholderData: keepPreviousData,
     },
   );
   const { open: navOpen } = useSidebar();
