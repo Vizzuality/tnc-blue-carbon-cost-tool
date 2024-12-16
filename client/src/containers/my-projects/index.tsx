@@ -123,23 +123,20 @@ export default function MyProjectsView() {
     },
   );
   const activities = useMemo(
-    () => [
-      { label: "All", count: allProjectsQuery?.data?.data?.length || 0 },
-      {
-        label: "Conservation",
-        count:
-          allProjectsQuery?.data?.data?.filter(
-            (p) => p.activity === ACTIVITY.CONSERVATION,
-          ).length || 0,
-      },
-      {
-        label: "Restoration",
-        count:
-          allProjectsQuery?.data?.data?.filter(
-            (p) => p.activity === ACTIVITY.RESTORATION,
-          ).length || 0,
-      },
-    ],
+    () =>
+      [
+        { label: "All", count: allProjectsQuery?.data?.data?.length || 0 },
+      ].concat(
+        Object.values(ACTIVITY)
+          .map((activity) => ({
+            label: activity,
+            count:
+              allProjectsQuery?.data?.data?.filter(
+                (p) => p.activity === activity,
+              ).length || 0,
+          }))
+          .sort((a, b) => a.label.localeCompare(b.label)),
+      ),
     [allProjectsQuery?.data?.data],
   );
   const handleSearch = async (
