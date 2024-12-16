@@ -104,7 +104,13 @@ export default function ParametersProjects() {
             </SelectTrigger>
             <SelectContent>
               {parameter.options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  disabled={
+                    option.value === PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE
+                  }
+                >
                   {option.label}
                 </SelectItem>
               ))}
