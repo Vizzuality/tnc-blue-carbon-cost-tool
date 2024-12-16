@@ -74,6 +74,14 @@ export const onSubmit = async (data: CreateCustomProjectForm) => {
         // @ts-expect-error fix later
         plantingSuccessRate: plantingSuccessRate / 100,
       }),
+      ...(originalValues.activity === ACTIVITY.RESTORATION && {
+        restorationYearlyBreakdown: [
+          ...new Set(originalValues.parameters.restorationYearlyBreakdown),
+        ].map((hectareas, index) => ({
+          year: index,
+          annualHectaresRestored: hectareas,
+        })),
+      }),
     },
     assumptions: {
       ...Object.keys(originalValues.assumptions ?? {}).reduce(
@@ -133,7 +141,7 @@ export default function CreateCustomProject() {
     resolver: zodResolver(CreateCustomProjectSchema),
     defaultValues: {
       projectName: "test",
-      activity: ACTIVITY.CONSERVATION,
+      activity: ACTIVITY.RESTORATION,
       ecosystem: ECOSYSTEM.SEAGRASS,
       countryCode: countryOptions?.[0]?.value,
       projectSizeHa: 20,
