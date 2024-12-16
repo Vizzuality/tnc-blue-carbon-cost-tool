@@ -34,12 +34,18 @@ const NO_DATA: DataColumnDef<OtherFormProperty>[] = [];
 export default function OtherCostInputsTable() {
   const form = useFormContext<CreateCustomProjectForm>();
 
-  const { ecosystem, countryCode, activity } = form.getValues();
+  const {
+    ecosystem,
+    countryCode,
+    activity,
+    parameters: { restorationActivity },
+  } = form.getValues();
 
   const { queryKey } = queryKeys.customProjects.defaultCosts({
     ecosystem,
     countryCode,
     activity,
+    restorationActivity,
   });
   const { data, isSuccess } =
     client.customProjects.getDefaultCostInputs.useQuery(
@@ -49,6 +55,7 @@ export default function OtherCostInputsTable() {
           ecosystem,
           countryCode,
           activity,
+          ...(activity === ACTIVITY.RESTORATION && { restorationActivity }),
         },
       },
       {
@@ -70,7 +77,9 @@ export default function OtherCostInputsTable() {
               defaultValue: data.body.data[key as keyof typeof data.body.data],
               value: "",
             })),
-        enabled: !!ecosystem && !!countryCode && !!activity,
+        enabled:
+          (!!activity && activity === ACTIVITY.CONSERVATION) ||
+          (activity === ACTIVITY.RESTORATION && !!restorationActivity),
       },
     );
 

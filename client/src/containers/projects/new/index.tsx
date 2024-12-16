@@ -67,22 +67,6 @@ export const onSubmit = async (data: CreateCustomProjectForm) => {
 
   data = {
     ...originalValues,
-    parameters: {
-      ...originalValues.parameters,
-      // @ts-expect-error fix later
-      ...(originalValues.parameters?.plantingSuccessRate && {
-        // @ts-expect-error fix later
-        plantingSuccessRate: plantingSuccessRate / 100,
-      }),
-      ...(originalValues.activity === ACTIVITY.RESTORATION && {
-        restorationYearlyBreakdown: [
-          ...new Set(originalValues.parameters.restorationYearlyBreakdown),
-        ].map((hectareas, index) => ({
-          year: index,
-          annualHectaresRestored: hectareas,
-        })),
-      }),
-    },
     assumptions: {
       ...Object.keys(originalValues.assumptions ?? {}).reduce(
         (acc, assumptionKey) => {
@@ -141,7 +125,7 @@ export default function CreateCustomProject() {
     resolver: zodResolver(CreateCustomProjectSchema),
     defaultValues: {
       projectName: "test",
-      activity: ACTIVITY.RESTORATION,
+      activity: ACTIVITY.CONSERVATION,
       ecosystem: ECOSYSTEM.SEAGRASS,
       countryCode: countryOptions?.[0]?.value,
       projectSizeHa: 20,
@@ -155,8 +139,6 @@ export default function CreateCustomProject() {
         projectSpecificEmissionFactor: 0,
         emissionFactorSOC: 0,
         emissionFactorAGB: 0,
-        // @ts-expect-error fix later
-        plantingSuccessRate: 80,
       },
       assumptions: {
         baselineReassessmentFrequency: undefined,
