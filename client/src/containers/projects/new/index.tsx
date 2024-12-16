@@ -48,6 +48,8 @@ export const onSubmit = async (data: CreateCustomProjectForm) => {
       ecosystem: data.ecosystem,
       activity: data.activity,
       countryCode: data.countryCode,
+      // @ts-expect-error fix later
+      restorationActivity: data.parameters?.restorationActivity,
     }).queryKey,
   );
 
@@ -65,8 +67,44 @@ export const onSubmit = async (data: CreateCustomProjectForm) => {
     {},
   );
 
+  const validYears = // @ts-expect-error fix later
+    (originalValues.parameters.restorationYearlyBreakdown as number[])
+      .map((v, index) => {
+        // if (!v) return undefined;
+
+        return {
+          year: index == 0 ? -1 : index,
+          hectares: v,
+        };
+      })
+      .filter((v) => v.hectares > 0);
+
+  const {
+    // @ts-expect-error fix later
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    restorationYearlyBreakdown,
+    ...restParameters
+  } = originalValues.parameters;
+
   data = {
     ...originalValues,
+    parameters: {
+      ...restParameters,
+      // @ts-expect-error fix later
+      ...(restParameters?.plantingSuccessRate && {
+        plantingSuccessRate:
+          // @ts-expect-error fix later
+          restParameters.plantingSuccessRate / 100,
+      }),
+      ...(originalValues.activity === ACTIVITY.RESTORATION && {
+        ...(validYears.length > 0 && {
+          restorationYearlyBreakdown: validYears.map(({ year, hectares }) => ({
+            year,
+            annualHectaresRestored: hectares,
+          })),
+        }),
+      }),
+    },
     assumptions: {
       ...Object.keys(originalValues.assumptions ?? {}).reduce(
         (acc, assumptionKey) => {
@@ -124,7 +162,7 @@ export default function CreateCustomProject() {
   const methods = useForm<CreateCustomProjectForm>({
     resolver: zodResolver(CreateCustomProjectSchema),
     defaultValues: {
-      projectName: "test",
+      projectName: "",
       activity: ACTIVITY.CONSERVATION,
       ecosystem: ECOSYSTEM.SEAGRASS,
       countryCode: countryOptions?.[0]?.value,
@@ -139,6 +177,8 @@ export default function CreateCustomProject() {
         projectSpecificEmissionFactor: 0,
         emissionFactorSOC: 0,
         emissionFactorAGB: 0,
+        // @ts-expect-error fix later
+        plantingSuccessRate: 80,
       },
       assumptions: {
         baselineReassessmentFrequency: undefined,

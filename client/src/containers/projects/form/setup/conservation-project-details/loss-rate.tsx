@@ -26,7 +26,10 @@ export default function LossRate() {
     ecosystem,
     countryCode,
     activity,
-    parameters: { lossRateUsed },
+    parameters: {
+      // @ts-expect-error fix later
+      lossRateUsed,
+    },
   } = form.getValues();
 
   const queryKey = queryKeys.customProjects.defaultActivityTypes({
@@ -34,21 +37,24 @@ export default function LossRate() {
     countryCode,
   }).queryKey;
 
-  const { data } = client.customProjects.getActivityTypesDefaults.useQuery(
-    queryKey,
-    { query: { ecosystem, countryCode } },
-    {
+  const { data, isSuccess } =
+    client.customProjects.getActivityTypesDefaults.useQuery(
       queryKey,
-      enabled:
-        !!ecosystem &&
-        !!countryCode &&
-        lossRateUsed === LOSS_RATE_USED.NATIONAL_AVERAGE,
-      select: (response) => {
-        const { data } = response.body;
-        return data[activity as ACTIVITY.CONSERVATION].ecosystemLossRate;
+      { query: { ecosystem, countryCode } },
+      {
+        queryKey,
+        enabled:
+          !!ecosystem &&
+          !!countryCode &&
+          lossRateUsed === LOSS_RATE_USED.NATIONAL_AVERAGE,
+        select: (response) => {
+          const { data } = response.body;
+          return data[activity as ACTIVITY.CONSERVATION].ecosystemLossRate;
+        },
       },
-    },
-  );
+    );
+
+  if (!isSuccess) return null;
 
   if (lossRateUsed === LOSS_RATE_USED.NATIONAL_AVERAGE) {
     return (

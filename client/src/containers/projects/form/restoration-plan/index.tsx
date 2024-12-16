@@ -1,8 +1,7 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 
-import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
 import {
   flexRender,
   getCoreRowModel,
@@ -12,7 +11,6 @@ import {
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
-import { AssumptionsFormProperty } from "@/containers/projects/form/assumptions/columns";
 import { COLUMNS } from "@/containers/projects/form/restoration-plan/columns";
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
 
@@ -31,17 +29,33 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+const useFormValues = () => {
+  const { getValues } = useFormContext<CreateCustomProjectForm>();
+
+  return {
+    ...getValues(),
+    ...useWatch(),
+  };
+};
+
 export default function RestorationPlanProjectForm() {
   const form = useFormContext<CreateCustomProjectForm>();
 
-  const v = form.getValues();
-  console.log(v);
+  const formValues = useFormValues();
 
   const {
     ecosystem,
     activity,
-    assumptions: { projectLength },
-  } = form.getValues();
+    projectSizeHa,
+    assumptions: {
+      // @ts-expect-error fix later
+      projectLength,
+    },
+    parameters: {
+      // @ts-expect-error fix later
+      restorationYearlyBreakdown,
+    },
+  } = formValues;
 
   const { queryKey } = queryKeys.customProjects.assumptions({
     ecosystem,
@@ -68,8 +82,6 @@ export default function RestorationPlanProjectForm() {
     ? Number(projectLength)
     : defaultRestorationProjectLength;
 
-  console.log({ totalYears });
-
   const DATA = useMemo(
     () =>
       Array.from({
@@ -89,6 +101,34 @@ export default function RestorationPlanProjectForm() {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const { setError, clearErrors } = form;
+
+  const breakDownError =
+    // @ts-expect-error fix later
+    form.formState.errors.parameters?.restorationYearlyBreakdown;
+
+  useEffect(() => {
+    const totalHectares = (restorationYearlyBreakdown as string[])
+      ?.filter(Boolean)
+      .reduce((acc, hectares) => acc + Number(hectares), 0);
+
+    if (totalHectares > projectSizeHa) {
+      setError("parameters.restorationYearlyBreakdown", {
+        message: `Total hectares restored cannot exceed project size. (${totalHectares}/${projectSizeHa})`,
+      });
+    } else {
+      if (breakDownError?.message) {
+        clearErrors("parameters.restorationYearlyBreakdown");
+      }
+    }
+  }, [
+    projectSizeHa,
+    restorationYearlyBreakdown,
+    setError,
+    clearErrors,
+    breakDownError?.message,
+  ]);
+
   return (
     <Accordion type="single" collapsible defaultValue="assumptions">
       <AccordionItem value="assumptions" className="border-b-0">
@@ -103,6 +143,9 @@ export default function RestorationPlanProjectForm() {
             <p className="font-normal text-muted-foreground">
               Overrides annual hectares inputs
             </p>
+            {breakDownError && (
+              <p className="text-destructive">{breakDownError.message}</p>
+            )}
           </div>
         </AccordionTrigger>
         <AccordionContent className="pb-0">

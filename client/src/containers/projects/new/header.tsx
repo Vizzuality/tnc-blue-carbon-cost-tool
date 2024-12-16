@@ -24,7 +24,7 @@ export default function Header() {
       <div className="flex items-center gap-2">
         <Button variant="secondary">Cancel</Button>
         <Button
-          // disabled={!methods.formState.isValid}
+          disabled={!methods.formState.isValid}
           onClick={() => {
             methods.handleSubmit((data) => onSubmit(data))();
             router.push("/projects/preview");
