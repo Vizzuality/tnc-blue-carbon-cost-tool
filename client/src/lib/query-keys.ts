@@ -50,7 +50,7 @@ export const customProjectKeys = createQueryKeys("customProjects", {
       sorting?: SortingState;
       pagination?: PaginationState;
     },
-  ) => ["all", , filters],
+  ) => ["all", filters],
   countries: null,
   one: (id: string) => [id],
   assumptions: ({

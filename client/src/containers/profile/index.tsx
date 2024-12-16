@@ -31,7 +31,7 @@ const sections = [
     description: (
       <>
         You can see more detail and modify your custom projects in{" "}
-        <Link href="/projects/custom" className="text-primary hover:underline">
+        <Link href="/my-projects" className="text-primary hover:underline">
           My Custom Projects
         </Link>{" "}
         page.
