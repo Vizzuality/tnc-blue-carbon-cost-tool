@@ -23,8 +23,9 @@ const inter = Spline_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Blue Carbon Cost",
-  description: "[TBD]",
+  title: "Blue Carbon Cost Tool",
+  description:
+    "The Blue Carbon Cost Tool estimates project costs and carbon benefits of Blue Carbon Market projects, providing a high-level view for comparisons and prioritization among difference project scenarios.",
 };
 
 export default async function RootLayout({
