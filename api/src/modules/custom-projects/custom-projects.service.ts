@@ -20,7 +20,12 @@ import { EventBus } from '@nestjs/cqrs';
 import { SaveCustomProjectEvent } from '@api/modules/custom-projects/events/save-custom-project.event';
 import { FetchSpecification } from 'nestjs-base-service';
 import { GetActivityTypesDefaults } from '@shared/dtos/custom-projects/get-activity-types-defaults.dto';
-import { Country } from '@shared/entities/country.entity';
+import { z } from 'zod';
+import { customProjecsQuerySchema } from '@shared/contracts/custom-projects.contract';
+
+export type CustomProjectFetchSpecificacion = z.infer<
+  typeof customProjecsQuerySchema
+>;
 
 @Injectable()
 export class CustomProjectsService extends AppBaseService<
@@ -121,7 +126,7 @@ export class CustomProjectsService extends AppBaseService<
 
   async extendFindAllQuery(
     query: SelectQueryBuilder<CustomProject>,
-    fetchSpecification: FetchSpecification,
+    fetchSpecification: CustomProjectFetchSpecificacion,
     info?: { user: User },
   ): Promise<SelectQueryBuilder<CustomProject>> {
     const { user } = info;
@@ -129,6 +134,12 @@ export class CustomProjectsService extends AppBaseService<
     query
       .leftJoinAndSelect('customProject.user', 'user')
       .andWhere('user.id = :userId', { userId: user.id });
+
+    if (fetchSpecification.partialProjectName) {
+      query = query.andWhere('project_name ILIKE :projectName', {
+        projectName: `%${fetchSpecification.partialProjectName}%`,
+      });
+    }
 
     return query;
   }

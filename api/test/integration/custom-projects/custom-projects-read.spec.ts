@@ -116,5 +116,38 @@ describe('Read Custom projects', () => {
         responseData.find((cp: CustomProject) => cp.id === customProject2.id),
       ).toBeDefined();
     });
+
+    test('An authenticated user should be able to retrieve its custom projects filtering by partialProjectName', async () => {
+      // Given
+      const { createCustomProject } = testManager.mocks();
+      const [customProject1, customProject2] = await Promise.all([
+        createCustomProject({
+          id: '2d8fdf38-3295-4970-b194-af503a2a6031',
+          projectName: 'Should not be found',
+          user: { id: user.id } as User,
+        }),
+        createCustomProject({
+          id: '2d8fdf38-3295-4970-b194-af503a2a6039',
+          projectName: 'Seagrass',
+          user: { id: user.id } as User,
+        }),
+      ]);
+
+      // When
+      const response = await testManager
+        .request()
+        .get(customProjectContract.getCustomProjects.path)
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .query({ partialProjectName: 'Sea' })
+        .send();
+
+      // Then
+      expect(response.status).toBe(200);
+      const responseData = response.body.data;
+      expect(responseData.length).toBe(1);
+      expect(
+        responseData.find((cp: CustomProject) => cp.id === customProject2.id),
+      ).toBeDefined();
+    });
   });
 });

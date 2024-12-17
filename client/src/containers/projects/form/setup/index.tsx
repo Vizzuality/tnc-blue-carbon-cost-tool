@@ -4,8 +4,12 @@ import * as React from "react";
 
 import { useFormContext } from "react-hook-form";
 
-import { ACTIVITY } from "@shared/entities/activity.enum";
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
+import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { CreateCustomProjectSchema } from "@shared/schemas/custom-projects/create-custom-project.schema";
@@ -63,16 +67,33 @@ export default function SetupProjectForm() {
   const form = useFormContext<CreateCustomProjectForm>();
 
   const {
+    activity,
     // @ts-expect-error fix later
-    parameters: { emissionFactorUsed },
+    parameters: { emissionFactorUsed, tierSelector, restorationActivity },
   } = form.getValues();
+
+  const isDisabled = (ecosystem: ECOSYSTEM) => {
+    if (activity === ACTIVITY.CONSERVATION) {
+      return (
+        emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_2 &&
+        ecosystem !== ECOSYSTEM.MANGROVE
+      );
+    }
+
+    if (activity === ACTIVITY.RESTORATION) {
+      return (
+        tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_2 &&
+        [ECOSYSTEM.SEAGRASS, ECOSYSTEM.SALT_MARSH].includes(ecosystem)
+      );
+    }
+
+    return false;
+  };
 
   const ECOSYSTEM_OPTIONS = Object.values(ECOSYSTEM).map((ecosystem) => ({
     label: ecosystem,
     value: ecosystem,
-    disabled:
-      emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_2 &&
-      ecosystem !== ECOSYSTEM.MANGROVE,
+    disabled: isDisabled(ecosystem),
   }));
 
   return (
@@ -219,7 +240,23 @@ export default function SetupProjectForm() {
                         form.setValue("ecosystem", v as ECOSYSTEM);
                         await form.trigger("ecosystem");
 
-                        form.resetField("parameters.emissionFactorUsed");
+                        if (activity === ACTIVITY.CONSERVATION) {
+                          form.resetField("parameters.emissionFactorUsed");
+                        }
+
+                        if (activity === ACTIVITY.RESTORATION) {
+                          if (
+                            [
+                              RESTORATION_ACTIVITY_SUBTYPE.HYDROLOGY,
+                              RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
+                            ].includes(restorationActivity)
+                          ) {
+                            form.setValue(
+                              "parameters.restorationActivity",
+                              RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
+                            );
+                          }
+                        }
                       }}
                     >
                       {ECOSYSTEM_OPTIONS.map((ecosystem) => (

@@ -1,5 +1,6 @@
 import { useFormContext } from "react-hook-form";
 
+import { ACTIVITY } from "@shared/entities/activity.enum";
 import { COSTS_DTO_TO_NAME_MAP } from "@shared/schemas/assumptions/assumptions.enums";
 import {
   flexRender,
@@ -34,12 +35,21 @@ const NO_DATA: DataColumnDef<OtherFormProperty>[] = [];
 export default function OtherCostInputsTable() {
   const form = useFormContext<CreateCustomProjectForm>();
 
-  const { ecosystem, countryCode, activity } = form.getValues();
+  const {
+    ecosystem,
+    countryCode,
+    activity,
+    parameters: {
+      // @ts-expect-error fix later
+      restorationActivity,
+    },
+  } = form.getValues();
 
   const { queryKey } = queryKeys.customProjects.defaultCosts({
     ecosystem,
     countryCode,
     activity,
+    restorationActivity,
   });
   const { data, isSuccess } =
     client.customProjects.getDefaultCostInputs.useQuery(
@@ -49,6 +59,7 @@ export default function OtherCostInputsTable() {
           ecosystem,
           countryCode,
           activity,
+          ...(activity === ACTIVITY.RESTORATION && { restorationActivity }),
         },
       },
       {
@@ -70,7 +81,9 @@ export default function OtherCostInputsTable() {
               defaultValue: data.body.data[key as keyof typeof data.body.data],
               value: "",
             })),
-        enabled: !!ecosystem && !!countryCode && !!activity,
+        enabled:
+          (!!activity && activity === ACTIVITY.CONSERVATION) ||
+          (activity === ACTIVITY.RESTORATION && !!restorationActivity),
       },
     );
 

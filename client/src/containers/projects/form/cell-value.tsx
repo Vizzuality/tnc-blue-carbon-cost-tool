@@ -1,4 +1,8 @@
+import { ComponentProps } from "react";
+
 import { useFormContext } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
 
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
 
@@ -12,8 +16,12 @@ import { Input } from "@/components/ui/input";
 
 export default function CellValue({
   name,
+  className,
+  hasUnit = false,
 }: {
   name: keyof CreateCustomProjectForm;
+  className?: ComponentProps<typeof FormControl>["className"];
+  hasUnit?: boolean;
 }) {
   const form = useFormContext<CreateCustomProjectForm>();
 
@@ -26,7 +34,7 @@ export default function CellValue({
         const { value, ...restField } = field;
 
         return (
-          <FormItem>
+          <FormItem className={className}>
             <FormControl>
               <Input
                 {...restField}
@@ -34,6 +42,9 @@ export default function CellValue({
                 placeholder="Insert value"
                 min={0}
                 defaultValue={field.value as number}
+                className={cn({
+                  "pr-12": hasUnit,
+                })}
               />
             </FormControl>
             <FormMessage />
