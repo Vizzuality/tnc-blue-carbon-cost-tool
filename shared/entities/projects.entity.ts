@@ -73,13 +73,13 @@ export class Project extends BaseEntity {
   abatementPotential: number;
 
   @Column({ name: "capex_npv", type: "decimal", nullable: true })
-  capexNpv: number;
+  capexNPV: number;
 
   @Column({ name: "capex", type: "decimal", nullable: true })
   capex: number;
 
   @Column({ name: "opex_npv", type: "decimal", nullable: true })
-  opexNpv: number;
+  opexNPV: number;
 
   @Column({ name: "opex", type: "decimal", nullable: true })
   opex: number;
