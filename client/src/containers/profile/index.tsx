@@ -8,8 +8,8 @@ import { useSetAtom } from "jotai";
 
 import CustomProjects from "@/containers/profile/custom-projects";
 import DeleteAccount from "@/containers/profile/delete-account";
-import FileUpload, { TEMPLATE_FILES } from "@/containers/profile/file-upload";
-import FileUploadDescription from "@/containers/profile/file-upload/description";
+// import FileUpload, { TEMPLATE_FILES } from "@/containers/profile/file-upload";
+// import FileUploadDescription from "@/containers/profile/file-upload/description";
 import ProfileSection from "@/containers/profile/profile-section";
 import ProfileSidebar from "@/containers/profile/profile-sidebar";
 import { intersectingAtom } from "@/containers/profile/store";
@@ -39,12 +39,12 @@ const sections = [
     ),
     Component: CustomProjects,
   },
-  {
-    id: "share-information",
-    title: "Share information",
-    description: <FileUploadDescription files={TEMPLATE_FILES} />,
-    Component: FileUpload,
-  },
+  // {
+  //   id: "share-information",
+  //   title: "Share information",
+  //   description: <FileUploadDescription files={TEMPLATE_FILES} />,
+  //   Component: FileUpload,
+  // },
   {
     id: "delete-account",
     title: "Delete account",
