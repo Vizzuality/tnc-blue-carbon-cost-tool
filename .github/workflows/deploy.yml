@@ -212,15 +212,11 @@ jobs:
     needs: [ set_environment_name, build_client, build_api, build_backoffice]
     # We need this in order to run the deployment job if none of the builds fails and at least one of them is successful
     if: >
+      !failure() &&
       (
-        needs.build_client.result != 'failure' && 
-        needs.build_api.result != 'failure' && 
-        needs.build_backoffice.result != 'failure'
-      ) &&
-      (
-        (needs.build_client.result == 'success') ||
-        (needs.build_api.result == 'success') ||
-        (needs.build_backoffice == 'success')
+        needs.build_client.result == 'success' ||
+        needs.build_api.result == 'success' ||
+        needs.build_backoffice.result == 'success'
       )
     runs-on: ubuntu-latest
     environment:
