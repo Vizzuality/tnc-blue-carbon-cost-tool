@@ -66,7 +66,7 @@ describe('Create Custom Projects - Setup', () => {
             projectLength: 20,
           },
         });
-      // console.log(response);
+      console.log(response);
       // TODO: Write tests for cost calculations
     });
   });
