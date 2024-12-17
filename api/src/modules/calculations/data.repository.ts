@@ -251,7 +251,7 @@ export class DataRepository extends Repository<BaseDataView> {
           break;
       }
       queryBuilder.select(
-        queryBuilder.alias + '.' + implementationLaborToSelect,
+        queryBuilder.alias + '.' + implementationLaborToSelect + ' :: float',
         'implementationLabor',
       );
     }

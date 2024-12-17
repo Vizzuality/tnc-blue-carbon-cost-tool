@@ -1,7 +1,10 @@
 import { TestManager } from '../../utils/test-manager';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
-import { ACTIVITY } from '@shared/entities/activity.enum';
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from '@shared/entities/activity.enum';
 
 describe('Create Custom Projects - Setup', () => {
   let testManager: TestManager;
@@ -67,7 +70,7 @@ describe('Create Custom Projects - Setup', () => {
     expect(response.body.data).toHaveLength(9);
   });
 
-  test('Should return default cost inputs given required filters', async () => {
+  test('[Conservation] Should return default cost inputs given required filters', async () => {
     const response = await testManager
       .request()
       .get(customProjectContract.getDefaultCostInputs.path)
@@ -87,6 +90,37 @@ describe('Create Custom Projects - Setup', () => {
       financingCost: 0.05,
       validation: 50000,
       implementationLabor: 0,
+      monitoring: 8400,
+      maintenance: 0.0833,
+      carbonStandardFees: 0.2,
+      communityBenefitSharingFund: 0.5,
+      baselineReassessment: 40000,
+      mrv: 75000,
+      longTermProjectOperatingCost: 22200,
+    });
+  });
+
+  test('[Restoration] Should return default cost inputs given required filters', async () => {
+    const response = await testManager
+      .request()
+      .get(customProjectContract.getDefaultCostInputs.path)
+      .query({
+        countryCode: 'IND',
+        ecosystem: ECOSYSTEM.SEAGRASS,
+        activity: ACTIVITY.RESTORATION,
+        restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
+      });
+
+    expect(response.body.data).toMatchObject({
+      feasibilityAnalysis: 50000,
+      conservationPlanningAndAdmin: 166766.666666667,
+      dataCollectionAndFieldCost: 26666.6666666667,
+      communityRepresentation: 67633.3333333333,
+      blueCarbonProjectPlanning: 100000,
+      establishingCarbonRights: 46666.6666666667,
+      financingCost: 0.05,
+      validation: 50000,
+      implementationLabor: 1879.13529321225,
       monitoring: 8400,
       maintenance: 0.0833,
       carbonStandardFees: 0.2,
