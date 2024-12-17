@@ -1,8 +1,6 @@
-import {
-  DotsHorizontalIcon,
-  // ExclamationTriangleIcon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
+import Link from "next/link";
+
+import { DotsHorizontalIcon, TrashIcon } from "@radix-ui/react-icons";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
@@ -72,7 +70,9 @@ export const columns: CustomColumn[] = [
           onCheckedChange={(value) => row.toggleSelected(!!value)}
           aria-label="Select row"
         />
-        <span>{getValue()}</span>
+        <Button variant="link" asChild>
+          <Link href={`/projects/${row.original.id}`}>{getValue()}</Link>
+        </Button>
       </div>
     ),
   },
