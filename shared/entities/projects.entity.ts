@@ -72,6 +72,18 @@ export class Project extends BaseEntity {
   @Column({ name: "abatement_potential", type: "decimal", nullable: true })
   abatementPotential: number;
 
+  @Column({ name: "capex_npv", type: "decimal", nullable: true })
+  capexNpv: number;
+
+  @Column({ name: "capex", type: "decimal", nullable: true })
+  capex: number;
+
+  @Column({ name: "opex_npv", type: "decimal", nullable: true })
+  opexNpv: number;
+
+  @Column({ name: "opex", type: "decimal", nullable: true })
+  opex: number;
+
   @Column({ name: "total_cost_npv", type: "decimal", nullable: true })
   totalCostNPV: number;
 

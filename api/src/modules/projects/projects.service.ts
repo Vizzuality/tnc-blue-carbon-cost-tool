@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
-import { Project } from '@shared/entities/projects.entity';
+import { COST_TYPE_SELECTOR, Project } from '@shared/entities/projects.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { z } from 'zod';
@@ -30,9 +30,16 @@ export class ProjectsService extends AppBaseService<
   ): Promise<PaginatedProjectsWithMaximums> {
     const qb = this.dataSource
       .createQueryBuilder()
-      .select('MAX(abatement_potential)::integer', 'maxAbatementPotential')
-      .addSelect('MAX(total_cost + total_cost_npv)::integer', 'maxTotalCost')
+      .select('SUM(abatement_potential)::integer', 'maxAbatementPotential')
       .from(Project, 'project');
+
+    const { costRangeSelector } = query;
+    if (costRangeSelector == COST_TYPE_SELECTOR.NPV) {
+      qb.addSelect('SUM(capex_npv + opex_npv)::integer', 'maxTotalCost');
+    } else {
+      qb.addSelect('SUM(capex + opex)::integer', 'maxTotalCost');
+    }
+
     const totalsQuery = this.applySearchFiltersToQueryBuilder(qb, query);
 
     const [maximums, { metadata, data }] = await Promise.all([

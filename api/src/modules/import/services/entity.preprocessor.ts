@@ -1118,6 +1118,10 @@ export class EntityPreprocessor {
       project.projectSize = row.project_size_ha;
       project.projectSizeFilter = row.project_size_filter;
       project.abatementPotential = row.abatement_potential;
+      project.opexNpv = row.opex_npv;
+      project.opex = row.opex;
+      project.capexNpv = row.capex_npv;
+      project.capex = row.capex;
       project.totalCostNPV = row.total_cost_npv;
       project.totalCost = row.total_cost;
       // TODO: This has dissapeared from the excel file and it is required for filtering, setting a fake value for now
