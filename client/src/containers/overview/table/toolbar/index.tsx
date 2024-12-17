@@ -190,7 +190,7 @@ export default function ToolbarProjectsTable() {
                       </div>
                       <div className="w-1/3 text-right font-medium">High</div>
                     </div>
-                    <div className="h-2 w-full rounded-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500" />
+                    <div className="to-green-500 h-2 w-full rounded-full bg-gradient-to-r from-red-500 via-yellow-500" />
                   </div>
                 </TabsContent>
 

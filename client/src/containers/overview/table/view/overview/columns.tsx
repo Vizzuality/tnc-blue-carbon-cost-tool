@@ -1,5 +1,6 @@
 import { ProjectType } from "@shared/contracts/projects.contract";
 import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
+import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { createColumnHelper } from "@tanstack/react-table";
 import { z } from "zod";
 
@@ -7,9 +8,49 @@ import { formatCurrency, formatNumber } from "@/lib/format";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
 
+import { TableStateWithMaximums } from "@/containers/overview/table/view/overview";
+
+import SingleStackedBarChart from "@/components/ui/bar-chart/single-stacked-bar-chart";
 import { DEFAULT_BG_CLASSES, ScoreIndicator } from "@/components/ui/score-card";
 
-const columnHelper = createColumnHelper<Partial<ProjectType>>();
+const columnHelper = createColumnHelper<
+  Partial<ProjectType> & {
+    capex?: number;
+    opex?: number;
+    capexNPV?: number;
+    opexNPV?: number;
+    totalCostNPV?: number;
+  }
+>();
+
+const createSegments = (
+  type: "npv" | "total",
+  projectName: string,
+  rowData: {
+    capexNPV?: number;
+    opexNPV?: number;
+    capex?: number;
+    opex?: number;
+  },
+) => {
+  const values = {
+    capex: type === "npv" ? (rowData.capexNPV ?? 0) : (rowData.capex ?? 0),
+    opex: type === "npv" ? (rowData.opexNPV ?? 0) : (rowData.opex ?? 0),
+  };
+
+  return [
+    {
+      id: `segment-${type}-${projectName}-${values.capex}`,
+      value: values.capex,
+      colorClass: "bg-sky-blue-500",
+    },
+    {
+      id: `segment-${type}-${projectName}-${values.opex}`,
+      value: values.opex,
+      colorClass: "bg-sky-blue-200",
+    },
+  ];
+};
 
 export const columns = (filters: z.infer<typeof filtersSchema>) => [
   columnHelper.accessor("projectName", {
@@ -54,8 +95,27 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
       if (value === null || value === undefined) {
         return "-";
       }
+      const state = props.table.getState() as TableStateWithMaximums;
 
-      return formatNumber(value);
+      return (
+        <div className="flex items-center gap-2">
+          <SingleStackedBarChart
+            total={{
+              id: `total-${props.row.original.projectName}-${value}`,
+              value: state.maximums?.maxAbatementPotential ?? 0,
+              colorClass: "bg-sky-blue-950",
+            }}
+            segments={[
+              {
+                id: `segment-${props.row.original.projectName}-${value}`,
+                value: props.getValue() ?? 0,
+                colorClass: "bg-green",
+              },
+            ]}
+          />
+          <p className="text-sm font-normal">{formatNumber(value)}</p>
+        </div>
+      );
     },
   }),
   columnHelper.accessor(
@@ -69,7 +129,33 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
           return "-";
         }
 
-        return formatNumber(value);
+        const state = props.table.getState() as TableStateWithMaximums;
+        const segmentsMap = {
+          [COST_TYPE_SELECTOR.NPV]: createSegments(
+            "npv",
+            props.row.original.projectName ?? "project",
+            props.row.original,
+          ),
+          [COST_TYPE_SELECTOR.TOTAL]: createSegments(
+            "total",
+            props.row.original.projectName ?? "project",
+            props.row.original,
+          ),
+        };
+
+        return (
+          <div className="flex items-center gap-2">
+            <SingleStackedBarChart
+              total={{
+                id: `total-${props.row.original.projectName}-${value}`,
+                value: state.maximums?.maxCost ?? 0,
+                colorClass: "bg-sky-blue-950",
+              }}
+              segments={segmentsMap[filters.costRangeSelector]}
+            />
+            <p className="text-sm font-normal">{formatNumber(value)}</p>
+          </div>
+        );
       },
     },
   ),
