@@ -328,15 +328,15 @@ describe('Projects', () => {
     await testManager.mocks().createProject({
       id: 'e934e9fe-a79c-40a5-8254-8817851764ad',
       projectName: 'PROJ_ABC',
-      totalCost: 100,
-      totalCostNPV: 50,
+      opex: 100,
+      capex: 100,
       abatementPotential: 10,
     });
     await testManager.mocks().createProject({
       id: 'e934e9fe-a79c-40a5-8254-8817851764ae',
       projectName: 'PROJ_DEF',
-      totalCost: 200,
-      totalCostNPV: 100,
+      opex: 100,
+      capex: 100,
       abatementPotential: 20,
     });
 
@@ -351,8 +351,8 @@ describe('Projects', () => {
     expect(response.status).toBe(HttpStatus.OK);
     expect(response.body.data).toHaveLength(2);
     expect(response.body.maximums).toEqual({
-      maxAbatementPotential: 20,
-      maxTotalCost: 300,
+      maxAbatementPotential: 30,
+      maxTotalCost: 400,
     });
   });
 
