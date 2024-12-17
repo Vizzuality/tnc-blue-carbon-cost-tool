@@ -6,7 +6,7 @@ import {
 import { z } from "zod";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
-import { useGlobalFilters } from "@/app/(overview)/url-store";
+import { Parameter, useGlobalFilters } from "@/app/(overview)/url-store";
 import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { INITIAL_COST_RANGE } from "@/containers/overview/filters/constants";
@@ -19,7 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-export const PROJECT_PARAMETERS = [
+
+export const PROJECT_PARAMETERS: Parameter[] = [
   {
     key: FILTER_KEYS[1],
     label: "Project size",
@@ -51,6 +52,7 @@ export const PROJECT_PARAMETERS = [
       {
         label: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
         value: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+        disabled: true,
       },
     ],
   },
@@ -94,7 +96,7 @@ export default function ParametersProjects() {
           <Label htmlFor={parameter.label}>{parameter.label}</Label>
           <Select
             name={parameter.label}
-            defaultValue={filters[parameter.key]}
+            defaultValue={String(filters[parameter.key])}
             onValueChange={(v) => {
               handleParameters(v, parameter.key);
             }}
@@ -107,9 +109,7 @@ export default function ParametersProjects() {
                 <SelectItem
                   key={option.value}
                   value={option.value}
-                  disabled={
-                    option.value === PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE
-                  }
+                  disabled={option?.disabled}
                 >
                   {option.label}
                 </SelectItem>
