@@ -81,7 +81,7 @@ export const FILTERS = {
   ABATEMENT_POTENTIAL:
     "Estimation of the total amount of CO2e abatement that is expected during the life of the project. Used to determine whether the scale justifies the development costs",
   PROJECT_SIZE: (
-    <div className="space-y-2">
+    <>
       <p>
         Project size refers to the scale of restoration or conservation efforts,
         measured in hectares, and is determined using a standardized approach to
@@ -102,10 +102,10 @@ export const FILTERS = {
         This method allows for meaningful &quot;apples-to-apples&quot;
         comparisons across project activities and ecosystem types.
       </p>
-    </div>
+    </>
   ),
   CARBON_PRICING_TYPE: (
-    <div className="space-y-2">
+    <>
       <p>
         The Carbon Price Type defines the pricing approach used to calculate the
         cost of carbon credits, which impacts project costs, including
@@ -128,10 +128,10 @@ export const FILTERS = {
         These two options allow for flexible cost assessments based on
         standardized market values or project-specific operational needs.
       </p>
-    </div>
+    </>
   ),
   COST_TYPE: (
-    <div className="space-y-2">
+    <>
       <p>
         The Cost Type defines the method used to calculate and present project
         costs. It offers two approaches to understand the financial requirements
@@ -157,7 +157,7 @@ export const FILTERS = {
         These two cost perspectives offer different insights into project
         affordability and financial planning.
       </p>
-    </div>
+    </>
   ),
 };
 
