@@ -24,7 +24,7 @@ const columnHelper = createColumnHelper<
 >();
 
 const createSegments = (
-  type: "npv" | "total",
+  type: COST_TYPE_SELECTOR,
   projectName: string,
   rowData: {
     capexNPV?: number;
@@ -34,8 +34,14 @@ const createSegments = (
   },
 ) => {
   const values = {
-    capex: type === "npv" ? (rowData.capexNPV ?? 0) : (rowData.capex ?? 0),
-    opex: type === "npv" ? (rowData.opexNPV ?? 0) : (rowData.opex ?? 0),
+    capex:
+      type === COST_TYPE_SELECTOR.NPV
+        ? (rowData.capexNPV ?? 0)
+        : (rowData.capex ?? 0),
+    opex:
+      type === COST_TYPE_SELECTOR.NPV
+        ? (rowData.opexNPV ?? 0)
+        : (rowData.opex ?? 0),
   };
 
   return [
@@ -130,18 +136,6 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
         }
 
         const state = props.table.getState() as TableStateWithMaximums;
-        const segmentsMap = {
-          [COST_TYPE_SELECTOR.NPV]: createSegments(
-            "npv",
-            props.row.original.projectName ?? "project",
-            props.row.original,
-          ),
-          [COST_TYPE_SELECTOR.TOTAL]: createSegments(
-            "total",
-            props.row.original.projectName ?? "project",
-            props.row.original,
-          ),
-        };
 
         return (
           <div className="flex items-center gap-2">
@@ -151,7 +145,11 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
                 value: state.maximums?.maxCost ?? 0,
                 colorClass: "bg-sky-blue-950",
               }}
-              segments={segmentsMap[filters.costRangeSelector]}
+              segments={createSegments(
+                COST_TYPE_SELECTOR.NPV,
+                props.row.original.projectName ?? "project",
+                props.row.original,
+              )}
             />
             <p className="text-sm font-normal">{formatNumber(value)}</p>
           </div>
