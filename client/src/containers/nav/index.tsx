@@ -1,15 +1,17 @@
 "use client";
 
+import { useMemo } from "react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { ROLES } from "@shared/entities/users/roles.enum";
 import {
-  LayoutDashboardIcon,
   ClipboardEditIcon,
   ClipboardListIcon,
+  LayoutDashboardIcon,
   ServerCogIcon,
   UserIcon,
-  // FileQuestionIcon,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -47,12 +49,14 @@ const navItems = {
       url: "/my-projects",
       icon: ClipboardListIcon,
       match: (pathname: string) => pathname === "/my-projects",
+      isAuth: true,
     },
     {
       title: "Admin",
       url: "/admin",
       icon: ServerCogIcon,
       match: (pathname: string) => pathname.startsWith("/admin"),
+      isAdmin: true,
     },
   ],
   footer: [
@@ -67,8 +71,23 @@ const navItems = {
 
 export default function MainNav() {
   const { open } = useSidebar();
-  const { status } = useSession();
+  const { status, data } = useSession();
   const pathname = usePathname();
+  const isAdmin = data?.user.role === ROLES.ADMIN;
+
+  const mainNavItems = useMemo(
+    () =>
+      navItems.main.filter((item) => {
+        if (item.isAdmin) {
+          return isAdmin;
+        }
+        if (item.isAuth) {
+          return status === "authenticated";
+        }
+        return true;
+      }),
+    [isAdmin, status],
+  );
 
   return (
     <Sidebar collapsible="icon" className="py-6">
@@ -79,7 +98,7 @@ export default function MainNav() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.main.map((item) => {
+              {mainNavItems.map((item) => {
                 const isActive = item.match(pathname);
                 return (
                   <SidebarMenuItem key={item.title}>
