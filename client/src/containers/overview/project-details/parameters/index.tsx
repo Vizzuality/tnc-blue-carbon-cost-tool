@@ -7,7 +7,7 @@ import { atom, useAtom } from "jotai";
 import { z } from "zod";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
-import { filtersSchema } from "@/app/(overview)/url-store";
+import { filtersSchema, Parameter } from "@/app/(overview)/url-store";
 
 import { Label } from "@/components/ui/label";
 import {
@@ -26,7 +26,7 @@ const INITIAL_FILTERS_STATE: Partial<z.infer<typeof filtersSchema>> = {
 
 const filtersAtom = atom(INITIAL_FILTERS_STATE);
 
-export const PROJECT_PARAMETERS = [
+export const PROJECT_PARAMETERS: Parameter[] = [
   {
     key: FILTER_KEYS[1],
     label: "Project size",
@@ -58,6 +58,7 @@ export const PROJECT_PARAMETERS = [
       {
         label: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
         value: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+        disabled: true,
       },
     ],
   },
@@ -99,7 +100,7 @@ export default function ParametersProjects() {
           <Label htmlFor={parameter.label}>{parameter.label}</Label>
           <Select
             name={parameter.label}
-            defaultValue={filters[parameter.key]}
+            defaultValue={String(filters[parameter.key])}
             onValueChange={(v) => {
               handleParameters(v, parameter.key);
             }}
@@ -112,9 +113,7 @@ export default function ParametersProjects() {
                 <SelectItem
                   key={option.value}
                   value={option.value}
-                  disabled={
-                    option.value === PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE
-                  }
+                  disabled={option?.disabled}
                 >
                   {option.label}
                 </SelectItem>
