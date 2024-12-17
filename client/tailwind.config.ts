@@ -87,18 +87,19 @@ const config: Config = {
           950: "#0a2d42",
         },
         "mint-green": {
-          200: "#70C69B"
+          200: "#70C69B",
         },
-        "wheat": {
-          200: "#EEE0BD"
+        wheat: {
+          200: "#EEE0BD",
         },
-        "yellow": {
-          500: "#EACD3F"
+        yellow: {
+          500: "#EACD3F",
         },
-        "high": "#B9CCA3",
-        "medium": "#F5EBB8",
-        "low": "#F7BA93",
-        "deep-ocean": "#132A47"
+        green: "#90BA36",
+        high: "#B9CCA3",
+        medium: "#F5EBB8",
+        low: "#F7BA93",
+        "deep-ocean": "#132A47",
       },
       borderRadius: {
         lg: "var(--radius)",

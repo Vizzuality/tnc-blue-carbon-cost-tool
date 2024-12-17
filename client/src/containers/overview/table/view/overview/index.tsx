@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { projectsQuerySchema } from "@shared/contracts/projects.contract";
+import { PaginatedProjectsWithMaximums } from "@shared/dtos/projects/projects.dto";
 import { keepPreviousData } from "@tanstack/react-query";
 import {
   flexRender,
@@ -11,6 +12,7 @@ import {
   PaginationState,
   SortingState,
   useReactTable,
+  TableState,
 } from "@tanstack/react-table";
 import { useAtom } from "jotai";
 import { ChevronsUpDownIcon } from "lucide-react";
@@ -44,6 +46,9 @@ import TablePagination, {
 
 type filterFields = z.infer<typeof projectsQuerySchema.shape.fields>;
 type sortFields = z.infer<typeof projectsQuerySchema.shape.sort>;
+export interface TableStateWithMaximums extends TableState {
+  maximums?: PaginatedProjectsWithMaximums["maximums"];
+}
 
 export function OverviewTable() {
   const [tableView] = useTableView();
@@ -73,8 +78,8 @@ export function OverviewTable() {
     {
       query: {
         ...filtersToQueryParams(filters),
-        fields: columnsBasedOnFilters.map(
-          (column) => column.accessorKey,
+        fields: ["capex", "capexNPV", "opex", "opexNPV"].concat(
+          columnsBasedOnFilters.map((column) => column.accessorKey),
         ) as filterFields,
         ...(sorting.length > 0 && {
           sort: sorting.map(
@@ -87,16 +92,17 @@ export function OverviewTable() {
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
         partialProjectName: filters.keyword,
+        withMaximums: true,
       },
     },
     {
       queryKey,
-      select: (data) => data.body,
+      select: (data) => data.body as PaginatedProjectsWithMaximums,
       placeholderData: keepPreviousData,
     },
   );
 
-  const table = useReactTable({
+  const table = useReactTable<PaginatedProjectsWithMaximums["data"][0]>({
     data: isSuccess ? data.data : NO_DATA,
     columns: columnsBasedOnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -104,7 +110,8 @@ export function OverviewTable() {
     state: {
       sorting,
       pagination,
-    },
+      maximums: data?.maximums,
+    } as TableStateWithMaximums,
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
   });
