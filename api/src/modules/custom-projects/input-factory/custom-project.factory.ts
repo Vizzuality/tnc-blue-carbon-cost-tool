@@ -10,6 +10,8 @@ import { CostOutput } from '@api/modules/calculations/calculation.engine';
 import { ProjectInput } from '@api/modules/calculations/cost.calculator';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { Country } from '@shared/entities/country.entity';
+import { RestorationProjectParamsDto } from '../dto/restoration-project-params.dto';
+import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 
 export type ConservationProjectCarbonInputs = {
   lossRate: number;
@@ -42,10 +44,60 @@ export class CustomProjectFactory {
         additionalAssumptions,
       );
     } else if (dto.activity === ACTIVITY.RESTORATION) {
-      throw new NotImplementedException('Restoration not implemented');
+      return this.createRestorationProjectInput(
+        dto,
+        additionalBaseData,
+        additionalAssumptions,
+      );
     } else {
       throw new Error('Invalid activity type');
     }
+  }
+
+  private createRestorationProjectInput(
+    dto: CreateCustomProjectDto,
+    additionalBaseData: AdditionalBaseData,
+    additionalAssumptions: NonOverridableModelAssumptions,
+  ) {
+    const {
+      parameters,
+      assumptions,
+      costInputs,
+      projectName,
+      projectSizeHa,
+      initialCarbonPriceAssumption,
+      activity,
+      carbonRevenuesToCover,
+      ecosystem,
+      countryCode,
+    } = dto;
+
+    const projectParams = parameters as RestorationProjectParamsDto;
+
+    const restorationProjectInput: RestorationProjectInput =
+      new RestorationProjectInput();
+    restorationProjectInput.setGeneralInputs({
+      projectName,
+      projectSizeHa,
+      initialCarbonPriceAssumption,
+      activity,
+      carbonRevenuesToCover,
+      ecosystem,
+      countryCode,
+    });
+    restorationProjectInput.setSequestrationRate(
+      projectParams,
+      additionalBaseData,
+    );
+    restorationProjectInput.setCostAndCarbonInputs(
+      costInputs,
+      additionalBaseData,
+    );
+    restorationProjectInput.setModelAssumptions(
+      assumptions,
+      additionalAssumptions,
+    );
+    return restorationProjectInput;
   }
 
   private createConservationProjectInput(

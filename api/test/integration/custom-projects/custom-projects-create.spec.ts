@@ -23,14 +23,18 @@ describe('Create Custom Projects - Setup', () => {
         .post(customProjectContract.createCustomProject.path)
         .send({
           countryCode: 'IND',
-          activity: 'Conservation',
+          activity: 'Restoration',
           ecosystem: 'Mangrove',
           projectName: 'My custom project',
           projectSizeHa: 1000,
           initialCarbonPriceAssumption: 1000,
           carbonRevenuesToCover: 'Opex',
+          activityType: 'Planting',
+          plantingSuccessRate: 0.8,
           parameters: {
             lossRateUsed: 'National average',
+            sequestrationRateUsed: 'Tier 3 - Project-specific rate',
+            projectSpecificSequestrationRate: 100,
             emissionFactorUsed: 'Tier 2 - Country-specific emission factor',
           },
           costInputs: {
@@ -43,6 +47,7 @@ describe('Create Custom Projects - Setup', () => {
             financingCost: 0.05,
             validation: 50000,
             implementationLaborHybrid: null,
+            implementationLabor: 0,
             monitoring: 15000,
             maintenance: 0.0833,
             carbonStandardFees: 0.2,
@@ -61,7 +66,7 @@ describe('Create Custom Projects - Setup', () => {
             projectLength: 20,
           },
         });
-
+      // console.log(response);
       // TODO: Write tests for cost calculations
     });
   });
