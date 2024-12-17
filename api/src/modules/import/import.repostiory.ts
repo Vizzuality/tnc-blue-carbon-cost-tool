@@ -68,7 +68,42 @@ export class ImportRepository {
     baseIncrease: BaseIncrease[];
     modelAssumptions: ModelAssumptions[];
   }) {
-    return this.dataSource.transaction(async (manager) => {
+    return this.dataSource.transaction('READ COMMITTED', async (manager) => {
+      // DATA WIPE STARTS
+      await manager.clear(Project);
+      await manager.clear(ProjectSize);
+      await manager.clear(FeasibilityAnalysis);
+      await manager.clear(ConservationPlanningAndAdmin);
+      await manager.clear(DataCollectionAndFieldCosts);
+      await manager.clear(CommunityRepresentation);
+      await manager.clear(BlueCarbonProjectPlanning);
+      await manager.clear(CarbonRights);
+      await manager.clear(FinancingCost);
+      await manager.clear(ValidationCost);
+      await manager.clear(MonitoringCost);
+      await manager.clear(Maintenance);
+      await manager.clear(CommunityBenefitSharingFund);
+      await manager.clear(BaselineReassessment);
+      await manager.clear(MRV);
+      await manager.clear(LongTermProjectOperating);
+      await manager.clear(CarbonStandardFees);
+      await manager.clear(CommunityCashFlow);
+      await manager.clear(ImplementationLaborCost);
+
+      // Carbon inputs ingestion
+      await manager.clear(EcosystemExtent);
+      await manager.clear(EcosystemLoss);
+      await manager.clear(RestorableLand);
+      await manager.clear(SequestrationRate);
+      await manager.clear(EmissionFactors);
+
+      // Other tables ingestion
+      await manager.clear(BaseSize);
+      await manager.clear(BaseIncrease);
+      await manager.clear(ModelAssumptions);
+      // DATA WIPE ENDS
+
+      // CREATION STARTS
       await manager.save(importData.projects);
 
       // Cost inputs ingestion
@@ -102,6 +137,7 @@ export class ImportRepository {
       await manager.save(importData.baseSize);
       await manager.save(importData.baseIncrease);
       await manager.save(importData.modelAssumptions);
+      // CREATION ENDS
     });
   }
 }

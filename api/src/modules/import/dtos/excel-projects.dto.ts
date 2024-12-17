@@ -16,6 +16,10 @@ export type ExcelProjects = {
   project_size_ha: number;
   project_size_filter: string;
   abatement_potential: number;
+  capex_npv: number;
+  capex: number;
+  opex_npv: number;
+  opex: number;
   total_cost_npv: number;
   total_cost: number;
   cost_per_tco2e_npv: number;
