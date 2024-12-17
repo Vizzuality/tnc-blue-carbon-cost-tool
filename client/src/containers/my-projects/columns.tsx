@@ -101,7 +101,7 @@ export const columns: CustomColumn[] = [
           className={cn({
             "border-sky-300 bg-blue-500/20 text-sky-blue-300 hover:bg-blue-500/20":
               getValue() === ACTIVITY.CONSERVATION,
-            "border-mint-green-200 bg-green-500/20 text-mint-green-200 hover:bg-green-500/20":
+            "bg-green-500/20 hover:bg-green-500/20 border-mint-green-200 text-mint-green-200":
               getValue() === ACTIVITY.RESTORATION,
           })}
         >
