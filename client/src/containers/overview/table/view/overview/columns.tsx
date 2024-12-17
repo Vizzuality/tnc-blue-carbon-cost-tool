@@ -142,7 +142,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
             <SingleStackedBarChart
               total={{
                 id: `total-${props.row.original.projectName}-${value}`,
-                value: state.maximums?.maxCost ?? 0,
+                value: state.maximums?.maxTotalCost ?? 0,
                 colorClass: "bg-sky-blue-950",
               }}
               segments={createSegments(
