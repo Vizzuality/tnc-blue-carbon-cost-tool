@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
@@ -34,6 +36,7 @@ export interface Parameter {
   label: string;
   className: string;
   options: ParameterOption[];
+  tooltipContent?: ReactNode;
 }
 
 export const filtersSchema = z.object({
