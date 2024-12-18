@@ -8,9 +8,9 @@ interface ScoreIndicatorProps {
 }
 
 export const DEFAULT_BG_CLASSES: Record<PROJECT_SCORE, string> = {
-  [PROJECT_SCORE.HIGH]: "bg-high",
-  [PROJECT_SCORE.MEDIUM]: "bg-medium",
-  [PROJECT_SCORE.LOW]: "bg-low",
+  [PROJECT_SCORE.HIGH]: "bg-ramps-green",
+  [PROJECT_SCORE.MEDIUM]: "bg-ramps-yellow",
+  [PROJECT_SCORE.LOW]: "bg-ramps-red",
 };
 
 export const ScoreIndicator = ({
