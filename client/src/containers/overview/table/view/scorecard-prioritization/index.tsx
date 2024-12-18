@@ -22,6 +22,8 @@ import { cn } from "@/lib/utils";
 import { projectDetailsAtom } from "@/app/(overview)/store";
 import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
+import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
+
 import ProjectDetails from "@/containers/overview/project-details";
 import {
   filtersToQueryParams,
@@ -62,6 +64,7 @@ export function ScoredCardPrioritizationTable() {
     sorting,
     pagination,
   }).queryKey;
+  useTablePaginationReset(filters.keyword, setPagination);
 
   const { data, isSuccess } = client.projects.getProjectsScorecard.useQuery(
     queryKey,

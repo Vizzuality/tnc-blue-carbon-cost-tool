@@ -20,6 +20,8 @@ import { cn } from "@/lib/utils";
 
 import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
+import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
+
 import {
   filtersToQueryParams,
   NO_DATA,
@@ -51,6 +53,7 @@ export function KeyCostsTable() {
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
   });
+  useTablePaginationReset(filters.keyword, setPagination);
 
   const queryKey = queryKeys.tables.all(tableView, projectsQuerySchema, {
     ...filters,
