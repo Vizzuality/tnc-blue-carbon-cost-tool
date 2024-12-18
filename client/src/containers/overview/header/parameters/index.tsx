@@ -6,11 +6,14 @@ import {
 import { z } from "zod";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
-import { useGlobalFilters } from "@/app/(overview)/url-store";
+import { Parameter, useGlobalFilters } from "@/app/(overview)/url-store";
 import { filtersSchema } from "@/app/(overview)/url-store";
+
+import { FILTERS } from "@/constants/tooltip";
 
 import { INITIAL_COST_RANGE } from "@/containers/overview/filters/constants";
 
+import InfoButton from "@/components/ui/info-button";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -19,11 +22,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-export const PROJECT_PARAMETERS = [
+
+export const PROJECT_PARAMETERS: Parameter[] = [
   {
     key: FILTER_KEYS[1],
     label: "Project size",
     className: "w-[125px]",
+    tooltipContent: FILTERS.PROJECT_SIZE,
     options: [
       {
         label: PROJECT_SIZE_FILTER.SMALL,
@@ -43,6 +48,7 @@ export const PROJECT_PARAMETERS = [
     key: FILTER_KEYS[2],
     label: "Carbon pricing type",
     className: "w-[195px]",
+    tooltipContent: FILTERS.CARBON_PRICING_TYPE,
     options: [
       {
         label: PROJECT_PRICE_TYPE.MARKET_PRICE,
@@ -51,6 +57,7 @@ export const PROJECT_PARAMETERS = [
       {
         label: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
         value: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+        disabled: true,
       },
     ],
   },
@@ -58,6 +65,7 @@ export const PROJECT_PARAMETERS = [
     key: FILTER_KEYS[3],
     label: "Cost",
     className: "w-[85px]",
+    tooltipContent: FILTERS.COST_TYPE,
     options: [
       {
         label: COST_TYPE_SELECTOR.TOTAL,
@@ -92,9 +100,12 @@ export default function ParametersProjects() {
       {PROJECT_PARAMETERS.map((parameter) => (
         <div key={parameter.label} className="flex items-center space-x-2">
           <Label htmlFor={parameter.label}>{parameter.label}</Label>
+          <InfoButton title={parameter.label}>
+            {parameter.tooltipContent}
+          </InfoButton>
           <Select
             name={parameter.label}
-            defaultValue={filters[parameter.key]}
+            defaultValue={String(filters[parameter.key])}
             onValueChange={(v) => {
               handleParameters(v, parameter.key);
             }}
@@ -104,7 +115,11 @@ export default function ParametersProjects() {
             </SelectTrigger>
             <SelectContent>
               {parameter.options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  disabled={option?.disabled}
+                >
                   {option.label}
                 </SelectItem>
               ))}

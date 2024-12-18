@@ -113,7 +113,7 @@ const DialogContentContainer = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("space-y-1.5 text-foreground", className)} {...props} />
+  <div className={cn("space-y-2 text-foreground", className)} {...props} />
 );
 DialogContentContainer.displayName = "DialogContentContainer";
 

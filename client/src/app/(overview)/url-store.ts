@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
@@ -23,6 +25,20 @@ import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector"
 
 const SUB_ACTIVITIES = RESTORATION_ACTIVITY_SUBTYPE;
 
+interface ParameterOption {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
+
+export interface Parameter {
+  key: keyof Omit<z.infer<typeof filtersSchema>, "keyword">;
+  label: string;
+  className: string;
+  options: ParameterOption[];
+  tooltipContent?: ReactNode;
+}
+
 export const filtersSchema = z.object({
   [FILTER_KEYS[0]]: z.string().optional(),
   [FILTER_KEYS[1]]: z.nativeEnum(PROJECT_SIZE_FILTER),
@@ -39,7 +55,7 @@ export const filtersSchema = z.object({
 export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
   keyword: "",
   projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
-  priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+  priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
   costRangeSelector: COST_TYPE_SELECTOR.NPV,
   countryCode: "",
   ecosystem: [],

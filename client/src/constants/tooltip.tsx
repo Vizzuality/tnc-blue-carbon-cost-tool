@@ -80,6 +80,85 @@ export const FILTERS = {
   COST: "Total cost (incl. CAPEX and OPEX)",
   ABATEMENT_POTENTIAL:
     "Estimation of the total amount of CO2e abatement that is expected during the life of the project. Used to determine whether the scale justifies the development costs",
+  PROJECT_SIZE: (
+    <>
+      <p>
+        Project size refers to the scale of restoration or conservation efforts,
+        measured in hectares, and is determined using a standardized approach to
+        ensure comparability across different ecosystems and project types.
+      </p>
+      <p>
+        Sizes are defined based on their &quot;carbon equivalency&quot; — the
+        impact a conservation project has on carbon emissions is aligned with an
+        equivalent restoration effort.
+      </p>
+      <p>
+        For instance, &quot;medium&quot; projects involve 500 hectares of
+        restored mangroves, salt marshes, or seagrass, compared to conservation
+        efforts that avoid the loss of approximately 20,000 ha of mangroves,
+        4,000 ha of salt marshes, or 2,000 ha of seagrass.
+      </p>
+      <p>
+        This method allows for meaningful &quot;apples-to-apples&quot;
+        comparisons across project activities and ecosystem types.
+      </p>
+    </>
+  ),
+  CARBON_PRICING_TYPE: (
+    <>
+      <p>
+        The Carbon Price Type defines the pricing approach used to calculate the
+        cost of carbon credits, which impacts project costs, including
+        contributions to the “community benefit sharing fund.” There are two
+        pricing archetypes available:
+      </p>
+      <ul className="list-disc space-y-2 pl-4">
+        <li>
+          Market Price: A standardized premium price of $30 per ton of CO₂e,
+          reflecting the added value of co-benefits such as climate resilience
+          and biodiversity. This price is consistent across all projects.
+        </li>
+        <li>
+          OPEX Breakeven Price: A project-specific price designed to cover the
+          operational expenditure (OPEX) of an individual project. This price
+          varies depending on the unique costs associated with each project.
+        </li>
+      </ul>
+      <p>
+        These two options allow for flexible cost assessments based on
+        standardized market values or project-specific operational needs.
+      </p>
+    </>
+  ),
+  COST_TYPE: (
+    <>
+      <p>
+        The Cost Type defines the method used to calculate and present project
+        costs. It offers two approaches to understand the financial requirements
+        of a project:
+      </p>
+      <ul className="list-disc space-y-2 pl-4">
+        <li>
+          Total Cost: The full cost of the project, including both capital
+          expenditures (CAPEX) and operational expenditures (OPEX), without
+          adjustments for the time value of money. This provides a
+          straightforward, cumulative view of project costs.
+        </li>
+        <li>
+          Net Present Value (NPV) Cost: The present value of total project costs
+          (CAPEX + OPEX) per ton of CO₂e, excluding financing costs. The NPV
+          Cost accounts for the time value of money, providing a more accurate
+          view of a project&apos;s long-term financial viability. This metric
+          allows for better comparison across projects by normalizing future
+          costs to their present-day value.
+        </li>
+      </ul>
+      <p>
+        These two cost perspectives offer different insights into project
+        affordability and financial planning.
+      </p>
+    </>
+  ),
 };
 
 export const MAP_LEGEND =

@@ -2,9 +2,11 @@ import { FC } from "react";
 
 import { type CustomProjectSummary } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import { useSetAtom } from "jotai";
-import { XIcon } from "lucide-react";
+import { FileEdit, XIcon } from "lucide-react";
 
 import { projectsUIState } from "@/app/projects/store";
+
+import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import { PROJECT_SUMMARY } from "@/constants/tooltip";
 
@@ -40,6 +42,7 @@ interface ProjectSummaryProps {
 }
 const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
   const setProjectSummaryOpen = useSetAtom(projectsUIState);
+  const featureFlags = useFeatureFlags();
 
   return (
     <div
@@ -91,11 +94,12 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
           Calculations based on project setup parameters. For new calculations,
           edit project details.
         </p>
-        {/* TODO: Uncomment when feature is available */}
-        {/* <Button type="button" variant="outline">
-          <FileEdit />
-          <span>Edit Project</span>
-        </Button> */}
+        {featureFlags["edit-project"] && (
+          <Button type="button" variant="outline">
+            <FileEdit />
+            <span>Edit Project</span>
+          </Button>
+        )}
       </div>
     </div>
   );

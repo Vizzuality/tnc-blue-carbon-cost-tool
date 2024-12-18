@@ -110,13 +110,14 @@ export default function ToolbarProjectsTable() {
       <SearchProjectsTable />
       <TabsProjectsTable />
       <div className="flex flex-1 items-center justify-end space-x-2">
+        <span className="text-sm text-muted-foreground">Table details</span>
         <InfoButton title="Table details">
           <div className="relative flex h-[600px] w-[auto] flex-col">
             <Tabs
               defaultValue="general"
               className="flex h-full w-full flex-col"
             >
-              <div className="sticky top-0 z-10 bg-background pb-4">
+              <div className="sticky top-0 z-10 bg-background">
                 <TabsList className="w-full justify-start space-x-6 divide-x-0 divide-transparent rounded-none border border-l-0 border-r-0 border-t-0 bg-transparent p-0">
                   <TabsTrigger
                     value="general"
@@ -142,10 +143,10 @@ export default function ToolbarProjectsTable() {
                 </TabsList>
               </div>
 
-              <div className="h-full overflow-y-hidden">
+              <div className="h-full overflow-y-hidden pb-6">
                 <TabsContent
                   value="general"
-                  className="mt-4 h-full space-y-4 text-sm data-[state=inactive]:hidden"
+                  className="mt-4 h-full space-y-2 text-sm data-[state=inactive]:hidden"
                 >
                   <p>
                     This table offers three distinct views, showcasing example
@@ -153,6 +154,15 @@ export default function ToolbarProjectsTable() {
                     the filters to refine your results, or adjust the selectors
                     —&quot;Project Size,&quot; &quot;Carbon Pricing Type,&quot;
                     and &quot;Cost&quot;—to see different perspectives.
+                  </p>
+                  <p>
+                    Abatement potential is the estimated annual blue carbon
+                    potential of each country, ecosystem, and activity
+                    (conservation or restoration). The Cost represents the NPV
+                    cost per ton CO2e (including CAPEX + OPEX) for a typical
+                    project, categorized by ecosystem, activity and country. The
+                    project name includes the country, ecosystem, activity and
+                    typical project size.
                   </p>
                 </TabsContent>
 
@@ -172,7 +182,7 @@ export default function ToolbarProjectsTable() {
                     give a comprehensive evaluation. These scores add additional
                     insights for project assessment.
                   </p>
-                  <div className="mt-6 space-y-4">
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="w-1/3 font-medium">Low</div>
                       <div className="w-1/3 text-center font-medium">
@@ -188,10 +198,10 @@ export default function ToolbarProjectsTable() {
                   value="scorecard"
                   className="mt-4 h-full space-y-4 data-[state=inactive]:hidden"
                 >
-                  <ScrollArea className="h-full px-4">
-                    <div className="space-y-6 text-sm">
-                      <div>
-                        <p className="mb-4">
+                  <ScrollArea className="h-full pr-4">
+                    <div className="space-y-6">
+                      <div className="space-y-2 text-sm">
+                        <p>
                           In addition to economic feasibility and abatement
                           potential, this table includes{" "}
                           <span className="font-medium">
@@ -204,10 +214,10 @@ export default function ToolbarProjectsTable() {
                           evaluation. These scores add additional insights for
                           project assessment.
                         </p>
-                        <p className="mb-6">
+                        <p className="!mt-6">
                           Each metric can go from a scale from low to high:
                         </p>
-                        <div className="mb-8 grid grid-cols-3 gap-2 text-center">
+                        <div className="!mt-4 grid grid-cols-3 gap-2 text-center">
                           <div className="height[fit-content] rounded-md bg-low p-2 text-sky-blue-950">
                             <div className="font-medium">Low</div>
                             <div className="text-sm">Description of low</div>
@@ -263,21 +273,21 @@ export default function ToolbarProjectsTable() {
                   value="costs"
                   className="mt-4 h-full space-y-4 data-[state=inactive]:hidden"
                 >
-                  <ScrollArea className="h-full px-4">
+                  <ScrollArea className="h-full pr-4">
                     <div className="space-y-6">
-                      <div>
-                        <p className="mb-4 text-sm">
+                      <div className="space-y-2 text-sm">
+                        <p>
                           This table provides an overview of the most
                           significant cost components for typical blue carbon
                           projects, categorized by country, ecosystem, and
                           activity. This table enables easy comparison of these
                           essential cost components.
                         </p>
-                        <p className="mb-6 text-sm">
+                        <p className="!mt-4">
                           Each metric is color coded depending on the minimum
                           range for each metric.
                         </p>
-                        <div className="mb-8 flex flex-col gap-2">
+                        <div className="!mt-4 flex flex-col gap-2">
                           <div className="h-4 w-full bg-gradient-to-r from-[#E7C4B1] via-[#EEE0BD] to-[#C7DBBC]" />
                           <div className="flex justify-between text-sm text-muted-foreground">
                             <span>Min value</span>

@@ -6,6 +6,6 @@ export class PaginatedProjectsWithMaximums {
   data: Partial<Project>[];
   maximums: {
     maxAbatementPotential: number;
-    maxCost: number;
+    maxTotalCost: number;
   };
 }

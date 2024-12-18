@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
-import { Project } from '@shared/entities/projects.entity';
+import { COST_TYPE_SELECTOR, Project } from '@shared/entities/projects.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { z } from 'zod';
@@ -28,20 +28,34 @@ export class ProjectsService extends AppBaseService<
   public async findAllProjectsWithMaximums(
     query: ProjectFetchSpecificacion,
   ): Promise<PaginatedProjectsWithMaximums> {
+    // Elena told us that the maximum values of the abatement_potential and max_total_cost bars is the sum of all values of the filtered results
     const qb = this.dataSource
       .createQueryBuilder()
-      .select('MAX(abatement_potential)::integer', 'maxAbatementPotential')
-      .addSelect('MAX(total_cost + total_cost_npv)::integer', 'maxTotalCost')
+      .select('SUM(abatement_potential)::BIGINT', 'maxAbatementPotential')
       .from(Project, 'project');
+
+    const { costRangeSelector } = query;
+    if (costRangeSelector == COST_TYPE_SELECTOR.NPV) {
+      qb.addSelect('SUM(capex_npv + opex_npv)::BIGINT', 'maxTotalCost');
+    } else {
+      qb.addSelect('SUM(capex + opex)::BIGINT', 'maxTotalCost');
+    }
+
     const totalsQuery = this.applySearchFiltersToQueryBuilder(qb, query);
 
-    const [maximums, { metadata, data }] = await Promise.all([
-      totalsQuery.getRawOne(),
-      this.findAllPaginated(query),
-    ]);
+    const [{ maxAbatementPotential, maxTotalCost }, { metadata, data }] =
+      await Promise.all([
+        totalsQuery.getRawOne(),
+        this.findAllPaginated(query),
+      ]);
+
+    // The numbers are too big at the moment.
     return {
       metadata,
-      maximums,
+      maximums: {
+        maxAbatementPotential: Number(maxAbatementPotential),
+        maxTotalCost: Number(maxTotalCost),
+      },
       data,
     };
   }

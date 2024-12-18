@@ -3,9 +3,13 @@ import { FC } from "react";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { FileEdit } from "lucide-react";
+
+import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import DetailItem from "@/containers/projects/custom-project/details/detail-item";
 
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 interface ProjectDetailsProps {
@@ -38,15 +42,18 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
     lossRate,
     emissionFactors,
   } = data;
+  const featureFlags = useFeatureFlags();
+
   return (
     <Card className="flex-1 space-y-1">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold">Project details</h2>
-        {/* TODO: Uncomment when feature is available */}
-        {/* <Button type="button" variant="ghost">
-          <FileEdit />
-          <span>Edit project</span>
-        </Button> */}
+        {featureFlags["edit-project"] && (
+          <Button type="button" variant="ghost">
+            <FileEdit />
+            <span>Edit project</span>
+          </Button>
+        )}
       </div>
       <div className="grid grid-cols-3 gap-6">
         <div className="space-y-3">

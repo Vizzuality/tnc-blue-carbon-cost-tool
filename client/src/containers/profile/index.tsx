@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import Link from "next/link";
 
 import { useSetAtom } from "jotai";
+
+import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import CustomProjects from "@/containers/profile/custom-projects";
 import DeleteAccount from "@/containers/profile/delete-account";
@@ -52,11 +54,22 @@ const sections = [
       "This action will permanently delete your account. By doing this you will loose access to all your custom scenarios.",
     Component: DeleteAccount,
   },
-];
+] as const;
 
 export default function Profile() {
   const ref = useRef<HTMLDivElement>(null);
   const setIntersecting = useSetAtom(intersectingAtom);
+  const featureFlags = useFeatureFlags();
+  const currentSections = useMemo(() => {
+    return sections.filter((section) => {
+      const featureFlagExists = section.id in featureFlags;
+      const isFeatureEnabled =
+        featureFlagExists &&
+        featureFlags[section.id as keyof typeof featureFlags];
+
+      return !featureFlagExists || isFeatureEnabled;
+    });
+  }, [featureFlags]);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -99,11 +112,11 @@ export default function Profile() {
 
       <div className="relative grid h-full grid-cols-[317px_1fr] gap-6 overflow-hidden pl-4">
         <ProfileSidebar
-          navItems={sections.map((s) => ({ id: s.id, name: s.title }))}
+          navItems={currentSections.map((s) => ({ id: s.id, name: s.title }))}
         />
         <ScrollArea ref={ref} className="pr-6" showGradient>
           <div id="profile-sections-container" className="space-y-2 pb-80">
-            {sections.map(({ Component, ...rest }) => (
+            {currentSections.map(({ Component, ...rest }) => (
               <ProfileSection key={rest.id} {...rest}>
                 <Component />
               </ProfileSection>
