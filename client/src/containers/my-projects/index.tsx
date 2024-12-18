@@ -23,6 +23,8 @@ import { cn, getAuthHeader } from "@/lib/utils";
 
 import { useMyProjectsFilters } from "@/app/my-projects/url-store";
 
+import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
+
 import Search from "@/components/ui/search";
 import { useSidebar } from "@/components/ui/sidebar";
 import {
@@ -64,6 +66,8 @@ export default function MyProjectsView() {
     sorting,
     pagination,
   }).queryKey;
+
+  useTablePaginationReset(filters.keyword, setPagination);
 
   const { data } = client.customProjects.getCustomProjects.useQuery(
     queryKey,
