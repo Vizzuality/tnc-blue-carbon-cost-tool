@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 
 import { ExtractAtomValue, useSetAtom } from "jotai";
@@ -10,8 +11,7 @@ import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import CustomProjects from "@/containers/profile/custom-projects";
 import DeleteAccount from "@/containers/profile/delete-account";
-import FileUpload, { TEMPLATE_FILES } from "@/containers/profile/file-upload";
-import FileUploadDescription from "@/containers/profile/file-upload/description";
+import { TEMPLATE_FILES } from "@/containers/profile/file-upload";
 import ProfileSection from "@/containers/profile/profile-section";
 import ProfileSidebar from "@/containers/profile/profile-sidebar";
 import { profileStepAtom } from "@/containers/profile/store";
@@ -19,6 +19,11 @@ import UserDetails from "@/containers/profile/user-details";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+
+const FileUpload = dynamic(() => import("@/containers/profile/file-upload"));
+const FileUploadDescription = dynamic(
+  () => import("@/containers/profile/file-upload/description"),
+);
 
 export const PROFILE_SECTIONS = [
   {
