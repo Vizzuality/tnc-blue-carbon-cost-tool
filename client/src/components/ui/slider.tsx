@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useState } from "react";
 
 import * as SliderPrimitive from "@radix-ui/react-slider";
 
@@ -58,6 +59,10 @@ const RangeSlider = React.forwardRef<
     format?: (v: number) => number | string;
   }
 >(({ className, format = (v: number) => v, ...props }, ref) => {
+  const [isDragging, setIsDragging] = useState({
+    left: false,
+    right: false,
+  });
   const [values, setValues] = React.useState([
     props.defaultValue?.[0] || 0,
     props.defaultValue?.[1] || 0,
@@ -79,18 +84,32 @@ const RangeSlider = React.forwardRef<
       <SliderPrimitive.Track className={SLIDER_TRACK_STYLES}>
         <SliderPrimitive.Range className="absolute h-full bg-primary" />
       </SliderPrimitive.Track>
-      <Tooltip>
+      <Tooltip {...(isDragging["left"] && { open: true })}>
         <TooltipTrigger asChild>
-          <Thumb />
+          <Thumb
+            onPointerDown={() => {
+              setIsDragging((prevState) => ({ ...prevState, left: true }));
+            }}
+            onPointerUp={() => {
+              setIsDragging((prevState) => ({ ...prevState, left: false }));
+            }}
+          />
         </TooltipTrigger>
         <TooltipContent side="top" align="center">
           {format(values[0])}
         </TooltipContent>
       </Tooltip>
 
-      <Tooltip>
+      <Tooltip {...(isDragging["right"] && { open: true })}>
         <TooltipTrigger asChild>
-          <Thumb />
+          <Thumb
+            onPointerDown={() => {
+              setIsDragging((prevState) => ({ ...prevState, right: true }));
+            }}
+            onPointerUp={() => {
+              setIsDragging((prevState) => ({ ...prevState, right: false }));
+            }}
+          />
         </TooltipTrigger>
         <TooltipContent side="top" align="center">
           {format(values[1])}
