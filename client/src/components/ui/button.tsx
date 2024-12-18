@@ -12,7 +12,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-big-stone-900 shadow hover:bg-sky-blue-200",
         secondary:
-          "bg-secondary text-accent-foreground shadow-sm hover:bg-big-stone-200",
+          "bg-secondary text-accent-foreground shadow-sm hover:bg-muted-foreground",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-rose-700 focus-visible:ring-destructive",
         outline:

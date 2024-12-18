@@ -83,7 +83,7 @@ const CostDetailTable: FC<CostDetailTableProps> = ({ data }) => {
                     key={cell.id}
                     className={cn({
                       "px-4": cell.column.id === "value",
-                      "text-big-stone-200": cell.column.id === "label",
+                      "text-muted-foreground": cell.column.id === "label",
                     })}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

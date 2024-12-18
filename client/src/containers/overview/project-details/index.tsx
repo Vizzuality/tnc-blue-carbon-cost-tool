@@ -192,7 +192,7 @@ export default function ProjectDetails() {
                       <h3 className="text-md">Total project cost</h3>
                     </Label>
                   </div>
-                  <div className="text-sm text-big-stone-200">
+                  <div className="text-sm text-muted-foreground">
                     Refers to the summary of Capital Expenditure and Operating
                     Expenditure
                   </div>
@@ -255,7 +255,7 @@ export default function ProjectDetails() {
                       <h3 className="text-md">Total project cost</h3>
                     </Label>
                   </div>
-                  <div className="text-sm text-big-stone-200">
+                  <div className="text-sm text-muted-foreground">
                     Refers to the summary of Capital Expenditure and Operating
                     Expenditure
                   </div>
@@ -322,7 +322,7 @@ export default function ProjectDetails() {
                   {renderAbatementCurrency(projectData.abatement)}
                 </span>
               </div>
-              <div className="mt-4 space-y-2 text-sm text-big-stone-200">
+              <div className="mt-4 space-y-2 text-sm text-muted-foreground">
                 <p>Estimation of total CO2 expected during the project.</p>
               </div>
             </Card>
@@ -368,7 +368,7 @@ export default function ProjectDetails() {
               </div>
               {featureFlags["project-comparison"] && (
                 <div className="flex items-center gap-2">
-                  <Label className="text-xs text-big-stone-200">
+                  <Label className="text-xs text-muted-foreground">
                     Compare with a different project
                   </Label>
                   <Button
@@ -420,7 +420,7 @@ export default function ProjectDetails() {
               </div>
               {featureFlags["project-comparison"] && (
                 <div className="flex items-center gap-2">
-                  <Label className="text-xs text-big-stone-200">
+                  <Label className="text-xs text-muted-foreground">
                     Compare with a different project
                   </Label>
                   <Button

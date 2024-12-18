@@ -37,7 +37,7 @@ const ProjectCost: FC<ProjectCostProps> = ({ total, capex, opex }) => {
               <h2 className="text-base font-semibold">Total project cost</h2>
             </Label>
           </div>
-          <div className="text-sm text-big-stone-200">
+          <div className="text-sm text-muted-foreground">
             Refers to the summary of Capital Expenditure and Operating
             Expenditure
           </div>
