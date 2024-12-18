@@ -23,6 +23,8 @@ import { cn } from "@/lib/utils";
 import { projectDetailsAtom } from "@/app/(overview)/store";
 import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
 
+import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
+
 import ProjectDetails from "@/containers/overview/project-details";
 import {
   filtersToQueryParams,
@@ -55,10 +57,12 @@ export function OverviewTable() {
       desc: true,
     },
   ]);
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
   });
+  useTablePaginationReset(filters.keyword, setPagination);
 
   const queryKey = queryKeys.tables.all(tableView, projectsQuerySchema, {
     ...filters,
