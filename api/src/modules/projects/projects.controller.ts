@@ -90,4 +90,15 @@ export class ProjectsController {
       },
     );
   }
+
+  @TsRestHandler(projectsContract.getProjectWithScorecard)
+  async getProjectWithScorecard(): ControllerResponse {
+    return tsRestHandler(
+      projectsContract.getProjectWithScorecard,
+      async ({ params: { id }, query }) => {
+        const data = await this.projectsScorecardService.getById(id, query);
+        return { body: { data }, status: HttpStatus.OK };
+      },
+    );
+  }
 }

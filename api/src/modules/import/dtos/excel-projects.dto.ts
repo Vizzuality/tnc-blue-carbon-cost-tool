@@ -20,6 +20,6 @@ export type ExcelProjects = {
   total_cost: number;
   cost_per_tco2e_npv: number;
   cost_per_tco2e: number;
-  initial_price_assumption: string;
+  initial_price_assumption: number;
   price_type: PROJECT_PRICE_TYPE;
 };
