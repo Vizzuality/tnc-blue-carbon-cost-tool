@@ -52,6 +52,17 @@ export const projectsContract = contract.router({
     },
     query: getProjectScorecardQuerySchema,
   },
+  getProjectWithScorecard: {
+    method: "GET",
+    path: "/projects/:id/scorecard",
+    pathParams: z.object({
+      id: z.coerce.string().uuid(),
+    }),
+    responses: {
+      200: contract.type<ApiResponse<ProjectScorecardView>>(),
+    },
+    query: projectScorecardQuerySchema,
+  },
   getProject: {
     method: "GET",
     path: "/projects/:id",

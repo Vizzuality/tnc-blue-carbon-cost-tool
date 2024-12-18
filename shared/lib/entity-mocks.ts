@@ -55,7 +55,7 @@ export const createProject = async (
     totalCost: 100,
     costPerTCO2eNPV: 100,
     costPerTCO2e: 100,
-    initialPriceAssumption: "$100",
+    initialPriceAssumption: 100,
     priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
   };
 
