@@ -63,8 +63,6 @@ export default function AssumptionsProjectForm() {
       },
     );
 
-  // const c = useMemo(() => COLUMNS(), []);
-
   const table = useReactTable({
     // @ts-expect-error fix later
     data: isSuccess ? data : NO_DATA,

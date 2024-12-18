@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 import {
   flexRender,
@@ -11,6 +11,7 @@ import {
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
+import { useFormValues } from "@/containers/projects/form";
 import { COLUMNS } from "@/containers/projects/form/restoration-plan/columns";
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
 
@@ -29,19 +30,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const useFormValues = () => {
-  const { getValues } = useFormContext<CreateCustomProjectForm>();
-
-  return {
-    ...getValues(),
-    ...useWatch(),
-  };
-};
-
 export default function RestorationPlanProjectForm() {
   const form = useFormContext<CreateCustomProjectForm>();
-
-  const formValues = useFormValues();
 
   const {
     ecosystem,
@@ -55,7 +45,7 @@ export default function RestorationPlanProjectForm() {
       // @ts-expect-error fix later
       restorationYearlyBreakdown,
     },
-  } = formValues;
+  } = useFormValues();
 
   const { queryKey } = queryKeys.customProjects.assumptions({
     ecosystem,

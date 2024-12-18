@@ -1,52 +1,73 @@
 "use client";
 
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 
+import Link from "next/link";
+
+import { ACTIVITY } from "@shared/entities/activity.enum";
+import { useAtomValue } from "jotai/index";
 import { InfoIcon } from "lucide-react";
+
+import { useFormValues } from "@/containers/projects/form";
+import { formStepAtom } from "@/containers/projects/store";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-const PROJECT_SETUP_STEPS = [
+export const PROJECT_SETUP_STEPS = [
   {
     name: "Project setup",
-    link: "/projects/new?step=setup",
+    slug: "setup",
     optional: false,
   },
   {
     name: "Assumptions",
-    link: "/projects/new?step=assumptions",
+    slug: "assumptions",
     optional: true,
   },
   {
     name: "Cost inputs overrides",
-    link: "/projects/new?step=cost-inputs-overrides",
+    slug: "cost-inputs-overrides",
     optional: true,
   },
-];
+] as const;
+
+export const RESTORATION_STEPS = [
+  {
+    name: "Restoration plan",
+    slug: "restoration-plan",
+    optional: true,
+  },
+] as const;
 
 export default function ProjectSidebar() {
-  const searchParams = useSearchParams();
-  const currentStep = searchParams.get("step");
+  const intersecting = useAtomValue(formStepAtom);
+
+  const { activity } = useFormValues();
+
+  const formSteps = useMemo(
+    () => [
+      ...PROJECT_SETUP_STEPS,
+      ...(activity === ACTIVITY.RESTORATION ? RESTORATION_STEPS : []),
+    ],
+    [activity],
+  );
 
   return (
     <aside className="flex h-full max-w-[320px] flex-col justify-between pb-6">
       <ul className="flex flex-col gap-2">
-        {PROJECT_SETUP_STEPS.map((step) => (
+        {formSteps.map((step) => (
           <li key={step.name}>
             <Button
-              variant={
-                step.link?.includes(
-                  currentStep as NonNullable<typeof currentStep>,
-                ) ||
-                (!currentStep && step.name === "Project setup")
-                  ? "default"
-                  : "ghost"
-              }
+              variant={step.slug === intersecting ? "default" : "ghost"}
               asChild
+              className="w-full justify-start font-medium"
             >
-              <Link href={step.link}>
+              <Link
+                href={`#${step.slug}`}
+                aria-controls={step.slug}
+                aria-current={intersecting === step.slug ? "true" : undefined}
+              >
                 {step.name} {step.optional && <span>(optional)</span>}
               </Link>
             </Button>
