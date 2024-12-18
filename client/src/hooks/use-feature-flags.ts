@@ -9,6 +9,9 @@ const FEATURE_FLAGS = {
    * - /profile
    */
   "share-information": false,
+  /** Controls the project comparison functionality in:
+   * - /overview/project-details (scorecard ratings and cost estimates comparison)
+   */
   "project-comparison": false,
   /** Controls the actions dropdown functionality in:
    * - /my-projects table

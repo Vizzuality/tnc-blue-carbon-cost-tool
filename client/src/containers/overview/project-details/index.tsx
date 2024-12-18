@@ -143,7 +143,7 @@ const projectData = {
 
 export default function ProjectDetails() {
   const [projectDetails, setProjectDetails] = useAtom(projectDetailsAtom);
-  const featureFlags = useFeatureFlags();
+  const { "project-comparison": projectComparison } = useFeatureFlags();
 
   const handleOpenDetails = (open: boolean) =>
     setProjectDetails({ ...projectDetails, isOpen: open });
@@ -366,7 +366,7 @@ export default function ProjectDetails() {
                   <h3 className="text-md">Scorecard ratings</h3>
                 </Label>
               </div>
-              {featureFlags["project-comparison"] && (
+              {projectComparison && (
                 <div className="flex items-center gap-2">
                   <Label className="text-xs text-muted-foreground">
                     Compare with a different project
@@ -418,7 +418,7 @@ export default function ProjectDetails() {
                   <h3 className="text-md">Cost estimates</h3>
                 </Label>
               </div>
-              {featureFlags["project-comparison"] && (
+              {projectComparison && (
                 <div className="flex items-center gap-2">
                   <Label className="text-xs text-muted-foreground">
                     Compare with a different project
