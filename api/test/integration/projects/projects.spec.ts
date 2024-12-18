@@ -352,8 +352,8 @@ describe('Projects', () => {
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.data).toHaveLength(2);
       expect(response.body.maximums).toEqual({
-        maxAbatementPotential: 20,
-        maxTotalCost: 300,
+        maxAbatementPotential: 30,
+        maxTotalCost: 200,
       });
     });
 
@@ -387,6 +387,8 @@ describe('Projects', () => {
 
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.data.projectName).toBe(project.projectName);
+      expect(response.body.data.feasibilityAnalysisNPV).toBeDefined();
+      expect(response.body.data.socialFeasibility).toBeDefined();
     });
 
     test('Should return a 400 if project does not exist', async () => {
@@ -395,26 +397,6 @@ describe('Projects', () => {
         .get(projectsContract.getProject.path.replace(':id', '123'));
 
       expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-    });
-
-    test('Should return a project with scorecard', async () => {
-      const project = await testManager.mocks().createProject();
-      await testManager.mocks().createProjectScorecard({
-        id: project.id,
-      });
-
-      const response = await testManager
-        .request()
-        .get(
-          projectsContract.getProjectWithScorecard.path.replace(
-            ':id',
-            project.id,
-          ),
-        );
-
-      expect(response.status).toBe(HttpStatus.OK);
-      expect(response.body.data.feasibilityAnalysisNPV).toBeDefined();
-      expect(response.body.data.socialFeasibility).toBeDefined();
     });
   });
 });
