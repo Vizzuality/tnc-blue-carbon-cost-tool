@@ -1,6 +1,7 @@
 const FEATURE_FLAGS = {
   "edit-project": false,
   "share-information": false,
+  "project-comparison": false,
 } as const;
 
 type FeatureFlags = typeof FEATURE_FLAGS;
