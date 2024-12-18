@@ -1,4 +1,6 @@
-import { ComponentProps, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
+
+import { useMap } from "react-map-gl";
 
 import { useSetAtom } from "jotai";
 import { LayersIcon } from "lucide-react";
@@ -21,6 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export default function ProjectsMap() {
   const [isLegendOpen, setIsLegendOpen] = useState(false);
@@ -31,9 +34,31 @@ export default function ProjectsMap() {
     }));
 
   const setPopup = useSetAtom(popupAtom);
+  const { state, sidebarRef } = useSidebar();
+  const { default: map } = useMap();
+
+  useEffect(() => {
+    if (state === "collapsed") {
+      const handleTransitionEnd = (e: TransitionEvent) => {
+        if (e.propertyName === "width") {
+          map?.resize();
+        }
+      };
+
+      const sidebarElement = sidebarRef.current;
+      sidebarElement?.addEventListener("transitionend", handleTransitionEnd);
+
+      return () => {
+        sidebarElement?.removeEventListener(
+          "transitionend",
+          handleTransitionEnd,
+        );
+      };
+    }
+  }, [state, map, sidebarRef]);
 
   return (
-    <div className="h-full overflow-hidden rounded-t-2xl">
+    <div className="h-full w-full overflow-hidden rounded-t-2xl">
       <Map
         minZoom={0}
         maxZoom={10}

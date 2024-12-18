@@ -3,9 +3,11 @@ import {
   COST_TYPE_SELECTOR,
   PROJECT_PRICE_TYPE,
 } from "@shared/entities/projects.entity";
+import { useAtomValue } from "jotai";
 import { z } from "zod";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
+import { projectsUIState } from "@/app/(overview)/store";
 import { Parameter, useGlobalFilters } from "@/app/(overview)/url-store";
 import { filtersSchema } from "@/app/(overview)/url-store";
 
@@ -81,7 +83,7 @@ export const PROJECT_PARAMETERS: Parameter[] = [
 
 export default function ParametersProjects() {
   const [filters, setFilters] = useGlobalFilters();
-
+  const { filtersOpen } = useAtomValue(projectsUIState);
   const handleParameters = async (
     v: string,
     parameter: keyof Omit<z.infer<typeof filtersSchema>, "keyword">,
@@ -96,7 +98,9 @@ export default function ParametersProjects() {
   };
 
   return (
-    <div className="flex items-center space-x-4">
+    <div
+      className={`flex items-center space-x-4 2xl:flex ${filtersOpen ? "hidden 2xl:flex" : "flex"}`}
+    >
       {PROJECT_PARAMETERS.map((parameter) => (
         <div key={parameter.label} className="flex items-center space-x-2">
           <Label htmlFor={parameter.label}>{parameter.label}</Label>

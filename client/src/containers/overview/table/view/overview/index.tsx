@@ -196,7 +196,7 @@ export function OverviewTable() {
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className="cursor-pointer"
+                className="group cursor-pointer transition-colors hover:bg-big-stone-950"
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 onClick={() => {
@@ -211,7 +211,16 @@ export function OverviewTable() {
                     key={cell.id}
                     className={cn({
                       "p-0": cell.column.id === "scoreCardRating",
+                      "group-hover:underline": cell.column.id === "projectName",
+                      "min-w-[200px] max-w-[200px] truncate":
+                        cell.column.id === "projectName",
+                      "px-4 py-2": cell.column.id !== "scoreCardRating",
                     })}
+                    title={
+                      typeof cell.getValue() === "string"
+                        ? (cell.getValue() as string)
+                        : undefined
+                    }
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>

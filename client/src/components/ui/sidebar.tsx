@@ -37,6 +37,7 @@ type SidebarContext = {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
+  sidebarRef: React.RefObject<HTMLDivElement>;
 };
 
 const SidebarContext = React.createContext<SidebarContext | null>(null);
@@ -120,6 +121,9 @@ const SidebarProvider = React.forwardRef<
     // This makes it easier to style the sidebar with Tailwind classes.
     const state = open ? "expanded" : "collapsed";
 
+    const internalRef = React.useRef<HTMLDivElement>(null);
+    const sidebarRef = (ref as React.RefObject<HTMLDivElement>) || internalRef;
+
     const contextValue = React.useMemo<SidebarContext>(
       () => ({
         state,
@@ -129,6 +133,7 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
+        sidebarRef,
       }),
       [
         state,
@@ -138,6 +143,7 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
+        sidebarRef,
       ],
     );
 
@@ -145,6 +151,7 @@ const SidebarProvider = React.forwardRef<
       <SidebarContext.Provider value={contextValue}>
         <TooltipProvider delayDuration={0}>
           <div
+            ref={sidebarRef}
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH,
@@ -156,7 +163,6 @@ const SidebarProvider = React.forwardRef<
               "group/sidebar-wrapper flex min-h-svh w-full text-sidebar-foreground has-[[data-variant=inset]]:bg-sidebar",
               className,
             )}
-            ref={ref}
             {...props}
           >
             {children}

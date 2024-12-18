@@ -9,6 +9,7 @@ import { ROLES } from "@shared/entities/users/roles.enum";
 import {
   ClipboardEditIcon,
   ClipboardListIcon,
+  FileQuestionIcon,
   LayoutDashboardIcon,
   ServerCogIcon,
   UserIcon,
@@ -16,6 +17,8 @@ import {
 import { useSession } from "next-auth/react";
 
 import { cn } from "@/lib/utils";
+
+import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import {
   Sidebar,
@@ -60,12 +63,12 @@ const navItems = {
     },
   ],
   footer: [
-    // {
-    //   title: "Methodology",
-    //   url: "/methodology",
-    //   icon: FileQuestionIcon,
-    //   match: (pathname: string) => pathname === "/methodology",
-    // },
+    {
+      title: "Methodology",
+      url: "/methodology",
+      icon: FileQuestionIcon,
+      match: (pathname: string) => pathname === "/methodology",
+    },
   ],
 };
 
@@ -74,7 +77,7 @@ export default function MainNav() {
   const { status, data } = useSession();
   const pathname = usePathname();
   const isAdmin = data?.user.role === ROLES.ADMIN;
-
+  const { "methodology-page": methodologyPage } = useFeatureFlags();
   const mainNavItems = useMemo(
     () =>
       navItems.main.filter((item) => {
@@ -88,6 +91,9 @@ export default function MainNav() {
       }),
     [isAdmin, status],
   );
+  const footerNavItems = useMemo(() => {
+    return navItems.footer.filter(() => methodologyPage);
+  }, [methodologyPage]);
 
   return (
     <Sidebar collapsible="icon" className="py-6">
@@ -127,7 +133,7 @@ export default function MainNav() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-          {/* {navItems.footer.map((item) => (
+          {footerNavItems.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                 asChild
@@ -142,7 +148,7 @@ export default function MainNav() {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-          ))} */}
+          ))}
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild

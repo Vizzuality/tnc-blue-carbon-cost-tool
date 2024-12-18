@@ -35,12 +35,12 @@ export default function Search({
 
   return (
     <div className={cn("flex items-center space-x-2", className)}>
-      <SearchIcon className="text-grey-900 h-6 w-6" />
       <div className="flex w-full">
         <div className="relative">
+          <SearchIcon className="text-grey-900 absolute left-2 top-1/2 h-5 w-5 -translate-y-1/2" />
           <Input
             variant="ghost"
-            className="w-[325px] pl-3 pr-8"
+            className="w-[325px] pl-10 pr-8"
             placeholder={placeholder}
             onChange={(e) => {
               setValue(e.target.value);

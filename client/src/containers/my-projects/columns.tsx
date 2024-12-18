@@ -1,12 +1,18 @@
 import Link from "next/link";
 
-import { DotsHorizontalIcon, TrashIcon } from "@radix-ui/react-icons";
+import {
+  DotsHorizontalIcon,
+  ExclamationTriangleIcon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
 
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
+
+import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,25 +30,32 @@ type CustomColumn = ColumnDef<CustomProject, keyof CustomProject> & {
   className?: string;
 };
 
-const ActionsDropdown = () => (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button variant="ghost" size="icon">
-        <DotsHorizontalIcon />
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent className="w-50" align="end">
-      {/* <DropdownMenuItem>
-        <ExclamationTriangleIcon className="mr-1 h-4 w-4" />
-        Update selection
-      </DropdownMenuItem> */}
-      <DropdownMenuItem>
-        <TrashIcon className="mr-1 h-6 w-6" />
-        Delete selection
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
-);
+const ActionsDropdown = () => {
+  const { "update-selection": updateSelection } = useFeatureFlags();
+  return (
+    <div className="flex w-full justify-end">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <DotsHorizontalIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-50" align="end">
+          {updateSelection && (
+            <DropdownMenuItem>
+              <ExclamationTriangleIcon className="mr-1 h-4 w-4" />
+              Update selection
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem>
+            <TrashIcon className="mr-1 h-6 w-6" />
+            Delete selection
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+};
 
 export const columns: CustomColumn[] = [
   {
