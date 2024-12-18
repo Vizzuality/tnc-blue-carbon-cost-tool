@@ -126,6 +126,7 @@ export default function MyProjectsView() {
     {
       select: (d) => d.body,
       queryKey: AllProjectsQueryKey,
+      placeholderData: keepPreviousData,
     },
   );
   const activities = useMemo(
@@ -219,14 +220,12 @@ export default function MyProjectsView() {
                                   : undefined
                               }
                             >
-                              <div>
-                                {flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext(),
-                                )}
-                              </div>
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
                               {header.column.getCanSort() && (
-                                <div>
+                                <>
                                   {{
                                     asc: <ChevronUpIcon className="h-4 w-4" />,
                                     desc: (
@@ -235,7 +234,7 @@ export default function MyProjectsView() {
                                   }[header.column.getIsSorted() as string] ?? (
                                     <ChevronsUpDownIcon className="h-4 w-4" />
                                   )}
-                                </div>
+                                </>
                               )}
                             </div>
                           )}
