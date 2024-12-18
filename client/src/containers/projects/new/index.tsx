@@ -67,17 +67,16 @@ export const onSubmit = async (data: CreateCustomProjectForm) => {
     {},
   );
 
-  const validYears = // @ts-expect-error fix later
-    (originalValues.parameters.restorationYearlyBreakdown as number[])
-      .map((v, index) => {
-        // if (!v) return undefined;
+  const isRestoration = data.activity === ACTIVITY.RESTORATION;
 
-        return {
+  const validYears = isRestoration // @ts-expect-error fix later
+    ? (originalValues.parameters.restorationYearlyBreakdown as number[])
+        .map((v, index) => ({
           year: index == 0 ? -1 : index,
           hectares: v,
-        };
-      })
-      .filter((v) => v.hectares > 0);
+        }))
+        .filter((v) => v.hectares > 0)
+    : [];
 
   const {
     // @ts-expect-error fix later
@@ -96,7 +95,7 @@ export const onSubmit = async (data: CreateCustomProjectForm) => {
           // @ts-expect-error fix later
           restParameters.plantingSuccessRate / 100,
       }),
-      ...(originalValues.activity === ACTIVITY.RESTORATION && {
+      ...(isRestoration && {
         ...(validYears.length > 0 && {
           restorationYearlyBreakdown: validYears.map(({ year, hectares }) => ({
             year,
