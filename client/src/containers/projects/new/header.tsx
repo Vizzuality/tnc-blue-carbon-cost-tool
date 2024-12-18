@@ -16,7 +16,7 @@ export default function Header() {
   const router = useRouter();
 
   return (
-    <div className="flex items-center justify-between py-3 pr-6">
+    <div className="flex h-16 items-center justify-between py-3 pr-6">
       <div className="flex items-center space-x-2">
         <SidebarTrigger />
         <h2 className="text-2xl font-medium">Custom project</h2>

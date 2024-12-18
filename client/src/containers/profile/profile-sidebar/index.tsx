@@ -8,9 +8,8 @@ import { signOut, useSession } from "next-auth/react";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
-import { cn } from "@/lib/utils";
 
-import { intersectingAtom } from "@/containers/profile/store";
+import { profileStepAtom } from "@/containers/profile/store";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -45,7 +44,7 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
       queryKey: queryKeys.user.me(session?.user?.id as string).queryKey,
     },
   );
-  const intersecting = useAtomValue(intersectingAtom);
+  const intersecting = useAtomValue(profileStepAtom);
 
   return (
     <aside className="flex h-full flex-col gap-8 pb-6 pt-3">
@@ -62,27 +61,26 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
         <h2 id="sidebar-nav-title" className="sr-only">
           User area navigation
         </h2>
-        <ol role="list" className="space-y-2">
+        <ul role="list" className="space-y-2">
           {navItems.map((o) => (
             <li key={`section-link-${o.id}`} role="listitem">
-              <Link
-                className={cn(
-                  "block rounded-3xl text-sm font-semibold text-muted-foreground transition-colors hover:bg-big-stone-900",
-                  intersecting === o.id && [
-                    "bg-accent text-accent-foreground",
-                    "hover:bg-accent hover:text-accent-foreground",
-                  ],
-                )}
-                href={`#${o.id}`}
-                id={getSidebarLinkId(o.id)}
-                aria-controls={o.id}
-                aria-current={intersecting === o.id ? "true" : undefined}
+              <Button
+                variant={intersecting === o.id ? "default" : "ghost"}
+                asChild
+                className="w-full justify-start font-medium"
               >
-                <div className="px-4 py-2">{o.name}</div>
-              </Link>
+                <Link
+                  href={`#${o.id}`}
+                  id={getSidebarLinkId(o.id)}
+                  aria-controls={o.id}
+                  aria-current={intersecting === o.id ? "true" : undefined}
+                >
+                  {o.name}
+                </Link>
+              </Button>
             </li>
           ))}
-        </ol>
+        </ul>
       </nav>
       <Button
         variant="outline"

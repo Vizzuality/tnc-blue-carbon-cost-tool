@@ -1,3 +1,7 @@
 import { atom } from "jotai";
 
-export const intersectingAtom = atom<string | null>(null);
+import { PROFILE_SECTIONS } from "@/containers/profile";
+
+export const profileStepAtom = atom<
+  (typeof PROFILE_SECTIONS)[number]["id"] | null
+>(null);

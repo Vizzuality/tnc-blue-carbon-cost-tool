@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 
 import Link from "next/link";
 
-import { useSetAtom } from "jotai";
+import { ExtractAtomValue, useSetAtom } from "jotai";
 
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
@@ -14,13 +14,13 @@ import FileUpload, { TEMPLATE_FILES } from "@/containers/profile/file-upload";
 import FileUploadDescription from "@/containers/profile/file-upload/description";
 import ProfileSection from "@/containers/profile/profile-section";
 import ProfileSidebar from "@/containers/profile/profile-sidebar";
-import { intersectingAtom } from "@/containers/profile/store";
+import { profileStepAtom } from "@/containers/profile/store";
 import UserDetails from "@/containers/profile/user-details";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-const sections = [
+export const PROFILE_SECTIONS = [
   {
     id: "my-details",
     title: "My details",
@@ -58,10 +58,10 @@ const sections = [
 
 export default function Profile() {
   const ref = useRef<HTMLDivElement>(null);
-  const setIntersecting = useSetAtom(intersectingAtom);
+  const setProfileStep = useSetAtom(profileStepAtom);
   const featureFlags = useFeatureFlags();
   const currentSections = useMemo(() => {
-    return sections.filter((section) => {
+    return PROFILE_SECTIONS.filter((section) => {
       const featureFlagExists = section.id in featureFlags;
       const isFeatureEnabled =
         featureFlagExists &&
@@ -78,9 +78,11 @@ export default function Profile() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const sectionSlug = entry.target.id;
+            const sectionSlug = entry.target.id as ExtractAtomValue<
+              typeof profileStepAtom
+            >;
 
-            setIntersecting(sectionSlug);
+            setProfileStep(sectionSlug);
           }
         });
       },
@@ -95,22 +97,22 @@ export default function Profile() {
       },
     );
 
-    const sections = Array.from(
+    const PROFILE_SECTIONS = Array.from(
       ref.current.querySelector("#profile-sections-container")?.children || [],
     );
-    sections.forEach((section) => observer.observe(section));
+    PROFILE_SECTIONS.forEach((section) => observer.observe(section));
 
     return () => observer.disconnect();
-  }, [setIntersecting]);
+  }, [setProfileStep]);
 
   return (
     <div className="flex h-lvh w-full flex-col">
-      <div className="flex items-center space-x-2 p-4">
+      <div className="flex h-16 items-center space-x-2 p-4 pl-0">
         <SidebarTrigger />
         <h2 className="text-2xl font-medium">User area</h2>
       </div>
 
-      <div className="relative grid h-full grid-cols-[317px_1fr] gap-6 overflow-hidden pl-4">
+      <div className="relative grid h-full grid-cols-[317px_1fr] gap-6 overflow-hidden">
         <ProfileSidebar
           navItems={currentSections.map((s) => ({ id: s.id, name: s.title }))}
         />
