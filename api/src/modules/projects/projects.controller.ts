@@ -84,8 +84,10 @@ export class ProjectsController {
   async getProject(): ControllerResponse {
     return tsRestHandler(
       projectsContract.getProject,
-      async ({ params: { id }, query }) => {
-        const data = await this.projectsScorecardService.getById(id, query);
+      async ({ params: { id } }) => {
+        const project = await this.projectsScorecardService.getById(id);
+        const data =
+          this.projectsScorecardService.adaptDbViewToApiView(project);
         return { body: { data }, status: HttpStatus.OK };
       },
     );

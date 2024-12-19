@@ -12,6 +12,7 @@ import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { BaseEntity } from "typeorm";
 import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
 import { PaginatedProjectsWithMaximums } from "@shared/dtos/projects/projects.dto";
+import { ProjectScorecardDto } from "@shared/dtos/projects/project-scorecard.dto";
 
 const contract = initContract();
 
@@ -59,9 +60,8 @@ export const projectsContract = contract.router({
       id: z.coerce.string().uuid(),
     }),
     responses: {
-      200: contract.type<ApiResponse<ProjectScorecardView>>(),
+      200: contract.type<ApiResponse<ProjectScorecardDto>>(),
     },
-    query: projectScorecardQuerySchema,
   },
   getProjectCountries: {
     method: "GET",

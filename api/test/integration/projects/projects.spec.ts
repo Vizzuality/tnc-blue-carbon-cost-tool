@@ -387,8 +387,9 @@ describe('Projects', () => {
 
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.data.projectName).toBe(project.projectName);
-      expect(response.body.data.feasibilityAnalysisNPV).toBeDefined();
-      expect(response.body.data.socialFeasibility).toBeDefined();
+      expect(response.body.data.scorecard).toBeDefined();
+      expect(response.body.data.projectCost.total).toBeDefined();
+      expect(response.body.data.projectCost.npv).toBeDefined();
     });
 
     test('Should return a 400 if project does not exist', async () => {
