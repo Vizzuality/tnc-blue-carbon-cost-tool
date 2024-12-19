@@ -58,14 +58,21 @@ const createSegments = (
   ];
 };
 
+const HeaderText = ({ children }: { children: React.ReactNode }) => (
+  <span className="text-xs font-normal">{children}</span>
+);
+const CellText = ({ children }: { children: React.ReactNode }) => (
+  <span className="text-xs font-normal">{children}</span>
+);
+
 export const columns = (filters: z.infer<typeof filtersSchema>) => [
   columnHelper.accessor("projectName", {
     enableSorting: true,
-    header: () => <span>Project Name</span>,
+    header: () => <HeaderText>Project Name</HeaderText>,
   }),
   columnHelper.accessor("scoreCardRating", {
     enableSorting: true,
-    header: () => <span>Scorecard rating</span>,
+    header: () => <HeaderText>Scorecard rating</HeaderText>,
     cell: (props) => {
       const value = props.getValue();
       if (value === undefined) {
@@ -82,20 +89,20 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
     filters.costRangeSelector === "npv" ? "costPerTCO2eNPV" : "costPerTCO2e",
     {
       enableSorting: true,
-      header: () => <span>Cost $(USD)/tCo2</span>,
+      header: () => <HeaderText>Cost $(USD)/tCo2</HeaderText>,
       cell: (props) => {
         const value = props.getValue();
         if (value === null || value === undefined) {
           return "-";
         }
 
-        return formatCurrency(value);
+        return <CellText>{formatCurrency(value)}</CellText>;
       },
     },
   ),
   columnHelper.accessor("abatementPotential", {
     enableSorting: true,
-    header: () => <span>Abatement potential</span>,
+    header: () => <HeaderText>Abatement potential (tCO2e/yr)</HeaderText>,
     cell: (props) => {
       const value = props.getValue();
       if (value === null || value === undefined) {
@@ -119,7 +126,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
               },
             ]}
           />
-          <p className="text-sm font-normal">{formatNumber(value)}</p>
+          <CellText>{formatNumber(value)}</CellText>
         </div>
       );
     },
@@ -128,7 +135,13 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
     filters.costRangeSelector === "npv" ? "totalCostNPV" : "totalCost",
     {
       enableSorting: true,
-      header: () => <span>Total Cost (CapEx + OpEx)</span>,
+      header: () => (
+        <HeaderText>
+          Total Cost (<span className="text-sky-blue-500">CapEx</span>
+          &nbsp;+&nbsp;
+          <span className="text-sky-blue-200">OpEx</span>)
+        </HeaderText>
+      ),
       cell: (props) => {
         const value = props.getValue();
         if (value === null || value === undefined) {
@@ -152,7 +165,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
                 props.row.original,
               )}
             />
-            <p className="text-sm font-normal">{formatNumber(value)}</p>
+            <CellText>{formatNumber(value)}</CellText>
           </div>
         );
       },
