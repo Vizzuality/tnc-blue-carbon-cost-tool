@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { projectsQuerySchema } from "@shared/contracts/projects.contract";
 import { PaginatedProjectsWithMaximums } from "@shared/dtos/projects/projects.dto";
+import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { keepPreviousData } from "@tanstack/react-query";
 import {
   flexRender,
@@ -47,7 +48,13 @@ import TablePagination, {
 type filterFields = z.infer<typeof projectsQuerySchema.shape.fields>;
 type sortFields = z.infer<typeof projectsQuerySchema.shape.sort>;
 export interface TableStateWithMaximums extends TableState {
-  maximums?: PaginatedProjectsWithMaximums["maximums"];
+  maximums?: {
+    maxAbatementPotential: number;
+    maxTotalCost: {
+      [COST_TYPE_SELECTOR.NPV]: number;
+      [COST_TYPE_SELECTOR.TOTAL]: number;
+    };
+  };
 }
 
 export function OverviewTable() {
@@ -110,7 +117,21 @@ export function OverviewTable() {
     state: {
       sorting,
       pagination,
-      maximums: data?.maximums,
+      maximums: {
+        maxAbatementPotential: isSuccess
+          ? Math.max(...data.data.map((item) => item.abatementPotential ?? 0))
+          : 0,
+        maxTotalCost: isSuccess
+          ? {
+              [COST_TYPE_SELECTOR.NPV]: Math.max(
+                ...data.data.map((item) => item.totalCostNPV ?? 0),
+              ),
+              [COST_TYPE_SELECTOR.TOTAL]: Math.max(
+                ...data.data.map((item) => item.totalCost ?? 0),
+              ),
+            }
+          : 0,
+      },
     } as TableStateWithMaximums,
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
