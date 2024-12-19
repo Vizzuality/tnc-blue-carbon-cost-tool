@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
 
-const PRIVATE_PAGES = /^(\/profile)/;
+const PRIVATE_PAGES = /^(\/profile|\/my-projects)/;
 
 export default function middleware(req: NextRequestWithAuth) {
   if (PRIVATE_PAGES.test(req.nextUrl.pathname)) {
