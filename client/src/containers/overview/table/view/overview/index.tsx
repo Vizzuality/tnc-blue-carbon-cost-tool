@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { projectsQuerySchema } from "@shared/contracts/projects.contract";
@@ -113,6 +113,25 @@ export function OverviewTable() {
     },
   );
 
+  const maximums = useMemo(
+    () => ({
+      maxAbatementPotential: isSuccess
+        ? Math.max(...data.data.map((item) => item.abatementPotential ?? 0))
+        : 0,
+      maxTotalCost: isSuccess
+        ? {
+            [COST_TYPE_SELECTOR.NPV]: Math.max(
+              ...data.data.map((item) => item.totalCostNPV ?? 0),
+            ),
+            [COST_TYPE_SELECTOR.TOTAL]: Math.max(
+              ...data.data.map((item) => item.totalCost ?? 0),
+            ),
+          }
+        : 0,
+    }),
+    [isSuccess, data?.data],
+  );
+
   const table = useReactTable<PaginatedProjectsWithMaximums["data"][0]>({
     data: isSuccess ? data.data : NO_DATA,
     columns: columnsBasedOnFilters,
@@ -121,21 +140,7 @@ export function OverviewTable() {
     state: {
       sorting,
       pagination,
-      maximums: {
-        maxAbatementPotential: isSuccess
-          ? Math.max(...data.data.map((item) => item.abatementPotential ?? 0))
-          : 0,
-        maxTotalCost: isSuccess
-          ? {
-              [COST_TYPE_SELECTOR.NPV]: Math.max(
-                ...data.data.map((item) => item.totalCostNPV ?? 0),
-              ),
-              [COST_TYPE_SELECTOR.TOTAL]: Math.max(
-                ...data.data.map((item) => item.totalCost ?? 0),
-              ),
-            }
-          : 0,
-      },
+      maximums,
     } as TableStateWithMaximums,
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
