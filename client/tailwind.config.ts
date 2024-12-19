@@ -96,9 +96,11 @@ const config: Config = {
           500: "#EACD3F",
         },
         green: "#90BA36",
-        "ramps-green": "#A4B591",
-        "ramps-yellow": "#F5EBB8",
-        "ramps-red": "#F7BA93",
+        ramps: {
+          green: "#A4B591",
+          yellow: "#F5EBB8",
+          red: "#F7BA93",
+        },
         "deep-ocean": "#132A47",
       },
       borderRadius: {
