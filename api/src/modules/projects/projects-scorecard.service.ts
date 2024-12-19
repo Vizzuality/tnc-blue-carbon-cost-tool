@@ -5,10 +5,6 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { z } from 'zod';
 import { getProjectsQuerySchema } from '@shared/contracts/projects.contract';
 import { ProjectScorecardView } from '@shared/entities/project-scorecard.view';
-import {
-  OtherProjectFilters,
-  ProjectFilters,
-} from '@shared/dtos/projects/projects-map.dto';
 
 export type ProjectFetchSpecificacion = z.infer<typeof getProjectsQuerySchema>;
 

@@ -85,7 +85,7 @@ export class ProjectsController {
     return tsRestHandler(
       projectsContract.getProject,
       async ({ params: { id }, query }) => {
-        const data = await this.projectsService.getById(id, query);
+        const data = await this.projectsScorecardService.getById(id, query);
         return { body: { data }, status: HttpStatus.OK };
       },
     );

@@ -59,9 +59,9 @@ export const projectsContract = contract.router({
       id: z.coerce.string().uuid(),
     }),
     responses: {
-      200: contract.type<ApiResponse<Project>>(),
+      200: contract.type<ApiResponse<ProjectScorecardView>>(),
     },
-    query: projectsQuerySchema,
+    query: projectScorecardQuerySchema,
   },
   getProjectCountries: {
     method: "GET",
