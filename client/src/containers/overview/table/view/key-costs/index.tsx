@@ -66,11 +66,6 @@ export function KeyCostsTable() {
     {
       query: {
         ...filtersToQueryParams(filters),
-        // fields: TABLE_COLUMNS.map((column) => column.accessorKey),
-        // ...(sorting.length > 0 && {
-        //   sort: sorting.map((sort) => `${sort.desc ? "" : "-"}${sort.id}`),
-        // }),
-        // fields: [''],
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
       },

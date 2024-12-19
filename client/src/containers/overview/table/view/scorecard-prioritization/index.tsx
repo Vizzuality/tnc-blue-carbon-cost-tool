@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import { projectScorecardQuerySchema } from "@shared/contracts/projects.contract";
 import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
 import { keepPreviousData } from "@tanstack/react-query";
 import {
@@ -14,6 +15,7 @@ import {
 } from "@tanstack/react-table";
 import { useAtom } from "jotai";
 import { ChevronsUpDownIcon } from "lucide-react";
+import { z } from "zod";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
@@ -45,6 +47,8 @@ import TablePagination, {
 
 import { scorecardFiltersSchema } from "./schema";
 
+type sortFields = z.infer<typeof projectScorecardQuerySchema.shape.sort>;
+
 export function ScoredCardPrioritizationTable() {
   const [tableView] = useTableView();
   const [filters] = useGlobalFilters();
@@ -70,7 +74,16 @@ export function ScoredCardPrioritizationTable() {
     queryKey,
     {
       query: {
-        filter: filtersToQueryParams(filters),
+        ...filtersToQueryParams(filters),
+        costRange: filters.costRange,
+        abatementPotentialRange: filters.abatementPotentialRange,
+        costRangeSelector: filters.costRangeSelector,
+        partialProjectName: filters.keyword,
+        ...(sorting.length > 0 && {
+          sort: sorting.map(
+            (sort) => `${sort.desc ? "" : "-"}${sort.id}`,
+          ) as sortFields,
+        }),
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
       },
