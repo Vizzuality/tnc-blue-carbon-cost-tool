@@ -1,4 +1,3 @@
-import { ProjectScorecard } from "./../entities/project-scorecard.entity";
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
 import {
@@ -16,7 +15,6 @@ import { PaginatedProjectsWithMaximums } from "@shared/dtos/projects/projects.dt
 const contract = initContract();
 
 export type ProjectType = Omit<Project, keyof BaseEntity>;
-export type ProjectScorecardType = Omit<ProjectScorecard, keyof BaseEntity>;
 
 export const otherParams = z.object({
   costRange: z.coerce.number().array().optional(),
@@ -27,7 +25,7 @@ export const otherParams = z.object({
 });
 export const projectsQuerySchema = generateEntityQuerySchema(Project);
 export const projectScorecardQuerySchema =
-  generateEntityQuerySchema(ProjectScorecard);
+  generateEntityQuerySchema(ProjectScorecardView);
 
 export const getProjectsQuerySchema = projectsQuerySchema.merge(otherParams);
 export const getProjectScorecardQuerySchema =
