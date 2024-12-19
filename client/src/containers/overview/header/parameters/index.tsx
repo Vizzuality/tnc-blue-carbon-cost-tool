@@ -6,7 +6,10 @@ import {
 import { z } from "zod";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
-import { Parameter, useGlobalFilters } from "@/app/(overview)/url-store";
+import {
+  Parameter,
+  useProjectOverviewFilters,
+} from "@/app/(overview)/url-store";
 import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { FILTERS } from "@/constants/tooltip";
@@ -80,7 +83,8 @@ export const PROJECT_PARAMETERS: Parameter[] = [
 ] as const;
 
 export default function ParametersProjects() {
-  const [filters, setFilters] = useGlobalFilters();
+  const [filters, setFilters] = useProjectOverviewFilters();
+
   const handleParameters = async (
     v: string,
     parameter: keyof Omit<z.infer<typeof filtersSchema>, "keyword">,

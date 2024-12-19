@@ -25,6 +25,8 @@ export const otherParams = z.object({
   withMaximums: z.coerce.boolean().optional(),
 });
 export const projectsQuerySchema = generateEntityQuerySchema(Project);
+export const projectQuerySchema =
+  generateEntityQuerySchema(ProjectScorecardDto);
 export const projectScorecardQuerySchema =
   generateEntityQuerySchema(ProjectScorecardView);
 
@@ -60,6 +62,7 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiResponse<ProjectScorecardDto>>(),
     },
+    query: projectQuerySchema,
   },
   getProjectCountries: {
     method: "GET",

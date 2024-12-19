@@ -23,23 +23,6 @@ export const formatNumber = (
   }).format(value);
 };
 
-export const renderAbatementCurrency = (
-  value: number,
-  options: Intl.NumberFormatOptions = {},
-) => {
-  let formatted = formatCurrency(value, options);
-  formatted = formatted.replace(/\.\d+/, "");
-  const [, amount] = formatted.match(/^(\D*)(.+)$/)!.slice(1);
-  return (
-    <>
-      <span className={"inline-block align-top text-xs text-muted-foreground"}>
-        tCO2e/yr &nbsp;
-      </span>
-      {amount}
-    </>
-  );
-};
-
 export function renderCurrency(
   value: number,
   options: Intl.NumberFormatOptions = {},

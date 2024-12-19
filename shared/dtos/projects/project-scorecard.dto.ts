@@ -1,3 +1,4 @@
+import { CustomProjectCostDetails } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
@@ -9,6 +10,17 @@ import {
   PROJECT_SIZE_FILTER,
 } from "@shared/entities/projects.entity";
 
+export interface Scorecard {
+  financialFeasibility: PROJECT_SCORE;
+  legalFeasibility: PROJECT_SCORE;
+  implementationFeasibility: PROJECT_SCORE;
+  socialFeasibility: PROJECT_SCORE;
+  securityRating: PROJECT_SCORE;
+  availabilityOfExperiencedLabor: PROJECT_SCORE;
+  availabilityOfAlternatingFunding: PROJECT_SCORE;
+  coastalProtectionBenefits: PROJECT_SCORE;
+  biodiversityBenefit: PROJECT_SCORE;
+}
 export class ProjectScorecardDto {
   id: string;
   countryCode: string;
@@ -24,17 +36,7 @@ export class ProjectScorecardDto {
   priceType: PROJECT_PRICE_TYPE;
 
   scoreCardRating: PROJECT_SCORE;
-  scorecard: {
-    financialFeasibility: PROJECT_SCORE;
-    legalFeasibility: PROJECT_SCORE;
-    implementationFeasibility: PROJECT_SCORE;
-    socialFeasibility: PROJECT_SCORE;
-    securityRating: PROJECT_SCORE;
-    availabilityOfExperiencedLabor: PROJECT_SCORE;
-    availabilityOfAlternatingFunding: PROJECT_SCORE;
-    coastalProtectionBenefits: PROJECT_SCORE;
-    biodiversityBenefit: PROJECT_SCORE;
-  };
+  scorecard: Scorecard;
   projectCost: {
     total: {
       totalCost: number;

@@ -22,7 +22,10 @@ import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
 import { projectDetailsAtom } from "@/app/(overview)/store";
-import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
+import {
+  useProjectOverviewFilters,
+  useTableView,
+} from "@/app/(overview)/url-store";
 
 import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
@@ -51,7 +54,7 @@ type sortFields = z.infer<typeof projectScorecardQuerySchema.shape.sort>;
 
 export function ScoredCardPrioritizationTable() {
   const [tableView] = useTableView();
-  const [filters] = useGlobalFilters();
+  const [filters] = useProjectOverviewFilters();
   const [, setProjectDetails] = useAtom(projectDetailsAtom);
   const [sorting, setSorting] = useState<SortingState>([
     {
@@ -166,7 +169,7 @@ export function ScoredCardPrioritizationTable() {
                 onClick={() => {
                   setProjectDetails({
                     isOpen: true,
-                    projectName: row.original.projectName ?? "",
+                    id: row.original.id,
                   });
                 }}
               >

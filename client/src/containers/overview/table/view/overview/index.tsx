@@ -24,7 +24,10 @@ import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
 import { projectDetailsAtom } from "@/app/(overview)/store";
-import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
+import {
+  useProjectOverviewFilters,
+  useTableView,
+} from "@/app/(overview)/url-store";
 
 import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
@@ -61,7 +64,7 @@ export interface TableStateWithMaximums extends TableState {
 
 export function OverviewTable() {
   const [tableView] = useTableView();
-  const [filters] = useGlobalFilters();
+  const [filters] = useProjectOverviewFilters();
   const [, setProjectDetails] = useAtom(projectDetailsAtom);
   const [sorting, setSorting] = useState<SortingState>([
     {
@@ -89,7 +92,7 @@ export function OverviewTable() {
     {
       query: {
         ...filtersToQueryParams(filters),
-        fields: ["capex", "capexNPV", "opex", "opexNPV"].concat(
+        fields: ["id", "capex", "capexNPV", "opex", "opexNPV"].concat(
           columnsBasedOnFilters.map((column) => column.accessorKey),
         ) as filterFields,
         ...(sorting.length > 0 && {
@@ -112,6 +115,10 @@ export function OverviewTable() {
       placeholderData: keepPreviousData,
     },
   );
+
+  const visibleProjectIds = useMemo(() => {
+    return data?.data.map((item) => item.id!) || [];
+  }, [data]);
 
   const maximums = useMemo(
     () => ({
@@ -202,7 +209,8 @@ export function OverviewTable() {
                 onClick={() => {
                   setProjectDetails({
                     isOpen: true,
-                    projectName: row.original.projectName ?? "",
+                    id: row.original.id!,
+                    visibleProjectIds,
                   });
                 }}
               >

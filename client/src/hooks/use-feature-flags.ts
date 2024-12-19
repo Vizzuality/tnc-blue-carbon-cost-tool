@@ -19,6 +19,7 @@ const FEATURE_FLAGS = {
   "update-selection": false,
   /** Controls the visibility of the methodology page */
   "methodology-page": false,
+  "compare-with-other-project": false,
 } as const;
 
 type FeatureFlags = typeof FEATURE_FLAGS;

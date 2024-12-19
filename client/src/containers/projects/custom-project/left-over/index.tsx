@@ -1,11 +1,9 @@
 import { FC } from "react";
 
-import { renderCurrency } from "@/lib/format";
-
 import { CUSTOM_PROJECT_OUTPUTS } from "@/constants/tooltip";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Graph, GraphLegend } from "@/components/ui/graph";
+import { GraphWithLegend } from "@/components/ui/graph";
 import { Label } from "@/components/ui/label";
 
 interface LeftoverProps {
@@ -39,39 +37,18 @@ const LeftOver: FC<LeftoverProps> = ({ total, leftover, opex }) => {
       </CardHeader>
 
       <CardContent className="px-4 pb-4">
-        <div className="flex justify-between gap-4">
-          <div className="flex max-w-[148px] flex-1 flex-col justify-between">
-            <div>
-              <span className="text-xl font-normal">
-                {renderCurrency(leftover)}
-              </span>
-            </div>
-            <GraphLegend
-              items={[
-                {
-                  label: "Total Revenue",
-                  textColor: "text-yellow-500",
-                  bgColor: "bg-yellow-500",
-                },
-                {
-                  label: "OpEx",
-                  textColor: "text-sky-blue-200",
-                  bgColor: "bg-sky-blue-200",
-                },
-              ]}
-            />
-          </div>
-          <Graph
-            total={total}
-            segments={[
-              {
-                value: opex,
-                colorClass: "bg-sky-blue-200",
-              },
-            ]}
-            leftover={leftover}
-          />
-        </div>
+        <GraphWithLegend
+          total={total}
+          leftover={leftover}
+          items={[
+            {
+              value: opex,
+              label: "OpEx",
+              textColor: "text-sky-blue-200",
+              bgColor: "bg-sky-blue-200",
+            },
+          ]}
+        />
       </CardContent>
     </Card>
   );

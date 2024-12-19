@@ -6,14 +6,14 @@ import { FillLayerSpecification } from "mapbox-gl";
 import { client } from "@/lib/query-client";
 import { geometriesKeys } from "@/lib/query-keys";
 
-import { useGlobalFilters } from "@/app/(overview)/url-store";
+import { useProjectOverviewFilters } from "@/app/(overview)/url-store";
 
 import { generateColorRamp } from "@/containers/overview/map/layers/projects/utils";
 
 export const LAYER_ID = "cost-abatement-layer";
 
 export default function ProjectsLayer() {
-  const [filters] = useGlobalFilters();
+  const [filters] = useProjectOverviewFilters();
 
   const queryKey = geometriesKeys.all(filters).queryKey;
 

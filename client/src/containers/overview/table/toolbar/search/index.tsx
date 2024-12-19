@@ -1,11 +1,11 @@
 import { ComponentProps } from "react";
 
-import { useGlobalFilters } from "@/app/(overview)/url-store";
+import { useProjectOverviewFilters } from "@/app/(overview)/url-store";
 
 import Search from "@/components/ui/search";
 
 export default function SearchProjectsTable() {
-  const [{ keyword }, setFilters] = useGlobalFilters();
+  const [{ keyword }, setFilters] = useProjectOverviewFilters();
 
   const handleSearch = async (
     v: Parameters<ComponentProps<typeof Search>["onChange"]>[0],

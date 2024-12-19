@@ -18,7 +18,10 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
-import { useGlobalFilters, useTableView } from "@/app/(overview)/url-store";
+import {
+  useProjectOverviewFilters,
+  useTableView,
+} from "@/app/(overview)/url-store";
 
 import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
@@ -42,7 +45,7 @@ import TablePagination, {
 
 export function KeyCostsTable() {
   const [tableView] = useTableView();
-  const [filters] = useGlobalFilters();
+  const [filters] = useProjectOverviewFilters();
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "projectName",

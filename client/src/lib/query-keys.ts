@@ -10,6 +10,7 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { PaginationState, SortingState } from "@tanstack/react-table";
 import { z } from "zod";
 
+import { ProjectDetailsFilters } from "@/app/(overview)/store";
 import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
@@ -40,7 +41,10 @@ export const tableKeys = createQueryKeys("tables", {
       pagination?: PaginationState;
     },
   ) => ["all", tableView, filters],
-  id: (id: string) => [id],
+});
+
+export const projectKeys = createQueryKeys("projects", {
+  one: (id: string, filters: ProjectDetailsFilters) => [id, filters],
 });
 
 export const customProjectKeys = createQueryKeys("customProjects", {
@@ -87,4 +91,5 @@ export const queryKeys = mergeQueryKeys(
   tableKeys,
   countriesKeys,
   customProjectKeys,
+  projectKeys,
 );
