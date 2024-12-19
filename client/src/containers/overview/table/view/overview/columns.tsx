@@ -62,7 +62,7 @@ const HeaderText = ({ children }: { children: React.ReactNode }) => (
   <span className="text-xs font-normal">{children}</span>
 );
 const CellText = ({ children }: { children: React.ReactNode }) => (
-  <span className="text-xs font-normal">{children}</span>
+  <span className="text-sm font-normal">{children}</span>
 );
 
 export const columns = (filters: z.infer<typeof filtersSchema>) => [
