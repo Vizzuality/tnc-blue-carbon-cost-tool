@@ -57,6 +57,7 @@
     "rooks": "7.14.1",
     "tailwind-merge": "2.5.3",
     "tailwindcss-animate": "1.0.7",
+    "usehooks-ts": "^3.1.0",
     "zod": "catalog:"
   },
   "devDependencies": {

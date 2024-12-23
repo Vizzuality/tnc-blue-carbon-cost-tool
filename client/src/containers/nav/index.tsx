@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -15,8 +16,9 @@ import {
   UserIcon,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useMediaQuery } from "usehooks-ts";
 
-import { cn } from "@/lib/utils";
+import { cn, getThemeSize } from "@/lib/utils";
 
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
@@ -94,11 +96,28 @@ export default function MainNav() {
   const footerNavItems = useMemo(() => {
     return navItems.footer.filter(() => methodologyPage);
   }, [methodologyPage]);
+  const isMobile = useMediaQuery(`(max-width: ${getThemeSize("md")})`);
 
   return (
     <Sidebar collapsible="icon" className="py-6">
       <SidebarHeader>
-        <span>{open ? "Blue Carbon Cost Tool" : "BCCT"}</span>
+        <span>
+          {open || (!open && isMobile) ? (
+            <Image
+              src="/logo-full.avif"
+              alt="Blue Carbon Cost Tool"
+              width={166}
+              height={56}
+            />
+          ) : (
+            <Image
+              src="/logo-small.avif"
+              alt="Blue Carbon Cost Tool"
+              width={60}
+              height={56}
+            />
+          )}
+        </span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
