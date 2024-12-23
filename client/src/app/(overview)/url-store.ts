@@ -23,10 +23,11 @@ import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector"
 
 const SUB_ACTIVITIES = RESTORATION_ACTIVITY_SUBTYPE;
 
-export interface Parameter<T = string> {
+export interface Parameter<T = keyof z.infer<typeof filtersSchema>> {
   key: T;
   label: string;
   className: string;
+  tooltipContent?: React.ReactNode;
   options: {
     label: string;
     value: string;

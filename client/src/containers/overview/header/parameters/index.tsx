@@ -3,14 +3,12 @@ import {
   COST_TYPE_SELECTOR,
   PROJECT_PRICE_TYPE,
 } from "@shared/entities/projects.entity";
-import { z } from "zod";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
 import {
   Parameter,
   useProjectOverviewFilters,
 } from "@/app/(overview)/url-store";
-import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { FILTERS } from "@/constants/tooltip";
 
@@ -87,7 +85,7 @@ export default function ParametersProjects() {
 
   const handleParameters = async (
     v: string,
-    parameter: keyof Omit<z.infer<typeof filtersSchema>, "keyword">,
+    parameter: keyof typeof filters,
   ) => {
     await setFilters((prev) => ({
       ...prev,
@@ -108,7 +106,9 @@ export default function ParametersProjects() {
           </InfoButton>
           <Select
             name={parameter.label}
-            defaultValue={String(filters[parameter.key])}
+            defaultValue={String(
+              filters[parameter.key as keyof typeof filters],
+            )}
             onValueChange={(v) => {
               handleParameters(v, parameter.key);
             }}
