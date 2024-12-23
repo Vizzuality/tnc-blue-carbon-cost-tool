@@ -1,8 +1,4 @@
-import {
-  PROJECT_SIZE_FILTER,
-  COST_TYPE_SELECTOR,
-  PROJECT_PRICE_TYPE,
-} from "@shared/entities/projects.entity";
+import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { useAtom } from "jotai";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
@@ -20,41 +16,6 @@ import {
 } from "@/components/ui/select";
 
 export const PROJECT_PARAMETERS: Parameter<keyof ProjectDetailsFilters>[] = [
-  {
-    key: FILTER_KEYS[1],
-    label: "Project size",
-    className: "w-[125px]",
-    options: [
-      {
-        label: PROJECT_SIZE_FILTER.SMALL,
-        value: PROJECT_SIZE_FILTER.SMALL,
-      },
-      {
-        label: PROJECT_SIZE_FILTER.MEDIUM,
-        value: PROJECT_SIZE_FILTER.MEDIUM,
-      },
-      {
-        label: PROJECT_SIZE_FILTER.LARGE,
-        value: PROJECT_SIZE_FILTER.LARGE,
-      },
-    ],
-  },
-  {
-    key: FILTER_KEYS[2],
-    label: "Carbon pricing type",
-    className: "w-[195px]",
-    options: [
-      {
-        label: PROJECT_PRICE_TYPE.MARKET_PRICE,
-        value: PROJECT_PRICE_TYPE.MARKET_PRICE,
-      },
-      {
-        label: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
-        value: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
-        disabled: true,
-      },
-    ],
-  },
   {
     key: FILTER_KEYS[3],
     label: "Cost",
@@ -79,7 +40,7 @@ export default function ParametersProjects() {
     v: string,
     parameter: keyof ProjectDetailsFilters,
   ) => {
-    setFilters((prev) => ({ ...prev, [parameter]: v }));
+    setFilters((prev) => ({ ...prev, [parameter]: v as COST_TYPE_SELECTOR }));
   };
 
   return (
