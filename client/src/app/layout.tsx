@@ -26,6 +26,23 @@ export const metadata: Metadata = {
   title: "Blue Carbon Cost Tool",
   description:
     "The Blue Carbon Cost Tool estimates project costs and carbon benefits of Blue Carbon Market projects, providing a high-level view for comparisons and prioritization among difference project scenarios.",
+  icons: {
+    icon: [
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      },
+      {
+        url: "/favicon.svg",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/favicon-96x96.png",
+        sizes: "96x96",
+        type: "image/png",
+      },
+    ],
+  },
 };
 
 export default async function RootLayout({
