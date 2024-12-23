@@ -96,6 +96,14 @@ export const customProjectContract = contract.router({
     },
     body: contract.type<CustomProject>(),
   },
+  deleteCustomProject: {
+    method: "DELETE",
+    path: "/custom-projects/:id",
+    responses: {
+      200: contract.type<null>(),
+    },
+    body: null,
+  },
 });
 
 // TODO: Due to dificulties crafting a deeply nested conditional schema, I will go forward with nestjs custom validation pipe for now
