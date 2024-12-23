@@ -7,7 +7,7 @@ import { Settings2Icon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { projectsUIState } from "@/app/(overview)/store";
-import { useGlobalFilters } from "@/app/(overview)/url-store";
+import { useProjectOverviewFilters } from "@/app/(overview)/url-store";
 import { INITIAL_FILTERS_STATE } from "@/app/(overview)/url-store";
 
 import ParametersProjects from "@/containers/overview/header/parameters";
@@ -17,7 +17,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function ProjectsHeader() {
   const setFiltersOpen = useSetAtom(projectsUIState);
-  const [filters] = useGlobalFilters();
+  const [filters] = useProjectOverviewFilters();
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const {

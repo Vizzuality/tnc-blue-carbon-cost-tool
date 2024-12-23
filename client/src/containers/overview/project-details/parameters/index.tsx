@@ -3,11 +3,12 @@ import {
   COST_TYPE_SELECTOR,
   PROJECT_PRICE_TYPE,
 } from "@shared/entities/projects.entity";
-import { atom, useAtom } from "jotai";
-import { z } from "zod";
+import { useAtom } from "jotai";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
-import { filtersSchema, Parameter } from "@/app/(overview)/url-store";
+import { projectDetailsFiltersAtom } from "@/app/(overview)/store";
+import type { ProjectDetailsFilters } from "@/app/(overview)/store";
+import { Parameter } from "@/app/(overview)/url-store";
 
 import { Label } from "@/components/ui/label";
 import {
@@ -18,15 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const INITIAL_FILTERS_STATE: Partial<z.infer<typeof filtersSchema>> = {
-  projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
-  priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
-  costRangeSelector: COST_TYPE_SELECTOR.NPV,
-};
-
-const filtersAtom = atom(INITIAL_FILTERS_STATE);
-
-export const PROJECT_PARAMETERS: Parameter[] = [
+export const PROJECT_PARAMETERS: Parameter<keyof ProjectDetailsFilters>[] = [
   {
     key: FILTER_KEYS[1],
     label: "Project size",
@@ -79,16 +72,12 @@ export const PROJECT_PARAMETERS: Parameter[] = [
   },
 ] as const;
 
-function useFilters() {
-  return useAtom(filtersAtom);
-}
-
 export default function ParametersProjects() {
-  const [filters, setFilters] = useFilters();
+  const [filters, setFilters] = useAtom(projectDetailsFiltersAtom);
 
   const handleParameters = (
     v: string,
-    parameter: keyof Omit<z.infer<typeof filtersSchema>, "keyword">,
+    parameter: keyof ProjectDetailsFilters,
   ) => {
     setFilters((prev) => ({ ...prev, [parameter]: v }));
   };

@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
@@ -25,18 +23,16 @@ import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector"
 
 const SUB_ACTIVITIES = RESTORATION_ACTIVITY_SUBTYPE;
 
-interface ParameterOption {
-  label: string;
-  value: string;
-  disabled?: boolean;
-}
-
-export interface Parameter {
-  key: keyof Omit<z.infer<typeof filtersSchema>, "keyword">;
+export interface Parameter<T = keyof z.infer<typeof filtersSchema>> {
+  key: T;
   label: string;
   className: string;
-  options: ParameterOption[];
-  tooltipContent?: ReactNode;
+  tooltipContent?: React.ReactNode;
+  options: {
+    label: string;
+    value: string;
+    disabled?: boolean;
+  }[];
 }
 
 export const filtersSchema = z.object({
@@ -65,7 +61,7 @@ export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
   abatementPotentialRange: INITIAL_ABATEMENT_POTENTIAL_RANGE,
 };
 
-export function useGlobalFilters() {
+export function useProjectOverviewFilters() {
   const [popup, setPopup] = useAtom(popupAtom);
   const [filters, setFilters] = useQueryState(
     "filters",

@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { projectsUIState } from "@/app/(overview)/store";
 import {
   INITIAL_FILTERS_STATE,
-  useGlobalFilters,
+  useProjectOverviewFilters,
 } from "@/app/(overview)/url-store";
 
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,7 @@ import {
 export const FILTERS_SIDEBAR_WIDTH = 320;
 
 export default function ProjectsFilters() {
-  const [filters, setFilters] = useGlobalFilters();
+  const [filters, setFilters] = useProjectOverviewFilters();
   const setFiltersOpen = useSetAtom(projectsUIState);
   const [costValuesState, setCostValuesState] = useState([
     filters.costRange[0] || INITIAL_COST_RANGE[filters.costRangeSelector][0],

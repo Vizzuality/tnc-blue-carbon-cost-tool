@@ -2,15 +2,13 @@ import { FC } from "react";
 
 import { useSetAtom } from "jotai";
 
-import { renderCurrency } from "@/lib/format";
-
 import { showCostDetailsAtom } from "@/app/projects/store";
 
 import { CUSTOM_PROJECT_OUTPUTS } from "@/constants/tooltip";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Graph, GraphLegend } from "@/components/ui/graph";
+import { GraphWithLegend } from "@/components/ui/graph";
 import { Label } from "@/components/ui/label";
 
 interface ProjectCostProps {
@@ -53,42 +51,23 @@ const ProjectCost: FC<ProjectCostProps> = ({ total, capex, opex }) => {
       </CardHeader>
 
       <CardContent className="px-4 pb-4">
-        <div className="flex justify-between gap-4">
-          <div className="flex max-w-[148px] flex-1 flex-col justify-between">
-            <div>
-              <span className="text-xl font-normal">
-                {renderCurrency(total)}
-              </span>
-            </div>
-            <GraphLegend
-              items={[
-                {
-                  label: "CapEx",
-                  textColor: "text-sky-blue-500",
-                  bgColor: "bg-sky-blue-500",
-                },
-                {
-                  label: "OpEx",
-                  textColor: "text-sky-blue-200",
-                  bgColor: "bg-sky-blue-200",
-                },
-              ]}
-            />
-          </div>
-          <Graph
-            total={total}
-            segments={[
-              {
-                value: capex,
-                colorClass: "bg-sky-blue-500",
-              },
-              {
-                value: opex,
-                colorClass: "bg-sky-blue-200",
-              },
-            ]}
-          />
-        </div>
+        <GraphWithLegend
+          total={total}
+          items={[
+            {
+              label: "CapEx",
+              value: capex,
+              textColor: "text-sky-blue-500",
+              bgColor: "bg-sky-blue-500",
+            },
+            {
+              label: "OpEx",
+              value: opex,
+              textColor: "text-sky-blue-200",
+              bgColor: "bg-sky-blue-200",
+            },
+          ]}
+        />
       </CardContent>
     </Card>
   );

@@ -30,7 +30,7 @@ const getSize = (value: number, total: number) => {
  * 2. Split mode (when leftover is provided): Shows total on left and segments with leftover on right
  */
 const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
-  if (leftover) {
+  if (typeof leftover === "number") {
     return (
       <div className="relative h-full min-h-[150px] w-full max-w-[400px] overflow-hidden rounded-md">
         <div className="absolute flex h-full w-full flex-row gap-1 rounded-md">
@@ -149,4 +149,62 @@ const GraphLegend: FC<GraphLegendProps> = ({ items }) => {
   );
 };
 
-export { Graph, GraphLegend };
+interface GraphWithLegendProps {
+  /** The total value to be displayed */
+  total: number;
+  /** Optional value that, when provided, shows a split view with total on left and segments with leftover on right */
+  leftover?: number;
+  /** Array of segments with their corresponding legend items */
+  items: Array<{
+    value: number;
+    label: string;
+    textColor: string;
+    bgColor: string;
+  }>;
+}
+
+const GraphWithLegend: FC<GraphWithLegendProps> = ({
+  total,
+  leftover,
+  items,
+}) => {
+  return (
+    <div className="flex min-h-[160px] justify-between gap-4">
+      <div className="flex max-w-[148px] flex-1 flex-col justify-between">
+        <div>
+          <span className="text-xl font-normal">
+            {renderCurrency(leftover || total)}
+          </span>
+        </div>
+        <GraphLegend
+          items={[
+            ...(leftover
+              ? [
+                  {
+                    label: "Total Revenue",
+                    textColor: "text-yellow-500",
+                    bgColor: "bg-yellow-500",
+                  },
+                ]
+              : []),
+            ...items.map(({ label, textColor, bgColor }) => ({
+              label,
+              textColor,
+              bgColor,
+            })),
+          ]}
+        />
+      </div>
+      <Graph
+        total={total}
+        segments={items.map(({ value, bgColor }) => ({
+          value,
+          colorClass: bgColor,
+        }))}
+        leftover={leftover}
+      />
+    </div>
+  );
+};
+
+export { Graph, GraphLegend, GraphWithLegend };
