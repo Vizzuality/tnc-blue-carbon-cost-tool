@@ -32,16 +32,12 @@ import {
 } from "@/components/ui/sheet";
 
 export default function ProjectDetails() {
-  const filters = useAtomValue(projectDetailsFiltersAtom);
+  const { costRangeSelector } = useAtomValue(projectDetailsFiltersAtom);
   const [projectDetails, setProjectDetails] = useAtom(projectDetailsAtom);
-  const { costRangeSelector } = filters;
-  const queryKey = queryKeys.projects.one(projectDetails.id, filters).queryKey;
+  const queryKey = queryKeys.projects.one(projectDetails.id).queryKey;
   const { data: projectData } = client.projects.getProject.useQuery(
     queryKey,
     {
-      query: {
-        filter: filters,
-      },
       params: { id: projectDetails.id },
     },
     {
