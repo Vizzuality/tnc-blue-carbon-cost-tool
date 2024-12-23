@@ -55,7 +55,7 @@ type sortFields = z.infer<typeof projectScorecardQuerySchema.shape.sort>;
 export function ScoredCardPrioritizationTable() {
   const [tableView] = useTableView();
   const [filters] = useProjectOverviewFilters();
-  const [, setProjectDetails] = useAtom(projectDetailsAtom);
+  const [projectDetails, setProjectDetails] = useAtom(projectDetailsAtom);
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "projectName",
@@ -168,6 +168,7 @@ export function ScoredCardPrioritizationTable() {
                 className="cursor-pointer hover:bg-muted/50"
                 onClick={() => {
                   setProjectDetails({
+                    ...projectDetails,
                     isOpen: true,
                     id: row.original.id,
                   });
