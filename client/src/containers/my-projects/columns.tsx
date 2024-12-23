@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import Link from "next/link";
 
 import {
@@ -8,9 +10,11 @@ import {
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
+import { useSession } from "next-auth/react";
 
 import { formatCurrency } from "@/lib/format";
-import { cn } from "@/lib/utils";
+import { client } from "@/lib/query-client";
+import { cn, getAuthHeader } from "@/lib/utils";
 
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
@@ -23,6 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/components/ui/toast/use-toast";
 
 type CustomProject = Partial<CustomProjectEntity>;
 
@@ -30,8 +35,77 @@ type CustomColumn = ColumnDef<CustomProject, keyof CustomProject> & {
   className?: string;
 };
 
-const ActionsDropdown = () => {
+const ActionsDropdown = ({
+  instance,
+}: {
+  instance: TableInstance<CustomProject> | Row<CustomProject>;
+}) => {
   const { "update-selection": updateSelection } = useFeatureFlags();
+  const isHeader = "getSelectedRowModel" in instance;
+  const deleteLabel = isHeader ? "Delete selection" : "Delete project";
+  const { data: session } = useSession();
+  const { toast } = useToast();
+  const deleteCustomProject = useCallback(
+    async (id: string): Promise<boolean> => {
+      try {
+        const { status } =
+          await client.customProjects.deleteCustomProject.mutation({
+            params: {
+              id,
+            },
+            extraHeaders: {
+              ...getAuthHeader(session?.accessToken as string),
+            },
+          });
+
+        return status === 200;
+      } catch (e) {
+        return false;
+      }
+    },
+    [session?.accessToken],
+  );
+
+  const handleDelete = async () => {
+    const results: boolean[] = [];
+
+    if (isHeader) {
+      const selectedRows = (
+        instance as TableInstance<CustomProject>
+      ).getSelectedRowModel().rows;
+
+      for (const row of selectedRows) {
+        const result = await deleteCustomProject(row.original.id as string);
+        results.push(result);
+      }
+    } else if (instance.original.id) {
+      const result = await deleteCustomProject(instance.original.id);
+      results.push(result);
+    }
+
+    const successCount = results.filter(Boolean).length;
+    const failureCount = results.length - successCount;
+
+    if (successCount > 0) {
+      toast({
+        description:
+          successCount === 1
+            ? "Project deleted successfully"
+            : `${successCount} projects deleted successfully`,
+      });
+    }
+
+    if (failureCount > 0) {
+      toast({
+        variant: "destructive",
+        description:
+          failureCount === 1
+            ? "Failed to delete project"
+            : `Failed to delete ${failureCount} projects`,
+      });
+    }
+  };
+
   return (
     <div className="flex w-full justify-end">
       <DropdownMenu>
@@ -47,9 +121,17 @@ const ActionsDropdown = () => {
               Update selection
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem>
-            <TrashIcon className="mr-1 h-6 w-6" />
-            Delete selection
+          <DropdownMenuItem
+            className="cursor-pointer space-x-2 text-sm font-normal"
+            disabled={
+              isHeader &&
+              (instance as TableInstance<CustomProject>).getSelectedRowModel()
+                .rows.length === 0
+            }
+            onClick={handleDelete}
+          >
+            <TrashIcon className="h-4 w-4" />
+            {deleteLabel}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -125,8 +207,8 @@ export const columns: CustomColumn[] = [
   },
   {
     accessorKey: "actions",
-    header: ActionsDropdown,
-    cell: ActionsDropdown,
+    header: ({ table }) => <ActionsDropdown instance={table} />,
+    cell: ({ row }) => <ActionsDropdown instance={row} />,
     className: "!border-l-0",
     enableSorting: false,
   },
