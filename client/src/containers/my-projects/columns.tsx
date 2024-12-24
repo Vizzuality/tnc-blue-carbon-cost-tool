@@ -49,13 +49,11 @@ const ActionsDropdown = ({
     async (id: string): Promise<boolean> => {
       try {
         const { status } =
-          await client.customProjects.deleteCustomProject.mutation({
-            params: {
-              id,
-            },
+          await client.customProjects.deleteCustomProjects.mutation({
             extraHeaders: {
               ...getAuthHeader(session?.accessToken as string),
             },
+            body: { ids: [id] },
           });
 
         return status === 200;
