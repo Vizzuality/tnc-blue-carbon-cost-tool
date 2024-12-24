@@ -210,14 +210,14 @@ const start = async () => {
         secure: false,
         maxAge: undefined,
       },
-    },
+    }
   );
 
   app.use(admin.options.rootPath, adminRouter);
 
   app.listen(PORT, () => {
     console.log(
-      `AdminJS started on http://localhost:${PORT}${admin.options.rootPath}`,
+      `AdminJS started on http://localhost:${PORT}${admin.options.rootPath}`
     );
   });
 };
