@@ -3,7 +3,7 @@ import { HttpStatus } from '@nestjs/common';
 import { projectsContract } from '@shared/contracts/projects.contract';
 import { Country } from '@shared/entities/country.entity';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
-import { Project } from '@shared/entities/projects.entity';
+import { Project, PROJECT_SIZE_FILTER } from '@shared/entities/projects.entity';
 
 describe('Projects', () => {
   let testManager: TestManager;
@@ -182,6 +182,58 @@ describe('Projects', () => {
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.data.length).toBe(2);
     });
+
+    test('Projects Scorecars filtered by project size filter', async () => {
+      const numProjects = 5;
+      const projects: Project[] = [];
+      const countryCodes: string[] = countriesInDb
+        .slice(0, numProjects)
+        .map((country) => country.code);
+      const projectSizeFilters = [
+        PROJECT_SIZE_FILTER.SMALL,
+        PROJECT_SIZE_FILTER.SMALL,
+        PROJECT_SIZE_FILTER.MEDIUM,
+        PROJECT_SIZE_FILTER.LARGE,
+        PROJECT_SIZE_FILTER.LARGE,
+      ];
+      const projectSizes = [1, 5, 10, 100, 50];
+
+      for (let i = 0; i < numProjects; i++) {
+        projects.push(
+          await testManager.mocks().createProject({
+            countryCode: countryCodes[i],
+            projectSizeFilter: projectSizeFilters[i],
+            projectSize: projectSizes[i],
+          }),
+        );
+      }
+
+      for (const project of projects) {
+        await testManager.mocks().createProjectScorecard({
+          countryCode: project.countryCode,
+          ecosystem: project.ecosystem,
+        });
+      }
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjectsScorecard.path)
+        .query({
+          filter: {
+            projectSizeFilter: [
+              PROJECT_SIZE_FILTER.MEDIUM,
+              PROJECT_SIZE_FILTER.LARGE,
+            ],
+          },
+          withMaximums: true,
+        });
+      expect(response.body.data).toHaveLength(3);
+      expect(
+        response.body.data
+          .map((project: Project) => project.projectSize)
+          .sort(),
+      ).toEqual([10, 100, 50]);
+    });
   });
 
   describe('Get Projects', () => {
@@ -321,6 +373,44 @@ describe('Projects', () => {
       expect(
         response.body.data.map((project: Project) => project.projectName),
       ).toEqual(['PROJ_ABC']);
+    });
+
+    test('Should return a list of projects filtered by project size filter', async () => {
+      await testManager.mocks().createProject({
+        projectSizeFilter: PROJECT_SIZE_FILTER.SMALL,
+        projectSize: 1,
+      });
+      await testManager.mocks().createProject({
+        projectSizeFilter: PROJECT_SIZE_FILTER.SMALL,
+        projectSize: 5,
+      });
+      await testManager.mocks().createProject({
+        projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
+        projectSize: 10,
+      });
+      await testManager.mocks().createProject({
+        projectSizeFilter: PROJECT_SIZE_FILTER.LARGE,
+        projectSize: 100,
+      });
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjects.path)
+        .query({
+          filter: {
+            projectSizeFilter: [
+              PROJECT_SIZE_FILTER.SMALL,
+              PROJECT_SIZE_FILTER.LARGE,
+            ],
+          },
+          withMaximums: true,
+        });
+      expect(response.body.data).toHaveLength(3);
+      expect(
+        response.body.data
+          .map((project: Project) => project.projectSize)
+          .sort(),
+      ).toEqual(['1', '100', '5']);
     });
   });
 
