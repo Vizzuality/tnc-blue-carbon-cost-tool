@@ -22,6 +22,7 @@ import { FetchSpecification } from 'nestjs-base-service';
 import { GetActivityTypesDefaults } from '@shared/dtos/custom-projects/get-activity-types-defaults.dto';
 import { z } from 'zod';
 import { customProjecsQuerySchema } from '@shared/contracts/custom-projects.contract';
+import { In } from 'typeorm';
 
 export type CustomProjectFetchSpecificacion = z.infer<
   typeof customProjecsQuerySchema
@@ -142,5 +143,16 @@ export class CustomProjectsService extends AppBaseService<
     }
 
     return query;
+  }
+
+  async canUserDeleteProjects(
+    userId: string,
+    projectIds: string[],
+  ): Promise<boolean> {
+    const customProjects = await this.repo.findBy({ id: In(projectIds) });
+
+    return customProjects.every(
+      (customProject) => customProject.user?.id === userId,
+    );
   }
 }

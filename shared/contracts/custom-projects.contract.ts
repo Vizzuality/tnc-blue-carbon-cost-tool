@@ -96,13 +96,13 @@ export const customProjectContract = contract.router({
     },
     body: contract.type<CustomProject>(),
   },
-  deleteCustomProject: {
+  deleteCustomProjects: {
     method: "DELETE",
-    path: "/custom-projects/:id",
+    path: "/custom-projects",
     responses: {
       200: contract.type<null>(),
     },
-    body: null,
+    body: contract.type<{ ids: string[] }>(),
   },
 });
 

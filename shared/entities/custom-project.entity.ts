@@ -22,13 +22,13 @@ export enum CARBON_REVENUES_TO_COVER {
 }
 
 export enum PROJECT_SPECIFIC_EMISSION {
-  ONE_EMISSION_FACTOR = 'One emission factor',
-  TWO_EMISSION_FACTORS = 'Two emission factors',
+  ONE_EMISSION_FACTOR = "One emission factor",
+  TWO_EMISSION_FACTORS = "Two emission factors",
 }
 export enum PROJECT_EMISSION_FACTORS {
-  TIER_1 = 'Tier 1 - Global emission factor',
-  TIER_2 = 'Tier 2 - Country-specific emission factor',
-  TIER_3 = 'Tier 3 - Project specific emission factor',
+  TIER_1 = "Tier 1 - Global emission factor",
+  TIER_2 = "Tier 2 - Country-specific emission factor",
+  TIER_3 = "Tier 3 - Project specific emission factor",
 }
 
 @Entity({ name: "custom_projects" })
@@ -54,7 +54,10 @@ export class CustomProject {
   @Column({ name: "abatement_potential", type: "decimal", nullable: true })
   abatementPotential?: number;
 
-  @ManyToOne(() => User, (user) => user.customProjects, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user) => user.customProjects, {
+    onDelete: "CASCADE",
+    eager: true,
+  })
   @JoinColumn({ name: "user_id" })
   user?: User;
 
