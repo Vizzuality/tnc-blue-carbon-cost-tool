@@ -144,4 +144,31 @@ export class CustomProjectsController {
       },
     );
   }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @TsRestHandler(customProjectContract.deleteCustomProjects)
+  async deleteCustomProjects(
+    @GetUser() user: User,
+    @Body() body: { ids: string[] },
+  ): Promise<any> {
+    return tsRestHandler(
+      customProjectContract.deleteCustomProjects,
+      async () => {
+        if (
+          !(await this.customProjects.canUserDeleteProjects(user.id, body.ids))
+        ) {
+          return {
+            status: 401,
+            body: null,
+          };
+        }
+        await this.customProjects.removeMany(body.ids);
+        return {
+          status: 200,
+          body: null,
+        };
+      },
+    );
+  }
 }
