@@ -37,7 +37,7 @@ export interface Parameter<T = keyof z.infer<typeof filtersSchema>> {
 
 export const filtersSchema = z.object({
   [FILTER_KEYS[0]]: z.string().optional(),
-  [FILTER_KEYS[1]]: z.nativeEnum(PROJECT_SIZE_FILTER),
+  [FILTER_KEYS[1]]: z.array(z.nativeEnum(PROJECT_SIZE_FILTER)),
   [FILTER_KEYS[2]]: z.nativeEnum(PROJECT_PRICE_TYPE),
   [FILTER_KEYS[3]]: z.nativeEnum(COST_TYPE_SELECTOR),
   [FILTER_KEYS[4]]: z.string().optional(),
@@ -50,7 +50,7 @@ export const filtersSchema = z.object({
 
 export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
   keyword: "",
-  projectSizeFilter: PROJECT_SIZE_FILTER.MEDIUM,
+  projectSizeFilter: [],
   priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
   costRangeSelector: COST_TYPE_SELECTOR.NPV,
   countryCode: "",
