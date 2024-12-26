@@ -1,5 +1,4 @@
 import {
-  PROJECT_SIZE_FILTER,
   COST_TYPE_SELECTOR,
   PROJECT_PRICE_TYPE,
 } from "@shared/entities/projects.entity";
@@ -25,26 +24,6 @@ import {
 } from "@/components/ui/select";
 
 export const PROJECT_PARAMETERS: Parameter[] = [
-  {
-    key: FILTER_KEYS[1],
-    label: "Project size",
-    className: "w-[125px]",
-    tooltipContent: FILTERS.PROJECT_SIZE,
-    options: [
-      {
-        label: PROJECT_SIZE_FILTER.SMALL,
-        value: PROJECT_SIZE_FILTER.SMALL,
-      },
-      {
-        label: PROJECT_SIZE_FILTER.MEDIUM,
-        value: PROJECT_SIZE_FILTER.MEDIUM,
-      },
-      {
-        label: PROJECT_SIZE_FILTER.LARGE,
-        value: PROJECT_SIZE_FILTER.LARGE,
-      },
-    ],
-  },
   {
     key: FILTER_KEYS[2],
     label: "Carbon pricing type",

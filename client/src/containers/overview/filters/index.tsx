@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { PROJECT_SIZE_FILTER } from "@shared/entities/projects.entity";
 import { useSetAtom } from "jotai/index";
 import { XIcon } from "lucide-react";
 import { useDebounce } from "rooks";
@@ -17,6 +18,8 @@ import {
   INITIAL_FILTERS_STATE,
   useProjectOverviewFilters,
 } from "@/app/(overview)/url-store";
+
+import { FILTERS } from "@/constants/tooltip";
 
 import { Button } from "@/components/ui/button";
 import { CheckboxWrapper } from "@/components/ui/checkbox";
@@ -120,6 +123,18 @@ export default function ProjectsFilters() {
       restorationActivity: isChecked
         ? [...prev.restorationActivity, subActivity]
         : prev.restorationActivity.filter((e) => e !== subActivity),
+    }));
+  };
+
+  const handleProjectSizeChange = async (
+    isChecked: CheckedState,
+    size: PROJECT_SIZE_FILTER,
+  ) => {
+    await setFilters((prev) => ({
+      ...prev,
+      projectSizeFilter: isChecked
+        ? [...prev.projectSizeFilter, size]
+        : prev.projectSizeFilter.filter((e) => e !== size),
     }));
   };
 
@@ -349,6 +364,31 @@ export default function ProjectsFilters() {
           min={formatNumber(INITIAL_ABATEMENT_POTENTIAL_RANGE[0])}
           max={formatNumber(INITIAL_ABATEMENT_POTENTIAL_RANGE[1])}
         />
+      </div>
+
+      <div className="space-y-2">
+        <Label
+          tooltip={{
+            title: "Project size",
+            content: FILTERS.PROJECT_SIZE,
+          }}
+        >
+          Project size
+        </Label>
+        <ul className="flex gap-2">
+          {Object.values(PROJECT_SIZE_FILTER).map((size) => (
+            <li key={size}>
+              <CheckboxWrapper
+                label={size}
+                id={size}
+                checked={filters.projectSizeFilter.includes(size)}
+                onCheckedChange={async (isChecked) => {
+                  await handleProjectSizeChange(isChecked, size);
+                }}
+              />
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
