@@ -56,7 +56,9 @@ class IntroModalManager {
 
   public showIntroModal(): boolean {
     if (this.isServer) return false;
-    return !localStorage.getItem("hideIntroModal");
+    return (
+      !!process.env.HIDE_INTRO_MODAL || !localStorage.getItem("hideIntroModal")
+    );
   }
 
   public setHideIntroModal(): void {
