@@ -9,12 +9,15 @@ import {
 } from "@radix-ui/react-icons";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
+import { useQueryClient } from "@tanstack/react-query";
 import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
 import { useSession } from "next-auth/react";
 
 import { formatCurrency } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { cn, getAuthHeader } from "@/lib/utils";
+
+import { DEFAULT_CUSTOM_PROJECTS_QUERY_KEY } from "@/app/my-projects/url-store";
 
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
@@ -45,15 +48,16 @@ const ActionsDropdown = ({
   const deleteLabel = isHeader ? "Delete selection" : "Delete project";
   const { data: session } = useSession();
   const { toast } = useToast();
-  const deleteCustomProject = useCallback(
-    async (id: string): Promise<boolean> => {
+  const queryClient = useQueryClient();
+  const deleteCustomProjects = useCallback(
+    async (ids: string[]): Promise<boolean> => {
       try {
         const { status } =
           await client.customProjects.deleteCustomProjects.mutation({
             extraHeaders: {
               ...getAuthHeader(session?.accessToken as string),
             },
-            body: { ids: [id] },
+            body: { ids },
           });
 
         return status === 200;
@@ -65,41 +69,44 @@ const ActionsDropdown = ({
   );
 
   const handleDelete = async () => {
-    const results: boolean[] = [];
+    let ids: string[] = [];
 
     if (isHeader) {
       const selectedRows = (
         instance as TableInstance<CustomProject>
       ).getSelectedRowModel().rows;
 
-      for (const row of selectedRows) {
-        const result = await deleteCustomProject(row.original.id as string);
-        results.push(result);
-      }
+      ids = selectedRows.map((row) => row.original.id as string);
     } else if (instance.original.id) {
-      const result = await deleteCustomProject(instance.original.id);
-      results.push(result);
+      ids = [instance.original.id];
     }
 
-    const successCount = results.filter(Boolean).length;
-    const failureCount = results.length - successCount;
+    const success = await deleteCustomProjects(ids);
 
-    if (successCount > 0) {
+    if (success) {
       toast({
         description:
-          successCount === 1
+          ids.length === 1
             ? "Project deleted successfully"
-            : `${successCount} projects deleted successfully`,
+            : `${ids.length} projects deleted successfully`,
       });
-    }
 
-    if (failureCount > 0) {
+      await queryClient.invalidateQueries({
+        queryKey: DEFAULT_CUSTOM_PROJECTS_QUERY_KEY,
+      });
+
+      if (isHeader) {
+        (instance as TableInstance<CustomProject>).resetRowSelection();
+      } else {
+        (instance as Row<CustomProject>).toggleSelected(false);
+      }
+    } else {
       toast({
         variant: "destructive",
         description:
-          failureCount === 1
+          ids.length === 1
             ? "Failed to delete project"
-            : `Failed to delete ${failureCount} projects`,
+            : `Failed to delete ${ids.length} projects`,
       });
     }
   };
