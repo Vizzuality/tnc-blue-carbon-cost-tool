@@ -1,12 +1,14 @@
 import { FC } from "react";
 
 import { Scorecard } from "@shared/dtos/projects/project-scorecard.dto";
+import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import CompareButton from "@/containers/overview/project-details/compare-button";
 
 import { Label } from "@/components/ui/label";
+import { ScoreIndicator } from "@/components/ui/score-card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 const scoreCardMap = {
@@ -52,7 +54,9 @@ const ScoreCardRatings: FC<{ data?: Scorecard }> = ({ data }) => {
                 <TableCell className="py-2 pl-4 text-sm font-normal text-big-stone-200">
                   {scoreCardMap[key as keyof Scorecard]}
                 </TableCell>
-                <TableCell className="w-[240px] font-medium">{value}</TableCell>
+                <TableCell className="w-[240px] p-0 font-medium">
+                  <ScoreIndicator value={value as PROJECT_SCORE} />
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>

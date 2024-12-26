@@ -11,7 +11,7 @@ import { filtersSchema } from "@/app/(overview)/url-store";
 import { TableStateWithMaximums } from "@/containers/overview/table/view/overview";
 
 import SingleStackedBarChart from "@/components/ui/bar-chart/single-stacked-bar-chart";
-import { DEFAULT_BG_CLASSES, ScoreIndicator } from "@/components/ui/score-card";
+import { ScoreIndicator } from "@/components/ui/score-card";
 
 const columnHelper = createColumnHelper<
   Partial<ProjectType> & {
@@ -78,11 +78,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
       if (value === undefined) {
         return "-";
       }
-      return (
-        <ScoreIndicator className={DEFAULT_BG_CLASSES[value as PROJECT_SCORE]}>
-          {value}
-        </ScoreIndicator>
-      );
+      return <ScoreIndicator value={value as PROJECT_SCORE} />;
     },
   }),
   columnHelper.accessor(

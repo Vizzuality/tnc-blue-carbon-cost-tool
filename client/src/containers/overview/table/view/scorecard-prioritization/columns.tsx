@@ -2,9 +2,7 @@ import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
 import { createColumnHelper } from "@tanstack/react-table";
 
-import { cn } from "@/lib/utils";
-
-import { ScoreIndicator, DEFAULT_BG_CLASSES } from "@/components/ui/score-card";
+import { ScoreIndicator } from "@/components/ui/score-card";
 
 const columnHelper = createColumnHelper<ProjectScorecardView>();
 
@@ -18,15 +16,9 @@ export const TABLE_COLUMNS = [
     header: () => <span>Financial feasibility</span>,
     cell: (props) => (
       <ScoreIndicator
-        className={cn(
-          "min-h-[56px]",
-          DEFAULT_BG_CLASSES[
-            props.row.original.financialFeasibility as PROJECT_SCORE
-          ],
-        )}
-      >
-        {props.row.original.financialFeasibility}
-      </ScoreIndicator>
+        value={props.row.original.financialFeasibility as PROJECT_SCORE}
+        className="min-h-[56px]"
+      />
     ),
   }),
   columnHelper.accessor("legalFeasibility", {
@@ -34,15 +26,9 @@ export const TABLE_COLUMNS = [
     header: () => <span>Legal Feasibility</span>,
     cell: (props) => (
       <ScoreIndicator
-        className={cn(
-          "min-h-[56px]",
-          DEFAULT_BG_CLASSES[
-            props.row.original.legalFeasibility as PROJECT_SCORE
-          ],
-        )}
-      >
-        {props.row.original.legalFeasibility}
-      </ScoreIndicator>
+        value={props.row.original.legalFeasibility as PROJECT_SCORE}
+        className="min-h-[56px]"
+      />
     ),
   }),
   columnHelper.accessor("implementationFeasibility", {
@@ -50,15 +36,9 @@ export const TABLE_COLUMNS = [
     header: () => <span>Implementation feasibility</span>,
     cell: (props) => (
       <ScoreIndicator
-        className={cn(
-          "min-h-[56px]",
-          DEFAULT_BG_CLASSES[
-            props.row.original.implementationFeasibility as PROJECT_SCORE
-          ],
-        )}
-      >
-        {props.row.original.implementationFeasibility}
-      </ScoreIndicator>
+        value={props.row.original.implementationFeasibility as PROJECT_SCORE}
+        className="min-h-[56px]"
+      />
     ),
   }),
   columnHelper.accessor("socialFeasibility", {
@@ -66,15 +46,9 @@ export const TABLE_COLUMNS = [
     header: () => <span>Social Feasibility</span>,
     cell: (props) => (
       <ScoreIndicator
-        className={cn(
-          "min-h-[56px]",
-          DEFAULT_BG_CLASSES[
-            props.row.original.socialFeasibility as PROJECT_SCORE
-          ],
-        )}
-      >
-        {props.row.original.socialFeasibility}
-      </ScoreIndicator>
+        value={props.row.original.socialFeasibility as PROJECT_SCORE}
+        className="min-h-[56px]"
+      />
     ),
   }),
   columnHelper.accessor("securityRating", {
@@ -82,15 +56,9 @@ export const TABLE_COLUMNS = [
     header: () => <span>Security Rating</span>,
     cell: (props) => (
       <ScoreIndicator
-        className={cn(
-          "min-h-[56px]",
-          DEFAULT_BG_CLASSES[
-            props.row.original.securityRating as PROJECT_SCORE
-          ],
-        )}
-      >
-        {props.row.original.securityRating}
-      </ScoreIndicator>
+        value={props.row.original.securityRating as PROJECT_SCORE}
+        className="min-h-[56px]"
+      />
     ),
   }),
   columnHelper.accessor("availabilityOfExperiencedLabor", {
@@ -98,15 +66,11 @@ export const TABLE_COLUMNS = [
     header: () => <span>Availability of experienced labor</span>,
     cell: (props) => (
       <ScoreIndicator
-        className={cn(
-          "min-h-[56px]",
-          DEFAULT_BG_CLASSES[
-            props.row.original.availabilityOfExperiencedLabor as PROJECT_SCORE
-          ],
-        )}
-      >
-        {props.row.original.availabilityOfExperiencedLabor}
-      </ScoreIndicator>
+        value={
+          props.row.original.availabilityOfExperiencedLabor as PROJECT_SCORE
+        }
+        className="min-h-[56px]"
+      />
     ),
   }),
   columnHelper.accessor("availabilityOfAlternatingFunding", {
@@ -114,15 +78,11 @@ export const TABLE_COLUMNS = [
     header: () => <span>Availability of alternating funding</span>,
     cell: (props) => (
       <ScoreIndicator
-        className={cn(
-          "min-h-[56px]",
-          DEFAULT_BG_CLASSES[
-            props.row.original.availabilityOfAlternatingFunding as PROJECT_SCORE
-          ],
-        )}
-      >
-        {props.row.original.availabilityOfAlternatingFunding}
-      </ScoreIndicator>
+        value={
+          props.row.original.availabilityOfAlternatingFunding as PROJECT_SCORE
+        }
+        className="min-h-[56px]"
+      />
     ),
   }),
   columnHelper.accessor("coastalProtectionBenefits", {
@@ -130,15 +90,9 @@ export const TABLE_COLUMNS = [
     header: () => <span>Coastal Protection benefit</span>,
     cell: (props) => (
       <ScoreIndicator
-        className={cn(
-          "min-h-[56px]",
-          DEFAULT_BG_CLASSES[
-            props.row.original.coastalProtectionBenefits as PROJECT_SCORE
-          ],
-        )}
-      >
-        {props.row.original.coastalProtectionBenefits}
-      </ScoreIndicator>
+        value={props.row.original.coastalProtectionBenefits as PROJECT_SCORE}
+        className="min-h-[56px]"
+      />
     ),
   }),
   columnHelper.accessor("biodiversityBenefit", {
@@ -146,15 +100,9 @@ export const TABLE_COLUMNS = [
     header: () => <span>Biodiversity benefit</span>,
     cell: (props) => (
       <ScoreIndicator
-        className={cn(
-          "min-h-[56px]",
-          DEFAULT_BG_CLASSES[
-            props.row.original.biodiversityBenefit as PROJECT_SCORE
-          ],
-        )}
-      >
-        {props.row.original.biodiversityBenefit}
-      </ScoreIndicator>
+        value={props.row.original.biodiversityBenefit as PROJECT_SCORE}
+        className="min-h-[56px]"
+      />
     ),
   }),
 ];
