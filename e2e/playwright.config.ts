@@ -49,6 +49,22 @@ export default defineConfig({
     baseURL: APP_URL,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: APP_URL,
+          localStorage: [
+            // Prevent intro modal from always showing during tests
+            // TODO: Write a separate test to check if the intro modal is shown
+            {
+              name: "hideIntroModal",
+              value: "true",
+            },
+          ],
+        },
+      ],
+    },
   },
   /* Configure projects for major browsers */
   projects: [
