@@ -15,9 +15,10 @@ import {
   ServerCogIcon,
   UserIcon,
 } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useMediaQuery } from "usehooks-ts";
 
+import { useAuth } from "@/lib/auth/context";
+import { AuthStatus } from "@/lib/auth/types";
 import { cn, getThemeSize } from "@/lib/utils";
 
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
@@ -76,9 +77,9 @@ const navItems = {
 
 export default function MainNav() {
   const { open } = useSidebar();
-  const { status, data } = useSession();
+  const { status, session } = useAuth();
   const pathname = usePathname();
-  const isAdmin = data?.user.role === ROLES.ADMIN;
+  const isAdmin = session?.user.role === ROLES.ADMIN;
   const { "methodology-page": methodologyPage } = useFeatureFlags();
   const mainNavItems = useMemo(
     () =>
@@ -87,7 +88,7 @@ export default function MainNav() {
           return isAdmin;
         }
         if (item.isAuth) {
-          return status === "authenticated";
+          return status === AuthStatus.AUTHENTICATED;
         }
         return true;
       }),

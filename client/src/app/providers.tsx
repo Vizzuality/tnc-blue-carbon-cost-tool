@@ -8,9 +8,9 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { createStore, Provider as JotaiProvider } from "jotai";
-import { Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
 
+import { AuthProvider } from "@/lib/auth/context";
+import { AppSession } from "@/lib/auth/types";
 import { makeQueryClient } from "@/lib/query-client";
 
 import SessionChecker from "@/components/session-checker";
@@ -35,13 +35,13 @@ export function getQueryClient() {
 export default function LayoutProviders({
   children,
   session,
-}: PropsWithChildren<{ session: Session | null }>) {
+}: PropsWithChildren<{ session: AppSession | null }>) {
   const queryClient = getQueryClient();
   const appStore = createStore();
 
   return (
     <>
-      <SessionProvider session={session} basePath="/auth/api">
+      <AuthProvider initialSession={session}>
         <TooltipProvider>
           <QueryClientProvider client={queryClient}>
             <TooltipProvider>
@@ -52,7 +52,7 @@ export default function LayoutProviders({
             </TooltipProvider>
           </QueryClientProvider>
         </TooltipProvider>
-      </SessionProvider>
+      </AuthProvider>
     </>
   );
 }

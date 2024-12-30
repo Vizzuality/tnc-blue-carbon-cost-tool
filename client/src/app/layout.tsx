@@ -4,10 +4,9 @@ import { Spline_Sans } from "next/font/google";
 
 import type { Metadata } from "next";
 import "@/app/globals.css";
-import { getServerSession } from "next-auth";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-import { config } from "@/app/auth/api/[...nextauth]/config";
+import { getServerSession } from "@/lib/auth/server";
 
 import IntroModal from "@/containers/intro-modal";
 import MainNav from "@/containers/nav";
@@ -49,7 +48,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<PropsWithChildren>) {
-  const session = await getServerSession(config);
+  const session = await getServerSession();
 
   return (
     <LayoutProviders session={session}>

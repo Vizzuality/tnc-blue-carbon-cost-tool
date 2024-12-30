@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { Metadata } from "next";
 
-import { auth } from "@/app/auth/api/[...nextauth]/config";
+import { getServerSession } from "@/lib/auth/server";
 
 import SignIn from "@/containers/auth/signin";
 import AuthLayout from "@/containers/auth-layout";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SignInPage() {
-  const session = await auth();
+  const session = await getServerSession();
 
   if (session) {
     redirect("/profile");

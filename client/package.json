@@ -40,6 +40,7 @@
     "country-iso-3-to-2": "^1.1.1",
     "d3": "7.9.0",
     "framer-motion": "11.11.9",
+    "jose": "^5.9.6",
     "jotai": "2.10.1",
     "lodash.isequal": "4.5.0",
     "lucide-react": "0.447.0",

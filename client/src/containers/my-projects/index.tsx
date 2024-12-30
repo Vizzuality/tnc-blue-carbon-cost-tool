@@ -15,8 +15,8 @@ import {
 } from "@tanstack/react-table";
 import { motion } from "framer-motion";
 import { ChevronsUpDownIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
 
+import { useAuth } from "@/lib/auth/context";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn, getAuthHeader } from "@/lib/utils";
@@ -49,7 +49,7 @@ const LAYOUT_TRANSITIONS = {
 };
 
 export default function MyProjectsView() {
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),

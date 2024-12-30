@@ -6,9 +6,9 @@ import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import { z } from "zod";
 
+import { useAuth } from "@/lib/auth/context";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
@@ -28,7 +28,7 @@ import { accountDetailsSchema } from "./schema";
 
 const UpdateEmailForm: FC = () => {
   const queryClient = useQueryClient();
-  const { data: session, update: updateSession } = useSession();
+  const { session } = useAuth();
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
 
@@ -70,7 +70,7 @@ const UpdateEmailForm: FC = () => {
           });
 
           if (response.status === 200) {
-            updateSession(response.body);
+            // updateSession(response.body);
 
             queryClient.invalidateQueries({
               queryKey: queryKeys.user.me(session?.user?.id as string).queryKey,
@@ -93,7 +93,7 @@ const UpdateEmailForm: FC = () => {
         }
       }
     },
-    [queryClient, session, updateSession, toast],
+    [queryClient, session, toast],
   );
 
   const handleEnterKey = useCallback(

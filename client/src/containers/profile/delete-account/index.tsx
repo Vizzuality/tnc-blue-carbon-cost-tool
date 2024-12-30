@@ -2,8 +2,9 @@
 
 import { FC, useCallback } from "react";
 
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
+import { useAuth } from "@/lib/auth/context";
 import { client } from "@/lib/query-client";
 
 import {
@@ -21,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast/use-toast";
 
 const DeleteAccount: FC = () => {
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const { toast } = useToast();
 
   const onDeleteAccount = useCallback(async () => {

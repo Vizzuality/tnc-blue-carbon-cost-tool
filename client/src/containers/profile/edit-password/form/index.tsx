@@ -5,9 +5,9 @@ import { FC, useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
 import { z } from "zod";
 
+import { useAuth } from "@/lib/auth/context";
 import { client } from "@/lib/query-client";
 
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ import { changePasswordSchema } from "./schema";
 
 const SignUpForm: FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof changePasswordSchema>>({

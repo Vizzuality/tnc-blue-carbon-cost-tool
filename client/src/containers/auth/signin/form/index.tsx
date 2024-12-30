@@ -9,8 +9,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LogInSchema } from "@shared/schemas/auth/login.schema";
-import { signIn } from "next-auth/react";
 import { z } from "zod";
+
+import { useAuth } from "@/lib/auth/context";
 
 import EmailInput from "@/containers/auth/email-input";
 
@@ -29,6 +30,7 @@ interface SignInFormProps {
   onSignIn?: () => void;
 }
 const SignInForm: FC<SignInFormProps> = ({ onSignIn }) => {
+  const { login } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
@@ -36,8 +38,8 @@ const SignInForm: FC<SignInFormProps> = ({ onSignIn }) => {
   const form = useForm<z.infer<typeof LogInSchema>>({
     resolver: zodResolver(LogInSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "adam.trincas@vizzuality.com",
+      password: "12345678",
     },
   });
 
@@ -48,30 +50,20 @@ const SignInForm: FC<SignInFormProps> = ({ onSignIn }) => {
 
       form.handleSubmit(async (formValues) => {
         try {
-          const response = await signIn("credentials", {
-            ...formValues,
-            redirect: false,
-          });
-
-          if (response?.ok) {
-            if (onSignIn) {
-              onSignIn();
-            } else {
-              router.push(searchParams.get("callbackUrl") ?? "/profile");
-            }
+          await login(formValues.email, formValues.password);
+          if (onSignIn) {
+            onSignIn();
+          } else {
+            router.push(searchParams.get("callbackUrl") ?? "/profile");
           }
-
-          if (!response?.ok) {
-            setErrorMessage(response?.error ?? "unknown error");
-          }
-        } catch (err) {
-          if (err instanceof Error) {
-            setErrorMessage(err.message ?? "unknown error");
+        } catch (error) {
+          if (error instanceof Error) {
+            setErrorMessage(error.message ?? "unknown error");
           }
         }
       })(evt);
     },
-    [form, router, searchParams, onSignIn],
+    [form, router, searchParams, login, onSignIn],
   );
 
   return (

@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
-import { useSession } from "next-auth/react";
 
+import { useAuth } from "@/lib/auth/context";
 import { client } from "@/lib/query-client";
 import { getAuthHeader } from "@/lib/utils";
 
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 
 const CustomProjects: FC = () => {
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const queryKey = DEFAULT_CUSTOM_PROJECTS_QUERY_KEY;
   const { data: projects } = client.customProjects.getCustomProjects.useQuery(
     queryKey,

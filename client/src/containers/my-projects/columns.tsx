@@ -11,8 +11,8 @@ import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { useQueryClient } from "@tanstack/react-query";
 import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
-import { useSession } from "next-auth/react";
 
+import { useAuth } from "@/lib/auth/context";
 import { formatCurrency } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { cn, getAuthHeader } from "@/lib/utils";
@@ -46,7 +46,7 @@ const ActionsDropdown = ({
   const { "update-selection": updateSelection } = useFeatureFlags();
   const isHeader = "getSelectedRowModel" in instance;
   const deleteLabel = isHeader ? "Delete selection" : "Delete project";
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const deleteCustomProjects = useCallback(

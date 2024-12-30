@@ -4,8 +4,8 @@ import Link from "next/link";
 
 import { useAtomValue } from "jotai";
 import { LogOutIcon } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
 
+import { useAuth } from "@/lib/auth/context";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
@@ -31,7 +31,7 @@ interface ProfileSidebarProps {
   navItems: { name: string; id: string }[];
 }
 const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
-  const { data: session } = useSession();
+  const { session, logout } = useAuth();
   const { data: user } = client.user.findMe.useQuery(
     queryKeys.user.me(session?.user?.id as string).queryKey,
     {
@@ -86,7 +86,7 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
         variant="outline"
         className="w-full font-bold"
         onClick={async () => {
-          await signOut();
+          await logout();
         }}
       >
         <LogOutIcon className="h-3 w-3" />
