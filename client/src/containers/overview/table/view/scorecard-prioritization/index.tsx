@@ -37,7 +37,7 @@ import {
 import { TABLE_COLUMNS } from "@/containers/overview/table/view/scorecard-prioritization/columns";
 
 import {
-  Table,
+  ScrollableTable,
   TableBody,
   TableCell,
   TableHead,
@@ -116,7 +116,7 @@ export function ScoredCardPrioritizationTable() {
 
   return (
     <>
-      <Table>
+      <ScrollableTable>
         <TableHeader className="sticky top-0 bg-white">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -194,7 +194,7 @@ export function ScoredCardPrioritizationTable() {
             </TableRow>
           )}
         </TableBody>
-      </Table>
+      </ScrollableTable>
       <TablePagination
         onChangePagination={setPagination}
         pagination={{
