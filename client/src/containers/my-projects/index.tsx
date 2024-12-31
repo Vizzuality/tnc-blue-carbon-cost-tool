@@ -159,7 +159,7 @@ export default function MyProjectsView() {
       className="flex flex-1 flex-col"
       transition={LAYOUT_TRANSITIONS}
     >
-      <div className="mx-3 flex h-full flex-1 flex-col">
+      <div className="mx-4 flex h-full flex-1 flex-col">
         <Header />
         <div className="flex items-center justify-between py-4">
           <div className="flex gap-2 rounded-full bg-slate-900">

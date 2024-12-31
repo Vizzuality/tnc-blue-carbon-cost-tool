@@ -59,7 +59,7 @@ export default async function RootLayout({
             <SidebarProvider>
               <MainNav />
               <IntroModal />
-              <main className="mx-3 flex h-dvh flex-1">{children}</main>
+              <main className="flex h-dvh flex-1">{children}</main>
             </SidebarProvider>
             <Toaster />
           </body>

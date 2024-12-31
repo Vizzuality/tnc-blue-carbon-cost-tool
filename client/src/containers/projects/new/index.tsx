@@ -232,7 +232,7 @@ export default function CreateCustomProject() {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-1 flex-col">
+      <div className="ml-4 flex flex-1 flex-col">
         <Header />
         <div className="flex flex-1 gap-3 overflow-hidden" ref={ref}>
           <ProjectSidebar />

@@ -103,7 +103,7 @@ const CustomProjectView: FC<{
       >
         <ProjectSummary data={output.summary} />
       </motion.aside>
-      <div className="mx-3 flex flex-1 flex-col">
+      <div className="mx-4 flex flex-1 flex-col">
         <CustomProjectHeader data={data} />
         <div className="mb-4 mt-2 flex gap-4">
           <ProjectDetails

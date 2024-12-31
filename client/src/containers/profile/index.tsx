@@ -111,7 +111,7 @@ export default function Profile() {
   }, [setProfileStep]);
 
   return (
-    <div className="flex h-lvh w-full flex-col">
+    <div className="ml-4 flex h-lvh w-full flex-col">
       <div className="flex h-16 items-center space-x-2 p-4 pl-0">
         <SidebarTrigger />
         <h2 className="text-2xl font-medium">User area</h2>

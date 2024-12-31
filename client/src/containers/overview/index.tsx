@@ -60,7 +60,7 @@ export default function Overview() {
       >
         <ProjectsFilters />
       </motion.aside>
-      <div className="flex flex-1 flex-col">
+      <div className="mx-4 flex flex-1 flex-col">
         <ProjectsHeader />
         <ResizablePanelGroup
           direction="vertical"
