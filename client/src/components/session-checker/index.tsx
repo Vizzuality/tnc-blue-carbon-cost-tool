@@ -24,8 +24,6 @@ export default function SessionChecker() {
     () => isPrivatePath(pathname) && !!session?.accessToken,
     [session?.accessToken, pathname],
   );
-  console.info("queryEnabled", queryEnabled);
-  console.info("session", session);
   const { error } = client.auth.validateToken.useQuery(
     queryKey,
     {
@@ -41,7 +39,6 @@ export default function SessionChecker() {
       enabled: queryEnabled,
     },
   );
-  console.info("error", error);
 
   useEffect(() => {
     if (error && isPrivatePath(pathname)) {
