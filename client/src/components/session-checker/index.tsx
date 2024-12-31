@@ -17,7 +17,7 @@ import { isPrivatePath } from "@/lib/utils";
  */
 export default function SessionChecker() {
   const { data: session } = useSession();
-  const queryKey = queryKeys.auth.validateToken.queryKey;
+  const queryKey = queryKeys.auth.validateToken(session?.accessToken).queryKey;
   const { error } = client.auth.validateToken.useQuery(
     queryKey,
     {
