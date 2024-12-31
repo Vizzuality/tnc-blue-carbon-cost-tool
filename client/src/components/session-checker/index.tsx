@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import { usePathname } from "next/navigation";
 
@@ -18,6 +18,14 @@ import { isPrivatePath } from "@/lib/utils";
 export default function SessionChecker() {
   const { data: session } = useSession();
   const queryKey = queryKeys.auth.validateToken(session?.accessToken).queryKey;
+
+  const pathname = usePathname();
+  const queryEnabled = useMemo(
+    () => isPrivatePath(pathname) && !!session?.accessToken,
+    [session?.accessToken, pathname],
+  );
+  console.info("queryEnabled", queryEnabled);
+  console.info("session", session);
   const { error } = client.auth.validateToken.useQuery(
     queryKey,
     {
@@ -30,10 +38,10 @@ export default function SessionChecker() {
     },
     {
       queryKey,
-      enabled: !!session?.accessToken,
+      enabled: queryEnabled,
     },
   );
-  const pathname = usePathname();
+  console.info("error", error);
 
   useEffect(() => {
     if (error && isPrivatePath(pathname)) {
