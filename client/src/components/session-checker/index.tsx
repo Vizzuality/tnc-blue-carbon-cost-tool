@@ -41,13 +41,13 @@ export default function SessionChecker() {
   );
 
   useEffect(() => {
-    if (error && isPrivatePath(pathname)) {
+    if (error && queryEnabled) {
       signOut({
         redirect: true,
-        callbackUrl: isPrivatePath(pathname) ? "/auth/signin" : undefined,
+        callbackUrl: queryEnabled ? "/auth/signin" : undefined,
       });
     }
-  }, [error, pathname]);
+  }, [error, pathname, queryEnabled]);
 
   return null;
 }
