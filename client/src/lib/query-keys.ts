@@ -15,6 +15,7 @@ import { filtersSchema } from "@/app/(overview)/url-store";
 import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
 
 export const authKeys = createQueryKeys("auth", {
+  validateToken: null,
   resetPasswordToken: (token: string) => ["reset-password-token", token],
   confirmEmailToken: (token: string) => ["confirm-email-token", token],
 });

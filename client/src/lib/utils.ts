@@ -67,3 +67,8 @@ class IntroModalManager {
   }
 }
 export const introModalManager = IntroModalManager.getInstance();
+
+const PRIVATE_PAGES = /^(\/profile|\/my-projects)/;
+export const isPrivatePath = (pathname: string) => {
+  return PRIVATE_PAGES.test(pathname);
+};
