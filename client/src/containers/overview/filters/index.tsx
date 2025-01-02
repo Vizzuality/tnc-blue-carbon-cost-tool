@@ -165,7 +165,7 @@ export default function ProjectsFilters() {
 
   return (
     <section
-      className="h-full flex-1 overflow-hidden border-r border-border bg-big-stone-950 pt-6"
+      className="flex h-full flex-1 flex-col overflow-hidden border-r border-border bg-big-stone-950 pt-6"
       style={{
         width: FILTERS_SIDEBAR_WIDTH,
       }}
