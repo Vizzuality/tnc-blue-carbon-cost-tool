@@ -3,7 +3,11 @@ import { HttpStatus } from '@nestjs/common';
 import { projectsContract } from '@shared/contracts/projects.contract';
 import { Country } from '@shared/entities/country.entity';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
-import { Project, PROJECT_SIZE_FILTER } from '@shared/entities/projects.entity';
+import {
+  COST_TYPE_SELECTOR,
+  Project,
+  PROJECT_SIZE_FILTER,
+} from '@shared/entities/projects.entity';
 
 describe('Projects', () => {
   let testManager: TestManager;
@@ -419,15 +423,15 @@ describe('Projects', () => {
       await testManager.mocks().createProject({
         id: 'e934e9fe-a79c-40a5-8254-8817851764ad',
         projectName: 'PROJ_ABC',
-        totalCost: 100,
-        totalCostNPV: 50,
+        capexNPV: 27,
+        opexNPV: 23,
         abatementPotential: 10,
       });
       await testManager.mocks().createProject({
         id: 'e934e9fe-a79c-40a5-8254-8817851764ae',
         projectName: 'PROJ_DEF',
-        totalCost: 200,
-        totalCostNPV: 100,
+        capexNPV: 12,
+        opexNPV: 36,
         abatementPotential: 20,
       });
 
@@ -437,13 +441,14 @@ describe('Projects', () => {
         .query({
           withMaximums: true,
           partialProjectName: 'PROJ',
+          costRangeSelector: COST_TYPE_SELECTOR.NPV,
         });
 
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.data).toHaveLength(2);
       expect(response.body.maximums).toEqual({
-        maxAbatementPotential: 30,
-        maxTotalCost: 200,
+        maxAbatementPotential: 20,
+        maxTotalCost: 50,
       });
     });
 
