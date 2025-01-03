@@ -28,17 +28,16 @@ export class ProjectsService extends AppBaseService<
   public async findAllProjectsWithMaximums(
     query: ProjectFetchSpecificacion,
   ): Promise<PaginatedProjectsWithMaximums> {
-    // Elena told us that the maximum values of the abatement_potential and max_total_cost bars is the sum of all values of the filtered results
     const qb = this.dataSource
       .createQueryBuilder()
-      .select('SUM(abatement_potential)::BIGINT', 'maxAbatementPotential')
+      .select('MAX(abatement_potential)', 'maxAbatementPotential')
       .from(Project, 'project');
 
     const { costRangeSelector } = query;
     if (costRangeSelector == COST_TYPE_SELECTOR.NPV) {
-      qb.addSelect('SUM(capex_npv + opex_npv)::BIGINT', 'maxTotalCost');
+      qb.addSelect('MAX(capex_npv + opex_npv)', 'maxTotalCost');
     } else {
-      qb.addSelect('SUM(capex + opex)::BIGINT', 'maxTotalCost');
+      qb.addSelect('MAX(capex + opex)', 'maxTotalCost');
     }
 
     const totalsQuery = this.applySearchFiltersToQueryBuilder(qb, query);
