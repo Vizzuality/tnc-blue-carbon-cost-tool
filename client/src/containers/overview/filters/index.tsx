@@ -200,12 +200,7 @@ export default function ProjectsFilters() {
               htmlFor="countryCode"
               tooltip={{
                 title: "Country",
-                content: (
-                  <p>
-                    Select the country you want to filter by. You can select
-                    multiple countries.
-                  </p>
-                ),
+                content: <p>Select the country you want to filter by.</p>,
               }}
             >
               Country
