@@ -260,6 +260,8 @@ jobs:
             backoffice:
               image: $ECR_REGISTRY/$ECR_REPOSITORY_ADMIN:$IMAGE_TAG
               restart: always
+              environment:
+                NODE_ENV: production
               ports:
                 - 1000:1000
             nginx:
