@@ -17,6 +17,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
 import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
 import { ROLES } from '@shared/entities/users/roles.enum';
+import { CustomProject } from '@shared/entities/custom-project.entity';
 
 @Controller()
 export class CustomProjectsController {
@@ -147,6 +148,35 @@ export class CustomProjectsController {
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @TsRestHandler(customProjectContract.updateCustomProject)
+  async updateCustomProject(
+    @GetUser() user: User,
+    @Body(new ValidationPipe({ enableDebugMessages: true, transform: true }))
+    dto: Partial<CustomProject>,
+  ): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.updateCustomProject,
+      async ({ params: { id } }) => {
+        if (
+          !(await this.customProjects.areProjectsCreatedByUser(user.id, [id]))
+        ) {
+          return {
+            status: 401,
+            body: null,
+          };
+        }
+
+        const updatedEntity = await this.customProjects.update(id, dto);
+        return {
+          status: 200,
+          body: updatedEntity,
+        };
+      },
+    );
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
   @TsRestHandler(customProjectContract.deleteCustomProjects)
   async deleteCustomProjects(
     @GetUser() user: User,
@@ -156,7 +186,10 @@ export class CustomProjectsController {
       customProjectContract.deleteCustomProjects,
       async () => {
         if (
-          !(await this.customProjects.canUserDeleteProjects(user.id, body.ids))
+          !(await this.customProjects.areProjectsCreatedByUser(
+            user.id,
+            body.ids,
+          ))
         ) {
           return {
             status: 401,

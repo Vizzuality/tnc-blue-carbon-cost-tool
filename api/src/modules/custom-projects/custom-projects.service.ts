@@ -145,7 +145,7 @@ export class CustomProjectsService extends AppBaseService<
     return query;
   }
 
-  async canUserDeleteProjects(
+  async areProjectsCreatedByUser(
     userId: string,
     projectIds: string[],
   ): Promise<boolean> {

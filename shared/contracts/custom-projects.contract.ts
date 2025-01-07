@@ -72,6 +72,18 @@ export const customProjectContract = contract.router({
     },
     body: CreateCustomProjectSchema,
   },
+  updateCustomProject: {
+    method: "PATCH",
+    path: "/custom-projects/:id",
+    pathParams: z.object({
+      id: z.coerce.string(),
+    }),
+    responses: {
+      201: contract.type<CustomProject>(),
+    },
+    body: contract.type<Partial<CustomProject>>(),
+    summary: "Update an existing custom-project",
+  },
   getCustomProjects: {
     method: "GET",
     path: "/custom-projects",
