@@ -26,8 +26,7 @@ export default function Header() {
         <Button
           disabled={!methods.formState.isValid}
           onClick={() => {
-            methods.handleSubmit((data) => onSubmit(data))();
-            router.push("/projects/preview");
+            methods.handleSubmit((data) => onSubmit(data, router))();
           }}
         >
           Continue

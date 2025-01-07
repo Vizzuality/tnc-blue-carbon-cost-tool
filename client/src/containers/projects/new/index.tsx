@@ -4,6 +4,9 @@ import { useEffect, useRef } from "react";
 
 import { FormProvider, useForm } from "react-hook-form";
 
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useRouter } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
@@ -32,7 +35,10 @@ import { formStepAtom } from "@/containers/projects/store";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export const onSubmit = async (data: CreateCustomProjectForm) => {
+export const onSubmit = async (
+  data: CreateCustomProjectForm,
+  router: AppRouterInstance,
+) => {
   const queryClient = getQueryClient();
 
   const originalValues = { ...data };
@@ -143,13 +149,14 @@ export const onSubmit = async (data: CreateCustomProjectForm) => {
 
   if (status === 201) {
     queryClient.setQueryData(queryKeys.customProjects.cached.queryKey, body);
+    router.push("/projects/preview");
   }
 };
 
 export default function CreateCustomProject() {
   const ref = useRef<HTMLDivElement>(null);
   const setIntersecting = useSetAtom(formStepAtom);
-
+  const router = useRouter();
   const { queryKey } = queryKeys.customProjects.countries;
   const { data: countryOptions } =
     client.customProjects.getAvailableCountries.useQuery(
@@ -238,7 +245,11 @@ export default function CreateCustomProject() {
           <ProjectSidebar />
           <div className="mb-4 flex-1">
             <ScrollArea className="flex h-full gap-3 pr-6">
-              <ProjectForm onSubmit={methods.handleSubmit(onSubmit)} />
+              <ProjectForm
+                onSubmit={methods.handleSubmit((data) =>
+                  onSubmit(data, router),
+                )}
+              />
             </ScrollArea>
           </div>
         </div>
