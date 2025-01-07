@@ -1,10 +1,4 @@
-import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
-
-export const ACTIVITIES_DESCRIPTIONS = {
-  [ACTIVITY.RESTORATION]: "TBD",
-  [ACTIVITY.CONSERVATION]: "TBD",
-};
 
 export const CARBON_REVENUES_TO_COVER_DESCRIPTIONS = {
   [CARBON_REVENUES_TO_COVER.OPEX]: "Includes operating costs only",

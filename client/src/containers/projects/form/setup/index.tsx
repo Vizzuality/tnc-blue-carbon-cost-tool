@@ -20,10 +20,7 @@ import { queryKeys } from "@/lib/query-keys";
 
 import { ACTIVITIES } from "@/containers/overview/filters/constants";
 import ConservationProjectDetails from "@/containers/projects/form/setup/conservation-project-details";
-import {
-  ACTIVITIES_DESCRIPTIONS,
-  CARBON_REVENUES_TO_COVER_DESCRIPTIONS,
-} from "@/containers/projects/form/setup/constants";
+import { CARBON_REVENUES_TO_COVER_DESCRIPTIONS } from "@/containers/projects/form/setup/constants";
 import RestorationProjectDetails from "@/containers/projects/form/setup/restoration-project-detail";
 
 import {
@@ -314,7 +311,6 @@ export default function SetupProjectForm() {
                           className="flex-1"
                           label={activity.label}
                           value={activity.value}
-                          description={ACTIVITIES_DESCRIPTIONS[activity.value]}
                           defaultChecked={
                             form.formState.defaultValues?.activity ===
                             activity.value
