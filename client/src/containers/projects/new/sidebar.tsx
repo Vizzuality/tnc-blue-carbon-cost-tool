@@ -8,6 +8,8 @@ import { ACTIVITY } from "@shared/entities/activity.enum";
 import { useAtomValue } from "jotai/index";
 import { InfoIcon } from "lucide-react";
 
+import { PRIVACY_POLICY_URL } from "@/lib/constants";
+
 import { useFormValues } from "@/containers/projects/form";
 import { formStepAtom } from "@/containers/projects/store";
 
@@ -87,7 +89,17 @@ export default function ProjectSidebar() {
             private and accessible only to you
           </span>
           . For more details on our commitment to data privacy, please review
-          our privacy policy.
+          our{" "}
+          <Button
+            variant="link"
+            className="h-auto p-0 text-base underline underline-offset-auto"
+            asChild
+          >
+            <Link href={PRIVACY_POLICY_URL} target="_blank">
+              privacy policy
+            </Link>
+          </Button>
+          .
         </p>
       </Card>
     </aside>

@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+import { PRIVACY_POLICY_URL } from "@/lib/constants";
+import { TERMS_AND_CONDITIONS_URL } from "@/lib/constants";
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -129,10 +132,29 @@ const TokenSignUpForm: FC = () => {
                     />
                     <Label
                       htmlFor={field.name}
-                      className="text-xs text-muted-foreground"
+                      className="text-sm font-normal text-foreground"
                     >
-                      I agree with the terms and conditions and privacy policy
-                      of the Blue Carbon Cost Tool platform.
+                      I agree with the&nbsp;
+                      <Button
+                        variant="link"
+                        className="h-auto p-0 text-sm underline underline-offset-auto"
+                        asChild
+                      >
+                        <Link href={TERMS_AND_CONDITIONS_URL} target="_blank">
+                          terms and conditions
+                        </Link>
+                      </Button>
+                      &nbsp;and&nbsp;
+                      <Button
+                        variant="link"
+                        className="h-auto p-0 text-sm underline underline-offset-auto"
+                        asChild
+                      >
+                        <Link href={PRIVACY_POLICY_URL} target="_blank">
+                          privacy policy
+                        </Link>
+                      </Button>
+                      &nbsp;of the Blue Carbon Cost Tool platform.
                     </Label>
                   </div>
                 </FormControl>
