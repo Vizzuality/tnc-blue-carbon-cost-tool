@@ -166,6 +166,14 @@ const start = async () => {
       fileIngestion: {
         icon: "File",
         component: Components.FileIngestion,
+        handler: async (request: Request, response: Response) => {
+          // Pass config
+          response.json({
+            config: {
+              apiUrl: API_URL,
+            }
+          });
+        }
       }
     },
     locale: {

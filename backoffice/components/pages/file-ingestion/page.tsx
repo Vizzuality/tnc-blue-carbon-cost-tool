@@ -1,10 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, H2, Text, Button, Tabs, Tab, DropZone, Icon } from '@adminjs/design-system';
+import { ApiClient } from 'adminjs';
+
+const UploadTab = ({props: { id, label, file, handleFileUpload, handleSubmit }}) => {
+  return (
+    <Tab id={id} label={label}>
+      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" p="xl">
+        <Box width="100%" maxWidth="400px">
+          <DropZone 
+            onChange={(files) => handleFileUpload(id, files[0])}
+            multiple={false}
+          />
+        </Box>
+        {file && <Text mt="md">File selected: {file.name}</Text>}
+        <Box display="flex" justifyContent="flex-end" width="100%" mt="lg">
+          <Button onClick={() => handleSubmit(id)}><Icon icon="Upload"/>Upload</Button>
+        </Box>
+      </Box>
+    </Tab>
+  );
+}
 
 const FileIngestion = () => {
+  // Component state
   const [activeTab, setActiveTab] = useState('first');
   const [fileOne, setFileOne] = useState<File | null>(null);
   const [fileTwo, setFileTwo] = useState<File | null>(null);
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  // Weird Adminjs setup
+  const adminjsClient = new ApiClient();
+  const [config, setConfig] = useState<{ apiUrl: string } | null>(null);
+  
+  adminjsClient.getPage({ pageName: 'fileIngestion' }).then((response: any) => {
+    setConfig(response.data.config);
+  });
 
   const handleFileUpload = (tab: string, file: File) => {
     if (tab === 'first') {
@@ -26,15 +57,18 @@ const FileIngestion = () => {
 
     try {
       // /admin is not exposed when the app runs behind a reverse proxy
-      const response = await fetch('http://localhost:4000/admin/upload/xlsx', {
+      const response = await fetch(`${config!.apiUrl}/admin/upload/xlsx`, {
         method: 'POST',
         body: formData,
-        credentials: 'include', // Backoffice cookie will be sent
+        credentials: 'include',
       });
-      const result = await response.json();
-      alert(`File uploaded successfully: ${JSON.stringify(result)}`);
+      if(response.status === 201) {
+        alert('The file was successfully uploaded and processed.');
+      } else {
+        alert('An error occurred while uploading the file.');
+      }
     } catch (error) {
-      alert(`Error uploading file: ${error.message}`);
+      alert(`An error occurred while uploading the file: ${error.message}`);
     }
   };
 
@@ -51,34 +85,24 @@ const FileIngestion = () => {
         variant="white"
       >
         <Tabs currentTab={activeTab} onChange={(index) => setActiveTab(index)}>
-          <Tab id='first' label="Data ingestion WIP">
-            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" p="xl">
-              <Box width="100%" maxWidth="400px">
-                <DropZone 
-                  onChange={(files) => handleFileUpload('first', files[0])}
-                  multiple={false}
-                />
-              </Box>
-              {fileOne && <Text mt="md">File selected: {fileOne.name}</Text>}
-              <Box display="flex" justifyContent="flex-end" width="100%" mt="lg">
-                <Button onClick={() => handleSubmit('first')}><Icon icon="Upload"/>Upload</Button>
-              </Box>
-            </Box>
-          </Tab>
-          <Tab id='second' label="Project Scorecards">
-            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" p="xl">
-              <Box width="100%" maxWidth="400px">
-                <DropZone
-                  onChange={(files) => handleFileUpload('second', files[0])}
-                  multiple={false}
-                />
-              </Box>
-              {fileTwo && <Text mt="md">File selected: {fileTwo.name}</Text>}
-              <Box display="flex" justifyContent="flex-end" width="100%" mt="lg">
-                <Button onClick={() => handleSubmit('second')}><Icon icon="Upload"/>Upload</Button>
-              </Box>
-            </Box>
-          </Tab>
+          <UploadTab
+            props={{
+             id: 'first',
+             label: "Data ingestion WIP",
+             file: fileOne,
+             handleFileUpload,
+             handleSubmit
+            }}
+          />
+          <UploadTab
+            props={{
+             id: 'second',
+             label: "Project Scorecards",
+             file: fileTwo,
+             handleFileUpload,
+             handleSubmit
+            }}
+          />
         </Tabs>
       </Box>
     </Box>
