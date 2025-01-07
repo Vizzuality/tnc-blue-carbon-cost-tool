@@ -16,13 +16,14 @@ services:
     depends_on:
       - database
 
-  admin:
+  backoffice:
     container_name: blue-carbon-cost-admin
     environment:
       DB_HOST: database
+      NODE_ENV: development
     build:
       context: .
-      dockerfile: admin/Dockerfile
+      dockerfile: backoffice/Dockerfile
     ports:
       - "1000:1000"
     networks:

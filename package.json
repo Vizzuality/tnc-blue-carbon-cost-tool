@@ -7,7 +7,7 @@
     "api:dev": "pnpm --filter api run start:dev",
     "api:build": "pnpm --filter api run build",
     "api:prod": "NODE_ENV=production pnpm --filter api run start:prod",
-    "backoffice:prod": "NODE_ENV=production pnpm --filter backoffice run start:prod",
+    "backoffice:prod": "pnpm --filter backoffice run start:prod",
     "client:deps": "pnpm --filter client install",
     "client:dev": "pnpm --filter client run dev",
     "client:build": "pnpm --filter client run build",
