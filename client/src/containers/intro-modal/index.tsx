@@ -25,7 +25,7 @@ const introItems = [
   {
     title: "Project Overview",
     description:
-      "Explore and compare project scenarios with ease. Apply filters for location, ecosystem type, activity, cost, abatement potential, and more. The global map visualizes project distributions, enabling comparisons based on cost-to-abatement ratios. Additionally, use the comparison table for detailed cost and score analyses, and select a project for additional details.",
+      "Explore and compare over 400 project scenarios with ease. Apply filters for location, ecosystem type, activity, cost, abatement potential and project size. The global map visualizes project blue carbon potential across 9 countries, enabling comparisons based on cost-to-abatement ratios. Additionally, use the comparison table for detailed cost and score analyses, and select a project for additional details.",
     icon: LayoutDashboardIcon,
   },
   {
@@ -37,7 +37,7 @@ const introItems = [
   {
     title: "Methodology",
     description:
-      "Explore for detailed information on assumptions, estimations, and data sources.",
+      "Explore for detailed information on model assumptions, estimations, and data sources.",
     icon: FileQuestionIcon,
   },
   {
@@ -66,7 +66,7 @@ const IntroModal = () => {
       <DialogContent>
         <DialogHeader className="space-y-5">
           <DialogTitle className="text-xl font-semibold">
-            Welcome to Blue Carbon Cost Tool
+            Welcome to the Blue Carbon Cost Tool
           </DialogTitle>
           <DialogDescription className="text-base font-normal text-foreground">
             The Blue Carbon Cost Tool estimates project costs and carbon
