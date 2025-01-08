@@ -31,7 +31,7 @@ const introItems = [
   {
     title: "Create custom projects",
     description:
-      "Design custom scenarios by modifying original parameters and exploring the resulting data in detail. Save your projects to revisit them anytime and quickly compare all the scenarios you’ve created.",
+      "Design custom scenarios by modifying default parameters and exploring the resulting data in detail. Save your projects to revisit them anytime and quickly compare all the scenarios you’ve created.",
     icon: ClipboardPenIcon,
   },
   {
@@ -41,7 +41,7 @@ const introItems = [
     icon: FileQuestionIcon,
   },
   {
-    title: "User area",
+    title: "Profile",
     description: "Access information about your personal account.",
     icon: UserIcon,
   },
