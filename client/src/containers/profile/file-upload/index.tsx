@@ -2,9 +2,12 @@ import React, { FC, useCallback, useState } from "react";
 
 import { useDropzone } from "react-dropzone";
 
+import Link from "next/link";
+
 import { FileUpIcon, XIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
+import { TERMS_AND_CONDITIONS_URL } from "@/lib/constants";
 import { client } from "@/lib/query-client";
 import { cn } from "@/lib/utils";
 
@@ -173,6 +176,20 @@ const FileUpload: FC = () => {
           </div>
         </div>
       )}
+      <p className="text-sm text-muted-foreground">
+        By sharing your data with us, you consent to being contacted for future
+        follow-ups. For more details, please review our&nbsp;
+        <Button
+          variant="link"
+          className="h-auto p-0 text-sm text-muted-foreground underline underline-offset-auto"
+          asChild
+        >
+          <Link href={TERMS_AND_CONDITIONS_URL} target="_blank">
+            Terms and Conditions
+          </Link>
+        </Button>
+        .
+      </p>
     </div>
   );
 };
