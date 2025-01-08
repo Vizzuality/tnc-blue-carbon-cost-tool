@@ -2,8 +2,9 @@
 
 import { FC, useCallback } from "react";
 
-import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
+import { signOut } from "@/lib/auth/api";
 import { useAuth } from "@/lib/auth/context";
 import { client } from "@/lib/query-client";
 
@@ -24,7 +25,7 @@ import { useToast } from "@/components/ui/toast/use-toast";
 const DeleteAccount: FC = () => {
   const { session } = useAuth();
   const { toast } = useToast();
-
+  const router = useRouter();
   const onDeleteAccount = useCallback(async () => {
     try {
       const { status, body } = await client.user.deleteMe.mutation({
@@ -34,7 +35,8 @@ const DeleteAccount: FC = () => {
       });
 
       if (status === 200) {
-        signOut({ callbackUrl: "/auth/signin", redirect: true });
+        await signOut();
+        router.push("/auth/signin");
       } else if (status === 400 || status === 401) {
         toast({
           variant: "destructive",
@@ -47,7 +49,7 @@ const DeleteAccount: FC = () => {
         description: "Something went wrong deleting the account.",
       });
     }
-  }, [session?.accessToken, toast]);
+  }, [session?.accessToken, toast, router]);
 
   return (
     <AlertDialog>

@@ -39,7 +39,7 @@ const SignInForm: FC<SignInFormProps> = ({ onSignIn }) => {
     resolver: zodResolver(LogInSchema),
     defaultValues: {
       email: "adam.trincas@vizzuality.com",
-      password: "12345678",
+      password: "",
     },
   });
 

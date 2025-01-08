@@ -3,11 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { signOut } from "@/lib/auth/api";
 import { SIGNIN_PATH } from "@/lib/auth/constants";
 import { getServerSession } from "@/lib/auth/server";
-
 import { isPrivatePath } from "@/lib/utils";
 
 export async function middleware(req: NextRequest) {
-  if (PRIVATE_PAGES.test(req.nextUrl.pathname)) {
+  if (isPrivatePath(req.nextUrl.pathname)) {
     const session = await getServerSession();
 
     if (!session) {

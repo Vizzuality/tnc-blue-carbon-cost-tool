@@ -13,7 +13,6 @@ import { AuthProvider } from "@/lib/auth/context";
 import { AppSession } from "@/lib/auth/types";
 import { makeQueryClient } from "@/lib/query-client";
 
-import SessionChecker from "@/components/session-checker";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 let browserQueryClient: QueryClient | undefined = undefined;
@@ -45,10 +44,7 @@ export default function LayoutProviders({
         <TooltipProvider>
           <QueryClientProvider client={queryClient}>
             <TooltipProvider>
-              <JotaiProvider store={appStore}>
-                <SessionChecker />
-                {children}
-              </JotaiProvider>
+              <JotaiProvider store={appStore}>{children}</JotaiProvider>
             </TooltipProvider>
           </QueryClientProvider>
         </TooltipProvider>

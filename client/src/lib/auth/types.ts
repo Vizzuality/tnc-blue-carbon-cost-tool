@@ -17,3 +17,9 @@ export enum AuthStatus {
   UNAUTHENTICATED = "unauthenticated",
   AUTHENTICATED = "authenticated",
 }
+
+export interface AuthApiResponse<T> {
+  body: T;
+  status: number;
+  error?: string;
+}

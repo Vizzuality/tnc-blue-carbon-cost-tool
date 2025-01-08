@@ -6,9 +6,10 @@ import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-pr
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { LayoutListIcon } from "lucide-react";
-import { Session } from "next-auth";
-import { getSession, useSession } from "next-auth/react";
 
+import { getSession } from "@/lib/auth/api";
+import { useAuth } from "@/lib/auth/context";
+import { AppSession } from "@/lib/auth/types";
 import { client } from "@/lib/query-client";
 import { cn, getAuthHeader } from "@/lib/utils";
 
@@ -29,11 +30,11 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
   const [{ projectSummaryOpen }, setProjectSummaryOpen] =
     useAtom(projectsUIState);
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const { toast } = useToast();
   const [saved, setSaved] = useState<boolean>(false);
   const SaveProject = useCallback(
-    async (arg: Session | null = session) => {
+    async (arg: AppSession | null = session) => {
       try {
         const { status, body } =
           await client.customProjects.saveCustomProject.mutation({

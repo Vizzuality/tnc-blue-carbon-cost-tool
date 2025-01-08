@@ -3,8 +3,8 @@ import React, { FC, useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { FileUpIcon, XIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
 
+import { useAuth } from "@/lib/auth/context";
 import { client } from "@/lib/query-client";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +30,7 @@ const MAX_FILES = 2;
 
 const FileUpload: FC = () => {
   const [files, setFiles] = useState<File[]>([]);
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const { toast } = useToast();
   const onDropAccepted = useCallback(
     (acceptedFiles: File[]) => {

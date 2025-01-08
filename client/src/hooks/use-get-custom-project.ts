@@ -4,14 +4,14 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 
+import { useAuth } from "@/lib/auth/context";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
 
 export function useGetCustomProject(id?: string) {
-  const { data: session } = useSession();
+  const { session } = useAuth();
   const queryCache = useQueryClient().getQueryData<{
     data: InstanceType<typeof CustomProjectEntity>;
   }>(queryKeys.customProjects.cached.queryKey);

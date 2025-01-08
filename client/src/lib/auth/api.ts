@@ -1,5 +1,7 @@
 import { UserWithAccessToken } from "@shared/dtos/users/user.dto";
 
+import { AppSession, AuthApiResponse } from "@/lib/auth/types";
+
 import { getServerAuthUrl } from "./server";
 
 /**
@@ -38,7 +40,13 @@ export async function signIn(
       body: JSON.stringify({ email, password }),
     });
 
-    return response.json();
+    const data: AuthApiResponse<UserWithAccessToken> = await response.json();
+
+    if (data.status !== 201) {
+      throw new Error(data.error || "Invalid credentials");
+    }
+
+    return data.body;
   } catch (error) {
     throw error;
   }
@@ -47,6 +55,7 @@ export async function signIn(
 /**
  * Signs out the current user by making a POST request to the signout endpoint.
  * @returns {Promise<void>}
+ * TODO: nice to have: { callbackUrl: string; redirect: boolean }
  */
 export async function signOut(): Promise<void> {
   try {
@@ -60,4 +69,10 @@ export async function signOut(): Promise<void> {
   } catch (error) {
     console.error("Error signing out", error);
   }
+}
+
+export async function getSession(): Promise<AppSession> {
+  const baseUrl = await getAuthUrl();
+  const response = await fetch(`${baseUrl}/session`);
+  return response.json();
 }
