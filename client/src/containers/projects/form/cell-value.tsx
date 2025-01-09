@@ -2,7 +2,7 @@ import { ComponentProps } from "react";
 
 import { useFormContext } from "react-hook-form";
 
-import { cn } from "@/lib/utils";
+import { cn, convertToDecimalPercentageValue } from "@/lib/utils";
 
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
 
@@ -18,10 +18,12 @@ export default function CellValue({
   name,
   className,
   hasUnit = false,
+  isPercentage = false,
 }: {
   name: keyof CreateCustomProjectForm;
   className?: ComponentProps<typeof FormControl>["className"];
   hasUnit?: boolean;
+  isPercentage?: boolean;
 }) {
   const form = useFormContext<CreateCustomProjectForm>();
 
@@ -30,8 +32,7 @@ export default function CellValue({
       control={form.control}
       name={name}
       render={({ field }) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { value, ...restField } = field;
+        const { value, onChange, ...restField } = field;
 
         return (
           <FormItem className={className}>
@@ -41,7 +42,15 @@ export default function CellValue({
                 type="number"
                 placeholder="Insert value"
                 min={0}
-                defaultValue={field.value as number}
+                defaultValue={value as number}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (isPercentage && value) {
+                    onChange(convertToDecimalPercentageValue(value));
+                  } else {
+                    onChange(value);
+                  }
+                }}
                 className={cn({
                   "pr-12": hasUnit,
                 })}

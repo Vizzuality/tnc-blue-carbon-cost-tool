@@ -48,3 +48,7 @@ const PRIVATE_PAGES = /^(\/profile|\/my-projects)/;
 export const isPrivatePath = (pathname: string) => {
   return PRIVATE_PAGES.test(pathname);
 };
+
+export const convertToPercentageValue = (value: number): number => value * 100;
+export const convertToDecimalPercentageValue = (value: string): string =>
+  (parseFloat(value) / 100).toString();
