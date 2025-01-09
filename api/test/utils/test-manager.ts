@@ -121,6 +121,31 @@ export class TestManager {
     await this.dataSource.query(geoCountriesSql);
   }
 
+  async ingestProjectScoreCards(jwtToken: string) {
+    const countriesPresent = await this.dataSource
+      .getRepository(Country)
+      .find();
+    if (!countriesPresent.length) {
+      throw new Error(
+        'No Countries present in the DB, cannot ingest Excel data for tests',
+      );
+    }
+    const testFilePath = path.join(
+      __dirname,
+      '../../../data/excel/data_ingestion_project_scorecard.xlsm',
+    );
+    const fileBuffer = fs.readFileSync(testFilePath);
+    const upload = await this.request()
+      .post(adminContract.uploadProjectScorecard.path)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .attach('file', fileBuffer, 'data_ingestion_project_scorecard.xlsm');
+    if (upload.status !== 201) {
+      throw new Error(
+        'Failed to upload data_ingestion_project_scorecard.xlsm file for tests',
+      );
+    }
+  }
+
   async ingestExcel(jwtToken: string) {
     const countriesPresent = await this.dataSource
       .getRepository(Country)

@@ -12,6 +12,7 @@ describe('Snapshot Custom Projects', () => {
     const { jwtToken } = await testManager.setUpTestUser();
     token = jwtToken;
     await testManager.ingestCountries();
+    await testManager.ingestProjectScoreCards(jwtToken);
     await testManager.ingestExcel(jwtToken);
   });
 

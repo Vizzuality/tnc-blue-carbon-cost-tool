@@ -14,6 +14,7 @@ describe('Update custom projects', () => {
   beforeEach(async () => {
     ({ jwtToken, user } = await testManager.setUpTestUser());
     await testManager.ingestCountries();
+    await testManager.ingestProjectScoreCards(jwtToken);
     await testManager.ingestExcel(jwtToken);
   });
 

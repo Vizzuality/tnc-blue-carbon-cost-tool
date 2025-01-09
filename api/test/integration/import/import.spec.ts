@@ -62,6 +62,7 @@ describe('Import Tests', () => {
   describe('Import Data', () => {
     it('should import cost data from an excel file', async () => {
       await testManager.ingestCountries();
+      await testManager.ingestProjectScoreCards(testUserToken);
       await testManager
         .request()
         .post(adminContract.uploadFile.path)
