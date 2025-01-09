@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { renderCurrency } from "@/lib/format";
+import Currency from "@/components/ui/currency";
 
 interface GraphProps {
   /** The total value that represents 100% of the graph */
@@ -43,14 +43,14 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
           >
             <div className="absolute bottom-1 left-0 right-0 mx-1">
               <div className="rounded-md bg-white/30 px-1.5 py-0.5 text-center text-xs font-semibold text-secondary-foreground">
-                {renderCurrency(
-                  total,
-                  {
+                <Currency
+                  value={total}
+                  options={{
                     notation: "compact",
                     maximumFractionDigits: 1,
-                  },
-                  "first-letter:text-secondary-foreground",
-                )}
+                  }}
+                  plainSymbol
+                />
               </div>
             </div>
           </div>
@@ -66,14 +66,14 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
               >
                 <div className="absolute bottom-1 left-0 right-0 mx-1">
                   <div className="rounded-md bg-white/30 px-1.5 py-0.5 text-center text-xs font-semibold text-secondary-foreground">
-                    {renderCurrency(
-                      value,
-                      {
+                    <Currency
+                      value={value}
+                      options={{
                         notation: "compact",
                         maximumFractionDigits: 1,
-                      },
-                      "first-letter:text-secondary-foreground",
-                    )}
+                      }}
+                      plainSymbol
+                    />
                   </div>
                 </div>
               </div>
@@ -104,14 +104,14 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
           >
             <div className="absolute bottom-1 left-0 right-0 mx-1">
               <div className="rounded-sm bg-white/50 px-1.5 py-0.5 text-center text-xs font-semibold text-big-stone-950">
-                {renderCurrency(
-                  value,
-                  {
+                <Currency
+                  value={value}
+                  options={{
                     notation: "compact",
                     maximumFractionDigits: 1,
-                  },
-                  "first-letter:text-secondary-foreground",
-                )}
+                  }}
+                  plainSymbol
+                />
               </div>
             </div>
           </div>
@@ -173,7 +173,7 @@ const GraphWithLegend: FC<GraphWithLegendProps> = ({
       <div className="flex max-w-[148px] flex-1 flex-col justify-between">
         <div>
           <span className="text-xl font-normal">
-            {renderCurrency(leftover || total)}
+            <Currency value={leftover || total} />
           </span>
         </div>
         <GraphLegend

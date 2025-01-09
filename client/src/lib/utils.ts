@@ -43,30 +43,6 @@ export const parseTableData = <
     value: formatCurrency(data[key as K], { maximumFractionDigits: 0 }),
   }));
 };
-class IntroModalManager {
-  private static instance: IntroModalManager;
-  private isServer: boolean = typeof window === "undefined";
-
-  public static getInstance(): IntroModalManager {
-    if (!IntroModalManager.instance) {
-      IntroModalManager.instance = new IntroModalManager();
-    }
-    return IntroModalManager.instance;
-  }
-
-  public showIntroModal(): boolean {
-    if (this.isServer) return false;
-    return (
-      !!process.env.HIDE_INTRO_MODAL || !localStorage.getItem("hideIntroModal")
-    );
-  }
-
-  public setHideIntroModal(): void {
-    if (this.isServer) return;
-    localStorage.setItem("hideIntroModal", "true");
-  }
-}
-export const introModalManager = IntroModalManager.getInstance();
 
 const PRIVATE_PAGES = /^(\/profile|\/my-projects)/;
 export const isPrivatePath = (pathname: string) => {
