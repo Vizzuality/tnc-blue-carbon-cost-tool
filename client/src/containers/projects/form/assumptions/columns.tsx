@@ -1,7 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 
-import { formatNumber } from "@/lib/format";
-import { convertToPercentageValue } from "@/lib/utils";
+import { formatNumber, toPercentageValue } from "@/lib/format";
 
 import CellValue from "@/containers/projects/form/cell-value";
 import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
@@ -43,7 +42,7 @@ export const COLUMNS = [
       if (!Number(value)) return value;
 
       if (props.row.original.unit.includes("%")) {
-        return convertToPercentageValue(Number(value));
+        return toPercentageValue(Number(value));
       }
 
       return formatNumber(Number(value));
