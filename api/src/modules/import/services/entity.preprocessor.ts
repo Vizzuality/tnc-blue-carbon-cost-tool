@@ -1,9 +1,8 @@
 import { ExcelEstablishingCarbonRights } from './../dtos/excel-establishing-carbon-rights.dto';
 import { Injectable } from '@nestjs/common';
-
 import { Country } from '@shared/entities/country.entity';
 import { Project } from '@shared/entities/projects.entity';
-import { ExcelProjects } from '@api/modules/import/dtos/excel-projects.dto';
+import { ExcelProject } from '@api/modules/import/dtos/excel-projects.dto';
 import { ExcelProjectSize } from '@api/modules/import/dtos/excel-project-size.dto';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
@@ -72,6 +71,10 @@ import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 import { ExcelProjectScorecard } from '../dtos/excel-projects-scorecard.dto ';
 import { PROJECT_SCORE } from '@shared/entities/project-score.enum';
+import { ProjectScoreUtils } from '@shared/entities/project-score.utils';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { RawDataIngestionData } from '@api/modules/import/parser/raw-data-ingestion.type';
 
 export type ParsedDBEntities = {
   projects: Project[];
@@ -103,42 +106,25 @@ export type ParsedDBEntities = {
   modelAssumptions: ModelAssumptions[];
 };
 
+export class ProjectScoreCardNotFoundError extends Error {
+  constructor(projectName: string) {
+    super(`Project scorecard for project ${projectName} not found.`);
+  }
+}
+
 @Injectable()
 export class EntityPreprocessor {
-  toProjectScorecardDbEntries(raw: {}): ProjectScorecard[] {
+  constructor(
+    @InjectRepository(ProjectScorecard)
+    private readonly projectScoreCardRepository: Repository<ProjectScorecard>,
+  ) {}
+
+  toProjectScorecardDbEntries(raw: unknown): ProjectScorecard[] {
     return this.processProjectScorecard(raw['Data_ingestion']);
   }
 
-  toDbEntities(raw: {
-    Projects: ExcelProjects[];
-    'Project size': ExcelProjectSize[];
-    'Feasibility analysis': ExcelFeasibilityAnalysis[];
-    'Conservation planning and admin': ExcelConservationPlanningAndAdmin[];
-    'Data collection and field costs': ExcelDataCollectionAndFieldCosts[];
-    'Community representation': ExcelCommunityRepresentation[];
-    'Blue carbon project planning': ExcelBlueCarbonProjectPlanning[];
-    'Establishing carbon rights': ExcelEstablishingCarbonRights[];
-    'Financing cost': ExcelFinancingCost[];
-    Validation: ExcelValidation[];
-    Monitoring: ExcelMonitoring[];
-    Maintenance: ExcelMaintenance[];
-    'Community benefit sharing fund': ExcelCommunityBenefitSharingFund[];
-    'Baseline reassessment': ExcelBaselineReassessment[];
-    MRV: ExcelMRV[];
-    'Long-term project operating': ExcelLongTermProjectOperating[];
-    'Carbon standard fees': ExcelCarbonStandardFees[];
-    'Community cash flow': ExcelCommunityCashFlow[];
-    'Ecosystem extent': ExcelEcosystemExtent[];
-    'Ecosystem loss': ExcelEcosystemLoss[];
-    'Restorable land': ExcelRestorableLand[];
-    'Sequestration rate': ExcelSequestrationRate[];
-    'Emission factors': ExcelEmissionFactors[];
-    'Implementation labor': ExcelImplementationLaborCost[];
-    base_size_table: ExcelBaseSize[];
-    base_increase: ExcelBaseIncrease[];
-    'Model assumptions': ExcelModelAssumptions[];
-  }): ParsedDBEntities {
-    const processedProjects = this.processProjects(raw.Projects);
+  async toDbEntities(raw: RawDataIngestionData): Promise<ParsedDBEntities> {
+    const processedProjects = await this.processProjects(raw.Projects);
 
     // process cost inputs
     const projectSize = this.processProjectSize(raw['Project size']);
@@ -1106,69 +1092,87 @@ export class EntityPreprocessor {
     return parsedArray;
   }
 
-  private processProjects(raw: ExcelProjects[]) {
-    const parsedArray: Project[] = [];
-    raw.forEach((row: ExcelProjects) => {
-      const project = new Project();
-      project.projectName = row.project_name;
-      project.countryCode = row.country_code;
-      project.ecosystem = row.ecosystem;
-      project.activity = row.activity;
-      project.restorationActivity = row.activity_type;
-      project.projectSize = row.project_size_ha;
-      project.projectSizeFilter = row.project_size_filter;
-      project.abatementPotential = row.abatement_potential;
-      project.opexNPV = row.opex_npv;
-      project.opex = row.opex;
-      project.capexNPV = row.capex_npv;
-      project.capex = row.capex;
-      project.totalCostNPV = row.total_cost_npv;
-      project.totalCost = row.total_cost;
-      project.costPerTCO2eNPV = row.cost_per_tco2e_npv;
-      project.costPerTCO2e = row.cost_per_tco2e;
-      project.initialPriceAssumption = row.initial_price_assumption;
-      project.priceType = row.price_type;
-      project.feasibilityAnalysisNPV = row.feasibility_analysis_npv;
-      project.feasibilityAnalysis = row.feasibility_analysis;
-      project.conservationPlanningNPV = row.conservation_planning_npv;
-      project.conservationPlanning = row.conservation_planning;
-      project.dataCollectionNPV = row.data_collection_npv;
-      project.dataCollection = row.data_collection;
-      project.communityRepresentationNPV = row.community_representation_npv;
-      project.communityRepresentation = row.community_representation;
-      project.blueCarbonProjectPlanningNPV =
-        row.blue_carbon_project_planning_npv;
-      project.blueCarbonProjectPlanning = row.blue_carbon_project_planning;
-      project.establishingCarbonRightsNPV = row.establishing_carbon_rights_npv;
-      project.establishingCarbonRights = row.establishing_carbon_rights;
-      project.validationNPV = row.validation_npv;
-      project.validation = row.validation;
-      project.implementationLaborNPV = row.implementation_labor_npv;
-      project.implementationLabor = row.implementation_labor;
-      project.monitoringNPV = row.monitoring_npv;
-      project.maintenanceNPV = row.maintenance_npv;
-      project.monitoring = row.monitoring;
-      project.maintenance = row.maintenance;
-      project.monitoringMaintenanceNPV = row.monitoring_maintenance_npv;
-      project.monitoringMaintenance = row.monitoring_maintenance;
-      project.communityBenefitNPV = row.community_benefit_npv;
-      project.communityBenefit = row.community_benefit;
-      project.carbonStandardFeesNPV = row.carbon_standard_fees_npv;
-      project.carbonStandardFees = row.carbon_standard_fees;
-      project.baselineReassessmentNPV = row.baseline_reassessment_npv;
-      project.baselineReassessment = row.baseline_reassessment;
-      project.mrvNPV = row.mrv_npv;
-      project.mrv = row.mrv;
-      project.longTermProjectOperatingNPV = row.long_term_project_operating_npv;
-      project.longTermProjectOperating = row.long_term_project_operating;
-      project.leftoverAfterOpex = row.leftover_after_opex;
-      project.leftoverAfterOpexNPV = row.leftover_after_opex_NPV;
-      project.totalRevenue = row.total_revenue;
-      project.totalRevenueNPV = row.total_revenu_npv;
-      project.creditsIssued = row.credits_issued;
-      parsedArray.push(project);
-    });
-    return parsedArray;
+  private async processProjects(raw: ExcelProject[]) {
+    return await Promise.all(
+      raw.map(async (row: ExcelProject) => {
+        const projectName = row.project_name;
+        const ecosystem = row.ecosystem;
+        const country_code = row.country_code;
+
+        const projectScoreCard =
+          await this.projectScoreCardRepository.findOneBy({
+            countryCode: country_code,
+            ecosystem,
+          });
+        if (projectScoreCard === null) {
+          throw new ProjectScoreCardNotFoundError(projectName);
+        }
+        const scoreCardRating =
+          ProjectScoreUtils.computeProjectScoreCardRating(projectScoreCard);
+
+        const project = new Project();
+        project.projectName = projectName;
+        project.countryCode = country_code;
+        project.ecosystem = ecosystem;
+        project.activity = row.activity;
+        project.restorationActivity = row.activity_type;
+        project.projectSize = row.project_size_ha;
+        project.projectSizeFilter = row.project_size_filter;
+        project.abatementPotential = row.abatement_potential;
+        project.opexNPV = row.opex_npv;
+        project.opex = row.opex;
+        project.capexNPV = row.capex_npv;
+        project.capex = row.capex;
+        project.totalCostNPV = row.total_cost_npv;
+        project.totalCost = row.total_cost;
+        project.costPerTCO2eNPV = row.cost_per_tco2e_npv;
+        project.costPerTCO2e = row.cost_per_tco2e;
+        project.initialPriceAssumption = row.initial_price_assumption;
+        project.priceType = row.price_type;
+        project.feasibilityAnalysisNPV = row.feasibility_analysis_npv;
+        project.feasibilityAnalysis = row.feasibility_analysis;
+        project.conservationPlanningNPV = row.conservation_planning_npv;
+        project.conservationPlanning = row.conservation_planning;
+        project.dataCollectionNPV = row.data_collection_npv;
+        project.dataCollection = row.data_collection;
+        project.communityRepresentationNPV = row.community_representation_npv;
+        project.communityRepresentation = row.community_representation;
+        project.blueCarbonProjectPlanningNPV =
+          row.blue_carbon_project_planning_npv;
+        project.blueCarbonProjectPlanning = row.blue_carbon_project_planning;
+        project.establishingCarbonRightsNPV =
+          row.establishing_carbon_rights_npv;
+        project.establishingCarbonRights = row.establishing_carbon_rights;
+        project.validationNPV = row.validation_npv;
+        project.validation = row.validation;
+        project.implementationLaborNPV = row.implementation_labor_npv;
+        project.implementationLabor = row.implementation_labor;
+        project.monitoringNPV = row.monitoring_npv;
+        project.maintenanceNPV = row.maintenance_npv;
+        project.monitoring = row.monitoring;
+        project.maintenance = row.maintenance;
+        project.monitoringMaintenanceNPV = row.monitoring_maintenance_npv;
+        project.monitoringMaintenance = row.monitoring_maintenance;
+        project.communityBenefitNPV = row.community_benefit_npv;
+        project.communityBenefit = row.community_benefit;
+        project.carbonStandardFeesNPV = row.carbon_standard_fees_npv;
+        project.carbonStandardFees = row.carbon_standard_fees;
+        project.baselineReassessmentNPV = row.baseline_reassessment_npv;
+        project.baselineReassessment = row.baseline_reassessment;
+        project.mrvNPV = row.mrv_npv;
+        project.mrv = row.mrv;
+        project.longTermProjectOperatingNPV =
+          row.long_term_project_operating_npv;
+        project.longTermProjectOperating = row.long_term_project_operating;
+        project.leftoverAfterOpex = row.leftover_after_opex;
+        project.leftoverAfterOpexNPV = row.leftover_after_opex_NPV;
+        project.totalRevenue = row.total_revenue;
+        project.totalRevenueNPV = row.total_revenu_npv;
+        project.creditsIssued = row.credits_issued;
+        project.scoreCardRating = scoreCardRating;
+        return project;
+      }),
+    );
   }
 
   private processProjectScorecard(raw: ExcelProjectScorecard[]) {

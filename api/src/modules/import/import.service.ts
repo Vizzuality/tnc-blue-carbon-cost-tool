@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { EntityPreprocessor } from '@api/modules/import/services/entity.preprocessor';
 import {
   ExcelParserInterface,
@@ -17,6 +17,7 @@ import {
 import { UserUploadCostInputs } from '@shared/entities/users/user-upload-cost-inputs.entity';
 import { UserUploadRestorationInputs } from '@shared/entities/users/user-upload-restoration-inputs.entity';
 import { UserUploadConservationInputs } from '@shared/entities/users/user-upload-conservation-inputs.entity';
+import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingestion.xlsx-parser';
 
 @Injectable()
 export class ImportService {
@@ -28,6 +29,7 @@ export class ImportService {
   };
 
   constructor(
+    private readonly dataIngestionParser: DataIngestionExcelParser,
     @Inject(ExcelParserToken)
     private readonly excelParser: ExcelParserInterface,
     private readonly importRepo: ImportRepository,
@@ -54,23 +56,32 @@ export class ImportService {
     }
   }
 
-  async import(fileBuffer: Buffer, userId: string) {
+  async import(fileBuffer: Buffer, userId: string): Promise<void> {
     this.logger.warn('Excel file import started...');
     this.registerImportEvent(userId, this.eventMap.STARTED);
     try {
-      const parsedSheets = await this.excelParser.parseExcel(fileBuffer);
-      const parsedDBEntities = this.preprocessor.toDbEntities(parsedSheets);
+      const parsedSheets =
+        await this.dataIngestionParser.parseBuffer(fileBuffer);
+      const parsedDBEntities =
+        await this.preprocessor.toDbEntities(parsedSheets);
       await this.importRepo.ingest(parsedDBEntities);
       this.logger.warn('Excel file import completed successfully');
       this.registerImportEvent(userId, this.eventMap.SUCCESS);
     } catch (e) {
       this.logger.error('Excel file import failed', e);
-      this.registerImportEvent(userId, this.eventMap.FAILED);
+      this.registerImportEvent(userId, this.eventMap.FAILED, {
+        error: { type: e.constructor.name, message: e.message },
+      });
+      throw new ConflictException(e);
     }
   }
 
-  registerImportEvent(userId: string, eventType: typeof this.eventMap) {
-    this.eventBus.publish(new ImportEvent(eventType, userId, {}));
+  registerImportEvent(
+    userId: string,
+    eventType: typeof this.eventMap,
+    payload = {},
+  ) {
+    this.eventBus.publish(new ImportEvent(eventType, userId, payload));
   }
 
   async importDataProvidedByPartner(fileBuffers: Buffer[], userId: string) {

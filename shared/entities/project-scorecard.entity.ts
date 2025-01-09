@@ -6,6 +6,7 @@ import {
   ManyToOne,
   Unique,
   JoinColumn,
+  BeforeInsert,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";

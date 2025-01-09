@@ -5,7 +5,7 @@ import {
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { PROJECT_PRICE_TYPE } from '@shared/entities/projects.entity';
 
-export type ExcelProjects = {
+export type ExcelProject = {
   project_name: string;
   continent: string;
   country: string;
