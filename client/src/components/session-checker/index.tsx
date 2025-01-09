@@ -37,6 +37,7 @@ export default function SessionChecker() {
     {
       queryKey,
       enabled: queryEnabled,
+      retry: false,
     },
   );
 
