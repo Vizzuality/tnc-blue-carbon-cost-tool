@@ -2,7 +2,8 @@ import { ComponentProps } from "react";
 
 import { useFormContext } from "react-hook-form";
 
-import { cn, convertToDecimalPercentageValue } from "@/lib/utils";
+import { toDecimalPercentageValue } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
 
@@ -46,7 +47,7 @@ export default function CellValue({
                 onChange={(e) => {
                   const value = e.target.value;
                   if (isPercentage && value) {
-                    onChange(convertToDecimalPercentageValue(value));
+                    onChange(toDecimalPercentageValue(value));
                   } else {
                     onChange(value);
                   }
