@@ -11,19 +11,22 @@ const OMITTED_FIELDS = [
   "costRange",
   "abatementPotentialRange",
   "costRangeSelector",
+  "priceType",
 ];
 
 export const filtersToQueryParams = (
   filters: z.infer<typeof filtersSchema | typeof scorecardFiltersSchema>,
 ) => {
   return Object.keys(filters)
-    .filter((key) => !OMITTED_FIELDS.includes(key))
+    .filter(
+      (key) =>
+        !OMITTED_FIELDS.includes(key) &&
+        filters[key as keyof typeof filters] !== "",
+    )
     .reduce(
       (acc, key) => ({
         ...acc,
-        ...(Array.isArray(filters[key as keyof typeof filters]) && {
-          [`filter[${key}]`]: filters[key as keyof typeof filters],
-        }),
+        [`filter[${key}]`]: filters[key as keyof typeof filters],
       }),
       {},
     );

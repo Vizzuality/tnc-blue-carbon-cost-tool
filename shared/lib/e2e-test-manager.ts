@@ -1,10 +1,14 @@
 import { DataSource } from "typeorm";
 import { User } from "@shared/entities/users/user.entity";
-import { createUser } from "@shared/lib/entity-mocks";
+import {createProject, createUser} from "@shared/lib/entity-mocks";
 import { clearTestDataFromDatabase } from "@shared/lib/db-helpers";
 import { JwtPayload, sign } from "jsonwebtoken";
 import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
 import { COMMON_DATABASE_ENTITIES } from "@shared/lib/db-entities";
+import {ProjectType} from "@shared/contracts/projects.contract";
+import * as fs from "fs";
+import * as path from "path";
+
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -46,6 +50,15 @@ export class E2eTestManager {
     await this.dataSource.destroy();
   }
 
+  async ingestCountries() {
+    const geoCountriesFilePath = path.join(
+        path.resolve(process.cwd(), '../'),
+        'api/src/insert_countries.sql'
+    );
+    const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, 'utf8');
+    await this.dataSource.query(geoCountriesSql);
+  }
+
   async createUser(additionalData?: Partial<User>) {
     return createUser(this.dataSource, additionalData);
   }
@@ -54,6 +67,8 @@ export class E2eTestManager {
     return {
       createUser: (additionalData?: Partial<User>) =>
         createUser(this.getDataSource(), additionalData),
+      createProject: (additionalData?: Partial<ProjectType>) =>
+        createProject(this.getDataSource(), additionalData),
     };
   }
 
