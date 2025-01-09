@@ -15,6 +15,7 @@ describe('Create Custom Projects - Setup', () => {
     const { jwtToken: token } = await testManager.setUpTestUser();
     jwtToken = token;
     await testManager.ingestCountries();
+    await testManager.ingestProjectScoreCards(jwtToken);
     await testManager.ingestExcel(jwtToken);
   });
 
