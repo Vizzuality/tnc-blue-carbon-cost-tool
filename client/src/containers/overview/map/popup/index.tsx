@@ -1,11 +1,12 @@
 import { useAtomValue } from "jotai";
 
-import { renderCurrency } from "@/lib/format";
+import { formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { popupAtom } from "@/app/(overview)/store";
 
 import MapPopup from "@/components/map/popup";
+import Currency from "@/components/ui/currency";
 
 const HEADER_CLASSES = "py-0.5 text-left font-normal text-muted-foreground";
 const CELL_CLASSES = "py-0.5 font-semibold";
@@ -30,16 +31,18 @@ export default function CostAbatementPopup() {
         <tbody>
           <tr>
             <td className={cn(CELL_CLASSES, "pr-2")}>
-              {renderCurrency(popup?.features?.[0]?.properties?.cost)}
+              <Currency value={popup?.features?.[0]?.properties?.cost} />
             </td>
             <td className={cn(CELL_CLASSES, "px-2")}>
-              {popup?.features?.[0]?.properties?.abatementPotential}
+              {formatNumber(
+                popup?.features?.[0]?.properties?.abatementPotential,
+              )}
             </td>
           </tr>
         </tbody>
       </table>
       <p className="mt-2 text-xs text-muted-foreground">
-        Values for the SUM of all projects.
+        Values for the SUM of all project combinations.
       </p>
     </MapPopup>
   );

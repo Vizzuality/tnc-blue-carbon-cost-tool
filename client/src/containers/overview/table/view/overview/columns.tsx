@@ -85,7 +85,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
     filters.costRangeSelector === "npv" ? "costPerTCO2eNPV" : "costPerTCO2e",
     {
       enableSorting: true,
-      header: () => <HeaderText>Cost $(USD)/tCo2</HeaderText>,
+      header: () => <HeaderText>Cost $(USD)/tCO2e</HeaderText>,
       cell: (props) => {
         const value = props.getValue();
         if (value === null || value === undefined) {

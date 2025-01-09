@@ -39,7 +39,7 @@ const Currency: FC<CurrencyProps> = ({
           "inline-block": true,
           "first-letter:align-top first-letter:text-xs first-letter:tracking-[0.1rem] first-letter:text-muted-foreground":
             !plainSymbol,
-          "first-letter:pr-1": plainSymbol,
+          "first-letter:pr-0.5": plainSymbol,
         },
         className,
       )}
