@@ -387,6 +387,7 @@ export class Project extends BaseEntity {
     enum: PROJECT_SCORE,
     default: PROJECT_SCORE.MEDIUM,
     name: "score_card_rating",
+    nullable: true,
   })
   scoreCardRating: PROJECT_SCORE;
 }

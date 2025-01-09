@@ -7,15 +7,22 @@ import { EntityPreprocessor } from '@api/modules/import/services/entity.preproce
 import { ExcelParserToken } from '@api/modules/import/services/excel-parser.interface';
 import { ImportRepository } from '@api/modules/import/import.repostiory';
 import { ImportEventHandler } from '@api/modules/import/events/handlers/import-event.handler';
+import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingestion.xlsx-parser';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 
 @Module({
-  imports: [MulterModule.register({})],
+  imports: [
+    TypeOrmModule.forFeature([ProjectScorecard]),
+    MulterModule.register({}),
+  ],
   controllers: [ImportController],
   providers: [
     ImportService,
     EntityPreprocessor,
     ImportRepository,
     ImportEventHandler,
+    DataIngestionExcelParser,
     { provide: ExcelParserToken, useClass: XlsxParser },
   ],
 })

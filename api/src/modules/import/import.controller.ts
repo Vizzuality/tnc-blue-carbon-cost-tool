@@ -36,10 +36,10 @@ export class ImportController {
     @GetUser() user: User,
   ): Promise<ControllerResponse> {
     return tsRestHandler(adminContract.uploadFile, async () => {
-      const importedData = await this.service.import(file.buffer, user.id);
+      await this.service.import(file.buffer, user.id);
       return {
         status: 201,
-        body: importedData,
+        body: null,
       };
     });
   }
