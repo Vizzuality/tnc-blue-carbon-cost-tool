@@ -1,6 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import { Box, H2, Text, Button, Tabs, Tab, DropZone, Icon } from '@adminjs/design-system';
+import React, { useLayoutEffect, useState } from 'react';
+import { Box, H2, Text, Button, Tabs, Tab, DropZone, Icon, H3, H4 } from '@adminjs/design-system';
 import { ApiClient } from 'adminjs';
+import styled from 'styled-components';
+
+
+const CustomAlert = ({ title, message, onClose }) => {
+  const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 999;
+`;
+
+const AlertBox = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  text-align: left;
+  overflow: auto;
+`;
+
+  return (
+    <>
+      <Overlay>
+        <AlertBox>
+          <H4>{title}</H4>
+          <Text>{message}</Text>
+          <Button mt="xl" onClick={onClose}>OK</Button>
+        </AlertBox>
+      </Overlay>
+    </>
+  );
+};
 
 const UploadTab = ({props: { id, label, file, handleFileUpload, handleSubmit }}) => {
   return (
@@ -26,27 +68,40 @@ const FileIngestion = () => {
   const [activeTab, setActiveTab] = useState('first');
   const [fileOne, setFileOne] = useState<File | null>(null);
   const [fileTwo, setFileTwo] = useState<File | null>(null);
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [alertData, setAlertData] = useState<{ title: string, message?: string, messages?: string[]} | null>();
 
   // Weird Adminjs setup
   const adminjsClient = new ApiClient();
   const [config, setConfig] = useState<{ apiUrl: string } | null>(null);
   
-  adminjsClient.getPage({ pageName: 'fileIngestion' }).then((response: any) => {
-    setConfig(response.data.config);
-  });
+  useLayoutEffect(() => {
+    adminjsClient.getPage({ pageName: 'fileIngestion' }).then((response: any) => {
+      setConfig(response.data.config);
+    });
+  }, [])
 
   const handleFileUpload = (tab: string, file: File) => {
+    let endPoint = config!.apiUrl;
     if (tab === 'first') {
       setFileOne(file);
+      endPoint += '/admin/upload/xlsx';
     } else if (tab === 'second') {
       setFileTwo(file);
+      endPoint += '/admin/upload/scorecard';
     }
   };
 
   const handleSubmit = async (tab: string) => {
-    const file = tab === 'first' ? fileOne : fileTwo;
+    let endPoint = config!.apiUrl;
+    let file;
+    if (tab === 'first') {
+      endPoint += '/admin/upload/xlsx';
+      file = fileOne;
+    } else if (tab === 'second') {
+      endPoint += '/admin/upload/scorecard';
+      file = fileTwo;
+    }
+
     if (!file) {
       alert('Please upload a file first!');
       return;
@@ -57,18 +112,24 @@ const FileIngestion = () => {
 
     try {
       // /admin is not exposed when the app runs behind a reverse proxy
-      const response = await fetch(`${config!.apiUrl}/admin/upload/xlsx`, {
+      const response = await fetch(endPoint, {
         method: 'POST',
         body: formData,
         credentials: 'include',
       });
       if(response.status === 201) {
-        alert('The file was successfully uploaded and processed.');
+        setAlertData({ title: '✅ Done', message: 'The file was successfully uploaded.' });
+      } else if (response.status === 409) {
+        const body = await response.json();
+        const errorMsgs = body.errors.map((error: {title: string}) => {
+          return error.title
+        });
+        setAlertData({ title: `❌ Error`, message: errorMsgs });
       } else {
-        alert('An error occurred while uploading the file.');
+        setAlertData({ title: '❌ Error', message: 'An error occurred while uploading the file.' });
       }
     } catch (error) {
-      alert(`An error occurred while uploading the file: ${error.message}`);
+      setAlertData({ title: '❌ Error', message: error.message });
     }
   };
 
@@ -105,6 +166,11 @@ const FileIngestion = () => {
           />
         </Tabs>
       </Box>
+      {alertData && <CustomAlert
+        title={alertData.title}
+        message={alertData.message}
+        onClose={() => {setAlertData(null)}}
+      />}
     </Box>
   );
 };
