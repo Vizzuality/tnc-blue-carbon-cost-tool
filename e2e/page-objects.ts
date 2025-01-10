@@ -1,0 +1,1 @@
+export const PROJECT_OVERVIEW_TABLE_LOCATOR = 'table tbody tr'

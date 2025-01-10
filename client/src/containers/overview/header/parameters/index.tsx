@@ -37,7 +37,6 @@ export const PROJECT_PARAMETERS: Parameter[] = [
       {
         label: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
         value: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
-        disabled: true,
       },
     ],
   },

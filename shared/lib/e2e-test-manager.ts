@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 import { User } from "@shared/entities/users/user.entity";
 import {createProject, createUser} from "@shared/lib/entity-mocks";
-import { clearTestDataFromDatabase } from "@shared/lib/db-helpers";
+import {clearTablesByEntities, clearTestDataFromDatabase} from "@shared/lib/db-helpers";
 import { JwtPayload, sign } from "jsonwebtoken";
 import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
 import { COMMON_DATABASE_ENTITIES } from "@shared/lib/db-entities";
@@ -37,6 +37,10 @@ export class E2eTestManager {
 
   async clearDatabase() {
     await clearTestDataFromDatabase(this.dataSource);
+  }
+
+  async clearTablesByEntities(entities: any[]) {
+   await clearTablesByEntities(this.dataSource, entities);
   }
 
   getDataSource() {
