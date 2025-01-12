@@ -34,7 +34,11 @@ export class ImportRepository {
   constructor(private readonly dataSource: DataSource) {}
 
   async importProjectScorecard(projectScorecards: ProjectScorecard[]) {
-    return this.dataSource.transaction(async (manager) => {
+    return this.dataSource.transaction('READ COMMITTED', async (manager) => {
+      // Wipe current project scorecards
+      await manager.clear(ProjectScorecard);
+
+      // Insert
       await manager.save(projectScorecards);
     });
   }
