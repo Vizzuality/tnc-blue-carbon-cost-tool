@@ -14,6 +14,7 @@ import {
   SortingState,
   useReactTable,
   TableState,
+  Updater,
 } from "@tanstack/react-table";
 import { useAtom } from "jotai";
 import { ChevronsUpDownIcon } from "lucide-react";
@@ -62,17 +63,23 @@ export interface TableStateWithMaximums extends TableState {
   };
 }
 
+const DEFAULT_SORTING: SortingState = [
+  {
+    id: "projectName",
+    desc: true,
+  },
+];
+
 export function OverviewTable() {
   const [tableView] = useTableView();
   const [filters] = useProjectOverviewFilters();
   const [, setProjectDetails] = useAtom(projectDetailsAtom);
-  const [sorting, setSorting] = useState<SortingState>([
-    {
-      id: "projectName",
-      desc: true,
-    },
-  ]);
-
+  const [sorting, setSorting] = useState<SortingState>(DEFAULT_SORTING);
+  const handleSortingChange = (updater: Updater<SortingState>) => {
+    const newSorting =
+      typeof updater === "function" ? updater(sorting) : updater;
+    setSorting(newSorting.length === 0 ? DEFAULT_SORTING : newSorting);
+  };
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
@@ -149,7 +156,7 @@ export function OverviewTable() {
       pagination,
       maximums,
     } as TableStateWithMaximums,
-    onSortingChange: setSorting,
+    onSortingChange: handleSortingChange,
     onPaginationChange: setPagination,
   });
 
