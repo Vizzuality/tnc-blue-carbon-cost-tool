@@ -65,15 +65,15 @@ export class CalculationEngine {
     baseSize: BaseSize;
     maxIterations: number;
     tolerance: number;
-  }): number | null {
-    console.time('calculateBreakevenPrice');
+  }): CostOutput {
     const { projectInput, baseIncrease, baseSize, maxIterations, tolerance } =
       dto;
     let carbonPrice = projectInput.initialCarbonPriceAssumption;
     let npvCoveringCost, creditsIssued;
 
     for (let i = 0; i < maxIterations; i++) {
-      projectInput.initialCarbonPriceAssumption = carbonPrice;
+      projectInput.assumptions.carbonPrice = carbonPrice;
+
       const costOutput = this.calculateCostOutput({
         projectInput: projectInput,
         baseIncrease: baseIncrease,
@@ -83,34 +83,23 @@ export class CalculationEngine {
       npvCoveringCost = costOutput.summary['NPV covering cost'];
       creditsIssued = costOutput.summary['Credits issued'];
 
-      console.log(
-        'Iteration',
-        i,
-        ': NPV covering cost =',
-        npvCoveringCost,
-        ', Carbon price =',
-        carbonPrice,
-      );
-
       if (npvCoveringCost < tolerance) {
-        console.log('Converged successfully.', npvCoveringCost, carbonPrice);
-        console.timeEnd('calculateBreakevenPrice');
-        return carbonPrice;
+        return costOutput;
       }
 
       if (creditsIssued === 0) {
-        console.log(
-          'Error: Credits issued are zero, breakeven cost cannot be calculated.',
+        console.error(
+          'Credits issued are zero, breakeven cost cannot be calculated.',
         );
-        console.timeEnd('calculateBreakevenPrice');
-        return null;
+        throw new Error(
+          'Credits issued are zero, breakeven cost cannot be calculated.',
+        );
       }
 
       carbonPrice -= npvCoveringCost / creditsIssued;
     }
 
-    console.log('Warning: Max iterations reached without convergence.');
-    console.timeEnd('calculateBreakevenPrice');
-    return null;
+    console.error('Max iterations reached without convergence.');
+    throw new Error('Max iterations reached without convergence.');
   }
 }
