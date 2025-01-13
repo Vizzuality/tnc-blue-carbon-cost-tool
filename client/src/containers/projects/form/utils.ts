@@ -1,13 +1,5 @@
-"use client";
-
-import { useEffect, useRef } from "react";
-
-import { FormProvider, useForm } from "react-hook-form";
-
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useRouter } from "next/navigation";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
 import {
@@ -16,30 +8,44 @@ import {
 } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
-import {
-  CreateCustomProjectSchema,
-  LOSS_RATE_USED,
-} from "@shared/schemas/custom-projects/create-custom-project.schema";
-import { ExtractAtomValue, useSetAtom } from "jotai";
+import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 
 import { toDecimalPercentageValue, toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
+import { getAuthHeader } from "@/lib/utils";
 
 import { getQueryClient } from "@/app/providers";
 
-import ProjectForm from "@/containers/projects/form";
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
-import Header from "@/containers/projects/new/header";
-import ProjectSidebar from "@/containers/projects/new/sidebar";
-import { formStepAtom } from "@/containers/projects/store";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
+interface OnSubmitOptions {
+  /**
+   * The id of the project to edit
+   */
+  id?: string;
+  /**
+   * The project data to submit
+   */
+  data: CreateCustomProjectForm;
+  /**
+   * The next/navigation router instance
+   */
+  router: AppRouterInstance;
+  /**
+   * The session object
+   */
+  session: Session | null;
+}
 
-export const onSubmit = async (
-  data: CreateCustomProjectForm,
-  router: AppRouterInstance,
-) => {
+export const onSubmit = async ({
+  id,
+  data,
+  router,
+  session,
+}: OnSubmitOptions) => {
   const queryClient = getQueryClient();
 
   const originalValues = { ...data };
@@ -152,19 +158,34 @@ export const onSubmit = async (
     },
   };
 
-  const { status, body } =
-    await client.customProjects.createCustomProject.mutation({ body: data });
+  const { status, body } = id
+    ? await client.customProjects.updateCustomProject.mutation({
+        body: data,
+        params: { id },
+        extraHeaders: {
+          ...getAuthHeader(session?.accessToken),
+        },
+      })
+    : await client.customProjects.createCustomProject.mutation({
+        body: data,
+      });
 
   if (status === 201) {
+    // Only store data in queryClient cache if the project was created
     queryClient.setQueryData(queryKeys.customProjects.cached.queryKey, body);
     router.push("/projects/preview");
   }
+
+  if (status === 200) {
+    await queryClient.invalidateQueries({
+      queryKey: queryKeys.customProjects.one(id).queryKey,
+    });
+    router.push(`/projects/${id}`);
+  }
 };
 
-export default function CreateCustomProject() {
-  const ref = useRef<HTMLDivElement>(null);
-  const setIntersecting = useSetAtom(formStepAtom);
-  const router = useRouter();
+export function useDefaultFormValues(id?: string): CreateCustomProjectForm {
+  const { data: session } = useSession();
   const { queryKey } = queryKeys.customProjects.countries;
   const { data: countryOptions } =
     client.customProjects.getAvailableCountries.useQuery(
@@ -213,57 +234,55 @@ export default function CreateCustomProject() {
         verificationFrequency: undefined,
       },
     },
-    mode: "all",
-  });
-  const activity = methods.watch("activity");
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const sectionSlug = entry.target.id as ExtractAtomValue<
-              typeof formStepAtom
-            >;
-
-            setIntersecting(sectionSlug);
-          }
-        });
-      },
-      {
-        root: ref.current,
-        threshold: 0.4,
-      },
-    );
-
-    const sections = Array.from(
-      ref.current.querySelector("#custom-project-steps-container")?.children ||
-        [],
-    );
-    sections.forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
-  }, [setIntersecting, activity]);
-
-  return (
-    <FormProvider {...methods}>
-      <div className="ml-4 flex flex-1 flex-col">
-        <Header />
-        <div className="flex flex-1 gap-3 overflow-hidden" ref={ref}>
-          <ProjectSidebar />
-          <div className="mb-4 flex-1">
-            <ScrollArea className="flex h-full gap-3 pr-6">
-              <ProjectForm
-                onSubmit={methods.handleSubmit((data) =>
-                  onSubmit(data, router),
-                )}
-              />
-            </ScrollArea>
-          </div>
-        </div>
-      </div>
-    </FormProvider>
+    {
+      queryKey: queryKeys.customProjects.one(id).queryKey,
+      enabled: !!id,
+      select: (data) => data.body.data,
+    },
   );
+
+  // @ts-expect-error fix later
+  return {
+    projectName: project?.projectName || "",
+    activity: project?.activity || ACTIVITY.CONSERVATION,
+    ecosystem: project?.ecosystem || ECOSYSTEM.SEAGRASS,
+    countryCode:
+      (project?.input.countryCode || countryOptions?.[0]?.value) ?? "",
+    projectSizeHa: project?.input.projectSizeHa || 20,
+    carbonRevenuesToCover:
+      project?.input.carbonRevenuesToCover || CARBON_REVENUES_TO_COVER.OPEX,
+    initialCarbonPriceAssumption:
+      project?.input.initialCarbonPriceAssumption || 1000,
+    parameters: {
+      emissionFactorUsed:
+        project?.input.parameters.emissionFactorUsed ||
+        EMISSION_FACTORS_TIER_TYPES.TIER_1,
+      lossRateUsed:
+        project?.input.parameters.lossRateUsed ||
+        LOSS_RATE_USED.PROJECT_SPECIFIC,
+      projectSpecificLossRate:
+        project?.input.parameters.projectSpecificLossRate || -35,
+      projectSpecificEmission:
+        project?.input.parameters.projectSpecificEmission ||
+        PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
+      projectSpecificEmissionFactor:
+        project?.input.parameters.projectSpecificEmissionFactor || 0,
+      emissionFactorSOC: project?.input.parameters.emissionFactorSOC || 0,
+      emissionFactorAGB: project?.input.parameters.emissionFactorAGB || 0,
+      // where can i find this?
+      plantingSuccessRate: 80,
+    },
+    assumptions: {
+      baselineReassessmentFrequency:
+        project?.input.assumptions.baselineReassessmentFrequency || undefined,
+      buffer: project?.input.assumptions.buffer || undefined,
+      carbonPriceIncrease:
+        project?.input.assumptions.carbonPriceIncrease || undefined,
+      discountRate: project?.input.assumptions.discountRate || undefined,
+      projectLength: project?.input.assumptions.projectLength || undefined,
+      restorationRate: project?.input.assumptions.restorationRate || undefined,
+      verificationFrequency:
+        project?.input.assumptions.verificationFrequency || undefined,
+    },
+  };
 }

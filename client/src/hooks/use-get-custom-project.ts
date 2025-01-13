@@ -15,10 +15,13 @@ export function useGetCustomProject(id?: string) {
   const queryCache = useQueryClient().getQueryData<{
     data: InstanceType<typeof CustomProjectEntity>;
   }>(queryKeys.customProjects.cached.queryKey);
+  const { queryKey } = queryKeys.customProjects.one(id, {
+    include: ["country"],
+  });
   const getCustomProjectQuery = client.customProjects.getCustomProject.useQuery(
-    queryKeys.customProjects.one(id || "").queryKey,
+    queryKey,
     {
-      params: { id: id || "" },
+      params: { id: id! },
       extraHeaders: {
         ...getAuthHeader(session?.accessToken as string),
       },
@@ -27,7 +30,7 @@ export function useGetCustomProject(id?: string) {
       },
     },
     {
-      queryKey: queryKeys.customProjects.one(id || "").queryKey,
+      queryKey: queryKey,
       enabled: !!id,
     },
   );

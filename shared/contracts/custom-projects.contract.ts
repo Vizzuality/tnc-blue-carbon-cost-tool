@@ -79,7 +79,7 @@ export const customProjectContract = contract.router({
       id: z.coerce.string(),
     }),
     responses: {
-      201: contract.type<CustomProject>(),
+      200: contract.type<CustomProject>(),
     },
     body: contract.type<Partial<CustomProject>>(),
     summary: "Update an existing custom-project",
