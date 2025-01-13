@@ -36,14 +36,30 @@ const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
   "compare-with-other-project": false,
 };
 
-const parseFeatureFlagsFromEnv = (featureString: string | undefined) => {
-  const featureList = featureString?.split(",").map((f) => f.trim()) || [];
-  return {
-    enabledFeatures: new Set(featureList.filter((f) => !f.startsWith("!"))),
-    disabledFeatures: new Set(
-      featureList.filter((f) => f.startsWith("!")).map((f) => f.slice(1)),
-    ),
-  };
+const parseFeatureFlagsFromEnv = (
+  features: string | undefined,
+): {
+  enabledFromEnv: Set<string>;
+  disabledFromEnv: Set<string>;
+} => {
+  const enabledFromEnv = new Set<string>();
+  const disabledFromEnv = new Set<string>();
+
+  if (!features) {
+    return { enabledFromEnv, disabledFromEnv };
+  }
+
+  features.split(",").forEach((feature) => {
+    const trimmed = feature.trim();
+
+    if (trimmed.startsWith("!")) {
+      disabledFromEnv.add(trimmed.slice(1));
+    } else {
+      enabledFromEnv.add(trimmed);
+    }
+  });
+
+  return { enabledFromEnv, disabledFromEnv };
 };
 
 /**
@@ -61,7 +77,7 @@ const parseFeatureFlagsFromEnv = (featureString: string | undefined) => {
  */
 export function useFeatureFlags(): FeatureFlags {
   return useMemo(() => {
-    const { enabledFeatures, disabledFeatures } = parseFeatureFlagsFromEnv(
+    const { enabledFromEnv, disabledFromEnv } = parseFeatureFlagsFromEnv(
       process.env.NEXT_PUBLIC_FEATURE_FLAGS,
     );
 
@@ -70,9 +86,9 @@ export function useFeatureFlags(): FeatureFlags {
     ).reduce(
       (flags, key) => ({
         ...flags,
-        [key]: disabledFeatures.has(key)
+        [key]: disabledFromEnv.has(key)
           ? false
-          : enabledFeatures.has(key) || DEFAULT_FEATURE_FLAGS[key],
+          : enabledFromEnv.has(key) || DEFAULT_FEATURE_FLAGS[key],
       }),
       {} as FeatureFlags,
     );
