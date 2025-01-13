@@ -36,9 +36,7 @@ export const introItems = [
 export const showIntroModal = (): boolean => {
   if (isServer) return false;
 
-  return (
-    !!process.env.HIDE_INTRO_MODAL || !localStorage.getItem("hideIntroModal")
-  );
+  return !localStorage.getItem("hideIntroModal");
 };
 
 export const setHideIntroModal = (): void => {

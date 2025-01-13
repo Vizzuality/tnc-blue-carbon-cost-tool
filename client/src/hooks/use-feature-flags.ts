@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 
 interface FeatureFlags {
+  /** Controls the visibility of the intro modal */
+  "intro-modal": boolean;
   /** Controls whether users can edit project details and settings in:
    * - /projects/custom-project/details
    * - /projects/custom-project/summary
@@ -25,6 +27,7 @@ interface FeatureFlags {
 }
 
 const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
+  "intro-modal": true,
   "edit-project": false,
   "share-information": false,
   "project-comparison": false,
@@ -33,18 +36,33 @@ const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
   "compare-with-other-project": false,
 };
 
+const parseFeatureFlagsFromEnv = (featureString: string | undefined) => {
+  const featureList = featureString?.split(",").map((f) => f.trim()) || [];
+  return {
+    enabledFeatures: new Set(featureList.filter((f) => !f.startsWith("!"))),
+    disabledFeatures: new Set(
+      featureList.filter((f) => f.startsWith("!")).map((f) => f.slice(1)),
+    ),
+  };
+};
+
 /**
- * Hook to get the feature flags for the current user.
- * Checks the environment variable FEATURE_FLAGS to see which flags are enabled.
- * If the environment variable is not set, falls back to default flags.
+ * Hook to get the feature flags.
+ *
+ * Features can be explicitly enabled or disabled using the NEXT_PUBLIC_FEATURE_FLAGS
+ * environment variable:
+ * - A feature name by itself (e.g., "feature1") enables the feature
+ * - A feature name with '!' prefix (e.g., "!feature2") explicitly disables the feature
+ * - Multiple features can be comma-separated: "feature1,!feature2,feature3"
+ *
+ * Fallback to default flags if the environment variable is not set
  *
  * @returns The feature flags for the current user.
  */
 export function useFeatureFlags(): FeatureFlags {
   return useMemo(() => {
-    const enabledFeatures = new Set(
-      process.env.NEXT_PUBLIC_FEATURE_FLAGS?.split(",").map((f) => f.trim()) ||
-        [],
+    const { enabledFeatures, disabledFeatures } = parseFeatureFlagsFromEnv(
+      process.env.NEXT_PUBLIC_FEATURE_FLAGS,
     );
 
     return (
@@ -52,7 +70,9 @@ export function useFeatureFlags(): FeatureFlags {
     ).reduce(
       (flags, key) => ({
         ...flags,
-        [key]: enabledFeatures.has(key) || DEFAULT_FEATURE_FLAGS[key],
+        [key]: disabledFeatures.has(key)
+          ? false
+          : enabledFeatures.has(key) || DEFAULT_FEATURE_FLAGS[key],
       }),
       {} as FeatureFlags,
     );
