@@ -1,4 +1,7 @@
-import { FC } from "react";
+import { FC, useCallback, useEffect } from "react";
+
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import { type CustomProjectSummary } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import { useSetAtom } from "jotai";
@@ -43,6 +46,20 @@ interface ProjectSummaryProps {
 const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
   const setProjectSummaryOpen = useSetAtom(projectsUIState);
   const featureFlags = useFeatureFlags();
+  const { id } = useParams<{ id?: string }>();
+  const closeProjectSummary = useCallback(() => {
+    setProjectSummaryOpen((prev) => ({
+      ...prev,
+      projectSummaryOpen: false,
+    }));
+  }, [setProjectSummaryOpen]);
+
+  useEffect(() => {
+    // Make sure to close the project summary when the component unmounts
+    return () => {
+      closeProjectSummary();
+    };
+  }, [closeProjectSummary]);
 
   return (
     <div
@@ -53,12 +70,7 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
         type="button"
         variant="ghost"
         className="absolute right-2 top-2 p-3 hover:bg-transparent"
-        onClick={() => {
-          setProjectSummaryOpen((prev) => ({
-            ...prev,
-            projectSummaryOpen: false,
-          }));
-        }}
+        onClick={closeProjectSummary}
       >
         <XIcon className="h-4 w-4 text-foreground hover:text-muted-foreground" />
       </Button>
@@ -95,9 +107,11 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
           edit project details.
         </p>
         {featureFlags["edit-project"] && (
-          <Button type="button" variant="outline">
-            <FileEdit />
-            <span>Edit Project</span>
+          <Button type="button" variant="outline" asChild>
+            <Link href={`/projects/${id}/edit`}>
+              <FileEdit />
+              <span>Edit Project</span>
+            </Link>
           </Button>
         )}
       </div>

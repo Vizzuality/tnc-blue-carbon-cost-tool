@@ -3,7 +3,7 @@ import { atom } from "jotai";
 import {
   PROJECT_SETUP_STEPS,
   RESTORATION_STEPS,
-} from "@/containers/projects/new/sidebar";
+} from "@/containers/projects/form/sidebar";
 
 export const formStepAtom = atom<
   | (typeof PROJECT_SETUP_STEPS)[number]["slug"]

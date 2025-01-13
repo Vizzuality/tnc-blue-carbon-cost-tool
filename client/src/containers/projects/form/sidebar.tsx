@@ -10,7 +10,7 @@ import { InfoIcon } from "lucide-react";
 
 import { PRIVACY_POLICY_URL } from "@/lib/constants";
 
-import { useFormValues } from "@/containers/projects/form";
+import { useFormValues } from "@/containers/projects/form/project-form";
 import { formStepAtom } from "@/containers/projects/store";
 
 import { Button } from "@/components/ui/button";

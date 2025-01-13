@@ -43,7 +43,6 @@ export const tableKeys = createQueryKeys("tables", {
     },
   ) => ["all", tableView, filters],
 });
-
 export const projectKeys = createQueryKeys("projects", {
   one: (id: string) => [id],
   bounds: (filters: z.infer<typeof getProjectsQuerySchema>) => [filters],
@@ -59,7 +58,10 @@ export const customProjectKeys = createQueryKeys("customProjects", {
     },
   ) => ["all", filters],
   countries: null,
-  one: (id: string) => [id],
+  one: (id?: string, query?: z.infer<typeof customProjecsQuerySchema>) => [
+    id,
+    query,
+  ],
   assumptions: ({
     ecosystem,
     activity,
