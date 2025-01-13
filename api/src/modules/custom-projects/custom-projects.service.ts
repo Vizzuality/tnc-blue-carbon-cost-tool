@@ -81,6 +81,14 @@ export class CustomProjectsService extends AppBaseService<
       costOutput,
     );
 
+    const breakevenPrice = this.calculationEngine.calculateBreakevenPrice({
+      projectInput,
+      baseIncrease,
+      baseSize,
+      maxIterations: 100,
+      tolerance: 0.00001,
+    });
+
     return customProject;
   }
 
