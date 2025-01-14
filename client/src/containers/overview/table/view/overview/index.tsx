@@ -78,7 +78,16 @@ export function OverviewTable() {
   const handleSortingChange = (updater: Updater<SortingState>) => {
     const newSorting =
       typeof updater === "function" ? updater(sorting) : updater;
-    setSorting(newSorting.length === 0 ? DEFAULT_SORTING : newSorting);
+
+    // We want to toggle projectName between asc/desc only (other columns can be asc/desc/none)
+    if (
+      newSorting.length === 0 &&
+      sorting.some((s) => s.id === "projectName")
+    ) {
+      setSorting([{ id: "projectName", desc: false }]);
+    } else {
+      setSorting(newSorting.length === 0 ? DEFAULT_SORTING : newSorting);
+    }
   };
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
