@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { getMetadataArgsStorage } from 'typeorm';
+import { z } from "zod";
+import { getMetadataArgsStorage } from "typeorm";
 
 const generateQuerySchema = <
   FIELDS extends string,
@@ -22,7 +22,7 @@ const generateQuerySchema = <
       z.enum(config.filter as [FILTERS, ...FILTERS[]]),
       z.union([
         z.string().transform((value) => {
-          return value.split(',');
+          return value.split(",");
         }),
         z.array(z.string()),
       ]),
