@@ -11,6 +11,7 @@ import {
   OtherProjectFilters,
   ProjectFilters,
 } from '@shared/dtos/projects/projects-map.dto';
+import { ProjectsKeyCostsService } from '@api/modules/projects/projects-key-costs.service';
 
 @Controller()
 export class ProjectsController {
@@ -19,6 +20,7 @@ export class ProjectsController {
     private readonly countryService: CountriesService,
     private readonly projectsScorecardService: ProjectsScorecardService,
     private readonly projectMapRepository: ProjectsMapRepository,
+    private readonly projectsKeyCostsService: ProjectsKeyCostsService,
   ) {}
 
   @TsRestHandler(projectsContract.getProjects)
@@ -29,6 +31,17 @@ export class ProjectsController {
         : await this.projectsService.findAllPaginated(query);
       return { body: data, status: HttpStatus.OK };
     });
+  }
+
+  @TsRestHandler(projectsContract.getProjectsKeyCosts)
+  async getProjectsKeyCosts(): ControllerResponse {
+    return tsRestHandler(
+      projectsContract.getProjectsKeyCosts,
+      async ({ query }) => {
+        const data = await this.projectsKeyCostsService.findAllPaginated(query);
+        return { body: data, status: HttpStatus.OK };
+      },
+    );
   }
 
   @TsRestHandler(projectsContract.getProjectsScorecard)

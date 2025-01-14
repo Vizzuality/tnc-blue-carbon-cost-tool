@@ -12,6 +12,7 @@ import { BaseEntity } from "typeorm";
 import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
 import { PaginatedProjectsWithMaximums } from "@shared/dtos/projects/projects.dto";
 import { ProjectScorecardDto } from "@shared/dtos/projects/project-scorecard.dto";
+import { ProjectKeyCostsView } from "@shared/entities/project-key-costs.view";
 
 const contract = initContract();
 
@@ -52,6 +53,14 @@ export const projectsContract = contract.router({
       200: contract.type<ApiPaginationResponse<ProjectScorecardView>>(),
     },
     query: getProjectScorecardQuerySchema,
+  },
+  getProjectsKeyCosts: {
+    method: "GET",
+    path: "/projects/key-costs",
+    responses: {
+      200: contract.type<ApiPaginationResponse<ProjectKeyCostsView>>(),
+    },
+    query: getProjectsQuerySchema,
   },
   getProject: {
     method: "GET",
