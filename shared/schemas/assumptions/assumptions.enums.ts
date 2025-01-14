@@ -30,21 +30,39 @@ export const ASSUMPTIONS_NAME_TO_DTO_MAP = {
   "Restoration project length": "projectLength",
 } as const;
 
-export const COSTS_DTO_TO_NAME_MAP = {
-  feasibilityAnalysis: "Feasibility analysis",
-  conservationPlanningAndAdmin: "Conservation planning and admin",
-  dataCollectionAndFieldCost: "Data collection and field cost",
-  communityRepresentation: "Community representation",
-  blueCarbonProjectPlanning: "Blue carbon project planning",
-  establishingCarbonRights: "Establishing carbon rights",
-  validation: "Validation",
-  implementationLabor: "Implementation labor",
-  monitoring: "Monitoring",
-  maintenance: "Maintenance",
-  communityBenefitSharingFund: "Community benefit sharing fund",
-  carbonStandardFees: "Carbon standard fees",
-  baselineReassessment: "Baseline reassessment",
-  mrv: "MRV",
-  longTermProjectOperatingCost: "Long term project operating cost",
-  financingCost: "Financing cost",
-}
+export const COSTS_DTO_MAP = {
+  feasibilityAnalysis: { label: "Feasibility analysis", unit: "$/project" },
+  conservationPlanningAndAdmin: {
+    label: "Conservation planning and admin",
+    unit: "$/yr",
+  },
+  dataCollectionAndFieldCost: {
+    label: "Data collection and field cost",
+    unit: "$/yr",
+  },
+  communityRepresentation: { label: "Community representation", unit: "$/yr" },
+  blueCarbonProjectPlanning: {
+    label: "Blue carbon project planning",
+    unit: "$/project",
+  },
+  establishingCarbonRights: {
+    label: "Establishing carbon rights",
+    unit: "$/yr",
+  },
+  validation: { label: "Validation", unit: "$/project" },
+  implementationLabor: { label: "Implementation labor", unit: "$/ha" },
+  monitoring: { label: "Monitoring", unit: "$/yr" },
+  maintenance: { label: "Maintenance", unit: "%" },
+  communityBenefitSharingFund: {
+    label: "Community benefit sharing fund",
+    unit: "%",
+  },
+  carbonStandardFees: { label: "Carbon standard fees", unit: "$/credit" },
+  baselineReassessment: { label: "Baseline reassessment", unit: "$/event" },
+  mrv: { label: "MRV", unit: "$/event" },
+  longTermProjectOperatingCost: {
+    label: "Long term project operating cost",
+    unit: "$/yr",
+  },
+  financingCost: { label: "Financing cost", unit: "%" },
+};
