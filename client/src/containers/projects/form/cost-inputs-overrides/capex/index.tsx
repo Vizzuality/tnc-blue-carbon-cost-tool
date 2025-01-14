@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
-import { COSTS_DTO_TO_NAME_MAP } from "@shared/schemas/assumptions/assumptions.enums";
+import { COSTS_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
 import {
   flexRender,
   getCoreRowModel,
@@ -73,11 +73,8 @@ export default function CapexCostInputsTable() {
               ),
             )
             .map((key) => ({
-              label:
-                COSTS_DTO_TO_NAME_MAP[
-                  key as keyof typeof COSTS_DTO_TO_NAME_MAP
-                ],
-              unit: "N/A",
+              label: COSTS_DTO_MAP[key as keyof typeof COSTS_DTO_MAP].label,
+              unit: COSTS_DTO_MAP[key as keyof typeof COSTS_DTO_MAP].unit,
               property: `costInputs.${key}` as CapexFormProperty,
               defaultValue: data.body.data[key as keyof typeof data.body.data],
               value: "",

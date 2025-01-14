@@ -60,6 +60,7 @@ export const COLUMNS = [
             props.row.original
               .property as keyof CreateCustomProjectForm["costInputs"]
           }
+          isPercentage={props.row.original.unit.includes("%")}
         />
       );
     },
