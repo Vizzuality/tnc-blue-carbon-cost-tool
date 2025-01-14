@@ -10,6 +10,7 @@ import { ProjectMap } from "@shared/dtos/projects/projects-map.dto";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { BaseEntity } from "typeorm";
 import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
+import { ProjectKeyCostView } from "@shared/entities/project-keycost.view";
 import { PaginatedProjectsWithMaximums } from "@shared/dtos/projects/projects.dto";
 import { ProjectScorecardDto } from "@shared/dtos/projects/project-scorecard.dto";
 
@@ -30,9 +31,15 @@ export const projectQuerySchema =
 export const projectScorecardQuerySchema =
   generateEntityQuerySchema(ProjectScorecardView);
 
+export const projectKeyCostQuerySchema =
+    generateEntityQuerySchema(ProjectKeyCostView);
+
 export const getProjectsQuerySchema = projectsQuerySchema.merge(otherParams);
 export const getProjectScorecardQuerySchema =
   projectScorecardQuerySchema.merge(otherParams);
+export const getProjectsKeyCostsQuerySchema = projectKeyCostQuerySchema.merge(otherParams.omit({
+  withMaximums: true,
+}));
 
 export const projectsContract = contract.router({
   getProjects: {
@@ -44,6 +51,14 @@ export const projectsContract = contract.router({
       >(),
     },
     query: getProjectsQuerySchema,
+  },
+  getProjectsKeyCosts: {
+    method: "GET",
+    path: "/projects/keycosts",
+    responses: {
+      200: contract.type<ApiPaginationResponse<ProjectKeyCostView>>(),
+    },
+    query: getProjectsKeyCostsQuerySchema,
   },
   getProjectsScorecard: {
     method: "GET",
