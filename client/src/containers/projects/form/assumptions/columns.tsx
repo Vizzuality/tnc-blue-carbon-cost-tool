@@ -1,10 +1,12 @@
 import { createColumnHelper } from "@tanstack/react-table";
 
-import { formatNumber, toPercentageValue } from "@/lib/format";
-
 import CellValue from "@/containers/projects/form/cell-value";
 import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import {
+  formatCellValue,
+  shouldFormatToPercentage,
+} from "@/containers/projects/utils";
 
 import { Label } from "@/components/ui/label";
 
@@ -33,20 +35,7 @@ export const COLUMNS = [
   }),
   columnHelper.accessor("defaultValue", {
     header: () => <span>Base value</span>,
-    cell: (props) => {
-      const value = props.getValue();
-      if (value === null || value === undefined) {
-        return "-";
-      }
-
-      if (!Number(value)) return value;
-
-      if (props.row.original.unit.includes("%")) {
-        return toPercentageValue(Number(value));
-      }
-
-      return formatNumber(Number(value));
-    },
+    cell: formatCellValue,
   }),
   columnHelper.accessor("unit", {
     header: () => <span>Unit</span>,
@@ -59,7 +48,7 @@ export const COLUMNS = [
           props.row.original
             .property as keyof CreateCustomProjectForm["assumptions"]
         }
-        isPercentage={props.row.original.unit.includes("%")}
+        isPercentage={shouldFormatToPercentage(props.row.original.unit)}
       />
     ),
   }),
