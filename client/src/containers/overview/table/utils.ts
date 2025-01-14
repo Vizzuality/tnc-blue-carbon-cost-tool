@@ -1,3 +1,5 @@
+import { Project } from "@shared/entities/projects.entity";
+import { Column } from "@tanstack/react-table";
 import { z } from "zod";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
@@ -29,4 +31,27 @@ export const filtersToQueryParams = (
       }),
       {},
     );
+};
+
+export const getColumnSortTitle = (column: Column<Partial<Project>>) => {
+  if (!column.getCanSort()) {
+    return undefined;
+  }
+
+  const nextSortOrder = column.getNextSortingOrder();
+
+  if (nextSortOrder === "asc") {
+    return "Sort ascending";
+  }
+
+  if (nextSortOrder === "desc") {
+    return "Sort descending";
+  }
+
+  // If column is projectName, then we want to toggle between asc/desc
+  if (column.id === "projectName") {
+    return "Sort ascending";
+  }
+
+  return "Clear sort";
 };

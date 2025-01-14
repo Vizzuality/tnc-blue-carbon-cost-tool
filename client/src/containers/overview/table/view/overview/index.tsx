@@ -35,6 +35,7 @@ import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 import ProjectDetails from "@/containers/overview/project-details";
 import {
   filtersToQueryParams,
+  getColumnSortTitle,
   NO_DATA,
 } from "@/containers/overview/table/utils";
 import { columns } from "@/containers/overview/table/view/overview/columns";
@@ -66,7 +67,7 @@ export interface TableStateWithMaximums extends TableState {
 const DEFAULT_SORTING: SortingState = [
   {
     id: "projectName",
-    desc: true,
+    desc: false,
   },
 ];
 
@@ -113,7 +114,7 @@ export function OverviewTable() {
         ) as filterFields,
         ...(sorting.length > 0 && {
           sort: sorting.map(
-            (sort) => `${sort.desc ? "" : "-"}${sort.id}`,
+            (sort) => `${sort.desc ? "-" : ""}${sort.id}`,
           ) as sortFields,
         }),
         costRange: filters.costRange,
@@ -187,15 +188,7 @@ export function OverviewTable() {
                             header.column.getCanSort(),
                         })}
                         onClick={header.column.getToggleSortingHandler()}
-                        title={
-                          header.column.getCanSort()
-                            ? header.column.getNextSortingOrder() === "asc"
-                              ? "Sort ascending"
-                              : header.column.getNextSortingOrder() === "desc"
-                                ? "Sort descending"
-                                : "Clear sort"
-                            : undefined
-                        }
+                        title={getColumnSortTitle(header.column)}
                       >
                         {flexRender(
                           header.column.columnDef.header,
