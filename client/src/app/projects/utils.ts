@@ -22,6 +22,8 @@ export async function prefetchProjectData(
   queryClient: QueryClient,
   projectId?: string,
 ): Promise<void> {
+  const session = await auth();
+
   await queryClient.prefetchQuery({
     queryKey: queryKeys.customProjects.countries.queryKey,
     queryFn: () => client.customProjects.getAvailableCountries.query(),
@@ -38,9 +40,7 @@ export async function prefetchProjectData(
       }),
   });
 
-  if (projectId) {
-    const session = await auth();
-
+  if (projectId && session?.accessToken) {
     await queryClient.prefetchQuery({
       queryKey: queryKeys.customProjects.one(projectId).queryKey,
       queryFn: () =>
@@ -48,7 +48,7 @@ export async function prefetchProjectData(
           params: { id: projectId },
           query: {},
           extraHeaders: {
-            ...getAuthHeader(session?.accessToken),
+            ...getAuthHeader(session.accessToken),
           },
         }),
     });
