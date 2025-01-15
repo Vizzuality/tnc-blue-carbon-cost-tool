@@ -20,10 +20,11 @@ export const createUserAction = async (
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
           Origin: response.req.headers.origin,
+          Cookie: response.req.headers.cookie, // Resend the the client cookies to the API to authenticate the admin via session cookie
         },
         body: JSON.stringify(request.payload),
+
       });
 
       if (!apiResponse.ok) {
