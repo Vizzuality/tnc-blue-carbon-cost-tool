@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
 
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 import {
   createCustomProject,
   parseFormValues,
@@ -27,14 +27,14 @@ interface HeaderProps {
 }
 
 export default function Header({ name, id }: HeaderProps) {
-  const methods = useFormContext<CreateCustomProjectForm>();
+  const methods = useFormContext<CustomProjectForm>();
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const router = useRouter();
   const { toast } = useToast();
   const isEdit = !!id;
   const handleSubmit = useCallback(
-    async (data: CreateCustomProjectForm) => {
+    async (data: CustomProjectForm) => {
       try {
         const formValues = parseFormValues(data);
 

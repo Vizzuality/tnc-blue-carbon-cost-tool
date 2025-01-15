@@ -47,7 +47,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export type CreateCustomProjectForm = z.infer<typeof CustomProjectSchema>;
+export type CustomProjectForm = z.infer<typeof CustomProjectSchema>;
 
 export default function SetupProjectForm() {
   const { queryKey } = queryKeys.countries.all;
@@ -61,7 +61,7 @@ export default function SetupProjectForm() {
     },
   );
 
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
 
   const {
     activity,

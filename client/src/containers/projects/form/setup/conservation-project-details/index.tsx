@@ -10,7 +10,7 @@ import {
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/custom-project.schema";
 
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 import LossRate from "@/containers/projects/form/setup/conservation-project-details/loss-rate";
 import T1GlobalEmissionFactor from "@/containers/projects/form/setup/conservation-project-details/t1-global-emission-factor";
 import T2NationalEmissionFactors from "@/containers/projects/form/setup/conservation-project-details/t2-national-emission-factors";
@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/select";
 
 export default function ConservationProjectDetails() {
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
 
   return (
     <Card variant="secondary" className="flex flex-col gap-4">

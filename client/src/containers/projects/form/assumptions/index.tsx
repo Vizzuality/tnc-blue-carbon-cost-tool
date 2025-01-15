@@ -15,7 +15,7 @@ import {
   COLUMNS,
 } from "@/containers/projects/form/assumptions/columns";
 import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import {
   Accordion,
@@ -35,7 +35,7 @@ import {
 export const NO_DATA: DataColumnDef<AssumptionsFormProperty>[] = [];
 
 export default function AssumptionsProjectForm() {
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
 
   const { ecosystem, activity } = form.getValues();
 

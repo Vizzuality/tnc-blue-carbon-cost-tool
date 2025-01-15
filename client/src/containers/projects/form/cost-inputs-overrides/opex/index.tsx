@@ -19,7 +19,7 @@ import {
   COLUMNS,
   OpexFormProperty,
 } from "@/containers/projects/form/cost-inputs-overrides/opex/columns";
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import {
   Table,
@@ -33,7 +33,7 @@ import {
 const NO_DATA: DataColumnDef<OpexFormProperty>[] = [];
 
 export default function OpexCostInputsTable() {
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
 
   const {
     ecosystem,

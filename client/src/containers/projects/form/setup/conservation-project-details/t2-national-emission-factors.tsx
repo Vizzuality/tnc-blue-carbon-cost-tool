@@ -7,14 +7,14 @@ import { ACTIVITY } from "@shared/entities/activity.enum";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import { FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 // ? these inputs are read-only as it is informative to the user. They are not meant to be sent to the API.
 export default function T2NationalEmissionFactors() {
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
 
   const { ecosystem, countryCode, activity } = form.getValues();
 

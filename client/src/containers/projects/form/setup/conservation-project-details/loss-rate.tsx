@@ -9,19 +9,14 @@ import { toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
+import ProjectSpecificLossRate from "@/containers/projects/form/setup/conservation-project-details/project-specific-loss-rate";
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 export default function LossRate() {
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
 
   const {
     ecosystem,
@@ -81,35 +76,5 @@ export default function LossRate() {
     );
   }
 
-  return (
-    <FormField
-      control={form?.control}
-      name="parameters.projectSpecificLossRate"
-      render={() => (
-        <FormItem className="flex items-center justify-between gap-4 space-y-0">
-          <div className="flex-1">
-            <FormLabel
-              tooltip={{
-                title: "Project-specific loss rate",
-                content: "TBD",
-              }}
-            >
-              Project-specific loss rate
-            </FormLabel>
-          </div>
-          <FormControl className="relative after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['%']">
-            <div className="relative flex flex-1 items-center">
-              <Input
-                {...form.register("parameters.projectSpecificLossRate")}
-                className="w-full pr-12"
-                type="number"
-                max={0}
-              />
-            </div>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
+  return <ProjectSpecificLossRate />;
 }

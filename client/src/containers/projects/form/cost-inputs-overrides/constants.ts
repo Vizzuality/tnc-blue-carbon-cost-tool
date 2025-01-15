@@ -1,6 +1,6 @@
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
-type CostInputsKeys = NonNullable<CreateCustomProjectForm["costInputs"]>;
+type CostInputsKeys = NonNullable<CustomProjectForm["costInputs"]>;
 
 // todo: label dictionary
 
