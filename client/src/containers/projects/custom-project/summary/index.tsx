@@ -4,8 +4,6 @@ import { type CustomProjectSummary } from "@shared/dtos/custom-projects/custom-p
 import { useSetAtom } from "jotai";
 import { FileEdit, XIcon } from "lucide-react";
 
-import { toPercentageValue } from "@/lib/format";
-
 import { projectsUIState } from "@/app/projects/store";
 
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
@@ -81,12 +79,7 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
                 </div>
                 <div className="text-base font-medium">
                   <Metric
-                    value={
-                      typeof data[key] === "number" &&
-                      customProjectSummaryUnitMap[key] === "%"
-                        ? parseFloat(toPercentageValue(data[key]))
-                        : data[key]
-                    }
+                    value={data[key]}
                     unit={customProjectSummaryUnitMap[key]}
                     unitBeforeValue
                   />
