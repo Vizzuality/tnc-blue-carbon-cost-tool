@@ -152,9 +152,10 @@ export class CustomProjectFactory {
     dto: CreateCustomProjectDto,
     country: Country,
     input: ProjectInput,
-    output: CostOutput,
+    breakevenCarbonPrice: number | null,
+    costOutput: CostOutput,
+    breakevenPriceCostOutput: CostOutput | null,
   ): CustomProject {
-    const { costPlans, summary, costDetails, yearlyBreakdown } = output;
     const customProject = new CustomProject();
     customProject.projectName = dto.projectName;
     customProject.country = {
@@ -162,16 +163,53 @@ export class CustomProjectFactory {
       name: country.name,
     } as Country;
     customProject.totalCostNPV =
-      costPlans.totalCapexNPV + costPlans.totalOpexNPV;
-    customProject.totalCost = costPlans.totalCapex + costPlans.totalOpex;
+      costOutput.costPlans.totalCapexNPV + costOutput.costPlans.totalOpexNPV;
+    customProject.totalCost =
+      costOutput.costPlans.totalCapex + costOutput.costPlans.totalOpex;
+
+    if (breakevenPriceCostOutput) {
+      customProject.breakevenTotalCost =
+        breakevenPriceCostOutput.costPlans.totalCapex +
+        breakevenPriceCostOutput.costPlans.totalOpex;
+      customProject.breakevenTotalCostNPV =
+        breakevenPriceCostOutput.costPlans.totalCapexNPV +
+        breakevenPriceCostOutput.costPlans.totalOpexNPV;
+    }
+
     customProject.projectSize = dto.projectSizeHa;
     customProject.projectLength = dto.assumptions.projectLength;
     customProject.ecosystem = dto.ecosystem;
     customProject.activity = dto.activity;
     customProject.output = {
+      initialCarbonPriceComputationOutput: this.generateProjectOutputObject(
+        input,
+        input.assumptions.carbonPrice,
+        costOutput,
+      ),
+      breakevenPriceComputationOutput: this.generateProjectOutputObject(
+        input,
+        breakevenCarbonPrice,
+        breakevenPriceCostOutput,
+      ),
+    };
+    customProject.input = dto;
+
+    return customProject;
+  }
+
+  private generateProjectOutputObject(
+    input: ProjectInput,
+    carbonPrice: number | null,
+    costOutput: CostOutput | null,
+  ) {
+    if (!costOutput || !carbonPrice) {
+      return null;
+    }
+
+    return {
       lossRate: input.lossRate,
       carbonRevenuesToCover: input.carbonRevenuesToCover,
-      initialCarbonPrice: input.initialCarbonPriceAssumption,
+      initialCarbonPrice: carbonPrice,
       emissionFactors: {
         emissionFactor: input.emissionFactor,
         emissionFactorAgb: input.emissionFactorAgb,
@@ -179,38 +217,43 @@ export class CustomProjectFactory {
       },
       totalProjectCost: {
         total: {
-          total: costPlans.totalCapex + costPlans.totalOpex,
-          capex: costPlans.totalCapex,
-          opex: costPlans.totalOpex,
+          total:
+            costOutput.costPlans.totalCapex + costOutput.costPlans.totalOpex,
+          capex: costOutput.costPlans.totalCapex,
+          opex: costOutput.costPlans.totalOpex,
         },
         npv: {
-          total: costPlans.totalCapexNPV + costPlans.totalOpexNPV,
-          capex: costPlans.totalCapexNPV,
-          opex: costPlans.totalOpexNPV,
+          total:
+            costOutput.costPlans.totalCapexNPV +
+            costOutput.costPlans.totalOpexNPV,
+          capex: costOutput.costPlans.totalCapexNPV,
+          opex: costOutput.costPlans.totalOpexNPV,
         },
       },
       leftover: {
         total: {
-          total: costPlans.totalCapex + costPlans.totalOpex,
+          total:
+            costOutput.costPlans.totalCapex + costOutput.costPlans.totalOpex,
           leftover:
-            costPlans.totalCapex +
-            costPlans.totalOpex -
-            costPlans.totalCapexNPV -
-            costPlans.totalOpexNPV,
-          opex: costPlans.totalOpex,
+            costOutput.costPlans.totalCapex +
+            costOutput.costPlans.totalOpex -
+            costOutput.costPlans.totalCapexNPV -
+            costOutput.costPlans.totalOpexNPV,
+          opex: costOutput.costPlans.totalOpex,
         },
         npv: {
-          total: costPlans.totalCapexNPV + costPlans.totalOpexNPV,
-          leftover: costPlans.totalCapexNPV + costPlans.totalOpexNPV,
-          opex: costPlans.totalOpexNPV,
+          total:
+            costOutput.costPlans.totalCapexNPV +
+            costOutput.costPlans.totalOpexNPV,
+          leftover:
+            costOutput.costPlans.totalCapexNPV +
+            costOutput.costPlans.totalOpexNPV,
+          opex: costOutput.costPlans.totalOpexNPV,
         },
       },
-      summary,
-      costDetails,
-      yearlyBreakdown,
+      summary: costOutput.summary,
+      costDetails: costOutput.costDetails,
+      yearlyBreakdown: costOutput.yearlyBreakdown,
     };
-    customProject.input = dto;
-
-    return customProject;
   }
 }

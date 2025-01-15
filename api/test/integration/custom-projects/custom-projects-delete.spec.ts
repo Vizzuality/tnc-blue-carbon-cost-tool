@@ -45,7 +45,7 @@ describe('Delete Custom projects', () => {
       expect(response.body.errors).toBeDefined();
     });
 
-    test.only('An authenticated user should not be able to delete projects that do not belong to them', async () => {
+    test('An authenticated user should not be able to delete projects that do not belong to them', async () => {
       // Given a custom project exists
       const customProject = await testManager.mocks().createCustomProject();
 

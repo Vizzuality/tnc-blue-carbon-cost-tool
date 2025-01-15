@@ -68,14 +68,55 @@ export type CostPlanMap = {
   [year: number]: number;
 };
 
-export type CustomProjectOutput =
-  | ConservationProjectOutput
-  | RestorationProjectOutput;
+export type CustomProjectOutput = {
+  initialCarbonPriceComputationOutput:
+    | ConservationProjectOutput
+    | RestorationProjectOutput;
+  breakevenPriceComputationOutput:
+    | ConservationProjectOutput
+    | RestorationProjectOutput
+    | null;
+};
 
 export class RestorationProjectOutput {
-  // to be defined. it will share most of the props, but probably carbon input related fields will be different
-  // i.e conservation does not account for sequestration rate, but restoration does
-  // Restoration does not care about emission factors, but conservation does
+  lossRate: number;
+  emissionFactors: {
+    emissionFactor: number | null;
+    emissionFactorAgb: number;
+    emissionFactorSoc: number;
+  };
+  carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
+  initialCarbonPrice: number;
+  totalProjectCost: {
+    total: {
+      total: number;
+      capex: number;
+      opex: number;
+    };
+    npv: {
+      total: number;
+      capex: number;
+      opex: number;
+    };
+  };
+  leftover: {
+    total: {
+      total: number;
+      leftover: number;
+      opex: number;
+    };
+    npv: {
+      total: number;
+      leftover: number;
+      opex: number;
+    };
+  };
+  summary: CustomProjectSummary;
+  costDetails: {
+    total: CustomProjectCostDetails;
+    npv: CustomProjectCostDetails;
+  };
+  yearlyBreakdown: YearlyBreakdown[];
 }
 
 export class ConservationProjectOutput {

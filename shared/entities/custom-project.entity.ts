@@ -45,6 +45,12 @@ export class CustomProject {
   @Column({ name: "total_cost", type: "decimal", nullable: true })
   totalCost: number;
 
+  @Column({ name: "breakeven_total_cost_npv", type: "decimal", nullable: true })
+  breakevenTotalCostNPV: number;
+
+  @Column({ name: "breakeven_total_cost", type: "decimal", nullable: true })
+  breakevenTotalCost: number;
+
   @Column({ name: "project_size", type: "decimal" })
   projectSize: number;
 
