@@ -7,7 +7,7 @@ import {
   COST_INPUTS_KEYS,
   DataColumnDef,
 } from "@/containers/projects/form/cost-inputs-overrides/constants";
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 import {
   formatCellValue,
   shouldFormatToPercentage,
@@ -50,8 +50,7 @@ export const COLUMNS = [
       return (
         <CellValue
           name={
-            props.row.original
-              .property as keyof CreateCustomProjectForm["costInputs"]
+            props.row.original.property as keyof CustomProjectForm["costInputs"]
           }
           isPercentage={shouldFormatToPercentage(props.row.original.unit)}
         />

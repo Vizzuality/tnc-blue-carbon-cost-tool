@@ -2,7 +2,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 
 import CellValue from "@/containers/projects/form/cell-value";
 import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 import {
   formatCellValue,
   shouldFormatToPercentage,
@@ -11,7 +11,7 @@ import {
 import { Label } from "@/components/ui/label";
 
 export type AssumptionsFormProperty =
-  `assumption.${keyof NonNullable<CreateCustomProjectForm["assumptions"]>}`;
+  `assumption.${keyof NonNullable<CustomProjectForm["assumptions"]>}`;
 
 const columnHelper =
   createColumnHelper<DataColumnDef<AssumptionsFormProperty>>();
@@ -45,8 +45,7 @@ export const COLUMNS = [
     cell: (props) => (
       <CellValue
         name={
-          props.row.original
-            .property as keyof CreateCustomProjectForm["assumptions"]
+          props.row.original.property as keyof CustomProjectForm["assumptions"]
         }
         isPercentage={shouldFormatToPercentage(props.row.original.unit)}
       />

@@ -6,7 +6,7 @@ import AssumptionsProjectForm from "@/containers/projects/form/assumptions";
 import CostInputsOverridesProjectForm from "@/containers/projects/form/cost-inputs-overrides";
 import RestorationPlanProjectForm from "@/containers/projects/form/restoration-plan";
 import SetupProjectForm, {
-  CreateCustomProjectForm,
+  CustomProjectForm,
 } from "@/containers/projects/form/setup";
 import {
   PROJECT_SETUP_STEPS,
@@ -16,7 +16,7 @@ import {
 import { Card } from "@/components/ui/card";
 
 export const useFormValues = () => {
-  const { getValues } = useFormContext<CreateCustomProjectForm>();
+  const { getValues } = useFormContext<CustomProjectForm>();
 
   return {
     ...getValues(),
@@ -25,7 +25,7 @@ export const useFormValues = () => {
 };
 
 export default function ProjectForm() {
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
   const { activity } = form.getValues();
 
   return (

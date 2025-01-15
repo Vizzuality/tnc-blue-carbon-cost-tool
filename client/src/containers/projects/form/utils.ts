@@ -11,16 +11,15 @@ import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumpt
 import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/custom-project.schema";
 import { useSession } from "next-auth/react";
 
-import { toDecimalPercentageValue, toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
 
 import { getQueryClient } from "@/app/providers";
 
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
-export const parseFormValues = (data: CreateCustomProjectForm) => {
+export const parseFormValues = (data: CustomProjectForm) => {
   const queryClient = getQueryClient();
 
   const originalValues = { ...data };
@@ -82,13 +81,6 @@ export const parseFormValues = (data: CreateCustomProjectForm) => {
     parameters: {
       ...restParameters,
       // @ts-expect-error fix later
-      ...(restParameters?.projectSpecificLossRate && {
-        projectSpecificLossRate: toDecimalPercentageValue(
-          // @ts-expect-error fix later
-          restParameters.projectSpecificLossRate,
-        ),
-      }),
-      // @ts-expect-error fix later
       ...(restParameters?.plantingSuccessRate && {
         plantingSuccessRate:
           // @ts-expect-error fix later
@@ -134,7 +126,13 @@ export const parseFormValues = (data: CreateCustomProjectForm) => {
   };
 };
 
-export const useDefaultFormValues = (id?: string): CreateCustomProjectForm => {
+/**
+ * Note: All percentage values are kept in decimal form,
+ * formatting to whole percentage values (for UI display) is done at input component level
+ *
+ * @returns initial values for the form
+ */
+export const useDefaultFormValues = (id?: string): CustomProjectForm => {
   const { data: session } = useSession();
   const { queryKey } = queryKeys.customProjects.countries;
   const { data: countryOptions } =
@@ -185,11 +183,8 @@ export const useDefaultFormValues = (id?: string): CreateCustomProjectForm => {
       lossRateUsed:
         project?.input.parameters.lossRateUsed ||
         LOSS_RATE_USED.PROJECT_SPECIFIC,
-      projectSpecificLossRate: parseFloat(
-        toPercentageValue(
-          project?.input.parameters.projectSpecificLossRate || -0.35,
-        ),
-      ),
+      projectSpecificLossRate:
+        project?.input.parameters.projectSpecificLossRate || -0.35,
       projectSpecificEmission:
         project?.input.parameters.projectSpecificEmission ||
         PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
@@ -216,7 +211,7 @@ export const useDefaultFormValues = (id?: string): CreateCustomProjectForm => {
 };
 
 export const updateCustomProject = async (options: {
-  body: CreateCustomProjectForm;
+  body: CustomProjectForm;
   params: { id: string };
   extraHeaders:
     | {
@@ -241,7 +236,7 @@ export const updateCustomProject = async (options: {
 };
 
 export const createCustomProject = async (options: {
-  body: CreateCustomProjectForm;
+  body: CustomProjectForm;
 }): Promise<ApiResponse<CustomProject>> => {
   try {
     const { status, body } =

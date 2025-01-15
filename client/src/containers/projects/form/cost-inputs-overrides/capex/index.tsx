@@ -19,7 +19,7 @@ import {
   COST_INPUTS_KEYS,
   DataColumnDef,
 } from "@/containers/projects/form/cost-inputs-overrides/constants";
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import {
   Table,
@@ -33,7 +33,7 @@ import {
 const NO_DATA: DataColumnDef<CapexFormProperty>[] = [];
 
 export default function CapexCostInputsTable() {
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
 
   const {
     ecosystem,

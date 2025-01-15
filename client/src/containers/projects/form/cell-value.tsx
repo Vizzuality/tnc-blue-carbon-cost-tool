@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { toDecimalPercentageValue } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import {
   FormControl,
@@ -21,12 +21,12 @@ export default function CellValue({
   hasUnit = false,
   isPercentage = false,
 }: {
-  name: keyof CreateCustomProjectForm;
+  name: keyof CustomProjectForm;
   className?: ComponentProps<typeof FormControl>["className"];
   hasUnit?: boolean;
   isPercentage?: boolean;
 }) {
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
 
   return (
     <FormField

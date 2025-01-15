@@ -10,7 +10,7 @@ import { ExtractAtomValue, useSetAtom } from "jotai";
 
 import Header from "@/containers/projects/form/header";
 import ProjectForm from "@/containers/projects/form/project-form";
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { type CustomProjectForm } from "@/containers/projects/form/setup";
 import ProjectSidebar from "@/containers/projects/form/sidebar";
 import { useDefaultFormValues } from "@/containers/projects/form/utils";
 import { formStepAtom } from "@/containers/projects/store";
@@ -26,7 +26,7 @@ export default function CustomProjectForm({ id }: CustomProjectFormProps) {
   const setIntersecting = useSetAtom(formStepAtom);
 
   const formValues = useDefaultFormValues(id);
-  const methods = useForm<CreateCustomProjectForm>({
+  const methods = useForm<CustomProjectForm>({
     resolver: zodResolver(CustomProjectSchema),
     defaultValues: formValues,
     mode: "all",

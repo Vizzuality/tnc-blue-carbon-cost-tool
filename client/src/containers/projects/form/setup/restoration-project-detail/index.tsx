@@ -13,7 +13,7 @@ import { toDecimalPercentageValue, toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import { Card } from "@/components/ui/card";
 import {
@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/select";
 
 export default function RestorationProjectDetails() {
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
 
   const {
     ecosystem,

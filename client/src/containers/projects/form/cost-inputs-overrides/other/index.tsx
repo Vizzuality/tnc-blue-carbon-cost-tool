@@ -19,7 +19,7 @@ import {
   COLUMNS,
   OtherFormProperty,
 } from "@/containers/projects/form/cost-inputs-overrides/other/columns";
-import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import {
   Table,
@@ -33,7 +33,7 @@ import {
 const NO_DATA: DataColumnDef<OtherFormProperty>[] = [];
 
 export default function OtherCostInputsTable() {
-  const form = useFormContext<CreateCustomProjectForm>();
+  const form = useFormContext<CustomProjectForm>();
 
   const {
     ecosystem,
