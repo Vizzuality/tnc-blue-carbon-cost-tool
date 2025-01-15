@@ -5,6 +5,8 @@ import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { FileEdit } from "lucide-react";
 
+import { toPercentageValue } from "@/lib/format";
+
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import DetailItem from "@/containers/projects/custom-project/details/detail-item";
@@ -92,7 +94,7 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
           />
           <DetailItem
             label="Loss rate"
-            value={lossRate}
+            value={parseFloat(toPercentageValue(lossRate))}
             unit="%"
             numberFormatOptions={{
               minimumFractionDigits: 2,

@@ -9,6 +9,7 @@ import {
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
+import { toDecimalPercentageValue, toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
@@ -204,11 +205,11 @@ export default function RestorationProjectDetails() {
                         onChange={(v) => {
                           form.setValue(
                             "parameters.plantingSuccessRate",
-                            Number(v.target.value),
+                            toDecimalPercentageValue(v.target.value),
                           );
                         }}
                         readOnly
-                        defaultValue={80}
+                        defaultValue={toPercentageValue(0.8)}
                         disabled
                       />
                     </div>

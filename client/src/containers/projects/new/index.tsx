@@ -22,6 +22,7 @@ import {
 } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { ExtractAtomValue, useSetAtom } from "jotai";
 
+import { toDecimalPercentageValue, toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
@@ -99,6 +100,13 @@ export const onSubmit = async (
     ...originalValues,
     parameters: {
       ...restParameters,
+      // @ts-expect-error fix later
+      ...(restParameters?.projectSpecificLossRate && {
+        projectSpecificLossRate: toDecimalPercentageValue(
+          // @ts-expect-error fix later
+          restParameters.projectSpecificLossRate,
+        ),
+      }),
       // @ts-expect-error fix later
       ...(restParameters?.plantingSuccessRate && {
         plantingSuccessRate:
@@ -185,13 +193,15 @@ export default function CreateCustomProject() {
       parameters: {
         emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
         lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
-        projectSpecificLossRate: -35,
+        // This is an exception, we need to convert the decimal value to a percentage value at this place
+        // instead of in the input field. TODO: We should fix this for a cleaner solution.
+        projectSpecificLossRate: parseFloat(toPercentageValue(-0.35)),
         projectSpecificEmission: PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
         projectSpecificEmissionFactor: 0,
         emissionFactorSOC: 0,
         emissionFactorAGB: 0,
         // @ts-expect-error fix later
-        plantingSuccessRate: 80,
+        plantingSuccessRate: 0.8,
       },
       assumptions: {
         baselineReassessmentFrequency: undefined,
