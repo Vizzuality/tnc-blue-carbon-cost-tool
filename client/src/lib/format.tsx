@@ -34,3 +34,8 @@ export const formatNumber = (
 export const toCompactAmount = (value: number) => {
   return `${(value / 1_000_000).toFixed(1)}M`;
 };
+
+export const toPercentageValue = (value: number): string =>
+  formatNumber(value * 100);
+export const toDecimalPercentageValue = (value: string): number =>
+  parseFloat(value) / 100;

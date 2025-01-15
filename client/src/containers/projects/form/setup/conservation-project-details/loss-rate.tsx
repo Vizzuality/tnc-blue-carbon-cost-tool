@@ -5,6 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
+import { toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
@@ -73,7 +74,7 @@ export default function LossRate() {
             className="w-full pr-32 text-muted-foreground"
             disabled
             readOnly
-            value={data}
+            value={toPercentageValue(data)}
           />
         </div>
       </div>

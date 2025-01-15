@@ -14,6 +14,7 @@ import {
   SortingState,
   useReactTable,
   TableState,
+  Updater,
 } from "@tanstack/react-table";
 import { useAtom } from "jotai";
 import { ChevronsUpDownIcon } from "lucide-react";
@@ -34,6 +35,7 @@ import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 import ProjectDetails from "@/containers/overview/project-details";
 import {
   filtersToQueryParams,
+  getColumnSortTitle,
   NO_DATA,
 } from "@/containers/overview/table/utils";
 import { columns } from "@/containers/overview/table/view/overview/columns";
@@ -62,17 +64,32 @@ export interface TableStateWithMaximums extends TableState {
   };
 }
 
+const DEFAULT_SORTING: SortingState = [
+  {
+    id: "projectName",
+    desc: false,
+  },
+];
+
 export function OverviewTable() {
   const [tableView] = useTableView();
   const [filters] = useProjectOverviewFilters();
   const [, setProjectDetails] = useAtom(projectDetailsAtom);
-  const [sorting, setSorting] = useState<SortingState>([
-    {
-      id: "projectName",
-      desc: true,
-    },
-  ]);
+  const [sorting, setSorting] = useState<SortingState>(DEFAULT_SORTING);
+  const handleSortingChange = (updater: Updater<SortingState>) => {
+    const newSorting =
+      typeof updater === "function" ? updater(sorting) : updater;
 
+    // We want to toggle projectName between asc/desc only (other columns can be asc/desc/none)
+    if (
+      newSorting.length === 0 &&
+      sorting.some((s) => s.id === "projectName")
+    ) {
+      setSorting([{ id: "projectName", desc: false }]);
+    } else {
+      setSorting(newSorting.length === 0 ? DEFAULT_SORTING : newSorting);
+    }
+  };
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
@@ -97,7 +114,7 @@ export function OverviewTable() {
         ) as filterFields,
         ...(sorting.length > 0 && {
           sort: sorting.map(
-            (sort) => `${sort.desc ? "" : "-"}${sort.id}`,
+            (sort) => `${sort.desc ? "-" : ""}${sort.id}`,
           ) as sortFields,
         }),
         costRange: filters.costRange,
@@ -149,7 +166,7 @@ export function OverviewTable() {
       pagination,
       maximums,
     } as TableStateWithMaximums,
-    onSortingChange: setSorting,
+    onSortingChange: handleSortingChange,
     onPaginationChange: setPagination,
   });
 
@@ -171,15 +188,7 @@ export function OverviewTable() {
                             header.column.getCanSort(),
                         })}
                         onClick={header.column.getToggleSortingHandler()}
-                        title={
-                          header.column.getCanSort()
-                            ? header.column.getNextSortingOrder() === "asc"
-                              ? "Sort ascending"
-                              : header.column.getNextSortingOrder() === "desc"
-                                ? "Sort descending"
-                                : "Clear sort"
-                            : undefined
-                        }
+                        title={getColumnSortTitle(header.column)}
                       >
                         {flexRender(
                           header.column.columnDef.header,

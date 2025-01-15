@@ -90,6 +90,7 @@ jobs:
             NEXTAUTH_URL=${{ vars.NEXTAUTH_URL }}
             NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
             NEXT_PUBLIC_MAPBOX_API_TOKEN=${{ vars.NEXT_PUBLIC_MAPBOX_API_TOKEN }}
+            NEXT_PUBLIC_FEATURE_FLAGS=${{ vars.NEXT_PUBLIC_FEATURE_FLAGS }}
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
