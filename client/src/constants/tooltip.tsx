@@ -169,7 +169,7 @@ export const PROJECT_DETAILS = {
     "The total cost represents the Net Present Value (NPV) of all expenses associated with a hypothetical blue carbon project, including both capital expenditures (CAPEX) and operating expenditures (OPEX) but excluding financing costs.",
   TOTAL_PROJECT_COST:
     "The total cost represents all expenses associated with a hypothetical blue carbon project, including both capital expenditures (CAPEX) and operating expenditures (OPEX) but excluding financing costs.",
-  LEFTOVER_AFTER_OPEX: "OPEX gap (rounded to nearest million):",
+  NET_REVENUE_AFTER_OPEX_TOTAL_COST: "OPEX gap (rounded to nearest million):",
   ABATEMENT_POTENTIAL:
     "Estimation of the total amount of CO2e abatement that is expected during the life of the project. Used to determine whether the scale justifies the development costs",
   OVERALL_SCORE:
@@ -644,7 +644,7 @@ export const COST_INPUT_OVERRIDE = {
 export const CUSTOM_PROJECT_OUTPUTS = {
   TOTAL_PROJECT_COST:
     "The total financial investment required for the project, including both capital expenditure (CAPEX) and operating expenditure (OPEX), expressed as NPV (Net Present Value).",
-  LEFTOVER_AFTER_OPEX:
+  NET_REVENUE_AFTER_OPEX_TOTAL_COST:
     "The remaining net revenue after accounting for all operating expenses (OPEX) associated with the project.",
   ANNUAL_PROJECT_CASH_FLOW:
     "The net amount of cash generated or consumed by the project on an annual basis, accounting for revenues, CAPEX, and OPEX.",
