@@ -6,6 +6,8 @@ import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-pr
 import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 
+import { toPercentageValue } from "@/lib/format";
+
 import { LAYOUT_TRANSITIONS } from "@/app/(overview)/constants";
 import { costDetailsFilterAtom, projectsUIState } from "@/app/projects/store";
 
@@ -101,7 +103,21 @@ const CustomProjectView: FC<{
         transition={LAYOUT_TRANSITIONS}
         className="overflow-hidden"
       >
-        <ProjectSummary data={output.summary} />
+        <ProjectSummary
+          data={{
+            ...output.summary,
+            "IRR when priced to cover OpEx": parseFloat(
+              toPercentageValue(
+                output.summary["IRR when priced to cover OpEx"],
+              ),
+            ),
+            "Community benefit sharing fund": parseFloat(
+              toPercentageValue(
+                output.summary["Community benefit sharing fund"],
+              ),
+            ),
+          }}
+        />
       </motion.aside>
       <div className="mx-4 flex flex-1 flex-col">
         <CustomProjectHeader data={data} />
