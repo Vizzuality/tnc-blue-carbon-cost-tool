@@ -6,6 +6,7 @@ import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { z } from 'zod';
 import { getProjectsQuerySchema } from '@shared/contracts/projects.contract';
 import { PaginatedProjectsWithMaximums } from '@shared/dtos/projects/projects.dto';
+import { PROJECT_KEY_COSTS_FIELDS } from '@shared/dtos/projects/project-key-costs.dto';
 
 export type ProjectFetchSpecificacion = z.infer<typeof getProjectsQuerySchema>;
 
@@ -110,5 +111,12 @@ export class ProjectsService extends AppBaseService<
     fetchSpecification: ProjectFetchSpecificacion,
   ): Promise<SelectQueryBuilder<Project>> {
     return this.applySearchFiltersToQueryBuilder(query, fetchSpecification);
+  }
+
+  public async findAllProjectsKeyCosts(
+    fetchSpecification: ProjectFetchSpecificacion,
+  ) {
+    fetchSpecification.fields = [...PROJECT_KEY_COSTS_FIELDS];
+    return this.findAllPaginated(fetchSpecification);
   }
 }
