@@ -38,7 +38,7 @@ export abstract class AppBaseService<
     return this._paginate(entitiesAndCount, fetchSpecification);
   }
 
-  private _paginate(
+  protected _paginate(
     entitiesAndCount: [Partial<Entity>[], number],
     fetchSpecification?: FetchSpecification,
   ): {

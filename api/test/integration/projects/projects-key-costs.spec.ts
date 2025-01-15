@@ -1,5 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { projectsContract } from '@shared/contracts/projects.contract';
+import { PROJECT_KEY_COSTS_FIELDS } from '@shared/dtos/projects/project-key-costs.dto';
 import { TestManager } from 'api/test/utils/test-manager';
 
 describe('Projects key costs', () => {
@@ -53,6 +54,11 @@ describe('Projects key costs', () => {
       expect(projects[0].projectName).toBe(projectsKeyCosts[0].projectName);
       expect(projects[1].projectName).toBe(projectsKeyCosts[1].projectName);
       expect(projects[2].projectName).toBe(projectsKeyCosts[2].projectName);
+
+      for (const project of projectsKeyCosts) {
+        for (const expectedField of PROJECT_KEY_COSTS_FIELDS)
+          expect(project[expectedField]).toBeDefined();
+      }
     });
   });
 });
