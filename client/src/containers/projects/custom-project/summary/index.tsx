@@ -82,7 +82,8 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
                 <div className="text-base font-medium">
                   <Metric
                     value={
-                      data[key] && customProjectSummaryUnitMap[key] === "%"
+                      typeof data[key] === "number" &&
+                      customProjectSummaryUnitMap[key] === "%"
                         ? parseFloat(toPercentageValue(data[key]))
                         : data[key]
                     }
