@@ -22,11 +22,12 @@ const LeftOver: FC<LeftoverProps> = ({ total, leftover, opex }) => {
               htmlFor="totalProjectCost"
               className="text-md font-medium"
               tooltip={{
-                title: "Leftover after OpEx",
-                content: CUSTOM_PROJECT_OUTPUTS.LEFTOVER_AFTER_OPEX,
+                title: "Net revenue after OPEX/Total cost",
+                content:
+                  CUSTOM_PROJECT_OUTPUTS.NET_REVENUE_AFTER_OPEX_TOTAL_COST,
               }}
             >
-              <h3 className="text-md">Leftover after OpEx</h3>
+              <h3 className="text-md">Net revenue after OPEX/Total cost</h3>
             </Label>
           </div>
           <div className="text-sm text-muted-foreground">
