@@ -53,7 +53,12 @@ const navItems = {
       title: "My custom projects",
       url: "/my-projects",
       icon: ClipboardListIcon,
-      match: (pathname: string) => pathname === "/my-projects",
+      match: (pathname: string) =>
+        pathname === "/my-projects" ||
+        // edit project (ex. /projects/[uuid]/edit):
+        pathname.match(/^\/projects\/(?!new$)[\w-]+\/edit$/) ||
+        // view project (ex. /projects/[uuid]):
+        pathname.match(/^\/projects\/(?!new$)[\w-]+$/),
       isAuth: true,
     },
     {

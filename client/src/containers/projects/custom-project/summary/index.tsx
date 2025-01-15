@@ -47,6 +47,7 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
   const setProjectSummaryOpen = useSetAtom(projectsUIState);
   const featureFlags = useFeatureFlags();
   const { id } = useParams<{ id?: string }>();
+  const showEditButton = featureFlags["edit-project"] && id;
   const closeProjectSummary = useCallback(() => {
     setProjectSummaryOpen((prev) => ({
       ...prev,
@@ -106,7 +107,7 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
           Calculations based on project setup parameters. For new calculations,
           edit project details.
         </p>
-        {featureFlags["edit-project"] && (
+        {showEditButton && (
           <Button type="button" variant="outline" asChild>
             <Link href={`/projects/${id}/edit`}>
               <FileEdit />

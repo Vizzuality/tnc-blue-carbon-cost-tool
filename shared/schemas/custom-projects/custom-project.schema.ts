@@ -138,7 +138,7 @@ export const InputCostsSchema = z.object({
   financingCost: z.preprocess(parseNumber, z.number().nonnegative()).optional(),
 });
 
-export const CreateCustomProjectBaseSchema = z.object({
+export const CustomProjectBaseSchema = z.object({
   countryCode: z.string().min(3).max(3),
   projectName: z.string().min(3).max(255),
   ecosystem: z.nativeEnum(ECOSYSTEM),
@@ -256,3 +256,15 @@ const ValidateRestorationSchema = (
     });
   }
 };
+export const CustomProjectSchema = z.discriminatedUnion("activity", [
+  z.object({
+    ...CustomProjectBaseSchema.shape,
+    activity: z.literal(ACTIVITY.CONSERVATION),
+    parameters: ConservationCustomProjectSchema,
+  }),
+  z.object({
+    ...CustomProjectBaseSchema.shape,
+    activity: z.literal(ACTIVITY.RESTORATION),
+    parameters: RestorationCustomProjectSchema,
+  }),
+]);

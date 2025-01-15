@@ -24,12 +24,12 @@ export const useFormValues = () => {
   };
 };
 
-export default function ProjectForm({ onSubmit }: { onSubmit: () => void }) {
+export default function ProjectForm() {
   const form = useFormContext<CreateCustomProjectForm>();
   const { activity } = form.getValues();
 
   return (
-    <form className="w-full space-y-8" onSubmit={onSubmit}>
+    <form className="w-full space-y-8">
       <div className="flex flex-col gap-3" id="custom-project-steps-container">
         <Card
           className="flex flex-1 flex-col"

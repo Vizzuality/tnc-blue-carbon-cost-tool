@@ -1,18 +1,75 @@
+import { useCallback } from "react";
+
 import { useFormContext } from "react-hook-form";
 
+import { useRouter } from "next/navigation";
+
+import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+
+import { queryKeys } from "@/lib/query-keys";
+import { getAuthHeader } from "@/lib/utils";
+
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
+import {
+  createCustomProject,
+  parseFormValues,
+  updateCustomProject,
+} from "@/containers/projects/form/utils";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useToast } from "@/components/ui/toast/use-toast";
 
 interface HeaderProps {
   name: string;
-  onSubmit: () => void;
+  id?: string;
 }
 
-export default function Header({ name, onSubmit }: HeaderProps) {
+export default function Header({ name, id }: HeaderProps) {
   const methods = useFormContext<CreateCustomProjectForm>();
-  const isEdit = name.length > 0;
+  const { data: session } = useSession();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const { toast } = useToast();
+  const isEdit = !!id;
+  const handleSubmit = useCallback(
+    async (data: CreateCustomProjectForm) => {
+      try {
+        const formValues = parseFormValues(data);
+
+        if (isEdit) {
+          await updateCustomProject({
+            body: formValues,
+            params: { id: id as string },
+            extraHeaders: {
+              ...getAuthHeader(session?.accessToken as string),
+            },
+          });
+          router.push(`/projects/${id}`);
+        } else {
+          const result = await createCustomProject({
+            body: formValues,
+          });
+
+          queryClient.setQueryData(
+            queryKeys.customProjects.cached.queryKey,
+            result,
+          );
+          router.push("/projects/preview");
+        }
+      } catch (e) {
+        toast({
+          variant: "destructive",
+          description:
+            e instanceof Error
+              ? e.message
+              : "Something went wrong saving the project",
+        });
+      }
+    },
+    [id, session, router, queryClient, isEdit, toast],
+  );
 
   return (
     <div className="flex h-16 items-center justify-between py-3 pr-6">
@@ -24,7 +81,10 @@ export default function Header({ name, onSubmit }: HeaderProps) {
       </div>
       <div className="flex items-center gap-2">
         <Button variant="secondary">Cancel</Button>
-        <Button disabled={!methods.formState.isValid} onClick={onSubmit}>
+        <Button
+          disabled={!methods.formState.isValid}
+          onClick={methods.handleSubmit(handleSubmit)}
+        >
           {isEdit ? "Save" : "Continue"}
         </Button>
       </div>

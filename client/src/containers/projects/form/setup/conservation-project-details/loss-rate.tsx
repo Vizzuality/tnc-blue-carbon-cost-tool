@@ -3,7 +3,7 @@ import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
-import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/custom-project.schema";
 
 import { toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";

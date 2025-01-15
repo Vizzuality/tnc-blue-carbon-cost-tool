@@ -47,12 +47,12 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
   } = data;
   const featureFlags = useFeatureFlags();
   const { id } = useParams<{ id?: string }>();
-
+  const showEditButton = featureFlags["edit-project"] && id;
   return (
     <Card className="flex-1 space-y-1">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold">Project details</h2>
-        {featureFlags["edit-project"] && (
+        {showEditButton && (
           <Button type="button" variant="ghost" asChild>
             <Link href={`/projects/${id}/edit`}>
               <FileEdit />
