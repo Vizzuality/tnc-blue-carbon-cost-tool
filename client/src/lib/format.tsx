@@ -37,5 +37,5 @@ export const toCompactAmount = (value: number) => {
 
 export const toPercentageValue = (value: number): string =>
   formatNumber(value * 100);
-export const toDecimalPercentageValue = (value: string): string =>
-  formatNumber(parseFloat(value) / 100);
+export const toDecimalPercentageValue = (value: string): number =>
+  parseFloat(value) / 100;

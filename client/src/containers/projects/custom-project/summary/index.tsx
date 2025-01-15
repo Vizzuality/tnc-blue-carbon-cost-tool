@@ -4,6 +4,8 @@ import { type CustomProjectSummary } from "@shared/dtos/custom-projects/custom-p
 import { useSetAtom } from "jotai";
 import { FileEdit, XIcon } from "lucide-react";
 
+import { toPercentageValue } from "@/lib/format";
+
 import { projectsUIState } from "@/app/projects/store";
 
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
@@ -33,8 +35,8 @@ const customProjectSummaryUnitMap: Record<keyof CustomProjectSummary, string> =
     "Total revenue (non-discounted)": "$",
     "Financing cost": "$",
     "Funding gap": "$",
-    "Funding gap (NPV)": "%",
-    "Funding gap per tCO2e (NPV)": "%",
+    "Funding gap (NPV)": "$",
+    "Funding gap per tCO2e (NPV)": "$",
     "Community benefit sharing fund": "%",
   } as const;
 interface ProjectSummaryProps {
@@ -79,7 +81,11 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
                 </div>
                 <div className="text-base font-medium">
                   <Metric
-                    value={data[key]}
+                    value={
+                      data[key] && customProjectSummaryUnitMap[key] === "%"
+                        ? parseFloat(toPercentageValue(data[key]))
+                        : data[key]
+                    }
                     unit={customProjectSummaryUnitMap[key]}
                     unitBeforeValue
                   />
