@@ -1,15 +1,14 @@
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-
+import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
 import {
   CARBON_REVENUES_TO_COVER,
+  CustomProject,
   PROJECT_SPECIFIC_EMISSION,
 } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
-import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
-import { Session } from "next-auth";
+import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/custom-project.schema";
 import { useSession } from "next-auth/react";
 
 import { toDecimalPercentageValue, toPercentageValue } from "@/lib/format";
@@ -21,31 +20,7 @@ import { getQueryClient } from "@/app/providers";
 
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
 
-interface OnSubmitOptions {
-  /**
-   * The id of the project to edit
-   */
-  id?: string;
-  /**
-   * The project data to submit
-   */
-  data: CreateCustomProjectForm;
-  /**
-   * The next/navigation router instance
-   */
-  router: AppRouterInstance;
-  /**
-   * The session object
-   */
-  session: Session | null;
-}
-
-export const onSubmit = async ({
-  id,
-  data,
-  router,
-  session,
-}: OnSubmitOptions) => {
+export const parseFormValues = (data: CreateCustomProjectForm) => {
   const queryClient = getQueryClient();
 
   const originalValues = { ...data };
@@ -102,7 +77,7 @@ export const onSubmit = async ({
     ...restParameters
   } = originalValues.parameters;
 
-  data = {
+  return {
     ...originalValues,
     parameters: {
       ...restParameters,
@@ -157,34 +132,9 @@ export const onSubmit = async ({
       }, {}),
     },
   };
-
-  const { status, body } = id
-    ? await client.customProjects.updateCustomProject.mutation({
-        body: data,
-        params: { id },
-        extraHeaders: {
-          ...getAuthHeader(session?.accessToken),
-        },
-      })
-    : await client.customProjects.createCustomProject.mutation({
-        body: data,
-      });
-
-  if (status === 201) {
-    // Only store data in queryClient cache if the project was created
-    queryClient.setQueryData(queryKeys.customProjects.cached.queryKey, body);
-    router.push("/projects/preview");
-  }
-
-  if (status === 200) {
-    await queryClient.invalidateQueries({
-      queryKey: queryKeys.customProjects.one(id).queryKey,
-    });
-    router.push(`/projects/${id}`);
-  }
 };
 
-export function useDefaultFormValues(id?: string): CreateCustomProjectForm {
+export const useDefaultFormValues = (id?: string): CreateCustomProjectForm => {
   const { data: session } = useSession();
   const { queryKey } = queryKeys.customProjects.countries;
   const { data: countryOptions } =
@@ -200,38 +150,13 @@ export function useDefaultFormValues(id?: string): CreateCustomProjectForm {
           })),
       },
     );
-
-  const methods = useForm<CreateCustomProjectForm>({
-    resolver: zodResolver(CreateCustomProjectSchema),
-    defaultValues: {
-      projectName: "",
-      activity: ACTIVITY.CONSERVATION,
-      ecosystem: ECOSYSTEM.SEAGRASS,
-      countryCode: countryOptions?.[0]?.value,
-      projectSizeHa: 20,
-      carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.OPEX,
-      initialCarbonPriceAssumption: 1000,
-      parameters: {
-        emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
-        lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
-        // This is an exception, we need to convert the decimal value to a percentage value at this place
-        // instead of in the input field. TODO: We should fix this for a cleaner solution.
-        projectSpecificLossRate: parseFloat(toPercentageValue(-0.35)),
-        projectSpecificEmission: PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
-        projectSpecificEmissionFactor: 0,
-        emissionFactorSOC: 0,
-        emissionFactorAGB: 0,
-        // @ts-expect-error fix later
-        plantingSuccessRate: 0.8,
-      },
-      assumptions: {
-        baselineReassessmentFrequency: undefined,
-        buffer: undefined,
-        carbonPriceIncrease: undefined,
-        discountRate: undefined,
-        projectLength: undefined,
-        restorationRate: undefined,
-        verificationFrequency: undefined,
+  const { data: project } = client.customProjects.getCustomProject.useQuery(
+    queryKeys.customProjects.one(id).queryKey,
+    {
+      params: { id: id as string },
+      query: {},
+      extraHeaders: {
+        ...getAuthHeader(session?.accessToken),
       },
     },
     {
@@ -260,8 +185,11 @@ export function useDefaultFormValues(id?: string): CreateCustomProjectForm {
       lossRateUsed:
         project?.input.parameters.lossRateUsed ||
         LOSS_RATE_USED.PROJECT_SPECIFIC,
-      projectSpecificLossRate:
-        project?.input.parameters.projectSpecificLossRate || -35,
+      projectSpecificLossRate: parseFloat(
+        toPercentageValue(
+          project?.input.parameters.projectSpecificLossRate || -0.35,
+        ),
+      ),
       projectSpecificEmission:
         project?.input.parameters.projectSpecificEmission ||
         PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
@@ -270,7 +198,7 @@ export function useDefaultFormValues(id?: string): CreateCustomProjectForm {
       emissionFactorSOC: project?.input.parameters.emissionFactorSOC || 0,
       emissionFactorAGB: project?.input.parameters.emissionFactorAGB || 0,
       // where can i find this?
-      plantingSuccessRate: 80,
+      plantingSuccessRate: 0.8,
     },
     assumptions: {
       baselineReassessmentFrequency:
@@ -285,4 +213,48 @@ export function useDefaultFormValues(id?: string): CreateCustomProjectForm {
         project?.input.assumptions.verificationFrequency || undefined,
     },
   };
-}
+};
+
+export const updateCustomProject = async (options: {
+  body: CreateCustomProjectForm;
+  params: { id: string };
+  extraHeaders:
+    | {
+        Authorization?: undefined;
+      }
+    | {
+        Authorization: string;
+      };
+}): Promise<void> => {
+  try {
+    const { status, body } =
+      await client.customProjects.updateCustomProject.mutation(options);
+
+    if (status !== 200) {
+      throw new Error(
+        body?.errors?.[0].title || "Something went wrong updating the project",
+      );
+    }
+  } catch (e) {
+    throw new Error("Something went wrong updating the project");
+  }
+};
+
+export const createCustomProject = async (options: {
+  body: CreateCustomProjectForm;
+}): Promise<ApiResponse<CustomProject>> => {
+  try {
+    const { status, body } =
+      await client.customProjects.createCustomProject.mutation(options);
+
+    if (status !== 201) {
+      throw new Error(
+        body?.errors?.[0].title || "Something went wrong creating the project",
+      );
+    }
+
+    return body;
+  } catch (e) {
+    throw new Error("Something went wrong creating the project");
+  }
+};

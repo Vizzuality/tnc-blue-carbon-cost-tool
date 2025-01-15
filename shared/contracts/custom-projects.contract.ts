@@ -10,9 +10,9 @@ import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-
 import { GetAssumptionsSchema } from "@shared/schemas/assumptions/get-assumptions.schema";
 
 import {
-  CreateCustomProjectSchema,
+  CustomProjectSchema,
   InputCostsSchema,
-} from "@shared/schemas/custom-projects/create-custom-project.schema";
+} from "@shared/schemas/custom-projects/custom-project.schema";
 import { z } from "zod";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { ActivityTypesDefaults } from "@shared/dtos/custom-projects/activity-types-defaults";
@@ -70,7 +70,7 @@ export const customProjectContract = contract.router({
     responses: {
       201: contract.type<ApiResponse<CustomProject>>(),
     },
-    body: CreateCustomProjectSchema,
+    body: CustomProjectSchema,
   },
   updateCustomProject: {
     method: "PATCH",

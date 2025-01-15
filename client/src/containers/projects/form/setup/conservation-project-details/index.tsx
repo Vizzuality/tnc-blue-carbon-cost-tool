@@ -8,7 +8,7 @@ import {
   PROJECT_SPECIFIC_EMISSION,
 } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/custom-project.schema";
 
 import { CreateCustomProjectForm } from "@/containers/projects/form/setup";
 import LossRate from "@/containers/projects/form/setup/conservation-project-details/loss-rate";
