@@ -1,6 +1,6 @@
 import { initContract } from "@ts-rest/core";
 import { LogInSchema } from "@shared/schemas/auth/login.schema";
-import { UserDto, UserWithAccessToken } from "@shared/dtos/users/user.dto";
+import { UserDto, UserWithAuthTokens } from "@shared/dtos/users/user.dto";
 import { TokenTypeSchema } from "@shared/schemas/auth/token-type.schema";
 import { z } from "zod";
 import { BearerTokenSchema } from "@shared/schemas/auth/bearer-token.schema";
@@ -8,16 +8,26 @@ import { SignUpSchema } from "@shared/schemas/auth/sign-up.schema";
 import { RequestEmailUpdateSchema } from "@shared/schemas/users/request-email-update.schema";
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { CreateUserSchema } from "@shared/schemas/users/create-user.schema";
+import { AuthTokenPair } from "@shared/dtos/auth-token-pair.dto";
+import { RefreshTokenSchema } from "@shared/schemas/auth/refresh-token.schema";
 
 // TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 
 const contract = initContract();
 export const authContract = contract.router({
+  refreshToken: {
+    method: "POST",
+    path: "/authentication/refresh-token",
+    responses: {
+      200: contract.type<AuthTokenPair>(),
+    },
+    body: RefreshTokenSchema,
+  },
   login: {
     method: "POST",
     path: "/authentication/login",
     responses: {
-      201: contract.type<UserWithAccessToken>(),
+      201: contract.type<UserWithAuthTokens>(),
     },
     body: LogInSchema,
   },

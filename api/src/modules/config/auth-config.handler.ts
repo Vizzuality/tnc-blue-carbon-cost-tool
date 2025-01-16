@@ -19,6 +19,14 @@ export class JwtConfigHandler {
           ),
         };
 
+      case TOKEN_TYPE_ENUM.REFRESH:
+        return {
+          secret: this.configService.getOrThrow<string>('REFRESH_TOKEN_SECRET'),
+          expiresIn: this.configService.getOrThrow<string>(
+            'REFRESH_TOKEN_EXPIRES_IN',
+          ),
+        };
+
       case TOKEN_TYPE_ENUM.RESET_PASSWORD:
         return {
           secret: this.configService.getOrThrow<string>(

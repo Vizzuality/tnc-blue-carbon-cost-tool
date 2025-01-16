@@ -37,6 +37,17 @@ export class AuthenticationController {
   ) {}
 
   @Public()
+  @TsRestHandler(authContract.refreshToken)
+  public async refreshToken(): Promise<ControllerResponse> {
+    return tsRestHandler(authContract.refreshToken, async ({ body }) => {
+      return {
+        status: 200,
+        body: await this.authService.refreshAuthTokens(body.refreshToken),
+      };
+    });
+  }
+
+  @Public()
   @TsRestHandler(authContract.register)
   async register(
     @Headers('origin') origin: string,

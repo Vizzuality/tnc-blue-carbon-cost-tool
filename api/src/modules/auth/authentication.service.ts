@@ -10,7 +10,7 @@ import { UsersService } from '@api/modules/users/users.service';
 import { User } from '@shared/entities/users/user.entity';
 import * as bcrypt from 'bcrypt';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
-import { UserWithAccessToken } from '@shared/dtos/users/user.dto';
+import { UserWithAuthTokens } from '@shared/dtos/users/user.dto';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { CreateUserDto } from '@shared/dtos/users/create-user.dto';
 import { randomBytes } from 'crypto';
@@ -30,6 +30,9 @@ import {
 } from '@shared/entities/users/backoffice-session';
 import { ROLES } from '@shared/entities/users/roles.enum';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ApiConfigService } from '@api/modules/config/app-config.service';
+import { TimeUtils } from '@api/utils/time.utils';
+import { AuthTokenPair } from '@shared/dtos/auth-token-pair.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -42,7 +45,13 @@ export class AuthenticationService {
     private readonly passwordManager: PasswordManager,
     @InjectRepository(BackOfficeSession)
     private readonly backOfficeSessionRepository: Repository<BackOfficeSession>,
+    private readonly config: ApiConfigService,
   ) {}
+
+  async refreshAuthTokens(refreshToken: string): Promise<AuthTokenPair> {
+    return this.jwtManager.refreshAuthTokens(refreshToken);
+  }
+
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
     if (user?.isActive && (await bcrypt.compare(password, user.password))) {
@@ -105,17 +114,14 @@ export class AuthenticationService {
       .where(`sess -> 'adminUser' ->> 'id' = :id`, { id: user.id })
       .execute();
 
-    const currentDate = new Date();
-    const sessionExpirationDate = new Date(
-      Date.UTC(
-        currentDate.getUTCFullYear() + 1,
-        currentDate.getUTCMonth(),
-        currentDate.getUTCDate(),
-        currentDate.getUTCHours(),
-        currentDate.getUTCMinutes(),
-        currentDate.getUTCSeconds(),
-      ),
-    );
+    // Same expiration time as the refresh token
+    const expiresInDuration = this.config.getJWTConfigByType(
+      TOKEN_TYPE_ENUM.REFRESH,
+    ).expiresIn;
+    const expiresInSeconds =
+      TimeUtils.parseDurationToSeconds(expiresInDuration);
+    const expiresAt = Date.now() + expiresInSeconds * 1000;
+
     const backofficeSession: BackOfficeSession = {
       sid: await uid(24),
       sess: {
@@ -123,6 +129,7 @@ export class AuthenticationService {
           secure: false,
           httpOnly: true,
           path: '/',
+          maxAge: expiresAt,
         },
         adminUser: {
           id: user.id,
@@ -135,24 +142,24 @@ export class AuthenticationService {
           accessToken,
         },
       },
-      expire: sessionExpirationDate,
+      expire: new Date(expiresAt),
     };
     await this.backOfficeSessionRepository.insert(backofficeSession);
     return backofficeSession;
   }
 
-  async logIn(user: User): Promise<[UserWithAccessToken, BackOfficeSession?]> {
-    const { accessToken } = await this.jwtManager.signAccessToken(user.id);
+  async logIn(user: User): Promise<[UserWithAuthTokens, BackOfficeSession?]> {
+    const tokenPair = await this.jwtManager.createAuthTokenPair(user.id);
     if (user.role !== ROLES.ADMIN) {
-      return [{ user, accessToken }];
+      return [{ user, ...tokenPair }];
     }
 
     // An adminjs session needs to be created for the admin user
     const backofficeSession = await this.createBackOfficeSession(
       user,
-      accessToken,
+      tokenPair.accessToken,
     );
-    return [{ user, accessToken }, backofficeSession];
+    return [{ user, ...tokenPair }, backofficeSession];
   }
 
   async signUp(user: User, signUpDto: SignUpDto): Promise<void> {

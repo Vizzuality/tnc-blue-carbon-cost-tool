@@ -59,11 +59,14 @@ describe('Validate Token', () => {
     // When an user with an expired token
     jest.spyOn(jwtConfigHandler, 'getJwtConfigByType').mockReturnValueOnce({
       secret: configService.getOrThrow('RESET_PASSWORD_TOKEN_SECRET'),
-      expiresIn: '1ms',
+      expiresIn: '1s',
     });
 
     const { resetPasswordToken } =
       await jwtManager.signResetPasswordToken('fake_id');
+
+    // Sleep
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // When the users tries to validate the token with type "reset-password"
     const response = await testManager
@@ -174,10 +177,12 @@ describe('Validate Token', () => {
     // When an user with an expired token
     jest.spyOn(jwtConfigHandler, 'getJwtConfigByType').mockReturnValueOnce({
       secret: configService.getOrThrow('ACCESS_TOKEN_SECRET'),
-      expiresIn: '1ms',
+      expiresIn: '1s',
     });
 
     const { accessToken } = await jwtManager.signAccessToken('fake_id');
+    // Sleep
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // When the users tries to validate the token with type "access"
     const response = await testManager
