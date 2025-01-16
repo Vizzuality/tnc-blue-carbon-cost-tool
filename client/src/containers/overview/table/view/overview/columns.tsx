@@ -8,6 +8,7 @@ import { formatCurrency, formatNumber } from "@/lib/format";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
 
+import { HeaderText, CellText } from "@/containers/overview/table/utils";
 import { TableStateWithMaximums } from "@/containers/overview/table/view/overview";
 
 import SingleStackedBarChart from "@/components/ui/bar-chart/single-stacked-bar-chart";
@@ -57,13 +58,6 @@ const createSegments = (
     },
   ];
 };
-
-const HeaderText = ({ children }: { children: React.ReactNode }) => (
-  <span className="text-xs font-normal">{children}</span>
-);
-const CellText = ({ children }: { children: React.ReactNode }) => (
-  <span className="text-sm font-normal">{children}</span>
-);
 
 export const columns = (filters: z.infer<typeof filtersSchema>) => [
   columnHelper.accessor("projectName", {
