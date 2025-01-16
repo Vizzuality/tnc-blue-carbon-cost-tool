@@ -1,0 +1,65 @@
+name: Release to Staging
+
+on:
+#  workflow_dispatch:
+#    inputs:
+#      version:
+#        description: 'New release candidate version (e.g. rc-1.0.0)'
+#        required: true
+  workflow_call:
+    inputs:
+      version:
+        description: 'New release candidate version (e.g. rc-1.0.0)'
+        required: true
+
+jobs:
+  prepare_release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Switch to staging branch and rebase from dev
+        run: |
+          git checkout staging
+          git pull origin staging
+          git rebase origin/dev || (git rebase --abort && echo "Rebase failed, manual resolution required" && exit 1)
+          git push origin staging --force
+
+      - name: Generate release tag
+        run: |
+          NEW_TAG="rc-${{ github.event.inputs.version }}"
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+
+      - name: Generate changelog
+        run: |
+          echo "## Changelog for ${{ github.event.inputs.version }}" > CHANGELOG.md
+          git log $(git describe --tags --abbrev=0)..HEAD --oneline >> CHANGELOG.md
+          cat CHANGELOG.md
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.NEW_TAG }}
+          name: Release Candidate ${{ github.event.inputs.version }}
+          body_path: CHANGELOG.md
+          draft: false
+          prerelease: true
+
+  trigger_deployment:
+    needs: prepare_release
+    uses: ./.github/workflows/deploy-v3.yml
+    with:
+      branch_name: staging
+      environment_name: staging

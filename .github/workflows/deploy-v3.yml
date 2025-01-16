@@ -1,0 +1,289 @@
+name: Deployment
+
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        required: true
+        type: string
+      environment_name:
+        required: true
+        type: string
+
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        required: true
+        type: string
+        description: 'The branch name to deploy'
+      environment_name:
+        required: true
+        type: string
+        description: 'The environment name to deploy'
+
+jobs:
+  trigger_build:
+    runs-on: ubuntu-latest
+    outputs:
+      build_client: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.client == 'true' || github.ref_name == 'staging' || github.ref_name == 'main' }}
+      build_api: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.api == 'true' || github.ref_name == 'staging' || github.ref_name == 'main' }}
+      build_backoffice: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.backoffice == 'true' || github.ref_name == 'staging' || github.ref_name == 'main' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect changes in client and API paths
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            client:
+              - '.github/workflows/**'
+              - 'shared/**'
+              - 'client/**'
+            api:
+              - '.github/workflows/**'
+              - 'shared/**'
+              - 'api/**'
+            backoffice:
+              - '.github/workflows/**'
+              - 'shared/**'
+              - 'backoffice/**'
+
+
+  build_client:
+    needs: [trigger_build ]
+    if: ${{ needs.trigger_build.outputs.build_client == 'true' }}
+    environment: ${{ inputs.environment_name }}
+
+    runs-on: ubuntu-latest
+    name: Build Client image and push to Amazon ECR
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIPELINE_USER_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'true'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build, tag, and push Client image to Amazon ECR
+        uses: docker/build-push-action@v6
+        with:
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+            NEXTAUTH_URL=${{ vars.NEXTAUTH_URL }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            NEXT_PUBLIC_MAPBOX_API_TOKEN=${{ vars.NEXT_PUBLIC_MAPBOX_API_TOKEN }}
+            NEXT_PUBLIC_FEATURE_FLAGS=${{ vars.NEXT_PUBLIC_FEATURE_FLAGS }}
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: ./client/Dockerfile
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.CLIENT_REPOSITORY_NAME }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.CLIENT_REPOSITORY_NAME }}:${{ github.job.environment }}
+
+  build_api:
+    needs: [trigger_build ]
+    if: ${{ needs.trigger_build.outputs.build_api == 'true' }}
+    environment: ${{ inputs.environment_name }}
+    runs-on: ubuntu-latest
+    name: Build API image and push to Amazon ECR
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIPELINE_USER_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'true'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build, tag, and push API image to Amazon ECR
+        uses: docker/build-push-action@v6
+        with:
+          build-args: |
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_NAME=${{ secrets.DB_NAME }}
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}
+            ACCESS_TOKEN_EXPIRES_IN=${{ secrets.ACCESS_TOKEN_EXPIRES_IN }}
+            RESET_PASSWORD_TOKEN_SECRET=${{ secrets.RESET_PASSWORD_TOKEN_SECRET }}
+            RESET_PASSWORD_TOKEN_EXPIRES_IN=${{ secrets.RESET_PASSWORD_TOKEN_EXPIRES_IN }}
+            EMAIL_CONFIRMATION_TOKEN_SECRET=${{ secrets.EMAIL_CONFIRMATION_TOKEN_SECRET }}
+            EMAIL_CONFIRMATION_TOKEN_EXPIRES_IN=${{ secrets.EMAIL_CONFIRMATION_TOKEN_EXPIRES_IN }}
+            ACCOUNT_CONFIRMATION_TOKEN_SECRET=${{ secrets.ACCOUNT_CONFIRMATION_TOKEN_SECRET }}
+            ACCOUNT_CONFIRMATION_EXPIRES_IN=${{ secrets.ACCOUNT_CONFIRMATION_EXPIRES_IN }}
+            AWS_SES_ACCESS_KEY_ID=${{ secrets.AWS_SES_ACCESS_KEY_ID }}
+            AWS_SES_ACCESS_KEY_SECRET=${{ secrets.AWS_SES_ACCESS_KEY_SECRET }}
+            AWS_SES_DOMAIN=${{ secrets.AWS_SES_DOMAIN }}
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            BACKOFFICE_SESSION_COOKIE_NAME=${{ vars.BACKOFFICE_SESSION_COOKIE_NAME }}
+            BACKOFFICE_SESSION_COOKIE_SECRET=${{ secrets.BACKOFFICE_SESSION_COOKIE_SECRET }}
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: ./api/Dockerfile
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.API_REPOSITORY_NAME }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.API_REPOSITORY_NAME }}:${{ github.job.environment }}
+
+  build_backoffice:
+    needs: [ trigger_build ]
+    if: ${{ needs.trigger_build.outputs.build_backoffice == 'true' }}
+    environment: ${{ inputs.environment_name }}
+    runs-on: ubuntu-latest
+    name: Build Backoffice image and push to Amazon ECR
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIPELINE_USER_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'true'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build, tag, and push Admin image to Amazon ECR
+        uses: docker/build-push-action@v6
+        with:
+          build-args: |
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_NAME=${{ secrets.DB_NAME }}
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+            BACKOFFICE_SESSION_COOKIE_NAME=${{ vars.BACKOFFICE_SESSION_COOKIE_NAME }}
+            BACKOFFICE_SESSION_COOKIE_SECRET=${{ secrets.BACKOFFICE_SESSION_COOKIE_SECRET }}
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: ./backoffice/Dockerfile
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ADMIN_REPOSITORY_NAME }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ADMIN_REPOSITORY_NAME }}:${{ github.job.environment }}
+  
+
+  deploy:
+    name: Deploy Services to Amazon EBS
+    needs: [  build_client, build_api, build_backoffice]
+    # We need this in order to run the deployment job if none of the builds fails and at least one of them is successful
+    if: >
+      !failure() &&
+      (
+        needs.build_client.result == 'success' ||
+        needs.build_api.result == 'success' ||
+        needs.build_backoffice.result == 'success'
+      )
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment_name }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PIPELINE_USER_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Generate docker compose file
+        working-directory: infrastructure/source_bundle
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY_CLIENT: ${{ secrets.CLIENT_REPOSITORY_NAME }}
+          ECR_REPOSITORY_API: ${{ secrets.API_REPOSITORY_NAME }}
+          ECR_REPOSITORY_ADMIN: ${{ secrets.ADMIN_REPOSITORY_NAME }}
+          IMAGE_TAG: ${{ github.job.environment }}
+        run: |
+          cat <<EOF >> docker-compose.yml
+          services:
+            client:
+              image: $ECR_REGISTRY/$ECR_REPOSITORY_CLIENT:$IMAGE_TAG
+              restart: always
+              ports:
+                - 3000:3000
+            api:
+              image: $ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG
+              restart: always
+              ports:
+                - 4000:4000
+            backoffice:
+              image: $ECR_REGISTRY/$ECR_REPOSITORY_ADMIN:$IMAGE_TAG
+              restart: always
+              environment:
+                NODE_ENV: production
+              ports:
+                - 1000:1000
+            nginx:
+              image: nginx
+              restart: always
+              volumes:
+                - ./proxy/conf.d:/etc/nginx/conf.d
+                - "\${EB_LOG_BASE_DIR}/nginx:/var/log/nginx"
+              ports:
+                - 80:80
+              depends_on:
+                - api
+                - client
+                - backoffice
+          EOF
+
+      - name: Generate zip file
+        working-directory: infrastructure/source_bundle
+        run: |
+          zip -r deploy.zip * .[^.]*
+
+      - name: Deploy to Amazon EB
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.PIPELINE_USER_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.PROJECT_NAME}}-${{ needs.set_environment_name.outputs.env_name }}
+          environment_name: ${{ secrets.PROJECT_NAME}}-${{ needs.set_environment_name.outputs.env_name }}-env
+          region: ${{ secrets.AWS_REGION }}
+          version_label: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          deployment_package: infrastructure/source_bundle/deploy.zip
