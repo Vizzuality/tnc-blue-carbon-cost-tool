@@ -85,34 +85,46 @@ export class ImportService {
   }
 
   async importDataProvidedByPartner(fileBuffers: Buffer[], userId: string) {
-    // TODO: Debt, add event handling
-    const { costInputs, carbonInputs } =
-      await this.excelParser.parseUserExcels(fileBuffers);
-    const mappedCostInputs = userDataCostInputsMapJsonToEntity(
-      costInputs,
-      userId,
-    );
-    const mappedRestorationInputs = userDataRestorationInputMapJsonToEntity(
-      carbonInputs.restoration,
-      userId,
-    );
-    const mappedConservationInputs = userDataConservationInputMapJsonToEntity(
-      carbonInputs.conservation,
-      userId,
-    );
-    await this.dataSource.transaction(async (manager) => {
-      const userCostInputsRepo = manager.getRepository(UserUploadCostInputs);
-      const userRestorationInputsRepo = manager.getRepository(
-        UserUploadRestorationInputs,
-      );
-      const userConservationInputsRepo = manager.getRepository(
-        UserUploadConservationInputs,
-      );
-      await userCostInputsRepo.save(mappedCostInputs);
-      await userRestorationInputsRepo.save(mappedRestorationInputs);
-      await userConservationInputsRepo.save(mappedConservationInputs);
-    });
+    this.logger.warn('importDataProvidedByPartner started...');
+    this.registerImportEvent(userId, this.eventMap.STARTED);
 
-    return carbonInputs;
+    try {
+      const { costInputs, carbonInputs } =
+        await this.excelParser.parseUserExcels(fileBuffers);
+      const mappedCostInputs = userDataCostInputsMapJsonToEntity(
+        costInputs,
+        userId,
+      );
+      const mappedRestorationInputs = userDataRestorationInputMapJsonToEntity(
+        carbonInputs.restoration,
+        userId,
+      );
+      const mappedConservationInputs = userDataConservationInputMapJsonToEntity(
+        carbonInputs.conservation,
+        userId,
+      );
+      await this.dataSource.transaction(async (manager) => {
+        const userCostInputsRepo = manager.getRepository(UserUploadCostInputs);
+        const userRestorationInputsRepo = manager.getRepository(
+          UserUploadRestorationInputs,
+        );
+        const userConservationInputsRepo = manager.getRepository(
+          UserUploadConservationInputs,
+        );
+        await userCostInputsRepo.save(mappedCostInputs);
+        await userRestorationInputsRepo.save(mappedRestorationInputs);
+        await userConservationInputsRepo.save(mappedConservationInputs);
+      });
+
+      this.logger.warn('importDataProvidedByPartner completed successfully');
+      this.registerImportEvent(userId, this.eventMap.SUCCESS);
+      return carbonInputs;
+    } catch (e) {
+      this.logger.error('importDataProvidedByPartner failed', e);
+      this.registerImportEvent(userId, this.eventMap.FAILED, {
+        error: { type: e.constructor.name, message: e.message },
+      });
+      throw new ConflictException(e);
+    }
   }
 }
