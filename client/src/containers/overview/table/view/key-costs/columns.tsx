@@ -1,42 +1,99 @@
-// import { createColumnHelper } from "@tanstack/react-table";
+import { ProjectKeyCosts } from "@shared/dtos/projects/project-key-costs.dto";
+import { CellContext, createColumnHelper } from "@tanstack/react-table";
+import { z } from "zod";
 
-// const columnHelper = createColumnHelper<{
-//   // ! these types should be part of the Project entity eventually, we are adding them here to silent TS for now
-//   // implementationLabor: number;
-//   // communityBenefitSharingFund: number;
-//   // monitoringAndMaintenance: number;
-//   // communityRepresentationLiaison: number;
-//   // conservationPlanningAndAdmin: number;
-//   // carbonStandardFees: number;
-// }>();
+import { formatCurrency } from "@/lib/format";
 
-export const TABLE_COLUMNS = [
-  // columnHelper.accessor("projectName", {
-  //   enableSorting: true,
-  //   header: () => <span>Project Name</span>,
-  // }),
-  // columnHelper.accessor("implementationLabor", {
-  //   enableSorting: true,
-  //   header: () => <span>Implementation labor</span>,
-  // }),
-  // columnHelper.accessor("communityBenefitSharingFund", {
-  //   enableSorting: true,
-  //   header: () => <span>Community benefit sharing fund</span>,
-  // }),
-  // columnHelper.accessor("monitoringAndMaintenance", {
-  //   enableSorting: true,
-  //   header: () => <span>Monitoring and maintenance</span>,
-  // }),
-  // columnHelper.accessor("communityRepresentationLiaison", {
-  //   enableSorting: true,
-  //   header: () => <span>Community representation/liaison</span>,
-  // }),
-  // columnHelper.accessor("conservationPlanningAndAdmin", {
-  //   enableSorting: true,
-  //   header: () => <span>Conservation planning and admin</span>,
-  // }),
-  // columnHelper.accessor("carbonStandardFees", {
-  //   enableSorting: true,
-  //   header: () => <span>Carbon standard fees</span>,
-  // }),
-];
+import { filtersSchema } from "@/app/(overview)/url-store";
+
+import { HeaderText, CellText } from "@/containers/overview/table/utils";
+import { KEY_COSTS_LABELS } from "@/containers/overview/table/view/key-costs/constants";
+
+const columnHelper = createColumnHelper<ProjectKeyCosts>();
+
+const renderHeader = (label: string) => {
+  return function render() {
+    return <HeaderText>{label}</HeaderText>;
+  };
+};
+
+const renderCell = (props: CellContext<ProjectKeyCosts, number>) => {
+  const value = props.getValue();
+  if (value === null || value === undefined) {
+    return "-";
+  }
+  return <CellText>{formatCurrency(value)}</CellText>;
+};
+
+export const columns = (filters: z.infer<typeof filtersSchema>) => {
+  const isNPV = filters.costRangeSelector === "npv";
+  const implementationLaborAccessor = isNPV
+    ? "implementationLaborNPV"
+    : "implementationLabor";
+
+  const communityBenefitAccessor = isNPV
+    ? "communityBenefitNPV"
+    : "communityBenefit";
+
+  const monitoringMaintenanceAccessor = isNPV
+    ? "monitoringMaintenanceNPV"
+    : "monitoringMaintenance";
+
+  const communityRepresentationAccessor = isNPV
+    ? "communityRepresentationNPV"
+    : "communityRepresentation";
+
+  const conservationPlanningAccessor = isNPV
+    ? "conservationPlanningNPV"
+    : "conservationPlanning";
+
+  const longTermProjectOperatingAccessor = isNPV
+    ? "longTermProjectOperatingNPV"
+    : "longTermProjectOperating";
+
+  const carbonStandardFeesAccessor = isNPV
+    ? "carbonStandardFeesNPV"
+    : "carbonStandardFees";
+
+  return [
+    columnHelper.accessor("projectName", {
+      enableSorting: true,
+      header: renderHeader("Project Name"),
+    }),
+    columnHelper.accessor(implementationLaborAccessor, {
+      enableSorting: true,
+      header: renderHeader(KEY_COSTS_LABELS[implementationLaborAccessor]),
+      cell: renderCell,
+    }),
+    columnHelper.accessor(communityBenefitAccessor, {
+      enableSorting: true,
+      header: renderHeader(KEY_COSTS_LABELS[communityBenefitAccessor]),
+      cell: renderCell,
+    }),
+    columnHelper.accessor(monitoringMaintenanceAccessor, {
+      enableSorting: true,
+      header: renderHeader(KEY_COSTS_LABELS[monitoringMaintenanceAccessor]),
+      cell: renderCell,
+    }),
+    columnHelper.accessor(communityRepresentationAccessor, {
+      enableSorting: true,
+      header: renderHeader(KEY_COSTS_LABELS[communityRepresentationAccessor]),
+      cell: renderCell,
+    }),
+    columnHelper.accessor(conservationPlanningAccessor, {
+      enableSorting: true,
+      header: renderHeader(KEY_COSTS_LABELS[conservationPlanningAccessor]),
+      cell: renderCell,
+    }),
+    columnHelper.accessor(longTermProjectOperatingAccessor, {
+      enableSorting: true,
+      header: renderHeader(KEY_COSTS_LABELS[longTermProjectOperatingAccessor]),
+      cell: renderCell,
+    }),
+    columnHelper.accessor(carbonStandardFeesAccessor, {
+      enableSorting: true,
+      header: renderHeader(KEY_COSTS_LABELS[carbonStandardFeesAccessor]),
+      cell: renderCell,
+    }),
+  ];
+};

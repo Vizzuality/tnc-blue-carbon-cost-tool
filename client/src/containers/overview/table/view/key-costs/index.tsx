@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { projectsQuerySchema } from "@shared/contracts/projects.contract";
+import { ProjectKeyCosts } from "@shared/dtos/projects/project-key-costs.dto";
 import { keepPreviousData } from "@tanstack/react-query";
 import {
   flexRender,
@@ -12,12 +13,15 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { useAtom } from "jotai/index";
 import { ChevronsUpDownIcon } from "lucide-react";
+import { z } from "zod";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
+import { projectDetailsAtom } from "@/app/(overview)/store";
 import {
   useProjectOverviewFilters,
   useTableView,
@@ -27,12 +31,13 @@ import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
 import {
   filtersToQueryParams,
+  getColumnSortTitle,
   NO_DATA,
 } from "@/containers/overview/table/utils";
-import { TABLE_COLUMNS } from "@/containers/overview/table/view/key-costs/columns";
+import { columns } from "@/containers/overview/table/view/key-costs/columns";
 
 import {
-  Table,
+  ScrollableTable,
   TableBody,
   TableCell,
   TableHead,
@@ -43,7 +48,11 @@ import TablePagination, {
   PAGINATION_SIZE_OPTIONS,
 } from "@/components/ui/table-pagination";
 
+type filterFields = z.infer<typeof projectsQuerySchema.shape.fields>;
+type sortFields = z.infer<typeof projectsQuerySchema.shape.sort>;
+
 export function KeyCostsTable() {
+  const [, setProjectDetails] = useAtom(projectDetailsAtom);
   const [tableView] = useTableView();
   const [filters] = useProjectOverviewFilters();
   const [sorting, setSorting] = useState<SortingState>([
@@ -64,13 +73,27 @@ export function KeyCostsTable() {
     pagination,
   }).queryKey;
 
-  const { data, isSuccess } = client.projects.getProjects.useQuery(
+  const columnsBasedOnFilters = columns(filters);
+
+  const { data, isSuccess } = client.projects.getProjectsKeyCosts.useQuery(
     queryKey,
     {
       query: {
         ...filtersToQueryParams(filters),
+        fields: columnsBasedOnFilters.map(
+          (column) => column.accessorKey,
+        ) as filterFields,
+        ...(sorting.length > 0 && {
+          sort: sorting.map(
+            (sort) => `${sort.desc ? "-" : ""}${sort.id}`,
+          ) as sortFields,
+        }),
+        costRange: filters.costRange,
+        abatementPotentialRange: filters.abatementPotentialRange,
+        costRangeSelector: filters.costRangeSelector,
         pageNumber: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
+        partialProjectName: filters.keyword,
       },
     },
     {
@@ -80,9 +103,13 @@ export function KeyCostsTable() {
     },
   );
 
+  const visibleProjectIds = useMemo(() => {
+    return data?.data?.map((item) => item.id!) || [];
+  }, [data]);
+
   const table = useReactTable({
-    data: isSuccess ? data.data : NO_DATA,
-    columns: TABLE_COLUMNS,
+    data: isSuccess ? (data?.data as ProjectKeyCosts[]) : NO_DATA,
+    columns: columnsBasedOnFilters,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     state: {
@@ -95,10 +122,10 @@ export function KeyCostsTable() {
 
   return (
     <>
-      <Table>
-        <TableHeader className="sticky top-0 bg-white">
+      <ScrollableTable>
+        <TableHeader className="sticky top-0">
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="divide-background">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id} className="p-2">
@@ -110,15 +137,7 @@ export function KeyCostsTable() {
                             header.column.getCanSort(),
                         })}
                         onClick={header.column.getToggleSortingHandler()}
-                        title={
-                          header.column.getCanSort()
-                            ? header.column.getNextSortingOrder() === "asc"
-                              ? "Sort ascending"
-                              : header.column.getNextSortingOrder() === "desc"
-                                ? "Sort descending"
-                                : "Clear sort"
-                            : undefined
-                        }
+                        title={getColumnSortTitle(header.column)}
                       >
                         {flexRender(
                           header.column.columnDef.header,
@@ -142,11 +161,32 @@ export function KeyCostsTable() {
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                className="group cursor-pointer transition-colors hover:bg-big-stone-950"
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                onClick={() => {
+                  setProjectDetails({
+                    isOpen: true,
+                    id: row.original.id!,
+                    visibleProjectIds,
+                  });
+                }}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={cn({
+                      "group-hover:underline": cell.column.id === "projectName",
+                      "min-w-[200px] max-w-[200px] truncate":
+                        cell.column.id === "projectName",
+                      "px-4 py-2": cell.column.id !== "scoreCardRating",
+                    })}
+                    title={
+                      typeof cell.getValue() === "string"
+                        ? (cell.getValue() as string)
+                        : undefined
+                    }
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -154,13 +194,13 @@ export function KeyCostsTable() {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={TABLE_COLUMNS.length}>
-                <div className="flex flex-1 justify-center">No results.</div>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
-      </Table>
+      </ScrollableTable>
       <TablePagination
         onChangePagination={setPagination}
         pagination={{

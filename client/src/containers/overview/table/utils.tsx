@@ -1,4 +1,5 @@
-import { Project } from "@shared/entities/projects.entity";
+import { PropsWithChildren } from "react";
+
 import { Column } from "@tanstack/react-table";
 import { z } from "zod";
 
@@ -33,7 +34,7 @@ export const filtersToQueryParams = (
     );
 };
 
-export const getColumnSortTitle = (column: Column<Partial<Project>>) => {
+export const getColumnSortTitle = <T = unknown,>(column: Column<T>) => {
   if (!column.getCanSort()) {
     return undefined;
   }
@@ -55,3 +56,11 @@ export const getColumnSortTitle = (column: Column<Partial<Project>>) => {
 
   return "Clear sort";
 };
+
+export const HeaderText = ({ children }: PropsWithChildren) => (
+  <span className="text-xs font-normal">{children}</span>
+);
+
+export const CellText = ({ children }: PropsWithChildren) => (
+  <span className="text-sm font-normal">{children}</span>
+);
