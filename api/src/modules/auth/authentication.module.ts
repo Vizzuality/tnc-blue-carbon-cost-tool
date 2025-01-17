@@ -17,9 +17,13 @@ import { EmailConfirmationJwtStrategy } from '@api/modules/auth/strategies/email
 import { BackofficeSessionStrategy } from '@api/modules/auth/strategies/backoffice-session.strategy';
 import { BackofficeService } from '@api/modules/backoffice/backoffice.service';
 import { BackofficeModule } from '@api/modules/backoffice/backoffice.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { IssuedRefreshToken } from '@api/modules/auth/entities/issued-refresh-token.entity';
+import { TokenCleanupService } from '@api/modules/auth/services/refresh-token-cleanup.service';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([IssuedRefreshToken]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ApiConfigModule],
@@ -36,6 +40,7 @@ import { BackofficeModule } from '@api/modules/backoffice/backoffice.module';
     BackofficeModule,
   ],
   providers: [
+    TokenCleanupService,
     AuthenticationService,
     LocalStrategy,
     JwtManager,

@@ -70,6 +70,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^10.0.0
         version: 10.4.1(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.1)
+      '@nestjs/schedule':
+        specifier: ^5.0.0
+        version: 5.0.0(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.1(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))
       '@nestjs/terminus':
         specifier: ^10.2.3
         version: 10.2.3(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.1(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/typeorm@10.0.2(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.1(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)(typeorm@0.3.20(pg@8.12.0)(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5))))(reflect-metadata@0.2.2)(rxjs@7.8.1)(typeorm@0.3.20(pg@8.12.0)(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))
@@ -136,6 +139,9 @@ importers:
       uid-safe:
         specifier: ^2.1.5
         version: 2.1.5
+      uuid:
+        specifier: ^11.0.5
+        version: 11.0.5
       xlsx:
         specifier: ^0.18.5
         version: 0.18.5
@@ -1974,6 +1980,12 @@ packages:
       '@nestjs/common': ^10.0.0
       '@nestjs/core': ^10.0.0
 
+  '@nestjs/schedule@5.0.0':
+    resolution: {integrity: sha512-RHqJIOo3AQvdeq0WuIFDqa5N0CkgxgqwmWRla96S6GmFV6qkQD1//EeH4k19MeCu4Ac9PzZ2y/Hu0zK9f//BQg==}
+    peerDependencies:
+      '@nestjs/common': ^10.0.0 || ^11.0.0
+      '@nestjs/core': ^10.0.0 || ^11.0.0
+
   '@nestjs/schematics@10.1.4':
     resolution: {integrity: sha512-QpY8ez9cTvXXPr3/KBrtSgXQHMSV6BkOUYy2c2TTe6cBqriEdGnCYqGl8cnfrQl3632q3lveQPaZ/c127dHsEw==}
     peerDependencies:
@@ -3509,6 +3521,9 @@ packages:
   '@types/lodash@4.17.7':
     resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
 
+  '@types/luxon@3.4.2':
+    resolution: {integrity: sha512-TifLZlFudklWlMBfhubvgqTXRzLDI5pCbGa4P8a3wPyUQSW+1xQ5eDsreP9DWHX3tjq1ke96uYG/nwundroWcA==}
+
   '@types/mapbox-gl@3.4.0':
     resolution: {integrity: sha512-tbn++Mm94H1kE7W6FF0oVC9rMXHVzDDNUbS7KfBMRF8NV/8csFi+67ytKcZJ4LsrpsJ+8MC6Os6ZinEDCsrunw==}
 
@@ -4408,6 +4423,9 @@ packages:
 
   crelt@1.0.6:
     resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
+
+  cron@3.5.0:
+    resolution: {integrity: sha512-0eYZqCnapmxYcV06uktql93wNWdlTmmBFP2iYz+JPVcQqlyFYcn1lFuIk4R54pkOmE7mcldTAPZv6X5XA4Q46A==}
 
   cross-fetch@4.0.0:
     resolution: {integrity: sha512-e4a5N8lVvuLgAWgnCrLr2PP0YyDOTHa9H/Rj54dirp61qXnNq46m82bRhNqIA5VccJtWBvPTFRV3TtvHUKPB1g==}
@@ -6062,6 +6080,10 @@ packages:
     resolution: {integrity: sha512-SZ//hQmvi+kDKrNepArVkYK7/jfeZ5uFNEnYmd45RKZcbGD78KLnrcNXmgeg6m+xNHFvTG+CblszXCy4n6DN4w==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
+
+  luxon@3.5.0:
+    resolution: {integrity: sha512-rh+Zjr6DNfUYR3bPwJEnuwDdqMbxZW7LOQfUN4B54+Cl+0o5zaU9RJ6bcidfDtC1cWCZXQ+nvX8bf6bAji37QQ==}
+    engines: {node: '>=12'}
 
   magic-string@0.30.8:
     resolution: {integrity: sha512-ISQTe55T2ao7XtlAStud6qwYPZjE4GK1S/BeVPus4jrq6JuOnQ00YKQC581RWhR122W7msZV263KzVeLoqidyQ==}
@@ -8074,6 +8096,10 @@ packages:
 
   uuid@10.0.0:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    hasBin: true
+
+  uuid@11.0.5:
+    resolution: {integrity: sha512-508e6IcKLrhxKdBbcA2b4KQZlLVp2+J5UwQ6F7Drckkc5N9ZJwFa4TgWtsww9UG8fGHbm6gbV19TdM5pQ4GaIA==}
     hasBin: true
 
   uuid@8.3.2:
@@ -10268,6 +10294,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@nestjs/schedule@5.0.0(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.1(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))':
+    dependencies:
+      '@nestjs/common': 10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 10.4.1(@nestjs/common@10.4.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      cron: 3.5.0
+
   '@nestjs/schematics@10.1.4(chokidar@3.6.0)(typescript@5.3.3)':
     dependencies:
       '@angular-devkit/core': 17.3.8(chokidar@3.6.0)
@@ -11894,6 +11926,8 @@ snapshots:
 
   '@types/lodash@4.17.7': {}
 
+  '@types/luxon@3.4.2': {}
+
   '@types/mapbox-gl@3.4.0':
     dependencies:
       '@types/geojson': 7946.0.14
@@ -13008,6 +13042,11 @@ snapshots:
 
   crelt@1.0.6: {}
 
+  cron@3.5.0:
+    dependencies:
+      '@types/luxon': 3.4.2
+      luxon: 3.5.0
+
   cross-fetch@4.0.0:
     dependencies:
       node-fetch: 2.7.0
@@ -13521,8 +13560,8 @@ snapshots:
       '@typescript-eslint/parser': 7.18.0(eslint@8.57.0)(typescript@5.4.5)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0)(eslint@8.57.0)
+      eslint-plugin-import: 2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.10.0(eslint@8.57.0)
       eslint-plugin-react: 7.35.2(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.0)
@@ -13545,37 +13584,37 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0)(eslint@8.57.0):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.3.6(supports-color@5.5.0)
       enhanced-resolve: 5.17.1
       eslint: 8.57.0
-      eslint-module-utils: 2.9.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.9.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0)(eslint@8.57.0))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.8.0
       is-bun-module: 1.1.0
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.9.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.9.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 7.18.0(eslint@8.57.0)(typescript@5.4.5)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -13586,7 +13625,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.9.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.9.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.4.5))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.30.0)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -15159,6 +15198,8 @@ snapshots:
   lucide-react@0.447.0(react@18.3.1):
     dependencies:
       react: 18.3.1
+
+  luxon@3.5.0: {}
 
   magic-string@0.30.8:
     dependencies:
@@ -17265,6 +17306,8 @@ snapshots:
   utils-merge@1.0.1: {}
 
   uuid@10.0.0: {}
+
+  uuid@11.0.5: {}
 
   uuid@8.3.2: {}
 

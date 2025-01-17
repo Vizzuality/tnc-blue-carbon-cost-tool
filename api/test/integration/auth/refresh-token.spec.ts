@@ -30,6 +30,9 @@ describe('Refresh token', () => {
       const { jwtToken: accessToken, refreshToken } =
         await testManager.logUserIn(user);
 
+      // This needed to ensure the generated token is different.
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // When
       const refreshRes = await testManager
         .request()
@@ -43,6 +46,30 @@ describe('Refresh token', () => {
       expect(refreshRes.status).toBe(200);
       expect(newAccessToken).not.toBe(accessToken);
       expect(newRefreshToken).not.toBe(refreshToken);
+    });
+
+    it('should return 401 status code if the refresh token has already been used (replay attack)', async () => {
+      // Given
+      const user = await testManager.mocks().createUser({
+        email: 't@t.com',
+        isActive: true,
+        role: ROLES.PARTNER,
+      });
+
+      const { refreshToken } = await testManager.logUserIn(user);
+
+      // When
+      await testManager
+        .request()
+        .post(authContract.refreshToken.path)
+        .send({ refreshToken });
+
+      const res = await testManager
+        .request()
+        .post(authContract.refreshToken.path)
+        .send({ refreshToken });
+
+      expect(res.status).toBe(401);
     });
 
     it('should return a 401 status code when the refresh token sent is valid but the user is not found or inactive', async () => {

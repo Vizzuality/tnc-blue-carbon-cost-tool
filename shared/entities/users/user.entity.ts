@@ -12,6 +12,7 @@ import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-in
 import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity";
 import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity";
 import { CustomProject } from "@shared/entities/custom-project.entity";
+import { IssuedRefreshToken } from "@api/modules/auth/entities/issued-refresh-token.entity";
 
 // TODO: For future reference:
 // https://github.com/typeorm/typeorm/issues/2897
@@ -59,4 +60,7 @@ export class User extends BaseEntity {
 
   @OneToMany("CustomProject", "user")
   customProjects: CustomProject[];
+
+  @OneToMany("IssuedRefreshToken", "user")
+  issuedRefreshTokens: IssuedRefreshToken[];
 }

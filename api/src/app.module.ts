@@ -18,6 +18,7 @@ import { CountriesModule } from '@api/modules/countries/countries.module';
 import { ProjectsModule } from '@api/modules/projects/projects.module';
 import { CustomProjectsModule } from '@api/modules/custom-projects/custom-projects.module';
 import { TerminusModule } from '@nestjs/terminus';
+import { ScheduleModule } from '@nestjs/schedule';
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -30,6 +31,7 @@ const NODE_ENV = process.env.NODE_ENV;
       isGlobal: true,
       validateRequestHeaders: false,
     }),
+    ScheduleModule.forRoot(),
     ApiConfigModule,
     AuthModule,
     NotificationsModule,
