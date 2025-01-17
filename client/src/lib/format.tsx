@@ -14,14 +14,16 @@ export const formatNumber = (
   value: number,
   options: Intl.NumberFormatOptions = {},
 ) => {
-  const formatted = Intl.NumberFormat("en-US", {
-    style: "decimal",
-    maximumFractionDigits: 2,
-    ...options,
-  }).format(value);
-
-  // Removes trailing ".00" if present
-  return formatted.replace(/\.00$/, "");
+  return (
+    Intl.NumberFormat("en-US", {
+      style: "decimal",
+      maximumFractionDigits: 2,
+      ...options,
+    })
+      .format(value)
+      // Removes trailing ".00" if present
+      .replace(/\.00$/, "")
+  );
 };
 
 /**
