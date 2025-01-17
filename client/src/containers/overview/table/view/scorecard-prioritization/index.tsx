@@ -122,7 +122,7 @@ export function ScoredCardPrioritizationTable() {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="p-2">
                     {header.isPlaceholder ? null : (
                       <div
                         className={cn({
