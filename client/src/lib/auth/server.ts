@@ -41,10 +41,15 @@ export async function revokeSession(): Promise<void> {
   cookies().delete(TOKEN_KEY);
 }
 
-export async function getServerAuthUrl(): Promise<string> {
+export async function getServerOrigin(): Promise<string> {
   const host = headers().get("host");
   const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-  return `${protocol}://${host}/auth/api`;
+  return `${protocol}://${host}`;
+}
+
+export async function getServerAuthUrl(): Promise<string> {
+  const origin = await getServerOrigin();
+  return `${origin}/auth/api`;
 }
 
 /**
@@ -66,4 +71,14 @@ export async function setResponseCookie(headers: Headers): Promise<void> {
       httpOnly: true,
     });
   }
+}
+
+export async function getCorsHeaders(methods: string): Promise<HeadersInit> {
+  const origin = await getServerOrigin();
+
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": methods,
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
 }
