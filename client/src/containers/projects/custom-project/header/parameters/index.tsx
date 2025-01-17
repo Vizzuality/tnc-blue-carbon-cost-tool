@@ -1,13 +1,11 @@
-import {
-  COST_TYPE_SELECTOR,
-  PROJECT_PRICE_TYPE,
-} from "@shared/entities/projects.entity";
+import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { z } from "zod";
 
 import { FILTER_KEYS } from "@/app/(overview)/constants";
 
 import { INITIAL_COST_RANGE } from "@/containers/overview/filters/constants";
 import {
+  CUSTOM_PROJECT_PRICE_TYPE,
   filtersSchema,
   useCustomProjectFilters,
 } from "@/containers/projects/url-store";
@@ -21,42 +19,48 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const PROJECT_PARAMETERS = [
-  {
-    key: FILTER_KEYS[3],
-    label: "Project size",
-    className: "w-[125px]",
-    disabled: false,
-    options: [
-      {
-        label: COST_TYPE_SELECTOR.NPV,
-        value: COST_TYPE_SELECTOR.NPV,
-      },
-      {
-        label: COST_TYPE_SELECTOR.TOTAL,
-        value: COST_TYPE_SELECTOR.TOTAL,
-      },
-    ],
-  },
-  {
-    key: FILTER_KEYS[2],
-    label: "Carbon pricing type",
-    className: "w-[195px]",
-    disabled: true,
-    options: [
-      {
-        label: PROJECT_PRICE_TYPE.MARKET_PRICE,
-        value: PROJECT_PRICE_TYPE.MARKET_PRICE,
-      },
-      {
-        label: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
-        value: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
-      },
-    ],
-  },
-] as const;
+export const getProjectParameters = (hasOpenBreakEvenPrice: boolean) =>
+  [
+    {
+      key: FILTER_KEYS[3],
+      label: "Project size",
+      className: "w-[125px]",
+      disabled: false,
+      options: [
+        {
+          label: COST_TYPE_SELECTOR.NPV,
+          value: COST_TYPE_SELECTOR.NPV,
+        },
+        {
+          label: COST_TYPE_SELECTOR.TOTAL,
+          value: COST_TYPE_SELECTOR.TOTAL,
+        },
+      ],
+    },
+    {
+      key: FILTER_KEYS[2],
+      label: "Carbon pricing type",
+      className: "w-[240px]",
+      disabled: !hasOpenBreakEvenPrice,
+      options: [
+        {
+          label: CUSTOM_PROJECT_PRICE_TYPE.INITIAL_CARBON_PRICE_ASSUMPTION,
+          value: CUSTOM_PROJECT_PRICE_TYPE.INITIAL_CARBON_PRICE_ASSUMPTION,
+        },
+        {
+          label: CUSTOM_PROJECT_PRICE_TYPE.BREAKEVEN_PRICE,
+          value: CUSTOM_PROJECT_PRICE_TYPE.BREAKEVEN_PRICE,
+        },
+      ],
+    },
+  ] as const;
 
-export default function CustomProjectParameters() {
+interface CustomProjectParametersProps {
+  hasOpenBreakEvenPrice: boolean;
+}
+export default function CustomProjectParameters({
+  hasOpenBreakEvenPrice,
+}: CustomProjectParametersProps) {
   const [filters, setFilters] = useCustomProjectFilters();
 
   const handleParameters = async (
@@ -74,7 +78,7 @@ export default function CustomProjectParameters() {
 
   return (
     <div className="flex flex-1 items-center justify-end space-x-4">
-      {PROJECT_PARAMETERS.map((parameter) => (
+      {getProjectParameters(hasOpenBreakEvenPrice).map((parameter) => (
         <div key={parameter.label} className="flex items-center space-x-2">
           <Label htmlFor={parameter.label}>{parameter.label}</Label>
           <Select

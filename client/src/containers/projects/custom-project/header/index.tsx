@@ -112,7 +112,11 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
             Project summary
           </span>
         </Button>
-        <CustomProjectParameters />
+        <CustomProjectParameters
+          hasOpenBreakEvenPrice={
+            data.output?.breakevenPriceComputationOutput !== null
+          }
+        />
         {ButtonComponent}
       </div>
     </Topbar>
