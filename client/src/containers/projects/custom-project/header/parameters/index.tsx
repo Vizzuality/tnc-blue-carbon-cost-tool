@@ -1,3 +1,4 @@
+import { CUSTOM_PROJECT_PRICE_TYPE } from "@shared/dtos/custom-projects/custom-projects.enums";
 import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { z } from "zod";
 
@@ -5,7 +6,6 @@ import { FILTER_KEYS } from "@/app/(overview)/constants";
 
 import { INITIAL_COST_RANGE } from "@/containers/overview/filters/constants";
 import {
-  CUSTOM_PROJECT_PRICE_TYPE,
   filtersSchema,
   useCustomProjectFilters,
 } from "@/containers/projects/url-store";

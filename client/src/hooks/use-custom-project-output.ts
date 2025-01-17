@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { CUSTOM_PROJECT_PRICE_TYPE } from "@shared/dtos/custom-projects/custom-projects.enums";
 import { CustomProject } from "@shared/entities/custom-project.entity";
 import { useAtomValue } from "jotai";
 
@@ -14,7 +15,6 @@ import {
 } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
 import { parseCostDetailsForTable } from "@/containers/projects/custom-project/cost-details/table/utils";
 import { useCustomProjectFilters } from "@/containers/projects/url-store";
-import { CUSTOM_PROJECT_PRICE_TYPE } from "@/containers/projects/url-store";
 
 export const useCustomProjectOutput = (
   data: InstanceType<typeof CustomProject>,
