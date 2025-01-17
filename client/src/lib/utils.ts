@@ -44,7 +44,8 @@ export const parseTableData = <
   }));
 };
 
-const PRIVATE_PAGES = /^(\/profile|\/my-projects)/;
+const PRIVATE_PAGES =
+  /^(\/profile|\/my-projects|\/projects\/[a-f0-9-]+(?:\/edit)?)/;
 export const isPrivatePath = (pathname: string) => {
   return PRIVATE_PAGES.test(pathname);
 };

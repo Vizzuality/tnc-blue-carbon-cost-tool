@@ -21,8 +21,10 @@ export default function SessionChecker() {
 
   const pathname = usePathname();
   const queryEnabled = useMemo(
-    () => isPrivatePath(pathname) && !!session?.accessToken,
-    [session?.accessToken, pathname],
+    // Always check if the user is logged in, regardless of the path
+    // so the sidebar items can update accordingly
+    () => !!session?.accessToken,
+    [session?.accessToken],
   );
   const { error } = client.auth.validateToken.useQuery(
     queryKey,
@@ -44,7 +46,7 @@ export default function SessionChecker() {
   useEffect(() => {
     if (error && queryEnabled) {
       signOut({
-        redirect: true,
+        redirect: isPrivatePath(pathname),
         callbackUrl: queryEnabled ? "/auth/signin" : undefined,
       });
     }
