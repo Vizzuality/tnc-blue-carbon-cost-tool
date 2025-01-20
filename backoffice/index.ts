@@ -163,7 +163,7 @@ const start = async () => {
       CountryResource,
     ],
     pages: {
-      fileIngestion: {
+      "data-upload": {
         icon: "File",
         component: Components.FileIngestion,
         handler: async (request: Request, response: Response) => {
@@ -185,6 +185,9 @@ const start = async () => {
             Country: "Countries",
             Project: "Projects",
             ProjectSize: "Project Sizes",
+            // Note: This is the title of the pages section in the sidebar.
+            // see full example here: https://github.com/SoftwareBrothers/adminjs/blob/master/src/locale/en/translation.json
+            pages: "Uploads"
           },
           resources: {
             ProjectSize: {
