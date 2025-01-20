@@ -11,10 +11,8 @@ import {
   flexRender,
   getCoreRowModel,
   PaginationState,
-  SortingState,
   useReactTable,
   TableState,
-  Updater,
 } from "@tanstack/react-table";
 import { useAtom } from "jotai";
 import { ChevronsUpDownIcon } from "lucide-react";
@@ -34,9 +32,11 @@ import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
 import ProjectDetails from "@/containers/overview/project-details";
 import {
+  DEFAULT_TABLE_SETTINGS,
   filtersToQueryParams,
   getColumnSortTitle,
   NO_DATA,
+  useSorting,
 } from "@/containers/overview/table/utils";
 import { columns } from "@/containers/overview/table/view/overview/columns";
 
@@ -64,32 +64,11 @@ export interface TableStateWithMaximums extends TableState {
   };
 }
 
-const DEFAULT_SORTING: SortingState = [
-  {
-    id: "projectName",
-    desc: false,
-  },
-];
-
 export function OverviewTable() {
   const [tableView] = useTableView();
   const [filters] = useProjectOverviewFilters();
   const [, setProjectDetails] = useAtom(projectDetailsAtom);
-  const [sorting, setSorting] = useState<SortingState>(DEFAULT_SORTING);
-  const handleSortingChange = (updater: Updater<SortingState>) => {
-    const newSorting =
-      typeof updater === "function" ? updater(sorting) : updater;
-
-    // We want to toggle projectName between asc/desc only (other columns can be asc/desc/none)
-    if (
-      newSorting.length === 0 &&
-      sorting.some((s) => s.id === "projectName")
-    ) {
-      setSorting([{ id: "projectName", desc: false }]);
-    } else {
-      setSorting(newSorting.length === 0 ? DEFAULT_SORTING : newSorting);
-    }
-  };
+  const { sorting, handleSortingChange } = useSorting();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
@@ -157,10 +136,10 @@ export function OverviewTable() {
   );
 
   const table = useReactTable<PaginatedProjectsWithMaximums["data"][0]>({
+    ...DEFAULT_TABLE_SETTINGS,
     data: isSuccess ? data.data : NO_DATA,
     columns: columnsBasedOnFilters,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
     state: {
       sorting,
       pagination,

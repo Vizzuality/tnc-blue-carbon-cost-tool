@@ -10,7 +10,6 @@ import {
   flexRender,
   getCoreRowModel,
   PaginationState,
-  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useAtom } from "jotai";
@@ -31,8 +30,11 @@ import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
 import ProjectDetails from "@/containers/overview/project-details";
 import {
+  DEFAULT_TABLE_SETTINGS,
   filtersToQueryParams,
+  getColumnSortTitle,
   NO_DATA,
+  useSorting,
 } from "@/containers/overview/table/utils";
 import { TABLE_COLUMNS } from "@/containers/overview/table/view/scorecard-prioritization/columns";
 
@@ -56,12 +58,7 @@ export function ScoredCardPrioritizationTable() {
   const [tableView] = useTableView();
   const [filters] = useProjectOverviewFilters();
   const [projectDetails, setProjectDetails] = useAtom(projectDetailsAtom);
-  const [sorting, setSorting] = useState<SortingState>([
-    {
-      id: "projectName",
-      desc: true,
-    },
-  ]);
+  const { sorting, handleSortingChange } = useSorting();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
@@ -84,7 +81,7 @@ export function ScoredCardPrioritizationTable() {
         partialProjectName: filters.keyword,
         ...(sorting.length > 0 && {
           sort: sorting.map(
-            (sort) => `${sort.desc ? "" : "-"}${sort.id}`,
+            (sort) => `${sort.desc ? "-" : ""}${sort.id}`,
           ) as sortFields,
         }),
         pageNumber: pagination.pageIndex + 1,
@@ -102,15 +99,15 @@ export function ScoredCardPrioritizationTable() {
   );
 
   const table = useReactTable({
+    ...DEFAULT_TABLE_SETTINGS,
     data: isSuccess ? data.data : (NO_DATA as ProjectScorecardView[]),
     columns: TABLE_COLUMNS,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
     state: {
       sorting,
       pagination,
     },
-    onSortingChange: setSorting,
+    onSortingChange: handleSortingChange,
     onPaginationChange: setPagination,
   });
 
@@ -131,15 +128,7 @@ export function ScoredCardPrioritizationTable() {
                             header.column.getCanSort(),
                         })}
                         onClick={header.column.getToggleSortingHandler()}
-                        title={
-                          header.column.getCanSort()
-                            ? header.column.getNextSortingOrder() === "asc"
-                              ? "Sort ascending"
-                              : header.column.getNextSortingOrder() === "desc"
-                                ? "Sort descending"
-                                : "Clear sort"
-                            : undefined
-                        }
+                        title={getColumnSortTitle(header.column)}
                       >
                         {flexRender(
                           header.column.columnDef.header,

@@ -6,7 +6,11 @@ import { formatCurrency } from "@/lib/format";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
 
-import { HeaderText, CellText } from "@/containers/overview/table/utils";
+import {
+  HeaderText,
+  CellText,
+  getAccessor,
+} from "@/containers/overview/table/utils";
 import { KEY_COSTS_LABELS } from "@/containers/overview/table/view/key-costs/constants";
 
 const columnHelper = createColumnHelper<ProjectKeyCosts>();
@@ -27,33 +31,25 @@ const renderCell = (props: CellContext<ProjectKeyCosts, number>) => {
 
 export const columns = (filters: z.infer<typeof filtersSchema>) => {
   const isNPV = filters.costRangeSelector === "npv";
-  const implementationLaborAccessor = isNPV
-    ? "implementationLaborNPV"
-    : "implementationLabor";
-
-  const communityBenefitAccessor = isNPV
-    ? "communityBenefitNPV"
-    : "communityBenefit";
-
-  const monitoringMaintenanceAccessor = isNPV
-    ? "monitoringMaintenanceNPV"
-    : "monitoringMaintenance";
-
-  const communityRepresentationAccessor = isNPV
-    ? "communityRepresentationNPV"
-    : "communityRepresentation";
-
-  const conservationPlanningAccessor = isNPV
-    ? "conservationPlanningNPV"
-    : "conservationPlanning";
-
-  const longTermProjectOperatingAccessor = isNPV
-    ? "longTermProjectOperatingNPV"
-    : "longTermProjectOperating";
-
-  const carbonStandardFeesAccessor = isNPV
-    ? "carbonStandardFeesNPV"
-    : "carbonStandardFees";
+  const implementationLaborAccessor = getAccessor("implementationLabor", isNPV);
+  const communityBenefitAccessor = getAccessor("communityBenefit", isNPV);
+  const monitoringMaintenanceAccessor = getAccessor(
+    "monitoringMaintenance",
+    isNPV,
+  );
+  const communityRepresentationAccessor = getAccessor(
+    "communityRepresentation",
+    isNPV,
+  );
+  const conservationPlanningAccessor = getAccessor(
+    "conservationPlanning",
+    isNPV,
+  );
+  const longTermProjectOperatingAccessor = getAccessor(
+    "longTermProjectOperating",
+    isNPV,
+  );
+  const carbonStandardFeesAccessor = getAccessor("carbonStandardFees", isNPV);
 
   return [
     columnHelper.accessor("projectName", {

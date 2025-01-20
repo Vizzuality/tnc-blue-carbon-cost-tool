@@ -8,7 +8,11 @@ import { formatCurrency, formatNumber } from "@/lib/format";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
 
-import { HeaderText, CellText } from "@/containers/overview/table/utils";
+import {
+  HeaderText,
+  CellText,
+  getAccessor,
+} from "@/containers/overview/table/utils";
 import { TableStateWithMaximums } from "@/containers/overview/table/view/overview";
 
 import SingleStackedBarChart from "@/components/ui/bar-chart/single-stacked-bar-chart";
@@ -76,7 +80,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
     },
   }),
   columnHelper.accessor(
-    filters.costRangeSelector === "npv" ? "costPerTCO2eNPV" : "costPerTCO2e",
+    getAccessor("costPerTCO2e", filters.costRangeSelector === "npv"),
     {
       enableSorting: true,
       header: () => <HeaderText>Cost $(USD)/tCO2e</HeaderText>,
@@ -122,7 +126,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
     },
   }),
   columnHelper.accessor(
-    filters.costRangeSelector === "npv" ? "totalCostNPV" : "totalCost",
+    getAccessor("totalCost", filters.costRangeSelector === "npv"),
     {
       enableSorting: true,
       header: () => (

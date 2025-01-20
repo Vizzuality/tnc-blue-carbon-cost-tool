@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 
-import { Column } from "@tanstack/react-table";
+import { Column, SortingState, Updater } from "@tanstack/react-table";
 import { z } from "zod";
 
 import { filtersSchema } from "@/app/(overview)/url-store";
@@ -64,3 +64,43 @@ export const HeaderText = ({ children }: PropsWithChildren) => (
 export const CellText = ({ children }: PropsWithChildren) => (
   <span className="text-sm font-normal">{children}</span>
 );
+
+export const getAccessor = <T extends string>(
+  baseName: T,
+  isNPV: boolean,
+): T | `${T}NPV` => (isNPV ? `${baseName}NPV` : baseName);
+
+export const DEFAULT_SORTING: SortingState = [
+  {
+    id: "projectName",
+    desc: false,
+  },
+];
+
+export function useSorting() {
+  const [sorting, setSorting] = useState<SortingState>(DEFAULT_SORTING);
+
+  const handleSortingChange = (updater: Updater<SortingState>) => {
+    const newSorting =
+      typeof updater === "function" ? updater(sorting) : updater;
+
+    // We want to toggle projectName between asc/desc only (other columns can be asc/desc/none)
+    if (
+      newSorting.length === 0 &&
+      sorting.some((s) => s.id === "projectName")
+    ) {
+      setSorting([{ id: "projectName", desc: false }]);
+    } else {
+      setSorting(newSorting.length === 0 ? DEFAULT_SORTING : newSorting);
+    }
+  };
+
+  return { sorting, handleSortingChange };
+}
+
+export const DEFAULT_TABLE_SETTINGS = {
+  // Explicitly set to false to forces sorting to always follow the asc-desc-undefined cycle
+  // see https://github.com/TanStack/table/issues/4289
+  sortDescFirst: false,
+  manualPagination: true,
+};

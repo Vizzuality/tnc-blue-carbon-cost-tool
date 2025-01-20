@@ -10,7 +10,6 @@ import {
   flexRender,
   getCoreRowModel,
   PaginationState,
-  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useAtom } from "jotai/index";
@@ -30,9 +29,11 @@ import {
 import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
 import {
+  DEFAULT_TABLE_SETTINGS,
   filtersToQueryParams,
   getColumnSortTitle,
   NO_DATA,
+  useSorting,
 } from "@/containers/overview/table/utils";
 import { columns } from "@/containers/overview/table/view/key-costs/columns";
 
@@ -55,12 +56,7 @@ export function KeyCostsTable() {
   const [, setProjectDetails] = useAtom(projectDetailsAtom);
   const [tableView] = useTableView();
   const [filters] = useProjectOverviewFilters();
-  const [sorting, setSorting] = useState<SortingState>([
-    {
-      id: "projectName",
-      desc: true,
-    },
-  ]);
+  const { sorting, handleSortingChange } = useSorting();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: Number.parseInt(PAGINATION_SIZE_OPTIONS[0]),
@@ -108,15 +104,15 @@ export function KeyCostsTable() {
   }, [data]);
 
   const table = useReactTable({
+    ...DEFAULT_TABLE_SETTINGS,
     data: isSuccess ? (data?.data as ProjectKeyCosts[]) : NO_DATA,
     columns: columnsBasedOnFilters,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
     state: {
       sorting,
       pagination,
     },
-    onSortingChange: setSorting,
+    onSortingChange: handleSortingChange,
     onPaginationChange: setPagination,
   });
 
