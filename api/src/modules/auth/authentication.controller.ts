@@ -48,6 +48,18 @@ export class AuthenticationController {
   }
 
   @Public()
+  @TsRestHandler(authContract.logout)
+  public async logout(): Promise<ControllerResponse> {
+    return tsRestHandler(authContract.logout, async ({ body }) => {
+      await this.authService.logoutUser(body.refreshToken);
+      return {
+        status: 204,
+        body: null,
+      };
+    });
+  }
+
+  @Public()
   @TsRestHandler(authContract.register)
   async register(
     @Headers('origin') origin: string,

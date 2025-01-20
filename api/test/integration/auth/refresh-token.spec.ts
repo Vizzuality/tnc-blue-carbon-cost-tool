@@ -48,6 +48,34 @@ describe('Refresh token', () => {
       expect(newRefreshToken).not.toBe(refreshToken);
     });
 
+    it('should return a 204 after having revoked a refresh token when the user logs out', async () => {
+      // Given
+      const user = await testManager.mocks().createUser({
+        email: 't@t.com',
+        isActive: true,
+        role: ROLES.PARTNER,
+      });
+
+      const { jwtToken: accessToken, refreshToken } =
+        await testManager.logUserIn(user);
+
+      // When
+      const res = await testManager
+        .request()
+        .post(authContract.logout.path)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ refreshToken });
+
+      const refreshRes = await testManager
+        .request()
+        .post(authContract.refreshToken.path)
+        .send({ refreshToken });
+
+      // Then
+      expect(res.status).toBe(204);
+      expect(refreshRes.status).toBe(401);
+    });
+
     it('should return 401 status code if the refresh token has already been used (replay attack)', async () => {
       // Given
       const user = await testManager.mocks().createUser({

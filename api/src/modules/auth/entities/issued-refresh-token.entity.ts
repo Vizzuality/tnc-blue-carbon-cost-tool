@@ -35,4 +35,7 @@ export class IssuedRefreshToken extends BaseEntity {
 
   @Column('timestamp')
   expiresAt: Date;
+
+  @Column('timestamp', { default: new Date() })
+  modifiedAt: Date;
 }

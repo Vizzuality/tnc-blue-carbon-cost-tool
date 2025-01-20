@@ -49,6 +49,7 @@ export class JwtManager {
     }
 
     issuedRefreshToken.status = IssuedRefreshTokenStatus.USED;
+    issuedRefreshToken.modifiedAt = new Date();
     this.refreshTokenRepository.save(issuedRefreshToken);
     return this.createAuthTokenPair(sub);
   }
@@ -123,6 +124,28 @@ export class JwtManager {
       refreshToken: token,
       refreshTokenExpiresAt: expiresAt,
     };
+  }
+
+  public async logoutUserWithRefreshToken(
+    refreshToken: string,
+  ): Promise<string> {
+    let sub: string, jti: string;
+    try {
+      const payload = await this.jwt.verifyAsync(refreshToken, {
+        secret: this.config.getJWTConfigByType(TOKEN_TYPE_ENUM.REFRESH).secret,
+      });
+      sub = payload.sub;
+      jti = payload.jti;
+    } catch (error) {
+      throw new UnauthorizedException('invalid_refresh_token');
+    }
+
+    await this.refreshTokenRepository.update(
+      { id: jti, user: { id: sub } },
+      { status: IssuedRefreshTokenStatus.REVOKED, modifiedAt: new Date() },
+    );
+
+    return sub;
   }
 
   private async sign(

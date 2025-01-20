@@ -52,6 +52,17 @@ export class AuthenticationService {
     return this.jwtManager.refreshAuthTokens(refreshToken);
   }
 
+  public async logoutUser(refreshToken: string): Promise<void> {
+    const userId =
+      await this.jwtManager.logoutUserWithRefreshToken(refreshToken);
+    await this.backOfficeSessionRepository
+      .createQueryBuilder()
+      .delete()
+      .from(BACKOFFICE_SESSIONS_TABLE)
+      .where(`sess -> 'adminUser' ->> 'id' = :id`, { id: userId })
+      .execute();
+  }
+
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
     if (user?.isActive && (await bcrypt.compare(password, user.password))) {

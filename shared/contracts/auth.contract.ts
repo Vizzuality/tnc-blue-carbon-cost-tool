@@ -10,6 +10,7 @@ import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { CreateUserSchema } from "@shared/schemas/users/create-user.schema";
 import { AuthTokenPair } from "@shared/dtos/auth-token-pair.dto";
 import { RefreshTokenSchema } from "@shared/schemas/auth/refresh-token.schema";
+import { LogoutSchema } from "@shared/schemas/users/logout.schema";
 
 // TODO: This is a scaffold. We need to define types for responses, zod schemas for body and query param validation etc.
 
@@ -22,6 +23,14 @@ export const authContract = contract.router({
       200: contract.type<AuthTokenPair>(),
     },
     body: RefreshTokenSchema,
+  },
+  logout: {
+    method: "POST",
+    path: "/authentication/logout",
+    responses: {
+      204: contract.type<null>(),
+    },
+    body: LogoutSchema,
   },
   login: {
     method: "POST",
