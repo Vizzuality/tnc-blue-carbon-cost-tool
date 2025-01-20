@@ -97,18 +97,18 @@ const FileIngestion = () => {
   const [config, setConfig] = useState<{ apiUrl: string } | null>(null);
 
   useLayoutEffect(() => {
-    adminjsClient
-      .getPage({ pageName: 'fileIngestion' })
-      .then((response: any) => {
-        setConfig(response.data.config);
-      });
+    adminjsClient.getPage({ pageName: 'data-upload' }).then((response: any) => {
+      setConfig(response.data.config);
+    });
   }, []);
 
   const handleFileUpload = (tab: string, file: File) => {
     if (tab === 'scorecard') {
       setScoreCardFile(file);
+      console.log('Uploading scorecard file', file.name);
     } else if (tab === 'data') {
       setDataFile(file);
+      console.log('Uploading data ingestion file', file.name);
     }
   };
 
