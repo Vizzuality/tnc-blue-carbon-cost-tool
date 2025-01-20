@@ -3,7 +3,7 @@ import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 import { cn } from "@/lib/utils";
 
 interface ScoreIndicatorProps {
-  value: PROJECT_SCORE;
+  value: PROJECT_SCORE | null;
   className?: string;
 }
 
@@ -18,7 +18,7 @@ export const ScoreIndicator = ({ value, className }: ScoreIndicatorProps) => {
     <div
       className={cn(
         "flex h-10 items-center justify-center text-sm font-normal capitalize text-deep-ocean",
-        DEFAULT_BG_CLASSES[value],
+        value ? DEFAULT_BG_CLASSES[value] : "bg-gray-300",
         className,
       )}
     >
