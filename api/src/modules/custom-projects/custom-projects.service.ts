@@ -74,11 +74,22 @@ export class CustomProjectsService extends AppBaseService<
       baseSize,
     });
 
+    const breakevenPriceCostOutput =
+      this.calculationEngine.calculateBreakevenPrice({
+        projectInput: structuredClone(projectInput),
+        baseIncrease,
+        baseSize,
+        maxIterations: 100,
+        tolerance: 0.00001,
+      });
+
     const customProject = this.customProjectFactory.createProject(
       dto,
       country,
       projectInput,
+      breakevenPriceCostOutput?.breakevenCarbonPrice || null,
       costOutput,
+      breakevenPriceCostOutput?.costOutput || null,
     );
 
     return customProject;

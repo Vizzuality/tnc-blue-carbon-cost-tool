@@ -19,10 +19,10 @@ interface ProjectDetailsProps {
     projectLength: number;
     ecosystem: ECOSYSTEM;
     activity: ACTIVITY;
-    lossRate: number;
-    carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
-    initialCarbonPrice: number;
-    emissionFactors: {
+    lossRate?: number;
+    carbonRevenuesToCover?: CARBON_REVENUES_TO_COVER;
+    initialCarbonPrice?: number;
+    emissionFactors?: {
       emissionFactor: number | null;
       emissionFactorAgb: number;
       emissionFactorSoc: number;
@@ -98,21 +98,23 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
               minimumFractionDigits: 2,
             }}
           />
-          <DetailItem
-            label="Emission factor"
-            subValues={[
-              {
-                label: "AGB",
-                value: emissionFactors.emissionFactorAgb,
-                unit: "tCO2e/ha/yr",
-              },
-              {
-                label: "SOC",
-                value: emissionFactors.emissionFactorSoc,
-                unit: "tCO2e/ha/yr",
-              },
-            ]}
-          />
+          {emissionFactors && (
+            <DetailItem
+              label="Emission factor"
+              subValues={[
+                {
+                  label: "AGB",
+                  value: emissionFactors.emissionFactorAgb,
+                  unit: "tCO2e/ha/yr",
+                },
+                {
+                  label: "SOC",
+                  value: emissionFactors.emissionFactorSoc,
+                  unit: "tCO2e/ha/yr",
+                },
+              ]}
+            />
+          )}
         </div>
       </div>
     </Card>

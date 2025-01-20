@@ -28,7 +28,9 @@ const customProjectCostDetailsLabelMap: Record<
   totalCost: "Total cost",
 } as const;
 
-function parseCostDetailsForTable(data: CustomProjectCostDetails): CostItem[] {
+function parseCostDetailsForTable(data?: CustomProjectCostDetails): CostItem[] {
+  if (!data) return [];
+
   return parseTableData(data, customProjectCostDetailsLabelMap);
 }
 

@@ -17,7 +17,7 @@ import {
 export type CostOutput = {
   costPlans: any;
   summary: CustomProjectSummary;
-  yearlyBreakdown: YearlyBreakdown;
+  yearlyBreakdown: YearlyBreakdown[];
   costDetails: {
     total: CustomProjectCostDetails;
     npv: CustomProjectCostDetails;
@@ -57,5 +57,47 @@ export class CalculationEngine {
       yearlyBreakdown: costCalculator.getYearlyBreakdown(),
       costDetails: costCalculator.getCostDetails(costPlans),
     };
+  }
+
+  calculateBreakevenPrice(dto: {
+    projectInput: ProjectInput;
+    baseIncrease: BaseIncrease;
+    baseSize: BaseSize;
+    maxIterations: number;
+    tolerance: number;
+  }): { costOutput: CostOutput; breakevenCarbonPrice: number } | null {
+    const { projectInput, baseIncrease, baseSize, maxIterations, tolerance } =
+      dto;
+    let carbonPrice = projectInput.initialCarbonPriceAssumption;
+    let npvCoveringCost, creditsIssued;
+
+    for (let i = 0; i < maxIterations; i++) {
+      projectInput.assumptions.carbonPrice = carbonPrice;
+
+      const costOutput = this.calculateCostOutput({
+        projectInput: projectInput,
+        baseIncrease: baseIncrease,
+        baseSize: baseSize,
+      });
+
+      npvCoveringCost = costOutput.summary['NPV covering cost'];
+      creditsIssued = costOutput.summary['Credits issued'];
+
+      if (Math.abs(npvCoveringCost) < tolerance) {
+        return { costOutput, breakevenCarbonPrice: carbonPrice };
+      }
+
+      if (creditsIssued === 0) {
+        console.error(
+          'Credits issued are zero, breakeven cost cannot be calculated.',
+        );
+        return null;
+      }
+
+      carbonPrice -= npvCoveringCost / creditsIssued;
+    }
+
+    console.error('Max iterations reached without convergence.');
+    return null;
   }
 }
