@@ -164,7 +164,7 @@ const FileIngestion = () => {
   return (
     <Box variant="grey">
       <Box variant="white">
-        <H2>File Ingestion</H2>
+        <H2>Data upload</H2>
         <Text>
           Use this page to update the available data. You must upload both files
           in the correct order:
@@ -194,7 +194,7 @@ const FileIngestion = () => {
           <UploadTab
             props={{
               id: 'data',
-              label: 'Data ingestion WIP',
+              label: 'Data ingestion',
               file: dataFile,
               handleFileUpload,
               handleSubmit,
