@@ -42,6 +42,17 @@ export class ProjectsController {
     );
   }
 
+  @TsRestHandler(projectsContract.getProjectsFiltersBounds)
+  async getProjectsFiltersBounds(): ControllerResponse {
+    return tsRestHandler(
+      projectsContract.getProjectsFiltersBounds,
+      async ({ query }) => {
+        const data = await this.projectsService.getProjectsFiltersBounds(query);
+        return { body: { data }, status: HttpStatus.OK };
+      },
+    );
+  }
+
   @TsRestHandler(projectsContract.getProjectsScorecard)
   async getProjectsScorecard(): ControllerResponse {
     return tsRestHandler(
