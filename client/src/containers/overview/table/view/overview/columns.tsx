@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import { formatCurrency, formatNumber } from "@/lib/format";
 
-import { filtersSchema } from "@/app/(overview)/url-store";
+import { filtersSchema } from "@/app/(overview)/constants";
 
 import {
   HeaderText,

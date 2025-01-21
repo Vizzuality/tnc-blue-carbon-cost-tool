@@ -2,6 +2,7 @@ import {
   createQueryKeys,
   mergeQueryKeys,
 } from "@lukemorales/query-key-factory";
+import { getProjectsQuerySchema } from "@shared/contracts/projects.contract";
 import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
@@ -10,7 +11,7 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { PaginationState, SortingState } from "@tanstack/react-table";
 import { z } from "zod";
 
-import { filtersSchema } from "@/app/(overview)/url-store";
+import { filtersSchema } from "@/app/(overview)/constants";
 
 import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
 
@@ -45,6 +46,7 @@ export const tableKeys = createQueryKeys("tables", {
 
 export const projectKeys = createQueryKeys("projects", {
   one: (id: string) => [id],
+  bounds: (filters: z.infer<typeof getProjectsQuerySchema>) => [filters],
 });
 
 export const customProjectKeys = createQueryKeys("customProjects", {

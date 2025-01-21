@@ -1,5 +1,57 @@
-import Overview from "@/containers/overview";
+import { getProjectsQuerySchema } from "@shared/contracts/projects.contract";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { z } from "zod";
 
-export default function OverviewPage() {
-  return <Overview />;
+import { client } from "@/lib/query-client";
+import { queryKeys } from "@/lib/query-keys";
+
+import { filtersSchema } from "@/app/(overview)/constants";
+import { INITIAL_FILTERS_STATE } from "@/app/(overview)/constants";
+
+import Overview from "@/containers/overview";
+import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
+import { filtersToQueryParams } from "@/containers/overview/utils";
+
+export default async function OverviewPage({
+  searchParams,
+}: {
+  searchParams?: {
+    filters: string;
+    table: (typeof TABLE_VIEWS)[number];
+  };
+}) {
+  const queryClient = new QueryClient();
+  const parsedFilters = filtersSchema.safeParse(
+    JSON.parse(searchParams?.filters || "{}"),
+  );
+
+  const queryParams: z.infer<typeof getProjectsQuerySchema> = {
+    ...filtersToQueryParams(
+      parsedFilters.success ? parsedFilters.data : INITIAL_FILTERS_STATE,
+    ),
+    costRangeSelector: parsedFilters.success
+      ? parsedFilters.data.costRangeSelector
+      : INITIAL_FILTERS_STATE.costRangeSelector,
+    partialProjectName: parsedFilters.success
+      ? parsedFilters.data.keyword
+      : INITIAL_FILTERS_STATE.keyword,
+  };
+
+  await queryClient.prefetchQuery({
+    queryKey: queryKeys.projects.bounds(queryParams).queryKey,
+    queryFn: () =>
+      client.projects.getProjectsFiltersBounds.query({
+        query: queryParams,
+      }),
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Overview />
+    </HydrationBoundary>
+  );
 }

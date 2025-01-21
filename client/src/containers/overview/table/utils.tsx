@@ -1,40 +1,10 @@
 import { ComponentProps, PropsWithChildren, useState } from "react";
 
 import { Column, SortingState, Updater } from "@tanstack/react-table";
-import { z } from "zod";
-
-import { filtersSchema } from "@/app/(overview)/url-store";
-
-import { scorecardFiltersSchema } from "@/containers/overview/table/view/scorecard-prioritization/schema";
 
 import { TableCell } from "@/components/ui/table";
 
 export const NO_DATA = [];
-
-const OMITTED_FIELDS = [
-  "keyword",
-  "costRange",
-  "abatementPotentialRange",
-  "costRangeSelector",
-];
-
-export const filtersToQueryParams = (
-  filters: z.infer<typeof filtersSchema | typeof scorecardFiltersSchema>,
-) => {
-  return Object.keys(filters)
-    .filter(
-      (key) =>
-        !OMITTED_FIELDS.includes(key) &&
-        filters[key as keyof typeof filters] !== "",
-    )
-    .reduce(
-      (acc, key) => ({
-        ...acc,
-        [`filter[${key}]`]: filters[key as keyof typeof filters],
-      }),
-      {},
-    );
-};
 
 export const getColumnSortTitle = <T = unknown,>(column: Column<T>) => {
   if (!column.getCanSort()) {
