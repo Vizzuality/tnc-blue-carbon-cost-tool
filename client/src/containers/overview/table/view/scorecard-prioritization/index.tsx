@@ -31,13 +31,13 @@ import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 import ProjectDetails from "@/containers/overview/project-details";
 import {
   DEFAULT_TABLE_SETTINGS,
-  filtersToQueryParams,
   getColumnSortTitle,
   NO_DATA,
   NoResults,
   useSorting,
 } from "@/containers/overview/table/utils";
 import { TABLE_COLUMNS } from "@/containers/overview/table/view/scorecard-prioritization/columns";
+import { filtersToQueryParams } from "@/containers/overview/utils";
 
 import {
   ScrollableTable,

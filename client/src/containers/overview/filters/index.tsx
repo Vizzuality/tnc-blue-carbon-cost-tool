@@ -1,25 +1,28 @@
 import { useState, useEffect } from "react";
 
 import { CheckedState } from "@radix-ui/react-checkbox";
+import { getProjectsQuerySchema } from "@shared/contracts/projects.contract";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { PROJECT_SIZE_FILTER } from "@shared/entities/projects.entity";
+import { keepPreviousData } from "@tanstack/react-query";
 import { useSetAtom } from "jotai/index";
 import { XIcon } from "lucide-react";
 import { useDebounce } from "rooks";
+import { z } from "zod";
 
 import { formatNumber } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
+import { INITIAL_FILTERS_STATE } from "@/app/(overview)/constants";
 import { projectsUIState } from "@/app/(overview)/store";
-import {
-  INITIAL_FILTERS_STATE,
-  useProjectOverviewFilters,
-} from "@/app/(overview)/url-store";
+import { useProjectOverviewFilters } from "@/app/(overview)/url-store";
 
 import { FILTERS } from "@/constants/tooltip";
+
+import { filtersToQueryParams } from "@/containers/overview/utils";
 
 import { Button } from "@/components/ui/button";
 import { CheckboxWrapper } from "@/components/ui/checkbox";
@@ -34,58 +37,24 @@ import {
 } from "@/components/ui/select";
 import { RangeSlider, SliderLabels } from "@/components/ui/slider";
 
-import {
-  ACTIVITIES,
-  INITIAL_COST_RANGE,
-  INITIAL_ABATEMENT_POTENTIAL_RANGE,
-} from "./constants";
+import { ACTIVITIES } from "./constants";
 
 export const FILTERS_SIDEBAR_WIDTH = 320;
 
 export default function ProjectsFilters() {
   const [filters, setFilters] = useProjectOverviewFilters();
   const setFiltersOpen = useSetAtom(projectsUIState);
-  const [costValuesState, setCostValuesState] = useState([
-    filters.costRange[0] || INITIAL_COST_RANGE[filters.costRangeSelector][0],
-    filters.costRange[1] || INITIAL_COST_RANGE[filters.costRangeSelector][1],
-  ]);
 
-  const [abatementValueState, setAbatementValueState] = useState([
-    filters.abatementPotentialRange[0] || INITIAL_ABATEMENT_POTENTIAL_RANGE[0],
-    filters.abatementPotentialRange[1] || INITIAL_ABATEMENT_POTENTIAL_RANGE[1],
-  ]);
-
-  const resetFilters = async () => {
-    await setFilters((prev) => ({
-      ...prev,
-      countryCode: INITIAL_FILTERS_STATE.countryCode,
-      ecosystem: INITIAL_FILTERS_STATE.ecosystem,
-      activities: INITIAL_FILTERS_STATE.activity,
-      restorationActivity: INITIAL_FILTERS_STATE.restorationActivity,
-      abatementPotentialRange: INITIAL_FILTERS_STATE.abatementPotentialRange,
-      costRange: INITIAL_FILTERS_STATE.costRange,
-    }));
-
-    setCostValuesState([
-      INITIAL_COST_RANGE[filters.costRangeSelector][0],
-      INITIAL_COST_RANGE[filters.costRangeSelector][1],
-    ]);
-
-    setAbatementValueState([
-      INITIAL_ABATEMENT_POTENTIAL_RANGE[0],
-      INITIAL_ABATEMENT_POTENTIAL_RANGE[1],
-    ]);
-  };
   const closeFilters = () => {
     setFiltersOpen((prev) => ({ ...prev, filtersOpen: false }));
   };
 
-  const { queryKey } = queryKeys.countries.all;
+  const { queryKey: countriesQueryKey } = queryKeys.countries.all;
   const { data: countryOptions } = client.projects.getProjectCountries.useQuery(
-    queryKey,
+    countriesQueryKey,
     {},
     {
-      queryKey,
+      queryKey: countriesQueryKey,
       select: (data) =>
         data.body.data.map(({ name, code }) => ({ label: name, value: code })),
     },
@@ -156,12 +125,67 @@ export default function ProjectsFilters() {
     250,
   );
 
+  const queryParams: z.infer<typeof getProjectsQuerySchema> = {
+    ...filtersToQueryParams(filters),
+    costRangeSelector: filters.costRangeSelector,
+    partialProjectName: filters.keyword,
+  };
+
+  const { queryKey: boundsQueryKey } = queryKeys.projects.bounds(queryParams);
+
+  const { data: bounds, isSuccess } =
+    client.projects.getProjectsFiltersBounds.useQuery(
+      boundsQueryKey,
+      {
+        query: queryParams,
+      },
+      {
+        queryKey: boundsQueryKey,
+        select: (response) => response.body.data,
+        placeholderData: keepPreviousData,
+      },
+    );
+
+  const [costValuesState, setCostValuesState] = useState([
+    filters.costRange[0] ?? bounds?.cost.min,
+    filters.costRange[1] ?? bounds?.cost.max,
+  ]);
+
+  const [abatementValueState, setAbatementValueState] = useState([
+    filters.abatementPotentialRange[0] ?? bounds?.abatementPotential.min,
+    filters.abatementPotentialRange[1] ?? bounds?.abatementPotential.max,
+  ]);
+
+  const resetFilters = async () => {
+    await setFilters(() => INITIAL_FILTERS_STATE);
+  };
+
   useEffect(() => {
-    setCostValuesState([
-      filters.costRange[0] || INITIAL_COST_RANGE[filters.costRangeSelector][0],
-      filters.costRange[1] || INITIAL_COST_RANGE[filters.costRangeSelector][1],
-    ]);
-  }, [filters.costRange, filters.costRangeSelector]);
+    if (isSuccess) {
+      if (filters === INITIAL_FILTERS_STATE) {
+        setCostValuesState([bounds.cost.min, bounds.cost.max]);
+        setAbatementValueState([
+          bounds.abatementPotential.min,
+          bounds.abatementPotential.max,
+        ]);
+        return;
+      }
+
+      setCostValuesState((prev) => {
+        if (prev[0] < bounds.cost.min) return [bounds.cost.min, prev[1]];
+        if (prev[1] > bounds.cost.max) return [prev[0], bounds.cost.max];
+        return prev;
+      });
+
+      setAbatementValueState((prev) => {
+        if (prev[0] < bounds.abatementPotential.min)
+          return [bounds.abatementPotential.min, prev[1]];
+        if (prev[1] > bounds.abatementPotential.max)
+          return [prev[0], bounds.abatementPotential.max];
+        return prev;
+      });
+    }
+  }, [isSuccess, bounds, filters]);
 
   return (
     <section
@@ -316,14 +340,9 @@ export default function ProjectsFilters() {
           <div className="flex flex-col gap-3">
             <Label htmlFor="costs">Cost ($/tCO2e)</Label>
             <RangeSlider
-              defaultValue={[
-                filters.costRange[0] ||
-                  INITIAL_COST_RANGE[filters.costRangeSelector][0],
-                filters.costRange[1] ||
-                  INITIAL_COST_RANGE[filters.costRangeSelector][1],
-              ]}
-              min={INITIAL_COST_RANGE[filters.costRangeSelector][0]}
-              max={INITIAL_COST_RANGE[filters.costRangeSelector][1]}
+              defaultValue={costValuesState}
+              min={bounds?.cost.min}
+              max={bounds?.cost.max}
               step={1}
               minStepsBetweenThumbs={1}
               value={costValuesState}
@@ -334,12 +353,8 @@ export default function ProjectsFilters() {
               format={(v) => formatNumber(v, {})}
             />
             <SliderLabels
-              min={formatNumber(
-                INITIAL_COST_RANGE[filters.costRangeSelector][0],
-              )}
-              max={formatNumber(
-                INITIAL_COST_RANGE[filters.costRangeSelector][1],
-              )}
+              min={formatNumber(bounds?.cost.min as NonNullable<number>)}
+              max={formatNumber(bounds?.cost.max as NonNullable<number>)}
             />
           </div>
 
@@ -348,14 +363,9 @@ export default function ProjectsFilters() {
               Abatement Potential (tCO2e/yr)
             </Label>
             <RangeSlider
-              defaultValue={[
-                filters.abatementPotentialRange[0] ||
-                  INITIAL_ABATEMENT_POTENTIAL_RANGE[0],
-                filters.abatementPotentialRange[1] ||
-                  INITIAL_ABATEMENT_POTENTIAL_RANGE[1],
-              ]}
-              min={INITIAL_ABATEMENT_POTENTIAL_RANGE[0]}
-              max={INITIAL_ABATEMENT_POTENTIAL_RANGE[1]}
+              defaultValue={abatementValueState}
+              min={bounds?.abatementPotential.min}
+              max={bounds?.abatementPotential.max}
               step={1}
               value={abatementValueState}
               minStepsBetweenThumbs={1}
@@ -366,8 +376,12 @@ export default function ProjectsFilters() {
               format={formatNumber}
             />
             <SliderLabels
-              min={formatNumber(INITIAL_ABATEMENT_POTENTIAL_RANGE[0])}
-              max={formatNumber(INITIAL_ABATEMENT_POTENTIAL_RANGE[1])}
+              min={formatNumber(
+                bounds?.abatementPotential.min as NonNullable<number>,
+              )}
+              max={formatNumber(
+                bounds?.abatementPotential.max as NonNullable<number>,
+              )}
             />
           </div>
 

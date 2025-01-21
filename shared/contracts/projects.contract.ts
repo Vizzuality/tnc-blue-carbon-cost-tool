@@ -36,6 +36,7 @@ export const getProjectsQuerySchema = projectsQuerySchema.merge(otherParams);
 export const getProjectScorecardQuerySchema =
   projectScorecardQuerySchema.merge(otherParams);
 
+
 export const projectsContract = contract.router({
   getProjects: {
     method: "GET",
@@ -69,13 +70,7 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ApiResponse<ProjectsFiltersBoundsDto>>(),
     },
-    query: getProjectsQuerySchema.pick({
-      filter: true,
-      costRange: true,
-      abatementPotentialRange: true,
-      costRangeSelector: true,
-      partialProjectName: true,
-    }),
+    query: getProjectsQuerySchema,
   },
   getProject: {
     method: "GET",

@@ -4,7 +4,7 @@ import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { atom } from "jotai";
 import { z } from "zod";
 
-import { filtersSchema } from "@/app/(overview)/url-store";
+import { filtersSchema } from "@/app/(overview)/constants";
 
 export const projectsUIState = atom<{
   filtersOpen: boolean;
