@@ -1,7 +1,9 @@
 import { TestManager } from '../../utils/test-manager';
 import { HttpStatus } from '@nestjs/common';
 import { projectsContract } from '@shared/contracts/projects.contract';
+import { ACTIVITY } from '@shared/entities/activity.enum';
 import { Country } from '@shared/entities/country.entity';
+import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 import {
   COST_TYPE_SELECTOR,
@@ -470,6 +472,90 @@ describe('Projects', () => {
       expect(fiveCountriesWithNoGeometry).toEqual(
         expect.arrayContaining(response.body.data),
       );
+    });
+
+    test('Should return projects filter bounds', async () => {
+      const projects: Project[] = [];
+      let it = 0;
+      for (const country of countriesInDb.slice(0, 5)) {
+        it += 1;
+        projects.push(
+          await testManager.mocks().createProject({
+            countryCode: country.code,
+            totalCost: 100 * it,
+            totalCostNPV: 100 * it,
+            abatementPotential: 1000 * it,
+          }),
+        );
+      }
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjectsFiltersBounds.path)
+        .query({
+          filter: {
+            ecosystem: [ECOSYSTEM.MANGROVE, ECOSYSTEM.SEAGRASS],
+            activity: [ACTIVITY.CONSERVATION],
+            projectSizeFilter: [
+              PROJECT_SIZE_FILTER.MEDIUM,
+              PROJECT_SIZE_FILTER.LARGE,
+            ],
+          },
+          costRange: [0, 310_000_000],
+          costRangeSelector: COST_TYPE_SELECTOR.NPV,
+          abatementPotentialRange: [2_000, 3_000],
+          partialProjectName: 'Project',
+        });
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body.data).toMatchObject({
+        abatementPotential: {
+          max: 3_000,
+          min: 2_000,
+        },
+        cost: {
+          max: 500,
+          min: 100,
+        },
+      });
+    });
+
+    test('Should return projects filter bounds - too strict filtering returns max and min without filters', async () => {
+      const projects: Project[] = [];
+      for (const country of countriesInDb.slice(0, 5)) {
+        projects.push(
+          await testManager
+            .mocks()
+            .createProject({ countryCode: country.code }),
+        );
+      }
+
+      const response = await testManager
+        .request()
+        .get(projectsContract.getProjectsFiltersBounds.path)
+        .query({
+          filter: {
+            ecosystem: [ECOSYSTEM.MANGROVE, ECOSYSTEM.SEAGRASS],
+            activity: [ACTIVITY.CONSERVATION],
+            projectSizeFilter: [PROJECT_SIZE_FILTER.SMALL],
+          },
+          costRange: [0, 310_000_000],
+          costRangeSelector: COST_TYPE_SELECTOR.NPV,
+          abatementPotentialRange: [0, 10_000_000],
+          partialProjectName: 'Project',
+        });
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body.data).toMatchObject({
+        abatementPotential: {
+          max: 100,
+          min: 100,
+        },
+        cost: {
+          max: 100,
+          min: 100,
+        },
+      });
     });
   });
 

@@ -13,6 +13,7 @@ import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
 import { PaginatedProjectsWithMaximums } from "@shared/dtos/projects/projects.dto";
 import { ProjectScorecardDto } from "@shared/dtos/projects/project-scorecard.dto";
 import { ProjectKeyCosts } from "@shared/dtos/projects/project-key-costs.dto";
+import { ProjectsFiltersBoundsDto } from "@shared/dtos/projects/projects-filters-bounds.dto";
 
 const contract = initContract();
 
@@ -61,6 +62,20 @@ export const projectsContract = contract.router({
       200: contract.type<ApiPaginationResponse<ProjectKeyCosts>>(),
     },
     query: getProjectsQuerySchema,
+  },
+  getProjectsFiltersBounds: {
+    method: "GET",
+    path: "/projects/filters-bounds",
+    responses: {
+      200: contract.type<ApiResponse<ProjectsFiltersBoundsDto>>(),
+    },
+    query: getProjectsQuerySchema.pick({
+      filter: true,
+      costRange: true,
+      abatementPotentialRange: true,
+      costRangeSelector: true,
+      partialProjectName: true,
+    }),
   },
   getProject: {
     method: "GET",
