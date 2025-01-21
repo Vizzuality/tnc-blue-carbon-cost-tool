@@ -11,7 +11,6 @@ const envConfigSchema = z
     DB_USERNAME: z.string(),
     DB_PASSWORD: z.string(),
 
-    API_URL: z.string(),
     ACCESS_TOKEN_SECRET: z.string(),
     ACCESS_TOKEN_EXPIRES_IN: z.string().regex(EXPIRES_IN_REGEX),
 
