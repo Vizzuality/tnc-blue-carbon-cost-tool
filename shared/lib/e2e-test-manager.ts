@@ -1,14 +1,21 @@
 import { DataSource } from "typeorm";
 import { User } from "@shared/entities/users/user.entity";
-import {createProject, createUser} from "@shared/lib/entity-mocks";
-import {clearTablesByEntities, clearTestDataFromDatabase} from "@shared/lib/db-helpers";
+import { createProject, createUser } from "@shared/lib/entity-mocks";
+import {
+  clearTablesByEntities,
+  clearTestDataFromDatabase,
+} from "@shared/lib/db-helpers";
 import { JwtPayload, sign } from "jsonwebtoken";
 import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
 import { COMMON_DATABASE_ENTITIES } from "@shared/lib/db-entities";
-import {ProjectType} from "@shared/contracts/projects.contract";
+import { ProjectType } from "@shared/contracts/projects.contract";
 import * as fs from "fs";
 import * as path from "path";
-
+import { Country } from "@shared/entities/country.entity";
+import { adminContract } from "@shared/contracts/admin.contract";
+import { API_URL } from "e2e/playwright.config";
+import { ROLES } from "@shared/entities/users/roles.enum";
+import { logUserIn } from "@shared/lib/utils/user.auth";
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -40,7 +47,7 @@ export class E2eTestManager {
   }
 
   async clearTablesByEntities(entities: any[]) {
-   await clearTablesByEntities(this.dataSource, entities);
+    await clearTablesByEntities(this.dataSource, entities);
   }
 
   getDataSource() {
@@ -54,13 +61,87 @@ export class E2eTestManager {
     await this.dataSource.destroy();
   }
 
+  api() {
+    return (path: string, options: RequestInit) => {
+      console.log("api", `${API_URL}${path}`, options);
+      return this.page.request.fetch(`${API_URL}${path}`, options);
+    };
+  }
+
   async ingestCountries() {
     const geoCountriesFilePath = path.join(
-        path.resolve(process.cwd(), '../'),
-        'api/src/insert_countries.sql'
+      path.resolve(process.cwd(), "../"),
+      "api/src/insert_countries.sql",
     );
-    const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, 'utf8');
+    const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, "utf8");
     await this.dataSource.query(geoCountriesSql);
+  }
+
+  async ingestProjectScoreCards(jwtToken: string) {
+    const countriesPresent = await this.dataSource
+      .getRepository(Country)
+      .find();
+    if (!countriesPresent.length) {
+      throw new Error(
+        'No Countries present in the DB, cannot ingest Excel data for tests',
+      );
+    }
+    const testFilePath = path.join(
+      __dirname,
+      '../../../../data/excel/data_ingestion_project_scorecard.xlsm',
+    );
+    const fileBuffer = fs.readFileSync(testFilePath);
+    const formData = new FormData();
+    formData.append('file', new Blob([fileBuffer]), 'data_ingestion_project_scorecard.xlsm');
+
+    const upload = await this.api()(adminContract.uploadProjectScorecard.path, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      body: formData
+    });
+
+      console.log("upload", upload)
+    if (upload.status !== 201) {
+      throw new Error(
+        'Failed to upload data_ingestion_project_scorecard.xlsm file for tests',
+      );
+    }
+  }
+
+  async ingestExcel(jwtToken: string) {
+    const countriesPresent = await this.dataSource
+      .getRepository(Country)
+      .find();
+    if (!countriesPresent.length) {
+      throw new Error(
+        'No Countries present in the DB, cannot ingest Excel data for tests',
+      );
+    }
+    const testFilePath = path.join(
+      __dirname,
+      '../../../../data/excel/data_ingestion_WIP.xlsm',
+    );
+    const fileBuffer = fs.readFileSync(testFilePath);
+    const formData = new FormData();
+    formData.append('file', new Blob([fileBuffer]), 'data_ingestion_WIP.xlsm');
+    
+    const upload = await this.api()(adminContract.uploadFile.path, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      body: formData
+    });
+    if (upload.status !== 201) {
+      throw new Error('Failed to upload Excel file for tests');
+    }
+  }
+
+  async setUpTestUser() {
+    const user = await this.mocks().createUser({role: ROLES.ADMIN, isActive: true})
+    return logUserIn(this, user);
   }
 
   async createUser(additionalData?: Partial<User>) {
@@ -82,11 +163,14 @@ export class E2eTestManager {
   }
 
   async login(user?: User) {
+    console.log("login user", user)
     if (!user) {
       user = await this.mocks().createUser();
     }
     await this.page.goto("/auth/signin");
-    await this.page.getByPlaceholder('Enter your email address').fill(user.email);
+    await this.page
+      .getByPlaceholder("Enter your email address")
+      .fill(user.email);
     await this.page.locator('input[type="password"]').fill(user.password);
     await this.page.getByRole("button", { name: /log in/i }).click();
     await this.page.waitForURL("/profile");

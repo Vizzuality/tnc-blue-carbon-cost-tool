@@ -4,7 +4,7 @@ require("dotenv").config({
   path: require("path").join("../shared/config", ".env.test"),
 });
 
-const API_URL = "http://localhost:4000";
+export const API_URL = "http://localhost:4000";
 const APP_URL = "http://localhost:3000";
 
 /**
