@@ -11,8 +11,6 @@ import * as path from "path";
 import {adminContract} from "@shared/contracts/admin.contract";
 import {API_URL} from "e2e/playwright.config";
 import {ROLES} from "@shared/entities/users/roles.enum";
-import {ProjectScorecardView} from "@shared/entities/project-scorecard.view";
-import {ProjectScorecard} from "@shared/entities/project-scorecard.entity";
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -128,7 +126,8 @@ export class E2eTestManager {
     }
   }
 
-  async ingestExcel() {
+  async ingestBaseData() {
+    await this.ingestCountries()
     const user = await this.mocks().createUser({role: ROLES.ADMIN, email: 'test@test.com'});
     const token = await this.generateTokenByType(
       user,
@@ -160,7 +159,7 @@ export class E2eTestManager {
     const url = API_URL + adminContract.uploadFile.path;
 
     try {
-      const res = await fetch(scorecardUrl, {
+      await fetch(scorecardUrl, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -168,18 +167,12 @@ export class E2eTestManager {
         body: scorecardFormData,
       });
 
-        console.log('response',res);
-        console.log('response STATUS', res.status);
-        console.log('response BODY', res.body);
-      console.log('Scorecard data uploaded')
     }catch (error) {
       throw new Error(`Error uploading file: ${error.message}`);
     }
-    const data = await this.getDataSource().getRepository(ProjectScorecard).find();
-    console.log('SCORECARD FROM DB **********');
-    console.log(data);
+
     try {
-      const res = await fetch(url, {
+       await fetch(url, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -187,35 +180,11 @@ export class E2eTestManager {
         body: formData,
       });
 
-      console.log('response WIP',res);
-      console.log('response WIP STATUS', res.status);
-
-      console.log('response WIP BODY', res.body);
-
-      // if (res.status !== 201) {
-      //   throw new Error('Failed to upload Excel file for tests');
-      // }
-
-      console.log('File uploaded successfully');
     } catch (error) {
       throw new Error(`Error uploading file: ${error.message}`);
     }
-    console.log('ALL DONE');
+
   }
 
 }
 
-// export async function logUserIn(
-//     testManager: TestManager,
-//     user: Partial<User>,
-// ): Promise<TestUser> {
-//   const response = await request(testManager.getApp().getHttpServer())
-//       .post('/authentication/login')
-//       .send({ email: user.email, password: user.password });
-//
-//   return {
-//     jwtToken: response.body.accessToken,
-//     user: user as User,
-//     password: user.password,
-//   };
-// }
