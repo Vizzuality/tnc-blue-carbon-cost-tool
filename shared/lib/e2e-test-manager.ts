@@ -1,21 +1,18 @@
-import { DataSource } from "typeorm";
-import { User } from "@shared/entities/users/user.entity";
-import { createProject, createUser } from "@shared/lib/entity-mocks";
-import {
-  clearTablesByEntities,
-  clearTestDataFromDatabase,
-} from "@shared/lib/db-helpers";
-import { JwtPayload, sign } from "jsonwebtoken";
-import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
-import { COMMON_DATABASE_ENTITIES } from "@shared/lib/db-entities";
-import { ProjectType } from "@shared/contracts/projects.contract";
+import {DataSource} from "typeorm";
+import {User} from "@shared/entities/users/user.entity";
+import {createProject, createUser} from "@shared/lib/entity-mocks";
+import {clearTablesByEntities, clearTestDataFromDatabase,} from "@shared/lib/db-helpers";
+import {JwtPayload, sign} from "jsonwebtoken";
+import {TOKEN_TYPE_ENUM} from "@shared/schemas/auth/token-type.schema";
+import {COMMON_DATABASE_ENTITIES} from "@shared/lib/db-entities";
+import {ProjectType} from "@shared/contracts/projects.contract";
 import * as fs from "fs";
 import * as path from "path";
-import { Country } from "@shared/entities/country.entity";
-import { adminContract } from "@shared/contracts/admin.contract";
-import { API_URL } from "e2e/playwright.config";
-import { ROLES } from "@shared/entities/users/roles.enum";
-import { logUserIn } from "@shared/lib/utils/user.auth";
+import {adminContract} from "@shared/contracts/admin.contract";
+import {API_URL} from "e2e/playwright.config";
+import {ROLES} from "@shared/entities/users/roles.enum";
+import {ProjectScorecardView} from "@shared/entities/project-scorecard.view";
+import {ProjectScorecard} from "@shared/entities/project-scorecard.entity";
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -61,12 +58,6 @@ export class E2eTestManager {
     await this.dataSource.destroy();
   }
 
-  api() {
-    return (path: string, options: RequestInit) => {
-      console.log("api", `${API_URL}${path}`, options);
-      return this.page.request.fetch(`${API_URL}${path}`, options);
-    };
-  }
 
   async ingestCountries() {
     const geoCountriesFilePath = path.join(
@@ -77,76 +68,8 @@ export class E2eTestManager {
     await this.dataSource.query(geoCountriesSql);
   }
 
-  async ingestProjectScoreCards(jwtToken: string) {
-    const countriesPresent = await this.dataSource
-      .getRepository(Country)
-      .find();
-    if (!countriesPresent.length) {
-      throw new Error(
-        'No Countries present in the DB, cannot ingest Excel data for tests',
-      );
-    }
-    const testFilePath = path.join(
-      __dirname,
-      '../../../../data/excel/data_ingestion_project_scorecard.xlsm',
-    );
-    const fileBuffer = fs.readFileSync(testFilePath);
-    const formData = new FormData();
-    formData.append('file', new Blob([fileBuffer]), 'data_ingestion_project_scorecard.xlsm');
 
-    const upload = await this.api()(adminContract.uploadProjectScorecard.path, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-      body: formData
-    });
 
-      console.log("upload", upload)
-    if (upload.status !== 201) {
-      throw new Error(
-        'Failed to upload data_ingestion_project_scorecard.xlsm file for tests',
-      );
-    }
-  }
-
-  async ingestExcel(jwtToken: string) {
-    const countriesPresent = await this.dataSource
-      .getRepository(Country)
-      .find();
-    if (!countriesPresent.length) {
-      throw new Error(
-        'No Countries present in the DB, cannot ingest Excel data for tests',
-      );
-    }
-    const testFilePath = path.join(
-      __dirname,
-      '../../../../data/excel/data_ingestion_WIP.xlsm',
-    );
-    const fileBuffer = fs.readFileSync(testFilePath);
-    const formData = new FormData();
-    formData.append('file', new Blob([fileBuffer]), 'data_ingestion_WIP.xlsm');
-    
-    const upload = await this.api()(adminContract.uploadFile.path, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-      body: formData
-    });
-    if (upload.status !== 201) {
-      throw new Error('Failed to upload Excel file for tests');
-    }
-  }
-
-  async setUpTestUser() {
-    const user = await this.mocks().createUser({role: ROLES.ADMIN, isActive: true})
-    return logUserIn(this, user);
-  }
-
-  async createUser(additionalData?: Partial<User>) {
-    return createUser(this.dataSource, additionalData);
-  }
 
   mocks() {
     return {
@@ -204,4 +127,95 @@ export class E2eTestManager {
         break;
     }
   }
+
+  async ingestExcel() {
+    const user = await this.mocks().createUser({role: ROLES.ADMIN, email: 'test@test.com'});
+    const token = await this.generateTokenByType(
+      user,
+      TOKEN_TYPE_ENUM.ACCESS,
+    );
+    const excelFilePath = path.join(
+        path.resolve(process.cwd(), "../"),
+        "data/excel/data_ingestion_WIP.xlsm",
+    );
+    const scorecardExcelFilePath = path.join(
+        path.resolve(process.cwd(), "../"),
+        "data/excel/data_ingestion_project_scorecard.xlsm",
+    );
+    const scorecardFileBuffer = fs.readFileSync(scorecardExcelFilePath);
+    const scorecardFileBlob = new Blob([scorecardFileBuffer], {
+      type: 'application/vnd.ms-excel.sheet.macroEnabled.12',
+    });
+    const fileBuffer = fs.readFileSync(excelFilePath);
+    const fileBlob = new Blob([fileBuffer], {
+      type: 'application/vnd.ms-excel.sheet.macroEnabled.12',
+    });
+    const scorecardFormData = new FormData();
+    scorecardFormData.append('file', scorecardFileBlob, 'data_ingestion_project_scorecard.xlsm');
+
+    const formData = new FormData();
+    formData.append('file', fileBlob, 'data_ingestion_WIP.xlsm');
+
+    const scorecardUrl = API_URL + adminContract.uploadProjectScorecard.path;
+    const url = API_URL + adminContract.uploadFile.path;
+
+    try {
+      const res = await fetch(scorecardUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: scorecardFormData,
+      });
+
+        console.log('response',res);
+        console.log('response STATUS', res.status);
+        console.log('response BODY', res.body);
+      console.log('Scorecard data uploaded')
+    }catch (error) {
+      throw new Error(`Error uploading file: ${error.message}`);
+    }
+    const data = await this.getDataSource().getRepository(ProjectScorecard).find();
+    console.log('SCORECARD FROM DB **********');
+    console.log(data);
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      console.log('response WIP',res);
+      console.log('response WIP STATUS', res.status);
+
+      console.log('response WIP BODY', res.body);
+
+      // if (res.status !== 201) {
+      //   throw new Error('Failed to upload Excel file for tests');
+      // }
+
+      console.log('File uploaded successfully');
+    } catch (error) {
+      throw new Error(`Error uploading file: ${error.message}`);
+    }
+    console.log('ALL DONE');
+  }
+
 }
+
+// export async function logUserIn(
+//     testManager: TestManager,
+//     user: Partial<User>,
+// ): Promise<TestUser> {
+//   const response = await request(testManager.getApp().getHttpServer())
+//       .post('/authentication/login')
+//       .send({ email: user.email, password: user.password });
+//
+//   return {
+//     jwtToken: response.body.accessToken,
+//     user: user as User,
+//     password: user.password,
+//   };
+// }

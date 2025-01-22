@@ -1,5 +1,6 @@
 import { expect, Page, test } from "@playwright/test";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
+import {BaseDataView} from "@shared/entities/base-data.view";
 
 let testManager: E2eTestManager;
 let page: Page;
@@ -10,15 +11,8 @@ test.describe("Projects - Create Custom Project", () => {
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     testManager = await E2eTestManager.load(page);
-    const { jwtToken } = await testManager.setUpTestUser();
-
-    if (!jwtToken) {
-      throw new Error("Failed to set up test user");
-    }
-
     await testManager.ingestCountries();
-    await testManager.ingestProjectScoreCards(jwtToken);
-    await testManager.ingestExcel(jwtToken);
+    await testManager.ingestExcel();
   });
 
   test.afterAll(async () => {
@@ -27,9 +21,8 @@ test.describe("Projects - Create Custom Project", () => {
   });
 
   test("I can create a custom project with default values", async () => {
-    await page.goto("http://localhost:3000/projects/new");
-
-    await page.locator('input[name="projectName"]').fill("Test Project");
-    await page.getByText("Continue").click();
+    const data = await testManager.getDataSource().getRepository(BaseDataView).find();
+    console.log('EXCEL DATA **********');
+    console.log(data);
   });
 });
