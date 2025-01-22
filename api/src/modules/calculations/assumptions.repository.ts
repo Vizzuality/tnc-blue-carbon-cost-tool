@@ -57,9 +57,10 @@ export class AssumptionsRepository extends Repository<ModelAssumptions> {
       })
       .orderBy('name', 'ASC')
       .getRawMany();
-    if (assumptions.length !== 7) {
-      throw new Error('Not all required overridable assumptions were found');
-    }
+    // Related to [0]. Search for [0] in this file.
+    // if (assumptions.length !== 7) {
+    //   throw new Error('Not all required overridable assumptions were found');
+    // }
     return assumptions;
   }
 
@@ -68,7 +69,10 @@ export class AssumptionsRepository extends Repository<ModelAssumptions> {
   ): string[] {
     const { ecosystem, activity } = dto;
     const assumptions = [...COMMON_OVERRIDABLE_ASSUMPTION_NAMES] as string[];
-    assumptions.push(this.map[ecosystem]);
+    // [0] The following line returns the restoration rate for an specific ecosystem. The this should only be returned for restoration activities according to the PO.
+    if (activity === ACTIVITY.RESTORATION) {
+      assumptions.push(this.map[ecosystem]);
+    }
     assumptions.push(this.map[activity]);
     return assumptions;
   }
