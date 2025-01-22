@@ -125,26 +125,22 @@ export class ProjectsService extends AppBaseService<
     fetchSpecification: ProjectFetchSpecificacion,
   ): Promise<ProjectsFiltersBoundsDto> {
     const defaultBounds = await this.getDefaultBounds();
-    let costBounds = await this.getCostBounds(fetchSpecification);
-    let abatementBounds = await this.getAbatementBounds(fetchSpecification);
+    let filtersBounds = await this.getFiltersBounds(fetchSpecification);
 
-    if (costBounds.min === 0 && costBounds.max === 0) {
-      costBounds = defaultBounds.costBounds;
+    if (filtersBounds.cost.min === 0 && filtersBounds.cost.max === 0) {
+      filtersBounds.cost = defaultBounds.cost;
     }
-    if (abatementBounds.min === 0 && abatementBounds.max === 0) {
-      abatementBounds = defaultBounds.abatementBounds;
+    if (
+      filtersBounds.abatementPotential.min === 0 &&
+      filtersBounds.abatementPotential.max === 0
+    ) {
+      filtersBounds.abatementPotential = defaultBounds.abatementPotential;
     }
 
-    return {
-      cost: { ...costBounds },
-      abatementPotential: { ...abatementBounds },
-    };
+    return filtersBounds;
   }
 
-  private async getDefaultBounds(): Promise<{
-    costBounds: { min: number; max: number };
-    abatementBounds: { min: number; max: number };
-  }> {
+  private async getDefaultBounds(): Promise<ProjectsFiltersBoundsDto> {
     const costBounds = await this.dataSource
       .createQueryBuilder()
       .select('MAX(total_cost)', 'maxCost')
@@ -160,66 +156,51 @@ export class ProjectsService extends AppBaseService<
       .execute();
 
     return {
-      costBounds: {
+      cost: {
         min: Number(costBounds[0].minCost),
         max: Number(costBounds[0].maxCost),
       },
-      abatementBounds: {
+      abatementPotential: {
         min: Number(abatementBounds[0].minAbatementPotential),
         max: Number(abatementBounds[0].maxAbatementPotential),
       },
     };
   }
 
-  private async getAbatementBounds(
+  private async getFiltersBounds(
     fetchSpecification: ProjectFetchSpecificacion,
-  ): Promise<{ min: number; max: number }> {
-    // Do not filter by cost to get the cost bounds
-    const abatementQuery = structuredClone(fetchSpecification);
-    delete abatementQuery.costRange;
-    delete abatementQuery.costRangeSelector;
+  ): Promise<ProjectsFiltersBoundsDto> {
+    let qb = this.dataSource.createQueryBuilder();
+    this.setFilters(qb, fetchSpecification.filter);
+    this.applySearchFiltersToQueryBuilder(qb, fetchSpecification);
 
-    let abatementBoundsQB = this.dataSource.createQueryBuilder();
-    this.setFilters(abatementBoundsQB, fetchSpecification.filter);
-    this.applySearchFiltersToQueryBuilder(abatementBoundsQB, abatementQuery);
-
-    const abatementBounds = await abatementBoundsQB
-      .select('MAX(abatement_potential)', 'maxAbatementPotential')
-      .addSelect('MIN(abatement_potential)', 'minAbatementPotential')
-      .from(Project, 'project')
-      .execute();
-    return {
-      min: Number(abatementBounds[0].minAbatementPotential),
-      max: Number(abatementBounds[0].maxAbatementPotential),
-    };
-  }
-
-  private async getCostBounds(
-    fetchSpecification: ProjectFetchSpecificacion,
-  ): Promise<{ min: number; max: number }> {
-    // Do not filter by abatement potential to get the abatement bounds
-    const costQuery = structuredClone(fetchSpecification);
-    delete costQuery.abatementPotentialRange;
-
-    let costBoundsQB = this.dataSource.createQueryBuilder();
-    this.setFilters(costBoundsQB, fetchSpecification.filter);
-    this.applySearchFiltersToQueryBuilder(costBoundsQB, costQuery);
+    qb.select('MAX(abatement_potential)', 'maxAbatementPotential').addSelect(
+      'MIN(abatement_potential)',
+      'minAbatementPotential',
+    );
 
     switch (fetchSpecification.costRangeSelector) {
       case 'npv':
-        costBoundsQB.addSelect('MAX(total_cost_npv)', 'maxCost');
-        costBoundsQB.addSelect('MIN(total_cost_npv)', 'minCost');
+        qb.addSelect('MAX(total_cost_npv)', 'maxCost');
+        qb.addSelect('MIN(total_cost_npv)', 'minCost');
         break;
       case 'total':
       default:
-        costBoundsQB.addSelect('MAX(total_cost)', 'maxCost');
-        costBoundsQB.addSelect('MIN(total_cost)', 'minCost');
+        qb.addSelect('MAX(total_cost)', 'maxCost');
+        qb.addSelect('MIN(total_cost)', 'minCost');
         break;
     }
-    const costBounds = await costBoundsQB.from(Project, 'project').execute();
+    const filterBounds = await qb.from(Project, 'project').execute();
+
     return {
-      min: Number(costBounds[0].minCost),
-      max: Number(costBounds[0].maxCost),
+      abatementPotential: {
+        min: Number(filterBounds[0].minAbatementPotential),
+        max: Number(filterBounds[0].maxAbatementPotential),
+      },
+      cost: {
+        min: Number(filterBounds[0].minCost),
+        max: Number(filterBounds[0].maxCost),
+      },
     };
   }
 }

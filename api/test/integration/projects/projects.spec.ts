@@ -503,15 +503,14 @@ describe('Projects', () => {
           },
           costRange: [0, 310_000_000],
           costRangeSelector: COST_TYPE_SELECTOR.NPV,
-          abatementPotentialRange: [2_000, 3_000],
           partialProjectName: 'Project',
         });
 
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.data).toMatchObject({
         abatementPotential: {
-          max: 3_000,
-          min: 2_000,
+          max: 5_000,
+          min: 1_000,
         },
         cost: {
           max: 500,
@@ -539,8 +538,6 @@ describe('Projects', () => {
             activity: [ACTIVITY.CONSERVATION],
             projectSizeFilter: [PROJECT_SIZE_FILTER.SMALL],
           },
-          costRange: [0, 310_000_000],
-          costRangeSelector: COST_TYPE_SELECTOR.NPV,
           abatementPotentialRange: [0, 10_000_000],
           partialProjectName: 'Project',
         });
