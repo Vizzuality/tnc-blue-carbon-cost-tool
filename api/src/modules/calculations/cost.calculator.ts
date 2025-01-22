@@ -5,10 +5,6 @@ import { ConservationProjectInput } from '@api/modules/custom-projects/input-fac
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
-import {
-  OverridableCostInputs,
-  PROJECT_DEVELOPMENT_TYPE,
-} from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculator';
 import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
 import { parseInt, sum } from 'lodash';
@@ -20,9 +16,11 @@ import {
   YearlyBreakdown,
   YearlyBreakdownCostName,
 } from '@shared/dtos/custom-projects/custom-project-output.dto';
+import { OverridableCostInputsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
+import { PROJECT_DEVELOPMENT_TYPE } from '@shared/dtos/projects/project-development.type';
 
 export type CostPlans = Record<
-  keyof OverridableCostInputs | string,
+  keyof OverridableCostInputsDto | string,
   CostPlanMap
 >;
 

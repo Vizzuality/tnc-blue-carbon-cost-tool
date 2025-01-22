@@ -4,7 +4,6 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
-import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';
@@ -12,7 +11,6 @@ import { CalculationEngine } from '@api/modules/calculations/calculation.engine'
 import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overridable-cost-inputs.dto';
 import { DataRepository } from '@api/modules/calculations/data.repository';
-import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { GetOverridableAssumptionsDTO } from '@shared/dtos/custom-projects/get-overridable-assumptions.dto';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 import { User } from '@shared/entities/users/user.entity';
@@ -23,6 +21,10 @@ import { GetActivityTypesDefaults } from '@shared/dtos/custom-projects/get-activ
 import { z } from 'zod';
 import { customProjecsQuerySchema } from '@shared/contracts/custom-projects.contract';
 import { In } from 'typeorm';
+import {
+  CreateCustomProjectDto,
+  OverridableCostInputsDto,
+} from '@api/modules/custom-projects/dto/create-custom-project.dto';
 
 export type CustomProjectFetchSpecificacion = z.infer<
   typeof customProjecsQuerySchema
@@ -48,7 +50,7 @@ export class CustomProjectsService extends AppBaseService<
     super(repo, 'customProject', 'customProjects');
   }
 
-  async create(dto: CreateCustomProjectDto): Promise<any> {
+  async create(dto: CreateCustomProjectDto): Promise<CustomProject> {
     const { countryCode, ecosystem, activity } = dto;
     const {
       additionalBaseData,
@@ -115,7 +117,7 @@ export class CustomProjectsService extends AppBaseService<
 
   async getDefaultCostInputs(
     dto: GetOverridableCostInputs,
-  ): Promise<OverridableCostInputs> {
+  ): Promise<OverridableCostInputsDto> {
     return this.dataRepository.getOverridableCostInputs(dto);
   }
 

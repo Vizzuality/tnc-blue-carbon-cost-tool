@@ -10,7 +10,6 @@ import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
-import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 import { GetUser } from '@api/decorators/get-user.decorator';
 import { User } from '@shared/entities/users/user.entity';
 import { AuthGuard } from '@nestjs/passport';
@@ -73,17 +72,12 @@ export class CustomProjectsController {
     );
   }
 
-  @TsRestHandler(customProjectContract.createCustomProject, {
-    validateRequestBody: false,
-  })
-  async create(
-    @Body(new ValidationPipe({ enableDebugMessages: true, transform: true }))
-    dto: CreateCustomProjectDto,
-  ): Promise<ControllerResponse> {
+  @TsRestHandler(customProjectContract.createCustomProject)
+  async create(): Promise<ControllerResponse> {
     return tsRestHandler(
       customProjectContract.createCustomProject,
-      async () => {
-        const customProject = await this.customProjects.create(dto as any);
+      async ({ body }) => {
+        const customProject = await this.customProjects.create(body);
         return {
           status: 201,
           body: { data: customProject },

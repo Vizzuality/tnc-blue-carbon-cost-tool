@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectInput } from '@api/modules/calculations/cost.calculator';
 import { ACTIVITY } from '@shared/entities/activity.enum';
-import { OverridableAssumptions } from '@api/modules/custom-projects/dto/project-assumptions.dto';
 import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
+import { OverridableAssumptionsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
 
 @Injectable()
 export class SequestrationRateCalculator {
@@ -12,10 +12,10 @@ export class SequestrationRateCalculator {
   activity: ACTIVITY;
   defaultProjectLength: number;
   projectLength: number;
-  buffer: OverridableAssumptions['buffer'];
+  buffer: OverridableAssumptionsDto['buffer'];
   plantingSuccessRate: NonOverridableModelAssumptions['plantingSuccessRate'];
   tier1SequestrationRate: AdditionalBaseData['tier1SequestrationRate'];
-  restorationRate: OverridableAssumptions['restorationRate'];
+  restorationRate: OverridableAssumptionsDto['restorationRate'];
   soilOrganicCarbonReleaseLength: NonOverridableModelAssumptions['soilOrganicCarbonReleaseLength'];
   constructor(projectInput: ProjectInput) {
     this.projectInput = projectInput;

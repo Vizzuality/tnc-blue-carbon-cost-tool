@@ -1,5 +1,5 @@
+import { PROJECT_DEVELOPMENT_TYPE } from "@shared/dtos/projects/project-development.type";
 import { ValueTransformer, ViewColumn, ViewEntity } from "typeorm";
-import { PROJECT_DEVELOPMENT_TYPE } from "@api/modules/custom-projects/dto/project-cost-inputs.dto";
 
 export const decimalTransformer: ValueTransformer = {
   to: (value: number | null) => value,

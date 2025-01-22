@@ -1,9 +1,6 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ACTIVITY } from '@shared/entities/activity.enum';
-import { ConservationProjectParamDto } from '@api/modules/custom-projects/dto/conservation-project-params.dto';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
-
-import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project-dto';
 import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
 import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
 import { CostOutput } from '@api/modules/calculations/calculation.engine';
@@ -12,6 +9,10 @@ import { CustomProject } from '@shared/entities/custom-project.entity';
 import { Country } from '@shared/entities/country.entity';
 import { RestorationProjectParamsDto } from '../dto/restoration-project-params.dto';
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
+import {
+  ConservationCustomProjectDto,
+  CreateCustomProjectDto,
+} from '@api/modules/custom-projects/dto/create-custom-project.dto';
 
 export type ConservationProjectCarbonInputs = {
   lossRate: number;
@@ -118,7 +119,7 @@ export class CustomProjectFactory {
       countryCode,
     } = dto;
 
-    const projectParams = parameters as ConservationProjectParamDto;
+    const projectParams = parameters as ConservationCustomProjectDto;
 
     const conservationProjectInput: ConservationProjectInput =
       new ConservationProjectInput();
