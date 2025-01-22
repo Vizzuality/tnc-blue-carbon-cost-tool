@@ -10,8 +10,8 @@ import {
   COMMON_OVERRIDABLE_ASSUMPTION_NAMES,
   ECOSYSTEM_RESTORATION_RATE_NAMES,
 } from '@shared/schemas/assumptions/assumptions.enums';
-import { OverridableAssumptions } from '@api/modules/custom-projects/dto/project-assumptions.dto';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
+import { OverridableAssumptionsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
 
 const NON_OVERRIDABLE_ASSUMPTION_NAMES_MAP = {
   'Annual cost increase': 'annualCostIncrease',
@@ -57,10 +57,6 @@ export class AssumptionsRepository extends Repository<ModelAssumptions> {
       })
       .orderBy('name', 'ASC')
       .getRawMany();
-    // Related to [0]. Search for [0] in this file.
-    // if (assumptions.length !== 7) {
-    //   throw new Error('Not all required overridable assumptions were found');
-    // }
     return assumptions;
   }
 
@@ -69,7 +65,6 @@ export class AssumptionsRepository extends Repository<ModelAssumptions> {
   ): string[] {
     const { ecosystem, activity } = dto;
     const assumptions = [...COMMON_OVERRIDABLE_ASSUMPTION_NAMES] as string[];
-    // [0] The following line returns the restoration rate for an specific ecosystem. The this should only be returned for restoration activities according to the PO.
     if (activity === ACTIVITY.RESTORATION) {
       assumptions.push(this.map[ecosystem]);
     }
@@ -131,4 +126,4 @@ export class NonOverridableModelAssumptions {
 }
 
 export type ModelAssumptionsForCalculations = NonOverridableModelAssumptions &
-  OverridableAssumptions;
+  OverridableAssumptionsDto;

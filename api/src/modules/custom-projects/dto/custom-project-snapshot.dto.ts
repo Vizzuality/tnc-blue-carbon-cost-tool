@@ -5,8 +5,8 @@ import {
   IsString,
   IsOptional,
 } from 'class-validator';
-import { CreateCustomProjectDto } from './create-custom-project-dto';
 import { CustomProjectOutput } from '@shared/dtos/custom-projects/custom-project-output.dto';
+import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
 
 export class CustomPrpjectAnnualProjectCashFlowDto {
   @IsArray()

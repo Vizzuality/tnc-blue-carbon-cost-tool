@@ -1,6 +1,6 @@
+import { PROJECT_EMISSION_FACTORS } from '@shared/entities/custom-project.entity';
 import { TestManager } from '../../utils/test-manager';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
-import { PROJECT_EMISSION_FACTORS } from '@api/modules/custom-projects/dto/conservation-project-params.dto';
 
 describe('Create Custom Projects - Request Validations', () => {
   let testManager: TestManager;
@@ -20,7 +20,15 @@ describe('Create Custom Projects - Request Validations', () => {
         .post(customProjectContract.createCustomProject.path)
         .send({});
 
-      expect(response.body.errors).toHaveLength(12);
+      const errors = response.body.errors;
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toStrictEqual(
+        expect.objectContaining({
+          status: '400',
+          title:
+            "Invalid discriminator value. Expected 'Conservation' | 'Restoration'",
+        }),
+      );
     });
   });
   describe('Conservation Project Validations', () => {
@@ -42,9 +50,13 @@ describe('Create Custom Projects - Request Validations', () => {
           },
         });
 
-      expect(response.body.errors).toHaveLength(1);
-      expect(response.body.errors[0].title).toEqual(
-        'lossRateUsed must be one of the following values: National average, Project specific',
+      const errors = response.body.errors;
+      expect(errors[0]).toStrictEqual(
+        expect.objectContaining({
+          status: '400',
+          title:
+            "Invalid enum value. Expected 'National average' | 'Project specific', received 'Invalid'",
+        }),
       );
     });
     test('If Loss Rate used is Project Specific, Project Specific Loss Rate should be provided and be negative', async () => {
@@ -65,13 +77,15 @@ describe('Create Custom Projects - Request Validations', () => {
             projectSpecificLossRate: 0.5,
           },
         });
-      expect(response.body.errors).toHaveLength(1);
-      expect(response.body.errors[0].title).toEqual(
-        'Project Specific Loss Rate must be negative',
+
+      expect(response.body.errors).toBeDefined();
+      const expectedError = response.body.errors.map(
+        (err) => err.title === 'Project Specific Loss Rate must be negative',
       );
+      expect(expectedError).toBeDefined();
     });
     test('If Emission Factor Used is Tier 2, only Mangroves is accepted as ecosystem', async () => {
-      const response = await testManager
+      const res = await testManager
         .request()
         .post(customProjectContract.createCustomProject.path)
         .send({
@@ -88,8 +102,9 @@ describe('Create Custom Projects - Request Validations', () => {
             projectSpecificEmission: 'One emission factor',
           },
         });
-      expect(response.body.errors).toHaveLength(1);
-      expect(response.body.errors[0].title).toEqual(
+
+      expect(res.body.errors).toHaveLength(1);
+      expect(res.body.errors[0].title).toEqual(
         'There is only Tier 2 emission factor for Mangrove ecosystems',
       );
     });

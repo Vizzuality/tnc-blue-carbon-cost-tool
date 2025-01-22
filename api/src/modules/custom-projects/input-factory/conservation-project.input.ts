@@ -1,12 +1,5 @@
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
-import { CARBON_REVENUES_TO_COVER } from '@api/modules/custom-projects/dto/create-custom-project-dto';
-import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
-import { OverridableAssumptions } from '@api/modules/custom-projects/dto/project-assumptions.dto';
-import {
-  ConservationProjectParamDto,
-  PROJECT_EMISSION_FACTORS,
-} from '@api/modules/custom-projects/dto/conservation-project-params.dto';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
 import { GeneralProjectInputs } from '@api/modules/custom-projects/input-factory/custom-project.factory';
@@ -14,6 +7,13 @@ import {
   ModelAssumptionsForCalculations,
   NonOverridableModelAssumptions,
 } from '@api/modules/calculations/assumptions.repository';
+import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
+import {
+  ConservationCustomProjectDto,
+  OverridableAssumptionsDto,
+  OverridableCostInputsDto,
+} from '@api/modules/custom-projects/dto/create-custom-project.dto';
+import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
 
 export class ConservationProjectInput {
   countryCode: string;
@@ -35,7 +35,7 @@ export class ConservationProjectInput {
   //   | Partial<BaseDataView>
   //   | (OverridableCostInputs & AdditionalBaseData);
 
-  costAndCarbonInputs: OverridableCostInputs & AdditionalBaseData;
+  costAndCarbonInputs: OverridableCostInputsDto & AdditionalBaseData;
 
   lossRate: number;
 
@@ -48,7 +48,7 @@ export class ConservationProjectInput {
   assumptions: ModelAssumptionsForCalculations;
 
   setLossRate(
-    parameters: ConservationProjectParamDto,
+    parameters: ConservationCustomProjectDto,
     carbonInputs: AdditionalBaseData,
   ): this {
     if (parameters.lossRateUsed === LOSS_RATE_USED.NATIONAL_AVERAGE) {
@@ -61,15 +61,15 @@ export class ConservationProjectInput {
   }
 
   setEmissionFactor(
-    parameters: ConservationProjectParamDto,
+    parameters: ConservationCustomProjectDto,
     additionalBaseData: AdditionalBaseData,
   ): this {
-    if (parameters.emissionFactorUsed === PROJECT_EMISSION_FACTORS.TIER_1) {
+    if (parameters.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_1) {
       this.emissionFactor = additionalBaseData.tier1EmissionFactor;
       this.emissionFactorAgb = null;
       this.emissionFactorSoc = null;
     }
-    if (parameters.emissionFactorUsed === PROJECT_EMISSION_FACTORS.TIER_2) {
+    if (parameters.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_2) {
       this.emissionFactorAgb = additionalBaseData.emissionFactorAgb;
       this.emissionFactorSoc = additionalBaseData.emissionFactorSoc;
       this.emissionFactor = null;
@@ -78,7 +78,7 @@ export class ConservationProjectInput {
   }
 
   setModelAssumptions(
-    overridableAssumptions: OverridableAssumptions,
+    overridableAssumptions: OverridableAssumptionsDto,
     rest: NonOverridableModelAssumptions,
   ): this {
     this.assumptions = { ...overridableAssumptions, ...rest };
@@ -86,7 +86,7 @@ export class ConservationProjectInput {
   }
 
   setCostAndCarbonInputs(
-    overridableCostInputs: OverridableCostInputs,
+    overridableCostInputs: OverridableCostInputsDto,
     additionalBaseData: AdditionalBaseData,
   ): this {
     this.costAndCarbonInputs = {

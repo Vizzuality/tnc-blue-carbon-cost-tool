@@ -3,8 +3,6 @@ import {
   RESTORATION_ACTIVITY_SUBTYPE,
 } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
-import { CARBON_REVENUES_TO_COVER } from '@api/modules/custom-projects/dto/create-custom-project-dto';
-import { OverridableCostInputs } from '@shared/dtos/custom-projects/cost.inputs';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import {
   ModelAssumptionsForCalculations,
@@ -13,7 +11,11 @@ import {
 import { SEQUESTRATION_RATE_TIER_TYPES } from '@shared/entities/carbon-inputs/sequestration-rate.entity';
 import { RestorationProjectParamsDto } from '@api/modules/custom-projects/dto/restoration-project-params.dto';
 import { GeneralProjectInputs } from '@api/modules/custom-projects/input-factory/custom-project.factory';
-import { OverridableAssumptions } from '../dto/project-assumptions.dto';
+import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
+import {
+  OverridableAssumptionsDto,
+  OverridableCostInputsDto,
+} from '@api/modules/custom-projects/dto/create-custom-project.dto';
 
 export class RestorationProjectInput {
   countryCode: string;
@@ -34,7 +36,7 @@ export class RestorationProjectInput {
 
   sequestrationRate: number;
 
-  costAndCarbonInputs: OverridableCostInputs & AdditionalBaseData;
+  costAndCarbonInputs: OverridableCostInputsDto & AdditionalBaseData;
 
   lossRate: number;
 
@@ -70,7 +72,7 @@ export class RestorationProjectInput {
   }
 
   setCostAndCarbonInputs(
-    overridableCostInputs: OverridableCostInputs,
+    overridableCostInputs: OverridableCostInputsDto,
     additionalBaseData: AdditionalBaseData,
   ): this {
     this.costAndCarbonInputs = {
@@ -81,7 +83,7 @@ export class RestorationProjectInput {
   }
 
   setModelAssumptions(
-    overridableAssumptions: OverridableAssumptions,
+    overridableAssumptions: OverridableAssumptionsDto,
     rest: NonOverridableModelAssumptions,
   ): this {
     this.assumptions = { ...overridableAssumptions, ...rest };

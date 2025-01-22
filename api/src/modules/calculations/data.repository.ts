@@ -8,7 +8,6 @@ import {
   RESTORATION_ACTIVITY_SUBTYPE,
 } from '@shared/entities/activity.enum';
 import { GetOverridableCostInputs } from '@shared/dtos/custom-projects/get-overridable-cost-inputs.dto';
-import { OverridableCostInputs } from '@api/modules/custom-projects/dto/project-cost-inputs.dto';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
@@ -19,6 +18,7 @@ import {
   RestorationActivityDefaults,
 } from '@shared/dtos/custom-projects/activity-types-defaults';
 import { Country } from '@shared/entities/country.entity';
+import { OverridableCostInputsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
 
 /**
  * Additional data that is required to perform calculations, which is not overridable by the user. Better naming and clustering of concepts would be great
@@ -189,7 +189,7 @@ export class DataRepository extends Repository<BaseDataView> {
 
   async getOverridableCostInputs(
     dto: GetOverridableCostInputs,
-  ): Promise<OverridableCostInputs> {
+  ): Promise<OverridableCostInputsDto> {
     const { countryCode, activity, ecosystem } = dto;
     const queryBuilder = this.createQueryBuilder().where({
       countryCode,
