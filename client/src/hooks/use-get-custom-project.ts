@@ -33,7 +33,7 @@ export function useGetCustomProject(id?: string) {
   );
   const pathname = usePathname();
   const router = useRouter();
-  const data = queryCache?.data || getCustomProjectQuery.data?.body.data;
+  const data = getCustomProjectQuery.data?.body.data || queryCache?.data;
 
   useEffect(() => {
     if (pathname === "/projects/preview" && !queryCache) {

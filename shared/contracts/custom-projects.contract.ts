@@ -104,7 +104,7 @@ export const customProjectContract = contract.router({
     method: "POST",
     path: "/custom-projects/save",
     responses: {
-      201: contract.type<null>(),
+      201: contract.type<ApiResponse<{ id: string }>>(),
     },
     body: contract.type<CustomProject>(),
   },

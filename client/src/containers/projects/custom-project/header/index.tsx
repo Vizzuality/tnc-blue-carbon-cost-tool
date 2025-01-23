@@ -1,6 +1,7 @@
 import { FC, useCallback, useState } from "react";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { useQueryClient } from "@tanstack/react-query";
@@ -32,6 +33,8 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
   const { data: session } = useSession();
   const { toast } = useToast();
   const [saved, setSaved] = useState<boolean>(false);
+  const pathname = usePathname();
+
   const SaveProject = useCallback(
     async (arg: Session | null = session) => {
       try {
@@ -44,6 +47,9 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
           });
 
         if (status === 201) {
+          // update the url without redirecting
+          // TODO: should also implement a clean way of removing the query cache
+          window.history.replaceState(null, "", `/projects/${body.data.id}`);
           toast({ description: "Project updated successfully." });
           setSaved(true);
           await queryClient.invalidateQueries({
@@ -51,7 +57,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
           });
         }
 
-        if (body?.errors) {
+        if (status !== 201 && body?.errors) {
           toast({
             variant: "destructive",
             description: body.errors[0].title,
@@ -86,7 +92,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
     );
   }
 
-  if (saved) {
+  if (saved || !pathname.includes("/projects/preview")) {
     ButtonComponent = (
       <Button asChild>
         <Link href="/my-projects">My custom projects</Link>
