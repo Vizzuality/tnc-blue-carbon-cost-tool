@@ -95,7 +95,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
   }
 
   return (
-    <Topbar title="Custom project - v01" className="gap-4">
+    <Topbar title={data.projectName} className="gap-4">
       <div className="flex flex-1 justify-between gap-4">
         <Button
           type="button"
