@@ -1,5 +1,7 @@
 import {  Page, test, expect } from "@playwright/test";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
+import {CustomProject} from "@shared/entities/custom-project.entity";
+import {User} from "@shared/entities/users/user.entity";
 
 let testManager: E2eTestManager;
 let page: Page;
@@ -12,7 +14,6 @@ test.describe("Custom Projects", () => {
     page = await browser.newPage();
     testManager = await E2eTestManager.load(page);
     await testManager.ingestBaseData();
-
   });
 
   test.afterAll(async () => {

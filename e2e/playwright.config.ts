@@ -44,10 +44,10 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: process.env.CI ? "list" : "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  timeout: 120_000,
+  //timeout: 120_000,
   use: {
-    // actionTimeout: 30000,
-    // navigationTimeout: 30000,
+     // actionTimeout: 30000,
+     navigationTimeout: 30000,
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: APP_URL,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
