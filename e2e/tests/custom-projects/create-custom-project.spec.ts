@@ -7,7 +7,8 @@ let page: Page;
 test.describe.configure({ mode: "serial" });
 
 test.describe("Custom Projects", () => {
-  test.beforeAll(async ({ browser }) => {
+  test.beforeAll(async ({ browser }, testInfo) => {
+    testInfo.setTimeout(testInfo.timeout + 60_000);
     page = await browser.newPage();
     testManager = await E2eTestManager.load(page);
     await testManager.ingestBaseData();
