@@ -95,10 +95,11 @@ export class CustomProjectsService extends AppBaseService<
     return customProject;
   }
 
-  async saveCustomProject(dto: CustomProject, user: User): Promise<void> {
+  async saveCustomProject(dto: CustomProject, user: User): Promise<string> {
     try {
-      await this.repo.save({ ...dto, user });
+      const { id } = await this.repo.save({ ...dto, user });
       this.eventBus.publish(new SaveCustomProjectEvent(user.id, true));
+      return id;
     } catch (error) {
       this.logger.error(`Error saving custom project: ${error}`);
       this.eventBus.publish(new SaveCustomProjectEvent(user.id, false, error));

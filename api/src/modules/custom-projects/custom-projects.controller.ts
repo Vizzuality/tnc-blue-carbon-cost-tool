@@ -99,10 +99,10 @@ export class CustomProjectsController {
     return tsRestHandler(
       customProjectContract.saveCustomProject,
       async ({ body }) => {
-        await this.customProjects.saveCustomProject(body, user);
+        const id = await this.customProjects.saveCustomProject(body, user);
         return {
           status: 201,
-          body: null,
+          body: { data: { id } },
         };
       },
     );
