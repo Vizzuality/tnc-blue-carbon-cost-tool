@@ -36,6 +36,7 @@ import {
   filtersToQueryParams,
   getColumnSortTitle,
   NO_DATA,
+  NoResults,
   useSorting,
 } from "@/containers/overview/table/utils";
 import { columns } from "@/containers/overview/table/view/overview/columns";
@@ -188,7 +189,7 @@ export function OverviewTable() {
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {isSuccess &&
             table.getRowModel().rows.map((row) => (
               <TableRow
                 className="group cursor-pointer transition-colors hover:bg-big-stone-950"
@@ -222,24 +223,26 @@ export function OverviewTable() {
                   </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
+            ))}
+
+          {isSuccess && data.data.length === 0 && (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
+              <NoResults colSpan={columnsBasedOnFilters.length} />
             </TableRow>
           )}
         </TableBody>
       </ScrollableTable>
-      <TablePagination
-        onChangePagination={setPagination}
-        pagination={{
-          ...pagination,
-          totalPages: data?.metadata?.totalPages ?? 0,
-          totalItems: data?.metadata?.totalItems ?? 0,
-        }}
-      />
+
+      {isSuccess && data.data.length > 0 && (
+        <TablePagination
+          onChangePagination={setPagination}
+          pagination={{
+            ...pagination,
+            totalPages: data?.metadata?.totalPages ?? 0,
+            totalItems: data?.metadata?.totalItems ?? 0,
+          }}
+        />
+      )}
     </>
   );
 }

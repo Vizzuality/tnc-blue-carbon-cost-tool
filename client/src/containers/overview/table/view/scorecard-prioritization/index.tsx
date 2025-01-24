@@ -34,6 +34,7 @@ import {
   filtersToQueryParams,
   getColumnSortTitle,
   NO_DATA,
+  NoResults,
   useSorting,
 } from "@/containers/overview/table/utils";
 import { TABLE_COLUMNS } from "@/containers/overview/table/view/scorecard-prioritization/columns";
@@ -149,7 +150,7 @@ export function ScoredCardPrioritizationTable() {
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {isSuccess &&
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -174,24 +175,25 @@ export function ScoredCardPrioritizationTable() {
                   </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
+            ))}
+
+          {isSuccess && data.data.length === 0 && (
             <TableRow>
-              <TableCell colSpan={TABLE_COLUMNS.length}>
-                <div className="flex flex-1 justify-center">No results.</div>
-              </TableCell>
+              <NoResults colSpan={TABLE_COLUMNS.length} />
             </TableRow>
           )}
         </TableBody>
       </ScrollableTable>
-      <TablePagination
-        onChangePagination={setPagination}
-        pagination={{
-          ...pagination,
-          totalPages: data?.metadata?.totalPages ?? 0,
-          totalItems: data?.metadata?.totalItems ?? 0,
-        }}
-      />
+      {isSuccess && data.data.length > 0 && (
+        <TablePagination
+          onChangePagination={setPagination}
+          pagination={{
+            ...pagination,
+            totalPages: data?.metadata?.totalPages ?? 0,
+            totalItems: data?.metadata?.totalItems ?? 0,
+          }}
+        />
+      )}
       <ProjectDetails />
     </>
   );

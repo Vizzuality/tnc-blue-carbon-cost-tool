@@ -22,11 +22,11 @@ const ScrollableTable = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
-  <ScrollArea hasHorizontalScroll>
+  <ScrollArea hasHorizontalScroll className="h-full">
     <div className="table h-full w-full table-fixed">
       <table
         ref={ref}
-        className={cn("w-full caption-bottom text-sm", className)}
+        className={cn("h-full w-full caption-bottom text-sm", className)}
         {...props}
       />
     </div>
@@ -91,7 +91,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-10 bg-big-stone-950 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "h-10 bg-big-stone-950 px-2 text-left align-middle text-xs font-normal text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
       className,
     )}
     {...props}
