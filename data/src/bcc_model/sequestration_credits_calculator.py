@@ -367,7 +367,7 @@ class SequestrationCreditsCalculator:
             raise ValueError(f"""Ecosystem extent historic not found for {self.project.ecosystem}
              and country {self.project.country}.""")
 
-    def calculate_abatement_potential(self):
+    def calculate_country_abatement_potential(self):
         if self.project.activity == "Restoration":
             ## abatement potential for restoration projects
             # Restorable land * sequestration rate
