@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from "react";
+import { ComponentProps, PropsWithChildren, useState } from "react";
 
 import { Column, SortingState, Updater } from "@tanstack/react-table";
 import { z } from "zod";
@@ -6,6 +6,8 @@ import { z } from "zod";
 import { filtersSchema } from "@/app/(overview)/url-store";
 
 import { scorecardFiltersSchema } from "@/containers/overview/table/view/scorecard-prioritization/schema";
+
+import { TableCell } from "@/components/ui/table";
 
 export const NO_DATA = [];
 
@@ -63,6 +65,12 @@ export const HeaderText = ({ children }: PropsWithChildren) => (
 
 export const CellText = ({ children }: PropsWithChildren) => (
   <span className="text-sm font-normal">{children}</span>
+);
+
+export const NoResults = (props: ComponentProps<typeof TableCell>) => (
+  <TableCell {...props} className="text-center">
+    <div className="flex flex-1 justify-center">No results.</div>
+  </TableCell>
 );
 
 export const getAccessor = <T extends string>(
