@@ -146,6 +146,25 @@ export default function ProjectsFilters() {
       },
     );
 
+  const { queryKey: defaultBoundsQueryKey } = queryKeys.projects.defaultBounds;
+
+  const { data: defaultBounds, isSuccess: isSuccessDefaultBounds } =
+    client.projects.getProjectsFiltersBounds.useQuery(
+      defaultBoundsQueryKey,
+      {
+        query: {
+          ...filtersToQueryParams(INITIAL_FILTERS_STATE),
+          costRangeSelector: INITIAL_FILTERS_STATE.costRangeSelector,
+          partialProjectName: INITIAL_FILTERS_STATE.keyword,
+        },
+      },
+      {
+        queryKey: defaultBoundsQueryKey,
+        select: (response) => response.body.data,
+        placeholderData: keepPreviousData,
+      },
+    );
+
   const [costValuesState, setCostValuesState] = useState([
     filters.costRange[0] ?? bounds?.cost.min,
     filters.costRange[1] ?? bounds?.cost.max,
@@ -158,34 +177,25 @@ export default function ProjectsFilters() {
 
   const resetFilters = async () => {
     await setFilters(() => INITIAL_FILTERS_STATE);
+
+    if (isSuccessDefaultBounds) {
+      setCostValuesState([defaultBounds.cost.min, defaultBounds.cost.max]);
+      setAbatementValueState([
+        defaultBounds.abatementPotential.min,
+        defaultBounds.abatementPotential.max,
+      ]);
+    }
   };
 
   useEffect(() => {
     if (isSuccess) {
-      if (filters === INITIAL_FILTERS_STATE) {
-        setCostValuesState([bounds.cost.min, bounds.cost.max]);
-        setAbatementValueState([
-          bounds.abatementPotential.min,
-          bounds.abatementPotential.max,
-        ]);
-        return;
-      }
-
-      setCostValuesState((prev) => {
-        if (prev[0] < bounds.cost.min) return [bounds.cost.min, prev[1]];
-        if (prev[1] > bounds.cost.max) return [prev[0], bounds.cost.max];
-        return prev;
-      });
-
-      setAbatementValueState((prev) => {
-        if (prev[0] < bounds.abatementPotential.min)
-          return [bounds.abatementPotential.min, prev[1]];
-        if (prev[1] > bounds.abatementPotential.max)
-          return [prev[0], bounds.abatementPotential.max];
-        return prev;
-      });
+      setCostValuesState([bounds.cost.min, bounds.cost.max]);
+      setAbatementValueState([
+        bounds.abatementPotential.min,
+        bounds.abatementPotential.max,
+      ]);
     }
-  }, [isSuccess, bounds, filters]);
+  }, [isSuccess, bounds]);
 
   return (
     <section
