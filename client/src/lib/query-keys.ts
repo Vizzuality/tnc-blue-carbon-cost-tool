@@ -47,6 +47,7 @@ export const tableKeys = createQueryKeys("tables", {
 export const projectKeys = createQueryKeys("projects", {
   one: (id: string) => [id],
   bounds: (filters: z.infer<typeof getProjectsQuerySchema>) => [filters],
+  defaultBounds: null,
 });
 
 export const customProjectKeys = createQueryKeys("customProjects", {

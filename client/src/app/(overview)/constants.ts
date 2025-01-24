@@ -39,8 +39,8 @@ export const filtersSchema = z.object({
   [FILTER_KEYS[5]]: z.array(z.nativeEnum(ECOSYSTEM)),
   [FILTER_KEYS[6]]: z.array(z.nativeEnum(ACTIVITY)),
   [FILTER_KEYS[7]]: z.array(z.nativeEnum(SUB_ACTIVITIES)),
-  [FILTER_KEYS[8]]: z.array(z.number()).length(2),
-  [FILTER_KEYS[9]]: z.array(z.number()).length(2),
+  [FILTER_KEYS[8]]: z.array(z.number()),
+  [FILTER_KEYS[9]]: z.array(z.number()),
 });
 
 export const INITIAL_FILTERS_STATE: z.infer<typeof filtersSchema> = {
