@@ -1,6 +1,5 @@
 import { expect, Page, test } from "@playwright/test";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
-import { User } from "@shared/entities/users/user.entity";
 import {Country} from "@shared/entities/country.entity";
 import {Project, PROJECT_PRICE_TYPE} from "@shared/entities/projects.entity";
 import {PROJECT_OVERVIEW_TABLE_LOCATOR} from "../../page-objects";
@@ -32,7 +31,8 @@ test.describe("Projects - Overview Table", () => {
             await testManager.mocks().createProject({countryCode: china.code, projectName: `${priceType} China Mangrove Conservation`, priceType});
             await testManager.mocks().createProject({countryCode: india.code, projectName: `${priceType} India Mangrove Conservation`, priceType});
         }
-        await page.goto('http://localhost:3000/');
+        page.goto('http://localhost:3000/');
+        await page.waitForResponse('**/projects?**');
         const firstRowCellsBeforeFilter = await page.locator(PROJECT_OVERVIEW_TABLE_LOCATOR).nth(0).locator('td').allTextContents();
         expect(firstRowCellsBeforeFilter).toContain(`Market price China Mangrove Conservation`)
         await page.locator('button').filter({ hasText: 'Market price' }).click();
