@@ -14,5 +14,6 @@ concurrency:
 jobs:
   deploy:
     uses: ./.github/workflows/release-candidate.yml
+    secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}

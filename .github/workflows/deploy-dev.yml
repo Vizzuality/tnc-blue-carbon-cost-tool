@@ -12,6 +12,7 @@ concurrency:
 jobs:
   deploy:
     uses: ./.github/workflows/deploy-v3.yml
+    secrets: inherit
     with:
       branch_name: dev
       environment_name: dev
