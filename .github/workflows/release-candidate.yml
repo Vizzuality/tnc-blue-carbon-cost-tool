@@ -43,10 +43,15 @@ jobs:
           git push origin $NEW_TAG
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
+      - name: Fetch all tags
+        run: git fetch --tags
+
       - name: Generate changelog
         run: |
+          LAST_TAG=$(git describe --tags --match "rc-*" --abbrev=0)
           echo "## Changelog for ${{ github.event.inputs.version }}" > CHANGELOG.md
-          git log $(git describe --tags --abbrev=0)..HEAD --oneline >> CHANGELOG.md
+          echo "Generating changelog from tag: $LAST_TAG"
+          git log $LAST_TAG..HEAD --pretty=format:"- %s (%an, %ad)" --date=short >> CHANGELOG.md
           cat CHANGELOG.md
 
       - name: Create GitHub release
