@@ -6,9 +6,9 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
-import { prefetchProjectData } from "@/app/projects/utils";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
-import { FEATURE_FLAGS } from "@/hooks/use-feature-flags";
+import { prefetchProjectData } from "@/app/projects/utils";
 
 import CustomProjectForm from "@/containers/projects/form";
 

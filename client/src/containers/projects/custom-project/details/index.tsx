@@ -8,7 +8,7 @@ import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { FileEdit } from "lucide-react";
 
-import { useFeatureFlags } from "@/hooks/use-feature-flags";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 import DetailItem from "@/containers/projects/custom-project/details/detail-item";
 
@@ -45,9 +45,8 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
     lossRate,
     emissionFactors,
   } = data;
-  const featureFlags = useFeatureFlags();
   const { id } = useParams<{ id?: string }>();
-  const showEditButton = featureFlags["edit-project"] && id;
+  const showEditButton = FEATURE_FLAGS["edit-project"] && id;
   return (
     <Card className="flex-1 space-y-1">
       <div className="flex items-center justify-between">

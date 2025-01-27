@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Scorecard } from "@shared/dtos/projects/project-scorecard.dto";
 import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 
-import { useFeatureFlags } from "@/hooks/use-feature-flags";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 import CompareButton from "@/containers/overview/project-details/compare-button";
 
@@ -25,7 +25,7 @@ const scoreCardMap = {
 
 const ScoreCardRatings: FC<{ data?: Scorecard }> = ({ data }) => {
   const { "compare-with-other-project": compareWithOtherProject } =
-    useFeatureFlags();
+    FEATURE_FLAGS;
   return (
     <>
       <div className="flex items-center justify-between py-2 pl-4 pr-2">

@@ -18,9 +18,8 @@ import {
 import { useSession } from "next-auth/react";
 import { useMediaQuery } from "usehooks-ts";
 
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn, getThemeSize } from "@/lib/utils";
-
-import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import {
   Sidebar,
@@ -84,7 +83,7 @@ export default function MainNav() {
   const { status, data } = useSession();
   const pathname = usePathname();
   const isAdmin = data?.user.role === ROLES.ADMIN;
-  const { "methodology-page": methodologyPage } = useFeatureFlags();
+  const { "methodology-page": methodologyPage } = FEATURE_FLAGS;
   const mainNavItems = useMemo(
     () =>
       navItems.main.filter((item) => {
