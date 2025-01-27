@@ -7,6 +7,7 @@ on:
 #        description: 'New release candidate version (e.g. rc-1.0.0)'
 #        required: true
   workflow_call:
+    secrets: inherit
     inputs:
       version:
         description: 'New release candidate version (e.g. rc-1.0.0)'
