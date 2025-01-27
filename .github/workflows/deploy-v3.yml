@@ -23,12 +23,20 @@ on:
 
 jobs:
   trigger_build:
+    environment: ${{ inputs.environment_name }}
     runs-on: ubuntu-latest
     outputs:
       build_client: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.client == 'true' || github.ref_name == 'staging' || github.ref_name == 'main' }}
       build_api: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.api == 'true' || github.ref_name == 'staging' || github.ref_name == 'main' }}
       build_backoffice: ${{ github.event_name == 'workflow_dispatch' || steps.changes.outputs.backoffice == 'true' || github.ref_name == 'staging' || github.ref_name == 'main' }}
     steps:
+      - name: Debug environment name
+        run: |
+          echo "Environment set to: ${{ inputs.environment_name }}"
+          echo "GitHub Job Environment: ${{ github.job.environment }}"
+          echo "Available ENV variables:"
+          env | sort
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -59,6 +67,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Build Client image and push to Amazon ECR
     steps:
+      - name: Debug environment name
+        run: |
+          echo "Environment set to: ${{ inputs.environment_name }}"
+          echo "GitHub Job Environment: ${{ github.job.environment }}"
+          echo "Available ENV variables:"
+          env | sort
       - name: Checkout code
         uses: actions/checkout@v4
 
