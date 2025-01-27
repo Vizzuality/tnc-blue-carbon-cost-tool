@@ -1,4 +1,4 @@
-import { optional, z } from "zod";
+import { z } from "zod";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import {
   ACTIVITY,
