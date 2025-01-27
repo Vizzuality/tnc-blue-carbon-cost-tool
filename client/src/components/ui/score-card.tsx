@@ -13,12 +13,16 @@ const DEFAULT_BG_CLASSES: Record<PROJECT_SCORE, string> = {
   [PROJECT_SCORE.LOW]: "bg-ramps-red",
 };
 
+export const getScoreIndicatorBgClass = (value: PROJECT_SCORE | null) => {
+  return value ? DEFAULT_BG_CLASSES[value] : "bg-gray-300";
+};
+
 export const ScoreIndicator = ({ value, className }: ScoreIndicatorProps) => {
   return (
     <div
       className={cn(
         "flex h-10 items-center justify-center text-sm font-normal capitalize text-deep-ocean",
-        value ? DEFAULT_BG_CLASSES[value] : "bg-gray-300",
+        getScoreIndicatorBgClass(value),
         className,
       )}
     >
