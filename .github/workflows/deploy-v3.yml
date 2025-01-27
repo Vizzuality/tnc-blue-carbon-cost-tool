@@ -108,7 +108,7 @@ jobs:
           push: true
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/${{ secrets.CLIENT_REPOSITORY_NAME }}:${{ github.sha }}
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.CLIENT_REPOSITORY_NAME }}:${{ github.job.environment }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.CLIENT_REPOSITORY_NAME }}:${{ inputs.environment_name }}
 
   build_api:
     needs: [trigger_build ]
@@ -166,7 +166,7 @@ jobs:
           push: true
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/${{ secrets.API_REPOSITORY_NAME }}:${{ github.sha }}
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.API_REPOSITORY_NAME }}:${{ github.job.environment }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.API_REPOSITORY_NAME }}:${{ inputs.environment_name }}
 
   build_backoffice:
     needs: [ trigger_build ]
@@ -213,7 +213,7 @@ jobs:
           push: true
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ADMIN_REPOSITORY_NAME }}:${{ github.sha }}
-            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ADMIN_REPOSITORY_NAME }}:${{ github.job.environment }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ADMIN_REPOSITORY_NAME }}:${{ inputs.environment_name }}
   
 
   deploy:
@@ -251,7 +251,7 @@ jobs:
           ECR_REPOSITORY_CLIENT: ${{ secrets.CLIENT_REPOSITORY_NAME }}
           ECR_REPOSITORY_API: ${{ secrets.API_REPOSITORY_NAME }}
           ECR_REPOSITORY_ADMIN: ${{ secrets.ADMIN_REPOSITORY_NAME }}
-          IMAGE_TAG: ${{ github.job.environment }}
+          IMAGE_TAG: ${{ inputs.environment_name }}
         run: |
           cat <<EOF >> docker-compose.yml
           services:
