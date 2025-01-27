@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import { ExtractAtomValue, useSetAtom } from "jotai";
 
-import { useFeatureFlags } from "@/hooks/use-feature-flags";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 import CustomProjects from "@/containers/profile/custom-projects";
 import DeleteAccount from "@/containers/profile/delete-account";
@@ -64,17 +64,16 @@ export const PROFILE_SECTIONS = [
 export default function Profile() {
   const ref = useRef<HTMLDivElement>(null);
   const setProfileStep = useSetAtom(profileStepAtom);
-  const featureFlags = useFeatureFlags();
   const currentSections = useMemo(() => {
     return PROFILE_SECTIONS.filter((section) => {
-      const featureFlagExists = section.id in featureFlags;
+      const featureFlagExists = section.id in FEATURE_FLAGS;
       const isFeatureEnabled =
         featureFlagExists &&
-        featureFlags[section.id as keyof typeof featureFlags];
+        FEATURE_FLAGS[section.id as keyof typeof FEATURE_FLAGS];
 
       return !featureFlagExists || isFeatureEnabled;
     });
-  }, [featureFlags]);
+  }, []);
 
   useEffect(() => {
     if (!ref.current) return;

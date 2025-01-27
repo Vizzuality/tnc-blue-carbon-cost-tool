@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useState } from "react";
 
-import { useFeatureFlags } from "@/hooks/use-feature-flags";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 import {
   introItems,
@@ -21,8 +21,9 @@ import {
 } from "@/components/ui/dialog";
 
 const IntroModal = () => {
-  const { "intro-modal": enabled } = useFeatureFlags();
-  const [isOpen, setIsOpen] = useState(enabled && showIntroModal());
+  const [isOpen, setIsOpen] = useState(
+    FEATURE_FLAGS["intro-modal"] && showIntroModal(),
+  );
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const handleClose = useCallback(
     (open = false) => {

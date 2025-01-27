@@ -1,8 +1,7 @@
 import { FC } from "react";
 
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
-
-import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import CompareButton from "@/containers/overview/project-details/compare-button";
 import { CostItem } from "@/containers/projects/custom-project/cost-details/table";
@@ -15,7 +14,7 @@ interface CostEstimatesProps {
 }
 const CostEstimates: FC<CostEstimatesProps> = ({ items }) => {
   const { "compare-with-other-project": compareWithOtherProject } =
-    useFeatureFlags();
+    FEATURE_FLAGS;
   return (
     <>
       <div className="flex items-center justify-between p-4 py-2">

@@ -13,13 +13,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
 import { useSession } from "next-auth/react";
 
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { formatCurrency } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { cn, getAuthHeader } from "@/lib/utils";
 
 import { DEFAULT_CUSTOM_PROJECTS_QUERY_KEY } from "@/app/my-projects/url-store";
-
-import { useFeatureFlags } from "@/hooks/use-feature-flags";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,7 +42,7 @@ const ActionsDropdown = ({
 }: {
   instance: TableInstance<CustomProject> | Row<CustomProject>;
 }) => {
-  const { "update-selection": updateSelection } = useFeatureFlags();
+  const { "update-selection": updateSelection } = FEATURE_FLAGS;
   const isHeader = "getSelectedRowModel" in instance;
   const deleteLabel = isHeader ? "Delete selection" : "Delete project";
   const { data: session } = useSession();

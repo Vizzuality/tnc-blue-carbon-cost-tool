@@ -7,9 +7,9 @@ import { type CustomProjectSummary } from "@shared/dtos/custom-projects/custom-p
 import { useSetAtom } from "jotai";
 import { FileEdit, XIcon } from "lucide-react";
 
-import { projectsUIState } from "@/app/projects/store";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
-import { useFeatureFlags } from "@/hooks/use-feature-flags";
+import { projectsUIState } from "@/app/projects/store";
 
 import { PROJECT_SUMMARY } from "@/constants/tooltip";
 
@@ -45,9 +45,8 @@ interface ProjectSummaryProps {
 }
 const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
   const setProjectSummaryOpen = useSetAtom(projectsUIState);
-  const featureFlags = useFeatureFlags();
   const { id } = useParams<{ id?: string }>();
-  const showEditButton = featureFlags["edit-project"] && id;
+  const showEditButton = FEATURE_FLAGS["edit-project"] && id;
   const closeProjectSummary = useCallback(() => {
     setProjectSummaryOpen((prev) => ({
       ...prev,
