@@ -1,34 +1,50 @@
-import { useMemo } from "react";
-
 interface FeatureFlags {
   /** Controls the visibility of the intro modal */
   "intro-modal": boolean;
-  /** Controls whether users can edit project details and settings in:
+  /** Controls whether users can see edit button in:
    * - /projects/custom-project/details
    * - /projects/custom-project/summary
+   *
+   * As well as access the edit page in:
+   * - /projects/[id]/edit
+   *
+   * @default false
    */
   "edit-project": boolean;
 
   /** Controls the visibility and sharing functionality in:
    * - /profile
+   *
+   * @default false
    */
   "share-information": boolean;
   /** Controls the project comparison functionality in:
    * - /overview/project-details (scorecard ratings and cost estimates comparison)
+   *
+   * @default false
    */
   "project-comparison": boolean;
   /** Controls the actions dropdown functionality in:
    * - /my-projects table
+   *
+   * @default false
    */
   "update-selection": boolean;
-  /** Controls the visibility of the methodology page */
+  /** Controls the visibility of the methodology page
+   *
+   * @default false
+   */
   "methodology-page": boolean;
+  /** Controls the visibility of the compare with other project page
+   *
+   * @default false
+   */
   "compare-with-other-project": boolean;
 }
 
 const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
   "intro-modal": true,
-  "edit-project": true,
+  "edit-project": false,
   "share-information": false,
   "project-comparison": false,
   "update-selection": false,
@@ -62,8 +78,26 @@ const parseFeatureFlagsFromEnv = (
   return { enabledFromEnv, disabledFromEnv };
 };
 
+const getFeatureFlags = () => {
+  const { enabledFromEnv, disabledFromEnv } = parseFeatureFlagsFromEnv(
+    process.env.NEXT_PUBLIC_FEATURE_FLAGS,
+  );
+
+  return (
+    Object.keys(DEFAULT_FEATURE_FLAGS) as Array<keyof FeatureFlags>
+  ).reduce(
+    (flags, key) => ({
+      ...flags,
+      [key]: disabledFromEnv.has(key)
+        ? false
+        : enabledFromEnv.has(key) || DEFAULT_FEATURE_FLAGS[key],
+    }),
+    {} as FeatureFlags,
+  );
+};
+
 /**
- * Hook to get the feature flags.
+ * Static object containing the current feature flags.
  *
  * Features can be explicitly enabled or disabled using the NEXT_PUBLIC_FEATURE_FLAGS
  * environment variable:
@@ -75,22 +109,4 @@ const parseFeatureFlagsFromEnv = (
  *
  * @returns The feature flags for the current user.
  */
-export function useFeatureFlags(): FeatureFlags {
-  return useMemo(() => {
-    const { enabledFromEnv, disabledFromEnv } = parseFeatureFlagsFromEnv(
-      process.env.NEXT_PUBLIC_FEATURE_FLAGS,
-    );
-
-    return (
-      Object.keys(DEFAULT_FEATURE_FLAGS) as Array<keyof FeatureFlags>
-    ).reduce(
-      (flags, key) => ({
-        ...flags,
-        [key]: disabledFromEnv.has(key)
-          ? false
-          : enabledFromEnv.has(key) || DEFAULT_FEATURE_FLAGS[key],
-      }),
-      {} as FeatureFlags,
-    );
-  }, []);
-}
+export const FEATURE_FLAGS: FeatureFlags = getFeatureFlags();
