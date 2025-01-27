@@ -61,6 +61,7 @@ jobs:
   trigger_deployment:
     needs: prepare_release
     uses: ./.github/workflows/deploy-v3.yml
+    secrets: inherit
     with:
       branch_name: staging
       environment_name: staging
