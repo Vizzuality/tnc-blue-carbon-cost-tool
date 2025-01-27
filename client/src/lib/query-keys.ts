@@ -2,6 +2,7 @@ import {
   createQueryKeys,
   mergeQueryKeys,
 } from "@lukemorales/query-key-factory";
+import { customProjecsQuerySchema } from "@shared/contracts/custom-projects.contract";
 import { getProjectsQuerySchema } from "@shared/contracts/projects.contract";
 import {
   ACTIVITY,
