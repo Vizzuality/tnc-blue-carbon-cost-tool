@@ -63,8 +63,6 @@ export default function AssumptionsProjectForm() {
       },
     );
 
-  console.log({ data });
-
   const table = useReactTable({
     // @ts-expect-error fix later
     data: isSuccess ? data : NO_DATA,
