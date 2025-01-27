@@ -67,18 +67,22 @@ describe('Create Custom Projects - Setup', () => {
             emissionFactorSOC: 0,
           },
         });
-      expect(response.status).toBe(201);
 
-      expect(response.body.data.totalCostNPV).toEqual(3619506.2162071504);
-      expect(response.body.data.totalCost).toEqual(5556541.947938656);
-      expect(response.body.data.breakevenTotalCost).toEqual(3750308.289753845);
-      expect(response.body.data.breakevenTotalCostNPV).toEqual(
-        2667356.215719252,
+      expect(response.status).toBe(201);
+      const responseData = response.body.data;
+      expect(responseData.totalCostNPV).toEqual(3619506.2162071504);
+      expect(responseData.totalCost).toEqual(5556541.947938656);
+      expect(responseData.breakevenTotalCost).toEqual(3750308.289753845);
+      expect(responseData.breakevenTotalCostNPV).toEqual(2667356.215719252);
+      const output = responseData.output;
+      expect(output.breakevenPriceComputationOutput.initialCarbonPrice).toEqual(
+        11.94909091180203,
       );
-      expect(
-        response.body.data.output.breakevenPriceComputationOutput
-          .initialCarbonPrice,
-      ).toEqual(11.94909091180203);
+      const yearlyBreakdown =
+        output.initialCarbonPriceComputationOutput.yearlyBreakdown;
+      for (const breakdown of yearlyBreakdown) {
+        expect(breakdown.costValues[0]).toBeUndefined();
+      }
     });
   });
 });
