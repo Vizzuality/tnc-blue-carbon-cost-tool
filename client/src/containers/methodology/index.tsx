@@ -9,35 +9,21 @@ import { DownloadIcon } from "lucide-react";
 
 import { useScrollSpy } from "@/hooks/use-scroll-spy";
 
+import { METHODOLOGY_SECTIONS } from "@/containers/methodology/sections";
 import MethodologySidebar from "@/containers/methodology/sidebar";
 import { methodologyStepAtom } from "@/containers/methodology/store";
+import { getSidebarNavItemAriaId } from "@/containers/sidebar/sidebar-navigation";
 
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-
-export const METHODOLOGY_SECTIONS = [
-  { id: "introduction", label: "Introduction", href: "#introduction" },
-  {
-    id: "project-size-assumptions",
-    label: "Project size assumptions",
-    href: "#project-size-assumptions",
-  },
-  {
-    id: "project-costs-assumptions-and-methodology",
-    label: "Project costs – assumptions and methodology",
-    href: "#project-costs-assumptions-and-methodology",
-  },
-  {
-    id: "qualitative-scorecard-details-and-sources",
-    label: "Qualitative scorecard details and sources",
-    href: "#qualitative-scorecard-details-and-sources",
-  },
-  {
-    id: "sources",
-    label: "Sources",
-    href: "#sources",
-  },
-];
 
 export default function Methodology() {
   const ref = useRef<HTMLDivElement>(null);
@@ -46,6 +32,10 @@ export default function Methodology() {
     id: "methodology-sections-container",
     containerRef: ref,
     setCurrentStep: setMethodologyStep,
+    options: {
+      threshold: 0.1,
+      rootMargin: "0% 0% -70% 0%",
+    },
   });
 
   return (
@@ -62,7 +52,46 @@ export default function Methodology() {
           </Link>
         </Button>
       </div>
-      <MethodologySidebar navItems={METHODOLOGY_SECTIONS} />
+      <div className="relative grid h-full grid-cols-[317px_1fr] overflow-hidden">
+        <MethodologySidebar
+          navItems={METHODOLOGY_SECTIONS.map(({ id, title, href }) => ({
+            id,
+            label: title,
+            href,
+          }))}
+        />
+        <ScrollArea ref={ref} className="px-8" showGradient>
+          <div
+            id="methodology-sections-container"
+            className="space-y-10 pb-80 pt-10"
+          >
+            {METHODOLOGY_SECTIONS.map(
+              ({ id, title, description, Component }) => (
+                <section
+                  key={id}
+                  id={id}
+                  aria-labelledby={getSidebarNavItemAriaId(id)}
+                >
+                  <Card
+                    variant="secondary"
+                    className="border-none p-0 shadow-none"
+                  >
+                    <CardHeader className="mb-6 space-y-4 px-16">
+                      <CardTitle className="text-2xl font-normal">
+                        {title}
+                      </CardTitle>
+                      <CardDescription>{description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="spacey-y-6">
+                      {Component}
+                    </CardContent>
+                  </Card>
+                </section>
+              ),
+            )}
+          </div>
+        </ScrollArea>
+      </div>
     </div>
   );
 }
