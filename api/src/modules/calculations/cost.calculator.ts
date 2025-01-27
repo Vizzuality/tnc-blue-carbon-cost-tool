@@ -431,6 +431,8 @@ export class CostCalculator {
       const plan = costPlans[planName];
       normalizedCostPlans[planName] = {};
       for (let year = startYear; year <= endYear; year++) {
+        if (year === 0) continue;
+
         normalizedCostPlans[planName][year] = plan[year] || 0;
       }
     }
