@@ -296,8 +296,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.PIPELINE_USER_SECRET_ACCESS_KEY }}
-          application_name: ${{ secrets.PROJECT_NAME}}-${{ needs.set_environment_name.outputs.env_name }}
-          environment_name: ${{ secrets.PROJECT_NAME}}-${{ needs.set_environment_name.outputs.env_name }}-env
+          application_name: ${{ secrets.PROJECT_NAME}}-${{ inputs.environment_name }}
+          environment_name: ${{ secrets.PROJECT_NAME}}-${{ inputs.environment_name }}-env
           region: ${{ secrets.AWS_REGION }}
           version_label: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           deployment_package: infrastructure/source_bundle/deploy.zip
