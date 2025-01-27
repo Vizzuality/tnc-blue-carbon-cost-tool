@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { projectScorecardQuerySchema } from "@shared/contracts/projects.contract";
+import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
 import { keepPreviousData } from "@tanstack/react-query";
 import {
@@ -39,6 +40,7 @@ import {
 import { TABLE_COLUMNS } from "@/containers/overview/table/view/scorecard-prioritization/columns";
 import { filtersToQueryParams } from "@/containers/overview/utils";
 
+import { getScoreIndicatorBgClass } from "@/components/ui/score-card";
 import {
   ScrollableTable,
   TableBody,
@@ -167,9 +169,16 @@ export function ScoredCardPrioritizationTable() {
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className={cn({
-                      "p-0": cell.column.id !== "projectName",
-                    })}
+                    className={cn(
+                      getScoreIndicatorBgClass(
+                        cell.row.original[
+                          cell.column.id as keyof ProjectScorecardView
+                        ] as PROJECT_SCORE,
+                      ),
+                      {
+                        "p-0": cell.column.id !== "projectName",
+                      },
+                    )}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
