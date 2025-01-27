@@ -363,8 +363,8 @@ export default function ProjectsFilters() {
               format={(v) => formatNumber(v, {})}
             />
             <SliderLabels
-              min={formatNumber(bounds?.cost.min as NonNullable<number>)}
-              max={formatNumber(bounds?.cost.max as NonNullable<number>)}
+              min={formatNumber(bounds?.cost.min ?? 0)}
+              max={formatNumber(bounds?.cost.max ?? 0)}
             />
           </div>
 
@@ -386,12 +386,8 @@ export default function ProjectsFilters() {
               format={formatNumber}
             />
             <SliderLabels
-              min={formatNumber(
-                bounds?.abatementPotential.min as NonNullable<number>,
-              )}
-              max={formatNumber(
-                bounds?.abatementPotential.max as NonNullable<number>,
-              )}
+              min={formatNumber(bounds?.abatementPotential.min ?? 0)}
+              max={formatNumber(bounds?.abatementPotential.max ?? 0)}
             />
           </div>
 
