@@ -69,6 +69,18 @@ export default function ConservationProjectDetails() {
                       "parameters.lossRateUsed",
                       v as LOSS_RATE_USED,
                     );
+                    if (v === LOSS_RATE_USED.NATIONAL_AVERAGE) {
+                      form.setValue(
+                        "parameters.projectSpecificLossRate",
+                        // prettier-ignore
+                        form.getFieldState("parameters.projectSpecificLossRate").invalid ?
+                            // @ts-expect-error fix later
+                            form.formState.defaultValues?.parameters?.projectSpecificLossRate
+                            // @ts-expect-error fix later
+                          : form.getValues().parameters?.projectSpecificLossRate,
+                      );
+                      await form.trigger("parameters.projectSpecificLossRate");
+                    }
                     await form.trigger("parameters.lossRateUsed");
                   }}
                 >
