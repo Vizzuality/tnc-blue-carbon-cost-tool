@@ -2,11 +2,11 @@ import { z } from 'zod';
 import {
   AssumptionsSchema,
   ConservationCustomProjectSchema,
-  CreateCustomProjectSchema,
+  CustomProjectSchema,
   InputCostsSchema,
-} from '@shared/schemas/custom-projects/create-custom-project.schema';
+} from '@shared/schemas/custom-projects/custom-project.schema';
 
-export type CreateCustomProjectDto = z.infer<typeof CreateCustomProjectSchema>;
+export type CreateCustomProjectDto = z.infer<typeof CustomProjectSchema>;
 export type ConservationCustomProjectDto = z.infer<
   typeof ConservationCustomProjectSchema
 >;

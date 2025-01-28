@@ -150,15 +150,15 @@ export const CustomProjectBaseSchema = z.object({
   costInputs: InputCostsSchema.optional(),
 });
 
-export const CreateCustomProjectSchema = z
+export const CustomProjectSchema = z
   .discriminatedUnion("activity", [
     z.object({
-      ...CreateCustomProjectBaseSchema.shape,
+      ...CustomProjectBaseSchema.shape,
       activity: z.literal(ACTIVITY.CONSERVATION),
       parameters: ConservationCustomProjectSchema,
     }),
     z.object({
-      ...CreateCustomProjectBaseSchema.shape,
+      ...CustomProjectBaseSchema.shape,
       activity: z.literal(ACTIVITY.RESTORATION),
       parameters: RestorationCustomProjectSchema,
     }),
@@ -173,7 +173,7 @@ export const CreateCustomProjectSchema = z
 
 // Complex validations that depend on multiple fields
 const ValidateConservationSchema = (
-  data: z.infer<typeof CreateCustomProjectSchema>,
+  data: z.infer<typeof CustomProjectSchema>,
   ctx: z.RefinementCtx,
 ) => {
   const params = data.parameters as z.infer<
@@ -239,7 +239,7 @@ const ValidateConservationSchema = (
 
 // Complex validations that depend on multiple fields
 const ValidateRestorationSchema = (
-  data: z.infer<typeof CreateCustomProjectSchema>,
+  data: z.infer<typeof CustomProjectSchema>,
   ctx: z.RefinementCtx,
 ) => {
   const params = data.parameters as z.infer<
@@ -256,15 +256,3 @@ const ValidateRestorationSchema = (
     });
   }
 };
-export const CustomProjectSchema = z.discriminatedUnion("activity", [
-  z.object({
-    ...CustomProjectBaseSchema.shape,
-    activity: z.literal(ACTIVITY.CONSERVATION),
-    parameters: ConservationCustomProjectSchema,
-  }),
-  z.object({
-    ...CustomProjectBaseSchema.shape,
-    activity: z.literal(ACTIVITY.RESTORATION),
-    parameters: RestorationCustomProjectSchema,
-  }),
-]);
