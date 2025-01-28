@@ -25,7 +25,7 @@ const ProjectSpecificLossRate = () => {
   const parameters = form.getValues().parameters;
   const [value, setValue] = useState<string>(
     "projectSpecificLossRate" in parameters
-      ? toPercentageValue(parameters.projectSpecificLossRate)
+      ? toPercentageValue(parameters.projectSpecificLossRate ?? 0)
       : "",
   );
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
