@@ -54,7 +54,7 @@ export const COSTS_DTO_MAP = {
   monitoring: { label: "Monitoring", unit: "$/yr" },
   maintenance: { label: "Maintenance", unit: "%" },
   communityBenefitSharingFund: {
-    label: "Community benefit sharing fund",
+    label: "Landowner/community benefit share",
     unit: "%",
   },
   carbonStandardFees: { label: "Carbon standard fees", unit: "$/credit" },

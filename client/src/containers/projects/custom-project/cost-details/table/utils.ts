@@ -20,7 +20,7 @@ const customProjectCostDetailsLabelMap: Record<
   operationalExpenditure: "Operating expenditure",
   monitoring: "Monitoring",
   maintenance: "Maintenance",
-  communityBenefitSharingFund: "Community benefit sharing fund",
+  communityBenefitSharingFund: "Landowner/community benefit share",
   carbonStandardFees: "Carbon standard fees",
   baselineReassessment: "Baseline reassessment",
   mrv: "MRV",
