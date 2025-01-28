@@ -101,18 +101,23 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
           {emissionFactors && (
             <DetailItem
               label="Emission factor"
-              subValues={[
-                {
-                  label: "AGB",
-                  value: emissionFactors.emissionFactorAgb,
-                  unit: "tCO2e/ha/yr",
-                },
-                {
-                  label: "SOC",
-                  value: emissionFactors.emissionFactorSoc,
-                  unit: "tCO2e/ha/yr",
-                },
-              ]}
+              value={emissionFactors.emissionFactor}
+              subValues={
+                !emissionFactors.emissionFactor
+                  ? [
+                      {
+                        label: "AGB",
+                        value: emissionFactors.emissionFactorAgb,
+                        unit: "tCO2e/ha/yr",
+                      },
+                      {
+                        label: "SOC",
+                        value: emissionFactors.emissionFactorSoc,
+                        unit: "tCO2e/ha/yr",
+                      },
+                    ]
+                  : undefined
+              }
             />
           )}
         </div>
