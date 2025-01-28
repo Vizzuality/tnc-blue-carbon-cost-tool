@@ -37,7 +37,7 @@ export const useCustomProjectOutput = (
         activity: data.activity,
         carbonRevenuesToCover: output?.carbonRevenuesToCover,
         initialCarbonPrice: output?.initialCarbonPrice,
-        lossRate: output?.lossRate,
+        lossRate: parseFloat(toPercentageValue(output?.lossRate ?? 0)),
         emissionFactors: output?.emissionFactors,
       },
     }),

@@ -14,7 +14,7 @@ interface SubValue {
 
 interface DetailItemProps {
   label: string;
-  value?: string | number;
+  value?: string | number | null;
   unit?: string;
   countryCode?: string;
   subValues?: SubValue[];
@@ -57,9 +57,9 @@ const DetailItem: FC<DetailItemProps> = ({
             numberFormatOptions={numberFormatOptions}
             compactUnit
           />
-        ) : (
+        ) : value ? (
           <span className="text-xl">{formatValue(value)}</span>
-        )}
+        ) : null}
       </div>
       {subValues?.map((subValue, index) => (
         <p key={index} className="space-x-1 font-normal">
