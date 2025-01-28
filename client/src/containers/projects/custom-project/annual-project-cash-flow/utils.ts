@@ -115,7 +115,7 @@ const cashflowConfig: Record<YearlyBreakdownCostName, CostNameConfig> = {
   },
   communityBenefitSharingFund: {
     order: 12,
-    label: "Community benefit sharing fund",
+    label: "Landowner/community benefit share",
   },
   carbonStandardFees: {
     order: 13,

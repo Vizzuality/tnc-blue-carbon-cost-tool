@@ -232,7 +232,7 @@ export default function SetupProjectForm() {
                   <FormControl>
                     <RadioGroup
                       className="flex gap-4"
-                      defaultValue={form.getValues("ecosystem") as ECOSYSTEM}
+                      value={form.getValues("ecosystem") as ECOSYSTEM}
                       onValueChange={async (v) => {
                         form.setValue("ecosystem", v as ECOSYSTEM);
                         await form.trigger("ecosystem");
