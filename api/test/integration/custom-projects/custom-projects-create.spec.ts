@@ -70,8 +70,8 @@ describe('Create Custom Projects - Setup', () => {
 
       expect(response.status).toBe(201);
       const responseData = response.body.data;
-      expect(responseData.totalCostNPV).toEqual(3619506.2162071504);
-      expect(responseData.totalCost).toEqual(5556541.947938656);
+      expect(responseData.totalCostNPV).toEqual(3092025.8572758473);
+      expect(responseData.totalCost).toEqual(4555908.877681957);
       expect(responseData.breakevenTotalCost).toEqual(3750308.289753845);
       expect(responseData.breakevenTotalCostNPV).toEqual(2667356.215719252);
       const output = responseData.output;
@@ -83,6 +83,10 @@ describe('Create Custom Projects - Setup', () => {
       for (const breakdown of yearlyBreakdown) {
         expect(breakdown.costValues[0]).toBeUndefined();
       }
+      expect(
+        responseData.output.initialCarbonPriceComputationOutput
+          .initialCarbonPrice,
+      ).toEqual(20);
     });
   });
 });

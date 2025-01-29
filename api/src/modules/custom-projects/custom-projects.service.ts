@@ -63,6 +63,9 @@ export class CustomProjectsService extends AppBaseService<
       ecosystem,
       activity,
     });
+    if (dto.initialCarbonPriceAssumption) {
+      additionalAssumptions.carbonPrice = dto.initialCarbonPriceAssumption;
+    }
 
     const projectInput = this.customProjectFactory.createProjectInput(
       dto,
