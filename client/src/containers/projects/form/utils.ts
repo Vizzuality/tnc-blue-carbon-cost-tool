@@ -17,6 +17,7 @@ import { getAuthHeader } from "@/lib/utils";
 
 import { getQueryClient } from "@/app/providers";
 
+import { DEFAULT_FORM_VALUES } from "@/containers/projects/form/constants";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 export const parseFormValues = (data: CustomProjectForm) => {
@@ -167,15 +168,17 @@ export const useDefaultFormValues = (id?: string): CustomProjectForm => {
   // @ts-expect-error fix later
   return {
     projectName: project?.projectName || "",
-    activity: project?.activity || ACTIVITY.CONSERVATION,
+    activity: project?.activity || DEFAULT_FORM_VALUES.activity,
     ecosystem: project?.ecosystem || ECOSYSTEM.SEAGRASS,
     countryCode:
       (project?.input.countryCode || countryOptions?.[0]?.value) ?? "",
-    projectSizeHa: project?.input.projectSizeHa || 20,
+    projectSizeHa:
+      project?.input.projectSizeHa || DEFAULT_FORM_VALUES.projectSizeHa,
     carbonRevenuesToCover:
       project?.input.carbonRevenuesToCover || CARBON_REVENUES_TO_COVER.OPEX,
     initialCarbonPriceAssumption:
-      project?.input.initialCarbonPriceAssumption || 1000,
+      project?.input.initialCarbonPriceAssumption ||
+      DEFAULT_FORM_VALUES.initialCarbonPriceAssumption,
     parameters: {
       emissionFactorUsed:
         project?.input.parameters.emissionFactorUsed ||
@@ -184,16 +187,23 @@ export const useDefaultFormValues = (id?: string): CustomProjectForm => {
         project?.input.parameters.lossRateUsed ||
         LOSS_RATE_USED.PROJECT_SPECIFIC,
       projectSpecificLossRate:
-        project?.input.parameters.projectSpecificLossRate || -0.35,
+        project?.input.parameters.projectSpecificLossRate ||
+        DEFAULT_FORM_VALUES.projectSpecificLossRate,
       projectSpecificEmission:
         project?.input.parameters.projectSpecificEmission ||
         PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
       projectSpecificEmissionFactor:
-        project?.input.parameters.projectSpecificEmissionFactor || 0,
-      emissionFactorSOC: project?.input.parameters.emissionFactorSOC || 0,
-      emissionFactorAGB: project?.input.parameters.emissionFactorAGB || 0,
-      // where can i find this?
-      plantingSuccessRate: 0.8,
+        project?.input.parameters.projectSpecificEmissionFactor ||
+        DEFAULT_FORM_VALUES.projectSpecificEmissionFactor,
+      emissionFactorSOC:
+        project?.input.parameters.emissionFactorSOC ||
+        DEFAULT_FORM_VALUES.emissionFactorSOC,
+      emissionFactorAGB:
+        project?.input.parameters.emissionFactorAGB ||
+        DEFAULT_FORM_VALUES.emissionFactorAGB,
+      plantingSuccessRate:
+        project?.input.parameters.plantingSuccessRate ||
+        DEFAULT_FORM_VALUES.plantingSuccessRate,
     },
     assumptions: {
       baselineReassessmentFrequency:

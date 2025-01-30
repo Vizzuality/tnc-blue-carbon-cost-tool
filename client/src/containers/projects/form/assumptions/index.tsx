@@ -1,11 +1,7 @@
 import { useFormContext } from "react-hook-form";
 
 import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
@@ -16,6 +12,7 @@ import {
 } from "@/containers/projects/form/assumptions/columns";
 import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
+import FormTable from "@/containers/projects/form/table";
 
 import {
   Accordion,
@@ -23,14 +20,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 export const NO_DATA: DataColumnDef<AssumptionsFormProperty>[] = [];
 
@@ -88,57 +77,7 @@ export default function AssumptionsProjectForm() {
           </div>
         </AccordionTrigger>
         <AccordionContent className="pb-0">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="divide-x-0">
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead
-                        key={header.id}
-                        className="bg-transparent font-normal"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    className="divide-x-0 divide-y-0 border-b-0"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-3">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={COLUMNS.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          <FormTable table={table} totalColumnsLength={COLUMNS.length} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

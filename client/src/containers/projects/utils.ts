@@ -23,5 +23,7 @@ export const formatCellValue = <T>(
     return toPercentageValue(Number(value));
   }
 
-  return formatNumber(Number(value));
+  return formatNumber(Number(value), {
+    maximumFractionDigits: 0,
+  });
 };

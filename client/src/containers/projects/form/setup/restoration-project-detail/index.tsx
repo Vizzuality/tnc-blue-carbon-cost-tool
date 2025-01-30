@@ -13,6 +13,7 @@ import { toDecimalPercentageValue, toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
+import { DEFAULT_FORM_VALUES } from "@/containers/projects/form/constants";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import { Card } from "@/components/ui/card";
@@ -281,6 +282,9 @@ export default function RestorationProjectDetails() {
                       <div className="relative flex flex-1 items-center">
                         <Input
                           {...field}
+                          defaultValue={
+                            DEFAULT_FORM_VALUES.projectSpecificSequestrationRate
+                          }
                           className="w-full pr-12"
                           type="number"
                           onChange={(v) => {
