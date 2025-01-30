@@ -226,13 +226,13 @@ export default function RestorationProjectDetails() {
                 <div className="basis-1/2 space-y-2">
                   <FormLabel
                     tooltip={{
-                      title: "IPCC default value",
+                      title: "Tier 1 - IPCC Default value",
                       content: "TBD",
                     }}
                   >
-                    IPCC default value
+                    Tier 1 - IPCC Default value
                   </FormLabel>
-                  <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['??']">
+                  <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['tCO2e/ha/yr']">
                     <Input
                       className="w-full pr-32 text-muted-foreground"
                       disabled
