@@ -84,6 +84,9 @@ describe('Read Custom projects', () => {
       // Then
       expect(response.status).toBe(200);
       expect(response.body.data.id).toBe(customProject.id);
+      const customProjectData = response.body.data as CustomProject;
+      expect(response.body.data).toEqual(customProjectData);
+      expect(response.body.data.user).toBeUndefined();
     });
 
     test('An authenticated user should be able to retrieve its custom projects', async () => {
