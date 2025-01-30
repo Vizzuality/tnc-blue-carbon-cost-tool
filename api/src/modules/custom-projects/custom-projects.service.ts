@@ -135,9 +135,7 @@ export class CustomProjectsService extends AppBaseService<
   ): Promise<SelectQueryBuilder<CustomProject>> {
     const { user } = info;
 
-    query
-      .leftJoinAndSelect('customProject.user', 'user')
-      .andWhere('user.id = :userId', { userId: user.id });
+    query.andWhere('customProject.user_id = :userId', { userId: user.id });
 
     return query;
   }
@@ -149,9 +147,7 @@ export class CustomProjectsService extends AppBaseService<
   ): Promise<SelectQueryBuilder<CustomProject>> {
     const { user } = info;
 
-    query
-      .leftJoinAndSelect('customProject.user', 'user')
-      .andWhere('user.id = :userId', { userId: user.id });
+    query.andWhere('customProject.user_id = :userId', { userId: user.id });
 
     if (fetchSpecification.partialProjectName) {
       query = query.andWhere('project_name ILIKE :projectName', {
