@@ -86,8 +86,17 @@ export default function ConservationProjectDetails() {
                 >
                   {Object.values(LOSS_RATE_USED).map((rate) => (
                     <div className="flex items-center gap-2" key={rate}>
-                      <RadioGroupItem className="flex-1" value={rate} />
-                      <FormLabel>{rate}</FormLabel>
+                      <RadioGroupItem
+                        id={`lossRateUsed-${rate}`}
+                        className="flex-1"
+                        value={rate}
+                      />
+                      <FormLabel
+                        htmlFor={`lossRateUsed-${rate}`}
+                        className="cursor-pointer"
+                      >
+                        {rate}
+                      </FormLabel>
                     </div>
                   ))}
                 </RadioGroup>
