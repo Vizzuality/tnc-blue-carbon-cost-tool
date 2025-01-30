@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   HttpStatus,
   UseGuards,
   ValidationPipe,
@@ -154,13 +155,14 @@ export class CustomProjectsController {
         if (
           !(await this.customProjects.areProjectsCreatedByUser(user.id, [id]))
         ) {
-          return {
-            status: 401,
-            body: null,
-          };
+          throw new ForbiddenException();
         }
-
-        const updatedEntity = await this.customProjects.update(id, dto);
+        const recalculatedCustomProject = await this.customProjects.create(dto);
+        const updatedEntity = await this.customProjects.update(id, {
+          id,
+          user,
+          ...recalculatedCustomProject,
+        });
         return {
           status: 200,
           body: updatedEntity,
