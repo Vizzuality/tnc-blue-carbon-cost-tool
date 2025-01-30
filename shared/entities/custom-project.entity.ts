@@ -62,7 +62,6 @@ export class CustomProject {
 
   @ManyToOne(() => User, (user) => user.customProjects, {
     onDelete: "CASCADE",
-    eager: true,
   })
   @JoinColumn({ name: "user_id" })
   user?: User;
