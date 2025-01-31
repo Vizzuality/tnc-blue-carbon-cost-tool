@@ -16,8 +16,8 @@ import {
   YearlyBreakdown,
   YearlyBreakdownCostName,
 } from '@shared/dtos/custom-projects/custom-project-output.dto';
-import { OverridableCostInputsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
 import { PROJECT_DEVELOPMENT_TYPE } from '@shared/dtos/projects/project-development.type';
+import { OverridableCostInputsDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 
 export type CostPlans = Record<
   keyof OverridableCostInputsDto | string,

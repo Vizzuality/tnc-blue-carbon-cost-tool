@@ -2,7 +2,7 @@ import {
   createQueryKeys,
   mergeQueryKeys,
 } from "@lukemorales/query-key-factory";
-import { customProjecsQuerySchema } from "@shared/contracts/custom-projects.contract";
+import { customProjectsQuerySchema } from "@shared/contracts/custom-projects.contract";
 import { getProjectsQuerySchema } from "@shared/contracts/projects.contract";
 import {
   ACTIVITY,
@@ -59,7 +59,7 @@ export const customProjectKeys = createQueryKeys("customProjects", {
     },
   ) => ["all", filters],
   countries: null,
-  one: (id?: string, query?: z.infer<typeof customProjecsQuerySchema>) => [
+  one: (id?: string, query?: z.infer<typeof customProjectsQuerySchema>) => [
     id,
     query,
   ],

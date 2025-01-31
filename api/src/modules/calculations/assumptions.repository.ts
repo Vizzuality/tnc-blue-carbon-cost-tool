@@ -11,7 +11,7 @@ import {
   ECOSYSTEM_RESTORATION_RATE_NAMES,
 } from '@shared/schemas/assumptions/assumptions.enums';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
-import { OverridableAssumptionsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
+import { OverridableAssumptionsDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 
 const NON_OVERRIDABLE_ASSUMPTION_NAMES_MAP = {
   'Annual cost increase': 'annualCostIncrease',

@@ -12,7 +12,7 @@ import { RestorationProjectInput } from '@api/modules/custom-projects/input-fact
 import {
   ConservationCustomProjectDto,
   CreateCustomProjectDto,
-} from '@api/modules/custom-projects/dto/create-custom-project.dto';
+} from '@shared/dtos/custom-projects/create-custom-project.dto';
 
 export type ConservationProjectCarbonInputs = {
   lossRate: number;
