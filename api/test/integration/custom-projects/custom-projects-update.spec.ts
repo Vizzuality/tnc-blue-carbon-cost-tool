@@ -79,6 +79,8 @@ describe('Update custom projects', () => {
       // Given a custom project exists
       const customProject = await testManager.mocks().createCustomProject();
 
+      const { input } = customProject;
+
       // When updating the custom project
       const response = await testManager
         .request()
@@ -86,9 +88,7 @@ describe('Update custom projects', () => {
           `${customProjectContract.updateCustomProject.path.replace(':id', customProject.id)}`,
         )
         .set('Authorization', `Bearer ${jwtToken}`)
-        .send({
-          projectName: 'B',
-        });
+        .send({ ...input, projectName: 'Trying to update name' });
 
       // Then
       expect(response.status).toBe(401);
