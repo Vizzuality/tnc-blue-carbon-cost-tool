@@ -1,5 +1,5 @@
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
-import { TestManager } from 'api/test/utils/test-manager';
+import { TestManager } from '../../utils/test-manager';
 
 describe('Import Repository', () => {
   let testManager: TestManager;

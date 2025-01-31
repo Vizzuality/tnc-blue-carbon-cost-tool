@@ -162,7 +162,12 @@ export class CustomProjectsService extends AppBaseService<
     userId: string,
     projectIds: string[],
   ): Promise<boolean> {
-    const customProjects = await this.repo.findBy({ id: In(projectIds) });
+    const customProjects = await this.repo.find({
+      where: {
+        id: In(projectIds),
+      },
+      relations: ['user'],
+    });
 
     return customProjects.every(
       (customProject) => customProject.user?.id === userId,
