@@ -10,8 +10,9 @@ import {
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ACTIVITY } from "@shared/entities/activity.enum";
+import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
-@Entity("project_size")
+@Entity({ name: "project_sizes" })
 @Unique(["country", "ecosystem", "activity"])
 export class ProjectSize extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -34,4 +35,12 @@ export class ProjectSize extends BaseEntity {
 
   @Column({ name: "size", type: "decimal" })
   sizeHa: number;
+
+  @Column({ name: "source_id", type: "int", nullable: true })
+  @ManyToOne("ModelComponentSource", "projectSizes", {
+    onDelete: "CASCADE",
+    nullable: true,
+  })
+  @JoinColumn({ name: "source_id" })
+  source: ModelComponentSource;
 }
