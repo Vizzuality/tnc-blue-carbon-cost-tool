@@ -27,7 +27,7 @@ const NODE_ENV = process.env.NODE_ENV;
 
 @Module({
   imports: [
-    TerminusModule.forRoot({ logger: NODE_ENV === 'test' ? false : true }),
+    TerminusModule.forRoot({ logger: NODE_ENV !== 'test' }),
     TsRestModule.register({
       validateRequestQuery: true,
       validateRequestBody: true,

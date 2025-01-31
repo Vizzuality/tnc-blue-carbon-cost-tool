@@ -4,7 +4,7 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
-import { OverridableAssumptionsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
+import { OverridableAssumptionsDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 
 @Injectable()
 export class SequestrationRateCalculator {

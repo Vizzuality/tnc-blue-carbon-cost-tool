@@ -4,7 +4,6 @@ import {
   ForbiddenException,
   HttpStatus,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { CountriesService } from '@api/modules/countries/countries.service';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
@@ -17,7 +16,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
 import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
 import { ROLES } from '@shared/entities/users/roles.enum';
-import { CustomProject } from '@shared/entities/custom-project.entity';
 
 @Controller()
 export class CustomProjectsController {

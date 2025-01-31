@@ -18,8 +18,7 @@ import {
   RestorationActivityDefaults,
 } from '@shared/dtos/custom-projects/activity-types-defaults';
 import { Country } from '@shared/entities/country.entity';
-import { OverridableCostInputsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
-
+import { OverridableCostInputsDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 /**
  * Additional data that is required to perform calculations, which is not overridable by the user. Better naming and clustering of concepts would be great
  */

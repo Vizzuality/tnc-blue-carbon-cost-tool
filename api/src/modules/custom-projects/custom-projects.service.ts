@@ -19,15 +19,15 @@ import { SaveCustomProjectEvent } from '@api/modules/custom-projects/events/save
 import { FetchSpecification } from 'nestjs-base-service';
 import { GetActivityTypesDefaults } from '@shared/dtos/custom-projects/get-activity-types-defaults.dto';
 import { z } from 'zod';
-import { customProjecsQuerySchema } from '@shared/contracts/custom-projects.contract';
+import { customProjectsQuerySchema } from '@shared/contracts/custom-projects.contract';
 import { In } from 'typeorm';
 import {
   CreateCustomProjectDto,
   OverridableCostInputsDto,
-} from '@api/modules/custom-projects/dto/create-custom-project.dto';
+} from '@shared/dtos/custom-projects/create-custom-project.dto';
 
 export type CustomProjectFetchSpecificacion = z.infer<
-  typeof customProjecsQuerySchema
+  typeof customProjectsQuerySchema
 >;
 
 @Injectable()

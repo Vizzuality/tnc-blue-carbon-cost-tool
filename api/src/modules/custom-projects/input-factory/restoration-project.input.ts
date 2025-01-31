@@ -15,7 +15,7 @@ import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity
 import {
   OverridableAssumptionsDto,
   OverridableCostInputsDto,
-} from '@api/modules/custom-projects/dto/create-custom-project.dto';
+} from '@shared/dtos/custom-projects/create-custom-project.dto';
 
 export class RestorationProjectInput {
   countryCode: string;

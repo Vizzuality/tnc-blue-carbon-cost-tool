@@ -8,12 +8,12 @@ import {
   NonOverridableModelAssumptions,
 } from '@api/modules/calculations/assumptions.repository';
 import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
+import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
 import {
   ConservationCustomProjectDto,
   OverridableAssumptionsDto,
   OverridableCostInputsDto,
-} from '@api/modules/custom-projects/dto/create-custom-project.dto';
-import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
+} from '@shared/dtos/custom-projects/create-custom-project.dto';
 
 export class ConservationProjectInput {
   countryCode: string;

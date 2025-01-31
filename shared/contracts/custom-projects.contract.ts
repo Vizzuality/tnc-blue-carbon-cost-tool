@@ -17,9 +17,8 @@ import { z } from "zod";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { ActivityTypesDefaults } from "@shared/dtos/custom-projects/activity-types-defaults";
 import { GetActivityTypesDefaultsSchema } from "@shared/schemas/custom-projects/activity-types-defaults.schema";
-import {CreateCustomProjectDto} from "@api/modules/custom-projects/dto/create-custom-project.dto";
 
-export const customProjecsQuerySchema = generateEntityQuerySchema(
+export const customProjectsQuerySchema = generateEntityQuerySchema(
   CustomProject,
 ).merge(
   z.object({
@@ -88,7 +87,7 @@ export const customProjectContract = contract.router({
   getCustomProjects: {
     method: "GET",
     path: "/custom-projects",
-    query: customProjecsQuerySchema,
+    query: customProjectsQuerySchema,
     responses: {
       200: contract.type<ApiPaginationResponse<CustomProject>>(),
     },
@@ -96,7 +95,7 @@ export const customProjectContract = contract.router({
   getCustomProject: {
     method: "GET",
     path: "/custom-projects/:id",
-    query: customProjecsQuerySchema,
+    query: customProjectsQuerySchema,
     responses: {
       200: contract.type<ApiResponse<CustomProject>>(),
     },
