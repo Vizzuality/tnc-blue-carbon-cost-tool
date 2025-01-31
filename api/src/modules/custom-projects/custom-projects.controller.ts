@@ -159,7 +159,6 @@ export class CustomProjectsController {
           await this.customProjects.create(body);
         const updatedEntity = await this.customProjects.update(id, {
           id,
-          user,
           ...recalculatedCustomProject,
         });
         return {

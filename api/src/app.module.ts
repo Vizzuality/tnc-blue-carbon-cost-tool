@@ -1,4 +1,8 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Module,
+  OnModuleInit,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApiConfigModule } from '@api/modules/config/app-config.module';
@@ -8,7 +12,7 @@ import { AdminModule } from '@api/modules/admin/admin.module';
 import { ImportModule } from '@api/modules/import/import.module';
 import { ApiEventsModule } from '@api/modules/api-events/api-events.module';
 import { UsersModule } from '@api/modules/users/users.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { AllExceptionsFilter } from '@api/filters/all-exceptions.exception.filter';
 import { TsRestModule } from '@ts-rest/nest';
 import { DataSource } from 'typeorm';
@@ -45,6 +49,7 @@ const NODE_ENV = process.env.NODE_ENV;
   providers: [
     AppService,
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
+    { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
   ],
 })
 export class AppModule implements OnModuleInit {
