@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CustomProjectSchema } from "@shared/schemas/custom-projects/custom-project.schema";
+import { CreateCustomProjectSchema } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { ExtractAtomValue, useSetAtom } from "jotai";
 
 import Header from "@/containers/projects/form/header";
@@ -27,7 +27,7 @@ export default function CustomProjectForm({ id }: CustomProjectFormProps) {
 
   const formValues = useDefaultFormValues(id);
   const methods = useForm<CustomProjectForm>({
-    resolver: zodResolver(CustomProjectSchema),
+    resolver: zodResolver(CreateCustomProjectSchema),
     defaultValues: formValues,
     mode: "all",
   });

@@ -10,13 +10,14 @@ import { GetDefaultCostInputsSchema } from "@shared/schemas/custom-projects/get-
 import { GetAssumptionsSchema } from "@shared/schemas/assumptions/get-assumptions.schema";
 
 import {
-  CustomProjectSchema,
+  CreateCustomProjectSchema,
   InputCostsSchema,
-} from "@shared/schemas/custom-projects/custom-project.schema";
+} from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { z } from "zod";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { ActivityTypesDefaults } from "@shared/dtos/custom-projects/activity-types-defaults";
 import { GetActivityTypesDefaultsSchema } from "@shared/schemas/custom-projects/activity-types-defaults.schema";
+import {CreateCustomProjectDto} from "@api/modules/custom-projects/dto/create-custom-project.dto";
 
 export const customProjecsQuerySchema = generateEntityQuerySchema(
   CustomProject,
@@ -70,7 +71,7 @@ export const customProjectContract = contract.router({
     responses: {
       201: contract.type<ApiResponse<CustomProject>>(),
     },
-    body: CustomProjectSchema,
+    body: CreateCustomProjectSchema,
   },
   updateCustomProject: {
     method: "PATCH",
@@ -79,9 +80,9 @@ export const customProjectContract = contract.router({
       id: z.coerce.string(),
     }),
     responses: {
-      200: contract.type<CustomProject>(),
+      200: contract.type<ApiResponse<CustomProject>>(),
     },
-    body: contract.type<Partial<CustomProject>>(),
+    body: CreateCustomProjectSchema,
     summary: "Update an existing custom-project",
   },
   getCustomProjects: {

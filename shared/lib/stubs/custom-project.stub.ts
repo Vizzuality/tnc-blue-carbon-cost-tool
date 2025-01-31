@@ -5,6 +5,8 @@ import {
   CustomProject,
 } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import {LOSS_RATE_USED} from "@shared/schemas/custom-projects/create-custom-project.schema";
+import {EMISSION_FACTORS_TIER_TYPES} from "@shared/entities/carbon-inputs/emission-factors.entity";
 
 const DEFAULT_CONSERVATION_CUSTOM_PROJECT: CustomProject = {
   projectName: "My custom project",
@@ -667,16 +669,16 @@ const DEFAULT_CONSERVATION_CUSTOM_PROJECT: CustomProject = {
   },
   input: {
     countryCode: "IND",
-    activity: "Conservation",
-    ecosystem: "Mangrove",
+    activity: ACTIVITY.CONSERVATION,
+    ecosystem: ECOSYSTEM.MANGROVE,
     projectName: "My custom project",
     projectSizeHa: 1000,
     initialCarbonPriceAssumption: 1000,
-    carbonRevenuesToCover: "Opex",
+    carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.OPEX,
     parameters: {
-      lossRateUsed: "National average",
-      emissionFactorUsed: "Tier 2 - Country-specific emission factor",
-      ecosystem: "Mangrove",
+      lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
+      emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_2,
+      ecosystem: ECOSYSTEM.MANGROVE,
     },
     costInputs: {
       feasibilityAnalysis: 50000,

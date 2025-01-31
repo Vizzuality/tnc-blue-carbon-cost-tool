@@ -1,7 +1,7 @@
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
-import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/custom-project.schema';
+import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
 import { GeneralProjectInputs } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import {
   ModelAssumptionsForCalculations,

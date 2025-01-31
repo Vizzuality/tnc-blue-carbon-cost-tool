@@ -146,18 +146,17 @@ export class CustomProjectsController {
   @TsRestHandler(customProjectContract.updateCustomProject)
   async updateCustomProject(
     @GetUser() user: User,
-    @Body(new ValidationPipe({ enableDebugMessages: true, transform: true }))
-    dto: Partial<CustomProject>,
   ): Promise<ControllerResponse> {
     return tsRestHandler(
       customProjectContract.updateCustomProject,
-      async ({ params: { id } }) => {
+      async ({ params: { id }, body }) => {
         if (
           !(await this.customProjects.areProjectsCreatedByUser(user.id, [id]))
         ) {
           throw new ForbiddenException();
         }
-        const recalculatedCustomProject = await this.customProjects.create(dto);
+        const recalculatedCustomProject =
+          await this.customProjects.create(body);
         const updatedEntity = await this.customProjects.update(id, {
           id,
           user,
@@ -165,7 +164,7 @@ export class CustomProjectsController {
         });
         return {
           status: 200,
-          body: updatedEntity,
+          body: { data: updatedEntity },
         };
       },
     );
