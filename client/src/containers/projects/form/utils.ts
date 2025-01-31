@@ -8,7 +8,7 @@ import {
 } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
-import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/custom-project.schema";
+import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useSession } from "next-auth/react";
 
 import { client } from "@/lib/query-client";

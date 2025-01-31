@@ -12,7 +12,7 @@ import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emis
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { CustomProjectSchema } from "@shared/schemas/custom-projects/custom-project.schema";
+import { CreateCustomProjectSchema } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { z } from "zod";
 
 import { client } from "@/lib/query-client";
@@ -47,7 +47,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export type CustomProjectForm = z.infer<typeof CustomProjectSchema>;
+export type CustomProjectForm = z.infer<typeof CreateCustomProjectSchema>;
 
 export default function SetupProjectForm() {
   const { queryKey } = queryKeys.countries.all;

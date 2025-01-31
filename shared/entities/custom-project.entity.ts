@@ -10,6 +10,7 @@ import { ACTIVITY } from "@shared/entities/activity.enum";
 import { Country } from "@shared/entities/country.entity";
 import { User } from "@shared/entities/users/user.entity";
 import { type CustomProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
+import {CreateCustomProjectDto} from "@api/modules/custom-projects/dto/create-custom-project.dto";
 
 /**
  * @note: This entity does not extend BaseEntity as it won't be used in the backoffice. However, it has to be added to the BO datasource due to its relation
@@ -78,7 +79,7 @@ export class CustomProject {
 
   @Column({ name: "input_snapshot", type: "jsonb" })
   // TODO: this should be the infered type of the zod schema
-  input: any;
+  input: CreateCustomProjectDto | any
 
   @Column({ name: "output_snapshot", type: "jsonb" })
   output: CustomProjectOutput;

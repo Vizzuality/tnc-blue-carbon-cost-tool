@@ -150,7 +150,8 @@ export const CustomProjectBaseSchema = z.object({
   costInputs: InputCostsSchema.optional(),
 });
 
-export const CustomProjectSchema = z
+
+export const CreateCustomProjectSchema = z
   .discriminatedUnion("activity", [
     z.object({
       ...CustomProjectBaseSchema.shape,
@@ -173,7 +174,7 @@ export const CustomProjectSchema = z
 
 // Complex validations that depend on multiple fields
 const ValidateConservationSchema = (
-  data: z.infer<typeof CustomProjectSchema>,
+  data: z.infer<typeof CreateCustomProjectSchema>,
   ctx: z.RefinementCtx,
 ) => {
   const params = data.parameters as z.infer<
@@ -239,7 +240,7 @@ const ValidateConservationSchema = (
 
 // Complex validations that depend on multiple fields
 const ValidateRestorationSchema = (
-  data: z.infer<typeof CustomProjectSchema>,
+  data: z.infer<typeof CreateCustomProjectSchema>,
   ctx: z.RefinementCtx,
 ) => {
   const params = data.parameters as z.infer<
