@@ -62,7 +62,7 @@ select
 from
 	country_activity_ecosystem_combinations as cae
 inner join 
-	project_size ps on 
+	project_sizes ps on 
 		ps."country_code" = cae.country_code and 
 		ps."ecosystem"::VARCHAR = cae."ecosystem"::VARCHAR and
 		ps."activity"::VARCHAR = cae."activity"::VARCHAR

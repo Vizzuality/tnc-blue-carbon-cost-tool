@@ -8,19 +8,21 @@ import {
   BeforeUpdate,
   Unique,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { EmissionFactorsSource } from "@shared/entities/methodology/emission-factor-source.entity";
 
 // TODO: The calculations provide a third option Tier 3 which is provided by the user. Do we need to support this in the DB for this entity,
 //       or would be enough to save the user provided value as metadata for the custom project
 export enum EMISSION_FACTORS_TIER_TYPES {
   TIER_1 = "Tier 1 - Global emission factor",
   TIER_2 = "Tier 2 - Country-specific emission factor",
-  TIER_3 = 'Tier 3 - Project specific emission factor',
+  TIER_3 = "Tier 3 - Project specific emission factor",
 }
 
-@Entity("emission_factors")
+@Entity({ name: "emission_factors" })
 @Unique(["country", "ecosystem"])
 export class EmissionFactors extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -63,6 +65,9 @@ export class EmissionFactors extends BaseEntity {
 
   @Column("decimal", { name: "emission_factor_country_SOC", nullable: true })
   t2CountrySpecificSOC: number;
+
+  @OneToMany("EmissionFactorsSource", "emissionFactor")
+  sources: EmissionFactorsSource[];
 
   @BeforeInsert()
   @BeforeUpdate()

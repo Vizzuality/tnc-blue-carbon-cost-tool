@@ -36,6 +36,8 @@ import { UserUploadConservationInputs } from "@shared/entities/users/user-upload
 import { ProjectScorecard } from "@shared/entities/project-scorecard.entity";
 import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
 import { BackOfficeSession } from "@shared/entities/users/backoffice-session";
+import { EmissionFactorsSource } from "@shared/entities/methodology/emission-factor-source.entity";
+import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -76,4 +78,6 @@ export const COMMON_DATABASE_ENTITIES = [
   ProjectScorecard,
   ProjectScorecardView,
   BackOfficeSession,
+  ModelComponentSource,
+  EmissionFactorsSource,
 ];
