@@ -1,6 +1,6 @@
-import { ResourceWithOptions } from "adminjs";
-import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
-import { Country } from "@shared/entities/country.entity.js";
+import { ResourceWithOptions } from 'adminjs';
+import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import { Country } from '@shared/entities/country.entity.js';
 
 export const CountryResource: ResourceWithOptions = {
   resource: Country,
@@ -12,12 +12,12 @@ export const CountryResource: ResourceWithOptions = {
       },
     },
     sort: {
-      sortBy: "name",
-      direction: "asc",
+      sortBy: 'name',
+      direction: 'asc',
     },
     navigation: {
-      name: "Data Management",
-      icon: "Database",
+      name: 'Data Management',
+      icon: 'Database',
     },
   },
 };

@@ -28,6 +28,8 @@ import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
+import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity';
+import { EmissionFactorsSource } from '@shared/entities/methodology/emission-factor-source.entity';
 
 @Injectable()
 export class ImportRepository {
@@ -99,12 +101,16 @@ export class ImportRepository {
       await manager.clear(EcosystemLoss);
       await manager.clear(RestorableLand);
       await manager.clear(SequestrationRate);
-      await manager.clear(EmissionFactors);
+      // await manager.clear(EmissionFactors);
 
       // Other tables ingestion
       await manager.clear(BaseSize);
       await manager.clear(BaseIncrease);
       await manager.clear(ModelAssumptions);
+      await manager.query('TRUNCATE TABLE emission_factors CASCADE');
+      await manager.query('TRUNCATE TABLE model_component_sources CASCADE');
+      await manager.query('TRUNCATE TABLE emission_factors_sources CASCADE');
+
       // DATA WIPE ENDS
 
       // CREATION STARTS
