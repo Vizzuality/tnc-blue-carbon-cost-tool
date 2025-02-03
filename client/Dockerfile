@@ -1,4 +1,4 @@
-FROM node:22.2.0-alpine
+FROM node:22.11.0-alpine
 
 ARG NEXT_PUBLIC_API_URL
 ARG NEXTAUTH_SECRET
@@ -18,6 +18,7 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json ./
 COPY client ./client
 COPY shared ./shared
 
+RUN npm install -g corepack
 RUN corepack enable pnpm
 RUN pnpm install
 

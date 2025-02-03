@@ -1,4 +1,4 @@
-FROM node:22.2.0-alpine
+FROM node:22.11.0-alpine
 
 ARG DB_HOST
 ARG DB_PORT
@@ -47,6 +47,7 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json ./
 COPY api ./api
 COPY shared ./shared
 
+RUN npm install -g corepack
 RUN corepack enable pnpm
 RUN pnpm install
 
