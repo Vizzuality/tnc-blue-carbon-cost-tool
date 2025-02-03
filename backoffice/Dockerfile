@@ -1,4 +1,4 @@
-FROM node:22.2.0-alpine
+FROM node:22.11.0-alpine
 
 ARG DB_HOST
 ARG DB_PORT
@@ -27,13 +27,9 @@ COPY backoffice ./backoffice
 COPY shared ./shared
 COPY api ./api
 
-
+RUN npm install -g corepack
 RUN corepack enable pnpm
-
-
 RUN pnpm install
-
-
 
 EXPOSE 1000
 
