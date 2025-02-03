@@ -1,5 +1,3 @@
-import { useFormContext } from "react-hook-form";
-
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { COSTS_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -15,14 +13,12 @@ import {
   COLUMNS,
   OtherFormProperty,
 } from "@/containers/projects/form/cost-inputs-overrides/other/columns";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
+import { useFormValues } from "@/containers/projects/form/project-form";
 import FormTable from "@/containers/projects/form/table";
 
 const NO_DATA: DataColumnDef<OtherFormProperty>[] = [];
 
 export default function OtherCostInputsTable() {
-  const form = useFormContext<CustomProjectForm>();
-
   const {
     ecosystem,
     countryCode,
@@ -31,7 +27,7 @@ export default function OtherCostInputsTable() {
       // @ts-expect-error fix later
       restorationActivity,
     },
-  } = form.getValues();
+  } = useFormValues();
 
   const { queryKey } = queryKeys.customProjects.defaultCosts({
     ecosystem,

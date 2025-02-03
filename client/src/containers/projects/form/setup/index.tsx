@@ -19,6 +19,7 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { ACTIVITIES } from "@/containers/overview/filters/constants";
+import { useFormValues } from "@/containers/projects/form/project-form";
 import ConservationProjectDetails from "@/containers/projects/form/setup/conservation-project-details";
 import { CARBON_REVENUES_TO_COVER_DESCRIPTIONS } from "@/containers/projects/form/setup/constants";
 import RestorationProjectDetails from "@/containers/projects/form/setup/restoration-project-detail";
@@ -67,7 +68,7 @@ export default function SetupProjectForm() {
     activity,
     // @ts-expect-error fix later
     parameters: { emissionFactorUsed, tierSelector, restorationActivity },
-  } = form.getValues();
+  } = useFormValues();
 
   const isDisabled = (ecosystem: ECOSYSTEM) => {
     if (activity === ACTIVITY.CONSERVATION) {
@@ -299,10 +300,16 @@ export default function SetupProjectForm() {
                         form.setValue("activity", v as ACTIVITY);
                         await form.trigger("activity");
 
-                        // form.setValue(
-                        //   "parameters.restorationActivity",
-                        //   RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
-                        // );
+                        // ? we default to a restoration activity ensuring costs are always calculated
+                        if (
+                          v === ACTIVITY.RESTORATION &&
+                          !restorationActivity
+                        ) {
+                          form.setValue(
+                            "parameters.restorationActivity",
+                            RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
+                          );
+                        }
                       }}
                     >
                       {ACTIVITIES.map((activity) => (
