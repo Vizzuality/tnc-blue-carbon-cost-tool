@@ -1,6 +1,8 @@
 import { flexRender } from "@tanstack/react-table";
 import { Table as TableInstance } from "@tanstack/react-table";
 
+import { cn } from "@/lib/utils";
+
 import { TableCell } from "@/components/ui/table";
 import { TableBody } from "@/components/ui/table";
 import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -41,8 +43,17 @@ export default function FormTable<T>({
         {table.getRowModel().rows?.length ? (
           table.getRowModel().rows.map((row) => (
             <TableRow key={row.id} className="divide-x-0 divide-y-0 border-b-0">
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id} className="py-3">
+              {row.getVisibleCells().map((cell, index) => (
+                <TableCell
+                  key={cell.id}
+                  className={cn({
+                    "py-3": true,
+                    "w-96": index === 0,
+                    "w-16":
+                      index !== 0 && index !== row.getVisibleCells().length - 1,
+                    "w-[500px]": index === row.getVisibleCells().length - 1,
+                  })}
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}
