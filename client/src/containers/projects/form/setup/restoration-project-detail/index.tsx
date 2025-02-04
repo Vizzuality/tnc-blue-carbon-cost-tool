@@ -9,11 +9,11 @@ import {
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
-import { toDecimalPercentageValue, toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { DEFAULT_FORM_VALUES } from "@/containers/projects/form/constants";
+import NumberInput from "@/containers/projects/form/number-input";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import { Card } from "@/components/ui/card";
@@ -179,48 +179,21 @@ export default function RestorationProjectDetails() {
         </div>
 
         <div className="flex gap-4">
-          <FormField
-            control={form?.control}
+          <NumberInput
             name="parameters.plantingSuccessRate"
-            render={({ field }) => {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const { value, ...restField } = field;
-
-              return (
-                <FormItem className="basis-1/2 space-y-2">
-                  <FormLabel
-                    tooltip={{
-                      title: "Planting SuccessRate",
-                      content: "TBD",
-                    }}
-                  >
-                    Planting Success Rate
-                  </FormLabel>
-                  <FormControl className="relative after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['%']">
-                    <div className="relative flex flex-1 items-center">
-                      <Input
-                        {...restField}
-                        className="w-full pr-12"
-                        type="number"
-                        min={0}
-                        onChange={(v) => {
-                          form.setValue(
-                            "parameters.plantingSuccessRate",
-                            toDecimalPercentageValue(v.target.value),
-                          );
-                        }}
-                        readOnly
-                        defaultValue={toPercentageValue(0.8)}
-                        disabled
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
+            label="Planting Success Rate"
+            tooltip={{
+              title: "Planting Success Rate",
+              content: "TBD",
             }}
+            formItemClassName="basis-1/2"
+            formControlClassName="after:content-['%'] after:right-9"
+            min={0}
+            initialValue={DEFAULT_FORM_VALUES.plantingSuccessRate}
+            isPercentage
+            readOnly
+            disabled
           />
-
           <>
             {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_1 &&
               isSuccess && (

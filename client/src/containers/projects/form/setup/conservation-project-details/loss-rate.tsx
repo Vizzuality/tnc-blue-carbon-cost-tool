@@ -9,8 +9,8 @@ import { toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
+import NumberInput from "@/containers/projects/form/number-input";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
-import ProjectSpecificLossRate from "@/containers/projects/form/setup/conservation-project-details/project-specific-loss-rate";
 
 import { FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -76,5 +76,24 @@ export default function LossRate() {
     );
   }
 
-  return <ProjectSpecificLossRate />;
+  return (
+    <NumberInput
+      name="parameters.projectSpecificLossRate"
+      label="Project Specific Loss Rate"
+      tooltip={{
+        title: "Project Specific Loss Rate",
+        content: "TBD",
+      }}
+      initialValue={form.getValues("parameters.projectSpecificLossRate")}
+      formItemClassName="flex items-center justify-between gap-4"
+      formControlClassName="after:right-9 after:content-['%']"
+      max={0}
+      onValueChange={async (v) => {
+        const newValue = v === null ? undefined : Number(v);
+        form.setValue("parameters.projectSpecificLossRate", newValue);
+        await form.trigger("parameters.projectSpecificLossRate");
+      }}
+      isPercentage
+    />
+  );
 }
