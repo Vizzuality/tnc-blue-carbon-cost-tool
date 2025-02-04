@@ -6,13 +6,12 @@ on:
       - 'client/**'
       - 'shared/**'
       - '.github/workflows/client-tests.yml'
-      - '/*'               # include changes in root
-      - '!api/**'       # exclude api folder
-      - '!infrastructure/**'  # exclude infra folder
+      - '/*' # include changes in root
+      - '!api/**' # exclude api folder
+      - '!infrastructure/**' # exclude infra folder
       - 'package.json'
 
   workflow_dispatch:
-
 
 jobs:
   client-integration-tests:
@@ -43,5 +42,5 @@ jobs:
         run: pnpm install
 
       - name: Run Client tests
-        working-directory: client
-        run: pnpm test
+        working-directory: .
+        run: pnpm client:test

@@ -12,6 +12,7 @@
     "client:dev": "pnpm --filter client run dev",
     "client:build": "pnpm --filter client run build",
     "client:prod": "pnpm --filter client run start",
+    "client:test": "pnpm --filter client run test",
     "shared:deps": "pnpm --filter shared install",
     "all:prod": "pnpm run build:client && pnpm run build:api && pnpm run start:client:prod & pnpm run start:api:prod & pnpm run start:admin:prod"
   },
