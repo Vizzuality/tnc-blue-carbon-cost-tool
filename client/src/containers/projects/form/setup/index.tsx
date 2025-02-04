@@ -19,7 +19,7 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { ACTIVITIES } from "@/containers/overview/filters/constants";
-import NumberInput from "@/containers/projects/form/number-input";
+import NumberFormItem from "@/containers/projects/form/number-form-item";
 import { useFormValues } from "@/containers/projects/form/project-form";
 import ConservationProjectDetails from "@/containers/projects/form/setup/conservation-project-details";
 import { CARBON_REVENUES_TO_COVER_DESCRIPTIONS } from "@/containers/projects/form/setup/constants";
@@ -395,21 +395,30 @@ export default function SetupProjectForm() {
               )}
             />
 
-            <NumberInput
+            <FormField
               name="initialCarbonPriceAssumption"
-              label="Initial carbon price assumption"
-              tooltip={{
-                title: "Initial carbon price assumption",
-                content: "TBD",
-              }}
-              initialValue={form.getValues("initialCarbonPriceAssumption")}
-              formItemClassName="flex items-center justify-between gap-4"
-              formControlClassName="after:right-9 after:content-['$']"
-              onValueChange={async (v) => {
-                const newValue = v === null ? undefined : Number(v);
-                form.setValue("initialCarbonPriceAssumption", newValue!);
-                await form.trigger("initialCarbonPriceAssumption");
-              }}
+              render={() => (
+                <>
+                  <NumberFormItem
+                    label="Initial carbon price assumption"
+                    tooltip={{
+                      title: "Initial carbon price assumption",
+                      content: "TBD",
+                    }}
+                    initialValue={form.getValues(
+                      "initialCarbonPriceAssumption",
+                    )}
+                    formItemClassName="flex items-center justify-between gap-4"
+                    formControlClassName="after:right-9 after:content-['$']"
+                    onValueChange={async (v) => {
+                      const newValue = v === null ? undefined : Number(v);
+                      form.setValue("initialCarbonPriceAssumption", newValue!);
+                      await form.trigger("initialCarbonPriceAssumption");
+                    }}
+                  />
+                  <FormMessage className="text-right" />
+                </>
+              )}
             />
           </div>
         </AccordionContent>

@@ -13,7 +13,7 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { DEFAULT_FORM_VALUES } from "@/containers/projects/form/constants";
-import NumberInput from "@/containers/projects/form/number-input";
+import NumberFormItem from "@/containers/projects/form/number-form-item";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import { Card } from "@/components/ui/card";
@@ -179,20 +179,26 @@ export default function RestorationProjectDetails() {
         </div>
 
         <div className="flex gap-4">
-          <NumberInput
+          <FormField
             name="parameters.plantingSuccessRate"
-            label="Planting Success Rate"
-            tooltip={{
-              title: "Planting Success Rate",
-              content: "TBD",
-            }}
-            formItemClassName="basis-1/2"
-            formControlClassName="after:content-['%'] after:right-9"
-            min={0}
-            initialValue={DEFAULT_FORM_VALUES.plantingSuccessRate}
-            isPercentage
-            readOnly
-            disabled
+            render={() => (
+              <NumberFormItem
+                label="Planting Success Rate"
+                tooltip={{
+                  title: "Planting Success Rate",
+                  content: "TBD",
+                }}
+                formItemClassName="basis-1/2"
+                formControlClassName="after:content-['%'] after:right-9"
+                min={0}
+                initialValue={DEFAULT_FORM_VALUES.plantingSuccessRate}
+                isPercentage
+                readOnly
+                disabled
+              >
+                <FormMessage />
+              </NumberFormItem>
+            )}
           />
           <>
             {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_1 &&

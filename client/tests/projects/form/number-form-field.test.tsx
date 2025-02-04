@@ -4,17 +4,23 @@ import { useForm, FormProvider } from "react-hook-form";
 
 import { fireEvent, render } from "@testing-library/react";
 
-import NumberInput, {
-  NumberInputProps,
-} from "@/containers/projects/form/number-input";
+import NumberFormItem, {
+  NumberFormItemProps,
+} from "@/containers/projects/form/number-form-item";
+
+import { FormField } from "@/components/ui/form";
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
   const methods = useForm();
-  return <FormProvider {...methods}>{children}</FormProvider>;
+  return (
+    <FormProvider {...methods}>
+      <FormField name="test" render={() => <>{children}</>} />
+    </FormProvider>
+  );
 };
 
-describe("projects/form/number-input", () => {
-  const defaultProps: NumberInputProps = {
+describe("projects/form/number-form-field", () => {
+  const defaultProps: NumberFormItemProps = {
     name: "test",
     label: "Test label",
     tooltip: {
@@ -26,7 +32,7 @@ describe("projects/form/number-input", () => {
   it("renders correctly with default props", () => {
     const { container } = render(
       <Wrapper>
-        <NumberInput {...defaultProps} />
+        <NumberFormItem {...defaultProps} />
       </Wrapper>,
     );
 
@@ -37,7 +43,7 @@ describe("projects/form/number-input", () => {
     const initialValue = 100;
     const { container } = render(
       <Wrapper>
-        <NumberInput {...defaultProps} initialValue={initialValue} />
+        <NumberFormItem {...defaultProps} initialValue={initialValue} />
       </Wrapper>,
     );
 
@@ -48,7 +54,7 @@ describe("projects/form/number-input", () => {
     const decimalValue = 0.5;
     const { container } = render(
       <Wrapper>
-        <NumberInput
+        <NumberFormItem
           {...defaultProps}
           initialValue={decimalValue}
           isPercentage
@@ -63,7 +69,7 @@ describe("projects/form/number-input", () => {
     const placeholder = "Insert a value";
     const { container } = render(
       <Wrapper>
-        <NumberInput {...defaultProps} placeholder={placeholder} />
+        <NumberFormItem {...defaultProps} placeholder={placeholder} />
       </Wrapper>,
     );
 
@@ -77,7 +83,7 @@ describe("projects/form/number-input", () => {
     const onValueChange = vi.fn();
     const { container } = render(
       <Wrapper>
-        <NumberInput
+        <NumberFormItem
           {...defaultProps}
           formControlClassName="after:content-['%']"
           onValueChange={onValueChange}
