@@ -51,16 +51,20 @@ import {
 export type CustomProjectForm = z.infer<typeof CreateCustomProjectSchema>;
 
 export default function SetupProjectForm() {
-  const { queryKey } = queryKeys.countries.all;
-  const { data: countryOptions } = client.projects.getProjectCountries.useQuery(
-    queryKey,
-    {},
-    {
+  const { queryKey } = queryKeys.customProjects.countries;
+  const { data: countryOptions } =
+    client.customProjects.getAvailableCountries.useQuery(
       queryKey,
-      select: (data) =>
-        data.body.data.map(({ name, code }) => ({ label: name, value: code })),
-    },
-  );
+      {},
+      {
+        queryKey,
+        select: (data) =>
+          data.body.data.map(({ name, code }) => ({
+            label: name,
+            value: code,
+          })),
+      },
+    );
 
   const form = useFormContext<CustomProjectForm>();
 
