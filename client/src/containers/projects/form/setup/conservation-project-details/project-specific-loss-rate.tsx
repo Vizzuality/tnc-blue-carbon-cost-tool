@@ -28,17 +28,15 @@ const ProjectSpecificLossRate = () => {
       ? toPercentageValue(parameters.projectSpecificLossRate ?? 0)
       : "",
   );
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
 
-    // if newValue is not a valid number, it will be an empty string
-    if (newValue.length > 0) {
-      setValue(newValue);
-      form.setValue(
-        "parameters.projectSpecificLossRate",
-        toDecimalPercentageValue(newValue),
-      );
-    }
+    setValue(newValue);
+    form.setValue(
+      "parameters.projectSpecificLossRate",
+      toDecimalPercentageValue(newValue),
+    );
+    await form.trigger("parameters.projectSpecificLossRate");
   };
 
   return (

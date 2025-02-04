@@ -19,6 +19,7 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { ACTIVITIES } from "@/containers/overview/filters/constants";
+import NumberInput from "@/containers/projects/form/number-input";
 import { useFormValues } from "@/containers/projects/form/project-form";
 import ConservationProjectDetails from "@/containers/projects/form/setup/conservation-project-details";
 import { CARBON_REVENUES_TO_COVER_DESCRIPTIONS } from "@/containers/projects/form/setup/constants";
@@ -394,40 +395,21 @@ export default function SetupProjectForm() {
               )}
             />
 
-            <FormField
-              control={form.control}
+            <NumberInput
               name="initialCarbonPriceAssumption"
-              render={({ field }) => (
-                <FormItem className="flex justify-between gap-4">
-                  <FormLabel
-                    tooltip={{
-                      title: "Initial carbon price assumption",
-                      content: "TBD",
-                    }}
-                  >
-                    Initial carbon price assumption in $
-                  </FormLabel>
-                  <FormControl className="relative after:absolute after:right-9 after:inline-block after:text-sm after:text-muted-foreground after:content-['$']">
-                    <div className="relative flex items-center">
-                      <Input
-                        type="number"
-                        placeholder="Insert project name"
-                        className="min-w-[225px]"
-                        min={0}
-                        {...field}
-                        onChange={async (v) => {
-                          form.setValue(
-                            "initialCarbonPriceAssumption",
-                            Number(v.target.value),
-                          );
-                          await form.trigger("initialCarbonPriceAssumption");
-                        }}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Initial carbon price assumption"
+              tooltip={{
+                title: "Initial carbon price assumption",
+                content: "TBD",
+              }}
+              initialValue={form.getValues("initialCarbonPriceAssumption")}
+              formItemClassName="flex items-center justify-between gap-4"
+              formControlClassName="after:right-9 after:content-['$']"
+              onValueChange={async (v) => {
+                const newValue = v === null ? undefined : Number(v);
+                form.setValue("initialCarbonPriceAssumption", newValue!);
+                await form.trigger("initialCarbonPriceAssumption");
+              }}
             />
           </div>
         </AccordionContent>

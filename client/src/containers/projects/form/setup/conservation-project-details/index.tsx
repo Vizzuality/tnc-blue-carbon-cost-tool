@@ -224,7 +224,7 @@ export default function ConservationProjectDetails() {
           {form.getValues("parameters.projectSpecificEmission") ===
             PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR && (
             <div className="flex">
-              <FormField
+              {/* <FormField
                 control={form?.control}
                 name="parameters.projectSpecificEmissionFactor"
                 render={({ field }) => (
@@ -259,7 +259,7 @@ export default function ConservationProjectDetails() {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
             </div>
           )}
 
