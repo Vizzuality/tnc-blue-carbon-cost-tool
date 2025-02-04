@@ -10,6 +10,7 @@ import {
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
+import NumberFormItem from "@/containers/projects/form/number-form-item";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
 import LossRate from "@/containers/projects/form/setup/conservation-project-details/loss-rate";
 import T1GlobalEmissionFactor from "@/containers/projects/form/setup/conservation-project-details/t1-global-emission-factor";
@@ -224,42 +225,33 @@ export default function ConservationProjectDetails() {
           {form.getValues("parameters.projectSpecificEmission") ===
             PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR && (
             <div className="flex">
-              {/* <FormField
-                control={form?.control}
+              <FormField
                 name="parameters.projectSpecificEmissionFactor"
-                render={({ field }) => (
-                  <FormItem className="basis-1/2">
-                    <FormLabel
-                      tooltip={{
-                        title: "Project Specific Emission Factor",
-                        content: "TBD",
-                      }}
-                    >
-                      Project Specific Emission Factor
-                    </FormLabel>
-                    <FormControl className="relative after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['tCO2e/ha/year']">
-                      <div className="relative flex flex-1 items-center">
-                        <Input
-                          {...field}
-                          className="w-full pr-32"
-                          type="number"
-                          min={0}
-                          onChange={async (v) => {
-                            form.setValue(
-                              "parameters.projectSpecificEmissionFactor",
-                              Number(v.target.value),
-                            );
-                            await form.trigger(
-                              "parameters.projectSpecificEmissionFactor",
-                            );
-                          }}
-                        />
-                      </div>
-                    </FormControl>
+                render={() => (
+                  <NumberFormItem
+                    label="Project Specific Emission Factor"
+                    tooltip={{
+                      title: "Project Specific Emission Factor",
+                      content: "TBD",
+                    }}
+                    formItemClassName="basis-1/2"
+                    formControlClassName="after:content-['tCO2e/ha/year']"
+                    min={0}
+                    onValueChange={async (v) => {
+                      const newValue = v === null ? undefined : Number(v);
+                      form.setValue(
+                        "parameters.projectSpecificEmissionFactor",
+                        newValue,
+                      );
+                      await form.trigger(
+                        "parameters.projectSpecificEmissionFactor",
+                      );
+                    }}
+                  >
                     <FormMessage />
-                  </FormItem>
+                  </NumberFormItem>
                 )}
-              /> */}
+              />
             </div>
           )}
 
