@@ -212,23 +212,36 @@ export class SequestrationRateCalculator {
         cumulativeHaRestoredInYear[year] = 0;
       }
     }
+    const yearsInOrder = Object.keys(cumulativeHaRestoredInYear)
+      .map(Number)
+      .sort((a, b) => a - b);
 
-    for (const yearStr in cumulativeHaRestoredInYear) {
-      const year = Number(yearStr);
-
+    for (const year of yearsInOrder) {
       if (year > this.projectLength) {
         cumulativeHaRestoredInYear[year] = 0;
       } else if (this.activity === ACTIVITY.RESTORATION) {
-        if (this.restorationRate < this.projectInput.projectSizeHa) {
-          cumulativeHaRestoredInYear[year] = this.restorationRate;
+        if (year === -1) {
+          cumulativeHaRestoredInYear[year] =
+            this.projectInput.assumptions.restorationRate;
+        } else if (year === 1) {
+          cumulativeHaRestoredInYear[year] =
+            cumulativeHaRestoredInYear[-1] +
+            this.projectInput.assumptions.restorationRate;
         } else {
+          cumulativeHaRestoredInYear[year] =
+            cumulativeHaRestoredInYear[year - 1] +
+            this.projectInput.assumptions.restorationRate;
+        }
+        if (
+          cumulativeHaRestoredInYear[year] > this.projectInput.projectSizeHa
+        ) {
           cumulativeHaRestoredInYear[year] = this.projectInput.projectSizeHa;
         }
       } else {
+        // Project is CONSERVATION
         cumulativeHaRestoredInYear[year] = this.projectInput.projectSizeHa;
       }
     }
-
     return cumulativeHaRestoredInYear;
   }
 
