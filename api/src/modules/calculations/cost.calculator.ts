@@ -699,7 +699,6 @@ export class CostCalculator {
         }
       }
     }
-    const maintenanceCost = 'maintenanceCost';
     return maintenanceCostPlan;
   }
 

@@ -1,4 +1,117 @@
-export const RESTORATION_MEXICO_MANGROVES = {
+import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
+import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
+
+/**
+ * Input received in the endpoint
+ */
+
+const RESTORATION_CREATE_CUSTOM_PROJECT_DTO: CreateCustomProjectDto | any = {
+  countryCode: 'MEX',
+  projectName: 'Restoration Mexico Mangrove',
+  ecosystem: 'Mangrove',
+  activity: 'Restoration',
+  projectSizeHa: 500,
+  carbonRevenuesToCover: 'Capex and Opex',
+  initialCarbonPriceAssumption: 30,
+  assumptions: {
+    verificationFrequency: 5,
+    baselineReassessmentFrequency: 10,
+    discountRate: 0.04,
+    restorationRate: 250,
+    carbonPriceIncrease: 0.015,
+    buffer: 0.2,
+    projectLength: 20,
+  },
+  costInputs: {
+    feasibilityAnalysis: 50000,
+    conservationPlanningAndAdmin: 166766.666666667,
+    dataCollectionAndFieldCost: 26666.6666666667,
+    communityRepresentation: 72600,
+    blueCarbonProjectPlanning: 100000,
+    establishingCarbonRights: 46666.6666666667,
+    validation: 50000,
+    implementationLabor: 15986,
+    monitoring: 11900,
+    maintenance: 0.0833,
+    communityBenefitSharingFund: 0.5,
+    carbonStandardFees: 0.2,
+    baselineReassessment: 40000,
+    mrv: 75000,
+    longTermProjectOperatingCost: 31300,
+    financingCost: 0.05,
+  },
+  parameters: {
+    restorationActivity: 'Planting',
+    tierSelector: 'Tier 2 - Country-specific rate',
+    plantingSuccessRate: 0.008,
+  },
+};
+
+/**
+ * DTO created by customProjectFactory to be sent to the calculation engine
+ */
+
+const RESTORATION_MEXICO_MANGROVES_PROJECT_INPUT:
+  | RestorationProjectInput
+  | any = {
+  projectName: 'Restoration Mexico Mangrove',
+  countryCode: 'MEX',
+  activity: 'Restoration',
+  ecosystem: 'Mangrove',
+  projectSizeHa: 500,
+  initialCarbonPriceAssumption: 30,
+  carbonRevenuesToCover: 'Capex and Opex',
+  costAndCarbonInputs: {
+    feasibilityAnalysis: 50000,
+    conservationPlanningAndAdmin: 166766.666666667,
+    dataCollectionAndFieldCost: 26666.6666666667,
+    communityRepresentation: 72600,
+    blueCarbonProjectPlanning: 100000,
+    establishingCarbonRights: 46666.6666666667,
+    validation: 50000,
+    implementationLabor: 15986,
+    monitoring: 11900,
+    maintenance: 0.0833,
+    communityBenefitSharingFund: 0.5,
+    carbonStandardFees: 0.2,
+    baselineReassessment: 40000,
+    mrv: 75000,
+    longTermProjectOperatingCost: 31300,
+    financingCost: 0.05,
+    maintenanceDuration: 3,
+    ecosystemLossRate: -0.0055,
+    tier1EmissionFactor: 27.2,
+    emissionFactorAgb: 63.2,
+    emissionFactorSoc: 74.9,
+    tier1SequestrationRate: 5.94,
+    tier2SequestrationRate: 18.33,
+    otherCommunityCashFlow: 'Development',
+  },
+  assumptions: {
+    verificationFrequency: 5,
+    baselineReassessmentFrequency: 10,
+    discountRate: 0.04,
+    restorationRate: 250,
+    carbonPriceIncrease: 0.015,
+    buffer: 0.2,
+    projectLength: 20,
+    annualCostIncrease: 0,
+    carbonPrice: 30,
+    siteSpecificEcosystemLossRate: -0.00244205185747926,
+    interestRate: 0.05,
+    loanRepaymentSchedule: 10,
+    soilOrganicCarbonReleaseLength: 10,
+    plantingSuccessRate: 0.8,
+    startingPointScaling: 500,
+    defaultProjectLength: 40,
+  },
+};
+
+/**
+ * Actual output of Custom Projects, sent to the consumer in customProject.output. Expected values
+ */
+
+const RESTORATION_MEXICO_MANGROVES_OUTPUT = {
   initialCarbonPriceComputationOutput: {
     sequestrationRate: 18.33333,
     plantingSuccessRate: 0.8,
@@ -1673,4 +1786,10 @@ export const RESTORATION_MEXICO_MANGROVES = {
       },
     ],
   },
+};
+
+export const RESTORATION_MEXICO_MANGROVE_FIXTURES = {
+  createDTO: RESTORATION_CREATE_CUSTOM_PROJECT_DTO,
+  projectInput: RESTORATION_MEXICO_MANGROVES_PROJECT_INPUT,
+  expectedOutput: RESTORATION_MEXICO_MANGROVES_OUTPUT,
 };
