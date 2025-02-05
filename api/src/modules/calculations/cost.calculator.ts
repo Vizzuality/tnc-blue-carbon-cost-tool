@@ -566,7 +566,11 @@ export class CostCalculator {
       }
     }
 
-    for (let year = -1; year <= 40; year++) {
+    for (
+      let year = -1;
+      year <= this.projectInput.assumptions.defaultProjectLength;
+      year++
+    ) {
       if (year === 0) {
         continue;
       }
@@ -626,7 +630,7 @@ export class CostCalculator {
         .map(Number)
         .sort((a, b) => a - b);
       for (const year of years) {
-        if (plan[year] === 0) {
+        if (year >= 1 && plan[year] === 0) {
           return year;
         }
       }
@@ -695,7 +699,7 @@ export class CostCalculator {
         }
       }
     }
-
+    const maintenanceCost = 'maintenanceCost';
     return maintenanceCostPlan;
   }
 
