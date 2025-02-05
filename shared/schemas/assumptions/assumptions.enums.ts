@@ -12,6 +12,7 @@ export enum ACTIVITY_PROJECT_LENGTH_NAMES {
 export const COMMON_OVERRIDABLE_ASSUMPTION_NAMES = [
   "Baseline reassessment frequency",
   "Buffer",
+  "Carbon price",
   "Carbon price increase",
   "Discount rate",
   "Verification frequency",
