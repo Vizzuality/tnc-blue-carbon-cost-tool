@@ -48,11 +48,12 @@ describe('Create Custom Projects - Setup', () => {
           activity: ACTIVITY.CONSERVATION,
         });
 
-      expect(response.body.data).toHaveLength(7);
+      expect(response.body.data).toHaveLength(8);
       expect(response.body.data.map((assumptions) => assumptions.name)).toEqual(
         [
           'Baseline reassessment frequency',
           'Buffer',
+          'Carbon price',
           'Carbon price increase',
           'Conservation project length',
           'Discount rate',
