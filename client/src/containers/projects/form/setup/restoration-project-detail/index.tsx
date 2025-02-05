@@ -252,6 +252,7 @@ export default function RestorationProjectDetails() {
                     className="pr-28"
                     formItemClassName="basis-1/2"
                     formControlClassName="after:content-['tCO2e/ha/yr']"
+                    min={0}
                     initialValue={
                       form.getValues(
                         "parameters.projectSpecificSequestrationRate",
