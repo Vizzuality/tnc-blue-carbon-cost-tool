@@ -49,7 +49,7 @@ COPY shared ./shared
 
 RUN npm install -g corepack
 RUN corepack enable pnpm
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 RUN pnpm api:build
 
