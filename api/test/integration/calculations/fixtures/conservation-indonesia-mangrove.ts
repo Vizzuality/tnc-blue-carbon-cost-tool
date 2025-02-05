@@ -1,4 +1,4 @@
-export const CONSERVATION_INDONESIA_MANGROVE = {
+export const CONSERVATION_INDONESIA_MANGROVE_OUTPUT = {
   initialCarbonPriceComputationOutput: {
     lossRate: -0.001,
     carbonRevenuesToCover: 'Opex',
