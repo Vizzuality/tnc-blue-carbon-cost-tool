@@ -249,10 +249,13 @@ export default function RestorationProjectDetails() {
                       title: SEQUESTRATION_RATE_TIER_TYPES.TIER_3,
                       content: "TBD",
                     }}
+                    className="pr-28"
                     formItemClassName="basis-1/2"
-                    formControlClassName="after:content-['%']"
+                    formControlClassName="after:content-['tCO2e/ha/yr']"
                     initialValue={
-                      DEFAULT_FORM_VALUES.projectSpecificSequestrationRate
+                      form.getValues(
+                        "parameters.projectSpecificSequestrationRate",
+                      ) ?? DEFAULT_FORM_VALUES.projectSpecificSequestrationRate
                     }
                     onValueChange={async (v) =>
                       handleFormChange(
@@ -260,7 +263,6 @@ export default function RestorationProjectDetails() {
                         v,
                       )
                     }
-                    isPercentage
                   />
                 )}
               />
