@@ -3,7 +3,12 @@ import { useState, ChangeEvent } from "react";
 import { toPercentageValue, toDecimalPercentageValue } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
+import {
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input, InputProps } from "@/components/ui/input";
 
 export interface NumberFormItemProps extends InputProps {
@@ -29,6 +34,7 @@ export default function NumberFormItem({
   formControlClassName,
   onValueChange,
   children,
+  placeholder,
   ...props
 }: NumberFormItemProps) {
   const [value, setValue] = useState<string>(
@@ -64,23 +70,27 @@ export default function NumberFormItem({
           {label}
         </FormLabel>
       </div>
-      <FormControl
-        className={cn(
-          "relative after:absolute after:right-9 after:inline-block after:text-sm after:text-muted-foreground",
-          formControlClassName,
-        )}
-      >
-        <div className="relative flex flex-1 items-center">
-          <Input
-            type="number"
-            className="w-full"
-            min={0}
-            value={value}
-            onChange={handleOnChange}
-            {...props}
-          />
-        </div>
-      </FormControl>
+      <div className="flex-1 space-y-2">
+        <FormControl
+          className={cn(
+            "relative after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground",
+            formControlClassName,
+          )}
+        >
+          <div className="relative flex flex-1 items-center">
+            <Input
+              type="number"
+              className="w-full pr-12"
+              min={0}
+              value={value}
+              onChange={handleOnChange}
+              placeholder={placeholder || "Insert value"}
+              {...props}
+            />
+          </div>
+        </FormControl>
+        <FormMessage />
+      </div>
       {children}
     </FormItem>
   );

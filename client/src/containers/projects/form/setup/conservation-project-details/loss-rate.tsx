@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { useFormContext } from "react-hook-form";
-
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
@@ -10,13 +8,13 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import NumberFormItem from "@/containers/projects/form/number-form-item";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
+import { useCustomProjectForm } from "@/containers/projects/form/utils";
 
-import { FormField, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormField, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 export default function LossRate() {
-  const form = useFormContext<CustomProjectForm>();
+  const { form, handleFormChange } = useCustomProjectForm();
 
   const {
     ecosystem,
@@ -80,26 +78,21 @@ export default function LossRate() {
     <FormField
       name="parameters.projectSpecificLossRate"
       render={() => (
-        <>
-          <NumberFormItem
-            label="Project Specific Loss Rate"
-            tooltip={{
-              title: "Project Specific Loss Rate",
-              content: "TBD",
-            }}
-            initialValue={form.getValues("parameters.projectSpecificLossRate")}
-            formItemClassName="flex items-center justify-between gap-4"
-            formControlClassName="after:right-9 after:content-['%']"
-            max={0}
-            onValueChange={async (v) => {
-              const newValue = v === null ? undefined : Number(v);
-              form.setValue("parameters.projectSpecificLossRate", newValue);
-              await form.trigger("parameters.projectSpecificLossRate");
-            }}
-            isPercentage
-          />
-          <FormMessage className="text-right" />
-        </>
+        <NumberFormItem
+          label="Project Specific Loss Rate"
+          tooltip={{
+            title: "Project Specific Loss Rate",
+            content: "TBD",
+          }}
+          initialValue={form.getValues("parameters.projectSpecificLossRate")}
+          formItemClassName="flex items-center justify-between gap-4"
+          formControlClassName="after:content-['%']"
+          max={0}
+          onValueChange={async (v) =>
+            handleFormChange("parameters.projectSpecificLossRate", v)
+          }
+          isPercentage
+        />
       )}
     />
   );
