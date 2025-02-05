@@ -29,7 +29,7 @@ COPY api ./api
 
 RUN npm install -g corepack
 RUN corepack enable pnpm
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 EXPOSE 1000
 
