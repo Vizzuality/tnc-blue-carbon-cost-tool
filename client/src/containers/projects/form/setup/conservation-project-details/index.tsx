@@ -260,10 +260,13 @@ export default function ConservationProjectDetails() {
                       title: "AGB Emission Factor",
                       content: "TBD",
                     }}
-                    className="pr-32"
+                    className="pr-24"
                     formItemClassName="basis-1/2"
-                    formControlClassName="after:content-['tCO2e/ha/year']"
+                    formControlClassName="after:content-['tCO2e/ha']"
                     min={0}
+                    initialValue={form.getValues(
+                      "parameters.emissionFactorAGB",
+                    )}
                     onValueChange={async (v) =>
                       handleFormChange("parameters.emissionFactorAGB", v)
                     }
@@ -283,6 +286,9 @@ export default function ConservationProjectDetails() {
                     formItemClassName="basis-1/2"
                     formControlClassName="after:content-['tCO2e/ha/year']"
                     min={0}
+                    initialValue={form.getValues(
+                      "parameters.emissionFactorSOC",
+                    )}
                     onValueChange={async (v) =>
                       handleFormChange("parameters.emissionFactorSOC", v)
                     }
