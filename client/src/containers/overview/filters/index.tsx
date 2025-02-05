@@ -348,7 +348,7 @@ export default function ProjectsFilters() {
             </ul>
           </div>
           <div className="flex flex-col gap-3">
-            <Label htmlFor="costs">Cost ($/tCO2e)</Label>
+            <Label htmlFor="costs">Cost ($)</Label>
             <RangeSlider
               defaultValue={costValuesState}
               min={bounds?.cost.min}

@@ -34,7 +34,7 @@ export const COLUMNS = [
     },
   }),
   columnHelper.accessor("defaultValue", {
-    header: () => <span>Base value</span>,
+    header: () => <span>Default value</span>,
     cell: formatCellValue,
   }),
   columnHelper.accessor("unit", {
