@@ -1,5 +1,5 @@
-import { CreateCustomProjectDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
+import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 
 /**
  * Input received in the endpoint
