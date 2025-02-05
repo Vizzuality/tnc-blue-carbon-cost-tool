@@ -58,6 +58,7 @@ export const RestorationCustomProjectSchema = z.object({
   tierSelector: z.nativeEnum(SEQUESTRATION_RATE_TIER_TYPES),
   projectSpecificSequestrationRate: z
     .number({ message: "Project Specific Rate should be a number" })
+    .positive({ message: "Project Specific Rate must be positive" })
     .optional(),
   // lossRateUsed: z.nativeEnum(LOSS_RATE_USED),
   plantingSuccessRate: z.preprocess(
@@ -149,7 +150,6 @@ export const CustomProjectBaseSchema = z.object({
   assumptions: AssumptionsSchema.optional(),
   costInputs: InputCostsSchema.optional(),
 });
-
 
 export const CreateCustomProjectSchema = z
   .discriminatedUnion("activity", [
