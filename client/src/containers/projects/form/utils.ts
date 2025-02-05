@@ -1,3 +1,7 @@
+import { useCallback } from "react";
+
+import { Path, useFormContext } from "react-hook-form";
+
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
@@ -262,4 +266,21 @@ export const createCustomProject = async (options: {
   } catch (e) {
     throw new Error("Something went wrong creating the project");
   }
+};
+
+export const useCustomProjectForm = () => {
+  const form = useFormContext<CustomProjectForm>();
+  const handleFormChange = useCallback(
+    async (fieldName: Path<CustomProjectForm>, value: number | null) => {
+      const newValue = value === null ? undefined : Number(value);
+      form.setValue(fieldName, newValue);
+      await form.trigger(fieldName);
+    },
+    [form],
+  );
+
+  return {
+    form,
+    handleFormChange,
+  };
 };

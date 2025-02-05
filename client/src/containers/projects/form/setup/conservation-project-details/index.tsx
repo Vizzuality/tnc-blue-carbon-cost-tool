@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { useFormContext } from "react-hook-form";
-
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
 import {
   PROJECT_EMISSION_FACTORS,
@@ -11,10 +9,10 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 import NumberFormItem from "@/containers/projects/form/number-form-item";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
 import LossRate from "@/containers/projects/form/setup/conservation-project-details/loss-rate";
 import T1GlobalEmissionFactor from "@/containers/projects/form/setup/conservation-project-details/t1-global-emission-factor";
 import T2NationalEmissionFactors from "@/containers/projects/form/setup/conservation-project-details/t2-national-emission-factors";
+import { useCustomProjectForm } from "@/containers/projects/form/utils";
 
 import { Card } from "@/components/ui/card";
 import {
@@ -24,7 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
@@ -35,7 +32,7 @@ import {
 } from "@/components/ui/select";
 
 export default function ConservationProjectDetails() {
-  const form = useFormContext<CustomProjectForm>();
+  const { form, handleFormChange } = useCustomProjectForm();
 
   return (
     <Card variant="secondary" className="flex flex-col gap-4">
@@ -236,20 +233,15 @@ export default function ConservationProjectDetails() {
                     }}
                     formItemClassName="basis-1/2"
                     formControlClassName="after:content-['tCO2e/ha/year']"
+                    className="pr-32"
                     min={0}
-                    onValueChange={async (v) => {
-                      const newValue = v === null ? undefined : Number(v);
-                      form.setValue(
+                    onValueChange={async (v) =>
+                      handleFormChange(
                         "parameters.projectSpecificEmissionFactor",
-                        newValue,
-                      );
-                      await form.trigger(
-                        "parameters.projectSpecificEmissionFactor",
-                      );
-                    }}
-                  >
-                    <FormMessage />
-                  </NumberFormItem>
+                        v,
+                      )
+                    }
+                  />
                 )}
               />
             </div>
@@ -260,71 +252,41 @@ export default function ConservationProjectDetails() {
             PROJECT_SPECIFIC_EMISSION.TWO_EMISSION_FACTORS && (
             <div className="flex gap-3">
               <FormField
-                control={form?.control}
                 name="parameters.emissionFactorAGB"
-                render={({ field }) => (
-                  <FormItem className="basis-1/2">
-                    <FormLabel
-                      tooltip={{
-                        title: "AGB Emission Factor",
-                        content: "TBD",
-                      }}
-                    >
-                      AGB Emission Factor
-                    </FormLabel>
-                    <FormControl className="relative after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['tCO2e/ha/year']">
-                      <div className="relative flex flex-1 items-center">
-                        <Input
-                          {...field}
-                          className="w-full pr-32"
-                          type="number"
-                          min={0}
-                          onChange={async (v) => {
-                            form.setValue(
-                              "parameters.emissionFactorAGB",
-                              Number(v.target.value),
-                            );
-                            await form.trigger("parameters.emissionFactorAGB");
-                          }}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                render={() => (
+                  <NumberFormItem
+                    label="AGB Emission Factor"
+                    tooltip={{
+                      title: "AGB Emission Factor",
+                      content: "TBD",
+                    }}
+                    className="pr-32"
+                    formItemClassName="basis-1/2"
+                    formControlClassName="after:content-['tCO2e/ha/year']"
+                    min={0}
+                    onValueChange={async (v) =>
+                      handleFormChange("parameters.emissionFactorAGB", v)
+                    }
+                  />
                 )}
               />
               <FormField
-                control={form?.control}
                 name="parameters.emissionFactorSOC"
-                render={({ field }) => (
-                  <FormItem className="basis-1/2">
-                    <FormLabel
-                      tooltip={{
-                        title: "SOC Emission Factor",
-                        content: "TBD",
-                      }}
-                    >
-                      SOC Emission Factor
-                    </FormLabel>
-                    <FormControl className="relative after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['tCO2e/ha/year']">
-                      <div className="relative flex flex-1 items-center">
-                        <Input
-                          {...field}
-                          className="w-full pr-32"
-                          type="number"
-                          min={0}
-                          onChange={async (v) => {
-                            form.setValue(
-                              "parameters.emissionFactorSOC",
-                              Number(v.target.value),
-                            );
-                            await form.trigger("parameters.emissionFactorSOC");
-                          }}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                render={() => (
+                  <NumberFormItem
+                    label="SOC Emission Factor"
+                    tooltip={{
+                      title: "SOC Emission Factor",
+                      content: "TBD",
+                    }}
+                    className="pr-32"
+                    formItemClassName="basis-1/2"
+                    formControlClassName="after:content-['tCO2e/ha/year']"
+                    min={0}
+                    onValueChange={async (v) =>
+                      handleFormChange("parameters.emissionFactorSOC", v)
+                    }
+                  />
                 )}
               />
             </div>

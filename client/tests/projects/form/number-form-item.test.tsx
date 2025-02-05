@@ -19,7 +19,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
-describe("projects/form/number-form-field", () => {
+describe("projects/form/number-form-item", () => {
   const defaultProps: NumberFormItemProps = {
     name: "test",
     label: "Test label",
@@ -65,17 +65,30 @@ describe("projects/form/number-form-field", () => {
     expect(container.querySelector("input")).toHaveValue(decimalValue * 100);
   });
 
-  it("renders with placeholder", () => {
-    const placeholder = "Insert a value";
+  it("renders with default placeholder when no placeholder is provided", () => {
     const { container } = render(
       <Wrapper>
-        <NumberFormItem {...defaultProps} placeholder={placeholder} />
+        <NumberFormItem {...defaultProps} />
       </Wrapper>,
     );
 
     expect(container.querySelector("input")).toHaveAttribute(
       "placeholder",
-      placeholder,
+      "Insert value",
+    );
+  });
+
+  it("renders with custom placeholder when provided", () => {
+    const customPlaceholder = "My custom placeholder";
+    const { container } = render(
+      <Wrapper>
+        <NumberFormItem {...defaultProps} placeholder={customPlaceholder} />
+      </Wrapper>,
+    );
+
+    expect(container.querySelector("input")).toHaveAttribute(
+      "placeholder",
+      customPlaceholder,
     );
   });
 

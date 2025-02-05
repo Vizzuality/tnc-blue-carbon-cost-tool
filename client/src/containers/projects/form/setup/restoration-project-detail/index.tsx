@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { useFormContext } from "react-hook-form";
-
 import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
@@ -14,7 +12,7 @@ import { queryKeys } from "@/lib/query-keys";
 
 import { DEFAULT_FORM_VALUES } from "@/containers/projects/form/constants";
 import NumberFormItem from "@/containers/projects/form/number-form-item";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
+import { useCustomProjectForm } from "@/containers/projects/form/utils";
 
 import { Card } from "@/components/ui/card";
 import {
@@ -34,7 +32,7 @@ import {
 } from "@/components/ui/select";
 
 export default function RestorationProjectDetails() {
-  const form = useFormContext<CustomProjectForm>();
+  const { form, handleFormChange } = useCustomProjectForm();
 
   const {
     ecosystem,
@@ -189,15 +187,13 @@ export default function RestorationProjectDetails() {
                   content: "TBD",
                 }}
                 formItemClassName="basis-1/2"
-                formControlClassName="after:content-['%'] after:right-9"
+                formControlClassName="after:content-['%']"
                 min={0}
                 initialValue={DEFAULT_FORM_VALUES.plantingSuccessRate}
                 isPercentage
                 readOnly
                 disabled
-              >
-                <FormMessage />
-              </NumberFormItem>
+              />
             )}
           />
           <>
@@ -245,35 +241,27 @@ export default function RestorationProjectDetails() {
               )}
             {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 && (
               <FormField
-                control={form?.control}
                 name="parameters.projectSpecificSequestrationRate"
-                render={({ field }) => (
-                  <FormItem className="basis-1/2 space-y-2">
-                    <FormLabel
-                      tooltip={{
-                        title: SEQUESTRATION_RATE_TIER_TYPES.TIER_3,
-                        content: "TBD",
-                      }}
-                    >
-                      Project-specific sequestration rate
-                    </FormLabel>
-                    <FormControl className="relative after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['%']">
-                      <div className="relative flex flex-1 items-center">
-                        <Input
-                          {...field}
-                          defaultValue={
-                            DEFAULT_FORM_VALUES.projectSpecificSequestrationRate
-                          }
-                          className="w-full pr-12"
-                          type="number"
-                          onChange={(v) => {
-                            field.onChange(Number(v.target.value));
-                          }}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                render={() => (
+                  <NumberFormItem
+                    label="Project-specific sequestration rate"
+                    tooltip={{
+                      title: SEQUESTRATION_RATE_TIER_TYPES.TIER_3,
+                      content: "TBD",
+                    }}
+                    formItemClassName="basis-1/2"
+                    formControlClassName="after:content-['%']"
+                    initialValue={
+                      DEFAULT_FORM_VALUES.projectSpecificSequestrationRate
+                    }
+                    onValueChange={async (v) =>
+                      handleFormChange(
+                        "parameters.projectSpecificSequestrationRate",
+                        v,
+                      )
+                    }
+                    isPercentage
+                  />
                 )}
               />
             )}

@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import { useFormContext } from "react-hook-form";
-
 import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
@@ -24,6 +22,7 @@ import { useFormValues } from "@/containers/projects/form/project-form";
 import ConservationProjectDetails from "@/containers/projects/form/setup/conservation-project-details";
 import { CARBON_REVENUES_TO_COVER_DESCRIPTIONS } from "@/containers/projects/form/setup/constants";
 import RestorationProjectDetails from "@/containers/projects/form/setup/restoration-project-detail";
+import { useCustomProjectForm } from "@/containers/projects/form/utils";
 
 import {
   Accordion,
@@ -63,7 +62,7 @@ export default function SetupProjectForm() {
     },
   );
 
-  const form = useFormContext<CustomProjectForm>();
+  const { form, handleFormChange } = useCustomProjectForm();
 
   const {
     activity,
@@ -178,43 +177,22 @@ export default function SetupProjectForm() {
                 )}
               />
               <FormField
-                control={form.control}
                 name="projectSizeHa"
-                render={({ field, fieldState }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel
-                      tooltip={{
-                        title: "Project Size",
-                        content: "Insert number of hectares",
-                      }}
-                    >
-                      Project Size
-                    </FormLabel>
-                    <FormControl className="relative after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['ha']">
-                      <div className="relative flex items-center">
-                        <Input
-                          placeholder="Insert number of hectares"
-                          className="pr-12"
-                          type="number"
-                          min={0}
-                          {...field}
-                          onChange={async (e) => {
-                            form.setValue(
-                              "projectSizeHa",
-                              Number(e.target.value),
-                            );
-                            await form.trigger("projectSizeHa");
-                          }}
-                        />
-                      </div>
-                    </FormControl>
-                    {fieldState.invalid && (
-                      <FormDescription>
-                        Size must be a positive number.
-                      </FormDescription>
-                    )}
-                    <FormMessage />
-                  </FormItem>
+                render={() => (
+                  <NumberFormItem
+                    label="Project Size"
+                    tooltip={{
+                      title: "Project Size",
+                      content: "Insert number of hectares",
+                    }}
+                    min={0}
+                    formItemClassName="flex-1"
+                    formControlClassName="after:content-['ha']"
+                    initialValue={form.getValues("projectSizeHa")}
+                    onValueChange={async (v) =>
+                      handleFormChange("projectSizeHa", v)
+                    }
+                  />
                 )}
               />
             </div>
@@ -409,12 +387,10 @@ export default function SetupProjectForm() {
                       "initialCarbonPriceAssumption",
                     )}
                     formItemClassName="flex items-center justify-between gap-4"
-                    formControlClassName="after:right-9 after:content-['$']"
-                    onValueChange={async (v) => {
-                      const newValue = v === null ? undefined : Number(v);
-                      form.setValue("initialCarbonPriceAssumption", newValue!);
-                      await form.trigger("initialCarbonPriceAssumption");
-                    }}
+                    formControlClassName="after:content-['$']"
+                    onValueChange={async (v) =>
+                      handleFormChange("initialCarbonPriceAssumption", v)
+                    }
                   />
                   <FormMessage className="text-right" />
                 </>
