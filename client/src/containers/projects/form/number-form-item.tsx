@@ -22,7 +22,6 @@ export interface NumberFormItemProps extends InputProps {
   formItemClassName?: string;
   formControlClassName?: string;
   onValueChange?: (value: number | null) => void;
-  children?: React.ReactNode;
 }
 
 export default function NumberFormItem({
@@ -33,7 +32,6 @@ export default function NumberFormItem({
   formItemClassName,
   formControlClassName,
   onValueChange,
-  children,
   placeholder,
   ...props
 }: NumberFormItemProps) {
@@ -91,7 +89,6 @@ export default function NumberFormItem({
         </FormControl>
         <FormMessage />
       </div>
-      {children}
     </FormItem>
   );
 }
