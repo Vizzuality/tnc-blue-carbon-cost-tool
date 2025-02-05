@@ -23,12 +23,12 @@ export const getProjectParameters = (hasOpenBreakEvenPrice: boolean) =>
   [
     {
       key: FILTER_KEYS[3],
-      label: "Project size",
+      label: "Cost type",
       className: "w-[125px]",
       disabled: false,
       options: [
         {
-          label: COST_TYPE_SELECTOR.NPV,
+          label: COST_TYPE_SELECTOR.NPV.toUpperCase(),
           value: COST_TYPE_SELECTOR.NPV,
         },
         {

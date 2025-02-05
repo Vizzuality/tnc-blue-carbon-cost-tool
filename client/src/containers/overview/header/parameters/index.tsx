@@ -42,7 +42,7 @@ export const PROJECT_PARAMETERS: Parameter[] = [
   },
   {
     key: FILTER_KEYS[3],
-    label: "Cost",
+    label: "Cost type",
     className: "w-[85px]",
     tooltipContent: FILTERS.COST_TYPE,
     options: [
@@ -51,7 +51,7 @@ export const PROJECT_PARAMETERS: Parameter[] = [
         value: COST_TYPE_SELECTOR.TOTAL,
       },
       {
-        label: COST_TYPE_SELECTOR.NPV,
+        label: COST_TYPE_SELECTOR.NPV.toUpperCase(),
         value: COST_TYPE_SELECTOR.NPV,
       },
     ],
