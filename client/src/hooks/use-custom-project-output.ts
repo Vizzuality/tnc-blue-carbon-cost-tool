@@ -90,10 +90,16 @@ export const useCustomProjectOutput = (
         : null,
     [output?.summary],
   );
+  const leftOverProps = useMemo(() => {
+    return {
+      title: `Net revenue after ${data.input.carbonRevenuesToCover}/Total cost`,
+      data: output?.leftover[costRangeSelector],
+    };
+  }, [output?.leftover, costRangeSelector, data.input.carbonRevenuesToCover]);
 
   return {
     projectCostProps: output?.totalProjectCost[costRangeSelector],
-    leftOverProps: output?.leftover[costRangeSelector],
+    leftOverProps,
     projectDetailsProps,
     costDetailsProps,
     chartData,

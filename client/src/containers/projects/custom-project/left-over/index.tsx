@@ -7,12 +7,15 @@ import { GraphWithLegend } from "@/components/ui/graph";
 import { Label } from "@/components/ui/label";
 
 interface LeftoverProps {
-  total: number;
-  leftover: number;
-  opex: number;
+  title: string;
+  data?: {
+    total: number;
+    leftover: number;
+    opex: number;
+  };
 }
 
-const LeftOver: FC<LeftoverProps> = ({ total, leftover, opex }) => {
+const LeftOver: FC<LeftoverProps> = ({ data, title }) => {
   return (
     <Card variant="secondary" className="flex-1 p-0">
       <CardHeader className="p-4">
@@ -27,7 +30,7 @@ const LeftOver: FC<LeftoverProps> = ({ total, leftover, opex }) => {
                   CUSTOM_PROJECT_OUTPUTS.NET_REVENUE_AFTER_OPEX_TOTAL_COST,
               }}
             >
-              <h3 className="text-md">Net revenue after OPEX/Total cost</h3>
+              <h3 className="text-md">{title}</h3>
             </Label>
           </div>
           <div className="text-sm text-muted-foreground">
@@ -38,18 +41,20 @@ const LeftOver: FC<LeftoverProps> = ({ total, leftover, opex }) => {
       </CardHeader>
 
       <CardContent className="px-4 pb-4">
-        <GraphWithLegend
-          total={total}
-          leftover={leftover}
-          items={[
-            {
-              value: opex,
-              label: "OpEx",
-              textColor: "text-sky-blue-200",
-              bgColor: "bg-sky-blue-200",
-            },
-          ]}
-        />
+        {data && (
+          <GraphWithLegend
+            total={data.total}
+            leftover={data.leftover}
+            items={[
+              {
+                value: data.opex,
+                label: "OpEx",
+                textColor: "text-sky-blue-200",
+                bgColor: "bg-sky-blue-200",
+              },
+            ]}
+          />
+        )}
       </CardContent>
     </Card>
   );
