@@ -646,6 +646,8 @@ export const CUSTOM_PROJECT_OUTPUTS = {
     "The total financial investment required for the project, including both capital expenditure (CAPEX) and operating expenditure (OPEX), expressed as NPV (Net Present Value).",
   NET_REVENUE_AFTER_OPEX_TOTAL_COST:
     "The remaining net revenue after accounting for all operating expenses (OPEX) associated with the project.",
+  NET_REVENUE_AFTER_CAPEX_OPEX_TOTAL_COST:
+    "The remaining net revenue after accounting for all capital and operating expenses (CAPEX and OPEX) associated with the project.",
   ANNUAL_PROJECT_CASH_FLOW:
     "The net amount of cash generated or consumed by the project on an annual basis, accounting for revenues, CAPEX, and OPEX.",
 };

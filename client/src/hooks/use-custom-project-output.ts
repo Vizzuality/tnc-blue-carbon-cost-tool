@@ -1,12 +1,17 @@
 import { useMemo } from "react";
 
 import { CUSTOM_PROJECT_PRICE_TYPE } from "@shared/dtos/custom-projects/custom-projects.enums";
-import { CustomProject } from "@shared/entities/custom-project.entity";
+import {
+  CARBON_REVENUES_TO_COVER,
+  CustomProject,
+} from "@shared/entities/custom-project.entity";
 import { useAtomValue } from "jotai";
 
 import { toPercentageValue } from "@/lib/format";
 
 import { costDetailsFilterAtom } from "@/app/projects/store";
+
+import { CUSTOM_PROJECT_OUTPUTS } from "@/constants/tooltip";
 
 import {
   getBreakdownYears,
@@ -91,8 +96,16 @@ export const useCustomProjectOutput = (
     [output?.summary],
   );
   const leftOverProps = useMemo(() => {
+    const tooltipContent =
+      data.input.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
+        ? CUSTOM_PROJECT_OUTPUTS.NET_REVENUE_AFTER_OPEX_TOTAL_COST
+        : CUSTOM_PROJECT_OUTPUTS.NET_REVENUE_AFTER_CAPEX_OPEX_TOTAL_COST;
     return {
       title: `Net revenue after ${data.input.carbonRevenuesToCover}/Total cost`,
+      tooltip: {
+        title: `Net revenue after ${data.input.carbonRevenuesToCover}/Total cost`,
+        content: tooltipContent,
+      },
       data: output?.leftover[costRangeSelector],
     };
   }, [output?.leftover, costRangeSelector, data.input.carbonRevenuesToCover]);
