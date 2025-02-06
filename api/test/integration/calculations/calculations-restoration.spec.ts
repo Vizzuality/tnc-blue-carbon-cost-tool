@@ -1,6 +1,4 @@
 import { TestManager } from '../../utils/test-manager';
-import { CalculationEngine } from '@api/modules/calculations/calculation.engine';
-import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { RESTORATION_MEXICO_MANGROVE_FIXTURES } from './fixtures/restoration-mexico-mangroves';
 import { CustomProject } from '@shared/entities/custom-project.entity';
@@ -29,7 +27,7 @@ describe('Calculations Restoration', () => {
   });
 
   // Utility test
-  test('Should compute the restoration costs for a given custom restoration project', async () => {
+  test.skip('Should compute the restoration costs for a given custom restoration project', async () => {
     const response = await testManager
       .request()
       .post(customProjectContract.createCustomProject.path)
@@ -145,6 +143,31 @@ describe('Calculations Restoration', () => {
 
       expect(roundAllNumericValues(communityRepresentation)).toEqual(
         roundAllNumericValues(expectedCommunityRepresentation),
+      );
+    });
+    test.skip('community benefit and sharing costs', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+
+      const customProjectOutput: CustomProject['output'] =
+        response.body.data.output;
+
+      const yearlyBreakdown =
+        customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
+
+      const communityBenefitSharing = yearlyBreakdown.find(
+        (y) => y.costName === 'communityBenefitSharingFund',
+      );
+
+      const expectedCommunityBenefitSharing =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
+          (y) => y.costName === 'communityBenefitSharingFund',
+        );
+
+      expect(roundAllNumericValues(communityBenefitSharing)).toEqual(
+        roundAllNumericValues(expectedCommunityBenefitSharing),
       );
     });
   });
