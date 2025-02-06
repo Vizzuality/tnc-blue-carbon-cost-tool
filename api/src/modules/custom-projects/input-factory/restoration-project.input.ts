@@ -9,13 +9,13 @@ import {
   NonOverridableModelAssumptions,
 } from '@api/modules/calculations/assumptions.repository';
 import { SEQUESTRATION_RATE_TIER_TYPES } from '@shared/entities/carbon-inputs/sequestration-rate.entity';
-import { RestorationProjectParamsDto } from '@api/modules/custom-projects/dto/restoration-project-params.dto';
 import { GeneralProjectInputs } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
 import {
   OverridableAssumptionsDto,
   OverridableCostInputsDto,
-} from '@shared/dtos/custom-projects/create-custom-project.dto';
+  RestorationProjectParamsDto,
+} from '@api/modules/custom-projects/dto/create-custom-project.dto';
 
 export class RestorationProjectInput {
   countryCode: string;
@@ -32,7 +32,7 @@ export class RestorationProjectInput {
 
   carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
 
-  activityType: RESTORATION_ACTIVITY_SUBTYPE;
+  restorationActivity: RESTORATION_ACTIVITY_SUBTYPE;
 
   sequestrationRate: number;
 
@@ -52,20 +52,14 @@ export class RestorationProjectInput {
     parameters: RestorationProjectParamsDto,
     additionalBaseData: AdditionalBaseData,
   ): this {
-    if (
-      parameters.sequestrationRateUsed === SEQUESTRATION_RATE_TIER_TYPES.TIER_3
-    ) {
+    if (parameters.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3) {
       this.sequestrationRate = parameters.projectSpecificSequestrationRate;
     }
 
-    if (
-      parameters.sequestrationRateUsed === SEQUESTRATION_RATE_TIER_TYPES.TIER_1
-    ) {
+    if (parameters.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_1) {
       this.sequestrationRate = additionalBaseData.tier1SequestrationRate;
     }
-    if (
-      parameters.sequestrationRateUsed === SEQUESTRATION_RATE_TIER_TYPES.TIER_2
-    ) {
+    if (parameters.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_2) {
       this.sequestrationRate = additionalBaseData.tier2SequestrationRate;
     }
     return this;
@@ -90,7 +84,13 @@ export class RestorationProjectInput {
     return this;
   }
 
-  setGeneralInputs(generalInputs: GeneralProjectInputs): this {
+  //TODO: Not optimal type extending, but doing this properly will require deprecation of existing BE classes and use inherited stuff from the zod schema
+  //      which after looking at it, won't be straightforward
+  setGeneralInputs(
+    generalInputs: GeneralProjectInputs & {
+      restorationActivity: RESTORATION_ACTIVITY_SUBTYPE;
+    },
+  ): this {
     this.projectName = generalInputs.projectName;
     this.countryCode = generalInputs.countryCode;
     this.activity = generalInputs.activity;
@@ -99,6 +99,7 @@ export class RestorationProjectInput {
     this.initialCarbonPriceAssumption =
       generalInputs.initialCarbonPriceAssumption;
     this.carbonRevenuesToCover = generalInputs.carbonRevenuesToCover;
+    this.restorationActivity = generalInputs.restorationActivity;
     return this;
   }
 }

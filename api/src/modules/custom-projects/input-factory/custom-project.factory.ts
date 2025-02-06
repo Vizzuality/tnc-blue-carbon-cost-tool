@@ -7,12 +7,12 @@ import { CostOutput } from '@api/modules/calculations/calculation.engine';
 import { ProjectInput } from '@api/modules/calculations/cost.calculator';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { Country } from '@shared/entities/country.entity';
-import { RestorationProjectParamsDto } from '../dto/restoration-project-params.dto';
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import {
   ConservationCustomProjectDto,
   CreateCustomProjectDto,
-} from '@shared/dtos/custom-projects/create-custom-project.dto';
+  RestorationProjectParamsDto,
+} from '@api/modules/custom-projects/dto/create-custom-project.dto';
 
 export type ConservationProjectCarbonInputs = {
   lossRate: number;
@@ -73,6 +73,7 @@ export class CustomProjectFactory {
       countryCode,
     } = dto;
 
+    //TODO: This inherits only Conservation param type
     const projectParams = parameters as RestorationProjectParamsDto;
 
     const restorationProjectInput: RestorationProjectInput =
@@ -85,6 +86,7 @@ export class CustomProjectFactory {
       carbonRevenuesToCover,
       ecosystem,
       countryCode,
+      restorationActivity: projectParams.restorationActivity,
     });
     restorationProjectInput.setSequestrationRate(
       projectParams,
