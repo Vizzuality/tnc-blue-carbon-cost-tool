@@ -43,7 +43,7 @@ import { BACKOFFICE_SESSIONS_TABLE } from '@shared/entities/users/backoffice-ses
 import { CountryResource } from './resources/countries/country.resource.js';
 import { componentLoader, Components } from 'backoffice/components/index.js';
 import { ModelComponentSourceResource } from 'backoffice/resources/model-component-source/model-component-source.resource.js';
-import { EmissionFactorsSourceResource } from 'backoffice/resources/model-component-source/emissions-factors-source.resource.js';
+import { EcosystemExtentResource } from 'backoffice/resources/ecosystem-extent/ecosystem-extent.resource.js';
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -158,7 +158,7 @@ const start = async () => {
       ModelAssumptionResource,
       CountryResource,
       ModelComponentSourceResource,
-      EmissionFactorsSourceResource,
+      EcosystemExtentResource,
     ],
     pages: {
       'data-upload': {

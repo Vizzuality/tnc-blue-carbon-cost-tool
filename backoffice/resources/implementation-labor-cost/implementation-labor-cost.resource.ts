@@ -1,17 +1,24 @@
-import { ResourceWithOptions } from "adminjs";
-import { ImplementationLaborCost } from "@shared/entities/cost-inputs/implementation-labor-cost.entity.js";
-import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
+import { ResourceWithOptions } from 'adminjs';
+import { ImplementationLaborCost } from '@shared/entities/cost-inputs/implementation-labor-cost.entity.js';
+import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  fetchRelatedSourcesActionHandler,
+  addSourceActionHandler,
+  deleteSourceActionHandler,
+  fetchAvailableSourceTypesActionHandler,
+} from 'backoffice/resources/common/many-2-many-sources.actions.js';
+import { Components } from 'backoffice/components/index.js';
 
 export const ImplementationLaborCostResource: ResourceWithOptions = {
   resource: ImplementationLaborCost,
   options: {
     sort: {
-      sortBy: "plantingCost",
-      direction: "desc",
+      sortBy: 'plantingCost',
+      direction: 'desc',
     },
     navigation: {
-      name: "Data Management",
-      icon: "Database",
+      name: 'Data Management',
+      icon: 'Database',
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
@@ -23,6 +30,36 @@ export const ImplementationLaborCostResource: ResourceWithOptions = {
       },
       hydrologyCost: {
         isVisible: { list: true, show: true, filter: false, edit: true },
+      },
+      sources: {
+        isVisible: { show: true, edit: true, list: true, filter: false },
+        components: {
+          list: Components.Many2ManySources,
+          show: Components.Many2ManySources,
+          edit: Components.Many2ManySources,
+        },
+      },
+    },
+    actions: {
+      fetchRelatedSourcesAction: {
+        actionType: 'record',
+        isVisible: false,
+        handler: fetchRelatedSourcesActionHandler,
+      },
+      addSourceAction: {
+        actionType: 'record',
+        isVisible: false,
+        handler: addSourceActionHandler,
+      },
+      deleteSourceAction: {
+        actionType: 'record',
+        isVisible: false,
+        handler: deleteSourceActionHandler,
+      },
+      fetchAvailableSourceTypesAction: {
+        actionType: 'record',
+        isVisible: false,
+        handler: fetchAvailableSourceTypesActionHandler,
       },
     },
   },

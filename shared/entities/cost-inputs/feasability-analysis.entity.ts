@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
 @Entity("feasibility_analysis")
 @Unique(["country", "ecosystem"])
@@ -28,4 +29,11 @@ export class FeasibilityAnalysis extends BaseEntity {
 
   @Column("decimal", { name: "analysis_cost_per_project" })
   analysisCost: number;
+
+  @ManyToOne("ModelComponentSource", "feasibilityAnalysis", {
+    onDelete: "CASCADE",
+    nullable: true,
+  })
+  @JoinColumn({ name: "source_id" })
+  source: ModelComponentSource;
 }

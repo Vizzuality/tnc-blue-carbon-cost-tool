@@ -1,11 +1,4 @@
-import {
-  ActionContext,
-  ActionRequest,
-  ActionResponse,
-  ResourceWithOptions,
-} from 'adminjs';
-import { EmissionFactors } from '@shared/entities/carbon-inputs/emission-factors.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import { ResourceWithOptions } from 'adminjs';
 import { Components } from 'backoffice/components/index.js';
 import {
   addSourceActionHandler,
@@ -13,63 +6,33 @@ import {
   fetchAvailableSourceTypesActionHandler,
   fetchRelatedSourcesActionHandler,
 } from 'backoffice/resources/common/many-2-many-sources.actions.js';
+import { EcosystemExtent } from '@shared/entities/carbon-inputs/ecosystem-extent.entity.js';
 
-export const EmissionFactorsResource: ResourceWithOptions = {
-  resource: EmissionFactors,
+export const EcosystemExtentResource: ResourceWithOptions = {
+  resource: EcosystemExtent,
   options: {
-    listProperties: [
-      'countryCode',
-      'ecosystem',
-      'tierSelector',
-      'emissionFactor',
-      'AGB',
-      'SOC',
-      'global',
-      't2CountrySpecificAGB',
-      't2CountrySpecificSOC',
-      'sources',
-    ],
-    filterProperties: ['countryCode', 'ecosystem'],
-    sort: {
-      sortBy: 'tierSelector',
-      direction: 'asc',
-    },
     navigation: {
       name: 'Data Management',
       icon: 'Database',
     },
     properties: {
-      ...GLOBAL_COMMON_PROPERTIES,
+      id: {
+        isVisible: { list: false, show: true, edit: false, filter: false },
+      },
       countryCode: {
         position: 1,
       },
       ecosystem: {
         position: 2,
       },
-      tierSelector: {
+      extent: {
         position: 3,
       },
-      emissionFactor: {
+      historicExtent: {
         position: 4,
       },
-      AGB: {
-        position: 5,
-      },
-      SOC: {
-        position: 6,
-      },
-      global: {
-        position: 7,
-      },
-      t2CountrySpecificAGB: {
-        position: 8,
-      },
-      t2CountrySpecificSOC: {
-        position: 10,
-        isVisible: { show: true, edit: true, list: true, filter: true },
-      },
       sources: {
-        position: 11,
+        position: 5,
         isVisible: { show: true, edit: true, list: true, filter: false },
         components: {
           list: Components.Many2ManySources,

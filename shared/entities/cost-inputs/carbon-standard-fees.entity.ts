@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
+import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
 @Entity("carbon_standard_fees")
 @Unique(["country"])
@@ -24,4 +25,11 @@ export class CarbonStandardFees extends BaseEntity {
 
   @Column("decimal", { name: "cost_per_carbon_credit_issued" })
   carbonStandardFee: number;
+
+  @ManyToOne("ModelComponentSource", "carbonStandardFees", {
+    onDelete: "CASCADE",
+    nullable: true,
+  })
+  @JoinColumn({ name: "source_id" })
+  source: ModelComponentSource;
 }

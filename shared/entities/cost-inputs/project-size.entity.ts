@@ -35,12 +35,4 @@ export class ProjectSize extends BaseEntity {
 
   @Column({ name: "size", type: "decimal" })
   sizeHa: number;
-
-  @Column({ name: "source_id", type: "int", nullable: true })
-  @ManyToOne("ModelComponentSource", "projectSizes", {
-    onDelete: "CASCADE",
-    nullable: true,
-  })
-  @JoinColumn({ name: "source_id" })
-  source: ModelComponentSource;
 }
