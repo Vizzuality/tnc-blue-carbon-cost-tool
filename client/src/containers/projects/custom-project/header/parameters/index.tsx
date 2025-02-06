@@ -2,6 +2,8 @@ import { CUSTOM_PROJECT_PRICE_TYPE } from "@shared/dtos/custom-projects/custom-p
 import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { z } from "zod";
 
+import { cn } from "@/lib/utils";
+
 import { FILTER_KEYS } from "@/app/(overview)/constants";
 
 import { INITIAL_COST_RANGE } from "@/containers/overview/filters/constants";
@@ -57,9 +59,11 @@ export const getProjectParameters = (hasOpenBreakEvenPrice: boolean) =>
 
 interface CustomProjectParametersProps {
   hasOpenBreakEvenPrice: boolean;
+  className?: HTMLDivElement["className"];
 }
 export default function CustomProjectParameters({
   hasOpenBreakEvenPrice,
+  className,
 }: CustomProjectParametersProps) {
   const [filters, setFilters] = useCustomProjectFilters();
 
@@ -77,7 +81,7 @@ export default function CustomProjectParameters({
   };
 
   return (
-    <div className="flex flex-1 items-center justify-end space-x-4">
+    <div className={cn("flex items-center space-x-4", className)}>
       {getProjectParameters(hasOpenBreakEvenPrice).map((parameter) => (
         <div key={parameter.label} className="flex items-center space-x-2">
           <Label htmlFor={parameter.label}>{parameter.label}</Label>

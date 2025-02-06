@@ -119,6 +119,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
           </span>
         </Button>
         <CustomProjectParameters
+          className="flex-1 justify-end"
           hasOpenBreakEvenPrice={
             data.output?.breakevenPriceComputationOutput !== null
           }
