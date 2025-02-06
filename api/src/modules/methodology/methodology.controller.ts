@@ -14,8 +14,9 @@ export class MethodologyController {
   public async getActivityTypeDefaults(): Promise<ControllerResponse> {
     return tsRestHandler(
       methodologyContract.getMethodologySources,
-      async ({ query }) => {
-        const [data] = await this.methodologySourcesService.findAll(query);
+      async () => {
+        const data =
+          await this.methodologySourcesService.getModelComponentSources();
         return {
           body: { data: data },
           status: HttpStatus.OK,

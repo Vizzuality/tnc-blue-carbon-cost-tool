@@ -1,19 +1,15 @@
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
-import { MethodologySource } from "@shared/entities/methodology/methodology-source.entity";
-import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
+import { MethodologySourcesDto } from "@shared/dtos/methodology/methodology-sources.dto";
 import { initContract } from "@ts-rest/core";
-
-export const methodologySourcesQuerySchema =
-  generateEntityQuerySchema(MethodologySource);
 
 const contract = initContract();
 export const methodologyContract = contract.router({
   getMethodologySources: {
     method: "GET",
     path: "/methodology/sources",
-    query: methodologySourcesQuerySchema,
+    query: null,
     responses: {
-      200: contract.type<ApiResponse<Partial<MethodologySource>[]>>(),
+      200: contract.type<ApiResponse<MethodologySourcesDto>>(),
     },
     summary: "Get all the sources for the methodology table",
   },

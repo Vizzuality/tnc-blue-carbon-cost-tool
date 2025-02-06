@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
 @Entity("data_collection_and_field_costs")
 @Unique(["country", "ecosystem"])
@@ -28,4 +29,11 @@ export class DataCollectionAndFieldCosts extends BaseEntity {
 
   @Column("decimal", { name: "field_cost_per_project" })
   fieldCost: number;
+
+  @ManyToOne("ModelComponentSource", "dataCollectionAndFieldCosts", {
+    onDelete: "CASCADE",
+    nullable: true,
+  })
+  @JoinColumn({ name: "source_id" })
+  source: ModelComponentSource;
 }

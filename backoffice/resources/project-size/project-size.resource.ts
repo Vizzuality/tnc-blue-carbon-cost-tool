@@ -12,14 +12,37 @@ export const ProjectSizeResource: ResourceWithOptions = {
       name: 'Data Management',
       icon: 'Database',
     },
+    listProperties: [
+      'countryCode',
+      'ecosystem',
+      'activity',
+      'sizeHa',
+      'source',
+    ],
+    showProperties: [
+      'countryCode',
+      'ecosystem',
+      'activity',
+      'sizeHa',
+      'source',
+    ],
+    editProperties: [
+      'countryCode',
+      'ecosystem',
+      'activity',
+      'sizeHa',
+      'source',
+    ],
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
       sizeHa: {
+        position: 4,
         type: 'number',
         isVisible: { list: true, show: true, edit: true, filter: false },
         description: 'Size in hectares',
       },
       source: {
+        position: 5,
         isVisible: { list: true, show: true, edit: true, filter: false },
       },
     },

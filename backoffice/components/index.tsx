@@ -8,8 +8,8 @@ export const Components = {
     'FileIngestion',
     './pages/file-ingestion/page',
   ),
-  EmissionFactorSources: componentLoader.add(
-    'EmissionFactorSources',
-    './molecules/emission-factors-sources',
+  Many2ManySources: componentLoader.add(
+    'Many2ManySources',
+    './molecules/many-2-many-sources',
   ),
 };

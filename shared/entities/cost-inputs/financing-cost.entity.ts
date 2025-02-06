@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
+import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
 @Entity("financing_cost")
 @Unique(["country"])
@@ -24,4 +25,11 @@ export class FinancingCost extends BaseEntity {
 
   @Column("decimal", { name: "financing_cost_capex_percent" })
   financingCostCapexPercent: number;
+
+  @ManyToOne("ModelComponentSource", "financingCost", {
+    onDelete: "CASCADE",
+    nullable: true,
+  })
+  @JoinColumn({ name: "source_id" })
+  source: ModelComponentSource;
 }

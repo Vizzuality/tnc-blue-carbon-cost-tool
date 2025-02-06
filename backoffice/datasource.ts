@@ -38,7 +38,7 @@ import { UserUploadConservationInputs } from '@shared/entities/users/user-upload
 import { BackOfficeSession } from '@shared/entities/users/backoffice-session.js';
 import { CustomProject } from '@shared/entities/custom-project.entity.js';
 import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity.js';
-import { EmissionFactorsSource } from '@shared/entities/methodology/emission-factor-source.entity.js';
+import { ModelComponentSourceM2M } from '@shared/entities/methodology/model-source-m2m.entity.js';
 
 // TODO: If we import the COMMON_DATABASE_ENTITIES from shared, we get an error where DataSouce is not set for a given entity
 export const ADMINJS_ENTITIES = [
@@ -79,7 +79,7 @@ export const ADMINJS_ENTITIES = [
   ModelAssumptions,
   CustomProject,
   BackOfficeSession,
-  EmissionFactorsSource,
+  ModelComponentSourceM2M,
 ];
 
 export const dataSource: DataSource = new DataSource({
