@@ -1,13 +1,15 @@
 import { FC } from "react";
 
-import { CUSTOM_PROJECT_OUTPUTS } from "@/constants/tooltip";
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GraphWithLegend } from "@/components/ui/graph";
 import { Label } from "@/components/ui/label";
 
 interface LeftoverProps {
   title: string;
+  tooltip: {
+    title: string;
+    content: string;
+  };
   data?: {
     total: number;
     leftover: number;
@@ -15,7 +17,7 @@ interface LeftoverProps {
   };
 }
 
-const LeftOver: FC<LeftoverProps> = ({ data, title }) => {
+const LeftOver: FC<LeftoverProps> = ({ data, title, tooltip }) => {
   return (
     <Card variant="secondary" className="flex-1 p-0">
       <CardHeader className="p-4">
@@ -24,11 +26,7 @@ const LeftOver: FC<LeftoverProps> = ({ data, title }) => {
             <Label
               htmlFor="totalProjectCost"
               className="text-md font-medium"
-              tooltip={{
-                title: "Net revenue after OPEX/Total cost",
-                content:
-                  CUSTOM_PROJECT_OUTPUTS.NET_REVENUE_AFTER_OPEX_TOTAL_COST,
-              }}
+              tooltip={tooltip}
             >
               <h3 className="text-md">{title}</h3>
             </Label>
