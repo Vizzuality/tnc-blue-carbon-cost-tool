@@ -510,7 +510,7 @@ export class CostCalculator {
     );
     const blueCarbonProjectPlanningCostPlan = this.createSimpleCostPlan(
       totalBaseCost,
-      [-4, -3, -2],
+      [-1],
     );
     return blueCarbonProjectPlanningCostPlan;
   }
@@ -519,13 +519,12 @@ export class CostCalculator {
     const totalBaseCost = this.getTotalBaseCost(
       COST_KEYS.COMMUNITY_REPRESENTATION,
     );
-    // TODO: TO avoid type crash, fix after cost calculator has all required inputs
-    const projectDevelopmentType = 'Development';
-    //  this.projectInput.costInputs.otherCommunityCashFlow;
+    const projectDevelopmentType: PROJECT_DEVELOPMENT_TYPE =
+      this.projectInput.costAndCarbonInputs.otherCommunityCashFlow;
     const initialCost =
       projectDevelopmentType === PROJECT_DEVELOPMENT_TYPE.DEVELOPMENT
-        ? 0
-        : totalBaseCost;
+        ? totalBaseCost
+        : 0;
     const communityRepresentationCostPlan = this.createSimpleCostPlan(
       totalBaseCost,
       [-4, -3, -2, -1],
@@ -590,7 +589,7 @@ export class CostCalculator {
         implementationLaborCostPlan[year] = laborCost;
       }
     }
-
+    const a = 1;
     return implementationLaborCostPlan;
   }
 
