@@ -29,7 +29,7 @@ describe('Calculations Restoration', () => {
   });
 
   // Utility test
-  test.skip('Should compute the restoration costs for a given custom restoration project', async () => {
+  test('Should compute the restoration costs for a given custom restoration project', async () => {
     const response = await testManager
       .request()
       .post(customProjectContract.createCustomProject.path)
@@ -95,6 +95,56 @@ describe('Calculations Restoration', () => {
       );
       expect(roundAllNumericValues(implementationLabor)).toEqual(
         roundAllNumericValues(expectedImplementationLabor),
+      );
+    });
+    test('blue carbon planning costs', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+
+      const customProjectOutput: CustomProject['output'] =
+        response.body.data.output;
+
+      const yearlyBreakdown =
+        customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
+
+      const blueCarbonPlanning = yearlyBreakdown.find(
+        (y) => y.costName === 'blueCarbonProjectPlanning',
+      );
+
+      const expectedBlueCarbonPlanning =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
+          (y) => y.costName === 'blueCarbonProjectPlanning',
+        );
+
+      expect(roundAllNumericValues(blueCarbonPlanning)).toEqual(
+        roundAllNumericValues(expectedBlueCarbonPlanning),
+      );
+    });
+    test('community representation costs', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+
+      const customProjectOutput: CustomProject['output'] =
+        response.body.data.output;
+
+      const yearlyBreakdown =
+        customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
+
+      const communityRepresentation = yearlyBreakdown.find(
+        (y) => y.costName === 'communityRepresentation',
+      );
+
+      const expectedCommunityRepresentation =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
+          (y) => y.costName === 'communityRepresentation',
+        );
+
+      expect(roundAllNumericValues(communityRepresentation)).toEqual(
+        roundAllNumericValues(expectedCommunityRepresentation),
       );
     });
   });
