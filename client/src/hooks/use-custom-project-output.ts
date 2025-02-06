@@ -5,11 +5,8 @@ import {
   CARBON_REVENUES_TO_COVER,
   CustomProject,
 } from "@shared/entities/custom-project.entity";
-import { useAtomValue } from "jotai";
 
 import { toPercentageValue } from "@/lib/format";
-
-import { costDetailsFilterAtom } from "@/app/projects/store";
 
 import { CUSTOM_PROJECT_OUTPUTS } from "@/constants/tooltip";
 
@@ -25,7 +22,6 @@ export const useCustomProjectOutput = (
   data: InstanceType<typeof CustomProject>,
 ) => {
   const [{ costRangeSelector, priceType }] = useCustomProjectFilters();
-  const costDetailsRangeSelector = useAtomValue(costDetailsFilterAtom);
   const key =
     priceType === CUSTOM_PROJECT_PRICE_TYPE.INITIAL_CARBON_PRICE_ASSUMPTION
       ? "initialCarbonPriceComputationOutput"
@@ -54,12 +50,8 @@ export const useCustomProjectOutput = (
       ({
         total: parseCostDetailsForTable(output?.costDetails.total),
         npv: parseCostDetailsForTable(output?.costDetails.npv),
-      })[costDetailsRangeSelector],
-    [
-      costDetailsRangeSelector,
-      output?.costDetails.total,
-      output?.costDetails.npv,
-    ],
+      })[costRangeSelector],
+    [costRangeSelector, output?.costDetails.total, output?.costDetails.npv],
   );
 
   const chartData = useMemo(

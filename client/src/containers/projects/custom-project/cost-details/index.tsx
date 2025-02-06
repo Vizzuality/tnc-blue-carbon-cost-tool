@@ -6,8 +6,8 @@ import { showCostDetailsAtom } from "@/app/projects/store";
 
 import { COST_DETAILS } from "@/constants/tooltip";
 
-import CostDetailsParameters from "@/containers/projects/custom-project/cost-details/parameters";
 import CostDetailTable from "@/containers/projects/custom-project/cost-details/table";
+import CustomProjectParameters from "@/containers/projects/custom-project/header/parameters";
 
 import InfoButton from "@/components/ui/info-button";
 import {
@@ -23,8 +23,9 @@ interface CostDetailsProps {
     label: string;
     value: string;
   }[];
+  hasOpenBreakEvenPrice: boolean;
 }
-const CostDetails: FC<CostDetailsProps> = ({ data }) => {
+const CostDetails: FC<CostDetailsProps> = ({ data, hasOpenBreakEvenPrice }) => {
   const [isVisible, setIsVisible] = useAtom(showCostDetailsAtom);
 
   return (
@@ -41,7 +42,9 @@ const CostDetails: FC<CostDetailsProps> = ({ data }) => {
             </InfoButton>
           </SheetTitle>
         </SheetHeader>
-        <CostDetailsParameters />
+        <CustomProjectParameters
+          hasOpenBreakEvenPrice={hasOpenBreakEvenPrice}
+        />
         <CostDetailTable data={data} />
       </SheetContent>
     </Sheet>

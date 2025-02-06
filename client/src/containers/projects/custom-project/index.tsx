@@ -97,7 +97,14 @@ const CustomProjectView: FC<{
           <ProjectDetails {...projectDetailsProps} />
           {projectCostProps && <ProjectCost {...projectCostProps} />}
           {leftOverProps && <LeftOver {...leftOverProps} />}
-          {costDetailsProps && <CostDetails data={costDetailsProps} />}
+          {costDetailsProps && (
+            <CostDetails
+              data={costDetailsProps}
+              hasOpenBreakEvenPrice={
+                data.output?.breakevenPriceComputationOutput !== null
+              }
+            />
+          )}
         </div>
         <AnnualProjectCashFlow tableData={tableData} chartData={chartData} />
       </div>
