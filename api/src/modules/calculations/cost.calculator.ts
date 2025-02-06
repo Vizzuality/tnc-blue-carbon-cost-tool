@@ -589,7 +589,6 @@ export class CostCalculator {
         implementationLaborCostPlan[year] = laborCost;
       }
     }
-    const a = 1;
     return implementationLaborCostPlan;
   }
 
