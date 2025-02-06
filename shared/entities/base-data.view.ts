@@ -280,5 +280,5 @@ export class BaseDataView {
   @ViewColumn({
     name: "other_community_cash_flow",
   })
-  otherCommunityCashFlow: string | PROJECT_DEVELOPMENT_TYPE;
+  otherCommunityCashFlow: PROJECT_DEVELOPMENT_TYPE;
 }
