@@ -4,7 +4,8 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
-import { OverridableAssumptionsDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
+import { OverridableAssumptionsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
+import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 
 @Injectable()
 export class SequestrationRateCalculator {
@@ -14,7 +15,9 @@ export class SequestrationRateCalculator {
   projectLength: number;
   buffer: OverridableAssumptionsDto['buffer'];
   plantingSuccessRate: NonOverridableModelAssumptions['plantingSuccessRate'];
+  // Tier1 sequestration rate value is required regardless of the Tier selected for Restoration projects
   tier1SequestrationRate: AdditionalBaseData['tier1SequestrationRate'];
+  sequestrationRate: RestorationProjectInput['sequestrationRate'];
   restorationRate: OverridableAssumptionsDto['restorationRate'];
   soilOrganicCarbonReleaseLength: NonOverridableModelAssumptions['soilOrganicCarbonReleaseLength'];
   constructor(projectInput: ProjectInput) {
@@ -27,6 +30,11 @@ export class SequestrationRateCalculator {
     this.tier1SequestrationRate =
       projectInput.costAndCarbonInputs.tier1SequestrationRate;
     this.restorationRate = projectInput.assumptions.restorationRate;
+    if (projectInput instanceof RestorationProjectInput) {
+      this.sequestrationRate = projectInput.sequestrationRate;
+    }
+    this.soilOrganicCarbonReleaseLength =
+      projectInput.assumptions.soilOrganicCarbonReleaseLength;
   }
 
   calculateEstimatedCreditsIssuedPlan(): CostPlanMap {
@@ -105,9 +113,7 @@ export class SequestrationRateCalculator {
   }): CostPlanMap {
     const areaRestoredOrConservedPlan: { [year: number]: number } =
       this.calculateAreaRestoredOrConserved();
-    const sequestrationRate: number = 0;
-    // TODO: Sequestration rate is for Restoration projects, still need to implement
-    //this.projectInput.assumptions.sequestrationRate;
+    const sequestrationRate: number = this.sequestrationRate;
 
     for (const yearStr in netEmissionReductionsPlan) {
       const year = Number(yearStr);
