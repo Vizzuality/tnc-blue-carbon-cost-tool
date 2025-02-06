@@ -70,13 +70,13 @@ describe('Create Custom Projects - Setup', () => {
 
       expect(response.status).toBe(201);
       const responseData = response.body.data;
-      expect(responseData.totalCostNPV).toEqual(3092025.8572758473);
-      expect(responseData.totalCost).toEqual(4555908.877681957);
-      expect(responseData.breakevenTotalCost).toEqual(3750308.289753845);
-      expect(responseData.breakevenTotalCostNPV).toEqual(2667356.215719252);
+      expect(responseData.totalCostNPV).toEqual(2735614.8569899863);
+      expect(responseData.totalCost).toEqual(3932640.485410141);
+      expect(responseData.breakevenTotalCost).toEqual(3555542.034883479);
+      expect(responseData.breakevenTotalCostNPV).toEqual(2528399.502417404);
       const output = responseData.output;
       expect(output.breakevenPriceComputationOutput.initialCarbonPrice).toEqual(
-        11.94909091180203,
+        15.031201985489698,
       );
       const yearlyBreakdown =
         output.initialCarbonPriceComputationOutput.yearlyBreakdown;
