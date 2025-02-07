@@ -49,11 +49,12 @@ export class CalculationEngine {
       sequestrationRateCalculator,
     );
 
+    // TODO: Type this, it might get confusing as costplans can have different values depending on the point in time
     const costPlans = costCalculator.initializeCostPlans();
     return {
       costPlans,
       summary: costCalculator.getSummary(costPlans),
-      yearlyBreakdown: costCalculator.getYearlyBreakdown(),
+      yearlyBreakdown: costCalculator.getYearlyBreakdown(costPlans),
       costDetails: costCalculator.getCostDetails(costPlans),
     };
   }

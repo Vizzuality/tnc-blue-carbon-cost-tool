@@ -1,5 +1,6 @@
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
+import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
 
 /**
  * Input received in the endpoint
@@ -115,7 +116,7 @@ const RESTORATION_MEXICO_MANGROVES_OUTPUT = {
   initialCarbonPriceComputationOutput: {
     sequestrationRate: 18.33333,
     plantingSuccessRate: 0.8,
-    carbonRevenuesToCover: 'capex+Opex',
+    carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.CAPEX_AND_OPEX,
     initialCarbonPrice: 30,
     totalProjectCost: {
       total: {

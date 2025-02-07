@@ -21,7 +21,7 @@ describe('Calculations Restoration', () => {
   });
 
   // Utility test
-  test.skip('Should compute the restoration costs for a given custom restoration project', async () => {
+  test('All yearly breakdown costplans', async () => {
     const response = await testManager
       .request()
       .post(customProjectContract.createCustomProject.path)
@@ -34,10 +34,138 @@ describe('Calculations Restoration', () => {
       breakevenPriceComputationOutput,
     } = customProjectOutput;
 
-    expect(initialCarbonPriceComputationOutput.yearlyBreakdown).toEqual(
+    const { yearlyBreakdown } = initialCarbonPriceComputationOutput;
+
+    const expectedYearlyBreakdown =
       RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
-        .initialCarbonPriceComputationOutput.yearlyBreakdown,
+        .initialCarbonPriceComputationOutput.yearlyBreakdown;
+
+    expect(yearlyBreakdown).toBeCloseToCustomProjectOutput(
+      expectedYearlyBreakdown,
+      735,
     );
+  });
+
+  describe('Project cost', () => {
+    test('TotalProjectCost', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+
+      const customProjectOutput: CustomProject['output'] =
+        response.body.data.output;
+
+      const { totalProjectCost } =
+        customProjectOutput.initialCarbonPriceComputationOutput;
+
+      const expectedTotalProjectCost =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
+          .initialCarbonPriceComputationOutput.totalProjectCost;
+
+      expect(totalProjectCost).toBeCloseToCustomProjectOutput(
+        expectedTotalProjectCost,
+        400,
+      );
+    });
+    test.skip('Leftover', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+
+      const customProjectOutput: CustomProject['output'] =
+        response.body.data.output;
+
+      const { leftover } =
+        customProjectOutput.initialCarbonPriceComputationOutput;
+
+      const expectedLeftover =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
+          .initialCarbonPriceComputationOutput.leftover;
+
+      expect(leftover).toBeCloseToCustomProjectOutput(expectedLeftover, 400);
+    });
+  });
+
+  describe.skip('Initial carbon price computation', () => {
+    test('Initial carbon price computation', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+
+      const customProjectOutput: CustomProject['output'] =
+        response.body.data.output;
+
+      const { initialCarbonPriceComputationOutput } = customProjectOutput;
+
+      delete initialCarbonPriceComputationOutput.summary;
+      delete initialCarbonPriceComputationOutput.yearlyBreakdown;
+      delete initialCarbonPriceComputationOutput.costDetails;
+
+      const expectedInitialCarbonPriceComputationOutput =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
+          .initialCarbonPriceComputationOutput;
+
+      delete expectedInitialCarbonPriceComputationOutput.summary;
+      delete expectedInitialCarbonPriceComputationOutput.yearlyBreakdown;
+      delete expectedInitialCarbonPriceComputationOutput.costDetails;
+
+      console.log('stop');
+
+      expect(
+        initialCarbonPriceComputationOutput,
+      ).toBeCloseToCustomProjectOutput(
+        expectedInitialCarbonPriceComputationOutput,
+        400,
+      );
+    });
+  });
+
+  describe('Project details', () => {
+    test('Project details', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+
+      const customProjectOutput: CustomProject['output'] =
+        response.body.data.output;
+
+      const { costDetails } =
+        customProjectOutput.initialCarbonPriceComputationOutput;
+
+      const expectedProjectDetails =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
+          .initialCarbonPriceComputationOutput.costDetails;
+
+      expect(costDetails).toBeCloseToCustomProjectOutput(
+        expectedProjectDetails,
+        400,
+      );
+    });
+  });
+
+  describe('Project summary', () => {
+    test('Project summary', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+
+      const customProjectOutput: CustomProject['output'] =
+        response.body.data.output;
+
+      const { summary } =
+        customProjectOutput.initialCarbonPriceComputationOutput;
+
+      const expectedSummary =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
+          .initialCarbonPriceComputationOutput.summary;
+
+      expect(summary).toBeCloseToCustomProjectOutput(expectedSummary, 750);
+    });
   });
 
   // Below tests are temporal so that we can progress fixing the calculations step by step
@@ -79,11 +207,11 @@ describe('Calculations Restoration', () => {
           (y) => y.costName === 'implementationLabor',
         );
 
-      expect(maintenance).toBeCloseToObject(expectedMaintenance);
-      expect(baselineReassesmentFrecuency).toBeCloseToObject(
+      expect(maintenance).toBeCloseToCustomProjectOutput(expectedMaintenance);
+      expect(baselineReassesmentFrecuency).toBeCloseToCustomProjectOutput(
         expectedBaselineReassesmentFrecuency,
       );
-      expect(implementationLabor).toBeCloseToObject(
+      expect(implementationLabor).toBeCloseToCustomProjectOutput(
         expectedImplementationLabor,
       );
     });
@@ -108,7 +236,9 @@ describe('Calculations Restoration', () => {
           (y) => y.costName === 'blueCarbonProjectPlanning',
         );
 
-      expect(blueCarbonPlanning).toBeCloseToObject(expectedBlueCarbonPlanning);
+      expect(blueCarbonPlanning).toBeCloseToCustomProjectOutput(
+        expectedBlueCarbonPlanning,
+      );
     });
     test('community representation costs', async () => {
       const response = await testManager
@@ -131,7 +261,7 @@ describe('Calculations Restoration', () => {
           (y) => y.costName === 'communityRepresentation',
         );
 
-      expect(communityRepresentation).toBeCloseToObject(
+      expect(communityRepresentation).toBeCloseToCustomProjectOutput(
         expectedCommunityRepresentation,
       );
     });
@@ -174,13 +304,109 @@ describe('Calculations Restoration', () => {
           (y) => y.costName === 'communityBenefitSharingFund',
         );
 
-      expect(communityBenefitSharing).toBeCloseToObject(
+      expect(communityBenefitSharing).toBeCloseToCustomProjectOutput(
         expectedCommunityBenefitSharing,
         500,
       );
-      expect(estimatedRevenue).toBeCloseToObject(expectedEstimatedRevenue, 800);
+      expect(estimatedRevenue).toBeCloseToCustomProjectOutput(
+        expectedEstimatedRevenue,
+        800,
+      );
 
-      expect(creditsIssuedPlan).toBeCloseToObject(expectedCreditsIssuedPlan);
+      expect(creditsIssuedPlan).toBeCloseToCustomProjectOutput(
+        expectedCreditsIssuedPlan,
+      );
+    });
+
+    test('carbon standard fees, opex total cost plan, total cost plan', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+
+      const customProjectOutput: CustomProject['output'] =
+        response.body.data.output;
+
+      const yearlyBreakdown =
+        customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
+
+      const carbonStandardFees = yearlyBreakdown.find(
+        (y) => y.costName === 'carbonStandardFees',
+      );
+
+      const opexTotalCostPlan = yearlyBreakdown.find(
+        (y) => y.costName === 'opexTotalCostPlan',
+      );
+
+      const totalCostPlan = yearlyBreakdown.find(
+        (y) => y.costName === 'totalCostPlan',
+      );
+
+      const expectedTotalCostPlan =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
+          (y) => y.costName === 'totalCostPlan',
+        );
+
+      const expectedOpexTotalCostPlan =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
+          (y) => y.costName === 'opexTotalCostPlan',
+        );
+
+      const expectedCarbonStandardFees =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
+          (y) => y.costName === 'carbonStandardFees',
+        );
+
+      expect(totalCostPlan).toBeCloseToCustomProjectOutput(
+        expectedTotalCostPlan,
+        400,
+      );
+      expect(carbonStandardFees).toBeCloseToCustomProjectOutput(
+        expectedCarbonStandardFees,
+      );
+      expect(opexTotalCostPlan).toBeCloseToCustomProjectOutput(
+        expectedOpexTotalCostPlan,
+        500,
+      );
+    });
+    test('annual net cash flow, annual net income', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+
+      const customProjectOutput: CustomProject['output'] =
+        response.body.data.output;
+
+      const yearlyBreakdown =
+        customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
+
+      const annualNetCashFlow = yearlyBreakdown.find(
+        (y) => y.costName === 'annualNetCashFlow',
+      );
+
+      const expectedAnnualNetCashFlow =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
+          (y) => y.costName === 'annualNetCashFlow',
+        );
+
+      const annualNetIncome = yearlyBreakdown.find(
+        (y) => y.costName === 'annualNetIncome',
+      );
+
+      const expectedAnnualNetIncome =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
+          (y) => y.costName === 'annualNetIncome',
+        );
+
+      expect(annualNetCashFlow).toBeCloseToCustomProjectOutput(
+        expectedAnnualNetCashFlow,
+        400,
+      );
+      expect(annualNetIncome).toBeCloseToCustomProjectOutput(
+        expectedAnnualNetIncome,
+        400,
+      );
     });
   });
 });
