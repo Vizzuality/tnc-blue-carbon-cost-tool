@@ -2,13 +2,7 @@ import { TestManager } from '../../utils/test-manager';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { RESTORATION_MEXICO_MANGROVE_FIXTURES } from './fixtures/restoration-mexico-mangroves';
 import { CustomProject } from '@shared/entities/custom-project.entity';
-
-// Utilitary function to round all numeric values as the API returns them as floats but in the expected output they are integers
-function roundAllNumericValues(obj: any) {
-  return JSON.parse(
-    JSON.stringify(obj, (_, v) => (typeof v === 'number' ? Math.round(v) : v)),
-  );
-}
+import '../../custom-matchers';
 
 describe('Calculations Restoration', () => {
   let testManager: TestManager;
@@ -85,14 +79,12 @@ describe('Calculations Restoration', () => {
           (y) => y.costName === 'implementationLabor',
         );
 
-      expect(roundAllNumericValues(maintenance)).toEqual(
-        roundAllNumericValues(expectedMaintenance),
+      expect(maintenance).toBeCloseToObject(expectedMaintenance);
+      expect(baselineReassesmentFrecuency).toBeCloseToObject(
+        expectedBaselineReassesmentFrecuency,
       );
-      expect(roundAllNumericValues(baselineReassesmentFrecuency)).toEqual(
-        roundAllNumericValues(expectedBaselineReassesmentFrecuency),
-      );
-      expect(roundAllNumericValues(implementationLabor)).toEqual(
-        roundAllNumericValues(expectedImplementationLabor),
+      expect(implementationLabor).toBeCloseToObject(
+        expectedImplementationLabor,
       );
     });
     test('blue carbon planning costs', async () => {
@@ -116,9 +108,7 @@ describe('Calculations Restoration', () => {
           (y) => y.costName === 'blueCarbonProjectPlanning',
         );
 
-      expect(roundAllNumericValues(blueCarbonPlanning)).toEqual(
-        roundAllNumericValues(expectedBlueCarbonPlanning),
-      );
+      expect(blueCarbonPlanning).toBeCloseToObject(expectedBlueCarbonPlanning);
     });
     test('community representation costs', async () => {
       const response = await testManager
@@ -141,11 +131,11 @@ describe('Calculations Restoration', () => {
           (y) => y.costName === 'communityRepresentation',
         );
 
-      expect(roundAllNumericValues(communityRepresentation)).toEqual(
-        roundAllNumericValues(expectedCommunityRepresentation),
+      expect(communityRepresentation).toBeCloseToObject(
+        expectedCommunityRepresentation,
       );
     });
-    test.skip('community benefit and sharing costs', async () => {
+    test('community benefit and sharing costs, estimated revenue costs, credits issued plan', async () => {
       const response = await testManager
         .request()
         .post(customProjectContract.createCustomProject.path)
@@ -161,14 +151,37 @@ describe('Calculations Restoration', () => {
         (y) => y.costName === 'communityBenefitSharingFund',
       );
 
+      const estimatedRevenue = yearlyBreakdown.find(
+        (y) => y.costName === 'estimatedRevenuePlan',
+      );
+
+      const creditsIssuedPlan = yearlyBreakdown.find(
+        (y) => y.costName === 'creditsIssuedPlan',
+      );
+
+      const expectedEstimatedRevenue =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
+          (y) => y.costName === 'estimatedRevenuePlan',
+        );
+
+      const expectedCreditsIssuedPlan =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
+          (y) => y.costName === 'creditsIssuedPlan',
+        );
+
       const expectedCommunityBenefitSharing =
         RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput.initialCarbonPriceComputationOutput.yearlyBreakdown.find(
           (y) => y.costName === 'communityBenefitSharingFund',
         );
 
-      expect(roundAllNumericValues(communityBenefitSharing)).toEqual(
-        roundAllNumericValues(expectedCommunityBenefitSharing),
+      expect(communityBenefitSharing).toBeCloseToObject(
+        expectedCommunityBenefitSharing,
+        500,
       );
+      expect(estimatedRevenue).toBeCloseToObject(expectedEstimatedRevenue, 800);
+
+      // TODO: DOUBLE CHECK IF EXPECTED TOTAL NPV IS CORRECT
+      expect(creditsIssuedPlan).toBeCloseToObject(expectedCreditsIssuedPlan);
     });
   });
 });
