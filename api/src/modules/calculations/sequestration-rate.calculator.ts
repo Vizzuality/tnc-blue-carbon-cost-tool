@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectInput } from '@api/modules/calculations/cost.calculator';
-import { ACTIVITY } from '@shared/entities/activity.enum';
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from '@shared/entities/activity.enum';
 import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
@@ -38,7 +41,7 @@ export class SequestrationRateCalculator {
   }
 
   calculateEstimatedCreditsIssuedPlan(): CostPlanMap {
-    const estCreditsIssuedPlan: { [year: number]: number } = {};
+    const estCreditsIssuedPlan: CostPlanMap = {};
 
     for (let year = -1; year <= this.defaultProjectLength; year++) {
       if (year !== 0) {
@@ -46,7 +49,7 @@ export class SequestrationRateCalculator {
       }
     }
 
-    const netEmissionsReductions: { [year: number]: number } =
+    const netEmissionsReductions: CostPlanMap =
       this.calculateNetEmissionsReductions();
 
     for (const yearStr in estCreditsIssuedPlan) {
@@ -108,24 +111,33 @@ export class SequestrationRateCalculator {
     return netEmissionReductionsPlan;
   }
 
-  private _calculateRestorationEmissions(netEmissionReductionsPlan: {
-    [year: number]: number;
-  }): CostPlanMap {
-    const areaRestoredOrConservedPlan: { [year: number]: number } =
+  private _calculateRestorationEmissions(
+    netEmissionReductionsPlan: CostPlanMap,
+  ): CostPlanMap {
+    const areaRestoredOrConservedPlan: CostPlanMap =
       this.calculateAreaRestoredOrConserved();
     const sequestrationRate: number = this.sequestrationRate;
+    let restorationActivity: RESTORATION_ACTIVITY_SUBTYPE;
+    if (this.projectInput instanceof RestorationProjectInput) {
+      restorationActivity = this.projectInput.restorationActivity;
+    }
 
-    for (const yearStr in netEmissionReductionsPlan) {
-      const year = Number(yearStr);
+    const sortedYears = Object.keys(netEmissionReductionsPlan)
+      .map(Number)
+      .sort((a, b) => a - b);
+
+    for (const year of sortedYears) {
       if (year <= this.projectLength) {
         if (year === -1) {
           netEmissionReductionsPlan[year] = 0;
-          // } else if (this.projectInput.restoration_activity === 'Planting') {
-          //   netEmissionReductionsPlan[year] = this._calculatePlantingEmissions(
-          //     areaRestoredOrConservedPlan,
-          //     sequestrationRate,
-          //     year,
-          //   );
+        } else if (
+          restorationActivity === RESTORATION_ACTIVITY_SUBTYPE.PLANTING
+        ) {
+          netEmissionReductionsPlan[year] = this._calculatePlantingEmissions(
+            areaRestoredOrConservedPlan,
+            sequestrationRate,
+            year,
+          );
         } else {
           if (year === 1) {
             netEmissionReductionsPlan[year] =
@@ -218,6 +230,8 @@ export class SequestrationRateCalculator {
         cumulativeHaRestoredInYear[year] = 0;
       }
     }
+    // TODO: We could use a Map to ensure the order of the years
+    //       This applies to all methods/parts that generate a CostPlanMap
     const yearsInOrder = Object.keys(cumulativeHaRestoredInYear)
       .map(Number)
       .sort((a, b) => a - b);

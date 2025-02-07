@@ -180,7 +180,6 @@ describe('Calculations Restoration', () => {
       );
       expect(estimatedRevenue).toBeCloseToObject(expectedEstimatedRevenue, 800);
 
-      // TODO: DOUBLE CHECK IF EXPECTED TOTAL NPV IS CORRECT
       expect(creditsIssuedPlan).toBeCloseToObject(expectedCreditsIssuedPlan);
     });
   });

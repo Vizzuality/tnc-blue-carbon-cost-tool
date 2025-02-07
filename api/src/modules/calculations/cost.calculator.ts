@@ -403,6 +403,12 @@ export class CostCalculator {
     });
 
     const yearlyBreakdown: YearlyBreakdown[] = [];
+    // TODO: Double check prototype as some costs seem to not calculate totalCost and totalNPV
+    const costsWithNoNPV = [
+      'creditsIssuedPlan',
+      // 'cumulativeNetIncomePlan',
+      // 'cumulativeNetIncomeCapexOpex',
+    ];
     for (const costName in yearNormalizedCostPlans) {
       const costValues = yearNormalizedCostPlans[costName];
       const totalCost = sum(Object.values(costValues));
@@ -410,7 +416,7 @@ export class CostCalculator {
       yearlyBreakdown.push({
         costName: costName as YearlyBreakdownCostName,
         totalCost,
-        totalNPV,
+        totalNPV: costsWithNoNPV.includes(costName) ? 0 : totalNPV,
         costValues,
       });
     }
