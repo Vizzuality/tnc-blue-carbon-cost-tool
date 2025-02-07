@@ -83,7 +83,11 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
         <div className="space-y-3">
           <DetailItem
             label="Project size"
-            value={projectSize}
+            value={
+              typeof projectSize === "number"
+                ? projectSize
+                : Number(projectSize)
+            }
             unit="hectares"
           />
           <DetailItem label="Activity type" value={activity} />

@@ -48,7 +48,7 @@ const Metric: FC<MetricProps> = ({
   compactUnit = false,
 }) => {
   const ValueElement = useMemo(() => {
-    if (!value) return null;
+    if (typeof value !== "number") return null;
 
     return (
       <span>
