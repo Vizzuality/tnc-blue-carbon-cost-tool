@@ -8,7 +8,7 @@ import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculator';
 import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
 import { parseInt, sum } from 'lodash';
-import { irr } from 'financial';
+import { irr } from 'node-irr';
 import {
   CostPlanMap,
   CustomProjectCostDetails,
@@ -18,6 +18,7 @@ import {
 } from '@shared/dtos/custom-projects/custom-project-output.dto';
 import { PROJECT_DEVELOPMENT_TYPE } from '@shared/dtos/projects/project-development.type';
 import { OverridableCostInputsDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
+import { CostOutput } from '@api/modules/calculations/calculation.engine';
 
 export type CostPlans = Record<
   keyof OverridableCostInputsDto | string,
@@ -104,7 +105,7 @@ export class CostCalculator {
       this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
     const totalCreditsIssued = sum(Object.values(creditsIssuedPlan));
     const costPerTCO2e =
-      totalCreditsIssued != 0 ? totalCapex / totalCreditsIssued : 0;
+      totalCreditsIssued != 0 ? totalNPV / totalCreditsIssued : 0;
     const costPerHa = totalNPV / this.projectInput.projectSizeHa;
     const npvCoveringCosts =
       this.projectInput.carbonRevenuesToCover === 'Opex'
@@ -137,7 +138,7 @@ export class CostCalculator {
       );
     const annualNetIncome =
       this.revenueProfitCalculator.calculateAnnualNetIncome(
-        this.capexTotalCostPlan,
+        this.opexTotalCostPlan,
       );
     const IRROpex = this.calculateIrr(
       annualNetCashFlow,
@@ -195,7 +196,7 @@ export class CostCalculator {
       '$/tCO2e (total cost, NPV)': costPerTCO2e,
       '$/ha': costPerHa,
       'NPV covering cost': npvCoveringCosts,
-      'Leftover after OpEx / total cost': null,
+      'Leftover after OpEx / total cost': npvCoveringCosts,
       'IRR when priced to cover OpEx': IRROpex,
       'IRR when priced to cover total cost': IRRTotalCost,
       'Total cost (NPV)': totalNPV,
@@ -223,7 +224,7 @@ export class CostCalculator {
       total: {
         capitalExpenditure: totalCapex,
         operationalExpenditure: totalOpex,
-        totalCost: totalCapex + totalCapex,
+        totalCost: totalCapex + totalOpex,
         feasibilityAnalysis: sum(
           Object.values(this.costPlans.feasibilityAnalysis),
         ),
@@ -322,13 +323,8 @@ export class CostCalculator {
     };
   }
 
-  getYearlyBreakdown(): any {
-    // const costPlans: CostPlans & {
-    //   capexTotalCostPlan: CostPlanMap;
-    //   opexTotalCostPlan: CostPlanMap;
-    // } = structuredClone(this.costPlans);
-
-    const costPlans: any = structuredClone(this.costPlans);
+  getYearlyBreakdown(costOutputs: any): any {
+    const costPlans: CostPlans = structuredClone(this.costPlans);
     const discountRate = this.projectInput.assumptions.discountRate;
 
     // Values to negative for some magical scientific reason that I am too dumb to understand
@@ -337,19 +333,12 @@ export class CostCalculator {
         value[year] = -cost;
       }
     }
-    const capexTotalCostPlan = costPlans.capexTotalCostPlan;
-    const opexTotalCostPlan = costPlans.opexTotalCostPlan;
-    // Get a summed cost plan for capex and opex
-    // TODO: totalCostPlan, estimatedRevenue and creditsIssued are yet to be included in the breakdown
-    const totalCostPlan = Object.keys({
-      ...capexTotalCostPlan,
-      ...opexTotalCostPlan,
-    }).reduce((acc, year: string) => {
-      const capexValue = capexTotalCostPlan[year] || 0;
-      const opexValue = opexTotalCostPlan[year] || 0;
-      acc[year] = capexValue + opexValue;
-      return acc;
-    }, {} as CostPlanMap);
+
+    // To calculate some plans, we need the non-negative capex and opex plans. But for some other plans, we need the negative capex and opex plans. Magic!
+    const capexTotalCostPlan = this.capexTotalCostPlan;
+    const opexTotalCostPlan = this.opexTotalCostPlan;
+    const negativeOpexTotalCostPlan = costPlans.opexTotalCostPlan;
+    const negativeCapexTotalCostPlan = costPlans.capexTotalCostPlan;
 
     const estimatedRevenuePlan =
       this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
@@ -362,9 +351,27 @@ export class CostCalculator {
       );
     const annualNetIncome =
       this.revenueProfitCalculator.calculateAnnualNetIncome(opexTotalCostPlan);
+    // Get a summed cost plan for capex and opex
+    // TODO: totalCostPlan, estimatedRevenue and creditsIssued are yet to be included in the breakdown
+    const totalCostPlan = Object.keys({
+      ...negativeOpexTotalCostPlan,
+      ...negativeCapexTotalCostPlan,
+    }).reduce((acc, year: string) => {
+      const capexValue = negativeCapexTotalCostPlan[year] || 0;
+      const opexValue = negativeOpexTotalCostPlan[year] || 0;
+      acc[year] = capexValue + opexValue;
+      return acc;
+    }, {} as CostPlanMap);
+
+    // TODO: Below is probably redundant as this plans are already calculated, but most likely not passed to the breakdown
+
     const cumulativeNetIncomePlan: CostPlanMap = {};
     const cumulativeNetIncomeCapexOpex: CostPlanMap = {};
-    for (let year = -4; year <= this.defaultProjectLength; year++) {
+    for (
+      let year = -4;
+      year <= this.projectInput.assumptions.projectLength;
+      year++
+    ) {
       if (year !== 0) {
         if (year === -4) {
           cumulativeNetIncomePlan[year] = annualNetIncome[year];
@@ -372,14 +379,14 @@ export class CostCalculator {
         } else {
           const costPlanOpex = {};
           const costPlanCapexOpex = {};
-          for (const year in annualNetIncome) {
-            if (parseInt(year) <= 0 && parseInt(year) >= -4) {
-              costPlanOpex[year] = annualNetIncome[year];
+          for (const yearKey in annualNetIncome) {
+            if (parseInt(yearKey) <= year && parseInt(yearKey) >= -4) {
+              costPlanOpex[yearKey] = annualNetIncome[yearKey];
             }
           }
-          for (const year in annualNetCashFlow) {
-            if (parseInt(year) <= 0 && parseInt(year) >= -4) {
-              costPlanCapexOpex[year] = annualNetCashFlow[year];
+          for (const yearKey in annualNetCashFlow) {
+            if (parseInt(yearKey) <= year && parseInt(yearKey) > -4) {
+              costPlanCapexOpex[yearKey] = annualNetCashFlow[yearKey];
             }
           }
           cumulativeNetIncomePlan[year] =
@@ -403,27 +410,39 @@ export class CostCalculator {
     });
 
     const yearlyBreakdown: YearlyBreakdown[] = [];
-    // TODO: Double check prototype as some costs seem to not calculate totalCost and totalNPV
-    const costsWithNoNPV = [
-      'creditsIssuedPlan',
-      // 'cumulativeNetIncomePlan',
-      // 'cumulativeNetIncomeCapexOpex',
-    ];
     for (const costName in yearNormalizedCostPlans) {
       const costValues = yearNormalizedCostPlans[costName];
-      const totalCost = sum(Object.values(costValues));
-      const totalNPV = this.calculateNpv(costValues, discountRate);
+      let totalCost = sum(Object.values(costValues));
+      let totalNPV = this.calculateNpv(costValues, discountRate);
+      if (costName === 'opexTotalCostPlan') {
+        totalCost = -costOutputs.totalOpex;
+        totalNPV = -costOutputs.totalOpexNPV;
+      }
+      if (costName === 'totalCostPlan') {
+        totalNPV = -costOutputs.totalNPV;
+      }
+      if (costName === 'creditsIssuedPlan') {
+        totalNPV = 0;
+      }
+      if (costName === 'cumulativeNetIncomePlan') {
+        totalCost = 0;
+        totalNPV = 0;
+      }
+      if (costName === 'cumulativeNetIncomeCapexOpex') {
+        totalCost = 0;
+        totalNPV = 0;
+      }
+
       yearlyBreakdown.push({
         costName: costName as YearlyBreakdownCostName,
         totalCost,
-        totalNPV: costsWithNoNPV.includes(costName) ? 0 : totalNPV,
+        totalNPV,
         costValues,
       });
     }
 
     return yearlyBreakdown;
   }
-
   /**
    * @description: Normalize the cost plans for each cost type to have the same length of years
    */
@@ -948,7 +967,6 @@ export class CostCalculator {
       console.error(
         `Invalid number: ${value} produced for ${costKey}: Setting to 0 for development`,
       );
-      value = 12345;
     }
   }
 
@@ -966,6 +984,7 @@ export class CostCalculator {
     for (const cost of costs) {
       this.aggregateCosts(cost, this.capexTotalCostPlan);
     }
+
     return this;
   }
 
@@ -1008,13 +1027,17 @@ export class CostCalculator {
     netIncome: CostPlanMap,
     useCapex: boolean = false,
   ): number {
-    const cashFlowArray = useCapex
-      ? Object.values(netCashFlow)
-      : Object.values(netIncome);
+    const cashFlowPlan = useCapex ? netCashFlow : netIncome;
 
-    const internalRateOfReturn = irr(cashFlowArray);
+    // Get the sorted list of years (as numbers) from the plan, as it needs to be ordered
+    // We are suffering the same issue in several parts, but we agreed that it would be costly to use sorted maps everywhere instead of object literals.
+    const sortedYears = Object.keys(cashFlowPlan)
+      .map(Number)
+      .sort((a, b) => a - b);
 
-    return internalRateOfReturn;
+    const cashFlowArray = sortedYears.map((year) => cashFlowPlan[year]);
+
+    return irr(cashFlowArray);
   }
 
   calculateCostPlans(): this {

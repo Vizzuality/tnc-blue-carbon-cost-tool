@@ -53,6 +53,7 @@ export class RevenueProfitCalculator {
     return estimatedRevenuePlan;
   }
 
+  // DEBUGGING HERE
   calculateAnnualNetCashFlow(
     capexTotalCostPlan: CostPlanMap,
     opexTotalCostPlan: CostPlanMap,
