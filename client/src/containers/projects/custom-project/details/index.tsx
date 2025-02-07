@@ -3,7 +3,10 @@ import { FC } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-import { ACTIVITY } from "@shared/entities/activity.enum";
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
 import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { FileEdit } from "lucide-react";
@@ -15,21 +18,23 @@ import DetailItem from "@/containers/projects/custom-project/details/detail-item
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-interface ProjectDetailsProps {
+export interface ProjectDetailsProps {
   data: {
     country: { code: string; name: string };
     projectSize: number;
     projectLength: number;
     ecosystem: ECOSYSTEM;
     activity: ACTIVITY;
-    lossRate?: number;
+    lossRate?: number | null;
     carbonRevenuesToCover?: CARBON_REVENUES_TO_COVER;
     initialCarbonPrice?: number;
     emissionFactors?: {
       emissionFactor: number | null;
       emissionFactorAgb: number;
       emissionFactorSoc: number;
-    };
+    } | null;
+    restorationActivity?: RESTORATION_ACTIVITY_SUBTYPE;
+    sequestrationRate?: number;
   };
 }
 
@@ -44,6 +49,8 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
     initialCarbonPrice,
     lossRate,
     emissionFactors,
+    restorationActivity,
+    sequestrationRate,
   } = data;
   const { id } = useParams<{ id?: string }>();
   const showEditButton = FEATURE_FLAGS["edit-project"] && id;
@@ -95,14 +102,16 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
             value={projectLength}
             unit="years"
           />
-          <DetailItem
-            label="Loss rate"
-            value={lossRate}
-            unit="%"
-            numberFormatOptions={{
-              minimumFractionDigits: 2,
-            }}
-          />
+          {typeof lossRate === "number" && (
+            <DetailItem
+              label="Loss rate"
+              value={lossRate}
+              unit="%"
+              numberFormatOptions={{
+                minimumFractionDigits: 2,
+              }}
+            />
+          )}
           {emissionFactors && (
             <DetailItem
               label="Emission factor"
@@ -123,6 +132,19 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
                     ]
                   : undefined
               }
+            />
+          )}
+          {restorationActivity && (
+            <DetailItem
+              label="Restoration activity type"
+              value={restorationActivity}
+            />
+          )}
+          {sequestrationRate && (
+            <DetailItem
+              label="Sequestration rate"
+              value={sequestrationRate}
+              unit="tCO2e/ha/yr"
             />
           )}
         </div>

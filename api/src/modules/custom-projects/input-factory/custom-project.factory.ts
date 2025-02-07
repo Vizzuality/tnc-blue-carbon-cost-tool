@@ -198,7 +198,15 @@ export class CustomProjectFactory {
         breakevenPriceCostOutput,
       ),
     };
-    customProject.input = dto;
+
+    if (input instanceof RestorationProjectInput) {
+      customProject.input = {
+        ...dto,
+        sequestrationRate: input.sequestrationRate,
+      };
+    } else {
+      customProject.input = dto;
+    }
 
     return customProject;
   }

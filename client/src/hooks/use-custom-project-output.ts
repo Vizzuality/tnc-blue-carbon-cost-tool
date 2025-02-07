@@ -29,8 +29,8 @@ export const useCustomProjectOutput = (
       : "breakevenPriceComputationOutput";
   const output = data.output[key];
 
-  const projectDetailsProps = useMemo(
-    () => ({
+  const projectDetailsProps = useMemo(() => {
+    return {
       data: {
         country: data.country,
         projectSize: data.projectSize,
@@ -51,10 +51,10 @@ export const useCustomProjectOutput = (
           output instanceof ConservationProjectOutput
             ? undefined
             : output?.sequestrationRate,
+        restorationActivity: data.input?.parameters?.restorationActivity,
       },
-    }),
-    [data, output],
-  );
+    };
+  }, [data, output]);
 
   const costDetailsProps = useMemo(
     () =>

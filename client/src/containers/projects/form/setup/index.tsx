@@ -70,8 +70,14 @@ export default function SetupProjectForm() {
 
   const {
     activity,
-    // @ts-expect-error fix later
-    parameters: { emissionFactorUsed, tierSelector, restorationActivity },
+    parameters: {
+      // @ts-expect-error fix later
+      emissionFactorUsed,
+      // @ts-expect-error fix later
+      sequestrationRateUsed,
+      // @ts-expect-error fix later
+      restorationActivity,
+    },
   } = useFormValues();
 
   const isDisabled = (ecosystem: ECOSYSTEM) => {
@@ -84,7 +90,7 @@ export default function SetupProjectForm() {
 
     if (activity === ACTIVITY.RESTORATION) {
       return (
-        tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_2 &&
+        sequestrationRateUsed === SEQUESTRATION_RATE_TIER_TYPES.TIER_2 &&
         [ECOSYSTEM.SEAGRASS, ECOSYSTEM.SALT_MARSH].includes(ecosystem)
       );
     }
