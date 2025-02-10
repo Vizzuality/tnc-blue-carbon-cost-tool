@@ -1,6 +1,7 @@
 import { FC } from "react";
 
 import { YearlyBreakdown } from "@shared/dtos/custom-projects/custom-project-output.dto";
+import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 
 import { useProjectCashFlowTab } from "@/app/projects/url-store";
 
@@ -14,10 +15,12 @@ import { Card } from "@/components/ui/card";
 interface AnnualProjectCashFlowProps {
   chartData: YearlyBreakdownChartData;
   tableData: YearlyBreakdown[];
+  carbonRevenuesToCover?: CARBON_REVENUES_TO_COVER;
 }
 const AnnualProjectCashFlow: FC<AnnualProjectCashFlowProps> = ({
   tableData,
   chartData,
+  carbonRevenuesToCover,
 }) => {
   const [tab] = useProjectCashFlowTab();
   return (
@@ -26,7 +29,10 @@ const AnnualProjectCashFlow: FC<AnnualProjectCashFlowProps> = ({
       {tab === "table" ? (
         <CashFlowTable data={tableData} />
       ) : (
-        <CashflowChart data={chartData} />
+        <CashflowChart
+          data={chartData}
+          carbonRevenuesToCover={carbonRevenuesToCover}
+        />
       )}
     </Card>
   );
