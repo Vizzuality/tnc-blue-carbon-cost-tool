@@ -87,7 +87,7 @@ export default function CustomProjectParameters({
           <Label htmlFor={parameter.label}>{parameter.label}</Label>
           <Select
             name={parameter.label}
-            defaultValue={filters[parameter.key]}
+            value={filters[parameter.key]}
             onValueChange={(v) => {
               handleParameters(v, parameter.key);
             }}
