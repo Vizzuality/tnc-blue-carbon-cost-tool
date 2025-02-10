@@ -39,18 +39,20 @@ const LeftOver: FC<LeftoverProps> = ({ data, title, tooltip }) => {
       </CardHeader>
 
       <CardContent className="px-4 pb-4">
-        <GraphWithLegend
-          total={total}
-          leftover={leftover}
-          items={[
-            {
-              value: opex,
-              label: "OpEx",
-              circleClassName: "bg-sky-blue-200",
-              labelClassName: "text-sky-blue-200",
-            },
-          ]}
-        />
+        {data && (
+          <GraphWithLegend
+            total={data.total}
+            leftover={data.leftover}
+            items={[
+              {
+                value: data.opex,
+                label: "OpEx",
+                circleClassName: "bg-sky-blue-200",
+                labelClassName: "text-sky-blue-200",
+              },
+            ]}
+          />
+        )}
       </CardContent>
     </Card>
   );
