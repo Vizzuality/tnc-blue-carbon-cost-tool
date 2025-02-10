@@ -290,7 +290,7 @@ export default function SetupProjectForm() {
                         ) {
                           form.setValue(
                             "parameters.restorationActivity",
-                            RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
+                            RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
                           );
                         }
                       }}
