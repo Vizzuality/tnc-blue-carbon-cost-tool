@@ -1,4 +1,6 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
+
+import { cn } from "@/lib/utils";
 
 import Currency from "@/components/ui/currency";
 
@@ -18,8 +20,9 @@ interface GraphSegment {
   colorClass: string;
 }
 
+const getPercentage = (value: number, total: number) => (value / total) * 100;
 const getSize = (value: number, total: number) => {
-  const percentage = (value / total) * 100;
+  const percentage = getPercentage(value, total);
   return `${Math.max(percentage, 0)}%`;
 };
 
@@ -55,6 +58,30 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
             </div>
           </div>
           <div className="flex h-full w-full flex-col gap-1 rounded-md">
+            {leftover > 0 && (
+              <div
+                style={{
+                  height: getSize(leftover, total),
+                  width: "100%",
+                  minHeight:
+                    getPercentage(leftover, total) < 20 ? "21%" : undefined,
+                }}
+                className={`relative flex h-full flex-col items-center justify-end rounded-md border border-dashed border-white p-1`}
+              >
+                <span className="rounded-sm bg-white/30 px-5 py-1 text-xs font-semibold text-card-foreground">
+                  {
+                    <Currency
+                      value={leftover}
+                      options={{
+                        notation: "compact",
+                        maximumFractionDigits: 1,
+                      }}
+                      plainSymbol
+                    />
+                  }
+                </span>
+              </div>
+            )}
             {segments.map(({ value, colorClass }) => (
               <div
                 key={`graph-segment-${colorClass}-${value}`}
@@ -78,13 +105,6 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
                 </div>
               </div>
             ))}
-            <div
-              style={{
-                height: getSize(leftover, total),
-                width: "100%",
-              }}
-              className={`relative h-full rounded-md border border-dashed border-white`}
-            ></div>
           </div>
         </div>
       </div>
@@ -92,7 +112,7 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
   }
 
   return (
-    <div className="relative h-40 max-w-[200px] flex-1 overflow-hidden">
+    <div className="relative h-40 max-w-[200px] flex-1 overflow-hidden rounded-md border border-dashed border-white p-1">
       <div className="flex h-full flex-col gap-1">
         {segments.map(({ value, colorClass }) => (
           <div
@@ -123,8 +143,8 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
 
 interface GraphLegendItem {
   label: string;
-  textColor: string;
-  bgColor: string;
+  circleClassName: string;
+  labelClassName: string;
 }
 
 interface GraphLegendProps {
@@ -134,14 +154,14 @@ interface GraphLegendProps {
 const GraphLegend: FC<GraphLegendProps> = ({ items }) => {
   return (
     <div className="mt-4 space-y-2">
-      {items.map(({ label, textColor, bgColor }) => (
+      {items.map(({ label, circleClassName, labelClassName }) => (
         <div
-          key={`legend-item-${label}-${textColor}`}
+          key={`legend-item-${label}-${circleClassName}`}
           className="flex items-center gap-4"
         >
           <div className="flex items-center gap-2">
-            <div className={`h-3 w-3 rounded-full ${bgColor}`}></div>
-            <span className={`text-xs ${textColor}`}>{label}</span>
+            <div className={cn("h-3 w-3 rounded-full", circleClassName)}></div>
+            <span className={cn("text-xs", labelClassName)}>{label}</span>
           </div>
         </div>
       ))}
@@ -158,8 +178,8 @@ interface GraphWithLegendProps {
   items: Array<{
     value: number;
     label: string;
-    textColor: string;
-    bgColor: string;
+    circleClassName: string;
+    labelClassName: string;
   }>;
 }
 
@@ -168,6 +188,36 @@ const GraphWithLegend: FC<GraphWithLegendProps> = ({
   leftover,
   items,
 }) => {
+  const graphLegendItems = useMemo(() => {
+    return [
+      ...(leftover
+        ? [
+            {
+              label: "Leftover",
+              circleClassName: "border border-dashed border-white",
+              labelClassName: "text-white",
+            },
+            {
+              label: "Total Revenue",
+              circleClassName: "bg-yellow-500",
+              labelClassName: "text-yellow-500",
+            },
+          ]
+        : [
+            {
+              label: "Total",
+              circleClassName: "border border-dashed border-white",
+              labelClassName: "text-white",
+            },
+          ]),
+      ...items.map(({ label, circleClassName, labelClassName }) => ({
+        label,
+        circleClassName,
+        labelClassName,
+      })),
+    ];
+  }, [leftover, items]);
+
   return (
     <div className="flex min-h-[160px] justify-between gap-4">
       <div className="flex max-w-[148px] flex-1 flex-col justify-between">
@@ -176,30 +226,13 @@ const GraphWithLegend: FC<GraphWithLegendProps> = ({
             <Currency value={leftover || total} />
           </span>
         </div>
-        <GraphLegend
-          items={[
-            ...(leftover
-              ? [
-                  {
-                    label: "Total Revenue",
-                    textColor: "text-yellow-500",
-                    bgColor: "bg-yellow-500",
-                  },
-                ]
-              : []),
-            ...items.map(({ label, textColor, bgColor }) => ({
-              label,
-              textColor,
-              bgColor,
-            })),
-          ]}
-        />
+        <GraphLegend items={graphLegendItems} />
       </div>
       <Graph
         total={total}
-        segments={items.map(({ value, bgColor }) => ({
+        segments={items.map(({ value, circleClassName }) => ({
           value,
-          colorClass: bgColor,
+          colorClass: circleClassName,
         }))}
         leftover={leftover}
       />

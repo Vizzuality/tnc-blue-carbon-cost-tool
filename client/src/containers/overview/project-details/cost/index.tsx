@@ -48,14 +48,14 @@ const ProjectDetailsCost: FC<ProjectDetailsCostProps> = ({ data }) => {
           {
             value: data?.[costRangeSelector].capex || 0,
             label: "CapEx",
-            textColor: "text-sky-blue-500",
-            bgColor: "bg-sky-blue-500",
+            circleClassName: "bg-sky-blue-500",
+            labelClassName: "text-sky-blue-500",
           },
           {
             value: data?.[costRangeSelector].opex || 0,
             label: "OpEx",
-            textColor: "text-sky-blue-200",
-            bgColor: "bg-sky-blue-200",
+            circleClassName: "bg-sky-blue-200",
+            labelClassName: "text-sky-blue-200",
           },
         ]}
       />
