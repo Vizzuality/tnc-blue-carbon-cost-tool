@@ -153,7 +153,7 @@ const CashflowChart: FC<CashflowChartProps> = ({
             const { x, y, payload } = props;
 
             // Not sure if needed, and from which number to count?
-            if (payload.value < 0) return <g></g>;
+            if (payload.value === 0) return <g></g>;
 
             return (
               <g transform={`translate(${x + 10},${y + 60})`}>
