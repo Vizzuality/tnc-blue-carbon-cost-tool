@@ -2,27 +2,26 @@ import { useCallback } from "react";
 
 import { Path, useFormContext } from "react-hook-form";
 
-import { ApiResponse } from "@shared/dtos/global/api-response.dto";
-import { ACTIVITY } from "@shared/entities/activity.enum";
-import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
-import {
-  CARBON_REVENUES_TO_COVER,
-  CustomProject,
-  PROJECT_SPECIFIC_EMISSION,
-} from "@shared/entities/custom-project.entity";
-import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
-import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useSession } from "next-auth/react";
 
+import { ApiResponse } from "@shared/dtos/global/api-response.dto";
+import { ACTIVITY } from "@shared/entities/activity.enum";
+import { CustomProject } from "@shared/entities/custom-project.entity";
+import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
-
 import { getQueryClient } from "@/app/providers";
 
-import { DEFAULT_FORM_VALUES } from "@/containers/projects/form/constants";
+import { useQueryClient } from "@tanstack/react-query";
+
+import {
+  DEFAULT_COMMON_FORM_VALUES,
+  DEFAULT_CONSERVATION_FORM_VALUES,
+} from "@/containers/projects/form/constants";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
+
+import { AssumptionsResponse } from "@shared/contracts/custom-projects.contract";
 
 export const parseFormValues = (data: CustomProjectForm) => {
   const queryClient = getQueryClient();
@@ -146,11 +145,12 @@ export const useDefaultFormValues = (id?: string): CustomProjectForm => {
       {},
       {
         queryKey,
-        select: (data) =>
-          data.body.data.map(({ name, code }) => ({
+        select: (data) => {
+          return data.body.data.map(({ name, code }) => ({
             label: name,
             value: code,
-          })),
+          }));
+        },
       },
     );
   const { data: project } = client.customProjects.getCustomProject.useQuery(
@@ -169,58 +169,95 @@ export const useDefaultFormValues = (id?: string): CustomProjectForm => {
     },
   );
 
-  // @ts-expect-error fix later
+  const queryClient = useQueryClient();
+
+  const assumptionsResponse = queryClient.getQueryData<AssumptionsResponse>(
+    queryKeys.customProjects.assumptions({
+      ecosystem: DEFAULT_COMMON_FORM_VALUES.ecosystem,
+      activity: DEFAULT_CONSERVATION_FORM_VALUES.activity,
+    }).queryKey,
+  );
+
+  const initialCarbonPriceAssumption =
+    assumptionsResponse?.status === 200
+      ? Number(
+          assumptionsResponse?.body.data.find(
+            ({ name }) => name === "Carbon price",
+          )?.value,
+        )
+      : 0;
+
+  if (project) {
+    const commonAttributes: Pick<
+      CustomProjectForm,
+      | "projectName"
+      | "ecosystem"
+      | "countryCode"
+      | "projectSizeHa"
+      | "carbonRevenuesToCover"
+      | "initialCarbonPriceAssumption"
+      | "assumptions"
+    > = {
+      projectName: project.projectName,
+      ecosystem: project.ecosystem,
+      countryCode: project.input.countryCode,
+      projectSizeHa: project.input.projectSizeHa,
+      carbonRevenuesToCover: project.input.carbonRevenuesToCover,
+      initialCarbonPriceAssumption: project.input.initialCarbonPriceAssumption,
+      assumptions: {
+        baselineReassessmentFrequency:
+          project?.input.assumptions.baselineReassessmentFrequency,
+        buffer: project?.input.assumptions.buffer,
+        carbonPriceIncrease: project?.input.assumptions.carbonPriceIncrease,
+        discountRate: project?.input.assumptions.discountRate,
+        projectLength: project?.input.assumptions.projectLength,
+        restorationRate: project?.input.assumptions.restorationRate,
+        verificationFrequency: project?.input.assumptions.verificationFrequency,
+      },
+    };
+
+    if (project.activity === ACTIVITY.RESTORATION) {
+      return {
+        activity: project.activity,
+        ...commonAttributes,
+        parameters: {
+          tierSelector: project.input.parameters.tierSelector,
+          plantingSuccessRate: project.input.parameters.plantingSuccessRate,
+          restorationActivity: project.input.parameters.restorationActivity,
+          restorationYearlyBreakdown:
+            project.input.parameters.restorationYearlyBreakdown,
+          projectSpecificSequestrationRate:
+            project.input.parameters.projectSpecificSequestrationRate,
+        },
+      };
+    }
+
+    if (project.activity === ACTIVITY.CONSERVATION) {
+      return {
+        activity: project.activity,
+        ...commonAttributes,
+        parameters: {
+          emissionFactorUsed: project.input.parameters.emissionFactorUsed,
+          lossRateUsed: project.input.parameters.lossRateUsed,
+          projectSpecificLossRate:
+            project.input.parameters.projectSpecificLossRate,
+          projectSpecificEmission:
+            project.input.parameters.projectSpecificEmission,
+          projectSpecificEmissionFactor:
+            project.input.parameters.projectSpecificEmissionFactor,
+          emissionFactorSOC: project.input.parameters.emissionFactorSOC,
+          emissionFactorAGB: project.input.parameters.emissionFactorAGB,
+        },
+      };
+    }
+  }
+
   return {
-    projectName: project?.projectName || "",
-    activity: project?.activity || DEFAULT_FORM_VALUES.activity,
-    ecosystem: project?.ecosystem || ECOSYSTEM.SEAGRASS,
-    countryCode:
-      (project?.input.countryCode || countryOptions?.[0]?.value) ?? "",
-    projectSizeHa:
-      project?.input.projectSizeHa || DEFAULT_FORM_VALUES.projectSizeHa,
-    carbonRevenuesToCover:
-      project?.input.carbonRevenuesToCover || CARBON_REVENUES_TO_COVER.OPEX,
-    initialCarbonPriceAssumption:
-      project?.input.initialCarbonPriceAssumption ||
-      DEFAULT_FORM_VALUES.initialCarbonPriceAssumption,
-    parameters: {
-      emissionFactorUsed:
-        project?.input.parameters.emissionFactorUsed ||
-        EMISSION_FACTORS_TIER_TYPES.TIER_1,
-      lossRateUsed:
-        project?.input.parameters.lossRateUsed ||
-        LOSS_RATE_USED.PROJECT_SPECIFIC,
-      projectSpecificLossRate:
-        project?.input.parameters.projectSpecificLossRate ||
-        DEFAULT_FORM_VALUES.projectSpecificLossRate,
-      projectSpecificEmission:
-        project?.input.parameters.projectSpecificEmission ||
-        PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
-      projectSpecificEmissionFactor:
-        project?.input.parameters.projectSpecificEmissionFactor ||
-        DEFAULT_FORM_VALUES.projectSpecificEmissionFactor,
-      emissionFactorSOC:
-        project?.input.parameters.emissionFactorSOC ||
-        DEFAULT_FORM_VALUES.emissionFactorSOC,
-      emissionFactorAGB:
-        project?.input.parameters.emissionFactorAGB ||
-        DEFAULT_FORM_VALUES.emissionFactorAGB,
-      plantingSuccessRate:
-        project?.input.parameters.plantingSuccessRate ||
-        DEFAULT_FORM_VALUES.plantingSuccessRate,
-    },
-    assumptions: {
-      baselineReassessmentFrequency:
-        project?.input.assumptions.baselineReassessmentFrequency || undefined,
-      buffer: project?.input.assumptions.buffer || undefined,
-      carbonPriceIncrease:
-        project?.input.assumptions.carbonPriceIncrease || undefined,
-      discountRate: project?.input.assumptions.discountRate || undefined,
-      projectLength: project?.input.assumptions.projectLength || undefined,
-      restorationRate: project?.input.assumptions.restorationRate || undefined,
-      verificationFrequency:
-        project?.input.assumptions.verificationFrequency || undefined,
-    },
+    ...DEFAULT_COMMON_FORM_VALUES,
+    ...DEFAULT_CONSERVATION_FORM_VALUES,
+    activity: ACTIVITY.CONSERVATION,
+    countryCode: countryOptions?.[0]?.value ?? "",
+    initialCarbonPriceAssumption,
   };
 };
 

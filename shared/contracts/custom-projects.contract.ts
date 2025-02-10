@@ -1,4 +1,4 @@
-import { initContract } from "@ts-rest/core";
+import {initContract, ClientInferResponses} from "@ts-rest/core";
 import {
   ApiPaginationResponse,
   ApiResponse,
@@ -42,7 +42,7 @@ export const customProjectContract = contract.router({
     method: "GET",
     path: "/custom-projects/available-countries",
     responses: {
-      201: contract.type<ApiResponse<Pick<Country, "name" | "code">[]>>(),
+      200: contract.type<ApiResponse<Pick<Country, "name" | "code">[]>>(),
     },
     summary: "Get available countries to create a custom project",
   },
@@ -118,4 +118,4 @@ export const customProjectContract = contract.router({
   },
 });
 
-// TODO: Due to dificulties crafting a deeply nested conditional schema, I will go forward with nestjs custom validation pipe for now
+export type AssumptionsResponse = ClientInferResponses<typeof customProjectContract.getDefaultAssumptions, 200>;
