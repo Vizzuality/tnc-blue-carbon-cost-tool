@@ -74,7 +74,7 @@ export default function SetupProjectForm() {
       // @ts-expect-error fix later
       emissionFactorUsed,
       // @ts-expect-error fix later
-      sequestrationRateUsed,
+      tierSelector,
       // @ts-expect-error fix later
       restorationActivity,
     },
@@ -90,7 +90,7 @@ export default function SetupProjectForm() {
 
     if (activity === ACTIVITY.RESTORATION) {
       return (
-        sequestrationRateUsed === SEQUESTRATION_RATE_TIER_TYPES.TIER_2 &&
+        tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_2 &&
         [ECOSYSTEM.SEAGRASS, ECOSYSTEM.SALT_MARSH].includes(ecosystem)
       );
     }

@@ -56,7 +56,7 @@ export const ConservationCustomProjectSchema = z.object({
 
 export const RestorationCustomProjectSchema = z.object({
   restorationActivity: z.nativeEnum(RESTORATION_ACTIVITY_SUBTYPE),
-  sequestrationRateUsed: z.nativeEnum(SEQUESTRATION_RATE_TIER_TYPES),
+  tierSelector: z.nativeEnum(SEQUESTRATION_RATE_TIER_TYPES),
   projectSpecificSequestrationRate: z
     .number({ message: "Project Specific Rate should be a number" })
     .positive({ message: "Project Specific Rate must be positive" })
@@ -251,7 +251,7 @@ const ValidateRestorationSchema = (
     typeof RestorationCustomProjectSchema
   >;
   if (
-    params.sequestrationRateUsed === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 &&
+    params.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 &&
     !params.projectSpecificSequestrationRate
   ) {
     ctx.addIssue({

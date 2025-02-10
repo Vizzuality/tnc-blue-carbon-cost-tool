@@ -38,7 +38,7 @@ export default function RestorationProjectDetails() {
     countryCode,
     activity,
     // @ts-expect-error fix later
-    parameters: { sequestrationRateUsed },
+    parameters: { tierSelector },
   } = form.getValues();
 
   const queryKey = queryKeys.customProjects.defaultActivityTypes({
@@ -140,14 +140,14 @@ export default function RestorationProjectDetails() {
                   </FormLabel>
                   <FormControl>
                     <Select
-                      name="parameters.sequestrationRateUsed"
-                      value={form.getValues("parameters.sequestrationRateUsed")}
+                      name="parameters.tierSelector"
+                      value={form.getValues("parameters.tierSelector")}
                       onValueChange={async (v) => {
                         form.setValue(
-                          "parameters.sequestrationRateUsed",
+                          "parameters.tierSelector",
                           v as SEQUESTRATION_RATE_TIER_TYPES,
                         );
-                        await form.trigger("parameters.sequestrationRateUsed");
+                        await form.trigger("parameters.tierSelector");
 
                         if (v === SEQUESTRATION_RATE_TIER_TYPES.TIER_2) {
                           form.setValue("ecosystem", ECOSYSTEM.MANGROVE);
@@ -196,7 +196,7 @@ export default function RestorationProjectDetails() {
             )}
           />
           <>
-            {sequestrationRateUsed === SEQUESTRATION_RATE_TIER_TYPES.TIER_1 &&
+            {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_1 &&
               isSuccess && (
                 <div className="basis-1/2 space-y-2">
                   <FormLabel
@@ -217,7 +217,7 @@ export default function RestorationProjectDetails() {
                   </div>
                 </div>
               )}
-            {sequestrationRateUsed === SEQUESTRATION_RATE_TIER_TYPES.TIER_2 &&
+            {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_2 &&
               isSuccess && (
                 <div className="basis-1/2 space-y-2">
                   <FormLabel
@@ -238,7 +238,7 @@ export default function RestorationProjectDetails() {
                   </div>
                 </div>
               )}
-            {sequestrationRateUsed === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 && (
+            {tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 && (
               <FormField
                 name="parameters.projectSpecificSequestrationRate"
                 render={() => (

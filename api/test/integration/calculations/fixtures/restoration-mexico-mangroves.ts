@@ -45,7 +45,7 @@ const RESTORATION_MANGROVES_MEXICO_CREATE_CUSTOM_PROJECT_DTO:
   },
   parameters: {
     restorationActivity: 'Planting',
-    sequestrationRateUsed: 'Tier 2 - Country-specific rate',
+    tierSelector: 'Tier 2 - Country-specific rate',
     plantingSuccessRate: 0.008,
   },
 };
