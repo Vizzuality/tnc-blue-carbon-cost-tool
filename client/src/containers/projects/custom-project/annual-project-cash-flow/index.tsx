@@ -15,11 +15,13 @@ import { Card } from "@/components/ui/card";
 interface AnnualProjectCashFlowProps {
   chartData: YearlyBreakdownChartData;
   tableData: YearlyBreakdown[];
+  breakevenPoint: number | null;
   carbonRevenuesToCover?: CARBON_REVENUES_TO_COVER;
 }
 const AnnualProjectCashFlow: FC<AnnualProjectCashFlowProps> = ({
   tableData,
   chartData,
+  breakevenPoint,
   carbonRevenuesToCover,
 }) => {
   const [tab] = useProjectCashFlowTab();
@@ -32,6 +34,7 @@ const AnnualProjectCashFlow: FC<AnnualProjectCashFlowProps> = ({
         <CashflowChart
           data={chartData}
           carbonRevenuesToCover={carbonRevenuesToCover}
+          breakevenPoint={breakevenPoint}
         />
       )}
     </Card>

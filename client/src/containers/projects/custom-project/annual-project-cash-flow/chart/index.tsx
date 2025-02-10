@@ -10,6 +10,7 @@ import {
   Line,
   XAxis,
   YAxis,
+  ReferenceLine,
 } from "recharts";
 
 import { formatCurrency } from "@/lib/format";
@@ -38,11 +39,13 @@ const CHART_COLORS = {
 
 interface CashflowChartProps {
   data: YearlyBreakdownChartData;
+  breakevenPoint: number | null;
   carbonRevenuesToCover?: CARBON_REVENUES_TO_COVER;
 }
 
 const CashflowChart: FC<CashflowChartProps> = ({
   data,
+  breakevenPoint,
   carbonRevenuesToCover,
 }) => {
   return (
@@ -73,6 +76,11 @@ const CashflowChart: FC<CashflowChartProps> = ({
           color: "hsl(var(--chart-5))",
           icon: () => <div className="h-[3px] w-[24px] bg-chart-5" />,
         },
+        breakevenPoint: {
+          label: "Breakeven point",
+          color: "hsl(var(--destructive))",
+          icon: () => <div className="h-[3px] w-[24px] bg-destructive" />,
+        },
       }}
       className="cashflow-chart min-h-[200px] w-full"
     >
@@ -83,6 +91,9 @@ const CashflowChart: FC<CashflowChartProps> = ({
           horizontal={true}
           vertical={true}
         />
+        {typeof breakevenPoint === "number" && (
+          <ReferenceLine x={breakevenPoint} stroke="hsl(var(--destructive))" />
+        )}
         <YAxis
           axisLine={false}
           tickLine={false}
@@ -125,6 +136,13 @@ const CashflowChart: FC<CashflowChartProps> = ({
           stroke={CHART_COLORS.cumulativeNetIncomePlan}
           dot={false}
           strokeWidth={2}
+        />
+        {/* Ensure breakeven point is part of the chart and visible in the legend */}
+        <Line
+          type="linear"
+          dataKey="breakevenPoint"
+          stroke="hsl(var(--destructive))"
+          hide={true}
         />
         <XAxis
           dataKey="year"
