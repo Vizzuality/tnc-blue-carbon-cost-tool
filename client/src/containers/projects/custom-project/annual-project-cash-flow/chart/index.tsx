@@ -2,6 +2,7 @@
 
 import { FC } from "react";
 
+import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import {
   Bar,
   CartesianGrid,
@@ -13,7 +14,11 @@ import {
 
 import { formatCurrency } from "@/lib/format";
 
-import { YearlyBreakdownChartData } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
+import {
+  YearlyBreakdownChartData,
+  cumulativeNetIncomePlanTooltipLabel,
+} from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
+import { cashflowConfig } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
 
 import {
   ChartContainer,
@@ -33,9 +38,13 @@ const CHART_COLORS = {
 
 interface CashflowChartProps {
   data: YearlyBreakdownChartData;
+  carbonRevenuesToCover?: CARBON_REVENUES_TO_COVER;
 }
 
-const CashflowChart: FC<CashflowChartProps> = ({ data }) => {
+const CashflowChart: FC<CashflowChartProps> = ({
+  data,
+  carbonRevenuesToCover,
+}) => {
   return (
     <ChartContainer
       config={{
@@ -57,7 +66,10 @@ const CashflowChart: FC<CashflowChartProps> = ({ data }) => {
           icon: () => <div className="h-[3px] w-[24px] bg-chart-4" />,
         },
         cumulativeNetIncomePlan: {
-          label: "Revenue OpEx",
+          label:
+            cumulativeNetIncomePlanTooltipLabel[
+              carbonRevenuesToCover as keyof typeof cumulativeNetIncomePlanTooltipLabel
+            ],
           color: "hsl(var(--chart-5))",
           icon: () => <div className="h-[3px] w-[24px] bg-chart-5" />,
         },
@@ -151,9 +163,17 @@ const CashflowChart: FC<CashflowChartProps> = ({ data }) => {
               indicator="dot"
               className="border-border"
               formatter={(v, n) => {
+                const config = cashflowConfig[n as keyof typeof cashflowConfig];
+                let label = config.label;
+                if (n === "cumulativeNetIncomePlan") {
+                  label =
+                    cumulativeNetIncomePlanTooltipLabel[
+                      carbonRevenuesToCover as keyof typeof cumulativeNetIncomePlanTooltipLabel
+                    ];
+                }
                 return (
                   <p className="inline-flex w-full justify-between gap-2">
-                    <span className="text-muted-foreground">{n}</span>
+                    <span className="text-muted-foreground">{label}</span>
                     <span className="font-normal">
                       {formatCurrency(v as number, {
                         maximumFractionDigits: 0,

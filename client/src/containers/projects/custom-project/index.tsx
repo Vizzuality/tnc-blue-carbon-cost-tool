@@ -48,8 +48,7 @@ const CustomProjectView: FC<{
     projectDetailsProps,
     leftOverProps,
     costDetailsProps,
-    chartData,
-    tableData,
+    annualProjectCashFlowProps,
     summaryData,
   } = useCustomProjectOutput(data);
 
@@ -106,7 +105,7 @@ const CustomProjectView: FC<{
             />
           )}
         </div>
-        <AnnualProjectCashFlow tableData={tableData} chartData={chartData} />
+        <AnnualProjectCashFlow {...annualProjectCashFlowProps} />
       </div>
     </motion.div>
   );

@@ -3,6 +3,7 @@ import {
   YearlyBreakdown,
   YearlyBreakdownCostName,
 } from "@shared/dtos/custom-projects/custom-project-output.dto";
+import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 
 function getBreakdownYears(data: YearlyBreakdown[]): number[] {
   if (data.length === 0) return [];
@@ -181,10 +182,18 @@ function parseYearlyBreakdownForTable(
   });
 }
 
+const cumulativeNetIncomePlanTooltipLabel = {
+  [CARBON_REVENUES_TO_COVER.OPEX]:
+    "Cumulative net income (NPV) (Revenue - OpEx)",
+  [CARBON_REVENUES_TO_COVER.CAPEX_AND_OPEX]:
+    "Cumulative net income (NPV) (Revenue - CapEx - OpEx)",
+} as const;
+
 export {
   getBreakdownYears,
   parseYearlyBreakdownForChart,
   parseYearlyBreakdownForTable,
   cashflowConfig,
+  cumulativeNetIncomePlanTooltipLabel,
   type YearlyBreakdownChartData,
 };

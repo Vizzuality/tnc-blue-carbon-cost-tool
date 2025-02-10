@@ -112,14 +112,21 @@ export const useCustomProjectOutput = (
       data: output?.leftover[costRangeSelector],
     };
   }, [output?.leftover, costRangeSelector, data.input.carbonRevenuesToCover]);
+  const annualProjectCashFlowProps = useMemo(
+    () => ({
+      tableData,
+      chartData,
+      carbonRevenuesToCover: output?.carbonRevenuesToCover,
+    }),
+    [tableData, chartData, output?.carbonRevenuesToCover],
+  );
 
   return {
     projectCostProps: output?.totalProjectCost[costRangeSelector],
     leftOverProps,
     projectDetailsProps,
     costDetailsProps,
-    chartData,
-    tableData,
+    annualProjectCashFlowProps,
     summaryData,
     output,
   };
