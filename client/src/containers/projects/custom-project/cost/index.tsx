@@ -57,14 +57,14 @@ const ProjectCost: FC<ProjectCostProps> = ({ total, capex, opex }) => {
             {
               label: "CapEx",
               value: capex,
-              textColor: "text-sky-blue-500",
-              bgColor: "bg-sky-blue-500",
+              circleClassName: "bg-sky-blue-500",
+              labelClassName: "text-sky-blue-500",
             },
             {
               label: "OpEx",
               value: opex,
-              textColor: "text-sky-blue-200",
-              bgColor: "bg-sky-blue-200",
+              circleClassName: "bg-sky-blue-200",
+              labelClassName: "text-sky-blue-200",
             },
           ]}
         />

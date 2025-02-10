@@ -48,8 +48,8 @@ const ProjectDetailsLeftover: FC<ProjectDetailsLeftoverProps> = ({
           {
             value: data?.[costRangeSelector].opex || 0,
             label: "OpEx",
-            textColor: "text-sky-blue-200",
-            bgColor: "bg-sky-blue-200",
+            circleClassName: "bg-sky-blue-200",
+            labelClassName: "text-sky-blue-200",
           },
         ]}
       />
