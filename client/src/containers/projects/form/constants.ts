@@ -1,13 +1,72 @@
 import { ACTIVITY } from "@shared/entities/activity.enum";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
+import {
+  ConservationCustomProjectSchema,
+  LOSS_RATE_USED,
+  RestorationCustomProjectSchema,
+} from "@shared/schemas/custom-projects/create-custom-project.schema";
 
-export const DEFAULT_FORM_VALUES = {
+import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
+import {
+  CARBON_REVENUES_TO_COVER,
+  PROJECT_SPECIFIC_EMISSION,
+} from "@shared/entities/custom-project.entity";
+
+import { z } from "zod";
+
+export const DEFAULT_COMMON_FORM_VALUES: Omit<
+  CustomProjectForm,
+  "activity" | "projectSizeHa" | "parameters"
+> = {
+  projectName: "",
+  ecosystem: ECOSYSTEM.SEAGRASS,
+  countryCode: "",
+  initialCarbonPriceAssumption: 0,
+  carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.OPEX,
+  assumptions: {
+    baselineReassessmentFrequency: undefined,
+    buffer: undefined,
+    carbonPriceIncrease: undefined,
+    discountRate: undefined,
+    projectLength: undefined,
+    restorationRate: undefined,
+    verificationFrequency: undefined,
+  },
+};
+
+export const DEFAULT_CONSERVATION_FORM_VALUES: Pick<
+  CustomProjectForm,
+  "activity" | "projectSizeHa"
+> & {
+  parameters: z.infer<typeof ConservationCustomProjectSchema>;
+} = {
   activity: ACTIVITY.CONSERVATION,
-  projectSizeHa: 10000, // activity === ACTIVITY.CONSERVATION ? 10000 : 100
-  projectSpecificLossRate: -0.003,
-  projectSpecificEmissionFactor: 15,
-  emissionFactorAGB: 200,
-  emissionFactorSOC: 15,
-  plantingSuccessRate: 0.8,
-  projectSpecificSequestrationRate: 15,
-  initialCarbonPriceAssumption: 30,
+  projectSizeHa: 10000,
+  parameters: {
+    projectSpecificLossRate: -0.003,
+    projectSpecificEmissionFactor: 15,
+    emissionFactorAGB: 200,
+    emissionFactorSOC: 15,
+    lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
+    emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
+    projectSpecificEmission: PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
+  },
+};
+
+export const DEFAULT_RESTORATION_FORM_VALUES: Pick<
+  CustomProjectForm,
+  "activity" | "projectSizeHa"
+> & {
+  parameters: Pick<
+    z.infer<typeof RestorationCustomProjectSchema>,
+    "plantingSuccessRate" | "projectSpecificSequestrationRate"
+  >;
+} = {
+  activity: ACTIVITY.RESTORATION,
+  projectSizeHa: 100,
+  parameters: {
+    plantingSuccessRate: 0.8,
+    projectSpecificSequestrationRate: 15,
+  },
 };
