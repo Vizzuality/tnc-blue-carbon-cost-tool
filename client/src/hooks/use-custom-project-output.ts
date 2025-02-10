@@ -117,6 +117,9 @@ export const useCustomProjectOutput = (
       tableData,
       chartData,
       carbonRevenuesToCover: output?.carbonRevenuesToCover,
+      breakevenPoint:
+        chartData.find((item) => item.cumulativeNetIncomePlan >= 0)?.year ||
+        null,
     }),
     [tableData, chartData, output?.carbonRevenuesToCover],
   );
