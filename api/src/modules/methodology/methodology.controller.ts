@@ -8,6 +8,17 @@ import { methodologyContract } from '@shared/contracts/methodology.contract';
 export class MethodologyController {
   constructor(private readonly methodologyService: MethodologyService) {}
 
+  @TsRestHandler(methodologyContract.getAllModelAssumptions)
+  async getAllModelAssumptions(): Promise<ControllerResponse> {
+    return tsRestHandler(
+      methodologyContract.getAllModelAssumptions,
+      async () => {
+        const data = await this.methodologyService.getAllModelAssumptions();
+        return { body: { data }, status: HttpStatus.OK };
+      },
+    );
+  }
+
   @TsRestHandler(methodologyContract.getMethodologySources)
   public async getActivityTypeDefaults(): Promise<ControllerResponse> {
     return tsRestHandler(
