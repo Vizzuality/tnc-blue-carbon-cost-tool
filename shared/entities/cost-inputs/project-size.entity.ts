@@ -10,7 +10,6 @@ import {
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ACTIVITY } from "@shared/entities/activity.enum";
-import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
 @Entity({ name: "project_sizes" })
 @Unique(["country", "ecosystem", "activity"])
