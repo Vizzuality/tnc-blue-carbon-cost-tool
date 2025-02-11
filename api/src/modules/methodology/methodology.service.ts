@@ -3,7 +3,7 @@ import { MethodologyRepository } from '@api/modules/methodology/methodology.repo
 import { MethodologySourcesDto } from '@shared/dtos/methodology/methodology-sources.dto';
 
 @Injectable()
-export class MethodologySourcesService {
+export class MethodologyService {
   protected logger: Logger = new Logger(this.constructor.name);
 
   public constructor(
