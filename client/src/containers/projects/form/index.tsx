@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 import { FormProvider, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomProjectFormSchema } from "@shared/schemas/custom-projects/custom-project-form.schema";
-import { ExtractAtomValue, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
+
+import { useScrollSpy } from "@/hooks/use-scroll-spy";
 
 import Header from "@/containers/projects/form/header";
 import ProjectForm from "@/containers/projects/form/project-form";
@@ -32,36 +34,15 @@ export default function CustomProjectForm({ id }: CustomProjectFormProps) {
     mode: "all",
   });
   const activity = methods.watch("activity");
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const sectionSlug = entry.target.id as ExtractAtomValue<
-              typeof formStepAtom
-            >;
-
-            setIntersecting(sectionSlug);
-          }
-        });
-      },
-      {
-        root: ref.current,
-        threshold: 0.4,
-      },
-    );
-
-    const sections = Array.from(
-      ref.current.querySelector("#custom-project-steps-container")?.children ||
-        [],
-    );
-    sections.forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
-  }, [setIntersecting, activity]);
+  useScrollSpy({
+    id: "custom-project-steps-container",
+    containerRef: ref,
+    setCurrentStep: setIntersecting,
+    options: {
+      threshold: 0.4,
+    },
+    deps: [activity],
+  });
 
   return (
     <FormProvider {...methods}>
