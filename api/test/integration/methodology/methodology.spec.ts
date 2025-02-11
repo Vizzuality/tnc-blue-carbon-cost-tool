@@ -2,6 +2,7 @@ import { methodologyContract } from '@shared/contracts/methodology.contract';
 import { EmissionFactors } from '@shared/entities/carbon-inputs/emission-factors.entity';
 import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity';
 import { ModelComponentSourceM2M } from '@shared/entities/methodology/model-source-m2m.entity';
+import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { TestManager } from 'api/test/utils/test-manager';
 
 describe('Methodology', () => {
@@ -27,7 +28,20 @@ describe('Methodology', () => {
       await testManager.clearDatabase();
     });
 
-    it('should return the methodology sources table when GET /methodology/sources is called', async () => {
+    it(`should return all model assumptions when a GET request is made to the ${methodologyContract.getAllModelAssumptions.path} endpoint`, async () => {
+      const modelAssumptions = await testManager
+        .getDataSource()
+        .getRepository(ModelAssumptions)
+        .find();
+      const response = await testManager
+        .request()
+        .get(methodologyContract.getAllModelAssumptions.path)
+        .expect(200);
+
+      expect(response.body.data).toEqual(modelAssumptions);
+    });
+
+    it(`should return all model assumptions when a GET request is made to the ${methodologyContract.getMethodologySources.path} endpoint`, async () => {
       const dataSource = testManager.getDataSource();
       const modelComponentSourcesRepo =
         dataSource.getRepository(ModelComponentSource);
