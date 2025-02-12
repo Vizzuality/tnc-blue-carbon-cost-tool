@@ -8,7 +8,9 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import {LOSS_RATE_USED} from "@shared/schemas/custom-projects/create-custom-project.schema";
 import {EMISSION_FACTORS_TIER_TYPES} from "@shared/entities/carbon-inputs/emission-factors.entity";
 
-const DEFAULT_CONSERVATION_CUSTOM_PROJECT: CustomProject = {
+
+// TODO: research why this breaks in emission factors
+const DEFAULT_CONSERVATION_CUSTOM_PROJECT: CustomProject | any = {
   projectName: "My custom project",
   abatementPotential: undefined,
   country: {
