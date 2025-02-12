@@ -1,4 +1,7 @@
-import { ACTIVITY } from "@shared/entities/activity.enum";
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
 import {
   CARBON_REVENUES_TO_COVER,
@@ -13,6 +16,7 @@ import {
 import { z } from "zod";
 
 import { CustomProjectForm } from "@/containers/projects/form/setup";
+import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 
 export const DEFAULT_COMMON_FORM_VALUES: Omit<
   CustomProjectForm,
@@ -59,13 +63,20 @@ export const DEFAULT_RESTORATION_FORM_VALUES: Pick<
 > & {
   parameters: Pick<
     z.infer<typeof RestorationCustomProjectSchema>,
-    "plantingSuccessRate" | "projectSpecificSequestrationRate"
+    | "restorationActivity"
+    | "tierSelector"
+    | "plantingSuccessRate"
+    | "projectSpecificSequestrationRate"
+    | "restorationYearlyBreakdown"
   >;
 } = {
   activity: ACTIVITY.RESTORATION,
   projectSizeHa: 100,
   parameters: {
+    restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
+    tierSelector: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
     plantingSuccessRate: 0.8,
     projectSpecificSequestrationRate: 15,
+    restorationYearlyBreakdown: [],
   },
 };
