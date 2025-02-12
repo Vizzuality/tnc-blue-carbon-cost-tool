@@ -18,12 +18,37 @@ import {
 } from '@shared/dtos/custom-projects/custom-project-output.dto';
 import { PROJECT_DEVELOPMENT_TYPE } from '@shared/dtos/projects/project-development.type';
 import { OverridableCostInputsDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
-import { CostOutput } from '@api/modules/calculations/calculation.engine';
+import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
 
 export type CostPlans = Record<
   keyof OverridableCostInputsDto | string,
   CostPlanMap
 >;
+
+export type CostPlansOutput = {
+  totalOpex: number;
+  totalCapex: number;
+  totalCapexNPV: number;
+  totalOpexNPV: number;
+  totalNPV: number;
+  costPerTCO2e: number;
+  costPerHa: number;
+  npvCoveringCosts: number;
+  totalCreditsIssued: number;
+  IRROpex: number;
+  IRRTotalCost: number;
+  totalRevenueNPV: number;
+  totalRevenue: number;
+  financingCost: number;
+  fundingGap: number;
+  fundingGapNPV: number;
+  fundingGapPerTCO2e: number;
+  totalCommunityBenefitSharingFund: number;
+  annualNetCashFlow: CostPlanMap;
+  annualNetIncome: CostPlanMap;
+  estimatedRevenuePlan: CostPlanMap;
+  creditsIssuedPlan: CostPlanMap;
+};
 
 // TODO: Strongly type this to bound it to existing types
 export enum COST_KEYS {
@@ -73,7 +98,7 @@ export class CostCalculator {
     this.sequestrationRateCalculator = sequestrationRateCalculator;
   }
 
-  initializeCostPlans() {
+  initializeCostPlans(): CostPlansOutput {
     this.capexTotalCostPlan = this.initializeTotalCostPlan(
       this.defaultProjectLength,
     );
@@ -108,7 +133,7 @@ export class CostCalculator {
       totalCreditsIssued != 0 ? totalNPV / totalCreditsIssued : 0;
     const costPerHa = totalNPV / this.projectInput.projectSizeHa;
     const npvCoveringCosts =
-      this.projectInput.carbonRevenuesToCover === 'Opex'
+      this.projectInput.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
         ? totalRevenueNPV - totalOpexNPV
         : totalRevenueNPV - totalNPV;
     const financingCost =
@@ -126,11 +151,11 @@ export class CostCalculator {
         : totalCommunityBenefitSharingFundNPV / totalRevenueNPV;
 
     const npvToUse =
-      this.projectInput.carbonRevenuesToCover === 'Opex'
+      this.projectInput.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
         ? totalOpexNPV
         : totalNPV;
     const fundingGap = this.calculateFundingGap(npvToUse, totalRevenueNPV);
-    //// WE GOOD UP TO HERE
+
     const annualNetCashFlow =
       this.revenueProfitCalculator.calculateAnnualNetCashFlow(
         this.capexTotalCostPlan,
@@ -170,10 +195,14 @@ export class CostCalculator {
       fundingGapNPV,
       fundingGapPerTCO2e,
       totalCommunityBenefitSharingFund,
+      annualNetCashFlow,
+      annualNetIncome,
+      estimatedRevenuePlan,
+      creditsIssuedPlan,
     };
   }
 
-  getSummary(stuff: any): CustomProjectSummary {
+  getSummary(costPlanOutput: CostPlansOutput): CustomProjectSummary {
     const {
       costPerTCO2e,
       costPerHa,
@@ -191,7 +220,7 @@ export class CostCalculator {
       fundingGapNPV,
       fundingGapPerTCO2e,
       totalCommunityBenefitSharingFund,
-    } = stuff;
+    } = costPlanOutput;
     return {
       '$/tCO2e (total cost, NPV)': costPerTCO2e,
       '$/ha': costPerHa,
@@ -213,13 +242,13 @@ export class CostCalculator {
     };
   }
 
-  getCostDetails(stuff: any): {
+  getCostDetails(costPlanOutput: CostPlansOutput): {
     total: CustomProjectCostDetails;
     npv: CustomProjectCostDetails;
   } {
     const discountRate = this.projectInput.assumptions.discountRate;
     const { totalOpex, totalCapex, totalCapexNPV, totalOpexNPV, totalNPV } =
-      stuff;
+      costPlanOutput;
     return {
       total: {
         capitalExpenditure: totalCapex,
@@ -323,7 +352,16 @@ export class CostCalculator {
     };
   }
 
-  getYearlyBreakdown(costOutputs: any): any {
+  getYearlyBreakdown(costPlanOutput: CostPlansOutput): any {
+    const {
+      annualNetCashFlow,
+      annualNetIncome,
+      estimatedRevenuePlan,
+      creditsIssuedPlan,
+      totalOpexNPV,
+      totalNPV,
+      totalOpex,
+    } = costPlanOutput;
     const costPlans: CostPlans = structuredClone(this.costPlans);
     const discountRate = this.projectInput.assumptions.discountRate;
 
@@ -333,26 +371,9 @@ export class CostCalculator {
         value[year] = -cost;
       }
     }
-
-    // To calculate some plans, we need the non-negative capex and opex plans. But for some other plans, we need the negative capex and opex plans. Magic!
-    const capexTotalCostPlan = this.capexTotalCostPlan;
-    const opexTotalCostPlan = this.opexTotalCostPlan;
     const negativeOpexTotalCostPlan = costPlans.opexTotalCostPlan;
     const negativeCapexTotalCostPlan = costPlans.capexTotalCostPlan;
 
-    const estimatedRevenuePlan =
-      this.revenueProfitCalculator.calculateEstimatedRevenuePlan();
-    const creditsIssuedPlan =
-      this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
-    const annualNetCashFlow =
-      this.revenueProfitCalculator.calculateAnnualNetCashFlow(
-        capexTotalCostPlan,
-        opexTotalCostPlan,
-      );
-    const annualNetIncome =
-      this.revenueProfitCalculator.calculateAnnualNetIncome(opexTotalCostPlan);
-    // Get a summed cost plan for capex and opex
-    // TODO: totalCostPlan, estimatedRevenue and creditsIssued are yet to be included in the breakdown
     const totalCostPlan = Object.keys({
       ...negativeOpexTotalCostPlan,
       ...negativeCapexTotalCostPlan,
@@ -412,31 +433,31 @@ export class CostCalculator {
     const yearlyBreakdown: YearlyBreakdown[] = [];
     for (const costName in yearNormalizedCostPlans) {
       const costValues = yearNormalizedCostPlans[costName];
-      let totalCost = sum(Object.values(costValues));
-      let totalNPV = this.calculateNpv(costValues, discountRate);
+      let totalCostToSet = sum(Object.values(costValues));
+      let totalNPVtoSet = this.calculateNpv(costValues, discountRate);
       if (costName === 'opexTotalCostPlan') {
-        totalCost = -costOutputs.totalOpex;
-        totalNPV = -costOutputs.totalOpexNPV;
+        totalCostToSet = -totalOpex;
+        totalNPVtoSet = -totalOpexNPV;
       }
       if (costName === 'totalCostPlan') {
-        totalNPV = -costOutputs.totalNPV;
+        totalNPVtoSet = -totalNPV;
       }
       if (costName === 'creditsIssuedPlan') {
-        totalNPV = 0;
+        totalNPVtoSet = 0;
       }
       if (costName === 'cumulativeNetIncomePlan') {
-        totalCost = 0;
-        totalNPV = 0;
+        totalCostToSet = 0;
+        totalNPVtoSet = 0;
       }
       if (costName === 'cumulativeNetIncomeCapexOpex') {
-        totalCost = 0;
-        totalNPV = 0;
+        totalCostToSet = 0;
+        totalNPVtoSet = 0;
       }
 
       yearlyBreakdown.push({
         costName: costName as YearlyBreakdownCostName,
-        totalCost,
-        totalNPV,
+        totalCost: totalCostToSet,
+        totalNPV: totalNPVtoSet,
         costValues,
       });
     }

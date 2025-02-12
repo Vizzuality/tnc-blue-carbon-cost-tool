@@ -5,7 +5,6 @@ expect.extend({
       const fullPath = path.length ? path.join(' -> ') : 'root';
       if (typeof a === 'number' && typeof b === 'number') {
         if (Math.abs(a - b) > tolerance) {
-          // Rojo para received, verde para expected
           diffs.push(
             `At ${fullPath}: \x1b[31m${a}\x1b[0m vs \x1b[32m${b}\x1b[0m`,
           );
