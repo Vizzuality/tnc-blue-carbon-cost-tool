@@ -77,6 +77,23 @@ export class DataIngestionExcelParser implements IExcelParser {
         throw new ExcelTabNotFoundError(sheetName);
       }
 
+      // We make sure headers are trimmed.
+      // We cannot see the space preceding the tab heading if we open the file using google sheets, excel online or numbers on mac.
+      // Quick localized fix that only applies to the 'Implementation labor' tab in order to avoid potential issues with other tabs.
+      if (sheetName === 'Implementation labor') {
+        const tabHeaders = (
+          utils.sheet_to_json(sheet, { header: 1, raw: true })[0] as string[]
+        ).map((header: any) => header.trim());
+
+        const parsedSheet = utils.sheet_to_json(sheet, {
+          header: tabHeaders,
+          range: 1,
+          raw: true,
+        });
+        parsedData[sheetName] = parsedSheet;
+        continue;
+      }
+
       const parsedSheet = utils.sheet_to_json(sheet, {
         raw: true,
       });
