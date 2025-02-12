@@ -34,7 +34,7 @@ export class MethodologyRepository {
         SELECT
             '${sourceConfig.category}' AS category, 
             '${sourceConfig.label}' AS name, 
-            JSONB_OBJECT_AGG(source_type, sources) AS sources
+            JSONB_OBJECT_AGG(sources_subquery.source_type, sources_subquery.sources) AS sources
         FROM
         (
             SELECT 
@@ -55,7 +55,7 @@ export class MethodologyRepository {
                 ORDER BY t2.source_type, t1.id, t1.name
             ) AS source_distinct
             GROUP BY source_distinct.source_type
-        ) UNION ALL`;
+        ) AS sources_subquery UNION ALL`;
       }
     }
     if (this.manyToManySourcesSql === '') {
