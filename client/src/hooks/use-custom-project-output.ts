@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { ConservationProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import { CUSTOM_PROJECT_PRICE_TYPE } from "@shared/dtos/custom-projects/custom-projects.enums";
 import {
   CARBON_REVENUES_TO_COVER,
@@ -38,8 +39,18 @@ export const useCustomProjectOutput = (
         activity: data.activity,
         carbonRevenuesToCover: output?.carbonRevenuesToCover,
         initialCarbonPrice: output?.initialCarbonPrice,
-        lossRate: parseFloat(toPercentageValue(output?.lossRate ?? 0)),
-        emissionFactors: output?.emissionFactors,
+        lossRate:
+          output instanceof ConservationProjectOutput
+            ? parseFloat(toPercentageValue(output?.lossRate ?? 0))
+            : 0,
+        emissionFactors:
+          output instanceof ConservationProjectOutput
+            ? output.emissionFactors
+            : undefined,
+        sequestrationRate:
+          output instanceof ConservationProjectOutput
+            ? undefined
+            : output?.sequestrationRate,
       },
     }),
     [data, output],
