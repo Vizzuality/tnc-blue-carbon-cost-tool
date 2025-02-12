@@ -3,17 +3,16 @@ import { renderHook } from "@testing-library/react";
 import { useDefaultFormValues } from "@/containers/projects/form/utils";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ACTIVITY } from "@shared/entities/activity.enum";
-import {
-  CARBON_REVENUES_TO_COVER,
-  PROJECT_SPECIFIC_EMISSION,
-} from "@shared/entities/custom-project.entity";
-import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
-import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
+import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import { COUNTRY_LIST, DEFAULT_ASSUMPTIONS, FAKE_PROJECT } from "./constants";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
 import { queryKeys } from "@/lib/query-keys";
+import {
+  DEFAULT_CONSERVATION_FORM_VALUES,
+  DEFAULT_RESTORATION_FORM_VALUES,
+} from "@/containers/projects/form/constants";
 
 const queryClient = new QueryClient();
 
@@ -71,14 +70,9 @@ describe("projects/form/default-values", () => {
       restorationRate: undefined,
       verificationFrequency: undefined,
     });
-    expect(defaultValues.current.parameters).toMatchObject({
-      projectSpecificLossRate: -0.003,
-      projectSpecificEmissionFactor: 15,
-      emissionFactorAGB: 200,
-      emissionFactorSOC: 15,
-      lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
-      emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
-      projectSpecificEmission: PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
+    expect(defaultValues.current.parameters).toEqual({
+      ...DEFAULT_CONSERVATION_FORM_VALUES.parameters,
+      ...DEFAULT_RESTORATION_FORM_VALUES.parameters,
     });
   });
 
@@ -109,10 +103,10 @@ describe("projects/form/default-values", () => {
     expect(defaultValues.current.carbonRevenuesToCover).equal(
       FAKE_PROJECT.input.carbonRevenuesToCover,
     );
-    expect(defaultValues.current.assumptions).toMatchObject(
+    expect(defaultValues.current.assumptions).toEqual(
       FAKE_PROJECT.input.assumptions,
     );
-    expect(defaultValues.current.parameters).toMatchObject(
+    expect(defaultValues.current.parameters).toEqual(
       FAKE_PROJECT.input.parameters,
     );
   });
