@@ -70,7 +70,7 @@ SELECT category, JSONB_AGG(JSONB_BUILD_OBJECT('name', name, 'sources', COALESCE(
 FROM (
     ${this.oneToNSourcesSql}
     ${this.manyToManySourcesSql}
-)
+) as joint_sources
 GROUP BY category
 ORDER BY category`;
     return this.dataSource.query(sql);
