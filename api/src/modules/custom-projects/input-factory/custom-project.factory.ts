@@ -238,14 +238,26 @@ export class CustomProjectFactory {
           costOutput.costPlans.totalOpexNPV;
 
     return {
-      lossRate: input.lossRate,
+      lossRate:
+        input.activity === ACTIVITY.CONSERVATION ? input.lossRate : undefined,
       carbonRevenuesToCover: input.carbonRevenuesToCover,
+      sequestrationRate:
+        input instanceof RestorationProjectInput
+          ? input.sequestrationRate
+          : undefined,
+      plantingSuccessRate:
+        input instanceof RestorationProjectInput
+          ? input.assumptions.plantingSuccessRate
+          : undefined,
       initialCarbonPrice: carbonPrice,
-      emissionFactors: {
-        emissionFactor: input.emissionFactor,
-        emissionFactorAgb: input.emissionFactorAgb,
-        emissionFactorSoc: input.emissionFactorSoc,
-      },
+      emissionFactors:
+        input.activity === ACTIVITY.CONSERVATION
+          ? {
+              emissionFactor: input.emissionFactor,
+              emissionFactorAgb: input.emissionFactorAgb,
+              emissionFactorSoc: input.emissionFactorSoc,
+            }
+          : undefined,
       totalProjectCost: {
         total: {
           total:
