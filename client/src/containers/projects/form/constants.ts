@@ -1,19 +1,18 @@
 import { ACTIVITY } from "@shared/entities/activity.enum";
-import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
-import {
-  ConservationCustomProjectSchema,
-  LOSS_RATE_USED,
-  RestorationCustomProjectSchema,
-} from "@shared/schemas/custom-projects/create-custom-project.schema";
-
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
 import {
   CARBON_REVENUES_TO_COVER,
   PROJECT_SPECIFIC_EMISSION,
 } from "@shared/entities/custom-project.entity";
-
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import {
+  ConservationCustomProjectSchema,
+  LOSS_RATE_USED,
+  RestorationCustomProjectSchema,
+} from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { z } from "zod";
+
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 export const DEFAULT_COMMON_FORM_VALUES: Omit<
   CustomProjectForm,

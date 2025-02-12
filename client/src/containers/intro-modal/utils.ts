@@ -9,7 +9,7 @@ const isServer = typeof window === "undefined";
 
 export const introItems = [
   {
-    title: "Project Overview",
+    title: "Projects Overview",
     description:
       "Explore and compare over 400 project scenarios with ease. Apply filters for location, ecosystem type, activity, cost, abatement potential and project size. The global map visualizes project blue carbon potential across 9 countries, enabling comparisons based on cost-to-abatement ratios. Additionally, use the comparison table for detailed cost and score analyses, and select a project for additional details.",
     icon: LayoutDashboardIcon,
