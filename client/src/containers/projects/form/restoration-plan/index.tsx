@@ -72,18 +72,18 @@ export default function RestorationPlanProjectForm() {
     ? Number(projectLength)
     : defaultRestorationProjectLength;
 
-  const DATA = useMemo(
-    () =>
-      Array.from({
-        length: (totalYears as NonNullable<typeof totalYears>) + 2,
-      })
-        .map((_, i) => ({
-          year: i - 1,
-          annualHectaresRestored: 0,
-        }))
-        .filter(({ year }) => year != 0),
-    [totalYears],
-  );
+  const DATA = useMemo(() => {
+    // Prevent array length from being greater than 42:
+    const arrayLength = totalYears && totalYears <= 40 ? totalYears + 2 : 42;
+    return Array.from({
+      length: arrayLength,
+    })
+      .map((_, i) => ({
+        year: i - 1,
+        annualHectaresRestored: 0,
+      }))
+      .filter(({ year }) => year != 0);
+  }, [totalYears]);
 
   const table = useReactTable({
     data: DATA,
