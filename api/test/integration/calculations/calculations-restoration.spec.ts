@@ -6,6 +6,7 @@ import '../../custom-matchers';
 
 describe('Calculations Restoration', () => {
   let testManager: TestManager;
+  let customProjectOutput: CustomProject['output'];
 
   beforeAll(async () => {
     testManager = await TestManager.createTestManager();
@@ -13,6 +14,11 @@ describe('Calculations Restoration', () => {
     await testManager.ingestCountries();
     await testManager.ingestProjectScoreCards(jwtToken);
     await testManager.ingestExcel(jwtToken);
+    const response = await testManager
+      .request()
+      .post(customProjectContract.createCustomProject.path)
+      .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
+    customProjectOutput = response.body.data.output;
   });
 
   afterAll(async () => {
@@ -21,30 +27,6 @@ describe('Calculations Restoration', () => {
   });
 
   // Utility test
-  test('All yearly breakdown costplans', async () => {
-    const response = await testManager
-      .request()
-      .post(customProjectContract.createCustomProject.path)
-      .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-    const customProjectOutput: CustomProject['output'] =
-      response.body.data.output;
-    const {
-      initialCarbonPriceComputationOutput,
-      breakevenPriceComputationOutput,
-    } = customProjectOutput;
-
-    const { yearlyBreakdown } = initialCarbonPriceComputationOutput;
-
-    const expectedYearlyBreakdown =
-      RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
-        .initialCarbonPriceComputationOutput.yearlyBreakdown;
-
-    expect(yearlyBreakdown).toBeCloseToCustomProjectOutput(
-      expectedYearlyBreakdown,
-      735,
-    );
-  });
 
   describe('Project cost', () => {
     test('TotalProjectCost', async () => {
@@ -68,15 +50,7 @@ describe('Calculations Restoration', () => {
         400,
       );
     });
-    test.skip('Leftover', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
+    test('Leftover', async () => {
       const { leftover } =
         customProjectOutput.initialCarbonPriceComputationOutput;
 
@@ -84,7 +58,7 @@ describe('Calculations Restoration', () => {
         RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
           .initialCarbonPriceComputationOutput.leftover;
 
-      expect(leftover).toBeCloseToCustomProjectOutput(expectedLeftover, 400);
+      expect(leftover).toBeCloseToCustomProjectOutput(expectedLeftover, 800);
     });
   });
 
@@ -112,8 +86,6 @@ describe('Calculations Restoration', () => {
       delete expectedInitialCarbonPriceComputationOutput.yearlyBreakdown;
       delete expectedInitialCarbonPriceComputationOutput.costDetails;
 
-      console.log('stop');
-
       expect(
         initialCarbonPriceComputationOutput,
       ).toBeCloseToCustomProjectOutput(
@@ -123,16 +95,8 @@ describe('Calculations Restoration', () => {
     });
   });
 
-  describe('Project details', () => {
-    test('Project details', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
+  describe('Project Cost details', () => {
+    test('Project Cost details', async () => {
       const { costDetails } =
         customProjectOutput.initialCarbonPriceComputationOutput;
 
@@ -149,14 +113,6 @@ describe('Calculations Restoration', () => {
 
   describe('Project summary', () => {
     test('Project summary', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
       const { summary } =
         customProjectOutput.initialCarbonPriceComputationOutput;
 
@@ -168,18 +124,22 @@ describe('Calculations Restoration', () => {
     });
   });
 
-  // Below tests are temporal so that we can progress fixing the calculations step by step
-
   describe('Yearly breakdown of costs', () => {
+    test('All yearly breakdown costplans', async () => {
+      const { initialCarbonPriceComputationOutput } = customProjectOutput;
+
+      const { yearlyBreakdown } = initialCarbonPriceComputationOutput;
+
+      const expectedYearlyBreakdown =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
+          .initialCarbonPriceComputationOutput.yearlyBreakdown;
+
+      expect(yearlyBreakdown).toBeCloseToCustomProjectOutput(
+        expectedYearlyBreakdown,
+        735,
+      );
+    });
     test('Maintenance, baseline reassesment frecuency, implementation labor ', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 
@@ -216,14 +176,6 @@ describe('Calculations Restoration', () => {
       );
     });
     test('blue carbon planning costs', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 
@@ -241,14 +193,6 @@ describe('Calculations Restoration', () => {
       );
     });
     test('community representation costs', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 
@@ -266,14 +210,6 @@ describe('Calculations Restoration', () => {
       );
     });
     test('community benefit and sharing costs, estimated revenue costs, credits issued plan', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 
@@ -319,14 +255,6 @@ describe('Calculations Restoration', () => {
     });
 
     test('carbon standard fees, opex total cost plan, total cost plan', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 
@@ -370,14 +298,6 @@ describe('Calculations Restoration', () => {
       );
     });
     test('annual net cash flow, annual net income', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 

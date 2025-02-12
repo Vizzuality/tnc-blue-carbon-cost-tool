@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   CostCalculator,
+  CostPlansOutput,
   ProjectInput,
 } from '@api/modules/calculations/cost.calculator';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
@@ -14,7 +15,7 @@ import {
 } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
 export type CostOutput = {
-  costPlans: any;
+  costPlans: CostPlansOutput;
   summary: CustomProjectSummary;
   yearlyBreakdown: YearlyBreakdown[];
   costDetails: {
@@ -51,6 +52,7 @@ export class CalculationEngine {
 
     // TODO: Type this, it might get confusing as costplans can have different values depending on the point in time
     const costPlans = costCalculator.initializeCostPlans();
+
     return {
       costPlans,
       summary: costCalculator.getSummary(costPlans),

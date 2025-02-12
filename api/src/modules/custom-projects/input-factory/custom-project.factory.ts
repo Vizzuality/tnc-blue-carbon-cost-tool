@@ -5,7 +5,10 @@ import { ConservationProjectInput } from '@api/modules/custom-projects/input-fac
 import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
 import { CostOutput } from '@api/modules/calculations/calculation.engine';
 import { ProjectInput } from '@api/modules/calculations/cost.calculator';
-import { CustomProject } from '@shared/entities/custom-project.entity';
+import {
+  CARBON_REVENUES_TO_COVER,
+  CustomProject,
+} from '@shared/entities/custom-project.entity';
 import { Country } from '@shared/entities/country.entity';
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import {
@@ -209,6 +212,31 @@ export class CustomProjectFactory {
       return null;
     }
 
+    // TODO: Unmantainable code, refactor once all calculations are fixed
+
+    const leftOverValueToSet: number =
+      input.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
+        ? costOutput.costPlans.totalRevenue - costOutput.costPlans.totalOpex
+        : costOutput.costPlans.totalRevenue -
+          (costOutput.costPlans.totalCapex + costOutput.costPlans.totalOpex);
+
+    const npvLeftOverValueToSet: number =
+      input.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
+        ? costOutput.costPlans.totalRevenueNPV -
+          (costOutput.costPlans.totalNPV + costOutput.costPlans.totalOpexNPV)
+        : costOutput.costPlans.totalRevenueNPV - costOutput.costPlans.totalNPV;
+
+    const leftOverCapexOrCapexAndOpexValueToSet: number =
+      input.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
+        ? costOutput.costPlans.totalOpex
+        : costOutput.costPlans.totalCapex + costOutput.costPlans.totalOpex;
+
+    const npvLeftOverCapexOrCapexAndOpexValueToSet: number =
+      input.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
+        ? costOutput.costPlans.totalOpexNPV
+        : costOutput.costPlans.totalCapexNPV +
+          costOutput.costPlans.totalOpexNPV;
+
     return {
       lossRate: input.lossRate,
       carbonRevenuesToCover: input.carbonRevenuesToCover,
@@ -235,23 +263,14 @@ export class CustomProjectFactory {
       },
       leftover: {
         total: {
-          total:
-            costOutput.costPlans.totalCapex + costOutput.costPlans.totalOpex,
-          leftover:
-            costOutput.costPlans.totalCapex +
-            costOutput.costPlans.totalOpex -
-            costOutput.costPlans.totalCapexNPV -
-            costOutput.costPlans.totalOpexNPV,
-          opex: costOutput.costPlans.totalOpex,
+          total: costOutput.costPlans.totalRevenue,
+          leftover: leftOverValueToSet,
+          opex: leftOverCapexOrCapexAndOpexValueToSet,
         },
         npv: {
-          total:
-            costOutput.costPlans.totalCapexNPV +
-            costOutput.costPlans.totalOpexNPV,
-          leftover:
-            costOutput.costPlans.totalCapexNPV +
-            costOutput.costPlans.totalOpexNPV,
-          opex: costOutput.costPlans.totalOpexNPV,
+          total: costOutput.costPlans.totalRevenueNPV,
+          leftover: npvLeftOverValueToSet,
+          opex: npvLeftOverCapexOrCapexAndOpexValueToSet,
         },
       },
       summary: costOutput.summary,
