@@ -134,12 +134,12 @@ const RESTORATION_MEXICO_MANGROVES_OUTPUT = {
       total: {
         total: 4041491,
         leftover: -10654052,
-        'opex+capex': 14695543,
+        opex: 14695543,
       },
       npv: {
         total: 2371315,
         leftover: -9466615,
-        'opex+capex': 11837930,
+        opex: 11837930,
       },
     },
     summary: {
