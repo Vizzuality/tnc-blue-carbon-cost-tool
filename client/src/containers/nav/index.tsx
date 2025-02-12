@@ -37,7 +37,7 @@ import {
 const navItems = {
   main: [
     {
-      title: "Project Overview",
+      title: "Projects Overview",
       url: "/",
       icon: LayoutDashboardIcon,
       match: (pathname: string) => pathname === "/",

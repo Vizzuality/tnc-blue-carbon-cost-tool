@@ -2,26 +2,25 @@ import { useCallback } from "react";
 
 import { Path, useFormContext } from "react-hook-form";
 
-import { useSession } from "next-auth/react";
-
+import { AssumptionsResponse } from "@shared/contracts/custom-projects.contract";
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject } from "@shared/entities/custom-project.entity";
 import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
-import { getQueryClient } from "@/app/providers";
 
-import { useQueryClient } from "@tanstack/react-query";
+import { getQueryClient } from "@/app/providers";
 
 import {
   DEFAULT_COMMON_FORM_VALUES,
   DEFAULT_CONSERVATION_FORM_VALUES,
 } from "@/containers/projects/form/constants";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
-
-import { AssumptionsResponse } from "@shared/contracts/custom-projects.contract";
 
 export const parseFormValues = (data: CustomProjectForm) => {
   const queryClient = getQueryClient();

@@ -20,7 +20,7 @@ const ProjectCost: FC<ProjectCostProps> = ({ total, capex, opex }) => {
   const setShowCostDetails = useSetAtom(showCostDetailsAtom);
 
   return (
-    <Card variant="secondary" className="flex-1 p-0">
+    <Card variant="secondary" className="grid flex-1 p-0">
       <CardHeader className="flex-row items-start justify-between gap-2 space-y-0 p-4">
         <div>
           <div className="flex items-center gap-2">
@@ -50,7 +50,7 @@ const ProjectCost: FC<ProjectCostProps> = ({ total, capex, opex }) => {
         </Button>
       </CardHeader>
 
-      <CardContent className="px-4 pb-4">
+      <CardContent className="flex flex-col justify-end px-4 pb-4">
         <GraphWithLegend
           total={total}
           items={[

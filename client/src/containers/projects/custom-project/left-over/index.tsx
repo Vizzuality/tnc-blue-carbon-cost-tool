@@ -19,7 +19,7 @@ interface LeftoverProps {
 
 const LeftOver: FC<LeftoverProps> = ({ data, title, tooltip }) => {
   return (
-    <Card variant="secondary" className="flex-1 p-0">
+    <Card variant="secondary" className="grid flex-1 p-0">
       <CardHeader className="p-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
@@ -38,7 +38,7 @@ const LeftOver: FC<LeftoverProps> = ({ data, title, tooltip }) => {
         </div>
       </CardHeader>
 
-      <CardContent className="px-4 pb-4">
+      <CardContent className="flex flex-col justify-end px-4 pb-4">
         {data && (
           <GraphWithLegend
             total={data.total}
