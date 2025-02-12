@@ -73,12 +73,13 @@ export default function RestorationPlanProjectForm() {
     : defaultRestorationProjectLength;
 
   const DATA = useMemo(() => {
-    // Prevent array length from being greater than 42:
     let arrayLength: number = 0;
 
-    if (totalYears) {
-      arrayLength = totalYears <= 40 ? totalYears + 2 : 42;
+    // Prevent array length from being greater than 42:
+    if (totalYears && totalYears > 0 && totalYears <= 40) {
+      arrayLength = totalYears + 2;
     }
+
     return Array.from({
       length: arrayLength,
     })
