@@ -10,7 +10,6 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
-import { DEFAULT_RESTORATION_FORM_VALUES } from "@/containers/projects/form/constants";
 import NumberFormItem from "@/containers/projects/form/number-form-item";
 import { useCustomProjectForm } from "@/containers/projects/form/utils";
 
@@ -189,9 +188,7 @@ export default function RestorationProjectDetails() {
                 formItemClassName="basis-1/2"
                 formControlClassName="after:content-['%']"
                 min={0}
-                initialValue={
-                  DEFAULT_RESTORATION_FORM_VALUES.parameters.plantingSuccessRate
-                }
+                initialValue={form.getValues("parameters.plantingSuccessRate")}
                 isPercentage
                 readOnly
                 disabled
@@ -255,13 +252,9 @@ export default function RestorationProjectDetails() {
                     formItemClassName="basis-1/2"
                     formControlClassName="after:content-['tCO2e/ha/yr']"
                     min={0}
-                    initialValue={
-                      form.getValues(
-                        "parameters.projectSpecificSequestrationRate",
-                      ) ??
-                      DEFAULT_RESTORATION_FORM_VALUES.parameters
-                        .projectSpecificSequestrationRate
-                    }
+                    initialValue={form.getValues(
+                      "parameters.projectSpecificSequestrationRate",
+                    )}
                     onValueChange={async (v) =>
                       handleFormChange(
                         "parameters.projectSpecificSequestrationRate",

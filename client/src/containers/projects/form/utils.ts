@@ -19,6 +19,7 @@ import { getQueryClient } from "@/app/providers";
 import {
   DEFAULT_COMMON_FORM_VALUES,
   DEFAULT_CONSERVATION_FORM_VALUES,
+  DEFAULT_RESTORATION_FORM_VALUES,
 } from "@/containers/projects/form/constants";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
 
@@ -257,6 +258,10 @@ export const useDefaultFormValues = (id?: string): CustomProjectForm => {
     activity: ACTIVITY.CONSERVATION,
     countryCode: countryOptions?.[0]?.value ?? "",
     initialCarbonPriceAssumption,
+    parameters: {
+      ...DEFAULT_CONSERVATION_FORM_VALUES.parameters,
+      ...DEFAULT_RESTORATION_FORM_VALUES.parameters,
+    },
   };
 };
 
