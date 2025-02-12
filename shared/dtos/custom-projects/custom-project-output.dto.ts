@@ -79,12 +79,14 @@ export type CustomProjectOutput = {
 };
 
 export class RestorationProjectOutput {
-  lossRate: number;
-  emissionFactors: {
-    emissionFactor: number | null;
-    emissionFactorAgb: number;
-    emissionFactorSoc: number;
-  };
+  // lossRate: number;
+  // emissionFactors: {
+  //   emissionFactor: number | null;
+  //   emissionFactorAgb: number;
+  //   emissionFactorSoc: number;
+  // };
+  sequestrationRate: number;
+  plantingSuccessRate: number;
   carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
   initialCarbonPrice: number;
   totalProjectCost: {

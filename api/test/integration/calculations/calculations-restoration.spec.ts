@@ -3,6 +3,7 @@ import { customProjectContract } from '@shared/contracts/custom-projects.contrac
 import { RESTORATION_MEXICO_MANGROVE_FIXTURES } from './fixtures/restoration-mexico-mangroves';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import '../../custom-matchers';
+import { RestorationProjectOutput } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
 describe('Calculations Restoration', () => {
   let testManager: TestManager;
@@ -30,14 +31,6 @@ describe('Calculations Restoration', () => {
 
   describe('Project cost', () => {
     test('TotalProjectCost', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
       const { totalProjectCost } =
         customProjectOutput.initialCarbonPriceComputationOutput;
 
@@ -62,35 +55,27 @@ describe('Calculations Restoration', () => {
     });
   });
 
-  describe.skip('Initial carbon price computation', () => {
-    test('Initial carbon price computation', async () => {
-      const response = await testManager
-        .request()
-        .post(customProjectContract.createCustomProject.path)
-        .send(RESTORATION_MEXICO_MANGROVE_FIXTURES.createDTO);
-
-      const customProjectOutput: CustomProject['output'] =
-        response.body.data.output;
-
+  describe('Project type specific values', () => {
+    test('Planting success rate and Sequestration rate', async () => {
       const { initialCarbonPriceComputationOutput } = customProjectOutput;
 
-      delete initialCarbonPriceComputationOutput.summary;
-      delete initialCarbonPriceComputationOutput.yearlyBreakdown;
-      delete initialCarbonPriceComputationOutput.costDetails;
+      const { plantingSuccessRate, sequestrationRate } =
+        initialCarbonPriceComputationOutput as RestorationProjectOutput;
 
       const expectedInitialCarbonPriceComputationOutput =
         RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
           .initialCarbonPriceComputationOutput;
 
-      delete expectedInitialCarbonPriceComputationOutput.summary;
-      delete expectedInitialCarbonPriceComputationOutput.yearlyBreakdown;
-      delete expectedInitialCarbonPriceComputationOutput.costDetails;
+      const {
+        plantingSuccessRate: expectedPlantingSuccessRate,
+        sequestrationRate: expectedSequestrationRate,
+      } = expectedInitialCarbonPriceComputationOutput;
 
-      expect(
-        initialCarbonPriceComputationOutput,
-      ).toBeCloseToCustomProjectOutput(
-        expectedInitialCarbonPriceComputationOutput,
-        400,
+      expect(plantingSuccessRate).toBeCloseToCustomProjectOutput(
+        expectedPlantingSuccessRate,
+      );
+      expect(sequestrationRate).toBeCloseToCustomProjectOutput(
+        expectedSequestrationRate,
       );
     });
   });
