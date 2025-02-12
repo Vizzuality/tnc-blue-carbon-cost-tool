@@ -7,6 +7,7 @@ import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject } from "@shared/entities/custom-project.entity";
 import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
+import { MAX_PROJECT_LENGTH } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
@@ -20,6 +21,7 @@ import {
   DEFAULT_COMMON_FORM_VALUES,
   DEFAULT_CONSERVATION_FORM_VALUES,
 } from "@/containers/projects/form/constants";
+import { RestorationPlanFormProperty } from "@/containers/projects/form/restoration-plan/columns";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 export const parseFormValues = (data: CustomProjectForm) => {
@@ -320,3 +322,32 @@ export const useCustomProjectForm = () => {
     handleFormChange,
   };
 };
+
+/**
+ *
+ * @param projectLength - The number of years the restoration project will run
+ *
+ * @param defaultLength - Fallback length to use if projectLength is not provided
+ *
+ * @returns An array of yearly restoration data where:
+ *          - First entry is year -1
+ *          - Followed by years 1 through projectLength
+ */
+export function getRestorationPlanTableData(
+  projectLength?: number | null,
+  defaultLength?: number,
+): RestorationPlanFormProperty[] {
+  const totalYears = projectLength ? Number(projectLength) : defaultLength;
+
+  if (!totalYears || totalYears <= 0 || totalYears > MAX_PROJECT_LENGTH) {
+    return [];
+  }
+
+  return [
+    { year: -1, annualHectaresRestored: 0 },
+    ...Array.from({ length: totalYears }, (_, i) => ({
+      year: i + 1,
+      annualHectaresRestored: 0,
+    })),
+  ];
+}
