@@ -43,8 +43,9 @@ export const parseFormValues = (data: CustomProjectForm) => {
       ecosystem: data.ecosystem,
       activity: data.activity,
       countryCode: data.countryCode,
-      // @ts-expect-error fix later
-      restorationActivity: data.parameters?.restorationActivity,
+      ...(data.activity === ACTIVITY.RESTORATION && {
+        restorationActivity: data.parameters?.restorationActivity,
+      }),
     }).queryKey,
   );
 
