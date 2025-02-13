@@ -1,7 +1,10 @@
+import {
+  MethodologySourcesConfig,
+  MethodologySourcesConfigEntry,
+} from '@shared/config/methodology.config.js';
 import { ModelComponentSourceM2M } from '@shared/entities/methodology/model-source-m2m.entity.js';
 import { ActionRequest, ActionResponse, ActionContext } from 'adminjs';
 import { dataSource } from 'backoffice/datasource.js';
-import { AVAILABLE_SOURCE_TYPES } from 'backoffice/resources/common/available-sources-types.js';
 
 export const fetchRelatedSourcesActionHandler = async (
   request: ActionRequest,
@@ -141,9 +144,17 @@ export const fetchAvailableSourceTypesActionHandler = async (
     }
 
     const resourceId = request!.query!.resourceId;
+    const sourceTypes =
+      (
+        MethodologySourcesConfig.find(
+          (row) =>
+            row.entity.name === resourceId && row.relationshipType === 'm2m',
+        ) as Extract<MethodologySourcesConfigEntry, { relationshipType: 'm2m' }>
+      )?.propertiesWithSources || [];
+
     return {
       record: record?.toJSON(currentAdmin),
-      sourceTypes: AVAILABLE_SOURCE_TYPES[resourceId] || [],
+      sourceTypes,
     };
   }
 };

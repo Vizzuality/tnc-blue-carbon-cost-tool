@@ -1,4 +1,4 @@
-import { MethodologySourcesConfig } from '@api/modules/methodology/methodology.config';
+import { MethodologySourcesConfig } from '@shared/config/methodology.config';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { MethodologySourcesDto } from '@shared/dtos/methodology/methodology-sources.dto';
 import { DataSource } from 'typeorm';
