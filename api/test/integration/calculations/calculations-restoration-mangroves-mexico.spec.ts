@@ -64,7 +64,7 @@ describe('Calculations Tests Case: Restoration Mangroves Mexico', () => {
     test('Planting success rate and Sequestration rate', async () => {
       const { initialCarbonPriceComputationOutput } = customProjectOutput;
 
-      const { plantingSuccessRate, sequestrationRate } =
+      const { plantingSuccessRate, sequestrationRate, initialCarbonPrice } =
         initialCarbonPriceComputationOutput as RestorationProjectOutput;
 
       const expectedInitialCarbonPriceComputationOutput =
@@ -74,6 +74,7 @@ describe('Calculations Tests Case: Restoration Mangroves Mexico', () => {
       const {
         plantingSuccessRate: expectedPlantingSuccessRate,
         sequestrationRate: expectedSequestrationRate,
+        initialCarbonPrice: expectedInitialCarbonPrice,
       } = expectedInitialCarbonPriceComputationOutput;
 
       expect(plantingSuccessRate).toBeCloseToCustomProjectOutput(
@@ -82,6 +83,7 @@ describe('Calculations Tests Case: Restoration Mangroves Mexico', () => {
       expect(sequestrationRate).toBeCloseToCustomProjectOutput(
         expectedSequestrationRate,
       );
+      expect(initialCarbonPrice).toEqual(expectedInitialCarbonPrice);
     });
   });
 

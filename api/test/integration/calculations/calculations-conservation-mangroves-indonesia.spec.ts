@@ -2,10 +2,10 @@ import { TestManager } from '../../utils/test-manager';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import '../../custom-matchers';
-import { ConservationProjectOutput } from '@shared/dtos/custom-projects/custom-project-output.dto';
 import { CONSERVATION_MANGROVE_INDONESIA } from './fixtures/conservation-indonesia-mangrove';
+import { ConservationProjectOutput } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
-describe('Calculations Conservation - Mangroves China', () => {
+describe('Calculations Tests Case: - Conservation Mangroves China', () => {
   let testManager: TestManager;
   let customProjectOutput: CustomProject['output'];
 
@@ -52,22 +52,21 @@ describe('Calculations Conservation - Mangroves China', () => {
       const expectedLeftover =
         CONSERVATION_MANGROVE_INDONESIA.expectedOutput
           .initialCarbonPriceComputationOutput.leftover;
-      expect(leftover).toBeCloseToCustomProjectOutput(expectedLeftover, 800);
+      expect(leftover).toBeCloseToCustomProjectOutput(expectedLeftover, 750);
     });
   });
 
   describe('Project type specific values', () => {
     test('Planting success rate and Sequestration rate', async () => {
       const { initialCarbonPriceComputationOutput } = customProjectOutput;
-      const { lossRate, emissionFactors } =
+      const { lossRate, emissionFactors, initialCarbonPrice } =
         initialCarbonPriceComputationOutput as ConservationProjectOutput;
       const expectedOutput =
         CONSERVATION_MANGROVE_INDONESIA.expectedOutput
           .initialCarbonPriceComputationOutput;
-      expect(lossRate).toBeCloseToCustomProjectOutput(expectedOutput.lossRate);
-      expect(emissionFactors).toBeCloseToCustomProjectOutput(
-        expectedOutput.emissionFactors,
-      );
+      expect(lossRate).toEqual(expectedOutput.lossRate);
+      expect(emissionFactors).toEqual(expectedOutput.emissionFactors);
+      expect(initialCarbonPrice).toEqual(expectedOutput.initialCarbonPrice);
     });
   });
 
