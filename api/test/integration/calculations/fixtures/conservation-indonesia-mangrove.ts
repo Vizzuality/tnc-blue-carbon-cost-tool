@@ -1,7 +1,63 @@
-export const CONSERVATION_INDONESIA_MANGROVE_OUTPUT = {
+import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
+import { ACTIVITY } from '@shared/entities/activity.enum';
+import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
+import {
+  CARBON_REVENUES_TO_COVER,
+  PROJECT_SPECIFIC_EMISSION,
+} from '@shared/entities/custom-project.entity';
+import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
+import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
+
+const CONSERVATION_INDONESIA_MANGROVE_CREATE_CUSTOM_PROJECT_DTO: CreateCustomProjectDto =
+  {
+    countryCode: 'IDN',
+    projectName: 'Conservation_Mangrove_Indonesia',
+    ecosystem: ECOSYSTEM.MANGROVE,
+    activity: ACTIVITY.CONSERVATION,
+    projectSizeHa: 10000,
+    carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.OPEX,
+    initialCarbonPriceAssumption: 20,
+    assumptions: {
+      verificationFrequency: 5,
+      baselineReassessmentFrequency: 10,
+      discountRate: 0.04,
+      carbonPriceIncrease: 0.015,
+      buffer: 0.2,
+      projectLength: 20,
+    },
+    costInputs: {
+      feasibilityAnalysis: 50000,
+      conservationPlanningAndAdmin: 166766.666666667,
+      dataCollectionAndFieldCost: 26666.6666666667,
+      communityRepresentation: 71183.3333333333,
+      blueCarbonProjectPlanning: 100000,
+      establishingCarbonRights: 46666.6666666667,
+      validation: 50000,
+      implementationLabor: 0,
+      monitoring: 15000,
+      maintenance: 0.0833,
+      communityBenefitSharingFund: 0.5,
+      carbonStandardFees: 0.2,
+      baselineReassessment: 40000,
+      mrv: 75000,
+      longTermProjectOperatingCost: 26400,
+      financingCost: 0.05,
+    },
+    parameters: {
+      lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
+      emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_2,
+      projectSpecificEmission: PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
+      projectSpecificLossRate: -0.001,
+      projectSpecificEmissionFactor: 15,
+      emissionFactorAGB: 200,
+      emissionFactorSOC: 15,
+    },
+  };
+
+const CONSERVATION_INDONESIA_MANGROVE_OUTPUT = {
   initialCarbonPriceComputationOutput: {
     lossRate: -0.001,
-    carbonRevenuesToCover: 'Opex',
+    carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.OPEX,
     initialCarbonPrice: 20,
     emissionFactors: {
       emissionFactor: null,
@@ -2129,4 +2185,9 @@ export const CONSERVATION_INDONESIA_MANGROVE_OUTPUT = {
       },
     ],
   },
+};
+
+export const CONSERVATION_MANGROVE_INDONESIA = {
+  createDTO: CONSERVATION_INDONESIA_MANGROVE_CREATE_CUSTOM_PROJECT_DTO,
+  expectedOutput: CONSERVATION_INDONESIA_MANGROVE_OUTPUT,
 };
