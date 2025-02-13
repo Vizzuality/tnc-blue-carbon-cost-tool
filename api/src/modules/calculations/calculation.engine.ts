@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   CostCalculator,
   CostPlansOutput,
@@ -26,6 +26,7 @@ export type CostOutput = {
 
 @Injectable()
 export class CalculationEngine {
+  logger = new Logger(CalculationEngine.name);
   constructor() {}
 
   calculateCostOutput(dto: {
@@ -50,7 +51,6 @@ export class CalculationEngine {
       sequestrationRateCalculator,
     );
 
-    // TODO: Type this, it might get confusing as costplans can have different values depending on the point in time
     const costPlans = costCalculator.initializeCostPlans();
 
     return {
@@ -86,11 +86,12 @@ export class CalculationEngine {
       creditsIssued = costOutput.summary['Credits issued'];
 
       if (Math.abs(npvCoveringCost) < tolerance) {
+        this.logger.log('Breakeven cost calculated successfully.');
         return { costOutput, breakevenCarbonPrice: carbonPrice };
       }
 
       if (creditsIssued === 0) {
-        console.error(
+        this.logger.error(
           'Credits issued are zero, breakeven cost cannot be calculated.',
         );
         return null;
@@ -99,7 +100,7 @@ export class CalculationEngine {
       carbonPrice -= npvCoveringCost / creditsIssued;
     }
 
-    console.error('Max iterations reached without convergence.');
+    this.logger.error('Max iterations reached without convergence.');
     return null;
   }
 }

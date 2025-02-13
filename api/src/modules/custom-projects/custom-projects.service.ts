@@ -25,6 +25,7 @@ import {
   CreateCustomProjectDto,
   OverridableCostInputsDto,
 } from '@shared/dtos/custom-projects/create-custom-project.dto';
+import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 
 export type CustomProjectFetchSpecificacion = z.infer<
   typeof customProjectsQuerySchema
@@ -81,7 +82,7 @@ export class CustomProjectsService extends AppBaseService<
 
     const breakevenPriceCostOutput =
       this.calculationEngine.calculateBreakevenPrice({
-        projectInput: structuredClone(projectInput),
+        projectInput,
         baseIncrease,
         baseSize,
         maxIterations: 100,
