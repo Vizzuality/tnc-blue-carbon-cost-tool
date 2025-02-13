@@ -6,7 +6,9 @@ import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity
  * Input received in the endpoint
  */
 
-const RESTORATION_CREATE_CUSTOM_PROJECT_DTO: CreateCustomProjectDto | any = {
+const RESTORATION_MANGROVES_MEXICO_CREATE_CUSTOM_PROJECT_DTO:
+  | CreateCustomProjectDto
+  | any = {
   countryCode: 'MEX',
   projectName: 'Restoration Mexico Mangrove',
   ecosystem: 'Mangrove',
@@ -1790,7 +1792,7 @@ const RESTORATION_MEXICO_MANGROVES_OUTPUT = {
 };
 
 export const RESTORATION_MEXICO_MANGROVE_FIXTURES = {
-  createDTO: RESTORATION_CREATE_CUSTOM_PROJECT_DTO,
+  createDTO: RESTORATION_MANGROVES_MEXICO_CREATE_CUSTOM_PROJECT_DTO,
   projectInput: RESTORATION_MEXICO_MANGROVES_PROJECT_INPUT,
   expectedOutput: RESTORATION_MEXICO_MANGROVES_OUTPUT,
 };
