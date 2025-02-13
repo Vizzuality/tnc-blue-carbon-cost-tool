@@ -27,7 +27,12 @@ describe('Calculations Restoration', () => {
     await testManager.close();
   });
 
-  // Utility test
+  test('Full Restoration Project Output', async () => {
+    expect(customProjectOutput).toBeCloseToCustomProjectOutput(
+      RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput,
+      750,
+    );
+  });
 
   describe('Project cost', () => {
     test('TotalProjectCost', async () => {
@@ -160,7 +165,7 @@ describe('Calculations Restoration', () => {
         expectedImplementationLabor,
       );
     });
-    test('blue carbon planning costs', async () => {
+    test('Blue carbon planning costs', async () => {
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 
@@ -177,7 +182,7 @@ describe('Calculations Restoration', () => {
         expectedBlueCarbonPlanning,
       );
     });
-    test('community representation costs', async () => {
+    test('Community representation costs', async () => {
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 
@@ -194,7 +199,7 @@ describe('Calculations Restoration', () => {
         expectedCommunityRepresentation,
       );
     });
-    test('community benefit and sharing costs, estimated revenue costs, credits issued plan', async () => {
+    test('Community benefit and sharing costs, estimated revenue costs, credits issued plan', async () => {
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 
@@ -239,7 +244,7 @@ describe('Calculations Restoration', () => {
       );
     });
 
-    test('carbon standard fees, opex total cost plan, total cost plan', async () => {
+    test('Carbon standard fees, opex total cost plan, total cost plan', async () => {
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 
@@ -282,7 +287,7 @@ describe('Calculations Restoration', () => {
         500,
       );
     });
-    test('annual net cash flow, annual net income', async () => {
+    test('Annual net cash flow, annual net income', async () => {
       const yearlyBreakdown =
         customProjectOutput.initialCarbonPriceComputationOutput.yearlyBreakdown;
 
@@ -311,6 +316,19 @@ describe('Calculations Restoration', () => {
       expect(annualNetIncome).toBeCloseToCustomProjectOutput(
         expectedAnnualNetIncome,
         400,
+      );
+    });
+  });
+  describe('Breakeven price', () => {
+    test('Breakeven price', async () => {
+      const { breakevenPriceComputationOutput } = customProjectOutput;
+
+      const expectedBreakevenPrice =
+        RESTORATION_MEXICO_MANGROVE_FIXTURES.expectedOutput
+          .breakevenPriceComputationOutput;
+
+      expect(breakevenPriceComputationOutput).toBeCloseToCustomProjectOutput(
+        expectedBreakevenPrice,
       );
     });
   });
