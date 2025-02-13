@@ -5,7 +5,7 @@ import { CustomProject } from '@shared/entities/custom-project.entity';
 import '../../custom-matchers';
 import { RestorationProjectOutput } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
-describe('Calculations Restoration', () => {
+describe('Calculations Tests Case: Restoration Mangroves Mexico', () => {
   let testManager: TestManager;
   let customProjectOutput: CustomProject['output'];
 
