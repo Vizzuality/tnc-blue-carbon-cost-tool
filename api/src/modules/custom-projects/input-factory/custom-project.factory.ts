@@ -223,7 +223,7 @@ export class CustomProjectFactory {
     const npvLeftOverValueToSet: number =
       input.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
         ? costOutput.costPlans.totalRevenueNPV -
-          (costOutput.costPlans.totalNPV + costOutput.costPlans.totalOpexNPV)
+          costOutput.costPlans.totalOpexNPV
         : costOutput.costPlans.totalRevenueNPV - costOutput.costPlans.totalNPV;
 
     const leftOverCapexOrCapexAndOpexValueToSet: number =
