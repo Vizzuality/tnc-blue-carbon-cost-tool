@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CalculationEngine } from '@api/modules/calculations/calculation.engine';
 import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory/custom-project.factory';
@@ -20,11 +20,13 @@ import { FetchSpecification } from 'nestjs-base-service';
 import { GetActivityTypesDefaults } from '@shared/dtos/custom-projects/get-activity-types-defaults.dto';
 import { z } from 'zod';
 import { customProjectsQuerySchema } from '@shared/contracts/custom-projects.contract';
-import { In } from 'typeorm';
 import {
   CreateCustomProjectDto,
   OverridableCostInputsDto,
 } from '@shared/dtos/custom-projects/create-custom-project.dto';
+import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
+import { ACTIVITY } from '@shared/entities/activity.enum';
+import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
 
 export type CustomProjectFetchSpecificacion = z.infer<
   typeof customProjectsQuerySchema
@@ -79,9 +81,20 @@ export class CustomProjectsService extends AppBaseService<
       baseSize,
     });
 
+    const projectInputClone =
+      projectInput.activity === ACTIVITY.CONSERVATION
+        ? Object.assign(
+            new ConservationProjectInput(),
+            structuredClone(projectInput),
+          )
+        : Object.assign(
+            new RestorationProjectInput(),
+            structuredClone(projectInput),
+          );
+
     const breakevenPriceCostOutput =
       this.calculationEngine.calculateBreakevenPrice({
-        projectInput,
+        projectInput: projectInputClone,
         baseIncrease,
         baseSize,
         maxIterations: 100,
