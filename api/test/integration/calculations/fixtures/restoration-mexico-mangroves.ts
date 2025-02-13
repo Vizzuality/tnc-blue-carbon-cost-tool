@@ -951,7 +951,7 @@ const RESTORATION_MEXICO_MANGROVES_OUTPUT = {
     ],
   },
   breakevenPriceComputationOutput: {
-    carbonRevenuesToCover: 'capex+Opex',
+    carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.CAPEX_AND_OPEX,
     sequestrationRate: 18.33333,
     plantingSuccessRate: 0.8,
     initialCarbonPrice: 269.5282137000882,
