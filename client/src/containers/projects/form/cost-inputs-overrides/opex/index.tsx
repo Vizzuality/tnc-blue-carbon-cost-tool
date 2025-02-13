@@ -33,7 +33,7 @@ export default function OpexCostInputsTable() {
     ecosystem,
     countryCode,
     activity,
-    restorationActivity,
+    ...(activity === ACTIVITY.RESTORATION && { restorationActivity }),
   });
   const { data, isSuccess } =
     client.customProjects.getDefaultCostInputs.useQuery(

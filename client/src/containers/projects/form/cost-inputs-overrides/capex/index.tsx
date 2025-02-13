@@ -33,7 +33,7 @@ export default function CapexCostInputsTable() {
     ecosystem,
     countryCode,
     activity,
-    restorationActivity,
+    ...(activity === ACTIVITY.RESTORATION && { restorationActivity }),
   });
 
   const { data, isSuccess } =
