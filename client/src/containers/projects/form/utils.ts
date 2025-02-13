@@ -329,6 +329,8 @@ export const useCustomProjectForm = () => {
  *
  * @param defaultLength - Fallback length to use if projectLength is not provided
  *
+ * @param maxProjectLength - The maximum number of years the restoration project can run
+ *
  * @returns An array of yearly restoration data where:
  *          - First entry is year -1
  *          - Followed by years 1 through projectLength
@@ -336,10 +338,16 @@ export const useCustomProjectForm = () => {
 export function getRestorationPlanTableData(
   projectLength?: number | null,
   defaultLength?: number,
+  maxProjectLength?: number,
 ): RestorationPlanFormProperty[] {
   const totalYears = projectLength ? Number(projectLength) : defaultLength;
+  let maxYears = MAX_PROJECT_LENGTH;
 
-  if (!totalYears || totalYears <= 0 || totalYears > MAX_PROJECT_LENGTH) {
+  if (typeof maxProjectLength === "number" && maxProjectLength > 0) {
+    maxYears = maxProjectLength;
+  }
+
+  if (!totalYears || totalYears <= 0 || totalYears > maxYears) {
     return [];
   }
 
