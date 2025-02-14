@@ -11,6 +11,7 @@ import {
 } from "@shared/entities/custom-project.entity";
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 
+export const MAX_PROJECT_LENGTH = 40;
 export enum LOSS_RATE_USED {
   NATIONAL_AVERAGE = "National average",
   PROJECT_SPECIFIC = "Project specific",
@@ -88,9 +89,13 @@ export const AssumptionsSchema = z.object({
   projectLength: z
     .preprocess(
       parseNumber,
-      z.number().positive().min(1).max(40, {
-        message: "Project Length should be between 1 and 40 years",
-      }),
+      z
+        .number()
+        .positive()
+        .min(1)
+        .max(MAX_PROJECT_LENGTH, {
+          message: `Project Length should be between 1 and ${MAX_PROJECT_LENGTH} years`,
+        }),
     )
     .optional(),
 });

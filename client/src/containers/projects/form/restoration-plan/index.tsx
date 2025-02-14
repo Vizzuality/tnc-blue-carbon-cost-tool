@@ -14,6 +14,7 @@ import { queryKeys } from "@/lib/query-keys";
 import { useFormValues } from "@/containers/projects/form/project-form";
 import { COLUMNS } from "@/containers/projects/form/restoration-plan/columns";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
+import { getRestorationPlanTableData } from "@/containers/projects/form/utils";
 
 import {
   Accordion,
@@ -68,21 +69,13 @@ export default function RestorationPlanProjectForm() {
       },
     );
 
-  const totalYears = projectLength
-    ? Number(projectLength)
-    : defaultRestorationProjectLength;
-
   const DATA = useMemo(
     () =>
-      Array.from({
-        length: (totalYears as NonNullable<typeof totalYears>) + 2,
-      })
-        .map((_, i) => ({
-          year: i - 1,
-          annualHectaresRestored: 0,
-        }))
-        .filter(({ year }) => year != 0),
-    [totalYears],
+      getRestorationPlanTableData(
+        projectLength,
+        defaultRestorationProjectLength,
+      ),
+    [projectLength, defaultRestorationProjectLength],
   );
 
   const table = useReactTable({
