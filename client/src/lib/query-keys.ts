@@ -90,6 +90,10 @@ export const customProjectKeys = createQueryKeys("customProjects", {
   }) => ["defaultActivityTypes", ecosystem, countryCode],
 });
 
+const methodologyKeys = createQueryKeys("methodology", {
+  sources: null,
+});
+
 export const queryKeys = mergeQueryKeys(
   authKeys,
   userKeys,
@@ -98,4 +102,5 @@ export const queryKeys = mergeQueryKeys(
   countriesKeys,
   customProjectKeys,
   projectKeys,
+  methodologyKeys,
 );

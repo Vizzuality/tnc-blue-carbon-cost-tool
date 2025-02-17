@@ -9,18 +9,18 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-interface TableHeader {
+interface MethodologyTableHeader {
   [key: string]: string;
 }
 
-interface TableRow {
+export interface MethodologyTableRow {
   [key: string]: string | number | React.ReactNode;
   category?: string;
 }
 
 interface MethodologyTableProps {
-  headers: TableHeader;
-  data: TableRow[];
+  headers: MethodologyTableHeader;
+  data: MethodologyTableRow[];
   categorized?: boolean;
 }
 
@@ -65,7 +65,7 @@ export default function MethodologyTable({
 
         return acc;
       },
-      {} as Record<string, TableRow[]>,
+      {} as Record<string, MethodologyTableRow[]>,
     );
 
     return (

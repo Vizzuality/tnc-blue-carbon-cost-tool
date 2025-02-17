@@ -111,6 +111,10 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-spline-sans)"],
       },
+      listStyleType: {
+        circle: "circle",
+        square: "square",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

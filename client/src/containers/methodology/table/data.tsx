@@ -525,3 +525,113 @@ export const qualitativeScorecardDetailsAndSourcesData = [
     ),
   },
 ];
+
+export const costComponentsHeaders = {
+  costInput: "Cost input",
+  baseCost: "Base cost",
+  units: "Units",
+};
+
+export const costComponentsData = [
+  {
+    costInput: "Feasibility analysis",
+    baseCost: "$50,000",
+    units: "$/project",
+    category: "CAPEX",
+  },
+  {
+    costInput: "Conservation planning and admin",
+    baseCost: "$166,767",
+    units: "$/yr",
+    category: "CAPEX",
+  },
+  {
+    costInput: "Data collection and field costs",
+    baseCost: "$26,667",
+    units: "$/yr",
+    category: "CAPEX",
+  },
+  {
+    costInput: "Community representation/liaison",
+    baseCost: "$71,183",
+    units: "$/yr",
+    category: "CAPEX",
+  },
+  {
+    costInput: "Blue carbon project planning",
+    baseCost: "$100,000",
+    units: "$/project",
+    category: "CAPEX",
+  },
+  {
+    costInput: "Establishing carbon rights",
+    baseCost: "$46,667",
+    units: "$/yr",
+    category: "CAPEX",
+  },
+  {
+    costInput: "Validation",
+    baseCost: "$50,000",
+    units: "$/project",
+    category: "CAPEX",
+  },
+  {
+    costInput: "Implementation labor",
+    baseCost: "$2,000",
+    units: "$/ha",
+    category: "CAPEX",
+  },
+  {
+    costInput: "Monitoring",
+    baseCost: "$15,000",
+    units: "$/yr",
+    category: "OPEX",
+  },
+  {
+    costInput: "Maintenance",
+    baseCost: "8%",
+    units: "% of implementation labor",
+    category: "OPEX",
+  },
+  {
+    costInput: "Landowner/community benefit share",
+    baseCost: "60%",
+    units: "% of revenue",
+    category: "OPEX",
+  },
+  {
+    costInput: "Carbon standard fees",
+    baseCost: "$0.20",
+    units: "$/credit",
+    category: "OPEX",
+  },
+  {
+    costInput: "Baseline reassessment",
+    baseCost: "$40,000",
+    units: "$/event",
+    category: "OPEX",
+  },
+  {
+    costInput: "MRV",
+    baseCost: "$75,000",
+    units: "$/event",
+    category: "OPEX",
+  },
+  {
+    costInput: "Long-term project operating",
+    baseCost: "$26,400",
+    units: "$/yr",
+    category: "OPEX",
+  },
+  {
+    costInput: "Financing cost",
+    baseCost: "5%",
+    units: "% of capex",
+    category: "Other",
+  },
+];
+
+export const sourcesHeaders = {
+  modelComponent: "Model component",
+  sources: "Sources",
+};
