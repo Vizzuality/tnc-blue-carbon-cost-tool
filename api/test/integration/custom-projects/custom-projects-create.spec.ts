@@ -34,7 +34,7 @@ describe('Create Custom Projects - Setup', () => {
             verificationFrequency: 5,
             baselineReassessmentFrequency: 10,
             discountRate: 0.04,
-            restorationRate: 250,
+            // restorationRate: 250,
             carbonPriceIncrease: 0.015,
             buffer: 0.2,
             projectLength: 20,

@@ -54,8 +54,31 @@ describe('Create Custom Projects - Request Validations', () => {
       expect(errors[0]).toStrictEqual(
         expect.objectContaining({
           status: '400',
+          title: 'Required',
+          detail:
+            '{"code":"invalid_type","expected":"object","received":"undefined","path":["assumptions"],"message":"Required"}',
+        }),
+      );
+      expect(errors[1]).toStrictEqual(
+        expect.objectContaining({
+          status: '400',
+          title: 'Required',
+          detail:
+            '{"code":"invalid_type","expected":"object","received":"undefined","path":["costInputs"],"message":"Required"}',
+        }),
+      );
+      expect(errors[2]).toStrictEqual(
+        expect.objectContaining({
+          status: '400',
           title:
             "Invalid enum value. Expected 'National average' | 'Project specific', received 'Invalid'",
+        }),
+      );
+      expect(errors[3]).toStrictEqual(
+        expect.objectContaining({
+          status: '400',
+          title: 'Required',
+          detail: `{"expected":"'One emission factor' | 'Two emission factors'","received":"undefined","code":"invalid_type","path":["parameters","projectSpecificEmission"],"message":"Required"}`,
         }),
       );
     });
@@ -101,9 +124,35 @@ describe('Create Custom Projects - Request Validations', () => {
             emissionFactorUsed: PROJECT_EMISSION_FACTORS.TIER_2,
             projectSpecificEmission: 'One emission factor',
           },
+          assumptions: {
+            verificationFrequency: 1,
+            baselineReassessmentFrequency: 1,
+            discountRate: 1,
+            restorationRate: 1,
+            carbonPriceIncrease: 1,
+            buffer: 1,
+            projectLength: 1,
+          },
+          costInputs: {
+            feasibilityAnalysis: 1,
+            conservationPlanningAndAdmin: 1,
+            dataCollectionAndFieldCost: 1,
+            communityRepresentation: 1,
+            blueCarbonProjectPlanning: 1,
+            establishingCarbonRights: 1,
+            validation: 1,
+            implementationLabor: 1,
+            monitoring: 1,
+            maintenance: 1,
+            communityBenefitSharingFund: 1,
+            carbonStandardFees: 1,
+            baselineReassessment: 1,
+            mrv: 1,
+            longTermProjectOperatingCost: 1,
+            financingCost: 1,
+          },
         });
 
-      expect(res.body.errors).toHaveLength(1);
       expect(res.body.errors[0].title).toEqual(
         'There is only Tier 2 emission factor for Mangrove ecosystems',
       );
@@ -124,6 +173,33 @@ describe('Create Custom Projects - Request Validations', () => {
             lossRateUsed: 'National average',
             emissionFactorUsed: PROJECT_EMISSION_FACTORS.TIER_3,
             projectSpecificEmission: 'Two emission factors',
+          },
+          assumptions: {
+            verificationFrequency: 1,
+            baselineReassessmentFrequency: 1,
+            discountRate: 1,
+            restorationRate: 1,
+            carbonPriceIncrease: 1,
+            buffer: 1,
+            projectLength: 1,
+          },
+          costInputs: {
+            feasibilityAnalysis: 1,
+            conservationPlanningAndAdmin: 1,
+            dataCollectionAndFieldCost: 1,
+            communityRepresentation: 1,
+            blueCarbonProjectPlanning: 1,
+            establishingCarbonRights: 1,
+            validation: 1,
+            implementationLabor: 1,
+            monitoring: 1,
+            maintenance: 1,
+            communityBenefitSharingFund: 1,
+            carbonStandardFees: 1,
+            baselineReassessment: 1,
+            mrv: 1,
+            longTermProjectOperatingCost: 1,
+            financingCost: 1,
           },
         });
       const errorTitles = response.body.errors.map((error) => error.title);
@@ -150,6 +226,32 @@ describe('Create Custom Projects - Request Validations', () => {
             lossRateUsed: 'National average',
             emissionFactorUsed: PROJECT_EMISSION_FACTORS.TIER_3,
             projectSpecificEmission: 'One emission factor',
+          },
+          assumptions: {
+            verificationFrequency: 1,
+            baselineReassessmentFrequency: 1,
+            discountRate: 1,
+            carbonPriceIncrease: 1,
+            buffer: 1,
+            projectLength: 1,
+          },
+          costInputs: {
+            feasibilityAnalysis: 1,
+            conservationPlanningAndAdmin: 1,
+            dataCollectionAndFieldCost: 1,
+            communityRepresentation: 1,
+            blueCarbonProjectPlanning: 1,
+            establishingCarbonRights: 1,
+            validation: 1,
+            implementationLabor: 1,
+            monitoring: 1,
+            maintenance: 1,
+            communityBenefitSharingFund: 1,
+            carbonStandardFees: 1,
+            baselineReassessment: 1,
+            mrv: 1,
+            longTermProjectOperatingCost: 1,
+            financingCost: 1,
           },
         });
       const errorTitles = response.body.errors.map((error) => error.title);

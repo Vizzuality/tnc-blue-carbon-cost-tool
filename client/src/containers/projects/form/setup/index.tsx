@@ -48,7 +48,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export type CustomProjectForm = z.infer<typeof CreateCustomProjectSchema>;
+export type ValidatedCustomProjectForm = z.infer<
+  typeof CreateCustomProjectSchema
+>;
+export type CustomProjectForm = Omit<
+  ValidatedCustomProjectForm,
+  "costInputs" | "assumptions"
+> & {
+  costInputs?: {
+    [K in keyof ValidatedCustomProjectForm["costInputs"]]: number | undefined;
+  };
+  assumptions?: {
+    [K in keyof ValidatedCustomProjectForm["assumptions"]]: number | undefined;
+  };
+};
 
 export default function SetupProjectForm() {
   const { queryKey } = queryKeys.customProjects.countries;

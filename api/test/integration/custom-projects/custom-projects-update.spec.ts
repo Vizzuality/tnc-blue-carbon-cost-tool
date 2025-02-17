@@ -50,8 +50,11 @@ describe('Update custom projects', () => {
           lossRateUsed: LOSS_RATE_USED.NATIONAL_AVERAGE,
           emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
           projectSpecificEmission: 'One emission factor',
-          projectSpecificLossRate: -0.5,
-          projectSpecificEmissionFactor: 0.5,
+          // These should be undefined
+          // projectSpecificLossRate: -0.5,
+          // projectSpecificEmissionFactor: 0.5,
+          projectSpecificLossRate: undefined,
+          projectSpecificEmissionFactor: undefined,
         },
       };
 
