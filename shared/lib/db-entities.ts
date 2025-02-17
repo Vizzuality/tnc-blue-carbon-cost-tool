@@ -25,6 +25,7 @@ import { ValidationCost } from "@shared/entities/cost-inputs/validation.entity";
 import { Country } from "@shared/entities/country.entity";
 import { ImplementationLaborCost } from "@shared/entities/cost-inputs/implementation-labor-cost.entity";
 import { Project } from "@shared/entities/projects.entity";
+import { Project2 } from "@shared/entities/projects2.entity";
 import { User } from "@shared/entities/users/user.entity";
 import { BaseSize } from "@shared/entities/base-size.entity";
 import { BaseIncrease } from "@shared/entities/base-increase.entity";
@@ -65,6 +66,7 @@ export const COMMON_DATABASE_ENTITIES = [
   MRV,
   SequestrationRate,
   Project,
+  Project2,
   EcosystemExtent,
   BaseDataView,
   ImplementationLaborCost,

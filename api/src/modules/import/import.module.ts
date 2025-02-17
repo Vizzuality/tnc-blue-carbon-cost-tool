@@ -1,3 +1,4 @@
+import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import { Module } from '@nestjs/common';
 import { ImportService } from './import.service';
 import { MulterModule } from '@nestjs/platform-express';
@@ -10,11 +11,13 @@ import { ImportEventHandler } from '@api/modules/import/events/handlers/import-e
 import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingestion.xlsx-parser';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
+import { CalculationsModule } from '@api/modules/calculations/calculations.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProjectScorecard]),
     MulterModule.register({}),
+    CalculationsModule,
   ],
   controllers: [ImportController],
   providers: [
@@ -22,6 +25,7 @@ import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
     EntityPreprocessor,
     ImportRepository,
     ImportEventHandler,
+    CustomProjectFactory,
     DataIngestionExcelParser,
     { provide: ExcelParserToken, useClass: XlsxParser },
   ],
