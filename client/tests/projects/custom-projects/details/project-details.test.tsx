@@ -23,6 +23,10 @@ describe("projects/custom-projects/details/project-details", () => {
       projectSize: 10000,
       activity: ACTIVITY.CONSERVATION,
       projectLength: 10,
+      initialCarbonPrice: {
+        label: "Initial carbon price",
+        value: 10,
+      },
     },
   };
 
