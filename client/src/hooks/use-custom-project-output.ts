@@ -1,7 +1,11 @@
 import { useMemo } from "react";
 
-import { ConservationProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
+import {
+  ConservationProjectOutput,
+  RestorationProjectOutput,
+} from "@shared/dtos/custom-projects/custom-project-output.dto";
 import { CUSTOM_PROJECT_PRICE_TYPE } from "@shared/dtos/custom-projects/custom-projects.enums";
+import { ACTIVITY } from "@shared/entities/activity.enum";
 import {
   CARBON_REVENUES_TO_COVER,
   CustomProject,
@@ -18,6 +22,18 @@ import {
 } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
 import { parseCostDetailsForTable } from "@/containers/projects/custom-project/cost-details/table/utils";
 import { useCustomProjectFilters } from "@/containers/projects/url-store";
+
+const initialCarbonPriceLabelMap = {
+  [CUSTOM_PROJECT_PRICE_TYPE.INITIAL_CARBON_PRICE_ASSUMPTION]:
+    "Initial carbon price",
+  [CUSTOM_PROJECT_PRICE_TYPE.BREAKEVEN_PRICE]: "OpEx breakeven price",
+};
+const isConservationProjectOutput = (
+  output: ConservationProjectOutput | RestorationProjectOutput | null,
+  activity: ACTIVITY,
+): output is ConservationProjectOutput => {
+  return activity === ACTIVITY.CONSERVATION;
+};
 
 export const useCustomProjectOutput = (
   data: InstanceType<typeof CustomProject>,
@@ -38,19 +54,19 @@ export const useCustomProjectOutput = (
         ecosystem: data.ecosystem,
         activity: data.activity,
         carbonRevenuesToCover: output?.carbonRevenuesToCover,
-        initialCarbonPrice: output?.initialCarbonPrice,
-        lossRate:
-          output instanceof ConservationProjectOutput
-            ? parseFloat(toPercentageValue(output?.lossRate ?? 0))
-            : 0,
-        emissionFactors:
-          output instanceof ConservationProjectOutput
-            ? output.emissionFactors
-            : undefined,
-        sequestrationRate:
-          output instanceof ConservationProjectOutput
-            ? undefined
-            : output?.sequestrationRate,
+        initialCarbonPrice: {
+          label: initialCarbonPriceLabelMap[priceType],
+          value: output?.initialCarbonPrice,
+        },
+        lossRate: isConservationProjectOutput(output, data.activity)
+          ? parseFloat(toPercentageValue(output?.lossRate ?? 0))
+          : null,
+        emissionFactors: isConservationProjectOutput(output, data.activity)
+          ? output.emissionFactors
+          : null,
+        sequestrationRate: isConservationProjectOutput(output, data.activity)
+          ? null
+          : output?.sequestrationRate,
         restorationActivity: data.input?.parameters?.restorationActivity,
       },
     };

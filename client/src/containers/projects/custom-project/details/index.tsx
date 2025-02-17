@@ -27,7 +27,10 @@ export interface ProjectDetailsProps {
     activity: ACTIVITY;
     lossRate?: number | null;
     carbonRevenuesToCover?: CARBON_REVENUES_TO_COVER;
-    initialCarbonPrice?: number;
+    initialCarbonPrice: {
+      label: string;
+      value?: number;
+    };
     emissionFactors?: {
       emissionFactor: number | null;
       emissionFactorAgb: number;
@@ -92,8 +95,8 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
           />
           <DetailItem label="Activity type" value={activity} />
           <DetailItem
-            label="Initial carbon price"
-            value={initialCarbonPrice}
+            label={initialCarbonPrice.label}
+            value={initialCarbonPrice.value}
             unit="$"
             numberFormatOptions={{
               maximumFractionDigits: 0,
