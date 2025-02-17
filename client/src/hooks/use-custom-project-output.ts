@@ -70,7 +70,7 @@ export const useCustomProjectOutput = (
         restorationActivity: data.input?.parameters?.restorationActivity,
       },
     };
-  }, [data, output]);
+  }, [data, output, priceType]);
 
   const costDetailsProps = useMemo(
     () =>

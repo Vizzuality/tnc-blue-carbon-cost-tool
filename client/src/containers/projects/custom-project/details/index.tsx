@@ -37,7 +37,7 @@ export interface ProjectDetailsProps {
       emissionFactorSoc: number;
     } | null;
     restorationActivity?: RESTORATION_ACTIVITY_SUBTYPE;
-    sequestrationRate?: number;
+    sequestrationRate?: number | null;
   };
 }
 
