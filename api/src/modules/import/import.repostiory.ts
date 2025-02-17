@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Project } from '@shared/entities/projects.entity';
-import { Project2 } from '@shared/entities/projects2.entity';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { FeasibilityAnalysis } from '@shared/entities/cost-inputs/feasability-analysis.entity';
 import { EcosystemExtent } from '@shared/entities/carbon-inputs/ecosystem-extent.entity';
@@ -11,7 +10,10 @@ import {
   EmissionFactors,
 } from '@shared/entities/carbon-inputs/emission-factors.entity';
 import { RestorableLand } from '@shared/entities/carbon-inputs/restorable-land.entity';
-import { SequestrationRate } from '@shared/entities/carbon-inputs/sequestration-rate.entity';
+import {
+  SEQUESTRATION_RATE_TIER_TYPES,
+  SequestrationRate,
+} from '@shared/entities/carbon-inputs/sequestration-rate.entity';
 import { BaselineReassessment } from '@shared/entities/cost-inputs/baseline-reassessment.entity';
 import { BlueCarbonProjectPlanning } from '@shared/entities/cost-inputs/blue-carbon-project-planning.entity';
 import { CarbonStandardFees } from '@shared/entities/cost-inputs/carbon-standard-fees.entity';
@@ -41,8 +43,37 @@ import {
   CARBON_REVENUES_TO_COVER,
   PROJECT_SPECIFIC_EMISSION,
 } from '@shared/entities/custom-project.entity';
-import { ACTIVITY } from '@shared/entities/activity.enum';
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from '@shared/entities/activity.enum';
 import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
+
+const DEFAULT_ASSUMPTIONS = {
+  baselineReassessmentFrequency: 10,
+  buffer: 0.2,
+  carbonPriceIncrease: 0.015,
+  discountRate: 0.04,
+  projectLength: 20,
+  verificationFrequency: 5,
+};
+
+const DEFAULT_CONSERVATION_PARAMS = {
+  lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
+  projectSpecificEmission: PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
+  projectSpecificEmissionFactor: 15,
+  projectSpecificLossRate: -0.003,
+  emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
+  emissionFactorAGB: 200,
+  emissionFactorSOC: 15,
+};
+
+const DEFAULT_RESTORATION_PARAMS = {
+  plantingSuccessRate: 0.008,
+  projectSpecificSequestrationRate: 15,
+  restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
+  tierSelector: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
+};
 
 @Injectable()
 export class ImportRepository {
@@ -169,19 +200,14 @@ export class ImportRepository {
   }
 
   async computeAndSaveProjects(projects: Project[]): Promise<void> {
-    const computedProjects: Project2[] = [];
-    for (let project of projects) {
-      if (project.activity == ACTIVITY.RESTORATION) {
-        continue;
-      }
-
+    const computedProjects: Project[] = [];
+    for (const project of projects) {
       const { countryCode, ecosystem, activity } = project;
       const {
         additionalBaseData,
         baseIncrease,
         baseSize,
         additionalAssumptions,
-        country,
       } = await this.dataRepository.getDataForCalculation({
         countryCode,
         ecosystem,
@@ -206,7 +232,7 @@ export class ImportRepository {
         baseSize,
       });
 
-      const computedProject = new Project2();
+      const computedProject = new Project();
       computedProject.projectName = project.projectName;
       computedProject.countryCode = project.countryCode;
       computedProject.ecosystem = project.ecosystem;
@@ -283,8 +309,6 @@ export class ImportRepository {
       computedProject.longTermProjectOperating =
         costOutputs.costDetails.total.longTermProjectOperatingCost;
       computedProject.initialPriceAssumption = project.initialPriceAssumption;
-      computedProject.leftoverAfterOpexNPV = 1;
-      computedProject.leftoverAfterOpex = 1;
       computedProject.totalRevenueNPV = costOutputs.costPlans.totalRevenueNPV;
       computedProject.totalRevenue = costOutputs.costPlans.totalRevenue;
       computedProject.creditsIssued = costOutputs.costPlans.totalCreditsIssued;
@@ -294,7 +318,7 @@ export class ImportRepository {
     }
 
     await this.dataSource.transaction('READ COMMITTED', async (manager) => {
-      await manager.clear(Project2);
+      await manager.clear(Project);
       await manager.save(computedProjects);
     });
   }
@@ -314,23 +338,11 @@ export class ImportRepository {
       initialCarbonPriceAssumption: project.initialPriceAssumption,
       costInputs: defaultCostInputs,
       // TODO: For imported projects, discuss default assumptions and parameteres with Elena
-      parameters: {
-        lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
-        projectSpecificEmission: PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
-        projectSpecificEmissionFactor: 15,
-        projectSpecificLossRate: -0.003,
-        emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
-        emissionFactorAGB: 200,
-        emissionFactorSOC: 15,
-      },
-      assumptions: {
-        baselineReassessmentFrequency: 10,
-        buffer: 0.2,
-        carbonPriceIncrease: 0.015,
-        discountRate: 0.04,
-        projectLength: 20,
-        verificationFrequency: 5,
-      },
+      parameters:
+        project.activity === ACTIVITY.CONSERVATION
+          ? DEFAULT_CONSERVATION_PARAMS
+          : DEFAULT_RESTORATION_PARAMS,
+      assumptions: DEFAULT_ASSUMPTIONS,
     };
   }
 }
