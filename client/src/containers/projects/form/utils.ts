@@ -23,9 +23,14 @@ import {
   DEFAULT_RESTORATION_FORM_VALUES,
 } from "@/containers/projects/form/constants";
 import { RestorationPlanFormProperty } from "@/containers/projects/form/restoration-plan/columns";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
+import {
+  CustomProjectForm,
+  ValidatedCustomProjectForm,
+} from "@/containers/projects/form/setup";
 
-export const parseFormValues = (data: CustomProjectForm) => {
+export const parseFormValues = (
+  data: CustomProjectForm,
+): ValidatedCustomProjectForm => {
   const queryClient = getQueryClient();
 
   const originalValues = { ...data };
@@ -46,7 +51,10 @@ export const parseFormValues = (data: CustomProjectForm) => {
       activity: data.activity,
       countryCode: data.countryCode,
       ...(data.activity === ACTIVITY.RESTORATION && {
-        restorationActivity: data.parameters?.restorationActivity,
+        restorationActivity:
+          "restorationActivity" in data.parameters
+            ? data.parameters.restorationActivity
+            : undefined,
       }),
     }).queryKey,
   );
@@ -130,7 +138,7 @@ export const parseFormValues = (data: CustomProjectForm) => {
         };
       }, {}),
     },
-  };
+  } as unknown as ValidatedCustomProjectForm;
 };
 
 /**
@@ -269,7 +277,7 @@ export const useDefaultFormValues = (id?: string): CustomProjectForm => {
 };
 
 export const updateCustomProject = async (options: {
-  body: CustomProjectForm;
+  body: ValidatedCustomProjectForm;
   params: { id: string };
   extraHeaders:
     | {
@@ -294,7 +302,7 @@ export const updateCustomProject = async (options: {
 };
 
 export const createCustomProject = async (options: {
-  body: CustomProjectForm;
+  body: ValidatedCustomProjectForm;
 }): Promise<ApiResponse<CustomProject>> => {
   try {
     const { status, body } =

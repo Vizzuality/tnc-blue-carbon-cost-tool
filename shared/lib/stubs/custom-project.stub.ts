@@ -5,9 +5,8 @@ import {
   CustomProject,
 } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import {LOSS_RATE_USED} from "@shared/schemas/custom-projects/create-custom-project.schema";
-import {EMISSION_FACTORS_TIER_TYPES} from "@shared/entities/carbon-inputs/emission-factors.entity";
-
+import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
 
 // TODO: research why this breaks in emission factors
 const DEFAULT_CONSERVATION_CUSTOM_PROJECT: CustomProject | any = {
@@ -706,7 +705,7 @@ const DEFAULT_CONSERVATION_CUSTOM_PROJECT: CustomProject | any = {
       verificationFrequency: 5,
       baselineReassessmentFrequency: 10,
       discountRate: 0.04,
-      restorationRate: 250,
+      // restorationRate: 250,
       carbonPriceIncrease: 0.015,
       buffer: 0.2,
       projectLength: 20,

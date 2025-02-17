@@ -73,74 +73,62 @@ export const RestorationCustomProjectSchema = z.object({
 });
 
 export const AssumptionsSchema = z.object({
-  verificationFrequency: z
-    .preprocess(parseNumber, z.number().positive())
-    .optional(),
-  baselineReassessmentFrequency: z
-    .preprocess(parseNumber, z.number().positive())
-    .optional(),
-  discountRate: z.preprocess(parseNumber, z.number().positive()).optional(),
+  verificationFrequency: z.preprocess(parseNumber, z.number().positive()),
+  baselineReassessmentFrequency: z.preprocess(
+    parseNumber,
+    z.number().positive(),
+  ),
+  discountRate: z.preprocess(parseNumber, z.number().positive()),
   restorationRate: z.preprocess(parseNumber, z.number().positive()).optional(),
-  carbonPriceIncrease: z
-    .preprocess(parseNumber, z.number().positive())
-    .optional(),
-  buffer: z.preprocess(parseNumber, z.number().positive()).optional(),
-  projectLength: z
-    .preprocess(
-      parseNumber,
-      z
-        .number()
-        .positive()
-        .min(1)
-        .max(MAX_PROJECT_LENGTH, {
-          message: `Project Length should be between 1 and ${MAX_PROJECT_LENGTH} years`,
-        }),
-    )
-    .optional(),
+  carbonPriceIncrease: z.preprocess(parseNumber, z.number().positive()),
+  buffer: z.preprocess(parseNumber, z.number().positive()),
+  projectLength: z.preprocess(
+    parseNumber,
+    z
+      .number()
+      .positive()
+      .min(1)
+      .max(MAX_PROJECT_LENGTH, {
+        message: `Project Length should be between 1 and ${MAX_PROJECT_LENGTH} years`,
+      }),
+  ),
 });
 
 export const InputCostsSchema = z.object({
   // capex
-  feasibilityAnalysis: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
-  conservationPlanningAndAdmin: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
-  dataCollectionAndFieldCost: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
-  communityRepresentation: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
-  blueCarbonProjectPlanning: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
-  establishingCarbonRights: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
-  validation: z.preprocess(parseNumber, z.number().nonnegative()).optional(),
-  implementationLabor: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
+  feasibilityAnalysis: z.preprocess(parseNumber, z.number().nonnegative()),
+  conservationPlanningAndAdmin: z.preprocess(
+    parseNumber,
+    z.number().nonnegative(),
+  ),
+  dataCollectionAndFieldCost: z.preprocess(
+    parseNumber,
+    z.number().nonnegative(),
+  ),
+  communityRepresentation: z.preprocess(parseNumber, z.number().nonnegative()),
+  blueCarbonProjectPlanning: z.preprocess(
+    parseNumber,
+    z.number().nonnegative(),
+  ),
+  establishingCarbonRights: z.preprocess(parseNumber, z.number().nonnegative()),
+  validation: z.preprocess(parseNumber, z.number().nonnegative()),
+  implementationLabor: z.preprocess(parseNumber, z.number().nonnegative()),
   // opex
-  monitoring: z.preprocess(parseNumber, z.number().nonnegative()).optional(),
-  maintenance: z.preprocess(parseNumber, z.number().nonnegative()).optional(),
-  communityBenefitSharingFund: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
-  carbonStandardFees: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
-  baselineReassessment: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
-  mrv: z.preprocess(parseNumber, z.number().nonnegative()).optional(),
-  longTermProjectOperatingCost: z
-    .preprocess(parseNumber, z.number().nonnegative())
-    .optional(),
+  monitoring: z.preprocess(parseNumber, z.number().nonnegative()),
+  maintenance: z.preprocess(parseNumber, z.number().nonnegative()),
+  communityBenefitSharingFund: z.preprocess(
+    parseNumber,
+    z.number().nonnegative(),
+  ),
+  carbonStandardFees: z.preprocess(parseNumber, z.number().nonnegative()),
+  baselineReassessment: z.preprocess(parseNumber, z.number().nonnegative()),
+  mrv: z.preprocess(parseNumber, z.number().nonnegative()),
+  longTermProjectOperatingCost: z.preprocess(
+    parseNumber,
+    z.number().nonnegative(),
+  ),
   // other
-  financingCost: z.preprocess(parseNumber, z.number().nonnegative()).optional(),
+  financingCost: z.preprocess(parseNumber, z.number().nonnegative()),
 });
 
 export const CustomProjectBaseSchema = z.object({
@@ -151,8 +139,8 @@ export const CustomProjectBaseSchema = z.object({
   projectSizeHa: z.number().nonnegative(),
   carbonRevenuesToCover: z.nativeEnum(CARBON_REVENUES_TO_COVER),
   initialCarbonPriceAssumption: z.number().nonnegative(),
-  assumptions: AssumptionsSchema.optional(),
-  costInputs: InputCostsSchema.optional(),
+  assumptions: AssumptionsSchema,
+  costInputs: InputCostsSchema,
 });
 
 export const CreateCustomProjectSchema = z
@@ -174,7 +162,14 @@ export const CreateCustomProjectSchema = z
     } else if (data.activity === ACTIVITY.RESTORATION) {
       ValidateRestorationSchema(data, ctx);
     }
+
+    ValidateAssumptionsSchema(data, ctx);
   });
+
+export const CustomProjectBaseLooseSchema = CustomProjectBaseSchema.extend({
+  assumptions: AssumptionsSchema.partial().optional(),
+  costInputs: InputCostsSchema.partial().optional(),
+});
 
 // Complex validations that depend on multiple fields
 const ValidateConservationSchema = (
@@ -190,6 +185,15 @@ const ValidateConservationSchema = (
         code: z.ZodIssueCode.custom,
         message:
           "projectSpecificLossRate is required when lossRateUsed is projectSpecific",
+        path: ["parameters.projectSpecificLossRate"],
+      });
+    }
+  } else {
+    if (params.projectSpecificLossRate !== undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "projectSpecificLossRate should not be provided unless lossRateUsed is Project Specific",
         path: ["parameters.projectSpecificLossRate"],
       });
     }
@@ -259,5 +263,30 @@ const ValidateRestorationSchema = (
       message: "Project Specific Rate is required",
       path: ["parameters.projectSpecificSequestrationRate"],
     });
+  }
+};
+
+const ValidateAssumptionsSchema = (
+  data: z.infer<typeof CreateCustomProjectSchema>,
+  ctx: z.RefinementCtx,
+) => {
+  const { activity, assumptions } = data;
+  if (activity === ACTIVITY.RESTORATION) {
+    if (!assumptions.restorationRate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Restoration Rate should be provided for Restoration projects",
+        path: ["assumptions.restorationRate"],
+      });
+    }
+  } else if (activity === ACTIVITY.CONSERVATION) {
+    if (assumptions.restorationRate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "Restoration Rate should not be provided for Conservation projects",
+        path: ["assumptions.restorationRate"],
+      });
+    }
   }
 };
