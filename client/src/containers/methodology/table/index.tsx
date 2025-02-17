@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from "react";
+import { Fragment } from "react";
 
 import {
   Table,
@@ -9,85 +9,76 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-interface MethodologyTableHeader {
-  [key: string]: string;
-}
-
-export interface MethodologyTableRow {
-  [key: string]: string | number | React.ReactNode;
+export interface MethodologyBaseTableRow {
+  id: string;
   category?: string;
+  [key: string]: string | number | React.ReactNode | undefined;
 }
 
-interface MethodologyTableProps {
-  headers: MethodologyTableHeader;
-  data: MethodologyTableRow[];
+export interface MethodologyTableDefinition<T extends MethodologyBaseTableRow> {
+  headers: { [K in keyof Omit<T, "id" | "category">]: string };
+  rows: T[];
+}
+
+interface MethodologyTableProps<T extends MethodologyBaseTableRow> {
+  data: MethodologyTableDefinition<T>;
   categorized?: boolean;
 }
 
-export default function MethodologyTable({
-  headers,
+export default function MethodologyTable<T extends MethodologyBaseTableRow>({
   data,
   categorized = false,
-}: MethodologyTableProps) {
-  const RegularTable = useMemo(
-    () => (
-      <TableBody>
-        {data.map((row) => (
-          <TableRow
-            key={`methodology-table-row-${row.id}`}
-            className="divide-none"
-          >
-            {Object.keys(headers).map((key) => (
-              <TableCell
-                key={`table-cell-${row.id}-${key}`}
-                className="px-2 py-4 text-xs"
-              >
-                {row[key]}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-    ),
-    [data, headers],
+}: MethodologyTableProps<T>) {
+  const { headers, rows } = data;
+  const headerKeys = Object.keys(headers) as Array<keyof typeof headers>;
+
+  const RegularTable = (
+    <TableBody>
+      {rows.map((row) => (
+        <TableRow key={row.id} className="divide-none">
+          {headerKeys.map((key) => (
+            <TableCell
+              key={`table-cell-${row.id}-${String(key)}`}
+              className="px-2 py-4 text-xs"
+            >
+              {row[key]}
+            </TableCell>
+          ))}
+        </TableRow>
+      ))}
+    </TableBody>
   );
 
   const renderCategorizedTable = () => {
-    const groupedData = data.reduce(
+    const groupedData = rows.reduce(
       (acc, row) => {
         const category = row.category || "";
-
         if (!acc[category]) {
           acc[category] = [];
         }
-
         acc[category].push(row);
-
         return acc;
       },
-      {} as Record<string, MethodologyTableRow[]>,
+      {} as Record<string, T[]>,
     );
 
     return (
       <TableBody>
-        {Object.entries(groupedData).map(([category, rows]) => (
+        {Object.entries(groupedData).map(([category, categoryRows]) => (
           <Fragment key={`methodology-table-category-${category}`}>
-            {rows.map((row, rowIndex) => (
-              <TableRow
-                key={`methodology-table-row-${row.id}`}
-                className="divide-none"
-              >
+            {categoryRows.map((row, rowIndex) => (
+              <TableRow key={row.id} className="divide-none">
                 {rowIndex === 0 && (
                   <TableCell
-                    rowSpan={rows.length}
+                    rowSpan={categoryRows.length}
                     className="border-r px-2 py-4 align-middle text-xs font-semibold uppercase"
                   >
                     {category}
                   </TableCell>
                 )}
-                {Object.keys(headers).map((key) => (
+                {headerKeys.map((key) => (
                   <TableCell
-                    key={`methodology-table-cell-${row.id}-${key}`}
+                    key={`methodology-table-cell-${row.id}-${String(key)}`}
                     className="px-2 py-4 text-xs"
                   >
                     {row[key]}
@@ -107,11 +98,13 @@ export default function MethodologyTable({
         <TableHeader>
           <TableRow className="h-12 divide-none border-b-background px-2">
             {categorized && (
-              <TableHead className="w-32 bg-big-stone-800/70 text-xs font-normal"></TableHead>
+              <TableHead className="w-32 bg-big-stone-800/70 text-xs font-normal">
+                Category
+              </TableHead>
             )}
-            {Object.keys(headers).map((key) => (
+            {headerKeys.map((key) => (
               <TableHead
-                key={`methodology-table-header-${key}`}
+                key={`methodology-table-header-${String(key)}`}
                 className="bg-big-stone-800/70 text-xs font-normal"
               >
                 {headers[key]}

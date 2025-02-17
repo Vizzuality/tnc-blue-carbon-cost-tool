@@ -4,9 +4,7 @@ import MethodologyTable from "@/containers/methodology/table";
 import {
   assumptionsData,
   costComponentsData,
-  costComponentsHeaders,
 } from "@/containers/methodology/table/data";
-import { assumptionsHeaders } from "@/containers/methodology/table/data";
 import ContentWrapper from "@/containers/methodology/wrapper";
 
 import { List } from "@/components/ui/list";
@@ -173,7 +171,7 @@ const ModelAssumptions: MethodologySection = {
           description="Table below showcases the model assumptions that are universally applied to all projects:"
         />
       </ContentWrapper>
-      <MethodologyTable headers={assumptionsHeaders} data={assumptionsData} />
+      <MethodologyTable data={assumptionsData} />
       <ContentWrapper>
         <p>
           While these assumptions have default settings, users can overwrite
@@ -247,11 +245,7 @@ const ModelAssumptions: MethodologySection = {
           description="The table below shows default values for each cost component. These default values serve as a baseline, but users have the flexibility to customize the output by overwriting specific cost components."
         />
       </ContentWrapper>
-      <MethodologyTable
-        headers={costComponentsHeaders}
-        data={costComponentsData}
-        categorized
-      />
+      <MethodologyTable data={costComponentsData} categorized />
     </div>
   ),
 };

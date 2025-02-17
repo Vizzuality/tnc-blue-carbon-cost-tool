@@ -4,12 +4,13 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import MethodologyTable, {
-  MethodologyTableRow,
+  MethodologyTableDefinition,
+  MethodologyBaseTableRow,
 } from "@/containers/methodology/table";
 import { sourcesHeaders } from "@/containers/methodology/table/data";
 
 const getTableData = (data: MethodologySourcesDto) => {
-  const rows: MethodologyTableRow[] = [];
+  const rows: MethodologyTableDefinition<MethodologyBaseTableRow>["rows"] = [];
 
   data.forEach((item) => {
     const category = item.category;
@@ -18,6 +19,7 @@ const getTableData = (data: MethodologySourcesDto) => {
       const modelComponent = source.name;
 
       rows.push({
+        id: `${category}-${modelComponent}`,
         category,
         modelComponent,
         sources: getSourcesComponent(source.sources),
@@ -25,7 +27,7 @@ const getTableData = (data: MethodologySourcesDto) => {
     });
   });
 
-  return rows;
+  return { headers: sourcesHeaders, rows };
 };
 
 const getSourcesComponent = (
@@ -76,5 +78,5 @@ export default function Sources() {
     return null;
   }
 
-  return <MethodologyTable headers={sourcesHeaders} data={data} categorized />;
+  return <MethodologyTable data={data} categorized />;
 }

@@ -1,6 +1,5 @@
 import { MethodologySection } from "@/containers/methodology/sections";
 import MethodologyTable from "@/containers/methodology/table";
-import { projectCostsAssumptionsAndMethodologyHeaders } from "@/containers/methodology/table/data";
 import { projectCostsAssumptionsAndMethodologyData } from "@/containers/methodology/table/data";
 import ContentWrapper from "@/containers/methodology/wrapper";
 
@@ -18,7 +17,6 @@ const ProjectCostsAssumptionsAndMethodology: MethodologySection = {
         </p>
       </ContentWrapper>
       <MethodologyTable
-        headers={projectCostsAssumptionsAndMethodologyHeaders}
         data={projectCostsAssumptionsAndMethodologyData}
         categorized
       />

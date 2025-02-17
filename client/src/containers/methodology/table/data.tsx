@@ -1,635 +1,701 @@
-export const projectSizeAssumptionsHeaders = {
-  project: "Project",
-  projectSize: "Project Size",
-  restorationSize: "Restoration size in ha",
-  conservationSize: "Conservation size in ha (avoided loss area in ha)",
+export const projectSizeAssumptionsData = {
+  headers: {
+    project: "Project",
+    projectSize: "Project Size",
+    restorationSize: "Restoration size in ha",
+    conservationSize: "Conservation size in ha (avoided loss area in ha)",
+  },
+  rows: [
+    {
+      id: "project-size-assumptions-mangroves-small",
+      project: "Mangroves",
+      projectSize: "Small",
+      restorationSize: 100,
+      conservationSize: "4,000 (~100)",
+    },
+    {
+      id: "project-size-assumptions-salt-marshes-small",
+      project: "Salt Marshes",
+      projectSize: "Small",
+      restorationSize: 100,
+      conservationSize: "800 (~100)",
+    },
+    {
+      id: "project-size-assumptions-seagrass-small",
+      project: "Seagrass",
+      projectSize: "Small",
+      restorationSize: 100,
+      conservationSize: "400 (~100)",
+    },
+    {
+      id: "project-size-assumptions-mangroves-medium",
+      project: "Mangroves",
+      projectSize: "Medium",
+      restorationSize: 500,
+      conservationSize: "20,000 (~500)",
+    },
+    {
+      id: "project-size-assumptions-salt-marshes-medium",
+      project: "Salt Marshes",
+      projectSize: "Medium",
+      restorationSize: 500,
+      conservationSize: "4,000 (~500)",
+    },
+    {
+      id: "project-size-assumptions-seagrass-medium",
+      project: "Seagrass",
+      projectSize: "Medium",
+      restorationSize: 500,
+      conservationSize: "2,000  (~500)",
+    },
+    {
+      id: "project-size-assumptions-mangroves-large",
+      project: "Mangroves",
+      projectSize: "Large",
+      restorationSize: 1000,
+      conservationSize: "40,000 (~1,000)",
+    },
+    {
+      id: "project-size-assumptions-salt-marshes-large",
+      project: "Salt Marshes",
+      projectSize: "Large",
+      restorationSize: 1000,
+      conservationSize: "8,000 (~1,000)",
+    },
+    {
+      id: "project-size-assumptions-seagrass-large",
+      project: "Seagrass",
+      projectSize: "Large",
+      restorationSize: 1000,
+      conservationSize: "4,000 (~1,000)",
+    },
+  ],
 };
 
-export const projectSizeAssumptionsData = [
-  {
-    project: "Mangroves",
-    projectSize: "Small",
-    restorationSize: 100,
-    conservationSize: "4,000 (~100)",
+export const projectCostsAssumptionsAndMethodologyData = {
+  headers: {
+    costComponent: "Cost component",
+    costAssumption: "Cost assumption",
+    duration: "Duration",
+    whatDrivesTheCost: "What drives the cost",
   },
-  {
-    project: "Salt Marshes",
-    projectSize: "Small",
-    restorationSize: 100,
-    conservationSize: "800 (~100)",
-  },
-  {
-    project: "Seagrass",
-    projectSize: "Small",
-    restorationSize: 100,
-    conservationSize: "400 (~100)",
-  },
-  {
-    project: "Mangroves",
-    projectSize: "Medium",
-    restorationSize: 500,
-    conservationSize: "20,000 (~500)",
-  },
-  {
-    project: "Salt Marshes",
-    projectSize: "Medium",
-    restorationSize: 500,
-    conservationSize: "4,000 (~500)",
-  },
-  {
-    project: "Seagrass",
-    projectSize: "Medium",
-    restorationSize: 500,
-    conservationSize: "2,000  (~500)",
-  },
-  {
-    project: "Mangroves",
-    projectSize: "Large",
-    restorationSize: 1000,
-    conservationSize: "40,000 (~1,000)",
-  },
-  {
-    project: "Salt Marshes",
-    projectSize: "Large",
-    restorationSize: 1000,
-    conservationSize: "8,000 (~1,000)",
-  },
-  {
-    project: "Seagrass",
-    projectSize: "Large",
-    restorationSize: 1000,
-    conservationSize: "4,000 (~1,000)",
-  },
-];
-
-export const projectCostsAssumptionsAndMethodologyHeaders = {
-  costComponent: "Cost component",
-  costAssumption: "Cost assumption",
-  duration: "Duration",
-  whatDrivesTheCost: "What drives the cost",
+  rows: [
+    {
+      id: "project-costs-assumptions-and-methodology-feasibility-analysis",
+      costComponent: <p className="font-bold">Feasibility analysis</p>,
+      costAssumption: (
+        <ul>
+          <li>US: ~$100k</li>
+          <li>AUS/ BHS: ~$70k</li>
+          <li>Others: ~$50k</li>
+        </ul>
+      ),
+      duration: "One off cost",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Providers typically have minimum fees</li>
+          <li>Location accessibility</li>
+        </ul>
+      ),
+      category: "capex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-conservation-activity-planning-and-admin",
+      costComponent: (
+        <p className="font-bold">Conservation activity planning & admin</p>
+      ),
+      costAssumption: "~$167k/ year",
+      duration: "4 years (start up time)",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Conservation professional salary</li>
+          <li>Duration of project start up phase</li>
+        </ul>
+      ),
+      category: "capex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-data-collection-and-field-costs",
+      costComponent: (
+        <p className="font-bold">Data collection and field costs</p>
+      ),
+      costAssumption: "~$27k/ year",
+      duration: "3 years",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Location accessibility</li>
+          <li>Number, remoteness, and homogeneity of habitats</li>
+          <li>Vendor costs</li>
+        </ul>
+      ),
+      category: "capex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-community-representation-liaison",
+      costComponent: (
+        <p className="font-bold">Community representation/ liaison</p>
+      ),
+      costAssumption: "Between ~$65-126k /year, depending on country",
+      duration: "4 years (start up time)",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Number of communities and their remoteness</li>
+          <li>Duration of project start up phase</li>
+        </ul>
+      ),
+      category: "capex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-blue-carbon-project-planning",
+      costComponent: <p className="font-bold">Blue carbon project planning</p>,
+      costAssumption: "Between ~$43-120k/ year, depending on country",
+      duration: "3 years",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Providers have minimums for costs of doing validation</li>
+          <li>Location accessibility</li>
+        </ul>
+      ),
+      category: "capex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-establishing-carbon-rights",
+      costComponent: <p className="font-bold">Conservation activity</p>,
+      costAssumption: "~0",
+      duration: "N/A",
+      whatDrivesTheCost: "N/A",
+      category: "capex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-implementation-labor-and-engineering-activity",
+      costComponent: (
+        <p className="font-bold">
+          Implementation labor and engineering activity
+        </p>
+      ),
+      costAssumption: "Highly dependent per ha cost by country and ecosystem",
+      duration: "Dependent on restoration plan",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Type and severity of intervention necessary</li>
+          <li>Location accessibility</li>
+          <li>Labor costs within country</li>
+        </ul>
+      ),
+      category: "capex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-monitoring-guarding-surveilling",
+      costComponent: (
+        <p className="font-bold">Monitoring/ Guarding/ Surveilling</p>
+      ),
+      costAssumption: "Highly dependent on salaries in country",
+      duration: "Every year after project set up",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Project size</li>
+          <li>Degradation driver</li>
+          <li>Desire to employ more community members hired for this role</li>
+        </ul>
+      ),
+      category: "opex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-maintenance",
+      costComponent: <p className="font-bold">Maintenance</p>,
+      costAssumption:
+        "8% of implementation cost, for 3 years after the implementation",
+      duration: "Three years after implementation",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Scale of original implementation</li>
+        </ul>
+      ),
+      category: "opex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-community-benefit-sharing-fund",
+      costComponent: (
+        <p className="font-bold">Community benefit sharing fund</p>
+      ),
+      costAssumption:
+        "5% of carbon credit revenues (developed countries), 50%-85% (developing country)",
+      duration: "Each year with carbon credit revenues",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Value of other opportunities from land</li>
+          <li>
+            Degree of economic contribution to community from ecosystem
+            degradation
+          </li>
+        </ul>
+      ),
+      category: "opex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-baseline-reassessment",
+      costComponent: <p className="font-bold">Baseline Reassessment</p>,
+      costAssumption: "$40,000 / baseline reassessment",
+      duration: "Every 10 years",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>
+            Providers have minimums for costs of doing a baseline reassessment
+          </li>
+          <li>Location accessibility</li>
+        </ul>
+      ),
+      category: "opex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-measurement-reporting-and-verification-mrv",
+      costComponent: (
+        <p className="font-bold">
+          Measurement, Reporting and Verification (MRV)
+        </p>
+      ),
+      costAssumption: "$100k (US, AUS, BA), $75k (others)",
+      duration: "Every 5 years",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Providers have minimums for costs of doing an MRV</li>
+          <li>Location accessibility</li>
+        </ul>
+      ),
+      category: "opex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-long-term-project-operating-admin",
+      costComponent: (
+        <p className="font-bold">Long term project operating admin</p>
+      ),
+      costAssumption: "$17k-130k (depending on country)",
+      duration: "Every year",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Number of communities and their remoteness</li>
+          <li>Number, remoteness, and homogeneity of habitats</li>
+        </ul>
+      ),
+      category: "opex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-carbon-standard-fees",
+      costComponent: <p className="font-bold">Carbon standard fees</p>,
+      costAssumption: "$0.2 per Verified Carbon Unit (VCU)",
+      duration: "Each year when credits are issued",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>
+            Fee is set by third parties and has breakpoints based on credits
+            sold
+          </li>
+        </ul>
+      ),
+      category: "opex",
+    },
+    {
+      id: "project-costs-assumptions-and-methodology-financing-cost",
+      costComponent: <p className="font-bold">Financing cost</p>,
+      costAssumption: "5% of CAPEX",
+      duration: "One off cost",
+      whatDrivesTheCost: (
+        <ul className="list-disc">
+          <li>Cost of doing business in the project country</li>
+          <li>Magnitude of the funding gap</li>
+        </ul>
+      ),
+      category: "financing",
+    },
+  ],
 };
 
-export const projectCostsAssumptionsAndMethodologyData = [
-  {
-    costComponent: <p className="font-bold">Feasibility analysis</p>,
-    costAssumption: (
-      <ul>
-        <li>US: ~$100k</li>
-        <li>AUS/ BHS: ~$70k</li>
-        <li>Others: ~$50k</li>
-      </ul>
-    ),
-    duration: "One off cost",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Providers typically have minimum fees</li>
-        <li>Location accessibility</li>
-      </ul>
-    ),
-    category: "capex",
+export const assumptionsData = {
+  headers: {
+    assumptions: "Assumptions",
+    units: "Units",
+    value: "Value",
   },
-  {
-    costComponent: (
-      <p className="font-bold">Conservation activity planning & admin</p>
-    ),
-    costAssumption: "~$167k/ year",
-    duration: "4 years (start up time)",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Conservation professional salary</li>
-        <li>Duration of project start up phase</li>
-      </ul>
-    ),
-    category: "capex",
-  },
-  {
-    costComponent: <p className="font-bold">Data collection and field costs</p>,
-    costAssumption: "~$27k/ year",
-    duration: "3 years",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Location accessibility</li>
-        <li>Number, remoteness, and homogeneity of habitats</li>
-        <li>Vendor costs</li>
-      </ul>
-    ),
-    category: "capex",
-  },
-  {
-    costComponent: (
-      <p className="font-bold">Community representation/ liaison</p>
-    ),
-    costAssumption: "Between ~$65-126k /year, depending on country",
-    duration: "4 years (start up time)",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Number of communities and their remoteness</li>
-        <li>Duration of project start up phase</li>
-      </ul>
-    ),
-    category: "capex",
-  },
-  {
-    costComponent: <p className="font-bold">Blue carbon project planning</p>,
-    costAssumption: "Between ~$43-120k/ year, depending on country",
-    duration: "3 years",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Providers have minimums for costs of doing validation</li>
-        <li>Location accessibility</li>
-      </ul>
-    ),
-    category: "capex",
-  },
-  {
-    costComponent: <p className="font-bold">Conservation activity</p>,
-    costAssumption: "~0",
-    duration: "N/A",
-    whatDrivesTheCost: "N/A",
-    category: "capex",
-  },
-  {
-    costComponent: (
-      <p className="font-bold">Implementation labor and engineering activity</p>
-    ),
-    costAssumption: "Highly dependent per ha cost by country and ecosystem",
-    duration: "Dependent on restoration plan",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Type and severity of intervention necessary</li>
-        <li>Location accessibility</li>
-        <li>Labor costs within country</li>
-      </ul>
-    ),
-    category: "capex",
-  },
-  {
-    costComponent: (
-      <p className="font-bold">Monitoring/ Guarding/ Surveilling</p>
-    ),
-    costAssumption: "Highly dependent on salaries in country",
-    duration: "Every year after project set up",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Project size</li>
-        <li>Degradation driver</li>
-        <li>Desire to employ more community members hired for this role</li>
-      </ul>
-    ),
-    category: "opex",
-  },
-  {
-    costComponent: <p className="font-bold">Maintenance</p>,
-    costAssumption:
-      "8% of implementation cost, for 3 years after the implementation",
-    duration: "Three years after implementation",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Scale of original implementation</li>
-      </ul>
-    ),
-    category: "opex",
-  },
-  {
-    costComponent: <p className="font-bold">Community benefit sharing fund</p>,
-    costAssumption:
-      "5% of carbon credit revenues (developed countries), 50%-85% (developing country)",
-    duration: "Each year with carbon credit revenues",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Value of other opportunities from land</li>
-        <li>
-          Degree of economic contribution to community from ecosystem
-          degradation
-        </li>
-      </ul>
-    ),
-    category: "opex",
-  },
-  {
-    costComponent: <p className="font-bold">Baseline Reassessment</p>,
-    costAssumption: "$40,000 / baseline reassessment",
-    duration: "Every 10 years",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>
-          Providers have minimums for costs of doing a baseline reassessment
-        </li>
-        <li>Location accessibility</li>
-      </ul>
-    ),
-    category: "opex",
-  },
-  {
-    costComponent: (
-      <p className="font-bold">Measurement, Reporting and Verification (MRV)</p>
-    ),
-    costAssumption: "$100k (US, AUS, BA), $75k (others)",
-    duration: "Every 5 years",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Providers have minimums for costs of doing an MRV</li>
-        <li>Location accessibility</li>
-      </ul>
-    ),
-    category: "opex",
-  },
-  {
-    costComponent: (
-      <p className="font-bold">Long term project operating admin</p>
-    ),
-    costAssumption: "$17k-130k (depending on country)",
-    duration: "Every year",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Number of communities and their remoteness</li>
-        <li>Number, remoteness, and homogeneity of habitats</li>
-      </ul>
-    ),
-    category: "opex",
-  },
-  {
-    costComponent: <p className="font-bold">Carbon standard fees</p>,
-    costAssumption: "$0.2 per Verified Carbon Unit (VCU)",
-    duration: "Each year when credits are issued",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>
-          Fee is set by third parties and has breakpoints based on credits sold
-        </li>
-      </ul>
-    ),
-    category: "opex",
-  },
-  {
-    costComponent: <p className="font-bold">Financing cost</p>,
-    costAssumption: "5% of CAPEX",
-    duration: "One off cost",
-    whatDrivesTheCost: (
-      <ul className="list-disc">
-        <li>Cost of doing business in the project country</li>
-        <li>Magnitude of the funding gap</li>
-      </ul>
-    ),
-    category: "financing",
-  },
-];
-
-export const assumptionsHeaders = {
-  assumptions: "Assumptions",
-  units: "Units",
-  value: "Value",
+  rows: [
+    {
+      id: "assumptions-verification-frequency",
+      assumptions: "Verification frequency",
+      units: "yrs",
+      value: 5,
+    },
+    {
+      id: "assumptions-baseline-reassessment-frequency",
+      assumptions: "Baseline reassessment frequency",
+      units: "yrs",
+      value: 10,
+    },
+  ],
 };
 
-export const assumptionsData = [
-  {
-    assumptions: "Verification frequency",
-    units: "yrs",
-    value: 5,
+export const qualitativeScorecardDetailsAndSourcesData = {
+  headers: {
+    metric: "Metric",
+    weighting: "Weighting",
+    whatWeCanMeasure: "What we can measure",
+    howWeWillMeasure: "How we will measure",
+    variesBy: "Varies by",
+    sources: "Sources",
   },
-  {
-    assumptions: "Baseline reassessment frequency",
-    units: "yrs",
-    value: 10,
-  },
-];
-
-export const qualitativeScorecardDetailsAndSourcesHeaders = {
-  metric: "Metric",
-  weighting: "Weighting",
-  whatWeCanMeasure: "What we can measure",
-  howWeWillMeasure: "How we will measure",
-  variesBy: "Varies by",
-  sources: "Sources",
-};
-
-export const qualitativeScorecardDetailsAndSourcesData = [
-  {
-    metric: <span className="font-bold">Legal feasibility</span>,
-    weighting: 12,
-    whatWeCanMeasure: (
-      <ul className="space-y-2">
-        <li>Country stability, ability to protect legal rights</li>
-        <li>Government’s climate commitment</li>
-      </ul>
-    ),
-    howWeWillMeasure: (
-      <>
-        <p>Weighted average (of percentile):</p>
-        <ul className="list-disc">
-          <li>
-            Count of blue carbon projects (all) or AFOLU projects (only in
-            development or completed)
-          </li>
-          <li>Index of Economic Freedom</li>
-          <li>-NDC Commitment Strength</li>
+  rows: [
+    {
+      id: "qualitative-scorecard-details-and-sources-legal-feasibility",
+      metric: <span className="font-bold">Legal feasibility</span>,
+      weighting: 12,
+      whatWeCanMeasure: (
+        <ul className="space-y-2">
+          <li>Country stability, ability to protect legal rights</li>
+          <li>Government’s climate commitment</li>
         </ul>
-      </>
-    ),
-    variesBy: "Country",
-    sources: (
-      <ul className="space-y-2">
-        <li>Verra & Plan Vivo Registries</li>
-        <li>World Bank</li>
-        <li>Climate Watch</li>
-      </ul>
-    ),
-  },
-  {
-    metric: <span className="font-bold">Implementation risk score</span>,
-    weighting: 12,
-    whatWeCanMeasure: (
-      <p>Permanence risk from mangrove deforestation, or natural disasters</p>
-    ),
-    howWeWillMeasure: (
-      <>
-        <p>Weighted average (of percentile):</p>
-        <ul className="list-disc">
-          <li>Mangrove loss rate</li>
-          <li>
-            Disaster risk exposure rating (layered with specific info for key
-            countries)
-          </li>
+      ),
+      howWeWillMeasure: (
+        <>
+          <p>Weighted average (of percentile):</p>
+          <ul className="list-disc">
+            <li>
+              Count of blue carbon projects (all) or AFOLU projects (only in
+              development or completed)
+            </li>
+            <li>Index of Economic Freedom</li>
+            <li>-NDC Commitment Strength</li>
+          </ul>
+        </>
+      ),
+      variesBy: "Country",
+      sources: (
+        <ul className="space-y-2">
+          <li>Verra & Plan Vivo Registries</li>
+          <li>World Bank</li>
+          <li>Climate Watch</li>
         </ul>
-      </>
-    ),
-    variesBy: "Country",
-    sources: (
-      <ul className="space-y-2">
-        <li>Global Mangrove Watch</li>
-        <li>World Risk Report (RUB, IFHV)</li>
-      </ul>
-    ),
-  },
-  {
-    metric: <span className="font-bold">Social feasibility</span>,
-    weighting: 12,
-    whatWeCanMeasure: (
-      <p>
-        Leakage risk from community activities (e.g., deforestation for shrimp
-        farming)
-      </p>
-    ),
-    howWeWillMeasure: (
-      <>
-        <p>Qualitative analysis by ecosystem:</p>
-        <ul className="list-disc">
-          <li>
-            Likelihood communities will return to the destructive activities
-            that led to initial degradation
-          </li>
+      ),
+    },
+    {
+      id: "qualitative-scorecard-details-and-sources-implementation-risk-score",
+      metric: <span className="font-bold">Implementation risk score</span>,
+      weighting: 12,
+      whatWeCanMeasure: (
+        <p>Permanence risk from mangrove deforestation, or natural disasters</p>
+      ),
+      howWeWillMeasure: (
+        <>
+          <p>Weighted average (of percentile):</p>
+          <ul className="list-disc">
+            <li>Mangrove loss rate</li>
+            <li>
+              Disaster risk exposure rating (layered with specific info for key
+              countries)
+            </li>
+          </ul>
+        </>
+      ),
+      variesBy: "Country",
+      sources: (
+        <ul className="space-y-2">
+          <li>Global Mangrove Watch</li>
+          <li>World Risk Report (RUB, IFHV)</li>
         </ul>
-      </>
-    ),
-    variesBy: "Country / Ecosystem",
-    sources: (
-      <ul className="space-y-2">
-        <li>Independent research</li>
-        <li>Expert interviews</li>
-      </ul>
-    ),
-  },
-  {
-    metric: (
-      <span className="font-bold">Availability of experienced labor</span>
-    ),
-    weighting: 10,
-    whatWeCanMeasure: (
-      <p>Size of labor pool experienced in restoration or conservation work</p>
-    ),
-    howWeWillMeasure: (
-      <>
-        <p>Percentile:</p>
-        <ul className="list-disc">
-          <li>
-            Count of blue carbon projects (all) or AFOLU projects (only in
-            development or completed)
-          </li>
+      ),
+    },
+    {
+      id: "qualitative-scorecard-details-and-sources-social-feasibility",
+      metric: <span className="font-bold">Social feasibility</span>,
+      weighting: 12,
+      whatWeCanMeasure: (
+        <p>
+          Leakage risk from community activities (e.g., deforestation for shrimp
+          farming)
+        </p>
+      ),
+      howWeWillMeasure: (
+        <>
+          <p>Qualitative analysis by ecosystem:</p>
+          <ul className="list-disc">
+            <li>
+              Likelihood communities will return to the destructive activities
+              that led to initial degradation
+            </li>
+          </ul>
+        </>
+      ),
+      variesBy: "Country / Ecosystem",
+      sources: (
+        <ul className="space-y-2">
+          <li>Independent research</li>
+          <li>Expert interviews</li>
         </ul>
-      </>
-    ),
-    variesBy: "Country",
-    sources: (
-      <ul className="space-y-2">
-        <li>Verra & Plan Vivo Registries</li>
-      </ul>
-    ),
-  },
-  {
-    metric: <span className="font-bold">Security rating</span>,
-    weighting: 5,
-    whatWeCanMeasure: <p>Safety threat to on-the-ground team</p>,
-    howWeWillMeasure: (
-      <>
-        <p>Weighted average (of percentile):</p>
-        <ul className="list-disc">
-          <li>Global Peace Index</li>
+      ),
+    },
+    {
+      id: "qualitative-scorecard-details-and-sources-availability-of-experienced-labor",
+      metric: (
+        <span className="font-bold">Availability of experienced labor</span>
+      ),
+      weighting: 10,
+      whatWeCanMeasure: (
+        <p>
+          Size of labor pool experienced in restoration or conservation work
+        </p>
+      ),
+      howWeWillMeasure: (
+        <>
+          <p>Percentile:</p>
+          <ul className="list-disc">
+            <li>
+              Count of blue carbon projects (all) or AFOLU projects (only in
+              development or completed)
+            </li>
+          </ul>
+        </>
+      ),
+      variesBy: "Country",
+      sources: (
+        <ul className="space-y-2">
+          <li>Verra & Plan Vivo Registries</li>
+        </ul>
+      ),
+    },
+    {
+      id: "qualitative-scorecard-details-and-sources-security-rating",
+      metric: <span className="font-bold">Security rating</span>,
+      weighting: 5,
+      whatWeCanMeasure: <p>Safety threat to on-the-ground team</p>,
+      howWeWillMeasure: (
+        <>
+          <p>Weighted average (of percentile):</p>
+          <ul className="list-disc">
+            <li>Global Peace Index</li>
+            <li>US Travel Risk Rating</li>
+          </ul>
+        </>
+      ),
+      variesBy: "Country",
+      sources: (
+        <ul className="space-y-2">
+          <li>Institute for Economics & Peace</li>
           <li>US Travel Risk Rating</li>
         </ul>
-      </>
-    ),
-    variesBy: "Country",
-    sources: (
-      <ul className="space-y-2">
-        <li>Institute for Economics & Peace</li>
-        <li>US Travel Risk Rating</li>
-      </ul>
-    ),
-  },
-  {
-    metric: (
-      <span className="font-bold">Availability of alternative funding</span>
-    ),
-    weighting: 5,
-    whatWeCanMeasure: (
-      <p>
-        Countries providing funds to / or receiving funds from UNFCCC Green
-        Climate Fund
-      </p>
-    ),
-    howWeWillMeasure: (
-      <>
-        <p>Percentile:</p>
-        <ul className="list-disc">
-          <li>Contribution amount (for contributing nations)</li>
-          <li>Financing amount (for recipient nations)</li>
+      ),
+    },
+    {
+      id: "qualitative-scorecard-details-and-sources-availability-of-alternative-funding",
+      metric: (
+        <span className="font-bold">Availability of alternative funding</span>
+      ),
+      weighting: 5,
+      whatWeCanMeasure: (
+        <p>
+          Countries providing funds to / or receiving funds from UNFCCC Green
+          Climate Fund
+        </p>
+      ),
+      howWeWillMeasure: (
+        <>
+          <p>Percentile:</p>
+          <ul className="list-disc">
+            <li>Contribution amount (for contributing nations)</li>
+            <li>Financing amount (for recipient nations)</li>
+          </ul>
+        </>
+      ),
+      variesBy: "Country",
+      sources: (
+        <ul className="space-y-2">
+          <li>UNFCCC</li>
+          <li>Expert interviews</li>
         </ul>
-      </>
-    ),
-    variesBy: "Country",
-    sources: (
-      <ul className="space-y-2">
-        <li>UNFCCC</li>
-        <li>Expert interviews</li>
-      </ul>
-    ),
-  },
-  {
-    metric: <span className="font-bold">Coastal protection benefit</span>,
-    weighting: 3,
-    whatWeCanMeasure: (
-      <>
-        <p>Percentile:</p>
-        <ul className="list-disc">
+      ),
+    },
+    {
+      id: "qualitative-scorecard-details-and-sources-coastal-protection-benefit",
+      metric: <span className="font-bold">Coastal protection benefit</span>,
+      weighting: 3,
+      whatWeCanMeasure: (
+        <>
+          <p>Percentile:</p>
+          <ul className="list-disc">
+            <li>
+              Count of individuals receiving coastal resiliency benefit over
+              country population in low coastal zones
+            </li>
+          </ul>
+        </>
+      ),
+      howWeWillMeasure: (
+        <>
+          <p>Percentile:</p>
+          <ul className="list-disc">
+            <li>Contribution amount (for contributing nations)</li>
+            <li>Financing amount (for recipient nations)</li>
+          </ul>
+        </>
+      ),
+      variesBy: "Country / Eco",
+      sources: (
+        <ul className="space-y-2">
+          <li>TNC Naturebase co-benefit study</li>
+        </ul>
+      ),
+    },
+    {
+      id: "qualitative-scorecard-details-and-sources-biodiversity-benefit",
+      metric: <span className="font-bold">Biodiversity benefit</span>,
+      weighting: 3,
+      whatWeCanMeasure: (
+        <p>
+          Typical biodiversity co-benefits delivered by projects with same
+          ecosystem characteristics
+        </p>
+      ),
+      howWeWillMeasure: (
+        <>
+          <p>Percentile:</p>
+          <ul className="list-disc">
+            <li>
+              Size of overlap between top priority Marine Protected Areas (MPAs)
+              and country Exclusive Economic Zone (EEZs)
+            </li>
+          </ul>
+        </>
+      ),
+      variesBy: "Country",
+      sources: (
+        <ul className="space-y-2">
           <li>
-            Count of individuals receiving coastal resiliency benefit over
-            country population in low coastal zones
+            Priority Areas for Marine Biodiversity Conservation – University of
+            Auckland
           </li>
         </ul>
-      </>
-    ),
-    howWeWillMeasure: (
-      <>
-        <p>Percentile:</p>
-        <ul className="list-disc">
-          <li>Contribution amount (for contributing nations)</li>
-          <li>Financing amount (for recipient nations)</li>
-        </ul>
-      </>
-    ),
-    variesBy: "Country / Eco",
-    sources: (
-      <ul className="space-y-2">
-        <li>TNC Naturebase co-benefit study</li>
-      </ul>
-    ),
-  },
-  {
-    metric: <span className="font-bold">Biodiversity benefit</span>,
-    weighting: 3,
-    whatWeCanMeasure: (
-      <p>
-        Typical biodiversity co-benefits delivered by projects with same
-        ecosystem characteristics
-      </p>
-    ),
-    howWeWillMeasure: (
-      <>
-        <p>Percentile:</p>
-        <ul className="list-disc">
-          <li>
-            Size of overlap between top priority Marine Protected Areas (MPAs)
-            and country Exclusive Economic Zone (EEZs)
-          </li>
-        </ul>
-      </>
-    ),
-    variesBy: "Country",
-    sources: (
-      <ul className="space-y-2">
-        <li>
-          Priority Areas for Marine Biodiversity Conservation – University of
-          Auckland
-        </li>
-      </ul>
-    ),
-  },
-];
-
-export const costComponentsHeaders = {
-  costInput: "Cost input",
-  baseCost: "Base cost",
-  units: "Units",
+      ),
+    },
+  ],
 };
 
-export const costComponentsData = [
-  {
-    costInput: "Feasibility analysis",
-    baseCost: "$50,000",
-    units: "$/project",
-    category: "CAPEX",
+export const costComponentsData = {
+  headers: {
+    costInput: "Cost input",
+    baseCost: "Base cost",
+    units: "Units",
   },
-  {
-    costInput: "Conservation planning and admin",
-    baseCost: "$166,767",
-    units: "$/yr",
-    category: "CAPEX",
-  },
-  {
-    costInput: "Data collection and field costs",
-    baseCost: "$26,667",
-    units: "$/yr",
-    category: "CAPEX",
-  },
-  {
-    costInput: "Community representation/liaison",
-    baseCost: "$71,183",
-    units: "$/yr",
-    category: "CAPEX",
-  },
-  {
-    costInput: "Blue carbon project planning",
-    baseCost: "$100,000",
-    units: "$/project",
-    category: "CAPEX",
-  },
-  {
-    costInput: "Establishing carbon rights",
-    baseCost: "$46,667",
-    units: "$/yr",
-    category: "CAPEX",
-  },
-  {
-    costInput: "Validation",
-    baseCost: "$50,000",
-    units: "$/project",
-    category: "CAPEX",
-  },
-  {
-    costInput: "Implementation labor",
-    baseCost: "$2,000",
-    units: "$/ha",
-    category: "CAPEX",
-  },
-  {
-    costInput: "Monitoring",
-    baseCost: "$15,000",
-    units: "$/yr",
-    category: "OPEX",
-  },
-  {
-    costInput: "Maintenance",
-    baseCost: "8%",
-    units: "% of implementation labor",
-    category: "OPEX",
-  },
-  {
-    costInput: "Landowner/community benefit share",
-    baseCost: "60%",
-    units: "% of revenue",
-    category: "OPEX",
-  },
-  {
-    costInput: "Carbon standard fees",
-    baseCost: "$0.20",
-    units: "$/credit",
-    category: "OPEX",
-  },
-  {
-    costInput: "Baseline reassessment",
-    baseCost: "$40,000",
-    units: "$/event",
-    category: "OPEX",
-  },
-  {
-    costInput: "MRV",
-    baseCost: "$75,000",
-    units: "$/event",
-    category: "OPEX",
-  },
-  {
-    costInput: "Long-term project operating",
-    baseCost: "$26,400",
-    units: "$/yr",
-    category: "OPEX",
-  },
-  {
-    costInput: "Financing cost",
-    baseCost: "5%",
-    units: "% of capex",
-    category: "Other",
-  },
-];
+  rows: [
+    {
+      id: "cost-components-feasibility-analysis",
+      costInput: "Feasibility analysis",
+      baseCost: "$50,000",
+      units: "$/project",
+      category: "CAPEX",
+    },
+    {
+      id: "cost-components-conservation-planning-and-admin",
+      costInput: "Conservation planning and admin",
+      baseCost: "$166,767",
+      units: "$/yr",
+      category: "CAPEX",
+    },
+    {
+      id: "cost-components-data-collection-and-field-costs",
+      costInput: "Data collection and field costs",
+      baseCost: "$26,667",
+      units: "$/yr",
+      category: "CAPEX",
+    },
+    {
+      id: "cost-components-community-representation-liaison",
+      costInput: "Community representation/ liaison",
+      baseCost: "$71,183",
+      units: "$/yr",
+      category: "CAPEX",
+    },
+    {
+      id: "cost-components-blue-carbon-project-planning",
+      costInput: "Blue carbon project planning",
+      baseCost: "$100,000",
+      units: "$/project",
+      category: "CAPEX",
+    },
+    {
+      id: "cost-components-establishing-carbon-rights",
+      costInput: "Establishing carbon rights",
+      baseCost: "$46,667",
+      units: "$/yr",
+      category: "CAPEX",
+    },
+    {
+      id: "cost-components-validation",
+      costInput: "Validation",
+      baseCost: "$50,000",
+      units: "$/project",
+      category: "CAPEX",
+    },
+    {
+      id: "cost-components-implementation-labor",
+      costInput: "Implementation labor",
+      baseCost: "$2,000",
+      units: "$/ha",
+      category: "CAPEX",
+    },
+    {
+      id: "cost-components-monitoring",
+      costInput: "Monitoring",
+      baseCost: "$15,000",
+      units: "$/yr",
+      category: "OPEX",
+    },
+    {
+      id: "cost-components-maintenance",
+      costInput: "Maintenance",
+      baseCost: "8%",
+      units: "% of implementation labor",
+      category: "OPEX",
+    },
+    {
+      id: "cost-components-landowner-community-benefit-share",
+      costInput: "Landowner/community benefit share",
+      baseCost: "60%",
+      units: "% of revenue",
+      category: "OPEX",
+    },
+    {
+      id: "cost-components-carbon-standard-fees",
+      costInput: "Carbon standard fees",
+      baseCost: "$0.20",
+      units: "$/credit",
+      category: "OPEX",
+    },
+    {
+      id: "cost-components-baseline-reassessment",
+      costInput: "Baseline reassessment",
+      baseCost: "$40,000",
+      units: "$/event",
+      category: "OPEX",
+    },
+    {
+      id: "cost-components-mrv",
+      costInput: "MRV",
+      baseCost: "$75,000",
+      units: "$/event",
+      category: "OPEX",
+    },
+    {
+      id: "cost-components-long-term-project-operating",
+      costInput: "Long-term project operating",
+      baseCost: "$26,400",
+      units: "$/yr",
+      category: "OPEX",
+    },
+    {
+      id: "cost-components-financing-cost",
+      costInput: "Financing cost",
+      baseCost: "5%",
+      units: "% of capex",
+      category: "Other",
+    },
+  ],
+};
 
 export const sourcesHeaders = {
   modelComponent: "Model component",

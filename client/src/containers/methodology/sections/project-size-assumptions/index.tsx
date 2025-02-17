@@ -1,6 +1,5 @@
 import { MethodologySection } from "@/containers/methodology/sections";
 import MethodologyTable from "@/containers/methodology/table";
-import { projectSizeAssumptionsHeaders } from "@/containers/methodology/table/data";
 import { projectSizeAssumptionsData } from "@/containers/methodology/table/data";
 import ContentWrapper from "@/containers/methodology/wrapper";
 
@@ -21,10 +20,7 @@ const ProjectSizeAssumptions: MethodologySection = {
           project sizes for each activity and ecosystem:
         </p>
       </ContentWrapper>
-      <MethodologyTable
-        headers={projectSizeAssumptionsHeaders}
-        data={projectSizeAssumptionsData}
-      />
+      <MethodologyTable data={projectSizeAssumptionsData} />
     </div>
   ),
 };

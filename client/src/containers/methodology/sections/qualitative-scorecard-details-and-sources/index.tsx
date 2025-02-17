@@ -1,9 +1,6 @@
 import { MethodologySection } from "@/containers/methodology/sections";
 import MethodologyTable from "@/containers/methodology/table";
-import {
-  qualitativeScorecardDetailsAndSourcesData,
-  qualitativeScorecardDetailsAndSourcesHeaders,
-} from "@/containers/methodology/table/data";
+import { qualitativeScorecardDetailsAndSourcesData } from "@/containers/methodology/table/data";
 import ContentWrapper from "@/containers/methodology/wrapper";
 const QualitativeScorecardDetailsAndSources: MethodologySection = {
   id: "qualitative-scorecard-details-and-sources",
@@ -17,10 +14,7 @@ const QualitativeScorecardDetailsAndSources: MethodologySection = {
           metrics. 
         </p>
       </ContentWrapper>
-      <MethodologyTable
-        headers={qualitativeScorecardDetailsAndSourcesHeaders}
-        data={qualitativeScorecardDetailsAndSourcesData}
-      />
+      <MethodologyTable data={qualitativeScorecardDetailsAndSourcesData} />
     </div>
   ),
 };
