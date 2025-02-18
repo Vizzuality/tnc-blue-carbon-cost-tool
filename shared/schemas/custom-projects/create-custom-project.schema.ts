@@ -61,7 +61,6 @@ export const RestorationCustomProjectSchema = z.object({
     .number({ message: "Project Specific Rate should be a number" })
     .positive({ message: "Project Specific Rate must be positive" })
     .optional(),
-  // lossRateUsed: z.nativeEnum(LOSS_RATE_USED),
   plantingSuccessRate: z.preprocess(
     parseNumber,
     z.number().nonnegative({

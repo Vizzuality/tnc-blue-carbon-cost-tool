@@ -70,8 +70,14 @@ export default function SetupProjectForm() {
 
   const {
     activity,
-    // @ts-expect-error fix later
-    parameters: { emissionFactorUsed, tierSelector, restorationActivity },
+    parameters: {
+      // @ts-expect-error fix later
+      emissionFactorUsed,
+      // @ts-expect-error fix later
+      tierSelector,
+      // @ts-expect-error fix later
+      restorationActivity,
+    },
   } = useFormValues();
 
   const isDisabled = (ecosystem: ECOSYSTEM) => {
