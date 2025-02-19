@@ -18,6 +18,11 @@ export class AppController {
     return null;
   }
 
+  @Get('/test')
+  public test() {
+    return 'test';
+  }
+
   @Get('/health')
   @HealthCheck({ noCache: true })
   public checkHealth(): ControllerResponse {
