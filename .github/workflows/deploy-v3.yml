@@ -67,14 +67,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Build Client image and push to Amazon ECR
     steps:
-      - name: Debug environment name
-        run: |
-          echo "Environment set to: ${{ inputs.environment_name }}"
-          echo "GitHub Job Environment: ${{ github.job.environment }}"
-          echo "Available ENV variables:"
-          env | sort
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch_name }}
+          fetch-depth: 0
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -299,5 +296,7 @@ jobs:
           application_name: ${{ secrets.PROJECT_NAME}}-${{ inputs.environment_name }}
           environment_name: ${{ secrets.PROJECT_NAME}}-${{ inputs.environment_name }}-env
           region: ${{ secrets.AWS_REGION }}
+          ## TODO: use a meaningful version label: TAG for staging, decide what for dev
           version_label: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           deployment_package: infrastructure/source_bundle/deploy.zip
+          wait_for_environment_recovery: 60
