@@ -20,7 +20,7 @@ export class AppController {
 
   @Get('/test')
   public test() {
-    return 'test';
+    return 'test 2';
   }
 
   @Get('/health')
