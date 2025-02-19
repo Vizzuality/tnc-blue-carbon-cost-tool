@@ -1,17 +1,15 @@
 name: Release to Staging
 
 on:
-#  workflow_dispatch:
-#    inputs:
-#      version:
-#        description: 'New release candidate version (e.g. rc-1.0.0)'
-#        required: true
   workflow_call:
     inputs:
       version:
         description: 'New release candidate version (e.g. rc-1.0.0)'
         required: true
         type: string
+
+## TODO: Consider using: https://github.com/googleapis/release-please-action which automates the versioning based on conventional commits
+
 
 jobs:
   prepare_release:
@@ -29,12 +27,19 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Switch to staging branch and rebase from dev
+      - name: Switch to staging branch and fast-forward merge from dev
         run: |
           git checkout staging
-          git pull origin staging
-          git rebase origin/dev || (git rebase --abort && echo "Rebase failed, manual resolution required" && exit 1)
-          git push origin staging --force
+          git fetch origin dev
+          git merge --ff-only origin/dev || (echo "Fast-forward merge failed, manual resolution required" && exit 1)
+          git push origin staging
+
+      - name: Determine last release candidate tag
+        run: |
+          # Capture the previous release candidate tag; if none, use the initial commit as base.
+          LAST_TAG=$(git describe --tags --match "rc-*" --abbrev=0 2>/dev/null || echo "")
+          echo "LAST_TAG=${LAST_TAG}" >> $GITHUB_ENV
+          echo "Last tag: ${LAST_TAG}"
 
       - name: Generate release tag
         run: |
@@ -48,10 +53,14 @@ jobs:
 
       - name: Generate changelog
         run: |
-          LAST_TAG=$(git describe --tags --match "rc-*" --abbrev=0)
+          if [ -z "${{ env.LAST_TAG }}" ]; then
+            BASE_COMMIT=$(git rev-list --max-parents=0 HEAD)
+          else
+            BASE_COMMIT="${{ env.LAST_TAG }}"
+          fi
           echo "## Changelog for ${{ github.event.inputs.version }}" > CHANGELOG.md
-          echo "Generating changelog from tag: $LAST_TAG"
-          git log $LAST_TAG..HEAD --pretty=format:"- %s (%an, %ad)" --date=short >> CHANGELOG.md
+          echo "Generating changelog from commit: $BASE_COMMIT"
+          git log $BASE_COMMIT..HEAD --pretty=format:"- %s (%an, %ad)" --date=short >> CHANGELOG.md
           cat CHANGELOG.md
 
       - name: Create GitHub release
