@@ -8,6 +8,15 @@ import {
 } from 'backoffice/resources/common/many-2-many-sources.actions.js';
 import { EcosystemExtent } from '@shared/entities/carbon-inputs/ecosystem-extent.entity.js';
 
+const FIELD_ORDER = [
+  'countryCode',
+  'ecosystem',
+  'extent',
+  'historicExtent',
+  'unprotectedExtent',
+  'sources',
+];
+
 export const EcosystemExtentResource: ResourceWithOptions = {
   resource: EcosystemExtent,
   options: {
@@ -15,6 +24,9 @@ export const EcosystemExtentResource: ResourceWithOptions = {
       name: 'Data Management',
       icon: 'Database',
     },
+    listProperties: FIELD_ORDER,
+    showProperties: FIELD_ORDER,
+    editProperties: FIELD_ORDER,
     properties: {
       id: {
         isVisible: { list: false, show: true, edit: false, filter: false },

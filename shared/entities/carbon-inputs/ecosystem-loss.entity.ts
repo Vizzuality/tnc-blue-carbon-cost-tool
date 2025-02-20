@@ -30,6 +30,7 @@ export class EcosystemLoss extends BaseEntity {
   @Column("decimal", { name: "ecosystem_loss_rate", nullable: true })
   ecosystemLossRate: number;
 
+  @Column({ name: "source_id", type: "int4", nullable: true })
   @ManyToOne("ModelComponentSource", "ecosystemLosses", {
     onDelete: "CASCADE",
     nullable: true,

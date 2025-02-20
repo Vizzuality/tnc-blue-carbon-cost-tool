@@ -1,5 +1,6 @@
 export type ExcelValidation = {
   Country: string;
   'Country code': string;
-  Validation: number;
+  'Validation cost': number;
+  Source: string;
 };

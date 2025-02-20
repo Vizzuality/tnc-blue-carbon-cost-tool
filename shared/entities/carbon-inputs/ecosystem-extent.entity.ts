@@ -31,4 +31,7 @@ export class EcosystemExtent extends BaseEntity {
 
   @Column("decimal", { name: "historic_extent", nullable: true })
   historicExtent: number;
+
+  @Column("decimal", { name: "unprotected_extent", nullable: true })
+  unprotectedExtent: number;
 }

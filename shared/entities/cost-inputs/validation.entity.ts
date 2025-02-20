@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
+import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
 @Entity("validation_cost")
 @Unique(["country"])
@@ -24,4 +25,12 @@ export class ValidationCost extends BaseEntity {
 
   @Column("decimal", { name: "validation_cost" })
   validationCost: number;
+
+  @Column({ name: "source_id", type: "int", nullable: true })
+  @ManyToOne("ModelComponentSource", "validationCosts", {
+    onDelete: "CASCADE",
+    nullable: true,
+  })
+  @JoinColumn({ name: "source_id" })
+  source: ModelComponentSource;
 }

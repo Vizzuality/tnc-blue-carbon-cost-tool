@@ -26,6 +26,7 @@ export class FinancingCost extends BaseEntity {
   @Column("decimal", { name: "financing_cost_capex_percent" })
   financingCostCapexPercent: number;
 
+  @Column({ name: "source_id", type: "int", nullable: true })
   @ManyToOne("ModelComponentSource", "financingCost", {
     onDelete: "CASCADE",
     nullable: true,

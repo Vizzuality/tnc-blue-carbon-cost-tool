@@ -30,6 +30,7 @@ export class CommunityRepresentation extends BaseEntity {
   @Column("decimal", { name: "liaison_cost" })
   liaisonCost: number;
 
+  @Column({ name: "source_id", type: "int4", nullable: true })
   @ManyToOne("ModelComponentSource", "dataCollectionAndFieldCosts", {
     onDelete: "CASCADE",
     nullable: true,

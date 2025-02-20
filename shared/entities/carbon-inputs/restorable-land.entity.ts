@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
 @Entity("restorable_land")
 @Unique(["country", "ecosystem"])
@@ -28,4 +29,12 @@ export class RestorableLand extends BaseEntity {
 
   @Column("decimal", { name: "restorable_land", nullable: true })
   restorableLand: number;
+
+  @Column({ name: "source_id", type: "int4", nullable: true })
+  @ManyToOne("ModelComponentSource", "restorableLands", {
+    onDelete: "CASCADE",
+    nullable: true,
+  })
+  @JoinColumn({ name: "source_id" })
+  source: ModelComponentSource;
 }

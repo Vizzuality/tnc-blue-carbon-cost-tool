@@ -1,11 +1,13 @@
 import { EcosystemExtent } from "@shared/entities/carbon-inputs/ecosystem-extent.entity";
 import { EcosystemLoss } from "@shared/entities/carbon-inputs/ecosystem-loss.entity";
 import { EmissionFactors } from "@shared/entities/carbon-inputs/emission-factors.entity";
+import { RestorableLand } from "@shared/entities/carbon-inputs/restorable-land.entity";
 import { SequestrationRate } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import { BaselineReassessment } from "@shared/entities/cost-inputs/baseline-reassessment.entity";
 import { BlueCarbonProjectPlanning } from "@shared/entities/cost-inputs/blue-carbon-project-planning.entity";
 import { CarbonStandardFees } from "@shared/entities/cost-inputs/carbon-standard-fees.entity";
 import { CommunityBenefitSharingFund } from "@shared/entities/cost-inputs/community-benefit-sharing-fund.entity";
+import { CommunityCashFlow } from "@shared/entities/cost-inputs/community-cash-flow.entity";
 import { CommunityRepresentation } from "@shared/entities/cost-inputs/community-representation.entity";
 import { ConservationPlanningAndAdmin } from "@shared/entities/cost-inputs/conservation-and-planning-admin.entity";
 import { DataCollectionAndFieldCosts } from "@shared/entities/cost-inputs/data-collection-and-field-costs.entity";
@@ -17,6 +19,8 @@ import { LongTermProjectOperating } from "@shared/entities/cost-inputs/long-term
 import { Maintenance } from "@shared/entities/cost-inputs/maintenance.entity";
 import { MonitoringCost } from "@shared/entities/cost-inputs/monitoring.entity";
 import { MRV } from "@shared/entities/cost-inputs/mrv.entity";
+import { ValidationCost } from "@shared/entities/cost-inputs/validation.entity";
+import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 
 export type MethodologySourcesConfigEntry =
   (typeof MethodologySourcesConfig)[number];
@@ -30,14 +34,14 @@ export const MethodologySourcesConfig = [
     label: "Ecosystem extent",
     category: "Carbon",
     relationshipType: "m2m",
-    propertiesWithSources: ["extent", "historicExtent"],
+    propertiesWithSources: ["extent", "historicExtent", "unprotectedExtent"],
   },
   {
     entity: SequestrationRate,
     label: "Sequestration rate",
     category: "Carbon",
     relationshipType: "m2m",
-    propertiesWithSources: ["tier1Factor", "tier2Factor", "sequestrationRate"],
+    propertiesWithSources: ["tier1Factor", "tier2Factor"],
   },
   {
     entity: EcosystemLoss,
@@ -50,13 +54,13 @@ export const MethodologySourcesConfig = [
     label: "Emission factors",
     category: "Carbon",
     relationshipType: "m2m",
-    propertiesWithSources: [
-      "SOC",
-      "AGB",
-      "global",
-      "t2CountrySpecificAGB",
-      "t2CountrySpecificSOC",
-    ],
+    propertiesWithSources: ["AGB", "SOC", "global"],
+  },
+  {
+    entity: RestorableLand,
+    label: "Restorable land",
+    category: "Carbon",
+    relationshipType: "1n",
   },
   // Costs
   {
@@ -87,8 +91,7 @@ export const MethodologySourcesConfig = [
     entity: BlueCarbonProjectPlanning,
     label: "Blue carbon project planning",
     category: "Costs",
-    relationshipType: "m2m",
-    propertiesWithSources: ["input1", "input2", "input2", "blueCarbon"],
+    relationshipType: "1n",
   },
   {
     entity: CarbonRights,
@@ -99,6 +102,12 @@ export const MethodologySourcesConfig = [
   {
     entity: FinancingCost,
     label: "Financing costs",
+    category: "Costs",
+    relationshipType: "1n",
+  },
+  {
+    entity: ValidationCost,
+    label: "Validation costs",
     category: "Costs",
     relationshipType: "1n",
   },
@@ -119,7 +128,8 @@ export const MethodologySourcesConfig = [
     entity: Maintenance,
     label: "Maintenance",
     category: "Costs",
-    relationshipType: "1n",
+    relationshipType: "m2m",
+    propertiesWithSources: ["maintenance", "maintenanceDuration"],
   },
   {
     entity: CommunityBenefitSharingFund,
@@ -151,5 +161,18 @@ export const MethodologySourcesConfig = [
     category: "Costs",
     relationshipType: "1n",
   },
+  {
+    entity: CommunityCashFlow,
+    label: "Community cash flow",
+    category: "Costs",
+    relationshipType: "1n",
+  },
   // Economic factors
+  {
+    entity: ModelAssumptions,
+    label: "Model assumptions",
+    category: "Economic factors",
+    relationshipType: "1n",
+    omitInView: true,
+  },
 ] as const;

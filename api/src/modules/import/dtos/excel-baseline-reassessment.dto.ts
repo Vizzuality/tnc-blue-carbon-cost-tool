@@ -1,5 +1,6 @@
 export type ExcelBaselineReassessment = {
   Country: string;
   'Country code': string;
-  'Baseline reassessment': number;
+  'Baseline reassessment cost': number;
+  Source: string;
 };

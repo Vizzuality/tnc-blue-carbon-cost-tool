@@ -1,7 +1,7 @@
 export type ExcelMonitoring = {
   Country: string;
   'Country code': string;
-  'Mangrove monitoring': number;
-  'Seagrass monitoring': number;
-  'Salt marsh monitoring': number;
+  Ecosystem: string;
+  'Monitoring cost': number;
+  Source: string;
 };

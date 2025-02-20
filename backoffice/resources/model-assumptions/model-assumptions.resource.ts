@@ -1,17 +1,17 @@
-import { ResourceWithOptions } from "adminjs";
-import { ModelAssumptions } from "@shared/entities/model-assumptions.entity.js";
-import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
+import { ResourceWithOptions } from 'adminjs';
+import { ModelAssumptions } from '@shared/entities/model-assumptions.entity.js';
+import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
 
 export const ModelAssumptionResource: ResourceWithOptions = {
   resource: ModelAssumptions,
   options: {
     sort: {
-      sortBy: "name",
-      direction: "desc",
+      sortBy: 'name',
+      direction: 'desc',
     },
     navigation: {
-      name: "Data Management",
-      icon: "Database",
+      name: 'Data Management',
+      icon: 'Database',
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,

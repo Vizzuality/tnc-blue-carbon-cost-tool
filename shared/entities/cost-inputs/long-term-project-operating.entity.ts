@@ -30,6 +30,7 @@ export class LongTermProjectOperating extends BaseEntity {
   @Column("decimal", { name: "long_term_project_operating_cost_per_year" })
   longTermProjectOperatingCost: number;
 
+  @Column({ name: "source_id", type: "int4", nullable: true })
   @ManyToOne("ModelComponentSource", "longTermProjectOperating", {
     onDelete: "CASCADE",
     nullable: true,

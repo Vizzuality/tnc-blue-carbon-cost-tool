@@ -30,6 +30,7 @@ export class MonitoringCost extends BaseEntity {
   @Column("decimal", { name: "monitoring_cost_per_year" })
   monitoringCost: number;
 
+  @Column({ name: "source_id", type: "int4", nullable: true })
   @ManyToOne("ModelComponentSource", "monitoringCost", {
     onDelete: "CASCADE",
     nullable: true,

@@ -33,24 +33,15 @@ export class ImportController {
   //       https://docs.nestjs.com/techniques/file-upload
 
   @TsRestHandler(adminContract.uploadFile)
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'file', maxCount: 1 },
-      { name: 'oldFile', maxCount: 1 },
-    ]),
-  )
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'file', maxCount: 1 }]))
   @RequiredRoles(ROLES.ADMIN)
   async uploadFile(
     @UploadedFiles()
-    files: { file?: Express.Multer.File[]; oldFile?: Express.Multer.File[] },
+    files: { file?: Express.Multer.File[] },
     @GetUser() user: User,
   ): Promise<ControllerResponse> {
     return tsRestHandler(adminContract.uploadFile, async () => {
-      await this.service.import(
-        files.file[0].buffer,
-        files.oldFile[0].buffer,
-        user.id,
-      );
+      await this.service.import(files.file[0].buffer, user.id);
       return {
         status: 201,
         body: null,
