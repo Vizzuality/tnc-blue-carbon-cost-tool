@@ -20,18 +20,14 @@ export const EmissionFactorsResource: ResourceWithOptions = {
     listProperties: [
       'countryCode',
       'ecosystem',
-      'tierSelector',
-      'emissionFactor',
       'AGB',
       'SOC',
       'global',
-      't2CountrySpecificAGB',
-      't2CountrySpecificSOC',
       'sources',
     ],
     filterProperties: ['countryCode', 'ecosystem'],
     sort: {
-      sortBy: 'tierSelector',
+      sortBy: 'countryCode',
       direction: 'asc',
     },
     navigation: {
@@ -46,9 +42,6 @@ export const EmissionFactorsResource: ResourceWithOptions = {
       ecosystem: {
         position: 2,
       },
-      tierSelector: {
-        position: 3,
-      },
       emissionFactor: {
         position: 4,
       },
@@ -60,13 +53,6 @@ export const EmissionFactorsResource: ResourceWithOptions = {
       },
       global: {
         position: 7,
-      },
-      t2CountrySpecificAGB: {
-        position: 8,
-      },
-      t2CountrySpecificSOC: {
-        position: 10,
-        isVisible: { show: true, edit: true, list: true, filter: true },
       },
       sources: {
         position: 11,

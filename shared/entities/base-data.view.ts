@@ -34,7 +34,7 @@ select
 	cpa.planning_cost_per_project as conservation_planning_and_admin,
 	dcfc.field_cost_per_project as data_collection_and_field_cost,
 	cr.liaison_cost as community_representation,
-	bcpp.blue_carbon as blue_carbon_project_planning,
+	bcpp.planning_cost as blue_carbon_project_planning,
 	crights.carbon_rights_cost as establishing_carbon_rights,
 	fc.financing_cost_capex_percent as financing_cost,
 	vc.validation_cost as validation,

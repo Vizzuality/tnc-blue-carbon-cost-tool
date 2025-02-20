@@ -10,12 +10,7 @@ import {
   JoinColumn,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
-
-export enum INPUT_SELECTION {
-  INPUT_1 = "Input 1",
-  INPUT_2 = "Input 2",
-  INPUT_3 = "Input 3",
-}
+import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
 @Entity("blue_carbon_project_planning")
 @Unique(["country"])
@@ -30,35 +25,14 @@ export class BlueCarbonProjectPlanning extends BaseEntity {
   @Column({ name: "country_code", type: "char", length: 3 })
   countryCode: string;
 
-  @Column({
-    type: "enum",
-    enum: INPUT_SELECTION,
-    nullable: false,
-    default: INPUT_SELECTION.INPUT_1,
+  @Column("decimal", { name: "planning_cost" })
+  planningCost: number;
+
+  @Column({ name: "source_id", type: "int4", nullable: true })
+  @ManyToOne("ModelComponentSource", "dataCollectionAndFieldCosts", {
+    onDelete: "CASCADE",
+    nullable: true,
   })
-  inputSelection: INPUT_SELECTION;
-
-  @Column("decimal", { name: "input_1_cost_per_project" })
-  input1: number;
-
-  @Column("decimal", { name: "input_2_cost_per_project" })
-  input2: number;
-
-  @Column("decimal", { name: "input_3_cost_per_project" })
-  input3: number;
-
-  @Column("decimal", { name: "blue_carbon" })
-  blueCarbon: number;
-
-  @BeforeInsert()
-  @BeforeUpdate()
-  setBlueCarbonValue() {
-    if (this.inputSelection === INPUT_SELECTION.INPUT_1) {
-      this.blueCarbon = this.input1;
-    } else if (this.inputSelection === INPUT_SELECTION.INPUT_2) {
-      this.blueCarbon = this.input2;
-    } else if (this.inputSelection === INPUT_SELECTION.INPUT_3) {
-      this.blueCarbon = this.input3;
-    }
-  }
+  @JoinColumn({ name: "source_id" })
+  source: ModelComponentSource;
 }

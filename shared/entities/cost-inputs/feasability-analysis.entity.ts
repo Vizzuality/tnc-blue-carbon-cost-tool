@@ -30,6 +30,7 @@ export class FeasibilityAnalysis extends BaseEntity {
   @Column("decimal", { name: "analysis_cost_per_project" })
   analysisCost: number;
 
+  @Column({ name: "source_id", type: "int4", nullable: true })
   @ManyToOne("ModelComponentSource", "feasibilityAnalysis", {
     onDelete: "CASCADE",
     nullable: true,

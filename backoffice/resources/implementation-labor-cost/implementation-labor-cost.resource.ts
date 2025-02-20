@@ -9,6 +9,15 @@ import {
 } from 'backoffice/resources/common/many-2-many-sources.actions.js';
 import { Components } from 'backoffice/components/index.js';
 
+const FIELD_ORDER = [
+  'countryCode',
+  'ecosystem',
+  'plantingCost',
+  'hybridCost',
+  'hydrologyCost',
+  'sources',
+];
+
 export const ImplementationLaborCostResource: ResourceWithOptions = {
   resource: ImplementationLaborCost,
   options: {
@@ -20,6 +29,9 @@ export const ImplementationLaborCostResource: ResourceWithOptions = {
       name: 'Data Management',
       icon: 'Database',
     },
+    listProperties: FIELD_ORDER,
+    showProperties: FIELD_ORDER,
+    editProperties: FIELD_ORDER,
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
       plantingCost: {

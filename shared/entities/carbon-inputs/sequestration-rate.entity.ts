@@ -37,11 +37,11 @@ export class SequestrationRate extends BaseEntity {
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
   ecosystem: ECOSYSTEM;
 
-  @Column({
-    type: "enum",
-    enum: SEQUESTRATION_RATE_TIER_TYPES,
-  })
-  tierSelector: SEQUESTRATION_RATE_TIER_TYPES;
+  // @Column({
+  //   type: "enum",
+  //   enum: SEQUESTRATION_RATE_TIER_TYPES,
+  // })
+  // tierSelector: SEQUESTRATION_RATE_TIER_TYPES;
 
   @Column("decimal", { name: "tier_1_factor", nullable: true })
   tier1Factor: number;
@@ -49,16 +49,16 @@ export class SequestrationRate extends BaseEntity {
   @Column("decimal", { name: "tier_2_factor", nullable: true })
   tier2Factor: number;
 
-  @Column("decimal", { name: "sequestration_rate", nullable: true })
-  sequestrationRate: number;
+  // @Column("decimal", { name: "sequestration_rate", nullable: true })
+  // sequestrationRate: number;
 
-  @BeforeInsert()
-  @BeforeUpdate()
-  setSequestrationRateValue() {
-    if (this.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_1) {
-      this.sequestrationRate = this.tier1Factor;
-    } else if (this.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_2) {
-      this.sequestrationRate = this.tier2Factor;
-    }
-  }
+  // @BeforeInsert()
+  // @BeforeUpdate()
+  // setSequestrationRateValue() {
+  //   if (this.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_1) {
+  //     this.sequestrationRate = this.tier1Factor;
+  //   } else if (this.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_2) {
+  //     this.sequestrationRate = this.tier2Factor;
+  //   }
+  // }
 }

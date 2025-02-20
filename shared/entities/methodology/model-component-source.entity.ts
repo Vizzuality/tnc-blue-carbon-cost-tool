@@ -1,7 +1,10 @@
 import { EcosystemLoss } from "@shared/entities/carbon-inputs/ecosystem-loss.entity";
+import { RestorableLand } from "@shared/entities/carbon-inputs/restorable-land.entity";
 import { BaselineReassessment } from "@shared/entities/cost-inputs/baseline-reassessment.entity";
+import { BlueCarbonProjectPlanning } from "@shared/entities/cost-inputs/blue-carbon-project-planning.entity";
 import { CarbonStandardFees } from "@shared/entities/cost-inputs/carbon-standard-fees.entity";
 import { CommunityBenefitSharingFund } from "@shared/entities/cost-inputs/community-benefit-sharing-fund.entity";
+import { CommunityCashFlow } from "@shared/entities/cost-inputs/community-cash-flow.entity";
 import { CommunityRepresentation } from "@shared/entities/cost-inputs/community-representation.entity";
 import { ConservationPlanningAndAdmin } from "@shared/entities/cost-inputs/conservation-and-planning-admin.entity";
 import { DataCollectionAndFieldCosts } from "@shared/entities/cost-inputs/data-collection-and-field-costs.entity";
@@ -12,7 +15,9 @@ import { LongTermProjectOperating } from "@shared/entities/cost-inputs/long-term
 import { Maintenance } from "@shared/entities/cost-inputs/maintenance.entity";
 import { MonitoringCost } from "@shared/entities/cost-inputs/monitoring.entity";
 import { MRV } from "@shared/entities/cost-inputs/mrv.entity";
+import { ValidationCost } from "@shared/entities/cost-inputs/validation.entity";
 import { ModelComponentSourceM2M } from "@shared/entities/methodology/model-source-m2m.entity";
+import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import {
   BaseEntity,
   Column,
@@ -29,7 +34,7 @@ export class ModelComponentSource extends BaseEntity {
   @Column({ name: "name", type: "varchar" })
   name: string;
 
-  @Column({ name: "reviewed_at", type: "timestamptz" })
+  @Column({ name: "reviewed_at", type: "timestamptz", nullable: true })
   reviewedAt: Date;
 
   // Only entities that can have a single source per row are present here
@@ -60,9 +65,6 @@ export class ModelComponentSource extends BaseEntity {
   @OneToMany("MonitoringCost", "source")
   monitoringCost: MonitoringCost[];
 
-  @OneToMany("Maintenance", "source")
-  maintenance: Maintenance[];
-
   @OneToMany("CommunityBenefitSharingFund", "source")
   communityBenefitSharingFund: CommunityBenefitSharingFund[];
 
@@ -77,4 +79,19 @@ export class ModelComponentSource extends BaseEntity {
 
   @OneToMany("CarbonStandardFees", "source")
   carbonStandardFees: CarbonStandardFees[];
+
+  @OneToMany("ModelAssumptions", "source")
+  modelAssumptions: ModelAssumptions[];
+
+  @OneToMany("BlueCarbonProjectPlanning", "source")
+  blueCarbonProjectPlanning: BlueCarbonProjectPlanning[];
+
+  @OneToMany("ValidationCost", "source")
+  validationCosts: ValidationCost[];
+
+  @OneToMany("CommunityCashFlow", "source")
+  communityCashFlows: CommunityCashFlow[];
+
+  @OneToMany("RestorableLand", "source")
+  restorableLands: RestorableLand[];
 }

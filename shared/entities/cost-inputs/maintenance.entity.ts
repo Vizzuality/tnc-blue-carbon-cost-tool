@@ -28,11 +28,4 @@ export class Maintenance extends BaseEntity {
 
   @Column("decimal", { name: "maintenance_duration_years" })
   maintenanceDuration: number;
-
-  @ManyToOne("ModelComponentSource", "maintenance", {
-    onDelete: "CASCADE",
-    nullable: true,
-  })
-  @JoinColumn({ name: "source_id" })
-  source: ModelComponentSource;
 }

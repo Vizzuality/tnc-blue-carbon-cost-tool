@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from "typeorm";
 import { Country } from "@shared/entities/country.entity";
+import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 
 export enum COMMUNITY_CASH_FLOW_TYPES {
   NON_DEVELOPMENT = "Non-development",
@@ -29,4 +30,12 @@ export class CommunityCashFlow extends BaseEntity {
 
   @Column({ type: "enum", enum: COMMUNITY_CASH_FLOW_TYPES, nullable: true })
   cashflowType: COMMUNITY_CASH_FLOW_TYPES;
+
+  @Column({ name: "source_id", type: "uuid", nullable: true })
+  @ManyToOne("ModelComponentSource", "communityCashFlows", {
+    onDelete: "CASCADE",
+    nullable: true,
+  })
+  @JoinColumn({ name: "source_id" })
+  source: ModelComponentSource;
 }

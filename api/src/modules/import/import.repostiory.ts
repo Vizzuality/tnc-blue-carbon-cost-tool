@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { Project } from '@shared/entities/projects.entity';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { FeasibilityAnalysis } from '@shared/entities/cost-inputs/feasability-analysis.entity';
@@ -29,6 +29,18 @@ import { BaseSize } from '@shared/entities/base-size.entity';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity';
+import {
+  ParsedEntities,
+  ParsedEntitiesWithSources,
+} from '@api/modules/import/services/parsed-db-entities.type';
+import { MethodologySourcesConfig } from '@shared/config/methodology.config';
+import { ModelComponentSourceM2M } from '@shared/entities/methodology/model-source-m2m.entity';
+
+type ClassifiedEntities = {
+  withoutSources: Partial<ParsedEntities>;
+  with1nSources: Partial<ParsedEntities>;
+  withM2mSources: Partial<ParsedEntities>;
+};
 
 @Injectable()
 export class ImportRepository {
@@ -44,35 +56,7 @@ export class ImportRepository {
     });
   }
 
-  async ingest(importData: {
-    projects: Project[];
-    projectSize: ProjectSize[];
-    feasibilityAnalysis: FeasibilityAnalysis[];
-    conservationPlanningAndAdmin: ConservationPlanningAndAdmin[];
-    dataCollectionAndFieldCosts: DataCollectionAndFieldCosts[];
-    communityRepresentation: CommunityRepresentation[];
-    blueCarbonProjectPlanning: BlueCarbonProjectPlanning[];
-    establishingCarbonRights: CarbonRights[];
-    financingCost: FinancingCost[];
-    validationCost: ValidationCost[];
-    monitoringCost: MonitoringCost[];
-    maintenanceCost: Maintenance[];
-    communityBenefit: CommunityBenefitSharingFund[];
-    baselineReassessment: BaselineReassessment[];
-    mrv: MRV[];
-    longTermProjectOperating: LongTermProjectOperating[];
-    carbonStandardFees: CarbonStandardFees[];
-    communityCashFlow: CommunityCashFlow[];
-    ecosystemExtent: EcosystemExtent[];
-    ecosystemLoss: EcosystemLoss[];
-    restorableLand: RestorableLand[];
-    sequestrationRate: SequestrationRate[];
-    emissionFactors: EmissionFactors[];
-    implementationLaborCost: ImplementationLaborCost[];
-    baseSize: BaseSize[];
-    baseIncrease: BaseIncrease[];
-    modelAssumptions: ModelAssumptions[];
-  }) {
+  public async ingest(parsedEntities: ParsedEntities) {
     return this.dataSource.transaction('READ COMMITTED', async (manager) => {
       // DATA WIPE STARTS
       await manager.clear(Project);
@@ -110,40 +94,152 @@ export class ImportRepository {
       // DATA WIPE ENDS
 
       // CREATION STARTS
-      await manager.save(importData.projects);
+      // Maybe they need to be saved first?
+      await manager.save(parsedEntities.projects.records);
+      const modelComponentSources = await manager.save(
+        parsedEntities.modelComponentSources.records,
+      );
 
-      // Cost inputs ingestion
-      await manager.save(importData.projectSize);
-      await manager.save(importData.feasibilityAnalysis);
-      await manager.save(importData.conservationPlanningAndAdmin);
-      await manager.save(importData.dataCollectionAndFieldCosts);
-      await manager.save(importData.communityRepresentation);
-      await manager.save(importData.blueCarbonProjectPlanning);
-      await manager.save(importData.establishingCarbonRights);
-      await manager.save(importData.financingCost);
-      await manager.save(importData.validationCost);
-      await manager.save(importData.monitoringCost);
-      await manager.save(importData.maintenanceCost);
-      await manager.save(importData.communityBenefit);
-      await manager.save(importData.baselineReassessment);
-      await manager.save(importData.mrv);
-      await manager.save(importData.longTermProjectOperating);
-      await manager.save(importData.carbonStandardFees);
-      await manager.save(importData.communityCashFlow);
-      await manager.save(importData.implementationLaborCost);
+      const entitiesWithSources = MethodologySourcesConfig.map(
+        (entityConfig) => entityConfig.entity,
+      );
 
-      // Carbon inputs ingestion
-      await manager.save(importData.ecosystemExtent);
-      await manager.save(importData.ecosystemLoss);
-      await manager.save(importData.restorableLand);
-      await manager.save(importData.sequestrationRate);
-      await manager.save(importData.emissionFactors);
+      delete parsedEntities.projects;
+      delete parsedEntities.modelComponentSources;
 
-      // Other tables ingestion
-      await manager.save(importData.baseSize);
-      await manager.save(importData.baseIncrease);
-      await manager.save(importData.modelAssumptions);
+      const classifiedEntities = Object.keys(parsedEntities).reduce(
+        (acc, key) => {
+          if (
+            entitiesWithSources.includes(parsedEntities[key].entity) === false
+          ) {
+            acc.withoutSources[key] = parsedEntities[key];
+            return acc;
+          }
+
+          const entityConfig = MethodologySourcesConfig.find(
+            (entry) => entry.entity === parsedEntities[key].entity,
+          )!;
+          if (entityConfig.relationshipType === '1n') {
+            acc.with1nSources[key] = parsedEntities[key];
+          } else if (entityConfig.relationshipType === 'm2m') {
+            acc.withM2mSources[key] = parsedEntities[key];
+          }
+
+          return acc;
+        },
+        {
+          withoutSources: {},
+          with1nSources: {},
+          withM2mSources: {},
+        } as ClassifiedEntities,
+      );
+      await this.saveParsedEntities(manager, classifiedEntities.withoutSources);
+
+      const m2mEntitiesWithIds = await this.saveParsedEntities(
+        manager,
+        classifiedEntities.withM2mSources,
+      );
+
+      const parsedEntitiesWithSources = this.addComponentSourcesRelationships(
+        {
+          ...m2mEntitiesWithIds,
+          ...classifiedEntities.with1nSources,
+        },
+        modelComponentSources,
+      );
+
+      await this.saveParsedEntities(manager, parsedEntitiesWithSources);
       // CREATION ENDS
     });
+  }
+
+  private async saveParsedEntities(
+    entity: EntityManager,
+    parsedEntities: Partial<ParsedEntities>,
+  ): Promise<Partial<ParsedEntities>> {
+    const response = {} as ParsedEntities;
+    for (const parsedEntityKey of Object.keys(parsedEntities)) {
+      response[parsedEntityKey] = {
+        entity: parsedEntities[parsedEntityKey].entity,
+        records: await entity.save(parsedEntities[parsedEntityKey].records),
+      };
+    }
+
+    return response;
+  }
+
+  private addComponentSourcesRelationships(
+    parsedEntities: Partial<ParsedEntities>,
+    modelComponentSources: ModelComponentSource[],
+  ): Partial<ParsedEntitiesWithSources> {
+    const parsedEntitiesWithSources = {
+      modelComponentSourceM2M: {
+        entity: ModelComponentSourceM2M,
+        records: [],
+      },
+    };
+
+    const componentSourceIdByName: { [name: string]: string } =
+      modelComponentSources.reduce((acc, value) => {
+        acc[value.name] = value.id;
+        return acc;
+      }, {});
+
+    // Mapping parsed entities to a methodology config entry at runtime
+    const parsedEntityKeys = Object.keys(
+      parsedEntities,
+    ) as (keyof ParsedEntities)[];
+    for (const entityKey of parsedEntityKeys) {
+      const parsedEntity = parsedEntities[entityKey];
+
+      const entityConfig = MethodologySourcesConfig.find(
+        (entry) => entry.entity.name === parsedEntity.entity.name,
+      );
+      if (entityConfig === undefined) continue;
+
+      if (entityConfig.relationshipType === '1n') {
+        for (const record of parsedEntity.records) {
+          const recordSource = record['source'];
+          if (recordSource === undefined) continue;
+
+          const sourceName = record['source']['name'];
+          const sourceId = componentSourceIdByName[sourceName];
+          if (sourceId === undefined)
+            throw new Error(
+              `SourceId for SourceName '${sourceName}' not found`,
+            );
+
+          record['source'] = {
+            id: componentSourceIdByName[sourceName],
+          };
+        }
+        parsedEntitiesWithSources[entityKey] = parsedEntity;
+      } else if (entityConfig.relationshipType === 'm2m') {
+        for (const record of parsedEntity.records) {
+          if (Array.isArray(record.sources) === false) continue;
+
+          for (const recordSource of record.sources) {
+            const sourceId = componentSourceIdByName[recordSource.sourceName];
+            if (sourceId === undefined)
+              throw new Error(
+                `SourceId for SourceName '${recordSource.sourceName}' not found`,
+              );
+
+            const m2mRelationship = new ModelComponentSourceM2M();
+            m2mRelationship.source = {
+              id: sourceId,
+            } as unknown as ModelComponentSource;
+            m2mRelationship.entityName = entityConfig.entity.name;
+            m2mRelationship.entityId = record.id as string;
+            m2mRelationship.sourceType = recordSource.fieldName;
+            parsedEntitiesWithSources.modelComponentSourceM2M.records.push(
+              m2mRelationship,
+            );
+          }
+        }
+      }
+    }
+
+    return parsedEntitiesWithSources;
   }
 }

@@ -26,6 +26,7 @@ export class BaselineReassessment extends BaseEntity {
   @Column("decimal", { name: "baseline_reassessment_cost_per_event" })
   baselineReassessmentCost: number;
 
+  @Column({ name: "source_id", type: "uuid", nullable: true })
   @ManyToOne("ModelComponentSource", "baselineReassessment", {
     onDelete: "CASCADE",
     nullable: true,

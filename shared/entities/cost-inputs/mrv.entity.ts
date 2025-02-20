@@ -26,6 +26,7 @@ export class MRV extends BaseEntity {
   @Column("decimal", { name: "mrv_cost_per_event" })
   mrvCost: number;
 
+  @Column({ name: "source_id", type: "int4", nullable: true })
   @ManyToOne("ModelComponentSource", "mrv", {
     onDelete: "CASCADE",
     nullable: true,

@@ -18,6 +18,7 @@ import { ExcelImplementationLaborCost } from '@api/modules/import/dtos/excel-imp
 import { ExcelLongTermProjectOperating } from '@api/modules/import/dtos/excel-long-term-project-operating.dto';
 import { ExcelMaintenance } from '@api/modules/import/dtos/excel-maintenance.dto';
 import { ExcelModelAssumptions } from '@api/modules/import/dtos/excel-model-assumptions.dto';
+import { ExcelModelComponentSource } from '@api/modules/import/dtos/excel-model-component-source.dto';
 import { ExcelMonitoring } from '@api/modules/import/dtos/excel-monitoring.dto';
 import { ExcelMRV } from '@api/modules/import/dtos/excel-mrv.dto';
 import { ExcelProjectSize } from '@api/modules/import/dtos/excel-project-size.dto';
@@ -27,6 +28,7 @@ import { ExcelSequestrationRate } from '@api/modules/import/dtos/excel-sequestra
 import { ExcelValidation } from '@api/modules/import/dtos/excel-validation.dto';
 
 export type RawDataIngestionData = {
+  'Sources table': ExcelModelComponentSource[];
   Projects: ExcelProject[];
   'Project size': ExcelProjectSize[];
   'Feasibility analysis': ExcelFeasibilityAnalysis[];

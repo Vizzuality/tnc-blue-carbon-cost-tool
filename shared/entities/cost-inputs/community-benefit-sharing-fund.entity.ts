@@ -26,6 +26,7 @@ export class CommunityBenefitSharingFund extends BaseEntity {
   @Column("decimal", { name: "community_benefit_sharing_fund_pc_of_revenue" })
   communityBenefitSharingFund: number;
 
+  @Column({ name: "source_id", type: "uuid", nullable: true })
   @ManyToOne("ModelComponentSource", "communityBenefitSharingFund", {
     onDelete: "CASCADE",
     nullable: true,

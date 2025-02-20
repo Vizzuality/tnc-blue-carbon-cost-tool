@@ -26,6 +26,7 @@ export class CarbonStandardFees extends BaseEntity {
   @Column("decimal", { name: "cost_per_carbon_credit_issued" })
   carbonStandardFee: number;
 
+  @Column({ name: "source_id", type: "int4", nullable: true })
   @ManyToOne("ModelComponentSource", "carbonStandardFees", {
     onDelete: "CASCADE",
     nullable: true,

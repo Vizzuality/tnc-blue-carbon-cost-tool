@@ -30,6 +30,7 @@ export class DataCollectionAndFieldCosts extends BaseEntity {
   @Column("decimal", { name: "field_cost_per_project" })
   fieldCost: number;
 
+  @Column({ name: "source_id", type: "int4", nullable: true })
   @ManyToOne("ModelComponentSource", "dataCollectionAndFieldCosts", {
     onDelete: "CASCADE",
     nullable: true,

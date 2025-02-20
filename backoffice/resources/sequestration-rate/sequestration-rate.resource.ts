@@ -8,46 +8,25 @@ import {
   fetchAvailableSourceTypesActionHandler,
 } from 'backoffice/resources/common/many-2-many-sources.actions.js';
 import { Components } from 'backoffice/components/index.js';
+
+const FIELD_ORDER = [
+  'countryCode',
+  'ecosystem',
+  'tier1Factor',
+  'tier2Factor',
+  'sources',
+];
+
 export const SequestrationRateResource: ResourceWithOptions = {
   resource: SequestrationRate,
   options: {
-    sort: {
-      sortBy: 'tierSelector',
-      direction: 'asc',
-    },
     navigation: {
       name: 'Data Management',
       icon: 'Database',
     },
-    listProperties: [
-      'countryCode',
-      'ecosystem',
-      'tierSelector',
-      'tier1Factor',
-      'tier2Factor',
-      'sequestrationRate',
-      'sources',
-    ],
-    editProperties: [
-      'id',
-      'countryCode',
-      'ecosystem',
-      'tierSelector',
-      'tier1Factor',
-      'tier2Factor',
-      'sequestrationRate',
-      'sources',
-    ],
-    showProperties: [
-      'id',
-      'countryCode',
-      'ecosystem',
-      'tierSelector',
-      'tier1Factor',
-      'tier2Factor',
-      'sequestrationRate',
-      'sources',
-    ],
+    listProperties: FIELD_ORDER,
+    editProperties: FIELD_ORDER,
+    showProperties: FIELD_ORDER,
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
       tier1Factor: {
@@ -57,10 +36,6 @@ export const SequestrationRateResource: ResourceWithOptions = {
       tier2Factor: {
         position: 5,
         isVisible: { list: false, show: true, filter: false, edit: true },
-      },
-      sequestrationRate: {
-        position: 6,
-        isVisible: { list: true, show: true, filter: false, edit: true },
       },
       sources: {
         position: 7,

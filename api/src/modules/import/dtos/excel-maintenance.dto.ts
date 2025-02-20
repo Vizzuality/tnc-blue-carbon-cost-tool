@@ -1,6 +1,8 @@
 export type ExcelMaintenance = {
   Country: string;
   'Country code': string;
-  Maintenance: number;
+  Maintenance: string;
   'Maintenance duration': number;
+  'Source maintenance': string;
+  'Source maintenance duration': string;
 };
