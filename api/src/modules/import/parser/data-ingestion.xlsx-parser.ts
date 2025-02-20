@@ -1,9 +1,11 @@
 import { RawDataIngestionData } from '@api/modules/import/parser/raw-data-ingestion.type';
 import {
+  ExcelTabHeaderNotFoundError,
   ExcelTabNotFoundError,
   IExcelParser,
 } from '@api/modules/import/parser/excel-parser.interface';
 import { read, utils, WorkBook, WorkSheet } from 'xlsx';
+import { DATA_INGESTION_CONFIG } from '@api/modules/import/parser/data-ingestion.config';
 
 export const EXPECTED_SHEETS = [
   'Index',
@@ -12,7 +14,7 @@ export const EXPECTED_SHEETS = [
   'Model assumptions and constrain',
   'Backoffice',
   'Input',
-  'Model assumptions',
+  // 'Model assumptions',
   'Data pull',
   'Data ingestion >>>',
   'master_table',
@@ -67,40 +69,70 @@ export const EXPECTED_SHEETS = [
 ] as const;
 
 export class DataIngestionExcelParser implements IExcelParser {
-  public async parseBuffer(buffer: Buffer): Promise<RawDataIngestionData> {
-    const workbook: WorkBook = read(buffer);
-    const parsedData: any = {};
+  public async parseBuffer(
+    buffer: Buffer,
+    oldFileBuffer: Buffer,
+  ): Promise<RawDataIngestionData> {
+    const excelFile: WorkBook = read(buffer);
+    const parsedData: Partial<RawDataIngestionData> = {};
 
-    for (const sheetName of EXPECTED_SHEETS) {
-      const sheet: WorkSheet = workbook.Sheets[sheetName];
-      if (sheet === undefined) {
-        throw new ExcelTabNotFoundError(sheetName);
+    const expectedTabNames = Object.keys(DATA_INGESTION_CONFIG);
+    for (const tabName of expectedTabNames) {
+      const tabContents: WorkSheet = excelFile.Sheets[tabName];
+      if (tabContents === undefined) {
+        throw new ExcelTabNotFoundError(tabName);
       }
 
-      // We make sure headers are trimmed.
-      // We cannot see the space preceding the tab heading if we open the file using google sheets, excel online or numbers on mac.
-      // Quick localized fix that only applies to the 'Implementation labor' tab in order to avoid potential issues with other tabs.
-      if (sheetName === 'Implementation labor') {
-        const tabHeaders = (
-          utils.sheet_to_json(sheet, { header: 1, raw: true })[0] as string[]
-        ).map((header: any) => header.trim());
-
-        const parsedSheet = utils.sheet_to_json(sheet, {
-          header: tabHeaders,
-          range: 1,
-          raw: true,
-        });
-        parsedData[sheetName] = parsedSheet;
-        continue;
-      }
-
-      const parsedSheet = utils.sheet_to_json(sheet, {
+      const parsedTab = utils.sheet_to_json(tabContents, {
         raw: true,
       });
-      // We can validate the sheet tab headers and column values when we have more information from the science team.
-      parsedData[sheetName] = parsedSheet;
-    }
 
-    return parsedData;
+      const tabConfig = DATA_INGESTION_CONFIG[tabName];
+      const firstRow: Record<string, unknown> = parsedTab[0] as Record<
+        string,
+        unknown
+      >;
+      for (const column of tabConfig.expectedColumns) {
+        if (!(column in firstRow)) {
+          throw new ExcelTabHeaderNotFoundError(column, tabName);
+        }
+        console.log(parsedTab);
+        parsedData[tabName] = parsedTab;
+      }
+
+      // Legacy code kept for the incremental migration of the data ingestion parser.
+      const workbook: WorkBook = read(oldFileBuffer);
+      for (const sheetName of EXPECTED_SHEETS) {
+        const sheet: WorkSheet = workbook.Sheets[sheetName];
+        if (sheet === undefined) {
+          throw new ExcelTabNotFoundError(sheetName);
+        }
+
+        // We make sure headers are trimmed.
+        // We cannot see the space preceding the tab heading if we open the file using google sheets, excel online or numbers on mac.
+        // Quick localized fix that only applies to the 'Implementation labor' tab in order to avoid potential issues with other tabs.
+        if (sheetName === 'Implementation labor') {
+          const tabHeaders = (
+            utils.sheet_to_json(sheet, { header: 1, raw: true })[0] as string[]
+          ).map((header: any) => header.trim());
+
+          const parsedSheet = utils.sheet_to_json(sheet, {
+            header: tabHeaders,
+            range: 1,
+            raw: true,
+          });
+          parsedData[sheetName] = parsedSheet as any;
+          continue;
+        }
+
+        const parsedSheet = utils.sheet_to_json(sheet, {
+          raw: true,
+        });
+        // We can validate the sheet tab headers and column values when we have more information from the science team.
+        parsedData[sheetName] = parsedSheet;
+      }
+
+      return parsedData as RawDataIngestionData;
+    }
   }
 }

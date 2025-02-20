@@ -17,5 +17,5 @@ export class RowColumnInvalidError extends Error {
 }
 
 export interface IExcelParser {
-  parseBuffer(buffer: Buffer): Promise<unknown>;
+  parseBuffer(buffer: Buffer, newFileBuffer: Buffer): Promise<unknown>;
 }
