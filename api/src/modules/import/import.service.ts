@@ -56,12 +56,18 @@ export class ImportService {
     }
   }
 
-  async import(fileBuffer: Buffer, userId: string): Promise<void> {
+  async import(
+    fileBuffer: Buffer,
+    oldFileBuffer: Buffer,
+    userId: string,
+  ): Promise<void> {
     this.logger.warn('Excel file import started...');
     this.registerImportEvent(userId, this.eventMap.STARTED);
     try {
-      const parsedSheets =
-        await this.dataIngestionParser.parseBuffer(fileBuffer);
+      const parsedSheets = await this.dataIngestionParser.parseBuffer(
+        fileBuffer,
+        oldFileBuffer,
+      );
       const parsedDBEntities =
         await this.preprocessor.toDbEntities(parsedSheets);
       await this.importRepo.ingest(parsedDBEntities);
