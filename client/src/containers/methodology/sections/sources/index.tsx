@@ -1,7 +1,6 @@
 import { MethodologySection } from "@/containers/methodology/sections";
-import SourcesComponent from "@/containers/methodology/sources";
+import SourcesTable from "@/containers/methodology/sections/sources/table";
 import ContentWrapper from "@/containers/methodology/wrapper";
-
 const Sources: MethodologySection = {
   id: "sources",
   title: "Sources",
@@ -15,7 +14,7 @@ const Sources: MethodologySection = {
           detailed description, please download the full methodology.
         </p>
       </ContentWrapper>
-      <SourcesComponent />
+      <SourcesTable />
     </div>
   ),
 };

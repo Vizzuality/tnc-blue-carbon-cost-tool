@@ -92,6 +92,7 @@ export const customProjectKeys = createQueryKeys("customProjects", {
 
 const methodologyKeys = createQueryKeys("methodology", {
   sources: null,
+  modelAssumptions: null,
 });
 
 export const queryKeys = mergeQueryKeys(

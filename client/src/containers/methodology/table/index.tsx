@@ -41,7 +41,7 @@ export default function MethodologyTable<T extends MethodologyBaseTableRow>({
               key={`table-cell-${row.id}-${String(key)}`}
               className="px-2 py-4 text-xs"
             >
-              {row[key]}
+              {row[key] || "-"}
             </TableCell>
           ))}
         </TableRow>

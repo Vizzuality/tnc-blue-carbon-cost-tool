@@ -43,7 +43,7 @@ export default function Methodology() {
           <h2 className="text-2xl font-medium">Methodology</h2>
         </div>
       </div>
-      <div className="relative grid h-full grid-cols-[317px_1fr] overflow-hidden">
+      <div className="relative grid h-full grid-cols-[400px_1fr] overflow-hidden">
         <MethodologySidebar navItems={navItems} />
         <ScrollArea ref={ref} className="px-8" showGradient>
           <div

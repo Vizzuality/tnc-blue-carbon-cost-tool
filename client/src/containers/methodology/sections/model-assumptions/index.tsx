@@ -1,10 +1,8 @@
 import { SubHeader } from "@/containers/methodology/header";
 import { MethodologySection } from "@/containers/methodology/sections";
+import ModelAssumptionsTable from "@/containers/methodology/sections/model-assumptions/table";
 import MethodologyTable from "@/containers/methodology/table";
-import {
-  assumptionsData,
-  costComponentsData,
-} from "@/containers/methodology/table/data";
+import { costComponentsData } from "@/containers/methodology/table/data";
 import ContentWrapper from "@/containers/methodology/wrapper";
 
 import { List } from "@/components/ui/list";
@@ -171,7 +169,7 @@ const ModelAssumptions: MethodologySection = {
           description="Table below showcases the model assumptions that are universally applied to all projects:"
         />
       </ContentWrapper>
-      <MethodologyTable data={assumptionsData} />
+      <ModelAssumptionsTable />
       <ContentWrapper>
         <p>
           While these assumptions have default settings, users can overwrite

@@ -310,24 +310,96 @@ export const projectCostsAssumptionsAndMethodologyData = {
   ],
 };
 
-export const assumptionsData = {
+export const qualitativeScoreCardData = {
   headers: {
-    assumptions: "Assumptions",
-    units: "Units",
-    value: "Value",
+    metric: "Metric",
+    description: "Description",
+    weight: "Weight",
   },
   rows: [
     {
-      id: "assumptions-verification-frequency",
-      assumptions: "Verification frequency",
-      units: "yrs",
-      value: 5,
+      id: "qualitative-scorecard-economic-feasibility",
+      metric: <span className="font-bold">Economic feasibility</span>,
+      description:
+        "Evaluation of the forecasted costs, revenues, and potential break-even price for carbon credits",
+      weight: 20,
+      category: "Economic",
     },
     {
-      id: "assumptions-baseline-reassessment-frequency",
-      assumptions: "Baseline reassessment frequency",
-      units: "yrs",
-      value: 10,
+      id: "qualitative-scorecard-abatement-potential",
+      metric: <span className="font-bold">Abatement potential</span>,
+      description:
+        "The estimated annual abatement potential (tCO2e/year) for each country, ecosystem, and activity (conservation/ restoration)",
+      weight: 18,
+      category: "Abatement",
+    },
+    {
+      id: "qualitative-scorecard-legal-feasibility",
+      metric: <span className="font-bold">Legal feasibility</span>,
+      description:
+        "Evaluation of whether a country has the legal protection, government infrastructure, and political support that is required for a project to successfully produce carbon credits. Focus will also be on community aspects and benefits for community",
+      weight: 12,
+      category: "Non-economic",
+    },
+    {
+      id: "qualitative-scorecard-implementation-risk",
+      metric: <span className="font-bold">Implementation risk score</span>,
+      description:
+        "Assessment of the permanence risk a project faces due to deforestation and natural disasters. Used to determine whether a project will achieve the estimated abatement and approval for credit issuance",
+      weight: 12,
+      category: "Non-economic",
+    },
+    {
+      id: "qualitative-scorecard-social-feasibility",
+      metric: <span className="font-bold">Social feasibility</span>,
+      description:
+        "Assessment of the leakage risk a project faces from communities reverting to previous activities that degraded or destroyed ecosystems (e.g., deforestation, walling off shrimp ponds, etc.)",
+      weight: 12,
+      category: "Non-economic",
+    },
+    {
+      id: "qualitative-scorecard-availability-of-experienced-labor",
+      metric: (
+        <span className="font-bold">Availability of experienced labor</span>
+      ),
+      description:
+        "Assessment of whether a country has a pre-existing labor pool with experience in conservation or restoration work, based on the number of blue carbon or AFOLU carbon projects completed or in development",
+      weight: 10,
+      category: "Non-economic",
+    },
+    {
+      id: "qualitative-scorecard-security-rating",
+      metric: <span className="font-bold">Security rating</span>,
+      description:
+        "Assessment of the safety threat to individuals entering the country. Used to determine the physical risk posed to on-the-ground teams",
+      weight: 5,
+      category: "Non-economic",
+    },
+    {
+      id: "qualitative-scorecard-availability-of-alternative-funding",
+      metric: (
+        <span className="font-bold">Availability of alternative funding</span>
+      ),
+      description:
+        "Assessment of the possibility a project could access revenues outside of carbon credits (e.g., biodiversity credits, resilience credits, grants) to cover gaps between costs and carbon pricing",
+      weight: 5,
+      category: "Non-economic",
+    },
+    {
+      id: "qualitative-scorecard-coastal-protection-benefit",
+      metric: <span className="font-bold">Coastal protection benefit</span>,
+      description:
+        "Estimation of a project’s ability to reduce community risk through improved coastal resilience, to inform likelihood of achieving higher credit price",
+      weight: 3,
+      category: "Non-economic",
+    },
+    {
+      id: "qualitative-scorecard-biodiversity-benefit",
+      metric: <span className="font-bold">Biodiversity benefit</span>,
+      description:
+        "Estimation of a project’s impact on biodiversity, to inform likelihood of achieving higher credit price",
+      weight: 3,
+      category: "Non-economic",
     },
   ],
 };
@@ -700,4 +772,10 @@ export const costComponentsData = {
 export const sourcesHeaders = {
   modelComponent: "Model component",
   sources: "Sources",
+};
+
+export const modelAssumptionsHeaders = {
+  assumptions: "Assumptions",
+  units: "Units",
+  value: "Value",
 };

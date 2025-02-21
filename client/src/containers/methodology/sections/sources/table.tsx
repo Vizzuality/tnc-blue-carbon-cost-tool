@@ -61,8 +61,9 @@ const getSourcesComponent = (
     );
   });
 };
+
 const queryKey = queryKeys.methodology.sources.queryKey;
-export default function Sources() {
+const SourcesTable = () => {
   const { data } = client.methodology.getMethodologySources.useQuery(
     queryKey,
     {},
@@ -79,4 +80,6 @@ export default function Sources() {
   }
 
   return <MethodologyTable data={data} categorized />;
-}
+};
+
+export default SourcesTable;

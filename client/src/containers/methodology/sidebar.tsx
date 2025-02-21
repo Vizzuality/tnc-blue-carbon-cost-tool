@@ -16,7 +16,7 @@ const MethodologySidebar: FC<MethodologySidebarProps> = ({ navItems }) => {
   const intersecting = useAtomValue(methodologyStepAtom);
 
   return (
-    <Sidebar>
+    <Sidebar className="max-w-[400px]">
       <SidebarNavigation
         srOnlyTitle="Methodology sections"
         items={navItems}

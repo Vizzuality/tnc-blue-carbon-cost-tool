@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 interface ListProps {
   children: React.ReactNode;
   className?: string;
+  as?: "ol" | "ul";
 }
 
 /**
@@ -11,9 +12,13 @@ interface ListProps {
  * @param className - Optional CSS classes to apply to the list.
  * @returns A list component.
  */
-const List = ({ children, className }: ListProps) => {
+const List = ({ children, className, as = "ul" }: ListProps) => {
+  const ListElement = as;
+
   return (
-    <ul className={cn("list-disc space-y-2 pl-4", className)}>{children}</ul>
+    <ListElement className={cn("list-disc space-y-2 pl-4", className)}>
+      {children}
+    </ListElement>
   );
 };
 

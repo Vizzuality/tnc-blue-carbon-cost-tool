@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 const styles = {
   sm: "text-sm",
+  base: "text-base",
   lg: "text-lg leading-10",
   xl: "text-xl leading-12",
   "2xl": "text-2xl leading-16",

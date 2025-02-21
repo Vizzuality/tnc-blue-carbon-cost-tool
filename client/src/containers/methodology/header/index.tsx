@@ -8,7 +8,7 @@ interface SubHeaderProps {
 const SubHeader = ({ title, description }: SubHeaderProps) => {
   return (
     <div className="space-y-2">
-      <Title as="h4" size="sm" className="font-semibold underline">
+      <Title as="h4" size="base" className="font-semibold underline">
         {title}
       </Title>
       <p>{description}</p>
