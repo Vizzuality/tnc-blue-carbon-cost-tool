@@ -6,408 +6,402 @@
 // eslint-disable-next-line
 //@ts-nocheck
 
+const Math = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <math display="block" className="px-4 py-2">
+      {children}
+    </math>
+  );
+};
+
 const Math1 = () => {
   return (
-    <math display="block">
+    <Math>
       <mrow>
-        <mtext>Annual avoided loss (ha)</mtext>
         <msub>
-          <mrow></mrow>
+          <mtext>Annual avoided loss (ha)</mtext>
           <mi>t</mi>
         </msub>
         <mo>=</mo>
         <mrow>
-          <mtext>Project area in baseline (ha)</mtext>
           <msub>
-            <mrow></mrow>
+            <mtext>Project area in baseline (ha)</mtext>
             <mrow>
-              <mi mathvariant="script">t</mi>
+              <mi>t</mi>
               <mo>-</mo>
               <mn>1</mn>
             </mrow>
           </msub>
-          <mo>&#xA0;</mo>
-          <mi mathvariant="script">x</mi>
+          <mspace width="0.25em" />
+          <mi>x</mi>
           <mo>loss rate (%)</mo>
         </mrow>
       </mrow>
-    </math>
+    </Math>
   );
 };
 
 const Math2 = () => {
   return (
-    <math display="block">
+    <Math>
       <mrow>
-        <mi>Cumulative avoided loss (ha)</mi>
         <msub>
-          <mrow></mrow>
+          <mtext>Cumulative avoided loss (ha)</mtext>
           <mi>t</mi>
         </msub>
         <mo>=</mo>
         <munderover>
-          <mo>&#x2211;</mo>
+          <mo>∑</mo>
           <mrow>
-            <mi mathvariant="script">i</mi>
+            <mi>i</mi>
             <mo>=</mo>
-            <mn>1</mn>
+            <mn>0</mn>
           </mrow>
-          <mrow>
-            <mo>t</mo>
-          </mrow>
+          <mi>N</mi>
         </munderover>
-        <mi>Annual avoided loss (ha)</mi>
         <msub>
-          <mrow></mrow>
+          <mi>Annual avoided loss (ha)</mi>
           <mi>i</mi>
         </msub>
       </mrow>
-    </math>
+    </Math>
   );
 };
 
 const Math3 = () => {
   return (
-    <math display="block">
+    <Math>
       <mrow>
-        <mtext>Carbon reduction</mtext>
         <msub>
-          <mrow></mrow>
+          <mtext>Carbon reduction</mtext>
           <mi>t</mi>
         </msub>
-        <mtext>&#xA0;(tCO2e in year</mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
+        <mspace width="0.25em" />
+        <mrow>
+          <mi>(</mi>
+          <mtext>tCO2e in year t</mtext>
+          <mi>)</mi>
+        </mrow>
         <mo>=</mo>
-        <mtext>Cumulative avoided loss (ha)</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Cumulative avoided loss (ha)</mtext>
+          <mi>t</mi>
         </msub>
         <mo>*</mo>
-        <mtext>
-          &#xA0;(Tier 1 emission factor (<mi>tCO2e</mi>&#xA0;per ha per year) +
-          Tier 1 sequestration factor (<mi>tCO2e</mi>
-          &#xA0;per ha per year))
-        </mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mtext>Tier 1 emission factor</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mi>tCO2e</mi>
+        <mspace width="0.25em" />
+        <mtext>per ha per year</mtext>
+        <mi>)</mi>
+        <mo>+</mo>
+        <mtext>Tier 1 sequestration factor</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mi>tCO2e</mi>
+        <mspace width="0.25em" />
+        <mtext>per ha per year</mtext>
+        <mi>)</mi>
       </mrow>
-    </math>
+    </Math>
   );
 };
 
 const Math4 = () => {
   return (
-    <math display="block" className="space-y-2">
-      <mrow>
-        <mtext>Above ground biomass: Carbon reduction AGB</mtext>
-        <msub>
-          <mrow></mrow>
-          <mi>t</mi>
-        </msub>
-        <mtext>
-          &#xA0;(<mi>tCO2e</mi>&#xA0;in year
-        </mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
-        <mo>=</mo>
-        <mtext>
-          Annual avoided loss (ha in year <mi>t</mi>)
-        </mtext>
-        <msub>
-          <mrow></mrow>
-          <mrow>
+    <div className="space-y-4">
+      <Math>
+        <mrow>
+          <msub>
+            <mtext>Above ground biomass: Carbon reduction AGB</mtext>
             <mi>t</mi>
-          </mrow>
-        </msub>
-        <mtext>&#xA0;</mtext>
-        <mi>x</mi>
-        <mtext>&#xA0;Tier 2 AGB emission factor (</mtext>
-        <mi>tCO2e</mi>
-        <mtext>&#xA0;per ha per year)</mtext>
-      </mrow>
-      <mrow>
-        <mtext>Soil organic carbon: Carbon reduction SOC</mtext>
-        <msub>
-          <mrow></mrow>
-          <mi>t</mi>
-        </msub>
-        <mtext>&#xA0;(tCO2e in year</mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
-        <mo>=</mo>
-        <mtext>Cumulative avoided loss (ha)</mtext>
-        <msub>
-          <mrow></mrow>
+          </msub>
+          <mspace width="0.25em" />
           <mrow>
-            <mi>t</mi>
+            <mi>(</mi>
+            <mtext>tCO2e in year t</mtext>
+            <mi>)</mi>
           </mrow>
-        </msub>
-        <mtext>&#xA0;</mtext>
-        <mi>x</mi>
-        <mtext>&#xA0;Tier 2 SOC emission factor (</mtext>
-        <mi>tCO2e</mi>
-        <mtext>&#xA0;per ha per year)</mtext>
-      </mrow>
-      <mrow>
-        <mtext>Additional sequestration: Additional sequestration</mtext>
-        <msub>
-          <mrow></mrow>
-          <mi>t</mi>
-        </msub>
-        <mtext>&#xA0;(tCO2e in year</mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
-        <mo>=</mo>
-        <mtext>Tier 1 sequestration rate (</mtext>
-        <mi>tCO2e</mi>
-        <mtext>&#xA0;per ha per year)</mtext>
-        <mo>*</mo>
-        <mtext>&#xA0;Cumulative avoided loss (ha)</mtext>
-        <msub>
-          <mrow></mrow>
+          <mo>=</mo>
+        </mrow>
+        <mrow>
+          <msub>
+            <mtext>Annual avoided loss (ha in year t)</mtext>
+            <mi>t</mi>
+          </msub>
+        </mrow>
+        <mrow>
+          <mspace width="0.25em" />
+          <mi>x</mi>
+          <mtext>Tier 2 AGB emission factor</mtext>
+          <mspace width="0.25em" />
+          <mi>(</mi>
+          <mi>tCO2e</mi>
+          <mtext>per ha per year</mtext>
+          <mi>)</mi>
+        </mrow>
+      </Math>
+      <Math>
+        <mrow>
+          <msub>
+            <mtext>Soil organic carbon: Carbon reduction SOC</mtext>
+            <mi>t</mi>
+          </msub>
+          <mspace width="0.25em" />
           <mrow>
-            <mi>t</mi>
+            <mi>(</mi>
+            <mtext>tCO2e in year t</mtext>
+            <mi>)</mi>
           </mrow>
-        </msub>
-      </mrow>
-    </math>
+          <mo>=</mo>
+          <msub>
+            <mtext>Cumulative avoided loss (ha)</mtext>
+            <mi>t</mi>
+          </msub>
+          <mspace width="0.25em" />
+          <mi>x</mi>
+          <mtext>Tier 2 SOC emission factor</mtext>
+          <mspace width="0.25em" />
+          <mi>(</mi>
+          <mi>tCO2e</mi>
+          <mtext>per ha per year</mtext>
+          <mi>)</mi>
+        </mrow>
+      </Math>
+      <Math>
+        <mrow>
+          <msub>
+            <mtext>Additional sequestration: Additional sequestration</mtext>
+            <mi>t</mi>
+          </msub>
+          <mspace width="0.25em" />
+          <mi>(</mi>
+          <mtext>tCO2e in year t</mtext>
+          <mi>)</mi>
+          <mo>=</mo>
+          <mtext>Tier 1 sequestration rate</mtext>
+          <mspace width="0.25em" />
+          <mi>(</mi>
+          <mi>tCO2e</mi>
+          <mtext>per ha per year</mtext>
+          <mi>)</mi>
+          <mo>*</mo>
+          <msub>
+            <mtext>Cumulative avoided loss (ha)</mtext>
+            <mi>t</mi>
+          </msub>
+        </mrow>
+      </Math>
+    </div>
   );
 };
 
 const Math5 = () => {
   return (
-    <math display="block">
+    <Math>
       <mrow>
-        <mtext>
-          Carbon reduction &#xA0;(<mi>tCO2e</mi>&#xA0;in year
-        </mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
+        <msub>
+          <mtext>Carbon reduction</mtext>
+          <mi>t</mi>
+        </msub>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mtext>tCO2e in year t</mtext>
+        <mi>)</mi>
         <mo>=</mo>
-        <mtext>Carbon reduction AGB</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon reduction AGB</mtext>
+          <mi>t</mi>
         </msub>
         <mo>+</mo>
-        <mtext>Carbon reduction SOC</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon reduction SOC</mtext>
+          <mi>t</mi>
         </msub>
         <mo>+</mo>
-        <mtext>Additional sequestration</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Additional sequestration</mtext>
+          <mi>t</mi>
         </msub>
       </mrow>
-    </math>
+    </Math>
   );
 };
 
 const Math6 = () => {
   return (
-    <math display="block">
+    <Math>
       <mrow>
-        <mtext>Carbon credits</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon credits</mtext>
+          <mi>t</mi>
         </msub>
-        <mtext>
-          &#xA0;(<mi>tCO2e</mi>&#xA0;in year
-        </mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
+        <mspace width="0.25em" />
+        <mrow>
+          <mi>(</mi>
+          <mtext>tCO2e in year t</mtext>
+          <mi>)</mi>
+        </mrow>
         <mo>=</mo>
-        <mtext>Carbon reduction</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon reduction</mtext>
+          <mi>t</mi>
         </msub>
-        <mtext>
-          &#xA0;(<mi>tCO2e</mi>&#xA0;in year
-        </mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
+        <mspace width="0.25em" />
+        <mrow>
+          <mi>(</mi>
+          <mtext>tCO2e in year t</mtext>
+          <mi>)</mi>
+        </mrow>
         <mo>*</mo>
-        <mtext>
-          &#xA0;(
-          <mi>1</mi>&#xA0;
-          <mo>-</mo>&#xA0;buffer(%))
-        </mtext>
+        <mrow>
+          <mi>(</mi>
+          <mn>1</mn>
+          <mo>-</mo>
+          <mtext>buffer (%)</mtext>
+          <mi>)</mi>
+        </mrow>
       </mrow>
-    </math>
+    </Math>
   );
 };
 
 const Math7 = () => {
   return (
-    <math display="block">
+    <Math>
       <mrow>
-        <mtext>Carbon revenue</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon revenue</mtext>
+          <mi>t</mi>
         </msub>
-        <mtext>
-          &#xA0;(<mi>$</mi>&#xA0;in year
-        </mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mtext>$ in year t</mtext>
+        <mi>)</mi>
         <mo>=</mo>
-        <mtext>Carbon credits</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon credits</mtext>
+          <mi>t</mi>
         </msub>
-        <mtext>
-          &#xA0;(<mi>tCO2e</mi>&#xA0;in year
-        </mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mtext>tCO2e in year t</mtext>
+        <mi>)</mi>
         <mo>*</mo>
-        <mtext>&#xA0;Carbon credit price (</mtext>
+        <mtext>Carbon credit price</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
         <mi>$/tCO2e</mi>
-        <mtext>)</mtext>
+        <mi>)</mi>
       </mrow>
-    </math>
+    </Math>
   );
 };
 
 const Math8 = () => {
   return (
-    <math display="block">
+    <Math>
       <mrow>
-        <mtext>Carbon reduction</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon reduction</mtext>
+          <mi>t</mi>
         </msub>
-        <mtext>
-          &#xA0;(<mi>tCO2e</mi>&#xA0;in year
-        </mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mtext>tCO2e in year t</mtext>
+        <mi>)</mi>
         <mo>=</mo>
-        <mtext>Restored area (ha)</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Restored area (ha)</mtext>
+          <mi>t</mi>
         </msub>
-        <mtext>&#xA0;</mtext>
+        <mspace width="0.25em" />
         <mi>x</mi>
-        <mtext>&#xA0;</mtext>
+        <mspace width="0.25em" />
         <mtext>Sequestration rate</mtext>
-        <mtext>
-          &#xA0;(<mi>tCO2e / ha / year</mi>)&#xA0;
-        </mtext>
-        <mtext>&#xA0;</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mi>tCO2e / ha / year</mi>
+        <mi>)</mi>
+        <mspace width="0.25em" />
         <mi>x</mi>
-        <mtext>&#xA0;</mtext>
-        <mtext>
-          (if planting: planting success rate (%), if hydrology<mo>/</mo>hybrid:
-          100%)
-        </mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mtext>if planting: planting success rate (%),</mtext>
+        <mspace width="0.25em" />
+        <mtext>if hydrology</mtext>
+        <mo>/</mo>
+        <mtext>hybrid: 100%)</mtext>
+        <mi>)</mi>
       </mrow>
-    </math>
+    </Math>
   );
 };
 
 const Math9 = () => {
   return (
-    <math display="block">
+    <Math>
       <mrow>
-        <mtext>Carbon credits</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon credits</mtext>
+          <mi>t</mi>
         </msub>
-        <mtext>
-          &#xA0;(<mi>tCO2e</mi>&#xA0;in year
-        </mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mtext>tCO2e in year t</mtext>
+        <mi>)</mi>
         <mo>=</mo>
-        <mtext>Carbon reduction</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon reduction</mtext>
+          <mi>t</mi>
         </msub>
-        <mtext>
-          &#xA0;(<mi>tCO2e</mi>&#xA0;in year
-        </mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mtext>tCO2e in year t</mtext>
+        <mi>)</mi>
         <mo>*</mo>
-        <mtext>
-          &#xA0;(1&#xA0;<mo>-</mo>&#xA0;
-          <mi>buffer(%)</mi>)
-        </mtext>
+        <mi>(</mi>
+        <mn>1</mn>
+        <mo>-</mo>
+        <mtext>buffer (%)</mtext>
+        <mi>)</mi>
       </mrow>
-    </math>
+    </Math>
   );
 };
 
 const Math10 = () => {
   return (
-    <math display="block">
+    <Math>
       <mrow>
-        <mtext>Carbon revenue</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon revenue</mtext>
+          <mi>t</mi>
         </msub>
-        <mtext>(</mtext>
-        <mi>$</mi>
-        <mtext>&#xA0;in year</mtext>
-        <mi>t</mi>
-        <mtext>)</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mtext>$ in year t</mtext>
+        <mi>)</mi>
         <mo>=</mo>
-        <mtext>Carbon credits</mtext>
         <msub>
-          <mrow></mrow>
-          <mrow>
-            <mi>t</mi>
-          </mrow>
+          <mtext>Carbon credits</mtext>
+          <mi>t</mi>
         </msub>
-        <mtext>(</mtext>
-        <mi>tCO2e in year t</mi>
-        <mtext>)</mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mtext>tCO2e in year t</mtext>
+        <mi>)</mi>
         <mo>*</mo>
         <mtext>Carbon credit price</mtext>
-        <mtext>
-          &#xA0;(<mi>$/tCO2e</mi>)&#xA0;
-        </mtext>
+        <mspace width="0.25em" />
+        <mi>(</mi>
+        <mi>$/tCO2e</mi>
+        <mi>)</mi>
       </mrow>
-    </math>
+    </Math>
   );
 };
 

@@ -1,3 +1,5 @@
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 interface MathComponentProps {
   name: string;
   children: React.ReactNode;
@@ -5,11 +7,11 @@ interface MathComponentProps {
 
 const MathComponent = ({ name, children }: MathComponentProps) => {
   return (
-    <div className="methodology-math flex flex-col items-center italic">
-      <div>
-        <div className="text-center text-sm">{children}</div>
-        <p className="text-right text-xs">({name})</p>
-      </div>
+    <div className="methodology-math italic">
+      <ScrollArea hasHorizontalScroll className="text-center text-sm">
+        {children}
+      </ScrollArea>
+      <p className="text-right text-xs">({name})</p>
     </div>
   );
 };
