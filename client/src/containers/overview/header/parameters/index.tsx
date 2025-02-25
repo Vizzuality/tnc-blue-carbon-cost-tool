@@ -43,7 +43,7 @@ export const PROJECT_PARAMETERS: Parameter[] = [
   {
     key: FILTER_KEYS[3],
     label: "Cost type",
-    className: "w-[85px]",
+    className: "w-[85px] [&>span]:first-letter:capitalize",
     tooltipContent: FILTERS.COST_TYPE,
     options: [
       {
@@ -100,6 +100,7 @@ export default function ParametersProjects() {
                   key={option.value}
                   value={option.value}
                   disabled={option?.disabled}
+                  className="[&>span]:first-letter:capitalize"
                 >
                   {option.label}
                 </SelectItem>
