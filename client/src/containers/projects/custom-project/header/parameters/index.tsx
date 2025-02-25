@@ -26,7 +26,7 @@ export const getProjectParameters = (hasOpenBreakEvenPrice: boolean) =>
     {
       key: FILTER_KEYS[3],
       label: "Cost type",
-      className: "w-[125px]",
+      className: "w-[125px] [&>span]:first-letter:capitalize",
       disabled: false,
       options: [
         {
@@ -98,7 +98,11 @@ export default function CustomProjectParameters({
             </SelectTrigger>
             <SelectContent>
               {parameter.options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="[&>span]:first-letter:capitalize"
+                >
                   {option.label}
                 </SelectItem>
               ))}

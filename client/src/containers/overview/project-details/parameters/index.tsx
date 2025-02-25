@@ -18,15 +18,15 @@ import {
 export const PROJECT_PARAMETERS: Parameter<keyof ProjectDetailsFilters>[] = [
   {
     key: FILTER_KEYS[3],
-    label: "Cost",
-    className: "w-[85px]",
+    label: "Cost type",
+    className: "w-[85px] [&>span]:first-letter:capitalize",
     options: [
       {
         label: COST_TYPE_SELECTOR.TOTAL,
         value: COST_TYPE_SELECTOR.TOTAL,
       },
       {
-        label: COST_TYPE_SELECTOR.NPV,
+        label: COST_TYPE_SELECTOR.NPV.toUpperCase(),
         value: COST_TYPE_SELECTOR.NPV,
       },
     ],
@@ -64,6 +64,7 @@ export default function ParametersProjects() {
                   key={option.value}
                   value={option.value}
                   disabled={option?.disabled}
+                  className="[&>span]:first-letter:capitalize"
                 >
                   {option.label}
                 </SelectItem>
