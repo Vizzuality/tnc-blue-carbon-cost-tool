@@ -53,7 +53,7 @@ export type RawDataIngestionData = {
   'Sequestration rate': ExcelSequestrationRate[];
   'Emission factors': ExcelEmissionFactors[];
   'Implementation labor': ExcelImplementationLaborCost[];
-  base_size_table: ExcelBaseSize[];
-  base_increase: ExcelBaseIncrease[];
+  Base_size_table: ExcelBaseSize[];
+  Base_increase: ExcelBaseIncrease[];
   'Model assumptions': ExcelModelAssumptions[];
 };

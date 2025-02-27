@@ -157,13 +157,13 @@ export class TestManager {
     }
     const testFilePath = path.join(
       __dirname,
-      '../../../data/excel/data_ingestion_WIP.xlsm',
+      '../../../data/excel/Carbon-Cost Data Upload.xlsm',
     );
     const fileBuffer = fs.readFileSync(testFilePath);
     const upload = await this.request()
       .post(adminContract.uploadFile.path)
       .set('Authorization', `Bearer ${jwtToken}`)
-      .attach('file', fileBuffer, 'data_ingestion_WIP.xlsm');
+      .attach('file', fileBuffer, 'Carbon-Cost Data Upload.xlsm');
     if (upload.status !== 201) {
       throw new Error('Failed to upload Excel file for tests');
     }

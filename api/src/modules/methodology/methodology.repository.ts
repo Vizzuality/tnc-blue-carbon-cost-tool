@@ -66,7 +66,7 @@ export class MethodologyRepository {
 
   public async getModelComponentSources(): Promise<MethodologySourcesDto> {
     const sql = `
-SELECT category, JSONB_AGG(JSONB_BUILD_OBJECT('name', name, 'sources', COALESCE(sources, '[]'::JSONB)) ORDER BY name) AS "sourcesByComponentName"
+SELECT category, JSONB_AGG(JSONB_BUILD_OBJECT('name', name, 'sources', sources) ORDER BY name) AS "sourcesByComponentName"
 FROM (
     ${this.oneToNSourcesSql}
     ${this.manyToManySourcesSql}

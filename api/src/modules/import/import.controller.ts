@@ -5,11 +5,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-  FilesInterceptor,
-} from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
 import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
 import { ROLES } from '@shared/entities/users/roles.enum';
@@ -33,15 +29,14 @@ export class ImportController {
   //       https://docs.nestjs.com/techniques/file-upload
 
   @TsRestHandler(adminContract.uploadFile)
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'file', maxCount: 1 }]))
+  @UseInterceptors(FileInterceptor('file'))
   @RequiredRoles(ROLES.ADMIN)
   async uploadFile(
-    @UploadedFiles()
-    files: { file?: Express.Multer.File[] },
+    @UploadXlsm() file: Express.Multer.File,
     @GetUser() user: User,
   ): Promise<ControllerResponse> {
     return tsRestHandler(adminContract.uploadFile, async () => {
-      await this.service.import(files.file[0].buffer, user.id);
+      await this.service.import(file.buffer, user.id);
       return {
         status: 201,
         body: null,

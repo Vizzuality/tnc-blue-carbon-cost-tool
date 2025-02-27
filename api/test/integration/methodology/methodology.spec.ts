@@ -3,6 +3,8 @@ import { EmissionFactors } from '@shared/entities/carbon-inputs/emission-factors
 import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity';
 import { ModelComponentSourceM2M } from '@shared/entities/methodology/model-source-m2m.entity';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
+import { METHODOLOGY_SOURCES_RESPONSE_BODY } from 'api/test/integration/methodology/methodology-sources.response';
+import { MethodologySourcesUtils } from 'api/test/integration/methodology/methodology-sources.utils';
 import { TestManager } from 'api/test/utils/test-manager';
 
 describe('Methodology', () => {
@@ -86,107 +88,13 @@ describe('Methodology', () => {
         .expect(200);
 
       expect(res.status).toBe(200);
-      expect(res.body.data).toStrictEqual([
-        {
-          category: 'Carbon',
-          sourcesByComponentName: [
-            {
-              name: 'Ecosystem extent',
-              sources: [],
-            },
-            {
-              name: 'Emission factors',
-              sources: {
-                AGB: [
-                  {
-                    id: sources[0].id,
-                    name: 'Test Source 1',
-                  },
-                ],
-                SOC: [
-                  {
-                    id: sources[1].id,
-                    name: 'Test Source 2',
-                  },
-                ],
-              },
-            },
-            {
-              name: 'Loss rate',
-              sources: [],
-            },
-            {
-              name: 'Sequestration rate',
-              sources: [],
-            },
-          ],
-        },
-        {
-          category: 'Costs',
-          sourcesByComponentName: [
-            {
-              name: 'Baseline reassessment',
-              sources: [],
-            },
-            {
-              name: 'Blue carbon project planning',
-              sources: [],
-            },
-            {
-              name: 'Carbon standard fees',
-              sources: [],
-            },
-            {
-              name: 'Community benefit sharing',
-              sources: [],
-            },
-            {
-              name: 'Community liaison',
-              sources: [],
-            },
-            {
-              name: 'Conservation planning',
-              sources: [],
-            },
-            {
-              name: 'Data collection',
-              sources: [],
-            },
-            {
-              name: 'Establishing carbon rights',
-              sources: [],
-            },
-            {
-              name: 'Feasibility analysis',
-              sources: [],
-            },
-            {
-              name: 'Financing costs',
-              sources: [],
-            },
-            {
-              name: 'Implementation',
-              sources: [],
-            },
-            {
-              name: 'Long term project operating',
-              sources: [],
-            },
-            {
-              name: 'Maintenance',
-              sources: [],
-            },
-            {
-              name: 'Monitoring',
-              sources: [],
-            },
-            {
-              name: 'MRV',
-              sources: [],
-            },
-          ],
-        },
-      ]);
+      expect(
+        MethodologySourcesUtils.removeSourceIds(res.body.data),
+      ).toStrictEqual(
+        MethodologySourcesUtils.removeSourceIds(
+          METHODOLOGY_SOURCES_RESPONSE_BODY,
+        ),
+      );
     });
   });
 
@@ -210,6 +118,8 @@ describe('Methodology', () => {
       const modelComponentSourceM2MRepo = dataSource.getRepository(
         ModelComponentSourceM2M,
       );
+      // Remove current relationships as the current excel file create them
+      await modelComponentSourceM2MRepo.delete({});
 
       const source = await modelComponentSourcesRepo.save({
         name: 'Test Source',
