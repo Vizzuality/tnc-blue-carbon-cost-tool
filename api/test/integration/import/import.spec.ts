@@ -11,7 +11,7 @@ describe('Import Tests', () => {
   let testUserToken: string;
   const testFilePath = path.join(
     __dirname,
-    '../../../../data/excel/data_ingestion_WIP.xlsm',
+    '../../../../data/excel/Carbon-Cost Data Upload.xlsm',
   );
   const fileBuffer = fs.readFileSync(testFilePath);
 
@@ -54,7 +54,7 @@ describe('Import Tests', () => {
         .request()
         .post(adminContract.uploadFile.path)
         .set('Authorization', `Bearer ${jwtToken}`)
-        .attach('file', fileBuffer, 'data_ingestion_WIP.xlsm');
+        .attach('file', fileBuffer, 'Carbon-Cost Data Upload.xlsm');
 
       expect(response.status).toBe(HttpStatus.FORBIDDEN);
     });
@@ -67,7 +67,7 @@ describe('Import Tests', () => {
         .request()
         .post(adminContract.uploadFile.path)
         .set('Authorization', `Bearer ${testUserToken}`)
-        .attach('file', fileBuffer, 'data_ingestion_WIP.xlsm');
+        .attach('file', fileBuffer, 'Carbon-Cost Data Upload.xlsm');
 
       const baseDataView = await testManager
         .getDataSource()

@@ -129,7 +129,11 @@ export const MethodologySourcesConfig = [
     label: "Maintenance",
     category: "Costs",
     relationshipType: "m2m",
-    propertiesWithSources: ["maintenance", "maintenanceDuration"],
+    propertiesWithSources: [
+      "maintenance",
+      "maintenanceDuration",
+      "maintenanceCost",
+    ],
   },
   {
     entity: CommunityBenefitSharingFund,

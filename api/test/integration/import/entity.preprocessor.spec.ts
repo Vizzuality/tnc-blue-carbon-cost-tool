@@ -97,6 +97,7 @@ describe('Entity Preprocessor', () => {
             activity_type: RESTORATION_ACTIVITY_SUBTYPE.HYBRID,
           },
         ],
+        'Sources table': [],
         'Project size': [],
         'Feasibility analysis': [],
         'Conservation planning and admin': [],
@@ -120,8 +121,8 @@ describe('Entity Preprocessor', () => {
         'Sequestration rate': [],
         'Emission factors': [],
         'Implementation labor': [],
-        base_size_table: [],
-        base_increase: [],
+        Base_size_table: [],
+        Base_increase: [],
         'Model assumptions': [],
       };
       const entityPreprocessor = testManager.getApp().get(EntityPreprocessor);
@@ -131,7 +132,7 @@ describe('Entity Preprocessor', () => {
 
       // Then
       expect(parsedDBEntities.projects).toBeDefined();
-      expect(parsedDBEntities.projects.length).toBe(1);
+      expect(parsedDBEntities.projects.records.length).toBe(1);
     });
 
     it('should throw an exception when the scorecard rating for a given project cannot be computedt', async () => {
@@ -221,9 +222,10 @@ describe('Entity Preprocessor', () => {
         'Sequestration rate': [],
         'Emission factors': [],
         'Implementation labor': [],
-        base_size_table: [],
-        base_increase: [],
+        Base_size_table: [],
+        Base_increase: [],
         'Model assumptions': [],
+        'Sources table': [],
       };
       const entityPreprocessor = testManager.getApp().get(EntityPreprocessor);
 
