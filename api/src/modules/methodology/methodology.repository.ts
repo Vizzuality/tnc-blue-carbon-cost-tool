@@ -2,6 +2,7 @@ import { MethodologySourcesConfig } from '@shared/config/methodology.config';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { MethodologySourcesDto } from '@shared/dtos/methodology/methodology-sources.dto';
 import { DataSource } from 'typeorm';
+import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
 
 export class MethodologyRepository {
   private oneToNSourcesSql: string = '';
@@ -16,6 +17,9 @@ export class MethodologyRepository {
 
   private preComputeSourcesSql(): void {
     for (const sourceConfig of MethodologySourcesConfig) {
+      // Exclude ModelAssumptions from the sources as they are delivered in a different way
+      if (sourceConfig.entity.name === ModelAssumptions.name) continue;
+
       const entityMetadata = this.dataSource.getMetadata(sourceConfig.entity);
       if (sourceConfig.relationshipType === '1n') {
         this.oneToNSourcesSql += `
@@ -65,11 +69,26 @@ export class MethodologyRepository {
   }
 
   public async getModelComponentSources(): Promise<MethodologySourcesDto> {
+    // Economic factors are store in a different way that break the general rule, so they need to be handled differently.
     const sql = `
 SELECT category, JSONB_AGG(JSONB_BUILD_OBJECT('name', name, 'sources', sources) ORDER BY name) AS "sourcesByComponentName"
 FROM (
     ${this.oneToNSourcesSql}
     ${this.manyToManySourcesSql}
+    
+    UNION ALL
+    SELECT 
+      'Economic factors' AS category, 
+      field_name AS name,
+      jsonb_agg(jsonb_build_object('id', source_id, 'name', source_name)) AS sources
+    FROM (
+      SELECT t2.name AS field_name, t1.name AS source_name, t1.id AS source_id
+      FROM model_component_sources t1
+      INNER JOIN model_assumptions t2 ON t2.source_id = t1.id
+      WHERE t2.name IN ('Discount rate', 'Carbon price increase')
+    ) 
+    GROUP BY field_name
+
 ) as joint_sources
 GROUP BY category
 ORDER BY category`;
