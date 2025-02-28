@@ -86,7 +86,7 @@ FROM (
       FROM model_component_sources t1
       INNER JOIN model_assumptions t2 ON t2.source_id = t1.id
       WHERE t2.name IN ('Discount rate', 'Carbon price increase')
-    ) 
+    ) AS economic_factors
     GROUP BY field_name
 
 ) as joint_sources
