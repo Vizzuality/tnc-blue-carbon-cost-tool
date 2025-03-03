@@ -206,26 +206,23 @@ export class CostCalculator {
     const {
       costPerTCO2e,
       costPerHa,
-      npvCoveringCosts,
       IRROpex,
       IRRTotalCost,
       totalNPV,
+      npvCoveringCosts,
       totalCapexNPV,
       totalOpexNPV,
       totalCreditsIssued,
       totalRevenueNPV,
       totalRevenue,
       financingCost,
-      fundingGap,
       fundingGapNPV,
       fundingGapPerTCO2e,
       totalCommunityBenefitSharingFund,
     } = costPlanOutput;
-    return {
+    const summary: Partial<CustomProjectSummary> = {
       '$/tCO2e (total cost, NPV)': costPerTCO2e,
       '$/ha': costPerHa,
-      'NPV covering cost': npvCoveringCosts,
-      'Leftover after OpEx / total cost': npvCoveringCosts,
       'IRR when priced to cover OpEx': IRROpex,
       'IRR when priced to cover total cost': IRRTotalCost,
       'Total cost (NPV)': totalNPV,
@@ -235,11 +232,19 @@ export class CostCalculator {
       'Total revenue (NPV)': totalRevenueNPV,
       'Total revenue (non-discounted)': totalRevenue,
       'Financing cost': financingCost,
-      'Funding gap': fundingGap,
       'Funding gap (NPV)': fundingGapNPV,
       'Funding gap per tCO2e (NPV)': fundingGapPerTCO2e,
       'Community benefit sharing fund': totalCommunityBenefitSharingFund,
     };
+
+    if (
+      this.projectInput.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
+    ) {
+      summary['Net revenue after OPEX'] = npvCoveringCosts;
+    } else {
+      summary['Net revenue after Total cost'] = npvCoveringCosts;
+    }
+    return summary as CustomProjectSummary;
   }
 
   getCostDetails(costPlanOutput: CostPlansOutput): {
