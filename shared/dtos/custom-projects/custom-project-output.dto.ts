@@ -4,8 +4,8 @@ import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity
 export type CustomProjectSummary = {
   "$/tCO2e (total cost, NPV)": number;
   "$/ha": number;
-  "NPV covering cost": number;
-  "Leftover after OpEx / total cost": number | null;
+  // "NPV covering cost": number;
+  // "Leftover after OpEx / total cost": number | null;
   "IRR when priced to cover OpEx": number;
   "IRR when priced to cover total cost": number;
   "Total cost (NPV)": number;
@@ -15,10 +15,13 @@ export type CustomProjectSummary = {
   "Total revenue (NPV)": number;
   "Total revenue (non-discounted)": number;
   "Financing cost": number;
-  "Funding gap": number;
+  // "Funding gap": number;
   "Funding gap (NPV)": number;
   "Funding gap per tCO2e (NPV)": number;
   "Community benefit sharing fund": number;
+
+  "Net revenue after OPEX": number | undefined;
+  "Net revenue after Total cost": number | undefined;
 };
 
 export type CustomProjectCostDetails = {

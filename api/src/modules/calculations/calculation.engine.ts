@@ -82,7 +82,11 @@ export class CalculationEngine {
         baseSize: baseSize,
       });
 
-      npvCoveringCost = costOutput.summary['NPV covering cost'];
+      // We don't have npvCoveringCost in the summary anymore but is the same a Net revenue according to Elena, just a naming change.
+      // npvCoveringCost = costOutput.summary['NPV covering cost'];
+      npvCoveringCost =
+        costOutput.summary['Net revenue after OPEX'] ??
+        costOutput.summary['Net revenue after Total cost'];
       creditsIssued = costOutput.summary['Credits issued'];
 
       if (Math.abs(npvCoveringCost) < tolerance) {
