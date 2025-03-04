@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 
 import { useSetAtom } from "jotai";
 
@@ -23,17 +23,10 @@ export default function Methodology() {
     containerRef: ref,
     setCurrentStep: setMethodologyStep,
     options: {
-      threshold: 0.1,
+      threshold: 0.05,
       rootMargin: "0% 0% -70% 0%",
     },
   });
-  const navItems = useMemo(() => {
-    return METHODOLOGY_SECTIONS.map(({ id, title, href }) => ({
-      id,
-      label: title,
-      href,
-    }));
-  }, []);
 
   return (
     <div className="ml-4 flex h-lvh w-full flex-col">
@@ -44,7 +37,7 @@ export default function Methodology() {
         </div>
       </div>
       <div className="relative grid h-full grid-cols-[400px_1fr] overflow-hidden">
-        <MethodologySidebar navItems={navItems} />
+        <MethodologySidebar />
         <ScrollArea ref={ref} className="px-8" showGradient>
           <div
             id="methodology-sections-container"

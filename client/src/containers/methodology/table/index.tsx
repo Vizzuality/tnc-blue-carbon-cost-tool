@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useCallback, useMemo } from "react";
 
 import {
   Table,
@@ -25,32 +25,9 @@ interface MethodologyTableProps<T extends MethodologyBaseTableRow> {
   categorized?: boolean;
 }
 
-export default function MethodologyTable<T extends MethodologyBaseTableRow>({
-  data,
-  categorized = false,
-}: MethodologyTableProps<T>) {
-  const { headers, rows } = data;
-  const headerKeys = Object.keys(headers) as Array<keyof typeof headers>;
-
-  const RegularTable = (
-    <TableBody>
-      {rows.map((row) => (
-        <TableRow key={row.id} className="divide-none">
-          {headerKeys.map((key) => (
-            <TableCell
-              key={`table-cell-${row.id}-${String(key)}`}
-              className="px-2 py-4 text-xs"
-            >
-              {row[key] || "-"}
-            </TableCell>
-          ))}
-        </TableRow>
-      ))}
-    </TableBody>
-  );
-
-  const renderCategorizedTable = () => {
-    const groupedData = rows.reduce(
+const groupedData = <T extends MethodologyBaseTableRow>(rows: T[]) =>
+  Object.entries(
+    rows.reduce(
       (acc, row) => {
         const category = row.category || "";
         if (!acc[category]) {
@@ -60,11 +37,43 @@ export default function MethodologyTable<T extends MethodologyBaseTableRow>({
         return acc;
       },
       {} as Record<string, T[]>,
-    );
+    ),
+  );
 
+function MethodologyTable<T extends MethodologyBaseTableRow>({
+  data,
+  categorized = false,
+}: MethodologyTableProps<T>) {
+  const { headers, rows } = data;
+  const headerKeys = useMemo(
+    () => Object.keys(headers) as Array<keyof typeof headers>,
+    [headers],
+  );
+
+  const renderRegularTable = useCallback(
+    () => (
+      <TableBody>
+        {rows.map((row) => (
+          <TableRow key={row.id} className="divide-none">
+            {headerKeys.map((key) => (
+              <TableCell
+                key={`table-cell-${row.id}-${String(key)}`}
+                className="px-2 py-4 text-xs"
+              >
+                {row[key] || "-"}
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableBody>
+    ),
+    [rows, headerKeys],
+  );
+
+  const renderCategorizedTable = useCallback(() => {
     return (
       <TableBody>
-        {Object.entries(groupedData).map(([category, categoryRows]) => (
+        {groupedData<T>(rows).map(([category, categoryRows]) => (
           <Fragment key={`methodology-table-category-${category}`}>
             {categoryRows.map((row, rowIndex) => (
               <TableRow key={row.id} className="divide-none">
@@ -90,7 +99,7 @@ export default function MethodologyTable<T extends MethodologyBaseTableRow>({
         ))}
       </TableBody>
     );
-  };
+  }, [rows, headerKeys]);
 
   return (
     <div className="overflow-hidden rounded-2xl border">
@@ -112,8 +121,10 @@ export default function MethodologyTable<T extends MethodologyBaseTableRow>({
             ))}
           </TableRow>
         </TableHeader>
-        {categorized ? renderCategorizedTable() : RegularTable}
+        {categorized ? renderCategorizedTable() : renderRegularTable()}
       </Table>
     </div>
   );
 }
+
+export default MethodologyTable;

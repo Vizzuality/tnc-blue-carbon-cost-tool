@@ -63,7 +63,7 @@ const Introduction: MethodologySection = {
       </List>
 
       <div>
-        <Title as="h4" size="sm" className="font-semibold underline">
+        <Title as="h4" size="base" className="font-semibold underline">
           Project types
         </Title>
         <p>
@@ -107,7 +107,7 @@ const Introduction: MethodologySection = {
         </li>
       </List>
       <div>
-        <Title as="h4" size="sm" className="font-semibold underline">
+        <Title as="h4" size="base" className="font-semibold underline">
           Countries
         </Title>
         <p>

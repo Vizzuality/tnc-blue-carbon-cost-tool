@@ -5,16 +5,18 @@ import { queryKeys } from "@/lib/query-keys";
 
 import MethodologyTable, {
   MethodologyBaseTableRow,
+  MethodologyTableDefinition,
 } from "@/containers/methodology/table";
 import { modelAssumptionsHeaders } from "@/containers/methodology/table/data";
 
 const getTableData = (data: ModelAssumptions[]) => {
-  const rows: MethodologyBaseTableRow[] = data.map((item) => ({
-    id: item.id,
-    assumptions: item.name,
-    units: item.unit,
-    value: item.value,
-  }));
+  const rows: MethodologyTableDefinition<MethodologyBaseTableRow>["rows"] =
+    data.map((item) => ({
+      id: item.id,
+      assumptions: item.name,
+      units: item.unit,
+      value: item.value,
+    }));
 
   return {
     headers: modelAssumptionsHeaders,

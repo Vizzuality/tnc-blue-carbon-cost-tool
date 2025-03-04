@@ -8,6 +8,7 @@ import MethodologyTable, {
   MethodologyBaseTableRow,
 } from "@/containers/methodology/table";
 import { sourcesHeaders } from "@/containers/methodology/table/data";
+import { Fragment } from "react";
 
 const getTableData = (data: MethodologySourcesDto) => {
   const rows: MethodologyTableDefinition<MethodologyBaseTableRow>["rows"] = [];
@@ -31,8 +32,12 @@ const getTableData = (data: MethodologySourcesDto) => {
 };
 
 const getSourcesComponent = (
-  sources: MethodologySourcesDto[number]["sourcesByComponentName"][number]["sources"],
+  sources:
+    | MethodologySourcesDto[number]["sourcesByComponentName"][number]["sources"]
+    | null,
 ) => {
+  if (sources === null) return null;
+
   if (Array.isArray(sources)) {
     return (
       <ul>
@@ -50,14 +55,14 @@ const getSourcesComponent = (
       sources[key as keyof typeof sources];
 
     return (
-      <>
+      <Fragment key={key}>
         <p>{key}</p>
         <ul>
           {items.map((item) => (
             <li key={item.id}>{item.name}</li>
           ))}
         </ul>
-      </>
+      </Fragment>
     );
   });
 };
@@ -69,9 +74,7 @@ const SourcesTable = () => {
     {},
     {
       queryKey,
-      select: (data) => {
-        return getTableData(data.body.data);
-      },
+      select: (data) => getTableData(data.body.data),
     },
   );
 

@@ -2,17 +2,18 @@ import { FC } from "react";
 
 import { useAtomValue } from "jotai";
 
+import METHODOLOGY_SECTIONS from "@/containers/methodology/sections";
 import { methodologyStepAtom } from "@/containers/methodology/store";
 import Sidebar from "@/containers/sidebar";
-import SidebarNavigation, {
-  SidebarNavigationItem,
-} from "@/containers/sidebar/sidebar-navigation";
+import SidebarNavigation from "@/containers/sidebar/sidebar-navigation";
 
-interface MethodologySidebarProps {
-  navItems: SidebarNavigationItem[];
-}
+const navItems = METHODOLOGY_SECTIONS.map(({ id, title, href }) => ({
+  id,
+  label: title,
+  href,
+}));
 
-const MethodologySidebar: FC<MethodologySidebarProps> = ({ navItems }) => {
+const MethodologySidebar: FC = () => {
   const intersecting = useAtomValue(methodologyStepAtom);
 
   return (
