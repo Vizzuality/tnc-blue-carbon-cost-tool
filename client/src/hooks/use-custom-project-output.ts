@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import {
   ConservationProjectOutput,
   RestorationProjectOutput,
+  sortCustomProjectSummary,
 } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import { CUSTOM_PROJECT_PRICE_TYPE } from "@shared/dtos/custom-projects/custom-projects.enums";
 import { ACTIVITY } from "@shared/entities/activity.enum";
@@ -95,34 +96,35 @@ export const useCustomProjectOutput = (
     [output?.yearlyBreakdown],
   );
 
-  const summaryData = useMemo(
-    () =>
-      output?.summary
-        ? {
-            ...output.summary,
-            "IRR when priced to cover OpEx": parseFloat(
-              toPercentageValue(
-                output.summary["IRR when priced to cover OpEx"],
-              ),
-            ),
-            "Community benefit sharing fund": parseFloat(
-              toPercentageValue(
-                output.summary["Community benefit sharing fund"],
-              ),
-            ),
-          }
-        : null,
-    [output?.summary],
-  );
-  const leftOverProps = useMemo(() => {
-    const tooltipContent =
-      data.input.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
-        ? CUSTOM_PROJECT_OUTPUTS.NET_REVENUE_AFTER_OPEX_TOTAL_COST
-        : CUSTOM_PROJECT_OUTPUTS.NET_REVENUE_AFTER_CAPEX_OPEX_TOTAL_COST;
+  const summaryData = useMemo(() => {
+    if (!output?.summary) return null;
+
+    const sortedSummary = sortCustomProjectSummary(output.summary);
     return {
-      title: `Net revenue after ${data.input.carbonRevenuesToCover}/Total cost`,
+      ...sortedSummary,
+      "IRR when priced to cover OpEx": parseFloat(
+        toPercentageValue(output.summary["IRR when priced to cover OpEx"]),
+      ),
+      "Community benefit sharing fund": parseFloat(
+        toPercentageValue(output.summary["Community benefit sharing fund"]),
+      ),
+    };
+  }, [output?.summary]);
+  const leftOverProps = useMemo(() => {
+    let title = "";
+    let tooltipContent;
+    if (data.input.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX) {
+      title = "Net revenue after OPEX";
+      tooltipContent = CUSTOM_PROJECT_OUTPUTS.NET_REVENUE_AFTER_OPEX_TOTAL_COST;
+    } else {
+      title = "Net revenue after Total cost";
+      tooltipContent =
+        CUSTOM_PROJECT_OUTPUTS.NET_REVENUE_AFTER_CAPEX_OPEX_TOTAL_COST;
+    }
+    return {
+      title,
       tooltip: {
-        title: `Net revenue after ${data.input.carbonRevenuesToCover}/Total cost`,
+        title,
         content: tooltipContent,
       },
       data: output?.leftover[costRangeSelector],

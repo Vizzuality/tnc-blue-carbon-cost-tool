@@ -24,8 +24,8 @@ const customProjectSummaryUnitMap: Record<keyof CustomProjectSummary, string> =
   {
     "$/tCO2e (total cost, NPV)": "$",
     "$/ha": "$",
-    "NPV covering cost": "$",
-    "Leftover after OpEx / total cost": "$",
+    "Net revenue after OPEX": "$",
+    "Net revenue after Total cost": "$",
     "IRR when priced to cover OpEx": "%",
     "IRR when priced to cover total cost": "%",
     "Total cost (NPV)": "$",
@@ -35,7 +35,6 @@ const customProjectSummaryUnitMap: Record<keyof CustomProjectSummary, string> =
     "Total revenue (NPV)": "$",
     "Total revenue (non-discounted)": "$",
     "Financing cost": "$",
-    "Funding gap": "$",
     "Funding gap (NPV)": "$",
     "Funding gap per tCO2e (NPV)": "$",
     "Community benefit sharing fund": "%",

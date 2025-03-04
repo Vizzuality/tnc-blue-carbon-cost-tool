@@ -4,8 +4,6 @@ import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity
 export type CustomProjectSummary = {
   "$/tCO2e (total cost, NPV)": number;
   "$/ha": number;
-  // "NPV covering cost": number;
-  // "Leftover after OpEx / total cost": number | null;
   "IRR when priced to cover OpEx": number;
   "IRR when priced to cover total cost": number;
   "Total cost (NPV)": number;
@@ -15,13 +13,49 @@ export type CustomProjectSummary = {
   "Total revenue (NPV)": number;
   "Total revenue (non-discounted)": number;
   "Financing cost": number;
-  // "Funding gap": number;
   "Funding gap (NPV)": number;
   "Funding gap per tCO2e (NPV)": number;
   "Community benefit sharing fund": number;
-
   "Net revenue after OPEX": number | undefined;
   "Net revenue after Total cost": number | undefined;
+};
+
+const SORTED_CUSTOM_PROJECT_SUMMARY_KEYS = [
+  "$/tCO2e (total cost, NPV)",
+  "$/ha",
+  "Net revenue after OPEX",
+  "Net revenue after Total cost",
+  "IRR when priced to cover OpEx",
+  "IRR when priced to cover total cost",
+  "Total cost (NPV)",
+  "Capital expenditure (NPV)",
+  "Operating expenditure (NPV)",
+  "Credits issued",
+  "Total revenue (NPV)",
+  "Total revenue (non-discounted)",
+  "Financing cost",
+  "Funding gap (NPV)",
+  "Funding gap per tCO2e (NPV)",
+  "Community benefit sharing fund",
+] as const;
+
+export const sortCustomProjectSummary = (
+  summary: CustomProjectSummary,
+): CustomProjectSummary => {
+  const sortedObj: Partial<CustomProjectSummary> = {};
+
+  for (
+    let keyIdx = 0;
+    keyIdx < SORTED_CUSTOM_PROJECT_SUMMARY_KEYS.length;
+    keyIdx++
+  ) {
+    const key = SORTED_CUSTOM_PROJECT_SUMMARY_KEYS[keyIdx];
+    if (key in summary) {
+      sortedObj[key] = summary[key];
+    }
+  }
+
+  return sortedObj as CustomProjectSummary;
 };
 
 export type CustomProjectCostDetails = {
