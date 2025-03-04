@@ -28,11 +28,11 @@ const ProjectDetailsLeftover: FC<ProjectDetailsLeftoverProps> = ({
             <Label
               className="text-md font-medium"
               tooltip={{
-                title: "Net revenue after OPEX/Total cost",
+                title: "Net revenue after OPEX",
                 content: PROJECT_DETAILS.NET_REVENUE_AFTER_OPEX_TOTAL_COST,
               }}
             >
-              <h3 className="text-md">Net revenue after OPEX/Total cost</h3>
+              <h3 className="text-md">Net revenue after OPEX</h3>
             </Label>
           </div>
           <div className="text-sm text-big-stone-200">

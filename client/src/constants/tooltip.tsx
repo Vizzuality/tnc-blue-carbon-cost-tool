@@ -657,8 +657,6 @@ export const PROJECT_SUMMARY: Record<keyof CustomProjectSummary, string> = {
     "The NPV of the total cost (CAPEX & OPEX, excl. financing cost) divided by the total credits the project will generate.",
   "$/ha":
     "The NPV of the total cost (CAPEX & OPEX, excl. financing cost) divided by the total ha of the project",
-  "NPV covering cost":
-    'The NPV of the carbon credit revenues subtracted by either the OPEX or the total cost (depending on parameter in "carbon revenues to cover")',
   "IRR when priced to cover OpEx":
     "The internal rate of return (IRR) calculated when carbon credits are priced to only cover the operating expenses (OPEX).",
   "IRR when priced to cover total cost":
@@ -681,10 +679,8 @@ export const PROJECT_SUMMARY: Record<keyof CustomProjectSummary, string> = {
     'The reverse of the "NPV covering OPEX" or "NPV covering total cost" metric.',
   "Community benefit sharing fund":
     "The percentage of the revenues assumed to go back to the community as part of the community benefit sharing fund.",
-  "Leftover after OpEx / total cost":
-    "The remaining net revenue after accounting for all operating expenses (OPEX) associated with the project.",
-  "Funding gap":
-    'The reverse of the "NPV covering OPEX" or "NPV covering total cost" metric.',
+  "Net revenue after OPEX": "TODO",
+  "Net revenue after Total cost": "TODO",
 };
 
 export const COST_DETAILS = (
