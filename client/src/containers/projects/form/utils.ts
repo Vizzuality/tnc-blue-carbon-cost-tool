@@ -6,7 +6,6 @@ import { AssumptionsResponse } from "@shared/contracts/custom-projects.contract"
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject } from "@shared/entities/custom-project.entity";
-import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
 import { MAX_PROJECT_LENGTH } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -14,8 +13,6 @@ import { useSession } from "next-auth/react";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
-
-import { getQueryClient } from "@/app/providers";
 
 import {
   DEFAULT_COMMON_FORM_VALUES,
@@ -27,119 +24,6 @@ import {
   CustomProjectForm,
   ValidatedCustomProjectForm,
 } from "@/containers/projects/form/setup";
-
-export const parseFormValues = (
-  data: CustomProjectForm,
-): ValidatedCustomProjectForm => {
-  const queryClient = getQueryClient();
-
-  const originalValues = { ...data };
-
-  const assumptionsResponse =
-    client.customProjects.getDefaultAssumptions.getQueryData(
-      queryClient,
-      queryKeys.customProjects.assumptions({
-        ecosystem: data.ecosystem,
-        activity: data.activity,
-      }).queryKey,
-    );
-
-  const costsResponse = client.customProjects.getDefaultCostInputs.getQueryData(
-    queryClient,
-    queryKeys.customProjects.defaultCosts({
-      ecosystem: data.ecosystem,
-      activity: data.activity,
-      countryCode: data.countryCode,
-      ...(data.activity === ACTIVITY.RESTORATION && {
-        restorationActivity:
-          "restorationActivity" in data.parameters
-            ? data.parameters.restorationActivity
-            : undefined,
-      }),
-    }).queryKey,
-  );
-
-  const costs = costsResponse?.body.data;
-
-  const defaultAssumptionsToObject = assumptionsResponse?.body.data.reduce(
-    (acc, { name, value }) => {
-      return {
-        ...acc,
-        [ASSUMPTIONS_NAME_TO_DTO_MAP[
-          name as keyof typeof ASSUMPTIONS_NAME_TO_DTO_MAP
-        ]]: Number(value as NonNullable<typeof value>),
-      };
-    },
-    {},
-  );
-
-  const isRestoration = data.activity === ACTIVITY.RESTORATION;
-
-  const validYears = isRestoration // @ts-expect-error fix later
-    ? (originalValues.parameters.restorationYearlyBreakdown as number[])
-        .map((v, index) => ({
-          year: index == 0 ? -1 : index,
-          hectares: v,
-        }))
-        .filter((v) => v.hectares > 0)
-    : [];
-
-  const {
-    // @ts-expect-error fix later
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    restorationYearlyBreakdown,
-    ...restParameters
-  } = originalValues.parameters;
-
-  return {
-    ...originalValues,
-    parameters: {
-      ...restParameters,
-      // @ts-expect-error fix later
-      ...(restParameters?.plantingSuccessRate && {
-        plantingSuccessRate:
-          // @ts-expect-error fix later
-          restParameters.plantingSuccessRate / 100,
-      }),
-      ...(isRestoration && {
-        ...(validYears.length > 0 && {
-          restorationYearlyBreakdown: validYears.map(({ year, hectares }) => ({
-            year,
-            annualHectaresRestored: hectares,
-          })),
-        }),
-      }),
-    },
-    assumptions: {
-      ...Object.keys(originalValues.assumptions ?? {}).reduce(
-        (acc, assumptionKey) => {
-          return {
-            ...acc,
-            [assumptionKey]:
-              originalValues.assumptions?.[
-                assumptionKey as keyof typeof originalValues.assumptions
-              ] ??
-              defaultAssumptionsToObject?.[
-                assumptionKey as keyof typeof defaultAssumptionsToObject
-              ],
-          };
-        },
-        {},
-      ),
-    },
-    costInputs: {
-      ...Object.keys(originalValues.costInputs ?? {}).reduce((acc, costKey) => {
-        return {
-          ...acc,
-          [costKey]:
-            originalValues.costInputs?.[
-              costKey as keyof typeof originalValues.costInputs
-            ] ?? costs?.[costKey as keyof typeof costs],
-        };
-      }, {}),
-    },
-  } as unknown as ValidatedCustomProjectForm;
-};
 
 /**
  * Note: All percentage values are kept in decimal form,

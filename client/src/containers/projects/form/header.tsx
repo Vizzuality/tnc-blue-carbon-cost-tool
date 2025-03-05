@@ -4,6 +4,7 @@ import { useFormContext } from "react-hook-form";
 
 import { useRouter } from "next/navigation";
 
+import { CreateCustomProjectSchema } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
@@ -13,9 +14,9 @@ import { getAuthHeader } from "@/lib/utils";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
 import {
   createCustomProject,
-  parseFormValues,
   updateCustomProject,
 } from "@/containers/projects/form/utils";
+import parseFormValues from "@/containers/projects/form/utils/parse-form-values";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -37,6 +38,18 @@ export default function Header({ name, id }: HeaderProps) {
     async (data: CustomProjectForm) => {
       try {
         const formValues = parseFormValues(data);
+        const result = CreateCustomProjectSchema.safeParse(formValues);
+
+        if (!result.success) {
+          // Set errors for each field that failed validation
+          result.error.errors.forEach((error) => {
+            methods.setError(error.path.join(".") as keyof CustomProjectForm, {
+              type: "custom",
+              message: error.message,
+            });
+          });
+          return;
+        }
 
         if (isEdit) {
           await updateCustomProject({
@@ -68,7 +81,7 @@ export default function Header({ name, id }: HeaderProps) {
         });
       }
     },
-    [id, session, router, queryClient, isEdit, toast],
+    [id, session, router, queryClient, isEdit, toast, methods],
   );
 
   return (
