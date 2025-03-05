@@ -172,7 +172,7 @@ export const CustomProjectBaseLooseSchema = CustomProjectBaseSchema.extend({
 });
 
 // Complex validations that depend on multiple fields
-const ValidateConservationSchema = (
+export const ValidateConservationSchema = (
   data: z.infer<typeof CreateCustomProjectSchema>,
   ctx: z.RefinementCtx,
 ) => {
@@ -247,7 +247,7 @@ const ValidateConservationSchema = (
 };
 
 // Complex validations that depend on multiple fields
-const ValidateRestorationSchema = (
+export const ValidateRestorationSchema = (
   data: z.infer<typeof CreateCustomProjectSchema>,
   ctx: z.RefinementCtx,
 ) => {
