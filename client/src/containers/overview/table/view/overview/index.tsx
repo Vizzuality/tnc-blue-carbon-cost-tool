@@ -218,6 +218,14 @@ export function OverviewTable() {
                         ? (cell.getValue() as string)
                         : undefined
                     }
+                    style={
+                      cell.column.id === "projectName"
+                        ? {
+                            minWidth: "fit-content",
+                            maxWidth: "100%",
+                          }
+                        : undefined
+                    }
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
