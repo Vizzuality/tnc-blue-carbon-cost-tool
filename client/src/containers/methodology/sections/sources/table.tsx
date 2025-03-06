@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import { MethodologySourcesDto } from "@shared/dtos/methodology/methodology-sources.dto";
 
 import { client } from "@/lib/query-client";
@@ -8,7 +10,8 @@ import MethodologyTable, {
   MethodologyBaseTableRow,
 } from "@/containers/methodology/table";
 import { sourcesHeaders } from "@/containers/methodology/table/data";
-import { Fragment } from "react";
+
+import { List } from "@/components/ui/list";
 
 const getTableData = (data: MethodologySourcesDto) => {
   const rows: MethodologyTableDefinition<MethodologyBaseTableRow>["rows"] = [];
@@ -23,7 +26,11 @@ const getTableData = (data: MethodologySourcesDto) => {
         id: `${category}-${modelComponent}`,
         category,
         modelComponent,
-        sources: getSourcesComponent(source.sources),
+        sources: (
+          <div className="[&>*:not(:last-child)]:mb-2">
+            {getSourcesComponent(source.sources)}
+          </div>
+        ),
       });
     });
   });
@@ -40,11 +47,11 @@ const getSourcesComponent = (
 
   if (Array.isArray(sources)) {
     return (
-      <ul>
+      <List>
         {sources.map((source) => (
           <li key={source.id}>{source.name}</li>
         ))}
-      </ul>
+      </List>
     );
   }
 
@@ -56,12 +63,12 @@ const getSourcesComponent = (
 
     return (
       <Fragment key={key}>
-        <p>{key}</p>
-        <ul>
+        <p className="font-semibold">{key}</p>
+        <List>
           {items.map((item) => (
             <li key={item.id}>{item.name}</li>
           ))}
-        </ul>
+        </List>
       </Fragment>
     );
   });

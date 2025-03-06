@@ -36,7 +36,7 @@ export default function Methodology() {
           <h2 className="text-2xl font-medium">Methodology</h2>
         </div>
       </div>
-      <div className="relative grid h-full grid-cols-[400px_1fr] overflow-hidden">
+      <div className="relative grid h-full grid-cols-[325px_1fr] overflow-hidden">
         <MethodologySidebar />
         <ScrollArea ref={ref} className="px-8" showGradient>
           <div
@@ -53,7 +53,7 @@ export default function Methodology() {
                   variant="secondary"
                   className="border-none p-0 shadow-none"
                 >
-                  <CardHeader className="mb-6 space-y-4 px-16">
+                  <CardHeader className="mb-6 space-y-4 px-2">
                     <CardTitle>
                       <h2 className="text-2xl font-normal">{title}</h2>
                     </CardTitle>

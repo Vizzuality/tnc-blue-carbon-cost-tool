@@ -18,9 +18,9 @@ import ContentWrapper from "@/containers/methodology/wrapper";
 import { List } from "@/components/ui/list";
 
 const CarbonEmissionsReductionsAndCarbonCreditRevenues: MethodologySection = {
-  id: "carbon-emissions-reductions-and-carbon-credit-revenues",
-  title: "Carbon emissions reductions and carbon credit revenues",
-  href: "#carbon-emissions-reductions-and-carbon-credit-revenues",
+  id: "emission-reductions-and-credit-revenues",
+  title: "Emission reductions and credit revenues",
+  href: "#emission-reductions-and-credit-revenues",
   Content: (
     <div className="space-y-4">
       <style>
@@ -125,7 +125,7 @@ const CarbonEmissionsReductionsAndCarbonCreditRevenues: MethodologySection = {
         <MathComponent name="4">
           <Math4 />
         </MathComponent>
-        <p className="px-16 text-center text-sm italic">
+        <p>
           <span className="underline">Note:</span> The cumulative avoided loss
           for the Soil Organic Carbon considers the assumed release duration
           over time (e.g., if we have assumed the soil organic carbon is

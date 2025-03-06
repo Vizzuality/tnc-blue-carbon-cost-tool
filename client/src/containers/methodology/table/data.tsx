@@ -1,3 +1,5 @@
+import { List } from "@/components/ui/list";
+
 export const projectSizeAssumptionsData = {
   headers: {
     project: "Project",
@@ -84,18 +86,18 @@ export const projectCostsAssumptionsAndMethodologyData = {
       id: "project-costs-assumptions-and-methodology-feasibility-analysis",
       costComponent: <p className="font-bold">Feasibility analysis</p>,
       costAssumption: (
-        <ul>
+        <List>
           <li>US: ~$100k</li>
           <li>AUS/ BHS: ~$70k</li>
           <li>Others: ~$50k</li>
-        </ul>
+        </List>
       ),
       duration: "One off cost",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Providers typically have minimum fees</li>
           <li>Location accessibility</li>
-        </ul>
+        </List>
       ),
       category: "capex",
     },
@@ -107,10 +109,10 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "~$167k/ year",
       duration: "4 years (start up time)",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Conservation professional salary</li>
           <li>Duration of project start up phase</li>
-        </ul>
+        </List>
       ),
       category: "capex",
     },
@@ -122,11 +124,11 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "~$27k/ year",
       duration: "3 years",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Location accessibility</li>
           <li>Number, remoteness, and homogeneity of habitats</li>
           <li>Vendor costs</li>
-        </ul>
+        </List>
       ),
       category: "capex",
     },
@@ -138,10 +140,10 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "Between ~$65-126k /year, depending on country",
       duration: "4 years (start up time)",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Number of communities and their remoteness</li>
           <li>Duration of project start up phase</li>
-        </ul>
+        </List>
       ),
       category: "capex",
     },
@@ -151,10 +153,10 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "Between ~$43-120k/ year, depending on country",
       duration: "3 years",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Providers have minimums for costs of doing validation</li>
           <li>Location accessibility</li>
-        </ul>
+        </List>
       ),
       category: "capex",
     },
@@ -176,11 +178,11 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "Highly dependent per ha cost by country and ecosystem",
       duration: "Dependent on restoration plan",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Type and severity of intervention necessary</li>
           <li>Location accessibility</li>
           <li>Labor costs within country</li>
-        </ul>
+        </List>
       ),
       category: "capex",
     },
@@ -192,11 +194,11 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "Highly dependent on salaries in country",
       duration: "Every year after project set up",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Project size</li>
           <li>Degradation driver</li>
           <li>Desire to employ more community members hired for this role</li>
-        </ul>
+        </List>
       ),
       category: "opex",
     },
@@ -207,9 +209,9 @@ export const projectCostsAssumptionsAndMethodologyData = {
         "8% of implementation cost, for 3 years after the implementation",
       duration: "Three years after implementation",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Scale of original implementation</li>
-        </ul>
+        </List>
       ),
       category: "opex",
     },
@@ -222,13 +224,13 @@ export const projectCostsAssumptionsAndMethodologyData = {
         "5% of carbon credit revenues (developed countries), 50%-85% (developing country)",
       duration: "Each year with carbon credit revenues",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Value of other opportunities from land</li>
           <li>
             Degree of economic contribution to community from ecosystem
             degradation
           </li>
-        </ul>
+        </List>
       ),
       category: "opex",
     },
@@ -238,12 +240,12 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "$40,000 / baseline reassessment",
       duration: "Every 10 years",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>
             Providers have minimums for costs of doing a baseline reassessment
           </li>
           <li>Location accessibility</li>
-        </ul>
+        </List>
       ),
       category: "opex",
     },
@@ -257,10 +259,10 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "$100k (US, AUS, BA), $75k (others)",
       duration: "Every 5 years",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Providers have minimums for costs of doing an MRV</li>
           <li>Location accessibility</li>
-        </ul>
+        </List>
       ),
       category: "opex",
     },
@@ -272,10 +274,10 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "$17k-130k (depending on country)",
       duration: "Every year",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Number of communities and their remoteness</li>
           <li>Number, remoteness, and homogeneity of habitats</li>
-        </ul>
+        </List>
       ),
       category: "opex",
     },
@@ -285,12 +287,12 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "$0.2 per Verified Carbon Unit (VCU)",
       duration: "Each year when credits are issued",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>
             Fee is set by third parties and has breakpoints based on credits
             sold
           </li>
-        </ul>
+        </List>
       ),
       category: "opex",
     },
@@ -300,10 +302,10 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costAssumption: "5% of CAPEX",
       duration: "One off cost",
       whatDrivesTheCost: (
-        <ul className="list-disc">
+        <List>
           <li>Cost of doing business in the project country</li>
           <li>Magnitude of the funding gap</li>
-        </ul>
+        </List>
       ),
       category: "financing",
     },
@@ -419,31 +421,33 @@ export const qualitativeScorecardDetailsAndSourcesData = {
       metric: <span className="font-bold">Legal feasibility</span>,
       weighting: 12,
       whatWeCanMeasure: (
-        <ul className="space-y-2">
+        <List>
           <li>Country stability, ability to protect legal rights</li>
           <li>Government’s climate commitment</li>
-        </ul>
+        </List>
       ),
       howWeWillMeasure: (
         <>
-          <p>Weighted average (of percentile):</p>
-          <ul className="list-disc">
+          <p className="mb-2 font-semibold">
+            Weighted average (of percentile):
+          </p>
+          <List>
             <li>
               Count of blue carbon projects (all) or AFOLU projects (only in
               development or completed)
             </li>
             <li>Index of Economic Freedom</li>
             <li>-NDC Commitment Strength</li>
-          </ul>
+          </List>
         </>
       ),
       variesBy: "Country",
       sources: (
-        <ul className="space-y-2">
+        <List>
           <li>Verra & Plan Vivo Registries</li>
           <li>World Bank</li>
           <li>Climate Watch</li>
-        </ul>
+        </List>
       ),
     },
     {
@@ -455,22 +459,24 @@ export const qualitativeScorecardDetailsAndSourcesData = {
       ),
       howWeWillMeasure: (
         <>
-          <p>Weighted average (of percentile):</p>
-          <ul className="list-disc">
+          <p className="mb-2 font-semibold">
+            Weighted average (of percentile):
+          </p>
+          <List>
             <li>Mangrove loss rate</li>
             <li>
               Disaster risk exposure rating (layered with specific info for key
               countries)
             </li>
-          </ul>
+          </List>
         </>
       ),
       variesBy: "Country",
       sources: (
-        <ul className="space-y-2">
+        <List>
           <li>Global Mangrove Watch</li>
           <li>World Risk Report (RUB, IFHV)</li>
-        </ul>
+        </List>
       ),
     },
     {
@@ -485,21 +491,23 @@ export const qualitativeScorecardDetailsAndSourcesData = {
       ),
       howWeWillMeasure: (
         <>
-          <p>Qualitative analysis by ecosystem:</p>
-          <ul className="list-disc">
+          <p className="mb-2 font-semibold">
+            Qualitative analysis by ecosystem:
+          </p>
+          <List>
             <li>
               Likelihood communities will return to the destructive activities
               that led to initial degradation
             </li>
-          </ul>
+          </List>
         </>
       ),
       variesBy: "Country / Ecosystem",
       sources: (
-        <ul className="space-y-2">
+        <List>
           <li>Independent research</li>
           <li>Expert interviews</li>
-        </ul>
+        </List>
       ),
     },
     {
@@ -515,20 +523,20 @@ export const qualitativeScorecardDetailsAndSourcesData = {
       ),
       howWeWillMeasure: (
         <>
-          <p>Percentile:</p>
-          <ul className="list-disc">
+          <p className="mb-2 font-semibold">Percentile:</p>
+          <List>
             <li>
               Count of blue carbon projects (all) or AFOLU projects (only in
               development or completed)
             </li>
-          </ul>
+          </List>
         </>
       ),
       variesBy: "Country",
       sources: (
-        <ul className="space-y-2">
+        <List>
           <li>Verra & Plan Vivo Registries</li>
-        </ul>
+        </List>
       ),
     },
     {
@@ -538,19 +546,21 @@ export const qualitativeScorecardDetailsAndSourcesData = {
       whatWeCanMeasure: <p>Safety threat to on-the-ground team</p>,
       howWeWillMeasure: (
         <>
-          <p>Weighted average (of percentile):</p>
-          <ul className="list-disc">
+          <p className="mb-2 font-semibold">
+            Weighted average (of percentile):
+          </p>
+          <List>
             <li>Global Peace Index</li>
             <li>US Travel Risk Rating</li>
-          </ul>
+          </List>
         </>
       ),
       variesBy: "Country",
       sources: (
-        <ul className="space-y-2">
+        <List>
           <li>Institute for Economics & Peace</li>
           <li>US Travel Risk Rating</li>
-        </ul>
+        </List>
       ),
     },
     {
@@ -567,19 +577,19 @@ export const qualitativeScorecardDetailsAndSourcesData = {
       ),
       howWeWillMeasure: (
         <>
-          <p>Percentile:</p>
-          <ul className="list-disc">
+          <p className="mb-2 font-semibold">Percentile:</p>
+          <List>
             <li>Contribution amount (for contributing nations)</li>
             <li>Financing amount (for recipient nations)</li>
-          </ul>
+          </List>
         </>
       ),
       variesBy: "Country",
       sources: (
-        <ul className="space-y-2">
+        <List>
           <li>UNFCCC</li>
           <li>Expert interviews</li>
-        </ul>
+        </List>
       ),
     },
     {
@@ -588,29 +598,29 @@ export const qualitativeScorecardDetailsAndSourcesData = {
       weighting: 3,
       whatWeCanMeasure: (
         <>
-          <p>Percentile:</p>
-          <ul className="list-disc">
+          <p className="mb-2 font-semibold">Percentile:</p>
+          <List>
             <li>
               Count of individuals receiving coastal resiliency benefit over
               country population in low coastal zones
             </li>
-          </ul>
+          </List>
         </>
       ),
       howWeWillMeasure: (
         <>
-          <p>Percentile:</p>
-          <ul className="list-disc">
+          <p className="mb-2 font-semibold">Percentile:</p>
+          <List>
             <li>Contribution amount (for contributing nations)</li>
             <li>Financing amount (for recipient nations)</li>
-          </ul>
+          </List>
         </>
       ),
       variesBy: "Country / Eco",
       sources: (
-        <ul className="space-y-2">
+        <List>
           <li>TNC Naturebase co-benefit study</li>
-        </ul>
+        </List>
       ),
     },
     {
@@ -625,23 +635,23 @@ export const qualitativeScorecardDetailsAndSourcesData = {
       ),
       howWeWillMeasure: (
         <>
-          <p>Percentile:</p>
-          <ul className="list-disc">
+          <p className="mb-2 font-semibold">Percentile:</p>
+          <List>
             <li>
               Size of overlap between top priority Marine Protected Areas (MPAs)
               and country Exclusive Economic Zone (EEZs)
             </li>
-          </ul>
+          </List>
         </>
       ),
       variesBy: "Country",
       sources: (
-        <ul className="space-y-2">
+        <List>
           <li>
             Priority Areas for Marine Biodiversity Conservation – University of
             Auckland
           </li>
-        </ul>
+        </List>
       ),
     },
   ],
