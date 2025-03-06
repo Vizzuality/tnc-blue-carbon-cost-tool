@@ -12,6 +12,7 @@ import { PRIVACY_POLICY_URL } from "@/lib/constants";
 
 import { useFormValues } from "@/containers/projects/form/project-form";
 import { formStepAtom } from "@/containers/projects/store";
+import Sidebar from "@/containers/sidebar";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -56,7 +57,7 @@ export default function ProjectSidebar() {
   );
 
   return (
-    <aside className="flex h-full max-w-[320px] flex-col justify-between pb-6">
+    <Sidebar className="justify-between">
       <ul className="flex flex-col gap-2">
         {formSteps.map((step) => (
           <li key={step.name}>
@@ -102,6 +103,6 @@ export default function ProjectSidebar() {
           .
         </p>
       </Card>
-    </aside>
+    </Sidebar>
   );
 }

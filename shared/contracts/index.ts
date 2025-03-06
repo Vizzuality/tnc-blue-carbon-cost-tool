@@ -5,6 +5,7 @@ import { usersContract } from "@shared/contracts/users.contract";
 import { JSONAPIError } from "@shared/dtos/json-api.error";
 import { projectsContract } from "@shared/contracts/projects.contract";
 import { customProjectContract } from "@shared/contracts/custom-projects.contract";
+import { methodologyContract } from "@shared/contracts/methodology.contract";
 
 const contract = initContract();
 
@@ -15,6 +16,7 @@ export const router = contract.router(
     user: usersContract,
     projects: projectsContract,
     customProjects: customProjectContract,
+    methodology: methodologyContract,
   },
   {
     commonResponses: {

@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-import { ExtractAtomValue, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
+
+import { useScrollSpy } from "@/hooks/use-scroll-spy";
 
 import CustomProjects from "@/containers/profile/custom-projects";
 import DeleteAccount from "@/containers/profile/delete-account";
@@ -74,40 +76,15 @@ export default function Profile() {
       return !featureFlagExists || isFeatureEnabled;
     });
   }, []);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const sectionSlug = entry.target.id as ExtractAtomValue<
-              typeof profileStepAtom
-            >;
-
-            setProfileStep(sectionSlug);
-          }
-        });
-      },
-      {
-        root: ref.current,
-        threshold: 0.1,
-        /**
-         * This rootMargin creates a horizontal line vertically centered
-         * that will help trigger an intersection at that the very point.
-         */
-        rootMargin: "-20% 0% -60% 0%",
-      },
-    );
-
-    const PROFILE_SECTIONS = Array.from(
-      ref.current.querySelector("#profile-sections-container")?.children || [],
-    );
-    PROFILE_SECTIONS.forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
-  }, [setProfileStep]);
+  useScrollSpy({
+    id: "profile-sections-container",
+    containerRef: ref,
+    setCurrentStep: setProfileStep,
+    options: {
+      threshold: 0.1,
+      rootMargin: "-20% 0% -60% 0%",
+    },
+  });
 
   return (
     <div className="ml-4 flex h-lvh w-full flex-col">
@@ -118,7 +95,11 @@ export default function Profile() {
 
       <div className="relative grid h-full grid-cols-[317px_1fr] gap-6 overflow-hidden">
         <ProfileSidebar
-          navItems={currentSections.map((s) => ({ id: s.id, name: s.title }))}
+          navItems={currentSections.map((s) => ({
+            id: s.id,
+            label: s.title,
+            href: `#${s.id}`,
+          }))}
         />
         <ScrollArea ref={ref} className="pr-6" showGradient>
           <div id="profile-sections-container" className="space-y-2 pb-80">

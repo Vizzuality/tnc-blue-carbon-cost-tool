@@ -48,7 +48,7 @@ const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
   "share-information": false,
   "project-comparison": false,
   "update-selection": false,
-  "methodology-page": false,
+  "methodology-page": true,
   "compare-with-other-project": false,
 };
 

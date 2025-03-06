@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from "react";
 
-import { getSidebarLinkId } from "@/containers/profile/profile-sidebar";
+import { getSidebarNavItemAriaId } from "@/containers/sidebar/sidebar-navigation";
 
 import {
   Card,
@@ -23,7 +23,7 @@ const ProfileSection: FC<ProfileSectionProps> = ({
   children,
 }) => {
   return (
-    <section id={id} aria-labelledby={getSidebarLinkId(id)}>
+    <section id={id} aria-labelledby={getSidebarNavItemAriaId(id)}>
       <Card variant="secondary" className="p-6">
         <CardHeader className="space-y-4">
           <CardTitle className="text-xl font-semibold">{title}</CardTitle>

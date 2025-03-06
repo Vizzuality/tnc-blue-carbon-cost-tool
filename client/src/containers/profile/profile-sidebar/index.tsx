@@ -1,7 +1,5 @@
 import { FC } from "react";
 
-import Link from "next/link";
-
 import { useAtomValue } from "jotai";
 import { LogOutIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
@@ -10,12 +8,13 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { profileStepAtom } from "@/containers/profile/store";
+import Sidebar from "@/containers/sidebar";
+import SidebarNavigation, {
+  SidebarNavigationItem,
+} from "@/containers/sidebar/sidebar-navigation";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-
-export const getSidebarLinkId = (slug?: string): string =>
-  `profile-sidebar-${slug}-link`;
 
 const getInitials = (fullName?: string): string => {
   if (!fullName) return "";
@@ -28,7 +27,7 @@ const getInitials = (fullName?: string): string => {
 };
 
 interface ProfileSidebarProps {
-  navItems: { name: string; id: string }[];
+  navItems: SidebarNavigationItem[];
 }
 const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
   const { data: session } = useSession();
@@ -47,7 +46,7 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
   const intersecting = useAtomValue(profileStepAtom);
 
   return (
-    <aside className="flex h-full flex-col gap-8 pb-6 pt-3">
+    <Sidebar className="gap-8 pt-3">
       <div className="flex gap-4">
         <Avatar>
           <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
@@ -57,31 +56,11 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
           <p className="font-normal">{user?.email}</p>
         </div>
       </div>
-      <nav className="flex-1" aria-labelledby="sidebar-nav-title">
-        <h2 id="sidebar-nav-title" className="sr-only">
-          User area navigation
-        </h2>
-        <ul role="list" className="space-y-2">
-          {navItems.map((o) => (
-            <li key={`section-link-${o.id}`} role="listitem">
-              <Button
-                variant={intersecting === o.id ? "default" : "ghost"}
-                asChild
-                className="w-full justify-start font-medium"
-              >
-                <Link
-                  href={`#${o.id}`}
-                  id={getSidebarLinkId(o.id)}
-                  aria-controls={o.id}
-                  aria-current={intersecting === o.id ? "true" : undefined}
-                >
-                  {o.name}
-                </Link>
-              </Button>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <SidebarNavigation
+        srOnlyTitle="User area navigation"
+        items={navItems}
+        currentSection={intersecting}
+      />
       <Button
         variant="outline"
         className="w-full font-bold"
@@ -92,7 +71,7 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
         <LogOutIcon className="h-3 w-3" />
         Log out
       </Button>
-    </aside>
+    </Sidebar>
   );
 };
 
