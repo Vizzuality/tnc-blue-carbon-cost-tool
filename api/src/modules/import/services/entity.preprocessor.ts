@@ -73,6 +73,14 @@ import {
   RecordSource,
   RecordWithSources,
 } from '@api/modules/import/services/parsed-db-entities.type';
+import { LegalFeasibility } from '@shared/entities/project-score-card/value-object/legal-feasibility.value-object';
+import { ImplementationFeasibility } from '@shared/entities/project-score-card/value-object/implementation-feasibility.value-object';
+import { SocialFeasibility } from '@shared/entities/project-score-card/value-object/social-feasibility.value-object';
+import { SecurityRating } from '@shared/entities/project-score-card/value-object/security-rating.value-object';
+import { AvailabilityOfExperiencedLabor } from '@shared/entities/project-score-card/value-object/availability-of-experienced-labor.value-object';
+import { AvailabilityOfAlternatingFunding } from '@shared/entities/project-score-card/value-object/availability-of-alternating-funding.value-object';
+import { CoastalProtectionBenefits } from '@shared/entities/project-score-card/value-object/coastal-protection-benefits.value-object';
+import { BiodiversityBenefit } from '@shared/entities/project-score-card/value-object/biodiversity-benefit.value-object';
 
 export class ProjectScoreCardNotFoundError extends Error {
   constructor(projectName: string) {
@@ -1049,51 +1057,45 @@ export class EntityPreprocessor {
       projectScorecard.countryCode = row.country_code;
       projectScorecard.ecosystem = row.ecosystem;
       projectScorecard.financialFeasibility = PROJECT_SCORE.LOW;
-      projectScorecard.legalFeasibility = this.convertNumberToProjectScore(
+      projectScorecard.legalFeasibility = LegalFeasibility.fromNumber(
         row.legal_feasibility,
-      );
+      ).toProjectScore();
 
       projectScorecard.implementationFeasibility =
-        this.convertNumberToProjectScore(row.implementation_risk_score);
+        ImplementationFeasibility.fromNumber(
+          row.implementation_risk_score,
+        ).toProjectScore();
 
-      projectScorecard.socialFeasibility = this.convertNumberToProjectScore(
+      projectScorecard.socialFeasibility = SocialFeasibility.fromNumber(
         row.social_feasibility,
-      );
+      ).toProjectScore();
 
-      projectScorecard.securityRating = this.convertNumberToProjectScore(
+      projectScorecard.securityRating = SecurityRating.fromNumber(
         row.security_rating,
-      );
+      ).toProjectScore();
 
       projectScorecard.availabilityOfExperiencedLabor =
-        this.convertNumberToProjectScore(row.availability_of_experienced_labor);
+        AvailabilityOfExperiencedLabor.fromNumber(
+          row.availability_of_experienced_labor,
+        ).toProjectScore();
 
       projectScorecard.availabilityOfAlternatingFunding =
-        this.convertNumberToProjectScore(
+        AvailabilityOfAlternatingFunding.fromNumber(
           row.availability_of_alternative_funding,
-        );
+        ).toProjectScore();
 
       projectScorecard.coastalProtectionBenefits =
-        this.convertNumberToProjectScore(row.coastal_protection_benefit);
-      projectScorecard.biodiversityBenefit = this.convertNumberToProjectScore(
+        CoastalProtectionBenefits.fromNumber(
+          row.coastal_protection_benefit,
+        ).toProjectScore();
+      projectScorecard.biodiversityBenefit = BiodiversityBenefit.fromNumber(
         row.biodiversity_benefit,
-      );
+      ).toProjectScore();
 
       parsedArray.push(projectScorecard);
     });
 
     return parsedArray;
-  }
-
-  private convertNumberToProjectScore(value: number): PROJECT_SCORE {
-    if (value === 1) {
-      return PROJECT_SCORE.LOW;
-    }
-    if (value === 2) {
-      return PROJECT_SCORE.MEDIUM;
-    }
-    if (value === 3) {
-      return PROJECT_SCORE.HIGH;
-    }
   }
 
   private emptyStringToNull(value: any): any | null {

@@ -1,46 +1,47 @@
+import { AvailabilityOfAlternatingFunding } from "@shared/entities/project-score-card/value-object/availability-of-alternating-funding.value-object";
+import { AvailabilityOfExperiencedLabor } from "@shared/entities/project-score-card/value-object/availability-of-experienced-labor.value-object";
+import { BiodiversityBenefit } from "@shared/entities/project-score-card/value-object/biodiversity-benefit.value-object";
+import { CoastalProtectionBenefits } from "@shared/entities/project-score-card/value-object/coastal-protection-benefits.value-object";
+import { ImplementationFeasibility } from "@shared/entities/project-score-card/value-object/implementation-feasibility.value-object";
+import { LegalFeasibility } from "@shared/entities/project-score-card/value-object/legal-feasibility.value-object";
+import { SecurityRating } from "@shared/entities/project-score-card/value-object/security-rating.value-object";
+import { SocialFeasibility } from "@shared/entities/project-score-card/value-object/social-feasibility.value-object";
 import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 import { ProjectScorecard } from "@shared/entities/project-scorecard.entity";
 
 export const ProjectScoreUtils = {
-  toNumber: (score: PROJECT_SCORE): number => {
-    switch (score) {
-      case PROJECT_SCORE.LOW:
-        return 1;
-      case PROJECT_SCORE.MEDIUM:
-        return 2;
-      case PROJECT_SCORE.HIGH:
-        return 3;
-      default:
-        return 0;
-    }
-  },
   computeProjectScoreCardRating(
     projectScoreCard: ProjectScorecard,
   ): PROJECT_SCORE | null {
-    const legalFeasibility = ProjectScoreUtils.toNumber(
+    const legalFeasibility = LegalFeasibility.fromString(
       projectScoreCard.legalFeasibility,
-    );
-    const implementationFeasibility = ProjectScoreUtils.toNumber(
+    ).toNumber();
+
+    const implementationFeasibility = ImplementationFeasibility.fromString(
       projectScoreCard.implementationFeasibility,
-    );
-    const socialFeasibility = ProjectScoreUtils.toNumber(
+    ).toNumber();
+
+    const socialFeasibility = SocialFeasibility.fromString(
       projectScoreCard.socialFeasibility,
-    );
-    const securityRating = ProjectScoreUtils.toNumber(
+    ).toNumber();
+
+    const securityRating = SecurityRating.fromString(
       projectScoreCard.securityRating,
-    );
-    const availabilityOfExperiencedLabor = ProjectScoreUtils.toNumber(
-      projectScoreCard.availabilityOfExperiencedLabor,
-    );
-    const availabilityOfAlternatingFunding = ProjectScoreUtils.toNumber(
-      projectScoreCard.availabilityOfAlternatingFunding,
-    );
-    const coastalProtectionBenefits = ProjectScoreUtils.toNumber(
+    ).toNumber();
+    const availabilityOfExperiencedLabor =
+      AvailabilityOfExperiencedLabor.fromString(
+        projectScoreCard.availabilityOfExperiencedLabor,
+      ).toNumber();
+    const availabilityOfAlternatingFunding =
+      AvailabilityOfAlternatingFunding.fromString(
+        projectScoreCard.availabilityOfAlternatingFunding,
+      ).toNumber();
+    const coastalProtectionBenefits = CoastalProtectionBenefits.fromString(
       projectScoreCard.coastalProtectionBenefits,
-    );
-    const biodiversityBenefit = ProjectScoreUtils.toNumber(
+    ).toNumber();
+    const biodiversityBenefit = BiodiversityBenefit.fromString(
       projectScoreCard.biodiversityBenefit,
-    );
+    ).toNumber();
 
     const scoreCardRating: number =
       (legalFeasibility * 0.12 +
