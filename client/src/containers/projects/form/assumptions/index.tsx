@@ -41,14 +41,16 @@ export default function AssumptionsProjectForm() {
       {
         queryKey,
         select: (data) =>
-          data.body.data.map(({ name, unit, value }) => ({
-            label: name,
-            unit,
-            property:
-              `assumptions.${ASSUMPTIONS_NAME_TO_DTO_MAP[name as keyof typeof ASSUMPTIONS_NAME_TO_DTO_MAP]}` as AssumptionsFormProperty,
-            defaultValue: value,
-            value: Number(value),
-          })),
+          data.body.data
+            .filter(({ name }) => name !== "Carbon price")
+            .map(({ name, unit, value }) => ({
+              label: name,
+              unit,
+              property:
+                `assumptions.${ASSUMPTIONS_NAME_TO_DTO_MAP[name as keyof typeof ASSUMPTIONS_NAME_TO_DTO_MAP]}` as AssumptionsFormProperty,
+              defaultValue: value,
+              value: Number(value),
+            })),
       },
     );
 
