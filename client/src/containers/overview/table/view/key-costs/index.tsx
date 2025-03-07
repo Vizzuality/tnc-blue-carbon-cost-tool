@@ -12,7 +12,6 @@ import {
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useAtom } from "jotai/index";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { z } from "zod";
 
@@ -20,7 +19,6 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
-import { projectDetailsAtom } from "@/app/(overview)/store";
 import {
   useProjectOverviewFilters,
   useTableView,
@@ -28,6 +26,7 @@ import {
 
 import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
+import { useProjectDetails } from "@/containers/overview/hooks";
 import {
   DEFAULT_TABLE_SETTINGS,
   getColumnSortTitle,
@@ -36,7 +35,10 @@ import {
   useSorting,
 } from "@/containers/overview/table/utils";
 import { columns } from "@/containers/overview/table/view/key-costs/columns";
-import { filtersToQueryParams } from "@/containers/overview/utils";
+import {
+  filtersToQueryParams,
+  getVisibleProjectIds,
+} from "@/containers/overview/utils";
 
 import {
   ScrollableTable,
@@ -54,7 +56,7 @@ type filterFields = z.infer<typeof projectsQuerySchema.shape.fields>;
 type sortFields = z.infer<typeof projectsQuerySchema.shape.sort>;
 
 export function KeyCostsTable() {
-  const [, setProjectDetails] = useAtom(projectDetailsAtom);
+  const { handleOpenDetails } = useProjectDetails();
   const [tableView] = useTableView();
   const [filters] = useProjectOverviewFilters();
   const { sorting, handleSortingChange } = useSorting();
@@ -100,9 +102,7 @@ export function KeyCostsTable() {
     },
   );
 
-  const visibleProjectIds = useMemo(() => {
-    return data?.data?.map((item) => item.id!) || [];
-  }, [data]);
+  const visibleProjectIds = useMemo(() => getVisibleProjectIds(data), [data]);
 
   const table = useReactTable({
     ...DEFAULT_TABLE_SETTINGS,
@@ -161,13 +161,9 @@ export function KeyCostsTable() {
                 className="group cursor-pointer transition-colors hover:bg-big-stone-950"
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                onClick={() => {
-                  setProjectDetails({
-                    isOpen: true,
-                    id: row.original.id!,
-                    visibleProjectIds,
-                  });
-                }}
+                onClick={() =>
+                  handleOpenDetails(row.original.id!, visibleProjectIds)
+                }
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
@@ -181,6 +177,14 @@ export function KeyCostsTable() {
                     title={
                       typeof cell.getValue() === "string"
                         ? (cell.getValue() as string)
+                        : undefined
+                    }
+                    style={
+                      cell.column.id === "projectName"
+                        ? {
+                            minWidth: "fit-content",
+                            maxWidth: "100%",
+                          }
                         : undefined
                     }
                   >

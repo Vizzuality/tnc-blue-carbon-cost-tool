@@ -1,3 +1,7 @@
+import { ApiPaginationResponse } from "@shared/dtos/global/api-response.dto";
+import { ProjectKeyCosts } from "@shared/dtos/projects/project-key-costs.dto";
+import { PaginatedProjectsWithMaximums } from "@shared/dtos/projects/projects.dto";
+import { Project } from "@shared/entities/projects.entity";
 import { z } from "zod";
 
 import { filtersSchema } from "@/app/(overview)/constants";
@@ -27,4 +31,15 @@ export const filtersToQueryParams = (
       }),
       {},
     );
+};
+
+export const getVisibleProjectIds = (
+  data?:
+    | ApiPaginationResponse<Project>
+    | PaginatedProjectsWithMaximums
+    | ApiPaginationResponse<ProjectKeyCosts>,
+): string[] => {
+  if (!data) return [];
+
+  return data.data.map((item) => item.id).filter((id) => id !== undefined);
 };

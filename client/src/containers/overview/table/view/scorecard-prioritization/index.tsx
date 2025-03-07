@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { projectScorecardQuerySchema } from "@shared/contracts/projects.contract";
@@ -13,7 +13,6 @@ import {
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useAtom } from "jotai";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { z } from "zod";
 
@@ -21,7 +20,6 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
-import { projectDetailsAtom } from "@/app/(overview)/store";
 import {
   useProjectOverviewFilters,
   useTableView,
@@ -29,7 +27,7 @@ import {
 
 import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
-import ProjectDetails from "@/containers/overview/project-details";
+import { useProjectDetails } from "@/containers/overview/hooks";
 import {
   DEFAULT_TABLE_SETTINGS,
   getColumnSortTitle,
@@ -38,7 +36,10 @@ import {
   useSorting,
 } from "@/containers/overview/table/utils";
 import { TABLE_COLUMNS } from "@/containers/overview/table/view/scorecard-prioritization/columns";
-import { filtersToQueryParams } from "@/containers/overview/utils";
+import {
+  filtersToQueryParams,
+  getVisibleProjectIds,
+} from "@/containers/overview/utils";
 
 import { getScoreIndicatorBgClass } from "@/components/ui/score-card";
 import {
@@ -60,7 +61,7 @@ type sortFields = z.infer<typeof projectScorecardQuerySchema.shape.sort>;
 export function ScoredCardPrioritizationTable() {
   const [tableView] = useTableView();
   const [filters] = useProjectOverviewFilters();
-  const [projectDetails, setProjectDetails] = useAtom(projectDetailsAtom);
+  const { handleOpenDetails } = useProjectDetails();
   const { sorting, handleSortingChange } = useSorting();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -100,6 +101,8 @@ export function ScoredCardPrioritizationTable() {
       placeholderData: keepPreviousData,
     },
   );
+
+  const visibleProjectIds = useMemo(() => getVisibleProjectIds(data), [data]);
 
   const table = useReactTable({
     ...DEFAULT_TABLE_SETTINGS,
@@ -157,14 +160,10 @@ export function ScoredCardPrioritizationTable() {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className="cursor-pointer hover:bg-muted/50"
-                onClick={() => {
-                  setProjectDetails({
-                    ...projectDetails,
-                    isOpen: true,
-                    id: row.original.id,
-                  });
-                }}
+                className="group cursor-pointer transition-colors hover:bg-big-stone-950"
+                onClick={() =>
+                  handleOpenDetails(row.original.id!, visibleProjectIds)
+                }
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
@@ -177,6 +176,8 @@ export function ScoredCardPrioritizationTable() {
                       ),
                       {
                         "p-0": cell.column.id !== "projectName",
+                        "group-hover:underline":
+                          cell.column.id === "projectName",
                       },
                     )}
                   >
@@ -203,7 +204,6 @@ export function ScoredCardPrioritizationTable() {
           }}
         />
       )}
-      <ProjectDetails />
     </>
   );
 }
