@@ -26,6 +26,42 @@ const getSize = (value: number, total: number) => {
   return `${Math.max(percentage, 0)}%`;
 };
 
+interface LeftOverGraphProps {
+  leftover: number;
+  leftoverHeight: string;
+  minHeight?: string;
+}
+
+const LeftOverGraph: FC<LeftOverGraphProps> = ({
+  leftover,
+  leftoverHeight,
+  minHeight,
+}) => {
+  return (
+    <div
+      style={{
+        height: leftoverHeight,
+        width: "100%",
+        minHeight: minHeight,
+      }}
+      className={`relative flex h-full flex-col items-center justify-end rounded-md border border-dashed border-white p-1`}
+    >
+      <span className="rounded-sm bg-white/30 px-5 py-1 text-xs font-semibold text-card-foreground">
+        {
+          <Currency
+            value={leftover}
+            options={{
+              notation: "compact",
+              maximumFractionDigits: 1,
+            }}
+            plainSymbol
+          />
+        }
+      </span>
+    </div>
+  );
+};
+
 /**
  * A responsive graph component that visualizes numerical data as vertical segments
  * Has two display modes:
@@ -34,53 +70,54 @@ const getSize = (value: number, total: number) => {
  */
 const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
   if (typeof leftover === "number") {
+    // Calculate heights for split mode visualization
+    const {
+      totalRevenueHeight,
+      leftoverHeight,
+      leftoverMinHeight,
+      totalRevenueMinHeight,
+    } = calculateSplitModeHeights(total, leftover);
+
     return (
       <div className="relative h-full min-h-[150px] w-full max-w-[400px] overflow-hidden rounded-md">
         <div className="absolute flex h-full w-full flex-row gap-1 rounded-md">
-          <div
-            style={{
-              height: "100%",
-              width: "100%",
-            }}
-            className="relative h-full rounded-md bg-yellow-500 transition-all duration-300 ease-in-out"
-          >
-            <div className="absolute bottom-1 left-0 right-0 mx-1">
-              <div className="rounded-md bg-white/30 px-1.5 py-0.5 text-center text-xs font-semibold text-secondary-foreground">
-                <Currency
-                  value={total}
-                  options={{
-                    notation: "compact",
-                    maximumFractionDigits: 1,
-                  }}
-                  plainSymbol
-                />
+          <div className="flex h-full w-full flex-col gap-1">
+            {leftover < 0 && (
+              <LeftOverGraph
+                leftover={leftover}
+                leftoverHeight={leftoverHeight}
+                minHeight={leftoverMinHeight}
+              />
+            )}
+            <div
+              style={{
+                height: totalRevenueHeight,
+                width: "100%",
+                minHeight: totalRevenueMinHeight,
+              }}
+              className="relative h-full rounded-md bg-yellow-500 transition-all duration-300 ease-in-out"
+            >
+              <div className="absolute bottom-1 left-0 right-0 mx-1">
+                <div className="rounded-md bg-white/30 px-1.5 py-0.5 text-center text-xs font-semibold text-secondary-foreground">
+                  <Currency
+                    value={total}
+                    options={{
+                      notation: "compact",
+                      maximumFractionDigits: 1,
+                    }}
+                    plainSymbol
+                  />
+                </div>
               </div>
             </div>
           </div>
           <div className="flex h-full w-full flex-col gap-1 rounded-md">
             {leftover > 0 && (
-              <div
-                style={{
-                  height: getSize(leftover, total),
-                  width: "100%",
-                  minHeight:
-                    getPercentage(leftover, total) < 20 ? "21%" : undefined,
-                }}
-                className={`relative flex h-full flex-col items-center justify-end rounded-md border border-dashed border-white p-1`}
-              >
-                <span className="rounded-sm bg-white/30 px-5 py-1 text-xs font-semibold text-card-foreground">
-                  {
-                    <Currency
-                      value={leftover}
-                      options={{
-                        notation: "compact",
-                        maximumFractionDigits: 1,
-                      }}
-                      plainSymbol
-                    />
-                  }
-                </span>
-              </div>
+              <LeftOverGraph
+                leftover={leftover}
+                leftoverHeight={leftoverHeight}
+                minHeight={leftoverMinHeight}
+              />
             )}
             {segments.map(({ value, colorClass }) => (
               <div
@@ -140,6 +177,50 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
     </div>
   );
 };
+
+/**
+ * Calculates the heights for the split mode visualization
+ * @param total - The total value
+ * @param leftover - The leftover value (can be positive or negative)
+ * @returns Object containing calculated heights and minimum heights for visualization
+ */
+function calculateSplitModeHeights(total: number, leftover: number) {
+  // Default height for total revenue (used when leftover is positive)
+  let totalRevenueHeight = "100%";
+
+  // Calculate absolute values for consistent calculations
+  const absLeftover = Math.abs(leftover);
+  const absTotal = total + absLeftover;
+
+  // Initial leftover height calculation (used when leftover is positive)
+  let leftoverHeight = getSize(leftover, total);
+
+  // Calculate leftover as percentage of the combined total
+  const leftoverPercentage = getPercentage(absLeftover, absTotal);
+
+  // Determine if we need to enforce minimum heights for better visualization
+  // (when one segment would be too small or too large)
+  const fixedHeights = leftoverPercentage < 20 || leftoverPercentage > 80;
+
+  // Set minimum heights to ensure visibility of small segments
+  const leftoverMinHeight =
+    fixedHeights && leftoverPercentage < 20 ? "21%" : undefined;
+  const totalRevenueMinHeight =
+    fixedHeights && leftoverPercentage > 80 ? "21%" : undefined;
+
+  // For negative leftover, recalculate heights based on absolute values
+  if (leftover < 0) {
+    totalRevenueHeight = getSize(total, absTotal);
+    leftoverHeight = getSize(absLeftover, absTotal);
+  }
+
+  return {
+    totalRevenueHeight,
+    leftoverHeight,
+    leftoverMinHeight,
+    totalRevenueMinHeight,
+  };
+}
 
 interface GraphLegendItem {
   label: string;
