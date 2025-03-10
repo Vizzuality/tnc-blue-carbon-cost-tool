@@ -33,18 +33,13 @@ const Currency: FC<CurrencyProps> = ({
   plainSymbol,
 }) => {
   return (
-    <span
-      className={cn(
-        {
-          "inline-block": true,
-          "first-letter:align-top first-letter:text-xs first-letter:tracking-[0.1rem] first-letter:text-muted-foreground":
-            !plainSymbol,
-          "first-letter:pr-0.5": plainSymbol,
-        },
-        className,
-      )}
-    >
-      {formatCurrency(value, options)}
+    <span className={cn("inline-flex flex-wrap gap-x-0.5", className)}>
+      <span className={cn({ "text-xs text-muted-foreground": !plainSymbol })}>
+        {value < 0 ? "-" : ""}$
+      </span>
+      <span>
+        {formatCurrency(Math.abs(value), options).replace(/^\$\s*/, "")}
+      </span>
     </span>
   );
 };
