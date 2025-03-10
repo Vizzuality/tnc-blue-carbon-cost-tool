@@ -26,7 +26,9 @@ describe("GraphWithLegend", () => {
     render(<GraphWithLegend {...testData} />);
 
     // Check if total amount is displayed
-    expect(screen.getByText("$1,000.00")).toBeInTheDocument();
+    const totalAmount = screen.getByText("1,000.00");
+    expect(totalAmount).toBeInTheDocument();
+    expect(totalAmount.previousSibling).toHaveTextContent("$");
 
     // Check if legend items are rendered
     expect(screen.getByText("Total")).toBeInTheDocument();
@@ -34,7 +36,12 @@ describe("GraphWithLegend", () => {
     expect(screen.getByText("Opex")).toBeInTheDocument();
 
     // Check if segment values are displayed (using the Currency component format)
-    expect(screen.getByText("$400.0")).toBeInTheDocument();
-    expect(screen.getByText("$600.0")).toBeInTheDocument();
+    const capExAmount = screen.getByText("400.0");
+    expect(capExAmount).toBeInTheDocument();
+    expect(capExAmount.previousSibling).toHaveTextContent("$");
+
+    const opExAmount = screen.getByText("600.0");
+    expect(opExAmount).toBeInTheDocument();
+    expect(opExAmount.previousSibling).toHaveTextContent("$");
   });
 });
