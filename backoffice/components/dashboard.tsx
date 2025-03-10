@@ -1,4 +1,5 @@
-import { Box, H1, Text } from "@adminjs/design-system";
+import React from 'react';
+import { Box, H1, Text } from '@adminjs/design-system';
 
 const Dashboard = () => {
   return (
