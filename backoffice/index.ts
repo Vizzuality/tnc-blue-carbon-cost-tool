@@ -44,6 +44,7 @@ import { CountryResource } from './resources/countries/country.resource.js';
 import { componentLoader, Components } from 'backoffice/components/index.js';
 import { ModelComponentSourceResource } from 'backoffice/resources/model-component-source/model-component-source.resource.js';
 import { EcosystemExtentResource } from 'backoffice/resources/ecosystem-extent/ecosystem-extent.resource.js';
+import path from 'path';
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -52,6 +53,7 @@ AdminJS.registerAdapter({
 
 const PORT = 1000;
 export const API_URL = process.env.API_URL || 'http://localhost:4000';
+const ROOT_PATH = '/admin';
 const authProvider = new AuthProvider();
 
 const start = async () => {
@@ -87,7 +89,11 @@ const start = async () => {
     dashboard: {
       component: Components.Dashboard,
     },
-    rootPath: '/admin',
+    assets: {
+      styles: [`${ROOT_PATH}/public/back-button.css`],
+      scripts: [`${ROOT_PATH}/public/back-button.js`],
+    },
+    rootPath: ROOT_PATH,
     componentLoader,
     resources: [
       UserResource,
@@ -230,6 +236,7 @@ const start = async () => {
     },
   );
 
+  app.use(`${ROOT_PATH}/public`, express.static(path.join('.', 'public')));
   app.use(admin.options.rootPath, adminRouter);
   admin.watch();
   app.listen(PORT, () => {
