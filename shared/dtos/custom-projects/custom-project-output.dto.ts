@@ -15,7 +15,7 @@ export type CustomProjectSummary = {
   "Financing cost": number;
   "Funding gap (NPV)": number;
   "Funding gap per tCO2e (NPV)": number;
-  "Community benefit sharing fund": number;
+  "Landowner/community benefit share": number;
   "Net revenue after OPEX": number | undefined;
   "Net revenue after Total cost": number | undefined;
 };
@@ -36,7 +36,7 @@ const SORTED_CUSTOM_PROJECT_SUMMARY_KEYS = [
   "Financing cost",
   "Funding gap (NPV)",
   "Funding gap per tCO2e (NPV)",
-  "Community benefit sharing fund",
+  "Landowner/community benefit share",
 ] as const;
 
 export const sortCustomProjectSummary = (

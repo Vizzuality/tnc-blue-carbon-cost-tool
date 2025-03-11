@@ -105,7 +105,7 @@ const CONSERVATION_INDONESIA_MANGROVE_OUTPUT = {
       'Financing cost': 68590,
       'Funding gap (NPV)': 0,
       'Funding gap per tCO2e (NPV)': 0,
-      'Community benefit sharing fund': 0.5,
+      'Landowner/community benefit share': 0.5,
     },
     costDetails: {
       total: {
@@ -946,7 +946,7 @@ const CONSERVATION_INDONESIA_MANGROVE_OUTPUT = {
       'Financing cost': 68590,
       'Funding gap (NPV)': 0,
       'Funding gap per tCO2e (NPV)': 0,
-      'Community benefit sharing fund': 0.5,
+      'Landowner/community benefit share': 0.5,
     },
     costDetails: {
       total: {

@@ -159,7 +159,7 @@ const RESTORATION_MEXICO_MANGROVES_OUTPUT = {
       'Financing cost': 468523,
       'Funding gap (NPV)': 9466615,
       'Funding gap per tCO2e (NPV)': 82.8,
-      'Community benefit sharing fund': 0.5,
+      'Landowner/community benefit share': 0.5,
     },
     costDetails: {
       total: {
@@ -994,7 +994,7 @@ const RESTORATION_MEXICO_MANGROVES_OUTPUT = {
       'Financing cost': 468523,
       'Funding gap (NPV)': 0,
       'Funding gap per tCO2e (NPV)': 0.0,
-      'Community benefit sharing fund': 0.5,
+      'Landowner/community benefit share': 0.5,
     },
     costDetails: {
       total: {

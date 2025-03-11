@@ -677,7 +677,7 @@ export const PROJECT_SUMMARY: Record<keyof CustomProjectSummary, string> = {
     'The reverse of the "NPV covering OPEX" or "NPV covering total cost" metric.',
   "Funding gap per tCO2e (NPV)":
     'The reverse of the "NPV covering OPEX" or "NPV covering total cost" metric.',
-  "Community benefit sharing fund":
+  "Landowner/community benefit share":
     "The percentage of the revenues assumed to go back to the community as part of the community benefit sharing fund.",
   "Net revenue after OPEX": "TODO",
   "Net revenue after Total cost": "TODO",

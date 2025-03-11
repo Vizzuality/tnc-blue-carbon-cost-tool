@@ -37,7 +37,7 @@ const customProjectSummaryUnitMap: Record<keyof CustomProjectSummary, string> =
     "Financing cost": "$",
     "Funding gap (NPV)": "$",
     "Funding gap per tCO2e (NPV)": "$",
-    "Community benefit sharing fund": "%",
+    "Landowner/community benefit share": "%",
   } as const;
 interface ProjectSummaryProps {
   data: CustomProjectSummary;
