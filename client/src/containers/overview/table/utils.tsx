@@ -43,6 +43,12 @@ export const NoResults = (props: ComponentProps<typeof TableCell>) => (
   </TableCell>
 );
 
+export const renderHeader = (label: string) => {
+  return function render() {
+    return <HeaderText>{label}</HeaderText>;
+  };
+};
+
 export const getAccessor = <T extends string>(
   baseName: T,
   isNPV: boolean,
