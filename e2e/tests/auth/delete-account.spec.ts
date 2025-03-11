@@ -38,6 +38,7 @@ test.describe("Auth - Delete Account", () => {
     await testManager.login(user as User);
 
     await page.waitForURL("/");
+    await page.goto("/profile");
 
     await page.getByRole("button", { name: "Delete account" }).click();
     await page.getByRole("button", { name: "Delete account" }).click();

@@ -39,7 +39,7 @@ test.describe("Auth - Update Password", () => {
     await testManager.login(user as User);
 
     await page.waitForURL("/");
-
+    await page.goto("/profile");
     await page
       .getByPlaceholder("Type your current password")
       .fill(user.password);
