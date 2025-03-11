@@ -18,8 +18,6 @@ export function useProjectDetails() {
   );
 
   return {
-    projectDetails,
-    setProjectDetails,
     handleOpenDetails,
   };
 }
