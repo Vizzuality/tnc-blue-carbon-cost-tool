@@ -234,7 +234,7 @@ export class CostCalculator {
       'Financing cost': financingCost,
       'Funding gap (NPV)': fundingGapNPV,
       'Funding gap per tCO2e (NPV)': fundingGapPerTCO2e,
-      'Community benefit sharing fund': totalCommunityBenefitSharingFund,
+      'Landowner/community benefit share': totalCommunityBenefitSharingFund,
     };
 
     if (

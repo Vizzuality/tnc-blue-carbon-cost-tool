@@ -45,7 +45,7 @@ export const RESTORATION_CHINA_SALT_MARSH = {
       'Funding gap': 25953499,
       'Funding gap (NPV)': 25953499,
       'Funding gap per tCO2e (NPV)': 997.2,
-      'Community benefit sharing fund': 0.5,
+      'Landowner/community benefit share': 0.5,
     },
     costDetails: {
       total: {
@@ -882,7 +882,7 @@ export const RESTORATION_CHINA_SALT_MARSH = {
       'Funding gap': 0,
       'Funding gap (NPV)': 0,
       'Funding gap per tCO2e (NPV)': 0.0,
-      'Community benefit sharing fund': 0.5,
+      'Landowner/community benefit share': 0.5,
     },
     costDetails: {
       total: {

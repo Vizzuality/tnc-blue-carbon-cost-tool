@@ -81,9 +81,9 @@ const CustomProjectView: FC<{
               "IRR when priced to cover OpEx": parseFloat(
                 toPercentageValue(summaryData["IRR when priced to cover OpEx"]),
               ),
-              "Community benefit sharing fund": parseFloat(
+              "Landowner/community benefit share": parseFloat(
                 toPercentageValue(
-                  summaryData["Community benefit sharing fund"],
+                  summaryData["Landowner/community benefit share"],
                 ),
               ),
             }}

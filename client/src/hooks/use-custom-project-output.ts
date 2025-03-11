@@ -106,7 +106,7 @@ export const useCustomProjectOutput = (
         toPercentageValue(output.summary["IRR when priced to cover OpEx"]),
       ),
       "Community benefit sharing fund": parseFloat(
-        toPercentageValue(output.summary["Community benefit sharing fund"]),
+        toPercentageValue(output.summary["Landowner/community benefit share"]),
       ),
     };
   }, [output?.summary]);
