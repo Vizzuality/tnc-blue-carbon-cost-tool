@@ -11,6 +11,17 @@ export const TABLE_COLUMNS = [
     enableSorting: true,
     header: () => <span>Project Name</span>,
   }),
+  columnHelper.accessor("scoreCardRating", {
+    enableSorting: true,
+    header: () => <span>Scorecard rating</span>,
+    cell: (props) => {
+      const value = props.getValue();
+      if (value === undefined) {
+        return "-";
+      }
+      return <ScoreIndicator value={value as PROJECT_SCORE} />;
+    },
+  }),
   columnHelper.accessor("financialFeasibility", {
     enableSorting: true,
     header: () => <span>Financial feasibility</span>,
