@@ -44,6 +44,7 @@ export type CostPlansOutput = {
   fundingGapNPV: number;
   fundingGapPerTCO2e: number;
   totalCommunityBenefitSharingFund: number;
+  projectAbatementPotential: number;
   annualNetCashFlow: CostPlanMap;
   annualNetIncome: CostPlanMap;
   estimatedRevenuePlan: CostPlanMap;
@@ -126,6 +127,11 @@ export class CostCalculator {
       estimatedRevenuePlan,
       this.projectInput.assumptions.discountRate,
     );
+    const netEmissionsReductionsPlan =
+      this.sequestrationRateCalculator.calculateNetEmissionsReductions();
+    const projectAbatementPotential = sum(
+      Object.values(netEmissionsReductionsPlan),
+    );
     const creditsIssuedPlan =
       this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
     const totalCreditsIssued = sum(Object.values(creditsIssuedPlan));
@@ -199,6 +205,7 @@ export class CostCalculator {
       annualNetIncome,
       estimatedRevenuePlan,
       creditsIssuedPlan,
+      projectAbatementPotential,
     };
   }
 

@@ -346,10 +346,18 @@ describe('Projects', () => {
     });
 
     test('Should return a list of projects filtered by min/max abatement potential', async () => {
-      await testManager.mocks().createProject({ abatementPotential: 25 });
-      await testManager.mocks().createProject({ abatementPotential: 15 });
-      await testManager.mocks().createProject({ abatementPotential: 45 });
-      await testManager.mocks().createProject({ abatementPotential: 10 });
+      await testManager
+        .mocks()
+        .createProject({ abatementPotential: 25, creditsIssued: 25 });
+      await testManager
+        .mocks()
+        .createProject({ abatementPotential: 15, creditsIssued: 15 });
+      await testManager
+        .mocks()
+        .createProject({ abatementPotential: 45, creditsIssued: 45 });
+      await testManager
+        .mocks()
+        .createProject({ abatementPotential: 10, creditsIssued: 10 });
 
       const response = await testManager
         .request()
