@@ -7,19 +7,13 @@ import { formatCurrency } from "@/lib/format";
 import { filtersSchema } from "@/app/(overview)/constants";
 
 import {
-  HeaderText,
   CellText,
   getAccessor,
+  renderHeader,
 } from "@/containers/overview/table/utils";
 import { KEY_COSTS_LABELS } from "@/containers/overview/table/view/key-costs/constants";
 
 const columnHelper = createColumnHelper<ProjectKeyCosts>();
-
-const renderHeader = (label: string) => {
-  return function render() {
-    return <HeaderText>{label}</HeaderText>;
-  };
-};
 
 const renderCell = (props: CellContext<ProjectKeyCosts, number>) => {
   const value = props.getValue();

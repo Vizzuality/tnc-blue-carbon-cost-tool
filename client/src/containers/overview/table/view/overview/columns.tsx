@@ -12,6 +12,7 @@ import {
   HeaderText,
   CellText,
   getAccessor,
+  renderHeader,
 } from "@/containers/overview/table/utils";
 import { TableStateWithMaximums } from "@/containers/overview/table/view/overview";
 
@@ -66,11 +67,11 @@ const createSegments = (
 export const columns = (filters: z.infer<typeof filtersSchema>) => [
   columnHelper.accessor("projectName", {
     enableSorting: true,
-    header: () => <HeaderText>Project Name</HeaderText>,
+    header: renderHeader("Project Name"),
   }),
   columnHelper.accessor("scoreCardRating", {
     enableSorting: true,
-    header: () => <HeaderText>Scorecard rating</HeaderText>,
+    header: renderHeader("Scorecard rating"),
     cell: (props) => {
       const value = props.getValue();
       if (value === undefined) {
@@ -83,7 +84,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
     getAccessor("costPerTCO2e", filters.costRangeSelector === "npv"),
     {
       enableSorting: true,
-      header: () => <HeaderText>Cost $(USD)/tCO2e</HeaderText>,
+      header: renderHeader("Cost $(USD)/tCO2e"),
       cell: (props) => {
         const value = props.getValue();
         if (value === null || value === undefined) {
@@ -96,7 +97,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
   ),
   columnHelper.accessor("abatementPotential", {
     enableSorting: true,
-    header: () => <HeaderText>Abatement potential (tCO2e/yr)</HeaderText>,
+    header: renderHeader("Abatement potential (tCO2e/yr)"),
     cell: (props) => {
       const value = props.getValue();
       if (value === null || value === undefined) {
