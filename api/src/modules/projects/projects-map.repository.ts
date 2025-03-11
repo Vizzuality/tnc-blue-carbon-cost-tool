@@ -48,7 +48,7 @@ export class ProjectsMapRepository extends Repository<Project> {
             .select('p.country_code')
             .from(Project, 'p')
             .addSelect(
-              'SUM(p.abatement_potential)',
+              'AVG(p.abatement_potential)',
               'total_abatement_potential',
             )
             .groupBy('p.country_code');

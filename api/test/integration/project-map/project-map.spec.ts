@@ -53,9 +53,9 @@ describe('Project Map', () => {
     expect(response.status).toBe(HttpStatus.OK);
     expect(response.body.features.length).toBe(2);
     expect(response.body.features[0].properties.cost).toBe(2000);
-    expect(response.body.features[0].properties.abatementPotential).toBe(4000);
+    expect(response.body.features[0].properties.abatementPotential).toBe(2000);
     expect(response.body.features[1].properties.cost).toBe(2002);
-    expect(response.body.features[1].properties.abatementPotential).toBe(4002);
+    expect(response.body.features[1].properties.abatementPotential).toBe(2001);
   });
 
   test('Should return the aggregated values for the filtered projects', async () => {
@@ -143,7 +143,7 @@ describe('Project Map', () => {
     expect(response.body.features.length).toBe(2);
     // First country should contain both projects
     expect(response.body.features[0].properties.cost).toBe(2000);
-    expect(response.body.features[0].properties.abatementPotential).toBe(4000);
+    expect(response.body.features[0].properties.abatementPotential).toBe(2000);
     // Second country should contain only the first project
     expect(response.body.features[1].properties.cost).toBe(1001);
     expect(response.body.features[1].properties.abatementPotential).toBe(2010);
@@ -191,7 +191,7 @@ describe('Project Map', () => {
     expect(response.body.features.length).toBe(1);
     // First country should contain both projects
     expect(response.body.features[0].properties.cost).toBe(2000);
-    expect(response.body.features[0].properties.abatementPotential).toBe(4000);
+    expect(response.body.features[0].properties.abatementPotential).toBe(2000);
   });
 
   test('Should return the geometries of the countries filtered by country code', async () => {
