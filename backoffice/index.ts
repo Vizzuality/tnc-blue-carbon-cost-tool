@@ -209,7 +209,7 @@ const start = async () => {
   const customRouter = express.Router();
   // Redirect to the app's login page
   customRouter.get('/login', (_, res) => {
-    res.redirect(encodeURIComponent('/auth/signin?callbackUrl=/admin'));
+    res.redirect(`/auth/signin?callbackUrl=${encodeURIComponent('/admin')}`);
   });
 
   const sessionCookieName = process.env
