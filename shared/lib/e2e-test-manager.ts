@@ -89,7 +89,7 @@ export class E2eTestManager {
     await this.page.getByPlaceholder('Enter your email address').fill(user.email);
     await this.page.locator('input[type="password"]').fill(user.password);
     await this.page.getByRole("button", { name: /log in/i }).click();
-    await this.page.waitForURL("/profile");
+    await this.page.waitForURL("/");
     return user;
   }
 

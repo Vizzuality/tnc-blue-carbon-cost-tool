@@ -38,11 +38,13 @@ test.describe("Auth - Update Password", () => {
     await testManager.mocks().createUser(user);
     await testManager.login(user as User);
 
-    await page.waitForURL('/profile');
+    await page.waitForURL("/");
 
-    await page.getByPlaceholder('Type your current password').fill(user.password);
-    await page.getByPlaceholder('Create new password').fill(newPassword);
-    await page.getByPlaceholder('Repeat new password').fill(newPassword);
+    await page
+      .getByPlaceholder("Type your current password")
+      .fill(user.password);
+    await page.getByPlaceholder("Create new password").fill(newPassword);
+    await page.getByPlaceholder("Repeat new password").fill(newPassword);
 
     await page.getByRole("button", { name: /update password/i }).click();
 
@@ -50,8 +52,11 @@ test.describe("Auth - Update Password", () => {
 
     await expect(page).toHaveURL(/auth\/signin/);
 
-    await testManager.login({ email: user.email, password: newPassword } as User);
+    await testManager.login({
+      email: user.email,
+      password: newPassword,
+    } as User);
 
-    await expect(page).toHaveURL("/profile");
+    await expect(page).toHaveURL("/");
   });
 });

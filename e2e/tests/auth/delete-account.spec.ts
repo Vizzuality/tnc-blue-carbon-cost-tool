@@ -37,18 +37,17 @@ test.describe("Auth - Delete Account", () => {
     await testManager.mocks().createUser(user);
     await testManager.login(user as User);
 
-    await page.waitForURL('/profile');
+    await page.waitForURL("/");
 
-    await page.getByRole('button', { name: 'Delete account' }).click();
-    await page.getByRole('button', { name: 'Delete account' }).click();
+    await page.getByRole("button", { name: "Delete account" }).click();
+    await page.getByRole("button", { name: "Delete account" }).click();
 
-    await page.waitForURL('/auth/signin');
+    await page.waitForURL("/auth/signin");
 
-    await page.getByPlaceholder('Enter your email address').fill(user.email);
+    await page.getByPlaceholder("Enter your email address").fill(user.email);
     await page.locator('input[type="password"]').fill(user.password);
     await page.getByRole("button", { name: /log in/i }).click();
 
-
-    await expect(page.getByText('Invalid credentials')).toBeVisible();
+    await expect(page.getByText("Invalid credentials")).toBeVisible();
   });
 });
