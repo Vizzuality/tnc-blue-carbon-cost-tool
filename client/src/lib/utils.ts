@@ -49,3 +49,10 @@ const PRIVATE_PAGES =
 export const isPrivatePath = (pathname: string) => {
   return PRIVATE_PAGES.test(pathname);
 };
+
+export async function signOutFromBackoffice() {
+  await fetch("/api/backoffice/signout", {
+    method: "POST",
+    credentials: "include",
+  });
+}

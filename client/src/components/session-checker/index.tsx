@@ -7,7 +7,7 @@ import { signOut, useSession } from "next-auth/react";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
-import { isPrivatePath } from "@/lib/utils";
+import { isPrivatePath, signOutFromBackoffice } from "@/lib/utils";
 
 /**
  * This should be a temporary solution to check if the access token is expired.
@@ -49,6 +49,7 @@ export default function SessionChecker() {
         redirect: isPrivatePath(pathname),
         callbackUrl: queryEnabled ? "/auth/signin" : undefined,
       });
+      signOutFromBackoffice();
     }
   }, [error, pathname, queryEnabled]);
 

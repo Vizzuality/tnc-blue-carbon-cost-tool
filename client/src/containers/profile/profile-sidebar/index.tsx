@@ -6,6 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
+import { signOutFromBackoffice } from "@/lib/utils";
 
 import { profileStepAtom } from "@/containers/profile/store";
 import Sidebar from "@/containers/sidebar";
@@ -66,6 +67,7 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
         className="w-full font-bold"
         onClick={async () => {
           await signOut();
+          await signOutFromBackoffice();
         }}
       >
         <LogOutIcon className="h-3 w-3" />
