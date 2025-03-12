@@ -11,6 +11,7 @@ import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { useQueryClient } from "@tanstack/react-query";
 import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
+import { PencilLineIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
@@ -119,6 +120,14 @@ const ActionsDropdown = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-50" align="end">
+          {FEATURE_FLAGS["edit-project"] && !isHeader && (
+            <DropdownMenuItem asChild>
+              <Link href={`/projects/${instance.original.id}/edit`}>
+                <PencilLineIcon className="mr-1 h-4 w-4" />
+                Edit project
+              </Link>
+            </DropdownMenuItem>
+          )}
           {updateSelection && (
             <DropdownMenuItem>
               <ExclamationTriangleIcon className="mr-1 h-4 w-4" />
