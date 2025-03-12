@@ -33,7 +33,7 @@ const Currency: FC<CurrencyProps> = ({
   plainSymbol,
 }) => {
   return (
-    <span className={cn("inline-flex flex-wrap gap-x-0.5", className)}>
+    <span className={cn("inline-flex gap-x-0.5", className)}>
       <span className={cn({ "text-xs text-muted-foreground": !plainSymbol })}>
         {value < 0 ? "-" : ""}$
       </span>
