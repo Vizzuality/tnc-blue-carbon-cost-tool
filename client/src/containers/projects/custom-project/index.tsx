@@ -1,9 +1,9 @@
 "use client";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { motion } from "framer-motion";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 
 import { toPercentageValue } from "@/lib/format";
 
@@ -20,6 +20,7 @@ import CostDetails from "@/containers/projects/custom-project/cost-details";
 import ProjectDetails from "@/containers/projects/custom-project/details";
 import CustomProjectHeader from "@/containers/projects/custom-project/header";
 import LeftOver from "@/containers/projects/custom-project/left-over";
+import { customProjectIdAtom } from "@/containers/projects/custom-project/store";
 import ProjectSummary from "@/containers/projects/custom-project/summary";
 
 import { useSidebar } from "@/components/ui/sidebar";
@@ -58,6 +59,11 @@ const CustomProjectView: FC<{
   const redirectPath = id
     ? `/projects/${id}/edit`
     : "/projects/new?useCache=true";
+  const setProjectId = useSetAtom(customProjectIdAtom);
+
+  useEffect(() => {
+    return () => setProjectId(null);
+  }, [setProjectId]);
 
   return (
     <motion.div
