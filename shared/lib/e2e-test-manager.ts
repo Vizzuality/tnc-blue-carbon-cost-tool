@@ -1,16 +1,19 @@
-import {DataSource} from "typeorm";
-import {User} from "@shared/entities/users/user.entity";
-import {createProject, createUser} from "@shared/lib/entity-mocks";
-import {clearTablesByEntities, clearTestDataFromDatabase,} from "@shared/lib/db-helpers";
-import {JwtPayload, sign} from "jsonwebtoken";
-import {TOKEN_TYPE_ENUM} from "@shared/schemas/auth/token-type.schema";
-import {COMMON_DATABASE_ENTITIES} from "@shared/lib/db-entities";
-import {ProjectType} from "@shared/contracts/projects.contract";
+import { DataSource } from "typeorm";
+import { User } from "@shared/entities/users/user.entity";
+import { createProject, createUser } from "@shared/lib/entity-mocks";
+import {
+  clearTablesByEntities,
+  clearTestDataFromDatabase,
+} from "@shared/lib/db-helpers";
+import { JwtPayload, sign } from "jsonwebtoken";
+import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
+import { COMMON_DATABASE_ENTITIES } from "@shared/lib/db-entities";
+import { ProjectType } from "@shared/contracts/projects.contract";
 import * as fs from "fs";
 import * as path from "path";
-import {adminContract} from "@shared/contracts/admin.contract";
-import {API_URL} from "e2e/playwright.config";
-import {ROLES} from "@shared/entities/users/roles.enum";
+import { adminContract } from "@shared/contracts/admin.contract";
+import { API_URL } from "e2e/playwright.config";
+import { ROLES } from "@shared/entities/users/roles.enum";
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -56,7 +59,6 @@ export class E2eTestManager {
     await this.dataSource.destroy();
   }
 
-
   async ingestCountries() {
     const geoCountriesFilePath = path.join(
       path.resolve(process.cwd(), "../"),
@@ -65,9 +67,6 @@ export class E2eTestManager {
     const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, "utf8");
     await this.dataSource.query(geoCountriesSql);
   }
-
-
-
 
   mocks() {
     return {
@@ -84,7 +83,7 @@ export class E2eTestManager {
   }
 
   async login(user?: User) {
-    console.log("login user", user)
+    console.log("login user", user);
     if (!user) {
       user = await this.mocks().createUser();
     }
@@ -127,64 +126,63 @@ export class E2eTestManager {
   }
 
   async ingestBaseData() {
-    await this.ingestCountries()
-    const user = await this.mocks().createUser({role: ROLES.ADMIN, email: 'test@test.com'});
-    const token = await this.generateTokenByType(
-      user,
-      TOKEN_TYPE_ENUM.ACCESS,
-    );
+    await this.ingestCountries();
+    const user = await this.mocks().createUser({
+      role: ROLES.ADMIN,
+      email: "test@test.com",
+    });
+    const token = await this.generateTokenByType(user, TOKEN_TYPE_ENUM.ACCESS);
     const excelFilePath = path.join(
-        path.resolve(process.cwd(), "../"),
-        "data/excel/data_ingestion_WIP.xlsm",
+      path.resolve(process.cwd(), "../"),
+      "data/excel/Carbon-Cost Data Upload.xlsm",
     );
     const scorecardExcelFilePath = path.join(
-        path.resolve(process.cwd(), "../"),
-        "data/excel/data_ingestion_project_scorecard.xlsm",
+      path.resolve(process.cwd(), "../"),
+      "data/excel/data_ingestion_project_scorecard.xlsm",
     );
     const scorecardFileBuffer = fs.readFileSync(scorecardExcelFilePath);
     const scorecardFileBlob = new Blob([scorecardFileBuffer], {
-      type: 'application/vnd.ms-excel.sheet.macroEnabled.12',
+      type: "application/vnd.ms-excel.sheet.macroEnabled.12",
     });
     const fileBuffer = fs.readFileSync(excelFilePath);
     const fileBlob = new Blob([fileBuffer], {
-      type: 'application/vnd.ms-excel.sheet.macroEnabled.12',
+      type: "application/vnd.ms-excel.sheet.macroEnabled.12",
     });
     const scorecardFormData = new FormData();
-    scorecardFormData.append('file', scorecardFileBlob, 'data_ingestion_project_scorecard.xlsm');
+    scorecardFormData.append(
+      "file",
+      scorecardFileBlob,
+      "Carbon-Cost Data Upload.xlsm",
+    );
 
     const formData = new FormData();
-    formData.append('file', fileBlob, 'data_ingestion_WIP.xlsm');
+    formData.append("file", fileBlob, "Carbon-Cost Data Upload.xlsm");
 
     const scorecardUrl = API_URL + adminContract.uploadProjectScorecard.path;
     const url = API_URL + adminContract.uploadFile.path;
 
     try {
       await fetch(scorecardUrl, {
-        method: 'POST',
+        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: scorecardFormData,
       });
-
-    }catch (error) {
+    } catch (error) {
       throw new Error(`Error uploading file: ${error.message}`);
     }
 
     try {
-       await fetch(url, {
-        method: 'POST',
+      await fetch(url, {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
-
     } catch (error) {
       throw new Error(`Error uploading file: ${error.message}`);
     }
-
   }
-
 }
-

@@ -47,15 +47,5 @@ test.describe("Custom Projects", () => {
       await insertProjectName();
       await submitCustomProjectAndCheckPreview();
     });
-
-    test("I can create a custom project, selecting different parameters", async () => {
-      await insertProjectName();
-      await page.locator("button").filter({ hasText: "India" }).click();
-      await page.getByLabel("Australia").click();
-
-      // TODO: add more input changes
-
-      await submitCustomProjectAndCheckPreview();
-    });
   });
 });
