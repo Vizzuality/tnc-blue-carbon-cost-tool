@@ -13,10 +13,10 @@ const Introduction: MethodologySection = {
       <p>
         To better understand the financials of blue carbon projects, The Nature
         Conservancy (TNC), in collaboration with Bain & Company, has developed
-        the <strong>Blue Carbon Cost Tool</strong>. This
+        the <strong>Blue Carbon Cost Tool</strong>. This&nbsp;
         <strong>pre-feasibility tool</strong> provides high-level estimations of
         project costs and carbon benefits for blue carbon projects, allowing for
-        project-specific scenario analysis and qualitative metrics for{" "}
+        project-specific scenario analysis and qualitative metrics for&nbsp;
         <strong>project prioritization</strong>. Stakeholders can utilize this
         tool to gain valuable insights into the financial aspects of blue carbon
         projects. Designed as an early-stage planning resource, the tool offers
@@ -51,14 +51,14 @@ const Introduction: MethodologySection = {
         <li>
           The <strong>Create Custom Project</strong> feature of the Blue Carbon
           Cost Tool provides a detailed framework and scenario modelling for
-          generating ‘snapshot’ estimations of project costs and carbon benefits
-          while enabling project-specific scenario analysis. This version
-          features a comprehensive model that integrates key analyses,
-          assumptions, and data sources, allowing users to select either default
-          values or customize inputs based on their specific project needs. Its
-          primary purpose is to simulate the financial and carbon outcomes of a
-          user-defined project, offering insights to support informed
-          decision-making.
+          generating &lsquo;snapshot&rsquo; estimations of project costs and
+          carbon benefits while enabling project-specific scenario analysis.
+          This version features a comprehensive model that integrates key
+          analyses, assumptions, and data sources, allowing users to select
+          either default values or customize inputs based on their specific
+          project needs. Its primary purpose is to simulate the financial and
+          carbon outcomes of a user-defined project, offering insights to
+          support informed decision-making.
         </li>
       </List>
 
