@@ -14,6 +14,7 @@ import { useCustomProjectOutput } from "@/hooks/use-custom-project-output";
 import { useGetCustomProject } from "@/hooks/use-get-custom-project";
 
 import AnnualProjectCashFlow from "@/containers/projects/custom-project/annual-project-cash-flow";
+import BreakevenPriceModal from "@/containers/projects/custom-project/breakeven-price-modal";
 import ProjectCost from "@/containers/projects/custom-project/cost";
 import CostDetails from "@/containers/projects/custom-project/cost-details";
 import ProjectDetails from "@/containers/projects/custom-project/details";
@@ -35,12 +36,13 @@ const CustomProject: FC<CustomProjectProps> = ({ id }) => {
   // TODO: Maybe add a spinner/skeleton?
   if (!data) return null;
 
-  return <CustomProjectView data={data} />;
+  return <CustomProjectView data={data} id={id} />;
 };
 
 const CustomProjectView: FC<{
   data: InstanceType<typeof CustomProjectEntity>;
-}> = ({ data }) => {
+  id?: string;
+}> = ({ data, id }) => {
   const { projectSummaryOpen } = useAtomValue(projectsUIState);
   const { open: navOpen } = useSidebar();
   const {
@@ -51,6 +53,11 @@ const CustomProjectView: FC<{
     annualProjectCashFlowProps,
     summaryData,
   } = useCustomProjectOutput(data);
+  const hasOpenBreakEvenPrice =
+    data.output?.breakevenPriceComputationOutput !== null;
+  const redirectPath = id
+    ? `/projects/${id}/edit`
+    : "/projects/new?useCache=true";
 
   return (
     <motion.div
@@ -91,6 +98,10 @@ const CustomProjectView: FC<{
         )}
       </motion.aside>
       <div className="mx-4 flex flex-1 flex-col">
+        <BreakevenPriceModal
+          open={!hasOpenBreakEvenPrice}
+          redirectPath={redirectPath}
+        />
         <CustomProjectHeader data={data} />
         <div className="mb-4 mt-2 flex gap-4">
           <ProjectDetails {...projectDetailsProps} />
@@ -99,9 +110,7 @@ const CustomProjectView: FC<{
           {costDetailsProps && (
             <CostDetails
               data={costDetailsProps}
-              hasOpenBreakEvenPrice={
-                data.output?.breakevenPriceComputationOutput !== null
-              }
+              hasOpenBreakEvenPrice={hasOpenBreakEvenPrice}
             />
           )}
         </div>
