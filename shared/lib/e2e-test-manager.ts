@@ -83,7 +83,6 @@ export class E2eTestManager {
   }
 
   async login(user?: User) {
-    console.log("login user", user);
     if (!user) {
       user = await this.mocks().createUser();
     }
