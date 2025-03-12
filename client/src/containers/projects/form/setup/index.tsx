@@ -32,7 +32,6 @@ import {
 } from "@/components/ui/accordion";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -135,7 +134,7 @@ export default function SetupProjectForm() {
             <FormField
               control={form.control}
               name="projectName"
-              render={({ field, fieldState }) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
@@ -151,11 +150,6 @@ export default function SetupProjectForm() {
                       />
                     </div>
                   </FormControl>
-                  {fieldState.invalid && (
-                    <FormDescription>
-                      Name must contain at least 3 characters.
-                    </FormDescription>
-                  )}
                   <FormMessage />
                 </FormItem>
               )}
