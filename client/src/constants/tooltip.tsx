@@ -731,40 +731,6 @@ export const ASSUMPTIONS = {
   ),
 };
 
-export const COST_INPUT_OVERRIDES = {
-  FEASIBILITY_ANALYSIS:
-    "The production of a feasibility assessment, evaluating GHG mitigation potential and financial and non-financial considerations (e.g., legal, social).",
-  CONSERVATION_PLANNING_AND_ADMIN:
-    "Activities involved in the project start-up phase, such as project management, vendor coordination, fundraising, research, and travel.",
-  DATA_COLLECTION_AND_FIELD_COSTS:
-    "The expenses associated with onsite and field sampling to gather necessary data for project baseline and monitoring (e.g., carbon stock, vegetation and soil characteristics, hydrological data).",
-  COMMUNITY_REPRESENTATION:
-    "Expenses incurred to support activiites aimed at supporting a free, prior and informed consent process with communities who are involved with or may be impacted by the project. This can include assessing community needs, conducting stakeholder surveys and trainings, providing education about blue carbon market projects, and supporting a community-led design.",
-  BLUE_CARBON_PROJECT_PLANNING:
-    "The preparation of the project design document (PD), which may include contracted services.",
-  ESTABLISHING_CARBON_RIGHTS:
-    "Legal expenses related to clarifying carbon rights, establishing conservation and community agreements, and packaging carbon benefits for legally valid sales.",
-  VALIDATION:
-    "The fee or price associated with the validation of the PD (e.g., by Verra).",
-  IMPLEMENTATION_LABOR:
-    "Only applicable to restoration. The costs associated with labor and materials required for rehabilitating the degraded area (hydrology, planting or hybrid). Note: Certain countries, ecosystems and activity types don’t have implementation labor estimates.",
-  MONITORING:
-    "The expenses related to individuals moving throughout the project site to prevent degradation and report necessary actions/changes.",
-  MAINTENANCE:
-    "Only applicable to restoration. The costs associated with the physical upkeep of the original implementation, such as pest control, removing blockages, and rebuilding small portions.",
-  COMMUNITY_BENEFIT_SHARING_FUND:
-    "Approximated as a percent (%) of the carbon credit revenues for the landowner/community residing where the project takes place. Best practice is to use the benefit share to meet the community's socio-economic and financial priorities, per the benefit sharing agreement. This benefit share may be used to compensate for alternative livelihoods and/or opportunity cost, which can be realized through goods, services, infrastructure, and/or cash.",
-  CARBON_STANDARD_FEES:
-    "Administrative fees charged by the carbon standard (e.g., Verra).",
-  BASELINE_REASSESSMENT:
-    "The costs associated with a third-party assessment to ensure the initial GHG emission/reduction estimates are accurate and remain so over time.",
-  MRV: "The costs associated with measuring, reporting, and verifying GHG emissions that occur post-implementation to enable carbon benefit sales through a third party.",
-  LONG_TERM_PROJECT_OPERATING:
-    "The expenses related to project oversight, vendor coordination, community engagement, stakeholder management, etc., during the ongoing operating years of the project.",
-  FINANCING_COST:
-    "The time, effort, and cost associated with securing financing for the set-up phase of the project.",
-};
-
 export const CUSTOM_PROJECT_OUTPUTS = {
   TOTAL_PROJECT_COST:
     "The total financial investment required for the project, including both capital expenditure (CAPEX) and operating expenditure (OPEX), expressed as NPV (Net Present Value).",
