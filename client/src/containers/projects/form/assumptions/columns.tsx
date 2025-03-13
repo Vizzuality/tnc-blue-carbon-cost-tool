@@ -13,8 +13,11 @@ import { Label } from "@/components/ui/label";
 export type AssumptionsFormProperty =
   `assumption.${keyof NonNullable<CustomProjectForm["assumptions"]>}`;
 
-const columnHelper =
-  createColumnHelper<DataColumnDef<AssumptionsFormProperty>>();
+const columnHelper = createColumnHelper<
+  DataColumnDef<AssumptionsFormProperty> & {
+    tooltipContent: React.ReactNode | string;
+  }
+>();
 
 export const COLUMNS = [
   columnHelper.accessor("label", {
@@ -24,8 +27,7 @@ export const COLUMNS = [
         <Label
           tooltip={{
             title: props.getValue(),
-            // todo: update with descriptions
-            content: props.getValue(),
+            content: props.row.original.tooltipContent,
           }}
         >
           {props.getValue()}

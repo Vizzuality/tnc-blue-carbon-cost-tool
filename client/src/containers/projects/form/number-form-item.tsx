@@ -15,7 +15,7 @@ export interface NumberFormItemProps extends InputProps {
   label: string;
   tooltip: {
     title: string;
-    content: string;
+    content: string | React.ReactNode;
   };
   initialValue?: string | number;
   isPercentage?: boolean;

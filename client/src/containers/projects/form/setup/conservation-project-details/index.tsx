@@ -8,6 +8,8 @@ import {
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
+import { CONSERVATION_PROJECT_DETAILS } from "@/constants/tooltip";
+
 import NumberFormItem from "@/containers/projects/form/number-form-item";
 import LossRate from "@/containers/projects/form/setup/conservation-project-details/loss-rate";
 import T1GlobalEmissionFactor from "@/containers/projects/form/setup/conservation-project-details/t1-global-emission-factor";
@@ -50,7 +52,7 @@ export default function ConservationProjectDetails() {
             <FormLabel
               tooltip={{
                 title: "Loss rate used",
-                content: "TBD",
+                content: CONSERVATION_PROJECT_DETAILS.LOSS_RATE_USED,
               }}
             >
               Loss rate used
@@ -116,8 +118,8 @@ export default function ConservationProjectDetails() {
             <FormItem className="basis-1/2">
               <FormLabel
                 tooltip={{
-                  title: "Emission factors",
-                  content: "TBD",
+                  title: "Emission factor used (as committed emissions)",
+                  content: CONSERVATION_PROJECT_DETAILS.EMISSION_FACTOR_USED,
                 }}
               >
                 Emission factor used (as committed emissions)
@@ -177,7 +179,8 @@ export default function ConservationProjectDetails() {
                   <FormLabel
                     tooltip={{
                       title: "Project-specific emissions type",
-                      content: "TBD",
+                      content:
+                        CONSERVATION_PROJECT_DETAILS.PROCET_SPECIFIC_EMISSIONS_TYPE,
                     }}
                   >
                     Project-specific emissions type
@@ -228,8 +231,8 @@ export default function ConservationProjectDetails() {
                   <NumberFormItem
                     label="Project Specific Emission Factor"
                     tooltip={{
-                      title: "Project Specific Emission Factor",
-                      content: "TBD",
+                      title: "Emission factor (CO2e/ ha /yr)",
+                      content: CONSERVATION_PROJECT_DETAILS.EMISSION_FACTOR,
                     }}
                     formItemClassName="basis-1/2"
                     formControlClassName="after:content-['tCO2e/ha/year']"
@@ -257,8 +260,8 @@ export default function ConservationProjectDetails() {
                   <NumberFormItem
                     label="AGB Emission Factor"
                     tooltip={{
-                      title: "AGB Emission Factor",
-                      content: "TBD",
+                      title: "AGB emissions",
+                      content: CONSERVATION_PROJECT_DETAILS.SOC_EMISSIONS,
                     }}
                     className="pr-24"
                     formItemClassName="basis-1/2"
@@ -279,8 +282,8 @@ export default function ConservationProjectDetails() {
                   <NumberFormItem
                     label="SOC Emission Factor"
                     tooltip={{
-                      title: "SOC Emission Factor",
-                      content: "TBD",
+                      title: "SOC Emissions",
+                      content: CONSERVATION_PROJECT_DETAILS.SOC_EMISSIONS,
                     }}
                     className="pr-32"
                     formItemClassName="basis-1/2"

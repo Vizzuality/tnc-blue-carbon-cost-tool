@@ -234,7 +234,7 @@ export default function ProjectsFilters() {
               htmlFor="countryCode"
               tooltip={{
                 title: "Country",
-                content: <p>Select the country you want to filter by.</p>,
+                content: FILTERS.COUNTRY,
               }}
             >
               Country
@@ -267,12 +267,7 @@ export default function ProjectsFilters() {
             <Label
               tooltip={{
                 title: "Ecosystems",
-                content: (
-                  <p>
-                    Select the ecosystems you want to filter by. You can select
-                    multiple ecosystems.
-                  </p>
-                ),
+                content: FILTERS.ECOSYSTEM,
               }}
             >
               Ecosystems
@@ -296,12 +291,7 @@ export default function ProjectsFilters() {
             <Label
               tooltip={{
                 title: "Activities",
-                content: (
-                  <p>
-                    Select the activities you want to filter by. You can select
-                    multiple activities and sub-activities.
-                  </p>
-                ),
+                content: FILTERS.ACTIVITY_TYPE,
               }}
             >
               Activities
@@ -348,7 +338,14 @@ export default function ProjectsFilters() {
             </ul>
           </div>
           <div className="flex flex-col gap-3">
-            <Label htmlFor="costs">Cost ($)</Label>
+            <Label
+              tooltip={{
+                title: "Cost ($)",
+                content: FILTERS.COST,
+              }}
+            >
+              Cost ($)
+            </Label>
             <RangeSlider
               defaultValue={costValuesState}
               min={bounds?.cost.min}
@@ -369,7 +366,12 @@ export default function ProjectsFilters() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <Label htmlFor="abatement_potential">
+            <Label
+              tooltip={{
+                title: "Abatement Potential (tCO2e/yr)",
+                content: FILTERS.ABATEMENT_POTENTIAL,
+              }}
+            >
               Abatement Potential (tCO2e/yr)
             </Label>
             <RangeSlider

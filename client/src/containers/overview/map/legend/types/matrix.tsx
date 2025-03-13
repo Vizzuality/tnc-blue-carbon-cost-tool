@@ -1,5 +1,9 @@
 import React from "react";
 
+import { MAP_LEGEND } from "@/constants/tooltip";
+
+import InfoButton from "@/components/ui/info-button";
+
 export interface LegendMatrixIntersectionsProps {
   intersections: Array<{
     id: number;
@@ -19,7 +23,10 @@ export default function MatrixLegend({
   return (
     <div className="flex gap-3">
       <div>
-        <span>Abatement potential and cost</span>
+        <p>Abatement potential and cost</p>
+        <InfoButton title="Abatement potential and cost">
+          {MAP_LEGEND}
+        </InfoButton>
       </div>
       <div className="flex items-center">
         <div className="relative w-20 flex-shrink-0 py-6 pl-5 text-xs font-medium text-muted-foreground">
