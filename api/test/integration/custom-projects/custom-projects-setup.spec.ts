@@ -91,7 +91,6 @@ describe('Create Custom Projects - Setup', () => {
       establishingCarbonRights: 46666.6666666667,
       financingCost: 0.05,
       validation: 50000,
-      implementationLabor: 0,
       monitoring: 8400,
       maintenance: 0.0833,
       carbonStandardFees: 0.2,

@@ -204,6 +204,9 @@ export class DataRepository extends Repository<BaseDataView> {
         `Could not find default Cost Inputs for country ${countryCode}, activity ${activity} and ecosystem ${ecosystem}`,
       );
     }
+    if (activity === ACTIVITY.CONSERVATION) {
+      costInputs.implementationLabor = undefined;
+    }
     return costInputs;
   }
 
