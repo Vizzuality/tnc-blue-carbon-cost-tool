@@ -4,7 +4,7 @@ import {
   ExcelParserInterface,
   ExcelParserToken,
 } from '@api/modules/import/services/excel-parser.interface';
-import { ImportRepository } from '@api/modules/import/import.repostiory';
+import { ImportRepository } from '@api/modules/import/import.repository';
 import { EventBus } from '@nestjs/cqrs';
 import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 import { ImportEvent } from '@api/modules/import/events/import.event';

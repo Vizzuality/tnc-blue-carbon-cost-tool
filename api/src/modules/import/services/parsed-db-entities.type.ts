@@ -36,7 +36,7 @@ export type RecordSource = {
 export type RecordWithSources<T> = T & {
   sources?: RecordSource[];
 };
-type ParsedEntity<T> = {
+export type ParsedEntity<T> = {
   entity: EntityClass<T>;
   records: RecordWithSources<T>[];
 };
