@@ -1,14 +1,18 @@
-import { ResourceWithOptions } from "adminjs";
-import { User } from "@shared/entities/users/user.entity.js";
-import { createUserAction } from "./user.actions.js";
-import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
+import { ResourceWithOptions } from 'adminjs';
+import { User } from '@shared/entities/users/user.entity.js';
+import { createUserAction } from './user.actions.js';
+import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
 
 export const UserResource: ResourceWithOptions = {
   resource: User,
   options: {
     navigation: {
-      name: "User Management",
-      icon: "User",
+      name: 'User Management',
+      icon: 'User',
+    },
+    sort: {
+      sortBy: 'name',
+      direction: 'asc',
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
@@ -20,7 +24,7 @@ export const UserResource: ResourceWithOptions = {
     },
     actions: {
       new: {
-        actionType: "resource",
+        actionType: 'resource',
         handler: createUserAction,
       },
     },
