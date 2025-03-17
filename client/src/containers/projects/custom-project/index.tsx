@@ -54,6 +54,7 @@ const CustomProjectView: FC<{
     annualProjectCashFlowProps,
     summaryData,
   } = useCustomProjectOutput(data);
+
   const hasOpenBreakEvenPrice =
     data.output?.breakevenPriceComputationOutput !== null;
   const redirectPath = id

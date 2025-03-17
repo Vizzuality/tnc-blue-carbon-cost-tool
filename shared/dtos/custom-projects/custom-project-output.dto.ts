@@ -69,7 +69,7 @@ export type CustomProjectCostDetails = {
   blueCarbonProjectPlanning: number;
   establishingCarbonRights: number;
   validation: number;
-  implementationLabor: number;
+  implementationLabor?: number;
   monitoring: number;
   maintenance: number;
   communityBenefitSharingFund: number;

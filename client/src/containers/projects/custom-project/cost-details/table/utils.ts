@@ -1,11 +1,10 @@
 import { CustomProjectCostDetails } from "@shared/dtos/custom-projects/custom-project-output.dto";
-
 import { parseTableData } from "@/lib/utils";
-
 import { CostItem } from "@/containers/projects/custom-project/cost-details/table";
+import { ACTIVITY } from "@shared/entities/activity.enum";
 
-const customProjectCostDetailsLabelMap: Record<
-  keyof CustomProjectCostDetails,
+const CONSERVATION_PROJECT_COST_LABELS: Record<
+  Exclude<keyof CustomProjectCostDetails, "implementationLabor">,
   string
 > = {
   capitalExpenditure: "Capital expenditure",
@@ -16,7 +15,6 @@ const customProjectCostDetailsLabelMap: Record<
   blueCarbonProjectPlanning: "Blue carbon project planning",
   establishingCarbonRights: "Establishing carbon rights",
   validation: "Validation",
-  implementationLabor: "Implementation labor",
   operationalExpenditure: "Operating expenditure",
   monitoring: "Monitoring",
   maintenance: "Maintenance",
@@ -28,10 +26,25 @@ const customProjectCostDetailsLabelMap: Record<
   totalCost: "Total cost",
 } as const;
 
-function parseCostDetailsForTable(data?: CustomProjectCostDetails): CostItem[] {
+const RESTORATION_PROJECT_COST_LABELS: Record<
+  keyof CustomProjectCostDetails,
+  string
+> = {
+  ...CONSERVATION_PROJECT_COST_LABELS,
+  implementationLabor: "Implementation labor",
+} as const;
+
+function parseCostDetailsForTable(
+  activity: ACTIVITY,
+  data?: CustomProjectCostDetails,
+): CostItem[] {
   if (!data) return [];
 
-  return parseTableData(data, customProjectCostDetailsLabelMap);
+  if (activity === ACTIVITY.CONSERVATION) {
+    return parseTableData(data, CONSERVATION_PROJECT_COST_LABELS);
+  }
+
+  return parseTableData(data, RESTORATION_PROJECT_COST_LABELS);
 }
 
 export { parseCostDetailsForTable };
