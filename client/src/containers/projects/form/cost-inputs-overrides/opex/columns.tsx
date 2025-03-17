@@ -18,7 +18,11 @@ import { Label } from "@/components/ui/label";
 export type OpexFormProperty =
   `costInputs.${(typeof COST_INPUTS_KEYS)["opex"][number]}`;
 
-const columnHelper = createColumnHelper<DataColumnDef<OpexFormProperty>>();
+const columnHelper = createColumnHelper<
+  DataColumnDef<OpexFormProperty> & {
+    tooltipContent: React.ReactNode | string;
+  }
+>();
 
 export const COLUMNS = [
   columnHelper.accessor("label", {
@@ -28,8 +32,7 @@ export const COLUMNS = [
         <Label
           tooltip={{
             title: props.getValue(),
-            // todo: update with descriptions
-            content: props.getValue(),
+            content: props.row.original.tooltipContent,
           }}
         >
           {props.getValue()}

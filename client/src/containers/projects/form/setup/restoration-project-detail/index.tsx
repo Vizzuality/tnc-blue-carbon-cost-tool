@@ -10,6 +10,8 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
+import { RESTORATION_PROJECT_DETAILS } from "@/constants/tooltip";
+
 import NumberFormItem from "@/containers/projects/form/number-form-item";
 import { useCustomProjectForm } from "@/containers/projects/form/utils";
 
@@ -85,8 +87,8 @@ export default function RestorationProjectDetails() {
                 <FormItem className="basis-1/2">
                   <FormLabel
                     tooltip={{
-                      title: "Project-specific emissions type",
-                      content: "TBD",
+                      title: "Restoration Activity type",
+                      content: RESTORATION_PROJECT_DETAILS.ACTIVITY_TYPE,
                     }}
                   >
                     Restoration Activity type
@@ -132,8 +134,8 @@ export default function RestorationProjectDetails() {
                 <FormItem className="basis-1/2">
                   <FormLabel
                     tooltip={{
-                      title: "Project-specific emissions type",
-                      content: "TBD",
+                      title: "Sequestration rate used (tCO2e/ha/yr)",
+                      content: RESTORATION_PROJECT_DETAILS.SEQUESTRATION_RATE,
                     }}
                   >
                     Sequestration Factor Used
@@ -183,7 +185,7 @@ export default function RestorationProjectDetails() {
                 label="Planting Success Rate"
                 tooltip={{
                   title: "Planting Success Rate",
-                  content: "TBD",
+                  content: RESTORATION_PROJECT_DETAILS.PLANTING_SUCCESS_RATE,
                 }}
                 formItemClassName="basis-1/2"
                 formControlClassName="after:content-['%']"
@@ -245,8 +247,10 @@ export default function RestorationProjectDetails() {
                   <NumberFormItem
                     label="Project-specific sequestration rate"
                     tooltip={{
-                      title: SEQUESTRATION_RATE_TIER_TYPES.TIER_3,
-                      content: "TBD",
+                      title:
+                        "Project-specific sequestration rate (tC02e/ha/yr)",
+                      content:
+                        RESTORATION_PROJECT_DETAILS.PROJECT_SPECIFIC_SEQUESTRATION_RATE,
                     }}
                     className="pr-28"
                     formItemClassName="basis-1/2"

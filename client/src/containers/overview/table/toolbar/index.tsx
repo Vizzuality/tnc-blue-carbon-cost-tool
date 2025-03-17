@@ -220,15 +220,12 @@ export default function ToolbarProjectsTable() {
                         <div className="!mt-4 grid grid-cols-3 gap-2 text-center">
                           <div className="h-fit rounded-md bg-ramps-red p-2 text-sky-blue-950">
                             <div className="font-medium">Low</div>
-                            <div className="text-sm">Description of low</div>
                           </div>
                           <div className="h-fit rounded-md bg-ramps-yellow p-2 text-sky-blue-950">
                             <div className="font-medium">Medium</div>
-                            <div className="text-sm">Description</div>
                           </div>
                           <div className="h-fit rounded-md bg-ramps-green p-2 text-sky-blue-950">
                             <div className="font-medium">High</div>
-                            <div className="text-sm">Description</div>
                           </div>
                         </div>
                       </div>

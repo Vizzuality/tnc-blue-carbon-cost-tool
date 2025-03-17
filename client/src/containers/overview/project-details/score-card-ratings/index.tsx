@@ -5,6 +5,8 @@ import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
 
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
+import { PROJECT_DETAILS } from "@/constants/tooltip";
+
 import CompareButton from "@/containers/overview/project-details/compare-button";
 
 import { Label } from "@/components/ui/label";
@@ -34,8 +36,7 @@ const ScoreCardRatings: FC<{ data?: Scorecard }> = ({ data }) => {
             className="text-md font-medium"
             tooltip={{
               title: "Scorecard ratings",
-              content:
-                "Refers to the summary of Capital Expenditure and Operating Expenditure",
+              content: PROJECT_DETAILS.SCORE_CARD_RATINGS,
             }}
           >
             <h3 className="text-base font-semibold">Scorecard ratings</h3>

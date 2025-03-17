@@ -16,6 +16,8 @@ import { z } from "zod";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
+import { CUSTOM_PROJECT, GENERAL_ASSUMPTIONS } from "@/constants/tooltip";
+
 import { ACTIVITIES } from "@/containers/overview/filters/constants";
 import NumberFormItem from "@/containers/projects/form/number-form-item";
 import { useFormValues } from "@/containers/projects/form/project-form";
@@ -163,7 +165,7 @@ export default function SetupProjectForm() {
                     <FormLabel
                       tooltip={{
                         title: "Country",
-                        content: "Select a country",
+                        content: CUSTOM_PROJECT.COUNTRY,
                       }}
                     >
                       Country
@@ -200,7 +202,7 @@ export default function SetupProjectForm() {
                     label="Project Size"
                     tooltip={{
                       title: "Project Size",
-                      content: "Insert number of hectares",
+                      content: CUSTOM_PROJECT.PROJECT_SIZE,
                     }}
                     min={0}
                     formItemClassName="flex-1"
@@ -221,7 +223,7 @@ export default function SetupProjectForm() {
                   <FormLabel
                     tooltip={{
                       title: "Ecosystem",
-                      content: "Select the ecosystem",
+                      content: CUSTOM_PROJECT.ECOSYSTEM,
                     }}
                   >
                     Ecosystem
@@ -284,7 +286,7 @@ export default function SetupProjectForm() {
                   <FormLabel
                     tooltip={{
                       title: "Activity",
-                      content: "Select an activity",
+                      content: CUSTOM_PROJECT.ACTIVITY_TYPE,
                     }}
                   >
                     Activity type
@@ -346,7 +348,7 @@ export default function SetupProjectForm() {
                   <FormLabel
                     tooltip={{
                       title: "Carbon Revenues to cover",
-                      content: "[TBD]",
+                      content: GENERAL_ASSUMPTIONS.CARBON_REVENUES_TO_COVER,
                     }}
                   >
                     Carbon Revenues to cover
@@ -397,8 +399,9 @@ export default function SetupProjectForm() {
                   <NumberFormItem
                     label="Initial carbon price assumption"
                     tooltip={{
-                      title: "Initial carbon price assumption",
-                      content: "TBD",
+                      title: "Initial carbon price assumptions in $",
+                      content:
+                        GENERAL_ASSUMPTIONS.INITIAL_CARBON_PRICE_ASSUMPTIONS,
                     }}
                     value={form.getValues("initialCarbonPriceAssumption")}
                     formItemClassName="flex items-center justify-between gap-4"

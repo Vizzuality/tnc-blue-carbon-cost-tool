@@ -62,6 +62,8 @@ export default function CapexCostInputsTable() {
               property: `costInputs.${key}` as CapexFormProperty,
               defaultValue: data.body.data[key as keyof typeof data.body.data],
               value: "",
+              tooltipContent:
+                COSTS_DTO_MAP[key as keyof typeof COSTS_DTO_MAP].tooltipContent,
             })),
         enabled:
           !!ecosystem &&

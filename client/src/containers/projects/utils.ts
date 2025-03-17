@@ -2,13 +2,11 @@ import { CellContext } from "@tanstack/react-table";
 
 import { formatNumber, toPercentageValue } from "@/lib/format";
 
-import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
-
 export const shouldFormatToPercentage = (value: string): boolean =>
   value.includes("%");
 
-export const formatCellValue = <T>(
-  props: CellContext<DataColumnDef<T>, string>,
+export const formatCellValue = <T extends { unit: string }>(
+  props: CellContext<T, string>,
 ): string => {
   const value = props.getValue();
   const unit = props.row.original.unit;
