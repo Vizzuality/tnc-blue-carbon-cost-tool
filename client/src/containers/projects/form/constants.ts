@@ -47,7 +47,6 @@ export const DEFAULT_CONSERVATION_FORM_VALUES: Pick<
   activity: ACTIVITY.CONSERVATION,
   projectSizeHa: 10000,
   parameters: {
-    projectSpecificLossRate: -0.003,
     projectSpecificEmissionFactor: 15,
     emissionFactorAGB: 200,
     emissionFactorSOC: 15,
