@@ -33,6 +33,6 @@ test.describe("Auth - Sign In", () => {
     };
     await testManager.mocks().createUser(user);
     await testManager.login(user as User);
-    await expect(testManager.getPage()).toHaveURL("/profile");
+    await expect(testManager.getPage()).toHaveURL("/");
   });
 });
