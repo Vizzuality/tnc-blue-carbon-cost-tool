@@ -16,22 +16,6 @@ import {
 
 const queryClient = new QueryClient();
 
-const { queryKey: countriesQueryKey } = queryKeys.customProjects.countries;
-const { queryKey: assumptionsQueryKey } = queryKeys.customProjects.assumptions({
-  ecosystem: ECOSYSTEM.SEAGRASS,
-  activity: ACTIVITY.CONSERVATION,
-});
-queryClient.setQueryData(countriesQueryKey, {
-  status: 200,
-  body: { data: COUNTRY_LIST },
-});
-queryClient.setQueryData(assumptionsQueryKey, {
-  status: 200,
-  body: {
-    data: DEFAULT_ASSUMPTIONS,
-  },
-});
-
 const wrapper = (queryClient: QueryClient) => {
   return ({ children }: PropsWithChildren) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -47,10 +31,39 @@ vi.mock("next-auth/react", () => ({
 }));
 
 describe("projects/form/default-values", () => {
-  it("returns correctly inputs for default CONSERVATION form", () => {
-    const { result: defaultValues } = renderHook(() => useDefaultFormValues(), {
-      wrapper: wrapper(queryClient),
+  const projectId = FAKE_PROJECT.id;
+  const FAKE_CACHED_PROJECT = {
+    ...FAKE_PROJECT,
+    projectName: "Cached project",
+  };
+
+  beforeEach(() => {
+    queryClient.clear();
+    const { queryKey: countriesQueryKey } = queryKeys.customProjects.countries;
+    const { queryKey: assumptionsQueryKey } =
+      queryKeys.customProjects.assumptions({
+        ecosystem: ECOSYSTEM.SEAGRASS,
+        activity: ACTIVITY.CONSERVATION,
+      });
+    queryClient.setQueryData(countriesQueryKey, {
+      status: 200,
+      body: { data: COUNTRY_LIST },
     });
+    queryClient.setQueryData(assumptionsQueryKey, {
+      status: 200,
+      body: {
+        data: DEFAULT_ASSUMPTIONS,
+      },
+    });
+  });
+
+  it("returns correctly inputs for default CONSERVATION form", () => {
+    const { result: defaultValues } = renderHook(
+      () => useDefaultFormValues(false),
+      {
+        wrapper: wrapper(queryClient),
+      },
+    );
 
     expect(defaultValues.current.projectName).equal("");
     expect(defaultValues.current.activity).equal(ACTIVITY.CONSERVATION);
@@ -77,7 +90,6 @@ describe("projects/form/default-values", () => {
   });
 
   it("returns correctly inputs from an existing project", () => {
-    const projectId = "fake-project-id";
     const { queryKey } = queryKeys.customProjects.one(projectId);
 
     queryClient.setQueryData(queryKey, {
@@ -86,7 +98,7 @@ describe("projects/form/default-values", () => {
     });
 
     const { result: defaultValues } = renderHook(
-      () => useDefaultFormValues(projectId),
+      () => useDefaultFormValues(false, projectId),
       { wrapper: wrapper(queryClient) },
     );
 
@@ -109,5 +121,53 @@ describe("projects/form/default-values", () => {
     expect(defaultValues.current.parameters).toEqual(
       FAKE_PROJECT.input.parameters,
     );
+  });
+
+  it("should use cached project data when useCache is true", async () => {
+    queryClient.setQueryData(queryKeys.customProjects.cached.queryKey, {
+      data: FAKE_CACHED_PROJECT,
+    });
+
+    const { result: defaultValues } = renderHook(
+      () => useDefaultFormValues(true),
+      { wrapper: wrapper(queryClient) },
+    );
+
+    expect(defaultValues.current.projectName).equal(
+      FAKE_CACHED_PROJECT.projectName,
+    );
+  });
+
+  it("should not use cached project data when useCache is false", async () => {
+    queryClient.setQueryData(queryKeys.customProjects.cached.queryKey, {
+      data: FAKE_CACHED_PROJECT,
+    });
+
+    const { result: defaultValues } = renderHook(
+      () => useDefaultFormValues(false),
+      { wrapper: wrapper(queryClient) },
+    );
+
+    expect(defaultValues.current.projectName).not.equal(
+      FAKE_CACHED_PROJECT.projectName,
+    );
+  });
+
+  it("should prioritize fetched project data over cached data", async () => {
+    queryClient.setQueryData(queryKeys.customProjects.cached.queryKey, {
+      data: FAKE_CACHED_PROJECT,
+    });
+
+    queryClient.setQueryData(queryKeys.customProjects.one(projectId).queryKey, {
+      status: 200,
+      body: { data: FAKE_PROJECT },
+    });
+
+    const { result: defaultValues } = renderHook(
+      () => useDefaultFormValues(true, projectId),
+      { wrapper: wrapper(queryClient) },
+    );
+
+    expect(defaultValues.current.projectName).equal(FAKE_PROJECT.projectName);
   });
 });
