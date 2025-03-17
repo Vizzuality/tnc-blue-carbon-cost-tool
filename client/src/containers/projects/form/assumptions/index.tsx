@@ -1,10 +1,15 @@
 import { useFormContext } from "react-hook-form";
 
-import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
+import {
+  ASSUMPTIONS_NAME_TO_DTO_MAP,
+  ASSUMPTIONS_NAME_TO_TOOLTIP_MAP,
+} from "@shared/schemas/assumptions/assumptions.enums";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
+
+import { ASSUMPTIONS } from "@/constants/tooltip";
 
 import {
   AssumptionsFormProperty,
@@ -50,6 +55,12 @@ export default function AssumptionsProjectForm() {
                 `assumptions.${ASSUMPTIONS_NAME_TO_DTO_MAP[name as keyof typeof ASSUMPTIONS_NAME_TO_DTO_MAP]}` as AssumptionsFormProperty,
               defaultValue: value,
               value: Number(value),
+              tooltipContent:
+                ASSUMPTIONS[
+                  ASSUMPTIONS_NAME_TO_TOOLTIP_MAP[
+                    name as keyof typeof ASSUMPTIONS_NAME_TO_TOOLTIP_MAP
+                  ]
+                ],
             })),
       },
     );

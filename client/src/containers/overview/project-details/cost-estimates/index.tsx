@@ -3,6 +3,8 @@ import { FC } from "react";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 
+import { PROJECT_DETAILS } from "@/constants/tooltip";
+
 import CompareButton from "@/containers/overview/project-details/compare-button";
 import { CostItem } from "@/containers/projects/custom-project/cost-details/table";
 
@@ -23,8 +25,7 @@ const CostEstimates: FC<CostEstimatesProps> = ({ items }) => {
             className="text-md font-medium"
             tooltip={{
               title: "Cost estimates",
-              content:
-                "Refers to the summary of Capital Expenditure and Operating Expenditure",
+              content: PROJECT_DETAILS.COST_ESTIMATES,
             }}
           >
             <h3 className="text-md">Cost estimates</h3>

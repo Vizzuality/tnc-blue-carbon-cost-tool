@@ -7,6 +7,8 @@ import { toPercentageValue } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
+import { CONSERVATION_PROJECT_DETAILS } from "@/constants/tooltip";
+
 import NumberFormItem from "@/containers/projects/form/number-form-item";
 import { useCustomProjectForm } from "@/containers/projects/form/utils";
 
@@ -82,7 +84,7 @@ export default function LossRate() {
           label="Project Specific Loss Rate"
           tooltip={{
             title: "Project Specific Loss Rate",
-            content: "TBD",
+            content: CONSERVATION_PROJECT_DETAILS.PROJECT_SPECIFIC_LOSS_RATE,
           }}
           initialValue={form.getValues("parameters.projectSpecificLossRate")}
           formItemClassName="flex items-center justify-between gap-4"
