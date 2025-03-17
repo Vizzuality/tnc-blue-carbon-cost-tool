@@ -24,6 +24,10 @@ export const SequestrationRateResource: ResourceWithOptions = {
       name: 'Data Management',
       icon: 'Database',
     },
+    sort: {
+      sortBy: 'countryCode',
+      direction: 'asc',
+    },
     listProperties: FIELD_ORDER,
     editProperties: FIELD_ORDER,
     showProperties: FIELD_ORDER,
