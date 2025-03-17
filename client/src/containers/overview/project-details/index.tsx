@@ -20,7 +20,10 @@ import Navigation from "@/containers/overview/project-details/navigation";
 import ParametersProjects from "@/containers/overview/project-details/parameters";
 import ScoreCardRating from "@/containers/overview/project-details/score-card-rating";
 import ScoreCardRatings from "@/containers/overview/project-details/score-card-ratings";
-import { parseCostEstimatesForTable } from "@/containers/overview/project-details/utils";
+import {
+  getProjectSizeLabel,
+  parseCostEstimatesForTable,
+} from "@/containers/overview/project-details/utils";
 
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -55,6 +58,10 @@ export default function ProjectDetails() {
           )
         : [],
     [projectData?.projectCost, costRangeSelector],
+  );
+  const projectSizeLabel = useMemo(
+    () => getProjectSizeLabel(projectData),
+    [projectData],
   );
 
   const handleOpenDetails = (open: boolean) =>
@@ -106,7 +113,7 @@ export default function ProjectDetails() {
             </Card>
           </div>
         </ScrollArea>
-        <Footer />
+        <Footer projectSize={projectSizeLabel} />
       </SheetContent>
     </Sheet>
   );

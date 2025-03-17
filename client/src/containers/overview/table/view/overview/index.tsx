@@ -14,7 +14,6 @@ import {
   useReactTable,
   TableState,
 } from "@tanstack/react-table";
-import { useAtom } from "jotai";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { z } from "zod";
 
@@ -22,7 +21,6 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/lib/utils";
 
-import { projectDetailsAtom } from "@/app/(overview)/store";
 import {
   useProjectOverviewFilters,
   useTableView,
@@ -30,7 +28,7 @@ import {
 
 import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
-import ProjectDetails from "@/containers/overview/project-details";
+import { useProjectDetails } from "@/containers/overview/hooks";
 import {
   DEFAULT_TABLE_SETTINGS,
   getColumnSortTitle,
@@ -39,7 +37,10 @@ import {
   useSorting,
 } from "@/containers/overview/table/utils";
 import { columns } from "@/containers/overview/table/view/overview/columns";
-import { filtersToQueryParams } from "@/containers/overview/utils";
+import {
+  filtersToQueryParams,
+  getVisibleProjectIds,
+} from "@/containers/overview/utils";
 
 import {
   ScrollableTable,
@@ -68,7 +69,7 @@ export interface TableStateWithMaximums extends TableState {
 export function OverviewTable() {
   const [tableView] = useTableView();
   const [filters] = useProjectOverviewFilters();
-  const [, setProjectDetails] = useAtom(projectDetailsAtom);
+  const { handleOpenDetails } = useProjectDetails();
   const { sorting, handleSortingChange } = useSorting();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -108,14 +109,12 @@ export function OverviewTable() {
     },
     {
       queryKey,
-      select: (data) => data.body as PaginatedProjectsWithMaximums,
+      select: (data) => data.body,
       placeholderData: keepPreviousData,
     },
   );
 
-  const visibleProjectIds = useMemo(() => {
-    return data?.data.map((item) => item.id!) || [];
-  }, [data]);
+  const visibleProjectIds = useMemo(() => getVisibleProjectIds(data), [data]);
 
   const maximums = useMemo(
     () => ({
@@ -152,7 +151,6 @@ export function OverviewTable() {
 
   return (
     <>
-      <ProjectDetails />
       <ScrollableTable>
         <TableHeader className="sticky top-0">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -195,13 +193,9 @@ export function OverviewTable() {
                 className="group cursor-pointer transition-colors hover:bg-big-stone-950"
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                onClick={() => {
-                  setProjectDetails({
-                    isOpen: true,
-                    id: row.original.id!,
-                    visibleProjectIds,
-                  });
-                }}
+                onClick={() =>
+                  handleOpenDetails(row.original.id!, visibleProjectIds)
+                }
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell

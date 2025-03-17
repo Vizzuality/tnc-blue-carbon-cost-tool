@@ -1,5 +1,6 @@
 import { ProjectScorecardDto } from "@shared/dtos/projects/project-scorecard.dto";
 
+import { formatNumber } from "@/lib/format";
 import { parseTableData } from "@/lib/utils";
 
 import { CostItem } from "@/containers/projects/custom-project/cost-details/table";
@@ -41,4 +42,12 @@ function parseCostEstimatesForTable(data: CostEstimates): CostItem[] {
   return parseTableData(data, costEstimatesLabelMap);
 }
 
-export { parseCostEstimatesForTable };
+function getProjectSizeLabel(data?: ProjectScorecardDto): string {
+  if (!data) {
+    return "";
+  }
+
+  return `${data.projectSizeFilter} project (${formatNumber(data.projectSize)} ha)`;
+}
+
+export { parseCostEstimatesForTable, getProjectSizeLabel };

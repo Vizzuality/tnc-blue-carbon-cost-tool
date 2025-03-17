@@ -1,4 +1,6 @@
-import { Link, NotebookPen } from "lucide-react";
+import Link from "next/link";
+
+import { NotebookPen } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,13 +14,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-const Footer = () => {
+interface FooterProps {
+  projectSize: string;
+}
+
+const Footer = ({ projectSize }: FooterProps) => {
   return (
     <div className="sticky bottom-0 flex w-full flex-wrap justify-between gap-4 border-t border-t-sky-900 bg-background px-6 py-2">
       <div className="text-xs">
         <div>
-          Values considered for a{" "}
-          <span className="font-bold">small project (40 ha).</span>
+          Values considered for a&nbsp;
+          <span className="font-bold">{projectSize}</span>
         </div>
         <div>For more detailed analysis, create a custom project.</div>
       </div>
@@ -43,10 +49,10 @@ const Footer = () => {
               needs.
             </DialogDescription>
             <DialogFooter>
-              <DialogClose>
+              <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button>
+              <Button asChild>
                 <Link href={"/projects/new"}>Create</Link>
               </Button>
             </DialogFooter>
