@@ -42,9 +42,6 @@ export const EmissionFactorsResource: ResourceWithOptions = {
       ecosystem: {
         position: 2,
       },
-      emissionFactor: {
-        position: 4,
-      },
       AGB: {
         position: 5,
       },
