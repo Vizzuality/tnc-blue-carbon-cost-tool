@@ -73,14 +73,20 @@ export const useCustomProjectOutput = (
     };
   }, [data, output, priceType]);
 
-  const costDetailsProps = useMemo(
-    () =>
-      ({
-        total: parseCostDetailsForTable(output?.costDetails.total),
-        npv: parseCostDetailsForTable(output?.costDetails.npv),
-      })[costRangeSelector],
-    [costRangeSelector, output?.costDetails.total, output?.costDetails.npv],
-  );
+  const costDetailsProps = useMemo(() => {
+    const costDetails = {
+      total: parseCostDetailsForTable(
+        projectDetailsProps.data.activity,
+        output?.costDetails.total,
+      ),
+      npv: parseCostDetailsForTable(
+        projectDetailsProps.data.activity,
+        output?.costDetails.npv,
+      ),
+    };
+    const result = costDetails[costRangeSelector];
+    return result;
+  }, [costRangeSelector, output?.costDetails.total, output?.costDetails.npv]);
 
   const chartData = useMemo(
     () =>
