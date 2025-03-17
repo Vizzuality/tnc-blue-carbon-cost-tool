@@ -5,6 +5,7 @@ import { FC, useCallback } from "react";
 import { signOut, useSession } from "next-auth/react";
 
 import { client } from "@/lib/query-client";
+import { signOutFromBackoffice } from "@/lib/utils";
 
 import {
   AlertDialog,
@@ -34,6 +35,7 @@ const DeleteAccount: FC = () => {
 
       if (status === 200) {
         signOut({ callbackUrl: "/auth/signin", redirect: true });
+        await signOutFromBackoffice();
       } else if (status === 400 || status === 401) {
         toast({
           variant: "destructive",

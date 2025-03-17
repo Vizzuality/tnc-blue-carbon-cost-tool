@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 
 import { Metadata } from "next";
 
+import { REDIRECT_SIGNIN_PATH } from "@/lib/constants";
+
 import { auth } from "@/app/auth/api/[...nextauth]/config";
 
 import SignUp from "@/containers/auth/signup";
@@ -16,7 +18,7 @@ export default async function SignInPage() {
   const session = await auth();
 
   if (session) {
-    redirect("/profile");
+    redirect(REDIRECT_SIGNIN_PATH);
   }
 
   return (

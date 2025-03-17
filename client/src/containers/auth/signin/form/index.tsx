@@ -12,6 +12,8 @@ import { LogInSchema } from "@shared/schemas/auth/login.schema";
 import { signIn } from "next-auth/react";
 import { z } from "zod";
 
+import { REDIRECT_SIGNIN_PATH } from "@/lib/constants";
+
 import EmailInput from "@/containers/auth/email-input";
 
 import { Button } from "@/components/ui/button";
@@ -57,7 +59,9 @@ const SignInForm: FC<SignInFormProps> = ({ onSignIn }) => {
             if (onSignIn) {
               onSignIn();
             } else {
-              router.push(searchParams.get("callbackUrl") ?? "/profile");
+              router.push(
+                searchParams.get("callbackUrl") ?? REDIRECT_SIGNIN_PATH,
+              );
             }
           }
 

@@ -52,6 +52,6 @@ test.describe("Auth - Sign In", () => {
       email: newEmail,
     } as User);
 
-    await expect(page).toHaveURL("/profile");
+    await expect(page).toHaveURL("/");
   });
 });
