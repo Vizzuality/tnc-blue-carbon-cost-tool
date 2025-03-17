@@ -1,5 +1,6 @@
 import { useTableView } from "@/app/(overview)/url-store";
 
+import ProjectDetails from "@/containers/overview/project-details";
 import ToolbarProjectsTable from "@/containers/overview/table/toolbar";
 import { KeyCostsTable } from "@/containers/overview/table/view/key-costs";
 import { OverviewTable } from "@/containers/overview/table/view/overview";
@@ -17,6 +18,7 @@ export default function TableVisualization() {
           <ScoredCardPrioritizationTable />
         )}
         {tableView === "key-costs" && <KeyCostsTable />}
+        <ProjectDetails />
       </div>
     </div>
   );
