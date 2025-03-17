@@ -126,7 +126,7 @@ const parseFormValues = (
       ...(restParameters?.plantingSuccessRate && {
         plantingSuccessRate:
           // @ts-expect-error fix later
-          restParameters.plantingSuccessRate / 100,
+          restParameters.plantingSuccessRate,
       }),
       ...(isRestoration && {
         ...(validYears.length > 0 && {
