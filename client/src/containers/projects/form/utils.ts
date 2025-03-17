@@ -31,7 +31,10 @@ import {
  *
  * @returns initial values for the form
  */
-export const useDefaultFormValues = (id?: string): CustomProjectForm => {
+export const useDefaultFormValues = (
+  useCache: boolean,
+  id?: string,
+): CustomProjectForm => {
   const { data: session } = useSession();
   const { queryKey } = queryKeys.customProjects.countries;
   const { data: countryOptions } =
@@ -48,7 +51,7 @@ export const useDefaultFormValues = (id?: string): CustomProjectForm => {
         },
       },
     );
-  const { data: project } = client.customProjects.getCustomProject.useQuery(
+  const getCustomProjectQuery = client.customProjects.getCustomProject.useQuery(
     queryKeys.customProjects.one(id).queryKey,
     {
       params: { id: id as string },
@@ -81,6 +84,13 @@ export const useDefaultFormValues = (id?: string): CustomProjectForm => {
           )?.value,
         )
       : 0;
+
+  const queryCache = queryClient.getQueryData<{
+    data: InstanceType<typeof CustomProject>;
+  }>(queryKeys.customProjects.cached.queryKey);
+
+  const project: CustomProject | null =
+    getCustomProjectQuery.data || (useCache && queryCache?.data) || null;
 
   if (project) {
     const commonAttributes: Pick<

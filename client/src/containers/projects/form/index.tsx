@@ -7,6 +7,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomProjectFormSchema } from "@shared/schemas/custom-projects/custom-project-form.schema";
 import { useSetAtom } from "jotai";
+import { parseAsBoolean, useQueryState } from "nuqs";
 
 import { useScrollSpy } from "@/hooks/use-scroll-spy";
 
@@ -26,8 +27,11 @@ interface CustomProjectFormProps {
 export default function CustomProjectForm({ id }: CustomProjectFormProps) {
   const ref = useRef<HTMLDivElement>(null);
   const setIntersecting = useSetAtom(formStepAtom);
-
-  const formValues = useDefaultFormValues(id);
+  const [useCache] = useQueryState(
+    "useCache",
+    parseAsBoolean.withDefault(false),
+  );
+  const formValues = useDefaultFormValues(useCache, id);
   const methods = useForm<CustomProjectForm>({
     resolver: zodResolver(CustomProjectFormSchema),
     defaultValues: formValues,
