@@ -94,10 +94,7 @@ export default function Header({ name, id }: HeaderProps) {
       </div>
       <div className="flex items-center gap-2">
         <Button variant="secondary">Cancel</Button>
-        <Button
-          disabled={!methods.formState.isValid}
-          onClick={methods.handleSubmit(handleSubmit)}
-        >
+        <Button onClick={methods.handleSubmit(handleSubmit)}>
           {isEdit ? "Save" : "Continue"}
         </Button>
       </div>

@@ -133,7 +133,12 @@ export const InputCostsSchema = z.object({
 
 export const CustomProjectBaseSchema = z.object({
   countryCode: z.string().min(3).max(3),
-  projectName: z.string().min(3).max(255),
+  projectName: z
+    .string()
+    .min(3, {
+      message: "Name must contain at least 3 characters.",
+    })
+    .max(255, { message: "Name must be less than 255 characters" }),
   ecosystem: z.nativeEnum(ECOSYSTEM),
   activity: z.nativeEnum(ACTIVITY),
   projectSizeHa: z.number().nonnegative(),
@@ -183,8 +188,7 @@ export const ValidateConservationSchema = (
     if (!params.projectSpecificLossRate) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message:
-          "projectSpecificLossRate is required when lossRateUsed is projectSpecific",
+        message: "Project Specific Loss Rate is required",
         path: ["parameters.projectSpecificLossRate"],
       });
     }
