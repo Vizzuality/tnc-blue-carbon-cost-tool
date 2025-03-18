@@ -81,6 +81,7 @@ export default function LossRate() {
       name="parameters.projectSpecificLossRate"
       render={() => (
         <NumberFormItem
+          id="parameters.projectSpecificLossRate"
           label="Project Specific Loss Rate"
           tooltip={{
             title: "Project Specific Loss Rate",
