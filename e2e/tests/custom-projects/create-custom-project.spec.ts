@@ -45,6 +45,7 @@ test.describe("Custom Projects", () => {
 
     test("I can create a custom project with default values", async () => {
       await insertProjectName();
+      await page.locator("#parameters\\.projectSpecificLossRate").fill("-1");
       await submitCustomProjectAndCheckPreview();
     });
   });
