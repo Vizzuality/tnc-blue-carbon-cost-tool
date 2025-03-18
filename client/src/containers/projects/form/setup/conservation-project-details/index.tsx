@@ -79,8 +79,9 @@ export default function ConservationProjectDetails() {
                             // @ts-expect-error fix later
                           : form.getValues().parameters?.projectSpecificLossRate,
                       );
-                      await form.trigger("parameters.projectSpecificLossRate");
                     }
+
+                    await form.trigger("parameters.projectSpecificLossRate");
                     await form.trigger("parameters.lossRateUsed");
                   }}
                 >
