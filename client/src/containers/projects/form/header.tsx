@@ -4,7 +4,10 @@ import { useFormContext } from "react-hook-form";
 
 import { useRouter } from "next/navigation";
 
-import { CreateCustomProjectSchema } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import {
+  CreateCustomProjectSchema,
+  LOSS_RATE_USED,
+} from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
@@ -94,7 +97,19 @@ export default function Header({ name, id }: HeaderProps) {
       </div>
       <div className="flex items-center gap-2">
         <Button variant="secondary">Cancel</Button>
-        <Button onClick={methods.handleSubmit(handleSubmit)}>
+        <Button
+          onClick={() => {
+            // Making sure only the necessary fields are included:
+            if (
+              methods.getValues("parameters.lossRateUsed") ===
+                LOSS_RATE_USED.NATIONAL_AVERAGE &&
+              methods.getValues("parameters.projectSpecificLossRate")
+            ) {
+              methods.unregister("parameters.projectSpecificLossRate");
+            }
+            methods.handleSubmit(handleSubmit)();
+          }}
+        >
           {isEdit ? "Save" : "Continue"}
         </Button>
       </div>
