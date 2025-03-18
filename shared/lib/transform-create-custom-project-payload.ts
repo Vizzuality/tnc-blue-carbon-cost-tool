@@ -3,12 +3,12 @@ import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumpt
 import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 /**
- * Transforms raw assumption data into a structured format
+ * Transforms model assumptions array to key-value map expected by the API
  *
- * @param data Raw assumption data
- * @returns Structured assumption data
+ * @param data Model assumptions array
+ * @returns Key-value map of model assumptions
  */
-export function transformAssumptionsData(
+export function assumptionsArrayToMap(
   data: Partial<ModelAssumptions>[],
 ): Partial<ValidatedCustomProjectForm["assumptions"]> {
   return data.reduce<Partial<ValidatedCustomProjectForm["assumptions"]>>(

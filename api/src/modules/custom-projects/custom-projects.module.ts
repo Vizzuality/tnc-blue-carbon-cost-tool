@@ -20,5 +20,7 @@ import { SaveCustomProjectEventHandler } from '@api/modules/custom-projects/even
     SaveCustomProjectEventHandler,
   ],
   controllers: [CustomProjectsController],
+  // TODO: since probably the project factory will be needed for both regular and custom projects, we should move it to the calculations module
+  exports: [CustomProjectFactory],
 })
 export class CustomProjectsModule {}

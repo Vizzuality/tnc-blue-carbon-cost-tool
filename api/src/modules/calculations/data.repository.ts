@@ -19,6 +19,7 @@ import {
 } from '@shared/dtos/custom-projects/activity-types-defaults';
 import { Country } from '@shared/entities/country.entity';
 import { OverridableCostInputsDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
+
 /**
  * Additional data that is required to perform calculations, which is not overridable by the user. Better naming and clustering of concepts would be great
  */
@@ -62,7 +63,12 @@ export class DataRepository extends Repository<BaseDataView> {
     super(repo.target, repo.manager, repo.queryRunner);
   }
 
-  async getDataForCalculation(dto: {
+  /**
+   * There is tech discussion left as to somehow bind projects to custom projects because there are a lot of overlapping concepts
+   * We also need to make sure that for creating/computing projects, there is no way to override assumptions and cost inputs (otherwise it would be a custom project)
+   * Assuming this, we need to split logic to retrieve data for custom projects and projects
+   */
+  async getDataToComputeCustomProjects(dto: {
     countryCode: string;
     ecosystem: ECOSYSTEM;
     activity: ACTIVITY;
@@ -92,6 +98,53 @@ export class DataRepository extends Repository<BaseDataView> {
       baseIncrease,
       additionalAssumptions,
       country,
+    };
+  }
+
+  /**
+   * To compute a project (either from excel or backoffice in the near future), we need to retrieve all the data that is required to perform calculations
+   */
+  async getDataToComputeProjects(dto: {
+    countryCode: string;
+    ecosystem: ECOSYSTEM;
+    activity: ACTIVITY;
+    restorationActivity?: RESTORATION_ACTIVITY_SUBTYPE;
+  }) {
+    const { countryCode, ecosystem, activity, restorationActivity } = dto;
+    const defaultAssumptions =
+      await this.assumptionsRepository.getOverridableModelAssumptions({
+        activity,
+        ecosystem,
+      });
+    const defaultCostInputs = await this.getOverridableCostInputs({
+      countryCode,
+      ecosystem,
+      activity,
+      restorationActivity,
+    });
+
+    const nonOverridableAssumptions =
+      await this.assumptionsRepository.getNonOverridableModelAssumptions(
+        activity,
+      );
+
+    const {
+      baseSize,
+      baseIncrease,
+      additionalBaseData,
+      additionalAssumptions,
+    } = await this.getDataToComputeCustomProjects({
+      countryCode,
+      ecosystem,
+      activity,
+    });
+    return {
+      defaultAssumptions: defaultAssumptions.concat(nonOverridableAssumptions),
+      defaultCostInputs,
+      additionalBaseData,
+      baseSize,
+      baseIncrease,
+      additionalAssumptions,
     };
   }
 

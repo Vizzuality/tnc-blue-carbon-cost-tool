@@ -10,6 +10,7 @@ import {
 import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ACTIVITY } from "@shared/entities/activity.enum";
+import {decimalTransformer} from "@shared/entities/base-data.view";
 
 @Entity({ name: "project_sizes" })
 @Unique(["country", "ecosystem", "activity"])
@@ -32,6 +33,6 @@ export class ProjectSize extends BaseEntity {
   @Column({ name: "activity", enum: ACTIVITY, type: "enum" })
   activity: ACTIVITY;
 
-  @Column({ name: "size", type: "decimal" })
+  @Column({ name: "size", type: "decimal", transformer: decimalTransformer })
   sizeHa: number;
 }

@@ -18,6 +18,7 @@ import { UserUploadCostInputs } from '@shared/entities/users/user-upload-cost-in
 import { UserUploadRestorationInputs } from '@shared/entities/users/user-upload-restoration-inputs.entity';
 import { UserUploadConservationInputs } from '@shared/entities/users/user-upload-conservation-inputs.entity';
 import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingestion.xlsx-parser';
+import { ProjectsService } from '@api/modules/projects/projects.service';
 
 @Injectable()
 export class ImportService {
@@ -36,6 +37,7 @@ export class ImportService {
     private readonly preprocessor: EntityPreprocessor,
     private readonly eventBus: EventBus,
     private readonly dataSource: DataSource,
+    private readonly projectsService: ProjectsService,
   ) {}
 
   async importProjectScorecard(fileBuffer: Buffer, userId: string) {
@@ -65,10 +67,10 @@ export class ImportService {
       const parsedDBEntities =
         await this.preprocessor.toDbEntities(parsedSheets);
       await this.importRepo.ingest(parsedDBEntities);
+      await this.projectsService.createFromExcel(parsedSheets.Projects);
       this.logger.warn('Excel file import completed successfully');
       this.registerImportEvent(userId, this.eventMap.SUCCESS);
     } catch (e) {
-      console.error(e);
       this.logger.error('Excel file import failed', e);
       this.registerImportEvent(userId, this.eventMap.FAILED, {
         error: { type: e.constructor.name, message: e.message },

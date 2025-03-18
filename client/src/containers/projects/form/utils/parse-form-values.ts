@@ -6,8 +6,8 @@ import {
   applyUserAssumptionsOverDefaults,
   applyUserCostInputsOverDefaults,
   getRestorationYearlyBreakdown,
-  transformAssumptionsData,
-} from "@shared/lib/utils";
+  assumptionsArrayToMap,
+} from "@shared/lib/transform-create-custom-project-payload";
 import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 import { client } from "@/lib/query-client";
@@ -65,7 +65,7 @@ const getDefaultAssumptions = (ecosystem: ECOSYSTEM, activity: ACTIVITY) => {
       }).queryKey,
     )?.body.data;
 
-  return assumptionsData ? transformAssumptionsData(assumptionsData) : {};
+  return assumptionsData ? assumptionsArrayToMap(assumptionsData) : {};
 };
 
 const getDefaultCostInputs = (data: CustomProjectForm) => {

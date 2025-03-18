@@ -26,7 +26,6 @@ import { ValidationCost } from '@shared/entities/cost-inputs/validation.entity';
 import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity';
 import { ModelComponentSourceM2M } from '@shared/entities/methodology/model-source-m2m.entity';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
-import { Project } from '@shared/entities/projects.entity';
 
 type EntityClass<T> = { new (...args: any[]): T };
 export type RecordSource = {
@@ -43,7 +42,6 @@ type ParsedEntity<T> = {
 
 export type ParsedEntities = {
   modelComponentSources: ParsedEntity<ModelComponentSource>;
-  projects: ParsedEntity<Project>;
   projectSize: ParsedEntity<ProjectSize>;
   feasibilityAnalysis: ParsedEntity<FeasibilityAnalysis>;
   conservationPlanningAndAdmin: ParsedEntity<ConservationPlanningAndAdmin>;

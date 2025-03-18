@@ -2,8 +2,8 @@ import {
   applyUserAssumptionsOverDefaults,
   applyUserCostInputsOverDefaults,
   getRestorationYearlyBreakdown,
-  transformAssumptionsData,
-} from "@shared/lib/utils";
+  assumptionsArrayToMap,
+} from "@shared/lib/transform-create-custom-project-payload";
 
 describe("shared/lib/utils", () => {
   describe("transformAssumptionsData", () => {
@@ -20,12 +20,12 @@ describe("shared/lib/utils", () => {
     } as const;
 
     it("should return empty object for empty input", () => {
-      const result = transformAssumptionsData([]);
+      const result = assumptionsArrayToMap([]);
       expect(result).toEqual({});
     });
 
     it("should transform valid assumptions to correct format", () => {
-      const result = transformAssumptionsData([...mockAssumptions.valid]);
+      const result = assumptionsArrayToMap([...mockAssumptions.valid]);
 
       expect(result).toEqual({
         baselineReassessmentFrequency: 5,
@@ -35,7 +35,7 @@ describe("shared/lib/utils", () => {
     });
 
     it("should ignore invalid assumption names and undefined values", () => {
-      const result = transformAssumptionsData([
+      const result = assumptionsArrayToMap([
         ...mockAssumptions.valid,
         ...mockAssumptions.invalid,
       ]);
