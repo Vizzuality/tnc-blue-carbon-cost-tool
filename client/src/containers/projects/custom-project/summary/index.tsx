@@ -1,10 +1,9 @@
 import { FC, useCallback, useEffect } from "react";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
 import { type CustomProjectSummary } from "@shared/dtos/custom-projects/custom-project-output.dto";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { FileEdit, XIcon } from "lucide-react";
 
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
@@ -14,6 +13,7 @@ import { projectsUIState } from "@/app/projects/store";
 import { PROJECT_SUMMARY } from "@/constants/tooltip";
 
 import { SUMMARY_SIDEBAR_WIDTH } from "@/containers/projects/custom-project";
+import { customProjectIdAtom } from "@/containers/projects/custom-project/store";
 
 import { Button } from "@/components/ui/button";
 import InfoButton from "@/components/ui/info-button";
@@ -44,7 +44,7 @@ interface ProjectSummaryProps {
 }
 const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
   const setProjectSummaryOpen = useSetAtom(projectsUIState);
-  const { id } = useParams<{ id?: string }>();
+  const id = useAtomValue(customProjectIdAtom);
   const showEditButton = FEATURE_FLAGS["edit-project"] && id;
   const closeProjectSummary = useCallback(() => {
     setProjectSummaryOpen((prev) => ({
