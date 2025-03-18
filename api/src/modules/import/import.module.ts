@@ -10,11 +10,14 @@ import { ImportEventHandler } from '@api/modules/import/events/handlers/import-e
 import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingestion.xlsx-parser';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
+import { ProjectsModule } from '@api/modules/projects/projects.module';
 
 @Module({
   imports: [
+    // TODO: After switching to compute projects, we might want to remove this from here and have it only in projects module?
     TypeOrmModule.forFeature([ProjectScorecard]),
     MulterModule.register({}),
+    ProjectsModule,
   ],
   controllers: [ImportController],
   providers: [
@@ -22,6 +25,7 @@ import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
     EntityPreprocessor,
     ImportRepository,
     ImportEventHandler,
+    // TODO: Which parser is being used here?
     DataIngestionExcelParser,
     { provide: ExcelParserToken, useClass: XlsxParser },
   ],

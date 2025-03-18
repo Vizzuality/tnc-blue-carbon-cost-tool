@@ -49,6 +49,7 @@ export class AssumptionsRepository extends Repository<ModelAssumptions> {
     super(repo.target, repo.manager, repo.queryRunner);
   }
 
+  // TODO: type the return value
   async getOverridableModelAssumptions(dto: GetOverridableAssumptionsDTO) {
     const assumptions = await this.createQueryBuilder('model_assumptions')
       .select(['name', 'unit', 'value'])

@@ -1,5 +1,6 @@
 import {
   ClassSerializerInterceptor,
+  Logger,
   Module,
   OnModuleInit,
 } from '@nestjs/common';
@@ -55,6 +56,7 @@ const NODE_ENV = process.env.NODE_ENV;
   ],
 })
 export class AppModule implements OnModuleInit {
+  logger = new Logger('ModuleInit');
   constructor(private datasource: DataSource) {}
 
   async onModuleInit() {
@@ -68,6 +70,7 @@ export class AppModule implements OnModuleInit {
         'SELECT count(*) FROM countries',
       );
       if (countries[0].count > 0) {
+        await this.computeAreaInHa();
         return;
       }
 
@@ -77,11 +80,28 @@ export class AppModule implements OnModuleInit {
       );
 
       await queryRunner.query(sql);
-      console.log('Countries imported');
+      await this.computeAreaInHa();
+      this.logger.log('Countries imported');
     } catch (e) {
-      console.error('Error while importing countries', e);
+      this.logger.error('Error importing countries', e);
     } finally {
       await queryRunner.release();
+    }
+  }
+
+  // TODO: We agreed to have a parquet file/something better to ingest the countries with proper geom types and precomputed area
+  //      This is a temporary solution since science is at capacity but we should remove this logic, clean the overall countries importing logic
+  //      once we have the new solution in place
+  async computeAreaInHa() {
+    const missingArea = await this.datasource.query(
+      'SELECT count(*) FROM countries WHERE area_ha IS NULL',
+    );
+    if (parseInt(missingArea[0].count) != 0) {
+      this.logger.log('Countries found with missing area, computing...');
+      await this.datasource.query(
+        'UPDATE countries SET area_ha = ST_Area(geography(geometry)) / 10000;',
+      );
+      this.logger.log('Countries area computed');
     }
   }
 }

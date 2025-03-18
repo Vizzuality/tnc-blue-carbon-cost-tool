@@ -31,6 +31,8 @@ import { adminContract } from '@shared/contracts/admin.contract';
 import { Country } from '@shared/entities/country.entity';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 import { CustomProject } from '@shared/entities/custom-project.entity';
+import { ImportService } from '@api/modules/import/import.service';
+import { TestImportService } from '@api/modules/import/services/test-import.service';
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate
  * common testing utilities
@@ -56,6 +58,8 @@ export class TestManager {
     })
       .overrideProvider(IEmailServiceToken)
       .useClass(MockEmailService)
+      .overrideProvider(ImportService)
+      .useClass(TestImportService)
       .compile();
     const dataSource = moduleFixture.get<DataSource>(getDataSourceToken());
     const testApp = moduleFixture.createNestApplication();

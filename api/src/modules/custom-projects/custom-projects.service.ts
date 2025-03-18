@@ -60,7 +60,7 @@ export class CustomProjectsService extends AppBaseService<
       baseSize,
       additionalAssumptions,
       country,
-    } = await this.dataRepository.getDataForCalculation({
+    } = await this.dataRepository.getDataToComputeCustomProjects({
       countryCode,
       ecosystem,
       activity,
@@ -74,6 +74,7 @@ export class CustomProjectsService extends AppBaseService<
       additionalBaseData,
       additionalAssumptions,
     );
+    console.log({ projectInput });
 
     const costOutput = this.calculationEngine.calculateCostOutput({
       projectInput,

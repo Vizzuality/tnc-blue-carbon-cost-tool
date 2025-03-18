@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
 import { COST_TYPE_SELECTOR, Project } from '@shared/entities/projects.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
@@ -8,8 +8,16 @@ import { getProjectsQuerySchema } from '@shared/contracts/projects.contract';
 import { PaginatedProjectsWithMaximums } from '@shared/dtos/projects/projects.dto';
 import { PROJECT_KEY_COSTS_FIELDS } from '@shared/dtos/projects/project-key-costs.dto';
 import { ProjectsFiltersBoundsDto } from '@shared/dtos/projects/projects-filters-bounds.dto';
+import {
+  CreateProjectDto,
+  ProjectsCalculationService,
+} from '@api/modules/projects/projects-calculation.service';
+import { ProjectBuilder } from '@api/modules/projects/project.builder';
+import { ProjectsScorecardService } from '@api/modules/projects/projects-scorecard.service';
+import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
+import { ExcelProject } from '@api/modules/import/dtos/excel-projects.dto';
 
-export type ProjectFetchSpecificacion = z.infer<typeof getProjectsQuerySchema>;
+export type ProjectFetchSpecification = z.infer<typeof getProjectsQuerySchema>;
 
 @Injectable()
 export class ProjectsService extends AppBaseService<
@@ -18,17 +26,20 @@ export class ProjectsService extends AppBaseService<
   unknown,
   unknown
 > {
+  logger = new Logger(ProjectsService.name);
   constructor(
     @InjectDataSource()
     private readonly dataSource: DataSource,
     @InjectRepository(Project)
     public readonly projectRepository: Repository<Project>,
+    private readonly projectCalculation: ProjectsCalculationService,
+    private readonly scorecard: ProjectsScorecardService,
   ) {
     super(projectRepository, 'project', 'projects');
   }
 
   public async findAllProjectsWithMaximums(
-    query: ProjectFetchSpecificacion,
+    query: ProjectFetchSpecification,
   ): Promise<PaginatedProjectsWithMaximums> {
     const qb = this.dataSource
       .createQueryBuilder()
@@ -63,7 +74,7 @@ export class ProjectsService extends AppBaseService<
 
   private applySearchFiltersToQueryBuilder(
     query: SelectQueryBuilder<Project>,
-    fetchSpecification: ProjectFetchSpecificacion,
+    fetchSpecification: ProjectFetchSpecification,
   ): SelectQueryBuilder<Project> {
     // Filter by project name
     if (fetchSpecification.partialProjectName) {
@@ -109,23 +120,23 @@ export class ProjectsService extends AppBaseService<
 
   async extendFindAllQuery(
     query: SelectQueryBuilder<Project>,
-    fetchSpecification: ProjectFetchSpecificacion,
+    fetchSpecification: ProjectFetchSpecification,
   ): Promise<SelectQueryBuilder<Project>> {
     return this.applySearchFiltersToQueryBuilder(query, fetchSpecification);
   }
 
   public async findAllProjectsKeyCosts(
-    fetchSpecification: ProjectFetchSpecificacion,
+    fetchSpecification: ProjectFetchSpecification,
   ) {
     fetchSpecification.fields = [...PROJECT_KEY_COSTS_FIELDS];
     return this.findAllPaginated(fetchSpecification);
   }
 
   public async getProjectsFiltersBounds(
-    fetchSpecification: ProjectFetchSpecificacion,
+    fetchSpecification: ProjectFetchSpecification,
   ): Promise<ProjectsFiltersBoundsDto> {
     const defaultBounds = await this.getDefaultBounds();
-    let filtersBounds = await this.getFiltersBounds(fetchSpecification);
+    const filtersBounds = await this.getFiltersBounds(fetchSpecification);
 
     if (filtersBounds.cost.min === 0 && filtersBounds.cost.max === 0) {
       filtersBounds.cost = defaultBounds.cost;
@@ -168,9 +179,9 @@ export class ProjectsService extends AppBaseService<
   }
 
   private async getFiltersBounds(
-    fetchSpecification: ProjectFetchSpecificacion,
+    fetchSpecification: ProjectFetchSpecification,
   ): Promise<ProjectsFiltersBoundsDto> {
-    let qb = this.dataSource.createQueryBuilder();
+    const qb = this.dataSource.createQueryBuilder();
     this.setFilters(qb, fetchSpecification.filter);
     this.applySearchFiltersToQueryBuilder(qb, fetchSpecification);
 
@@ -202,5 +213,53 @@ export class ProjectsService extends AppBaseService<
         max: Number(filterBounds[0].maxCost),
       },
     };
+  }
+
+  async create(dto: CreateProjectDto): Promise<Project> {
+    const costs = await this.projectCalculation.computeCostForProject(dto);
+    const projectSize = await this.dataSource
+      .getRepository(ProjectSize)
+      .findOne({
+        select: ['sizeHa'],
+        where: {
+          ecosystem: dto.ecosystem,
+          activity: dto.activity,
+          countryCode: dto.countryCode,
+        },
+      });
+    const scoreCardRating = await this.scorecard.getRating(dto);
+    // TODO: Not clear if sizeHa has to come from the DTO or be retrieved from the database. Does it make sense to have it in the DB?
+    //       Would make sense to have thresholds defined?
+    const projectBuilder = new ProjectBuilder(
+      dto,
+      scoreCardRating,
+      costs,
+      projectSize.sizeHa,
+    );
+    return projectBuilder.build();
+  }
+
+  async createFromExcel(fromExcel: ExcelProject[]): Promise<void> {
+    this.logger.log(
+      `Computing ${fromExcel.length} projects from Excel file...`,
+    );
+    const conservationProjects = fromExcel.filter(
+      (project) => project.activity === 'Conservation',
+    );
+    for (const excelProject of conservationProjects) {
+      const createProjectDto = ProjectBuilder.excelInputToDto(excelProject);
+      const project = await this.create(createProjectDto);
+      // TODO: Before saving, do we need to run final computing as in custom projects
+      await this.repository.save(project);
+    }
+    await Promise.all(
+      fromExcel.map(async (projectFromExcel) => {
+        const createProjectDto =
+          ProjectBuilder.excelInputToDto(projectFromExcel);
+        const project = await this.create(createProjectDto);
+        return this.repository.save(project);
+      }),
+    );
+    this.logger.warn(`Computed and saved ${fromExcel.length} projects`);
   }
 }
