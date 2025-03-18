@@ -1,7 +1,6 @@
 import { FC } from "react";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
 import {
   ACTIVITY,
@@ -9,11 +8,13 @@ import {
 } from "@shared/entities/activity.enum";
 import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { useAtomValue } from "jotai";
 import { FileEdit } from "lucide-react";
 
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 import DetailItem from "@/containers/projects/custom-project/details/detail-item";
+import { customProjectIdAtom } from "@/containers/projects/custom-project/store";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -55,7 +56,7 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
     restorationActivity,
     sequestrationRate,
   } = data;
-  const { id } = useParams<{ id?: string }>();
+  const id = useAtomValue(customProjectIdAtom);
   const showEditButton = FEATURE_FLAGS["edit-project"] && id;
   return (
     <Card className="flex-1 space-y-1">

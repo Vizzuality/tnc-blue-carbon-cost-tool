@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback } from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,6 +18,7 @@ import { projectsUIState } from "@/app/projects/store";
 
 import AuthDialog from "@/containers/auth/dialog";
 import CustomProjectParameters from "@/containers/projects/custom-project/header/parameters";
+import { customProjectIdAtom } from "@/containers/projects/custom-project/store";
 import Topbar from "@/containers/topbar";
 
 import { Button } from "@/components/ui/button";
@@ -32,7 +33,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const { toast } = useToast();
-  const [saved, setSaved] = useState<boolean>(false);
+  const [projectId, setProjectId] = useAtom(customProjectIdAtom);
   const pathname = usePathname();
 
   const SaveProject = useCallback(
@@ -49,9 +50,10 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
         if (status === 201) {
           // update the url without redirecting
           // TODO: should also implement a clean way of removing the query cache
-          window.history.replaceState(null, "", `/projects/${body.data.id}`);
+          const id = body.data.id;
+          window.history.replaceState(null, "", `/projects/${id}`);
           toast({ description: "Project updated successfully." });
-          setSaved(true);
+          setProjectId(id);
           await queryClient.invalidateQueries({
             queryKey: DEFAULT_CUSTOM_PROJECTS_QUERY_KEY,
           });
@@ -70,7 +72,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
         });
       }
     },
-    [session, data, toast, queryClient],
+    [session, data, toast, queryClient, setProjectId],
   );
   const handleOnSignIn = useCallback(async () => {
     // session is undefined when onSignIn callback is called
@@ -92,7 +94,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
     );
   }
 
-  if (saved || !pathname.includes("/projects/preview")) {
+  if (projectId || !pathname.includes("/projects/preview")) {
     ButtonComponent = (
       <Button asChild>
         <Link href="/my-projects">My custom projects</Link>
