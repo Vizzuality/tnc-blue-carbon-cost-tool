@@ -57,7 +57,7 @@ export class ImportRepository {
   }
 
   public async ingest(parsedEntities: ParsedEntities) {
-    return this.dataSource.transaction('READ COMMITTED', async (manager) => {
+    await this.dataSource.transaction('READ COMMITTED', async (manager) => {
       // DATA WIPE STARTS
       await manager.clear(Project);
       await manager.clear(ProjectSize);
@@ -94,8 +94,6 @@ export class ImportRepository {
       // DATA WIPE ENDS
 
       // CREATION STARTS
-      // Maybe they need to be saved first?
-      await manager.save(parsedEntities.projects.records);
       const modelComponentSources = await manager.save(
         parsedEntities.modelComponentSources.records,
       );
@@ -103,9 +101,6 @@ export class ImportRepository {
       const entitiesWithSources = MethodologySourcesConfig.map(
         (entityConfig) => entityConfig.entity,
       );
-
-      delete parsedEntities.projects;
-      delete parsedEntities.modelComponentSources;
 
       const classifiedEntities = Object.keys(parsedEntities).reduce(
         (acc, key) => {

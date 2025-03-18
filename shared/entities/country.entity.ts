@@ -44,13 +44,16 @@ export class Country extends BaseEntity {
   @Column({ name: "hdi", type: "int", nullable: true })
   hdi?: number;
 
+  @Column({ name: 'area_ha', type: 'numeric', nullable: true })
+  areaHa: number;
+
   @Index({ spatial: true })
   @Column({
     type: "geometry",
     srid: 4326,
-    // TODO: Make it nullable false once we have all the data
     nullable: true,
     select: false,
   })
   geometry: Geometry;
+
 }

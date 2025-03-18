@@ -16,6 +16,10 @@ import {
   PROJECT_SIZE_FILTER,
 } from '@shared/entities/projects.entity';
 import { PROJECT_SCORE } from '@shared/entities/project-score.enum';
+import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
+import { CreateProjectDto } from '@api/modules/projects/projects-calculation.service';
+import { ProjectScoreCardNotFoundError } from '@api/modules/import/services/entity.preprocessor';
+import { ProjectScoreUtils } from '@shared/entities/project-score.utils';
 
 export type ProjectFetchSpecificacion = z.infer<typeof getProjectsQuerySchema>;
 
@@ -29,6 +33,8 @@ export class ProjectsScorecardService extends AppBaseService<
   constructor(
     @InjectRepository(ProjectScorecardView)
     private readonly projectScorecardRepo: Repository<ProjectScorecardView>,
+    @InjectRepository(ProjectScorecard)
+    private readonly projectScorecardRepository: Repository<ProjectScorecard>,
   ) {
     super(projectScorecardRepo, 'project_scorecard', 'project_scorecards');
   }
@@ -160,5 +166,21 @@ export class ProjectsScorecardService extends AppBaseService<
       leftoverAfterOpex: dbView.leftoverAfterOpex,
       creditsIssued: dbView.creditsIssued,
     };
+  }
+
+  async getRating(dto: CreateProjectDto): Promise<PROJECT_SCORE> {
+    const { countryCode, ecosystem, projectName } = dto;
+
+    const projectScoreCard = await this.projectScorecardRepository.findOneBy({
+      countryCode,
+      ecosystem,
+    });
+    if (projectScoreCard === null) {
+      throw new ProjectScoreCardNotFoundError(projectName);
+    }
+    const scoreCardRating =
+      ProjectScoreUtils.computeProjectScoreCardRating(projectScoreCard);
+
+    return scoreCardRating;
   }
 }
