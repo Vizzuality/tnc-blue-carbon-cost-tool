@@ -8,6 +8,7 @@
     "@playwright/test": "1.44.1",
     "@types/lodash": "4.17.4",
     "@types/node": "catalog:",
+    "concurrently": "^9.1.2",
     "dotenv": "16.4.5",
     "tsc-alias": "1.8.10",
     "typescript": "catalog:"
@@ -16,6 +17,7 @@
     "pretest": "tsc && tsc-alias",
     "test": "playwright test -c ./dist/e2e",
     "test:ui": "pnpm pretest && playwright test --ui -c ./dist/e2e",
+    "test:watch": "pnpm pretest && concurrently \"tsc -w\" \"tsc-alias -w\" \"playwright test --ui -c ./dist/e2e\"",
     "codegen": "pnpm --filter api start:dev & pnpm --filter client dev & playwright codegen localhost:3000"
   }
 }
