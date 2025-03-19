@@ -1,7 +1,9 @@
 import { CustomProjectCostDetails } from "@shared/dtos/custom-projects/custom-project-output.dto";
-import { parseTableData } from "@/lib/utils";
-import { CostItem } from "@/containers/projects/custom-project/cost-details/table";
 import { ACTIVITY } from "@shared/entities/activity.enum";
+
+import { parseTableData } from "@/lib/utils";
+
+import { CostItem } from "@/containers/projects/custom-project/cost-details/table";
 
 const CONSERVATION_PROJECT_COST_LABELS: Record<
   Exclude<keyof CustomProjectCostDetails, "implementationLabor">,

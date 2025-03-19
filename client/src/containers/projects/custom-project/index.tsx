@@ -90,6 +90,7 @@ const CustomProjectView: FC<{
       >
         {summaryData && (
           <ProjectSummary
+            id={id}
             data={{
               ...summaryData,
               "IRR when priced to cover OpEx": parseFloat(
@@ -111,7 +112,7 @@ const CustomProjectView: FC<{
         />
         <CustomProjectHeader data={data} />
         <div className="mb-4 mt-2 flex gap-4">
-          <ProjectDetails {...projectDetailsProps} />
+          <ProjectDetails id={id} {...projectDetailsProps} />
           {projectCostProps && <ProjectCost {...projectCostProps} />}
           {leftOverProps && <LeftOver {...leftOverProps} />}
           {costDetailsProps && (
