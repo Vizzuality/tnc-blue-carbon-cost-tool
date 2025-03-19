@@ -34,11 +34,21 @@ export class DataIngestionExcelParser implements IExcelParser {
         }
       }
 
-      const parsedTab = utils.sheet_to_json(tabContents, {
-        header: tabHeaders,
-        range: 1,
-        raw: true,
-      });
+      const parsedTab = utils
+        .sheet_to_json(tabContents, {
+          header: tabHeaders,
+          range: 1,
+          raw: true,
+        })
+        .map((row) => {
+          Object.keys(row).forEach((key) => {
+            // Fix for the NaN values produced by the excel with "NoData" values
+            if (row[key] === 'NoData') {
+              row[key] = undefined;
+            }
+          });
+          return row;
+        });
 
       parsedData[tabName] = parsedTab;
     }
