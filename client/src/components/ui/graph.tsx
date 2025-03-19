@@ -25,6 +25,8 @@ const getSize = (value: number, total: number) => {
   const percentage = getPercentage(value, total);
   return `${Math.max(percentage, 0)}%`;
 };
+const currencyClassName =
+  "max-w-[100px] overflow-hidden text-clip whitespace-normal break-all";
 
 interface LeftOverGraphProps {
   leftover: number;
@@ -54,6 +56,7 @@ const LeftOverGraph: FC<LeftOverGraphProps> = ({
               notation: "compact",
               maximumFractionDigits: 1,
             }}
+            className={currencyClassName}
             plainSymbol
           />
         }
@@ -79,9 +82,9 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
     } = calculateSplitModeHeights(total, leftover);
 
     return (
-      <div className="relative h-full min-h-[150px] w-full max-w-[400px] overflow-hidden rounded-md">
+      <div className="relative h-full min-h-[150px] w-full max-w-[280px] overflow-hidden rounded-md">
         <div className="absolute flex h-full w-full flex-row gap-1 rounded-md">
-          <div className="flex h-full w-full flex-col gap-1">
+          <div className="flex h-full w-full min-w-0 flex-col gap-1">
             {leftover < 0 && (
               <LeftOverGraph
                 leftover={leftover}
@@ -105,6 +108,7 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
                       notation: "compact",
                       maximumFractionDigits: 1,
                     }}
+                    className={currencyClassName}
                     plainSymbol
                   />
                 </div>
@@ -136,6 +140,7 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
                         notation: "compact",
                         maximumFractionDigits: 1,
                       }}
+                      className={currencyClassName}
                       plainSymbol
                     />
                   </div>
@@ -198,15 +203,29 @@ function calculateSplitModeHeights(total: number, leftover: number) {
   // Calculate leftover as percentage of the combined total
   const leftoverPercentage = getPercentage(absLeftover, absTotal);
 
+  // Check if we're dealing with very large numbers (trillions)
+  const TRILLION = 1_000_000_000_000;
+  const hasLargeNumbers = absLeftover > TRILLION || absTotal > TRILLION;
+
   // Determine if we need to enforce minimum heights for better visualization
-  // (when one segment would be too small or too large)
-  const fixedHeights = leftoverPercentage < 20 || leftoverPercentage > 80;
+  // Increase threshold for large numbers to ensure better visibility
+  const minPercentageThreshold = hasLargeNumbers ? 30 : 20;
+  const fixedHeights =
+    leftoverPercentage < minPercentageThreshold ||
+    leftoverPercentage > 100 - minPercentageThreshold;
+
+  // Adjust minimum heights based on number size
+  const minHeightPercentage = hasLargeNumbers ? "31%" : "21%";
 
   // Set minimum heights to ensure visibility of small segments
   const leftoverMinHeight =
-    fixedHeights && leftoverPercentage < 20 ? "21%" : undefined;
+    fixedHeights && leftoverPercentage < minPercentageThreshold
+      ? minHeightPercentage
+      : undefined;
   const totalRevenueMinHeight =
-    fixedHeights && leftoverPercentage > 80 ? "21%" : undefined;
+    fixedHeights && leftoverPercentage > 100 - minPercentageThreshold
+      ? minHeightPercentage
+      : undefined;
 
   // For negative leftover, recalculate heights based on absolute values
   if (leftover < 0) {
@@ -301,10 +320,13 @@ const GraphWithLegend: FC<GraphWithLegendProps> = ({
 
   return (
     <div className="flex min-h-[160px] justify-between gap-4">
-      <div className="flex max-w-[148px] flex-1 flex-col justify-between">
+      <div className="flex flex-1 flex-col justify-between">
         <div>
           <span className="text-xl font-normal">
-            <Currency value={leftover || total} />
+            <Currency
+              value={leftover || total}
+              className="max-w-[230px] overflow-hidden text-clip whitespace-normal break-all"
+            />
           </span>
         </div>
         <GraphLegend items={graphLegendItems} />
