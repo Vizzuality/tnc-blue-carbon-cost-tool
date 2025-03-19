@@ -32,13 +32,21 @@ const Currency: FC<CurrencyProps> = ({
   className,
   plainSymbol,
 }) => {
+  const absValue = Math.abs(value);
+  const formatOptions = { ...options };
+
+  if (absValue >= 1e12) {
+    formatOptions.notation = "compact";
+    formatOptions.maximumFractionDigits = 2;
+  }
+
   return (
     <span className={cn("inline-flex gap-x-0.5", className)}>
       <span className={cn({ "text-xs text-muted-foreground": !plainSymbol })}>
         {value < 0 ? "-" : ""}$
       </span>
-      <span>
-        {formatCurrency(Math.abs(value), options).replace(/^\$\s*/, "")}
+      <span className="overflow-hidden text-ellipsis">
+        {formatCurrency(absValue, formatOptions).replace(/^\$\s*/, "")}
       </span>
     </span>
   );
