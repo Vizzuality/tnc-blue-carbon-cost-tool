@@ -86,7 +86,12 @@ export const useCustomProjectOutput = (
     };
     const result = costDetails[costRangeSelector];
     return result;
-  }, [costRangeSelector, output?.costDetails.total, output?.costDetails.npv]);
+  }, [
+    costRangeSelector,
+    output?.costDetails.total,
+    output?.costDetails.npv,
+    projectDetailsProps.data.activity,
+  ]);
 
   const chartData = useMemo(
     () =>
