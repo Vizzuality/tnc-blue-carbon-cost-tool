@@ -1,6 +1,13 @@
 import React, { CSSProperties, useEffect, useState } from 'react';
 import { ApiClient, BasePropertyProps, RecordJSON, useNotice } from 'adminjs';
-import { Badge, Label, Icon, Button, Select } from '@adminjs/design-system';
+import {
+  Badge,
+  Label,
+  Icon,
+  Button,
+  Select,
+  Link,
+} from '@adminjs/design-system';
 import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity.js';
 import { styled } from 'styled-components';
 import { SelectorOption } from '../atoms/selector.type.js';
@@ -239,7 +246,14 @@ const Many2ManySources: React.FC<Many2ManySourcesProps> = ({
             }}
           >
             <Badge>
-              {item.sourceType} - {item.source.name}
+              <Link
+                href={`/admin/resources/ModelComponentSource/records/${item.source.id}/show`}
+                style={{
+                  color: 'inherit',
+                }}
+              >
+                {item.sourceType} - {item.source.name}
+              </Link>
               {isEditView === true && (
                 <span
                   style={{
