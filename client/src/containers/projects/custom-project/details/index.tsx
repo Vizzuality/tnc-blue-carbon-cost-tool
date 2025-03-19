@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export interface ProjectDetailsProps {
+  id?: string;
   data: {
     country: { code: string; name: string };
     projectSize: number;
@@ -42,7 +43,7 @@ export interface ProjectDetailsProps {
   };
 }
 
-const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
+const ProjectDetails: FC<ProjectDetailsProps> = ({ id, data }) => {
   const {
     country,
     projectSize,
@@ -56,15 +57,16 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
     restorationActivity,
     sequestrationRate,
   } = data;
-  const id = useAtomValue(customProjectIdAtom);
-  const showEditButton = FEATURE_FLAGS["edit-project"] && id;
+  const idAtom = useAtomValue(customProjectIdAtom);
+  const projectId = id || idAtom;
+  const showEditButton = FEATURE_FLAGS["edit-project"] && projectId;
   return (
     <Card className="flex-1 space-y-1">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold">Project details</h2>
         {showEditButton && (
           <Button type="button" variant="ghost" asChild>
-            <Link href={`/projects/${id}/edit`}>
+            <Link href={`/projects/${projectId}/edit`}>
               <FileEdit />
               <span>Edit project</span>
             </Link>

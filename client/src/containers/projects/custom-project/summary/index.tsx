@@ -40,12 +40,14 @@ const customProjectSummaryUnitMap: Record<keyof CustomProjectSummary, string> =
     "Landowner/community benefit share": "%",
   } as const;
 interface ProjectSummaryProps {
+  id?: string;
   data: CustomProjectSummary;
 }
-const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
+const ProjectSummary: FC<ProjectSummaryProps> = ({ id, data }) => {
   const setProjectSummaryOpen = useSetAtom(projectsUIState);
-  const id = useAtomValue(customProjectIdAtom);
-  const showEditButton = FEATURE_FLAGS["edit-project"] && id;
+  const idAtom = useAtomValue(customProjectIdAtom);
+  const projectId = id || idAtom;
+  const showEditButton = FEATURE_FLAGS["edit-project"] && projectId;
   const closeProjectSummary = useCallback(() => {
     setProjectSummaryOpen((prev) => ({
       ...prev,
@@ -107,7 +109,7 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ data }) => {
         </p>
         {showEditButton && (
           <Button type="button" variant="outline" asChild>
-            <Link href={`/projects/${id}/edit`}>
+            <Link href={`/projects/${projectId}/edit`}>
               <FileEdit />
               <span>Edit Project</span>
             </Link>
