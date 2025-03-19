@@ -75,6 +75,7 @@ const Many2ManySources: React.FC<Many2ManySourcesProps> = ({
   const [availableSourceTypes, setAvailableSourceTypes] = useState<
     SelectorOption[]
   >([]);
+  const [sourceSearchString, setSourceSearchString] = useState<string>('');
   const [availableSources, setAvailableSources] = useState<SelectorOption[]>(
     [],
   );
@@ -100,10 +101,15 @@ const Many2ManySources: React.FC<Many2ManySourcesProps> = ({
     }
   };
 
-  const fetchAvailableDataSources = async () => {
+  const fetchAvailableDataSources = async (searchString: string = '') => {
     const response = await api.resourceAction({
       resourceId: 'ModelComponentSource',
       actionName: 'list',
+      params: {
+        filters: {
+          name: `%${searchString}%`,
+        },
+      },
     });
 
     if (response.data) {
@@ -128,13 +134,11 @@ const Many2ManySources: React.FC<Many2ManySourcesProps> = ({
         },
       },
     );
-
     const data = await res.json();
     if (data) {
-      // console.log(res.body);
+      // console.log(data);
       setAvailableSourceTypes(
         data.sourceTypes!.map((entry: string) => {
-          console.log(entry);
           return {
             value: entry,
             label: entry,
@@ -151,6 +155,12 @@ const Many2ManySources: React.FC<Many2ManySourcesProps> = ({
       fetchAvailableDataSources();
     }
   }, []);
+
+  useEffect(() => {
+    if (isEditView) {
+      fetchAvailableDataSources(sourceSearchString);
+    }
+  }, [sourceSearchString]);
 
   const handleAddClick = async (event: Event) => {
     event.preventDefault();
@@ -288,6 +298,9 @@ const Many2ManySources: React.FC<Many2ManySourcesProps> = ({
               value={selectedSource}
               options={availableSources}
               onChange={(selected) => setSelectedSource(selected)}
+              onInputChange={(inputValue: string) =>
+                setSourceSearchString(inputValue)
+              }
             />
           </AddSourceGridItem>
           <AddSourceGridItem
