@@ -2,17 +2,20 @@
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
+import {
+  applyUserAssumptionsOverDefaults,
+  applyUserCostInputsOverDefaults,
+  getRestorationYearlyBreakdown,
+  transformAssumptionsData,
+} from "@shared/lib/utils";
+import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { getQueryClient } from "@/app/providers";
 
-import {
-  CustomProjectForm,
-  ValidatedCustomProjectForm,
-} from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 // These will be overridden by actual values from the API or user input
 const DEFAULT_COST_INPUTS = {
@@ -53,22 +56,16 @@ const DEFAULT_ASSUMPTIONS = {
 const getDefaultAssumptions = (ecosystem: ECOSYSTEM, activity: ACTIVITY) => {
   const queryClient = getQueryClient();
 
-  return client.customProjects.getDefaultAssumptions
-    .getQueryData(
+  const assumptionsData =
+    client.customProjects.getDefaultAssumptions.getQueryData(
       queryClient,
       queryKeys.customProjects.assumptions({
         ecosystem: ecosystem,
         activity: activity,
       }).queryKey,
-    )
-    ?.body.data.reduce((acc, { name, value }) => {
-      return {
-        ...acc,
-        [ASSUMPTIONS_NAME_TO_DTO_MAP[
-          name as keyof typeof ASSUMPTIONS_NAME_TO_DTO_MAP
-        ]]: Number(value as NonNullable<typeof value>),
-      };
-    }, {});
+    )?.body.data;
+
+  return assumptionsData ? transformAssumptionsData(assumptionsData) : {};
 };
 
 const getDefaultCostInputs = (data: CustomProjectForm) => {
@@ -99,16 +96,13 @@ const parseFormValues = (
     data.ecosystem,
     data.activity,
   );
-  const costs = getDefaultCostInputs(data);
   const isRestoration = data.activity === ACTIVITY.RESTORATION;
 
-  const validYears = isRestoration // @ts-expect-error fix later
-    ? (originalValues.parameters.restorationYearlyBreakdown as number[])
-        .map((v, index) => ({
-          year: index == 0 ? -1 : index,
-          hectares: v,
-        }))
-        .filter((v) => v.hectares > 0)
+  const validYears = isRestoration
+    ? getRestorationYearlyBreakdown(
+        // @ts-expect-error fix later
+        originalValues.parameters.restorationYearlyBreakdown as number[],
+      )
     : [];
 
   const {
@@ -130,42 +124,23 @@ const parseFormValues = (
       }),
       ...(isRestoration && {
         ...(validYears.length > 0 && {
-          restorationYearlyBreakdown: validYears.map(({ year, hectares }) => ({
-            year,
-            annualHectaresRestored: hectares,
-          })),
+          restorationYearlyBreakdown: validYears,
         }),
       }),
     },
     assumptions: {
       ...DEFAULT_ASSUMPTIONS,
-      ...Object.keys(originalValues.assumptions ?? {}).reduce(
-        (acc, assumptionKey) => {
-          return {
-            ...acc,
-            [assumptionKey]:
-              originalValues.assumptions?.[
-                assumptionKey as keyof typeof originalValues.assumptions
-              ] ??
-              defaultAssumptions?.[
-                assumptionKey as keyof typeof defaultAssumptions
-              ],
-          };
-        },
-        {},
+      ...applyUserAssumptionsOverDefaults(
+        defaultAssumptions,
+        originalValues.assumptions ?? {},
       ),
     },
     costInputs: {
       ...DEFAULT_COST_INPUTS,
-      ...Object.keys(originalValues.costInputs ?? {}).reduce((acc, costKey) => {
-        return {
-          ...acc,
-          [costKey]:
-            originalValues.costInputs?.[
-              costKey as keyof typeof originalValues.costInputs
-            ] ?? costs?.[costKey as keyof typeof costs],
-        };
-      }, {}),
+      ...applyUserCostInputsOverDefaults(
+        getDefaultCostInputs(data) ?? {},
+        originalValues.costInputs ?? {},
+      ),
     },
   };
 };
