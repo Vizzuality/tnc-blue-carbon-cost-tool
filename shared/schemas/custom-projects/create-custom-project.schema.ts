@@ -294,3 +294,7 @@ const ValidateAssumptionsSchema = (
     }
   }
 };
+
+export type ValidatedCustomProjectForm = z.infer<
+  typeof CreateCustomProjectSchema
+>;
