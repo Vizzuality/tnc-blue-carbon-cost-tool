@@ -10,8 +10,7 @@ import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emis
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { CreateCustomProjectSchema } from "@shared/schemas/custom-projects/create-custom-project.schema";
-import { z } from "zod";
+import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
@@ -49,9 +48,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export type ValidatedCustomProjectForm = z.infer<
-  typeof CreateCustomProjectSchema
->;
 export type CustomProjectForm = Omit<
   ValidatedCustomProjectForm,
   "costInputs" | "assumptions"

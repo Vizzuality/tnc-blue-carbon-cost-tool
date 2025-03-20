@@ -7,6 +7,7 @@ import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject } from "@shared/entities/custom-project.entity";
 import { MAX_PROJECT_LENGTH } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
@@ -20,10 +21,7 @@ import {
   DEFAULT_RESTORATION_FORM_VALUES,
 } from "@/containers/projects/form/constants";
 import { RestorationPlanFormProperty } from "@/containers/projects/form/restoration-plan/columns";
-import {
-  CustomProjectForm,
-  ValidatedCustomProjectForm,
-} from "@/containers/projects/form/setup";
+import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 /**
  * Note: All percentage values are kept in decimal form,
