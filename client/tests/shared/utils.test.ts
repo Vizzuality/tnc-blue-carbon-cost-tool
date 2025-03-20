@@ -4,7 +4,6 @@ import {
   getRestorationYearlyBreakdown,
   transformAssumptionsData,
 } from "@shared/lib/utils";
-import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 describe("shared/lib/utils", () => {
   describe("transformAssumptionsData", () => {
@@ -50,14 +49,14 @@ describe("shared/lib/utils", () => {
     });
   });
 
-  describe("applyUserAssumptionsOverDefaults", () => {
+  describe("applyUserValuesOverDefaults", () => {
     const fixtures = {
-      defaultAssumptions: {
-        buffer: 0.2,
-        verificationFrequency: 2,
-      } as const,
-      userAssumptions: {
-        valid: {
+      assumptions: {
+        defaults: {
+          buffer: 0.2,
+          verificationFrequency: 2,
+        },
+        userValues: {
           buffer: 0.25,
           verificationFrequency: 3,
         },
@@ -65,80 +64,60 @@ describe("shared/lib/utils", () => {
           buffer: undefined,
           verificationFrequency: 3,
         },
-      } as const,
-    };
+      },
+      costs: {
+        defaults: {
+          validation: 1000,
+          feasibilityAnalysis: 2000,
+        },
+        userValues: {
+          validation: 1200,
+        },
+        withUndefined: {
+          validation: undefined,
+        },
+      },
+    } as const;
 
     it("should return empty object for empty inputs", () => {
-      const result = applyUserAssumptionsOverDefaults({}, {});
-      expect(result).toEqual({});
+      expect(applyUserAssumptionsOverDefaults({}, {})).toEqual({});
+      expect(applyUserCostInputsOverDefaults({}, {})).toEqual({});
     });
 
-    it("should prioritize user assumptions over defaults", () => {
-      const result = applyUserAssumptionsOverDefaults(
-        fixtures.defaultAssumptions,
-        fixtures.userAssumptions.valid,
+    it("should prioritize user values over defaults", () => {
+      const assumptionsResult = applyUserAssumptionsOverDefaults(
+        fixtures.assumptions.defaults,
+        fixtures.assumptions.userValues,
       );
-
-      expect(result).toEqual({
+      expect(assumptionsResult).toEqual({
         buffer: 0.25,
         verificationFrequency: 3,
       });
-    });
 
-    it("should handle undefined values", () => {
-      const result = applyUserAssumptionsOverDefaults(
-        fixtures.defaultAssumptions,
-        fixtures.userAssumptions.withUndefined,
+      const costsResult = applyUserCostInputsOverDefaults(
+        fixtures.costs.defaults,
+        fixtures.costs.userValues,
       );
-
-      expect(result).toEqual({
-        buffer: 0.2,
-        verificationFrequency: 3,
-      });
-    });
-  });
-
-  describe("applyUserCostInputsOverDefaults", () => {
-    const defaultCostInputs: Partial<ValidatedCustomProjectForm["costInputs"]> =
-      {
-        validation: 1000,
-        feasibilityAnalysis: 2000,
-        monitoring: 3000,
-      };
-
-    it("handles empty data", () => {
-      const result = applyUserCostInputsOverDefaults(defaultCostInputs, {});
-      expect(result).toEqual({});
-    });
-
-    it("prioritizes user cost inputs over defaults", () => {
-      const userCostInputs: Partial<ValidatedCustomProjectForm["costInputs"]> =
-        {
-          validation: 1200,
-        };
-
-      const result = applyUserCostInputsOverDefaults(
-        defaultCostInputs,
-        userCostInputs,
-      );
-
-      expect(result).toEqual({
+      expect(costsResult).toEqual({
         validation: 1200,
       });
     });
 
-    it("handles undefined values", () => {
-      const userCostInputs: Partial<ValidatedCustomProjectForm["costInputs"]> =
-        {
-          validation: undefined,
-        };
-
-      const result = applyUserCostInputsOverDefaults(
-        defaultCostInputs,
-        userCostInputs,
+    it("should handle undefined values by using defaults", () => {
+      const assumptionsResult = applyUserAssumptionsOverDefaults(
+        fixtures.assumptions.defaults,
+        fixtures.assumptions.withUndefined,
       );
+      expect(assumptionsResult).toEqual({
+        buffer: 0.2,
+        verificationFrequency: 3,
+      });
 
-      expect(result).toEqual({
+      const costsResult = applyUserCostInputsOverDefaults(
+        fixtures.costs.defaults,
+        fixtures.costs.withUndefined,
+      );
+      expect(costsResult).toEqual({
         validation: 1000,
       });
     });
