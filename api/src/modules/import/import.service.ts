@@ -73,7 +73,7 @@ export class ImportService {
       this.registerImportEvent(userId, this.eventMap.FAILED, {
         error: { type: e.constructor.name, message: e.message },
       });
-      throw new ConflictException(e);
+      throw new ConflictException('The excel file could not be imported');
     }
   }
 
