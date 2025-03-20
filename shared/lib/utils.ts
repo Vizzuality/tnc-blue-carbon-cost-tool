@@ -42,10 +42,8 @@ export function applyUserAssumptionsOverDefaults(
   defaultAssumptions: Partial<ValidatedCustomProjectForm["assumptions"]>,
   userAssumptions: Partial<ValidatedCustomProjectForm["assumptions"]>,
 ) {
-  console.log({ defaultAssumptions, userAssumptions });
   return {
     ...Object.keys(userAssumptions ?? {}).reduce((acc, assumptionKey) => {
-      console.log({ assumptionKey, acc });
       return {
         ...acc,
         [assumptionKey]:
