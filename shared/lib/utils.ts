@@ -31,54 +31,34 @@ export function transformAssumptionsData(
 }
 
 /**
- * Applies user-provided assumptions over default values
- * giving precedence to user values when available
+ * Applies user-provided values over defaults giving precedence to user values
  *
- * @param defaultAssumptions Default assumption values
- * @param userAssumptions User-provided assumption values
- * @returns Merged assumptions with user values taking precedence
+ * @param defaults Default values
+ * @param userValues User-provided values
+ * @returns Merged values with user values taking precedence
  */
-export function applyUserAssumptionsOverDefaults(
-  defaultAssumptions: Partial<ValidatedCustomProjectForm["assumptions"]>,
-  userAssumptions: Partial<ValidatedCustomProjectForm["assumptions"]>,
-) {
+export function applyUserValuesOverDefaults<
+  T extends Record<string, number | undefined>,
+>(defaults: Partial<T>, userValues: Partial<T>) {
   return {
-    ...Object.keys(userAssumptions ?? {}).reduce((acc, assumptionKey) => {
+    ...Object.keys(userValues ?? {}).reduce((acc, key) => {
       return {
         ...acc,
-        [assumptionKey]:
-          userAssumptions[assumptionKey as keyof typeof userAssumptions] ??
-          defaultAssumptions?.[
-            assumptionKey as keyof typeof defaultAssumptions
-          ],
+        [key]: userValues[key as keyof T] ?? defaults[key as keyof T],
       };
     }, {}),
   };
 }
 
-/**
- * Applies user-provided cost inputs over default values
- * giving precedence to user values when available
- *
- * @param defaultCostInputs Default cost input values
- * @param userCostInputs User-provided cost input values
- * @returns Merged cost inputs with user values taking precedence
- */
-export function applyUserCostInputsOverDefaults(
-  defaultCostInputs: Record<string, number | undefined>,
-  userCostInputs: Partial<ValidatedCustomProjectForm["costInputs"]>,
-) {
-  return {
-    ...Object.keys(userCostInputs ?? {}).reduce((acc, costKey) => {
-      return {
-        ...acc,
-        [costKey]:
-          userCostInputs[costKey as keyof typeof userCostInputs] ??
-          defaultCostInputs?.[costKey as keyof typeof defaultCostInputs],
-      };
-    }, {}),
-  };
-}
+export const applyUserAssumptionsOverDefaults = (
+  defaults: Partial<ValidatedCustomProjectForm["assumptions"]>,
+  userValues: Partial<ValidatedCustomProjectForm["assumptions"]>,
+) => applyUserValuesOverDefaults(defaults, userValues);
+
+export const applyUserCostInputsOverDefaults = (
+  defaults: Partial<ValidatedCustomProjectForm["costInputs"]>,
+  userValues: Partial<ValidatedCustomProjectForm["costInputs"]>,
+) => applyUserValuesOverDefaults(defaults, userValues);
 
 export function getRestorationYearlyBreakdown(
   data: number[],
