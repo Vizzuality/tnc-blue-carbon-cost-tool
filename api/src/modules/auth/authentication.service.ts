@@ -24,12 +24,11 @@ import { SendEmailConfirmationEmailCommand } from '@api/modules/notifications/em
 import { PasswordManager } from '@api/modules/auth/services/password.manager';
 import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 import { Repository } from 'typeorm';
-import {
-  BACKOFFICE_SESSIONS_TABLE,
-  BackOfficeSession,
-} from '@shared/entities/users/backoffice-session';
+import { BackOfficeSession } from '@shared/entities/users/backoffice-session';
 import { ROLES } from '@shared/entities/users/roles.enum';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DateUtils } from '@shared/lib/date.utils';
+import { ApiConfigService } from '@api/modules/config/app-config.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -42,6 +41,7 @@ export class AuthenticationService {
     private readonly passwordManager: PasswordManager,
     @InjectRepository(BackOfficeSession)
     private readonly backOfficeSessionRepository: Repository<BackOfficeSession>,
+    private readonly apiConfigService: ApiConfigService,
   ) {}
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
@@ -97,24 +97,14 @@ export class AuthenticationService {
     accessToken: string,
   ): Promise<BackOfficeSession> {
     // We replicate what adminjs does by default using postgres as session storage (the default in memory session storage is not production ready)
-    // This implementation is not compatible with many devices per user
-    await this.backOfficeSessionRepository
-      .createQueryBuilder()
-      .delete()
-      .from(BACKOFFICE_SESSIONS_TABLE)
-      .where(`sess -> 'adminUser' ->> 'id' = :id`, { id: user.id })
-      .execute();
+    const accessTokenDuration = this.apiConfigService.getJWTConfigByType(
+      TOKEN_TYPE_ENUM.ACCESS,
+    ).expiresIn;
 
     const currentDate = new Date();
-    const sessionExpirationDate = new Date(
-      Date.UTC(
-        currentDate.getUTCFullYear() + 1,
-        currentDate.getUTCMonth(),
-        currentDate.getUTCDate(),
-        currentDate.getUTCHours(),
-        currentDate.getUTCMinutes(),
-        currentDate.getUTCSeconds(),
-      ),
+    const sessionExpirationDate = DateUtils.addDuration(
+      currentDate,
+      accessTokenDuration,
     );
     const backofficeSession: BackOfficeSession = {
       sid: await uid(24),
@@ -123,6 +113,8 @@ export class AuthenticationService {
           secure: false,
           httpOnly: true,
           path: '/',
+          sameSite: 'lax',
+          expires: sessionExpirationDate,
         },
         adminUser: {
           id: user.id,
