@@ -69,10 +69,7 @@ export class AuthenticationController {
           this.backofficeService.generateCookieFromBackofficeSession(
             backofficeSession,
           );
-        res.cookie(cookieName, cookieValue, {
-          ...backofficeSession.sess.cookie,
-          sameSite: 'lax',
-        });
+        res.cookie(cookieName, cookieValue, backofficeSession.sess.cookie);
       }
 
       return {

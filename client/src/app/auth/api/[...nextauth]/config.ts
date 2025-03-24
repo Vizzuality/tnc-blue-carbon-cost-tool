@@ -1,3 +1,4 @@
+import setCookieParser from "set-cookie-parser";
 import { cookies } from "next/headers";
 
 import { UserWithAccessToken } from "@shared/dtos/users/user.dto";
@@ -46,18 +47,26 @@ export const config = {
         });
 
         // Check if adminjs was set in the response
-        const setCookieHeaders = response.headers.get("set-cookie");
-        if (setCookieHeaders !== null) {
-          const [cookieName, cookieValue] = decodeURIComponent(setCookieHeaders)
-            .split(";")[0]
-            .split("=");
+        const setCookieHeader = response.headers.get("set-cookie");
+        if (setCookieHeader !== null) {
+          const parsedCookies = setCookieParser.parse(setCookieHeader, {
+            map: false,
+          });
 
           const cookieStore = cookies();
-          cookieStore.set(cookieName, cookieValue, {
-            path: "/",
-            sameSite: "lax",
-            httpOnly: true,
-          });
+          for (const parsed of parsedCookies) {
+            cookieStore.set(parsed.name, parsed.value, {
+              httpOnly: parsed.httpOnly,
+              secure: parsed.secure,
+              path: parsed.path,
+              sameSite: parsed.sameSite?.toLowerCase() as
+                | "lax"
+                | "strict"
+                | "none",
+              expires: parsed.expires,
+              maxAge: parsed.maxAge,
+            });
+          }
         }
 
         if (response.status === 201) {
