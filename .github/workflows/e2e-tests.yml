@@ -11,6 +11,8 @@ on:
       - '/*'               # include changes in root
       - '!infrastructure/**'  # exclude infra folder
       - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
 
   workflow_dispatch:
 

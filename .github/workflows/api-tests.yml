@@ -11,6 +11,8 @@ on:
       - '!client/**'       # exclude client folder
       - '!infrastructure/**'  # exclude infra folder
       - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
 
   workflow_dispatch:
 

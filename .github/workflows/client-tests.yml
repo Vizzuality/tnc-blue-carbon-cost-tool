@@ -10,6 +10,8 @@ on:
       - '!api/**' # exclude api folder
       - '!infrastructure/**' # exclude infra folder
       - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
 
   workflow_dispatch:
 
