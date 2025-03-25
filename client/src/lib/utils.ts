@@ -51,7 +51,7 @@ export const isPrivatePath = (pathname: string) => {
 };
 
 export async function signOutFromBackoffice() {
-  await fetch("/api/backoffice/signout", {
+  await fetch("/auth/backoffice/signout", {
     method: "POST",
     credentials: "include",
   });
