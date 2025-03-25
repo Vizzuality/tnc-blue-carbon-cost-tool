@@ -4,6 +4,7 @@ import { useAtomValue } from "jotai";
 import { LogOutIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 
+import { REDIRECT_SIGNIN_PATH } from "@/lib/constants";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { signOutFromBackoffice } from "@/lib/utils";
@@ -66,7 +67,7 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
         variant="outline"
         className="w-full font-bold"
         onClick={async () => {
-          await signOut();
+          await signOut({ callbackUrl: REDIRECT_SIGNIN_PATH });
           await signOutFromBackoffice();
         }}
       >
