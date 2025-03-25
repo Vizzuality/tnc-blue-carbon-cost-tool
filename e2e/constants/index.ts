@@ -6,7 +6,7 @@ export const TEST_USER: Pick<
 > = {
   name: "John Doe",
   email: "jhondoe@test.com",
-  password: "12345678",
+  password: "passwordpassword",
   partnerName: "admin",
 };
 
