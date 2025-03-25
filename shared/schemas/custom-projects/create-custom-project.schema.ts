@@ -188,7 +188,7 @@ export const ValidateConservationSchema = (
     if (!params.projectSpecificLossRate) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Project Specific Loss Rate is required",
+        message: "required",
         path: ["parameters.projectSpecificLossRate"],
       });
     }

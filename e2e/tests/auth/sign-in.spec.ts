@@ -1,6 +1,7 @@
 import { expect, Page, test } from "@playwright/test";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
 import { User } from "@shared/entities/users/user.entity";
+import { ROUTES, TEST_USER } from "e2e/constants";
 
 let testManager: E2eTestManager;
 let page: Page;
@@ -26,13 +27,8 @@ test.describe("Auth - Sign In", () => {
   });
 
   test("an user signs in successfully", async ({ page }) => {
-    const user: Pick<User, "email" | "password" | "partnerName"> = {
-      email: "jhondoe@test.com",
-      password: "12345678",
-      partnerName: "admin",
-    };
-    await testManager.mocks().createUser(user);
-    await testManager.login(user as User);
-    await expect(testManager.getPage()).toHaveURL("/");
+    await testManager.mocks().createUser(TEST_USER);
+    await testManager.login(TEST_USER as User);
+    await expect(testManager.getPage()).toHaveURL(ROUTES.home);
   });
 });

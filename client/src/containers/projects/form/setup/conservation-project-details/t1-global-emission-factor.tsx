@@ -4,13 +4,14 @@ import { useFormContext } from "react-hook-form";
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
 
+import { formatNumber } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
+import ReadonlyInput from "@/containers/projects/form/readonly-input";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import { FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 // ? this input is read-only as it is informative to the user. It is not meant to be sent to the API.
 export default function T1GlobalEmissionFactor() {
@@ -51,12 +52,7 @@ export default function T1GlobalEmissionFactor() {
           T1 Global Emission Factor
         </FormLabel>
         <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['tCO2e/ha/year']">
-          <Input
-            className="w-full pr-32 text-muted-foreground"
-            disabled
-            readOnly
-            value={data}
-          />
+          <ReadonlyInput value={formatNumber(data)} />
         </div>
       </div>
     </div>
