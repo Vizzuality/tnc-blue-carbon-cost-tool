@@ -1,4 +1,3 @@
-import setCookieParser from "set-cookie-parser";
 import { cookies } from "next/headers";
 
 import { UserWithAccessToken } from "@shared/dtos/users/user.dto";
@@ -12,6 +11,7 @@ import { getServerSession, NextAuthOptions } from "next-auth";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
+import setCookieParser from "set-cookie-parser";
 
 import { client } from "@/lib/query-client";
 

@@ -66,7 +66,7 @@ const ProfileSidebar: FC<ProfileSidebarProps> = ({ navItems }) => {
         variant="outline"
         className="w-full font-bold"
         onClick={async () => {
-          await signOut();
+          await signOut({ callbackUrl: "/auth/signin" });
           await signOutFromBackoffice();
         }}
       >
