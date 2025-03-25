@@ -1,7 +1,7 @@
 import { FC, useCallback } from "react";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { useQueryClient } from "@tanstack/react-query";
@@ -35,6 +35,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
   const { toast } = useToast();
   const [projectId, setProjectId] = useAtom(customProjectIdAtom);
   const pathname = usePathname();
+  const router = useRouter();
 
   const SaveProject = useCallback(
     async (arg: Session | null = session) => {
@@ -48,10 +49,9 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
           });
 
         if (status === 201) {
-          // update the url without redirecting
           // TODO: should also implement a clean way of removing the query cache
           const id = body.data.id;
-          window.history.replaceState(null, "", `/projects/${id}`);
+          router.replace(`/projects/${id}`);
           toast({ description: "Project updated successfully." });
           setProjectId(id);
           await queryClient.invalidateQueries({
@@ -72,7 +72,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
         });
       }
     },
-    [session, data, toast, queryClient, setProjectId],
+    [session, data, toast, queryClient, setProjectId, router],
   );
   const handleOnSignIn = useCallback(async () => {
     // session is undefined when onSignIn callback is called

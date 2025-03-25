@@ -1,6 +1,7 @@
 import { FC } from "react";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import {
   ACTIVITY,
@@ -20,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export interface ProjectDetailsProps {
-  id?: string;
   data: {
     country: { code: string; name: string };
     projectSize: number;
@@ -43,7 +43,7 @@ export interface ProjectDetailsProps {
   };
 }
 
-const ProjectDetails: FC<ProjectDetailsProps> = ({ id, data }) => {
+const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
   const {
     country,
     projectSize,
@@ -58,6 +58,7 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ id, data }) => {
     sequestrationRate,
   } = data;
   const idAtom = useAtomValue(customProjectIdAtom);
+  const { id } = useParams();
   const projectId = id || idAtom;
   const showEditButton = FEATURE_FLAGS["edit-project"] && projectId;
   return (

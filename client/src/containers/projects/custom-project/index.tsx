@@ -112,7 +112,7 @@ const CustomProjectView: FC<{
         />
         <CustomProjectHeader data={data} />
         <div className="mb-4 mt-2 flex gap-4">
-          <ProjectDetails id={id} {...projectDetailsProps} />
+          <ProjectDetails {...projectDetailsProps} />
           {projectCostProps && <ProjectCost {...projectCostProps} />}
           {leftOverProps && <LeftOver {...leftOverProps} />}
           {costDetailsProps && (
