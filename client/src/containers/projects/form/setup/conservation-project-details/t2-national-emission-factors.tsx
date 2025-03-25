@@ -4,13 +4,14 @@ import { useFormContext } from "react-hook-form";
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
 
+import { formatNumber } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
+import ReadonlyInput from "@/containers/projects/form/readonly-input";
 import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import { FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 // ? these inputs are read-only as it is informative to the user. They are not meant to be sent to the API.
 export default function T2NationalEmissionFactors() {
@@ -51,12 +52,7 @@ export default function T2NationalEmissionFactors() {
           National AGB Emission Factor
         </FormLabel>
         <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['tCO2e/ha/year']">
-          <Input
-            className="w-full pr-32 text-muted-foreground"
-            disabled
-            readOnly
-            value={data?.emissionFactorAgb}
-          />
+          <ReadonlyInput value={formatNumber(data?.emissionFactorAgb)} />
         </div>
       </div>
       <div className="basis-1/2 space-y-2">
@@ -69,12 +65,7 @@ export default function T2NationalEmissionFactors() {
           National SOC Emission Factor
         </FormLabel>
         <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['tCO2e/ha/year']">
-          <Input
-            className="w-full pr-32 text-muted-foreground"
-            disabled
-            readOnly
-            value={data?.emissionFactorSoc}
-          />
+          <ReadonlyInput value={formatNumber(data?.emissionFactorSoc)} />
         </div>
       </div>
     </div>

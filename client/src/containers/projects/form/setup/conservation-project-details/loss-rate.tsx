@@ -10,10 +10,10 @@ import { queryKeys } from "@/lib/query-keys";
 import { CONSERVATION_PROJECT_DETAILS } from "@/constants/tooltip";
 
 import NumberFormItem from "@/containers/projects/form/number-form-item";
+import ReadonlyInput from "@/containers/projects/form/readonly-input";
 import { useCustomProjectForm } from "@/containers/projects/form/utils";
 
 import { FormField, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 export default function LossRate() {
   const { form, handleFormChange } = useCustomProjectForm();
@@ -65,12 +65,7 @@ export default function LossRate() {
           National loss rate
         </FormLabel>
         <div className="relative flex basis-1/2 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['%']">
-          <Input
-            className="w-full pr-32 text-muted-foreground"
-            disabled
-            readOnly
-            value={toPercentageValue(data)}
-          />
+          <ReadonlyInput value={toPercentageValue(data)} />
         </div>
       </div>
     );

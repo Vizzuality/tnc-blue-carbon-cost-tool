@@ -195,6 +195,7 @@ export default function SetupProjectForm() {
                 name="projectSizeHa"
                 render={() => (
                   <NumberFormItem
+                    data-testid="projectSizeHa"
                     label="Project Size"
                     tooltip={{
                       title: "Project Size",
@@ -391,23 +392,21 @@ export default function SetupProjectForm() {
             <FormField
               name="initialCarbonPriceAssumption"
               render={() => (
-                <>
-                  <NumberFormItem
-                    label="Initial carbon price assumption"
-                    tooltip={{
-                      title: "Initial carbon price assumptions in $",
-                      content:
-                        GENERAL_ASSUMPTIONS.INITIAL_CARBON_PRICE_ASSUMPTIONS,
-                    }}
-                    value={form.getValues("initialCarbonPriceAssumption")}
-                    formItemClassName="flex items-center justify-between gap-4"
-                    formControlClassName="after:content-['$']"
-                    onValueChange={async (v) =>
-                      handleFormChange("initialCarbonPriceAssumption", v)
-                    }
-                  />
-                  <FormMessage className="text-right" />
-                </>
+                <NumberFormItem
+                  data-testid="initialCarbonPriceAssumption"
+                  label="Initial carbon price assumption"
+                  tooltip={{
+                    title: "Initial carbon price assumptions in $",
+                    content:
+                      GENERAL_ASSUMPTIONS.INITIAL_CARBON_PRICE_ASSUMPTIONS,
+                  }}
+                  value={form.getValues("initialCarbonPriceAssumption")}
+                  formItemClassName="flex items-center justify-between gap-4"
+                  formControlClassName="after:content-['$']"
+                  onValueChange={async (v) =>
+                    handleFormChange("initialCarbonPriceAssumption", v)
+                  }
+                />
               )}
             />
           </div>

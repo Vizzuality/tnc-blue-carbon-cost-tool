@@ -1,3 +1,5 @@
+import { HTMLAttributes } from "react";
+
 import { flexRender } from "@tanstack/react-table";
 import { Table as TableInstance } from "@tanstack/react-table";
 
@@ -10,14 +12,16 @@ import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 interface FormTableProps<T> {
   table: TableInstance<T>;
   totalColumnsLength: number;
+  id?: HTMLAttributes<HTMLTableElement>["id"];
 }
 
 export default function FormTable<T>({
   table,
   totalColumnsLength,
+  id,
 }: FormTableProps<T>) {
   return (
-    <Table>
+    <Table id={id}>
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id} className="divide-x-0">
