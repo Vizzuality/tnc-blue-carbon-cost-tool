@@ -14,6 +14,7 @@ import * as path from "path";
 import { adminContract } from "@shared/contracts/admin.contract";
 import { API_URL } from "e2e/playwright.config";
 import { ROLES } from "@shared/entities/users/roles.enum";
+import { ROUTES } from "e2e/constants";
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -86,7 +87,7 @@ export class E2eTestManager {
     if (!user) {
       user = await this.mocks().createUser();
     }
-    await this.page.goto("/auth/signin");
+    await this.page.goto(ROUTES.auth.signin);
     await this.page
       .getByPlaceholder("Enter your email address")
       .fill(user.email);

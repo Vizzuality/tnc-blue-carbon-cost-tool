@@ -90,7 +90,11 @@ export default function AssumptionsProjectForm() {
           </div>
         </AccordionTrigger>
         <AccordionContent className="pb-0">
-          <FormTable table={table} totalColumnsLength={COLUMNS.length} />
+          <FormTable
+            table={table}
+            totalColumnsLength={COLUMNS.length}
+            id="assumptions-table"
+          />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

@@ -21,6 +21,7 @@ export interface NumberFormItemProps extends InputProps {
   isPercentage?: boolean;
   formItemClassName?: string;
   formControlClassName?: string;
+  "data-testid"?: string;
   onValueChange?: (value: number | null) => void;
 }
 
@@ -33,6 +34,7 @@ export default function NumberFormItem({
   formControlClassName,
   onValueChange,
   placeholder,
+  "data-testid": dataTestId,
   ...props
 }: NumberFormItemProps) {
   const [value, setValue] = useState<string>(
@@ -57,7 +59,7 @@ export default function NumberFormItem({
   };
 
   return (
-    <FormItem className={formItemClassName}>
+    <FormItem className={formItemClassName} data-testid={dataTestId}>
       <div className="flex-1">
         <FormLabel
           tooltip={{

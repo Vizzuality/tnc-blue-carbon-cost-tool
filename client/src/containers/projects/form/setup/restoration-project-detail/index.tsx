@@ -7,12 +7,14 @@ import {
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
+import { formatNumber } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { RESTORATION_PROJECT_DETAILS } from "@/constants/tooltip";
 
 import NumberFormItem from "@/containers/projects/form/number-form-item";
+import ReadonlyInput from "@/containers/projects/form/readonly-input";
 import { useCustomProjectForm } from "@/containers/projects/form/utils";
 
 import { Card } from "@/components/ui/card";
@@ -23,7 +25,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -156,7 +157,7 @@ export default function RestorationProjectDetails() {
                         }
                       }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger data-testid="parameters.tierSelector">
                         <SelectValue placeholder="Select sequestration tier" />
                       </SelectTrigger>
                       <SelectContent>
@@ -210,12 +211,7 @@ export default function RestorationProjectDetails() {
                     {SEQUESTRATION_RATE_TIER_TYPES.TIER_1}
                   </FormLabel>
                   <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['tCO2e/ha/yr']">
-                    <Input
-                      className="w-full pr-32 text-muted-foreground"
-                      disabled
-                      readOnly
-                      value={data?.tier1}
-                    />
+                    <ReadonlyInput value={formatNumber(data?.tier1)} />
                   </div>
                 </div>
               )}
@@ -231,12 +227,7 @@ export default function RestorationProjectDetails() {
                     Country-specific rate
                   </FormLabel>
                   <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['??']">
-                    <Input
-                      className="w-full pr-32 text-muted-foreground"
-                      disabled
-                      readOnly
-                      value={data?.tier2}
-                    />
+                    <ReadonlyInput value={formatNumber(data?.tier2)} />
                   </div>
                 </div>
               )}

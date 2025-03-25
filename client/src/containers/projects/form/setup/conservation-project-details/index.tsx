@@ -142,7 +142,7 @@ export default function ConservationProjectDetails() {
                     }
                   }}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger data-testid="parameters.emissionFactorUsed">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -201,7 +201,7 @@ export default function ConservationProjectDetails() {
                         );
                       }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger data-testid="parameters.projectSpecificEmission">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>

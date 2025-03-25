@@ -2,6 +2,7 @@ import { expect, Page, test } from "@playwright/test";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
 import { User } from "@shared/entities/users/user.entity";
 import { ROLES } from "@shared/entities/users/roles.enum";
+import { ROUTES, TEST_USER } from "e2e/constants";
 
 let testManager: E2eTestManager;
 let page: Page;
@@ -27,19 +28,14 @@ test.describe("Auth - Update Password", () => {
   });
 
   test("an user changes their password successfully", async () => {
-    const user: Pick<User, "email" | "password" | "partnerName" | "role"> = {
-      email: "jhondoe@test.com",
-      password: "12345678",
-      partnerName: "partner-test",
-      role: ROLES.ADMIN,
-    };
+    const user = { ...TEST_USER, role: ROLES.ADMIN };
     const newPassword = "987654321987654321";
 
     await testManager.mocks().createUser(user);
     await testManager.login(user as User);
 
-    await page.waitForURL("/");
-    await page.goto("/profile");
+    await page.waitForURL(ROUTES.home);
+    await page.goto(ROUTES.profile);
     await page
       .getByPlaceholder("Type your current password")
       .fill(user.password);
@@ -57,6 +53,6 @@ test.describe("Auth - Update Password", () => {
       password: newPassword,
     } as User);
 
-    await expect(page).toHaveURL("/");
+    await expect(page).toHaveURL(ROUTES.home);
   });
 });

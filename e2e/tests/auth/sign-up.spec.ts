@@ -2,6 +2,7 @@ import { expect, Page, test } from "@playwright/test";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
 import { User } from "@shared/entities/users/user.entity";
 import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
+import { ROUTES, TEST_USER } from "e2e/constants";
 
 let testManager: E2eTestManager;
 let page: Page;
@@ -27,16 +28,14 @@ test.describe("Auth - Sign Up", () => {
   });
 
   test("an user signs up successfully", async ({ page }) => {
-    const user: Pick<User, "name" | "email" | "partnerName"> = {
-      name: "John Doe",
-      partnerName: "Jane Doe",
-      email: "johndoe@test.com",
-    };
+    const user = TEST_USER;
 
-    await page.goto(`/auth/signup`);
+    await page.goto(ROUTES.auth.signup);
 
     await page.getByPlaceholder("Enter your name").fill(user.name);
-    await page.getByPlaceholder("Enter organization name").fill(user.partnerName);
+    await page
+      .getByPlaceholder("Enter organization name")
+      .fill(user.partnerName);
     await page.getByLabel("Email").fill(user.email);
     await page.getByRole("checkbox").check();
 
@@ -50,7 +49,7 @@ test.describe("Auth - Sign Up", () => {
       }),
     ).toBeVisible();
 
-    await page.waitForURL("/auth/signin");
+    await page.waitForURL(ROUTES.auth.signin);
     await expect(
       page.getByText("Welcome to Blue Carbon Cost", { exact: true }),
     ).toBeVisible();
@@ -66,9 +65,8 @@ test.describe("Auth - Sign Up", () => {
   test("an user successfully finish signup process with OTP", async ({
     page,
   }) => {
-    const user: Pick<User, "email" | "password" | "isActive"> = {
-      email: "johndoe@test.com",
-      password: "passwordpassword",
+    const user = {
+      ...TEST_USER,
       isActive: false,
     };
 
@@ -80,7 +78,7 @@ test.describe("Auth - Sign Up", () => {
       TOKEN_TYPE_ENUM.ACCOUNT_CONFIRMATION,
     );
 
-    await page.goto(`/auth/signup/${userToken}`);
+    await page.goto(ROUTES.auth.signup + `/${userToken}`);
 
     await page
       .getByPlaceholder("Enter the One-Time Password received in your mail")
@@ -95,12 +93,12 @@ test.describe("Auth - Sign Up", () => {
 
     await page.getByRole("button", { name: /save/i }).click();
 
-    await page.waitForURL("/auth/signin");
+    await page.waitForURL(ROUTES.auth.signin);
     await expect(page.getByText("Welcome to Blue Carbon Cost")).toBeVisible();
   });
 
   test("an user signs up with an invalid token", async ({ page }) => {
-    await page.goto("/auth/signup/12345678");
+    await page.goto(ROUTES.auth.signup + "/12345678");
 
     await expect(
       page.getByText("The token is invalid or has expired."),
