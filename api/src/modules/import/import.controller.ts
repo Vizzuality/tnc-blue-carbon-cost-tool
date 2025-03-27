@@ -1,11 +1,12 @@
 import {
+  BadRequestException,
   Controller,
   HttpStatus,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
 import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
 import { ROLES } from '@shared/entities/users/roles.enum';
@@ -20,6 +21,10 @@ import { GetUser } from '@api/modules/auth/decorators/get-user.decorator';
 import { User } from '@shared/entities/users/user.entity';
 import { usersContract } from '@shared/contracts/users.contract';
 import { JwtCookieAuthGuard } from '@api/modules/auth/guards/jwt-cookie-auth.guard';
+import {
+  UPLOAD_DATA_FILE_KEYS,
+  UploadDataFilesDto,
+} from '@shared/dtos/users/upload-data-files.dto';
 
 @Controller()
 @UseGuards(JwtCookieAuthGuard, RolesGuard)
@@ -63,7 +68,7 @@ export class ImportController {
     });
   }
 
-  @UseInterceptors(FilesInterceptor('files', 2))
+  @UseInterceptors(AnyFilesInterceptor({ limits: { files: 2, fields: 0 } }))
   @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
   @TsRestHandler(usersContract.uploadData)
   async uploadData(
@@ -71,13 +76,26 @@ export class ImportController {
     @UploadedFiles() files: Array<Express.Multer.File>,
   ): Promise<any> {
     return tsRestHandler(usersContract.uploadData, async () => {
-      const [file1, file2] = files;
-      const [file1Buffer, file2Buffer] = [file1.buffer, file2.buffer];
-      const data = await this.service.importDataProvidedByPartner(
-        [file1Buffer, file2Buffer],
+      const uploadedFiles: UploadDataFilesDto = files.reduce((acc, file) => {
+        acc[file.fieldname] = file;
+        return acc;
+      }, {});
+      if (
+        uploadedFiles[UPLOAD_DATA_FILE_KEYS.CARBON_INPUTS_TEMPLATE] == null ||
+        uploadedFiles[UPLOAD_DATA_FILE_KEYS.COST_INPUTS_TEMPLATE] == null
+      ) {
+        throw new BadRequestException(
+          'At least one of the files should be provided {carbon-inputs-template, cost-inputs-template}',
+        );
+      }
+      const [errors, data] = await this.service.importDataProvidedByPartner(
+        uploadedFiles,
         user.id,
       );
-      return { body: data, status: HttpStatus.CREATED };
+      if (errors) {
+        return { body: { errors }, status: HttpStatus.BAD_REQUEST };
+      }
+      return { body: { data }, status: HttpStatus.CREATED };
     });
   }
 }
