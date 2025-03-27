@@ -33,6 +33,4 @@ export const SHEETS_TO_PARSE = [
 
 export interface ExcelParserInterface {
   parseExcel(data: Buffer): Promise<any>;
-
-  parseUserExcels(data: Buffer[]): Promise<any>;
 }

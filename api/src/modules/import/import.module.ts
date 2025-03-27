@@ -10,6 +10,7 @@ import { ImportEventHandler } from '@api/modules/import/events/handlers/import-e
 import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingestion.xlsx-parser';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
+import { UserXlsxTemplatesParser } from '@api/modules/import/services/user-xlsx-templates.parser';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
     ImportEventHandler,
     DataIngestionExcelParser,
     { provide: ExcelParserToken, useClass: XlsxParser },
+    UserXlsxTemplatesParser,
   ],
 })
 export class ImportModule {}

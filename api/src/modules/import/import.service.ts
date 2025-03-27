@@ -18,6 +18,9 @@ import { UserUploadCostInputs } from '@shared/entities/users/user-upload-cost-in
 import { UserUploadRestorationInputs } from '@shared/entities/users/user-upload-restoration-inputs.entity';
 import { UserUploadConservationInputs } from '@shared/entities/users/user-upload-conservation-inputs.entity';
 import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingestion.xlsx-parser';
+import { UploadDataFilesDto } from '@shared/dtos/users/upload-data-files.dto';
+import { UserXlsxTemplatesParser } from '@api/modules/import/services/user-xlsx-templates.parser';
+import { ZodError, ZodIssue } from 'zod';
 
 @Injectable()
 export class ImportService {
@@ -32,6 +35,7 @@ export class ImportService {
     private readonly dataIngestionParser: DataIngestionExcelParser,
     @Inject(ExcelParserToken)
     private readonly excelParser: ExcelParserInterface,
+    private readonly userXlsxTemplatesParser: UserXlsxTemplatesParser,
     private readonly importRepo: ImportRepository,
     private readonly preprocessor: EntityPreprocessor,
     private readonly eventBus: EventBus,
@@ -85,47 +89,63 @@ export class ImportService {
     this.eventBus.publish(new ImportEvent(eventType, userId, payload));
   }
 
-  async importDataProvidedByPartner(fileBuffers: Buffer[], userId: string) {
+  async importDataProvidedByPartner(
+    files: UploadDataFilesDto,
+    userId: string,
+  ): Promise<[ZodIssue[] | undefined, any]> {
     this.logger.warn('importDataProvidedByPartner started...');
     this.registerImportEvent(userId, this.eventMap.STARTED);
 
     try {
       const { costInputs, carbonInputs } =
-        await this.excelParser.parseUserExcels(fileBuffers);
-      const mappedCostInputs = userDataCostInputsMapJsonToEntity(
-        costInputs,
-        userId,
-      );
-      const mappedRestorationInputs = userDataRestorationInputMapJsonToEntity(
-        carbonInputs.restoration,
-        userId,
-      );
-      const mappedConservationInputs = userDataConservationInputMapJsonToEntity(
-        carbonInputs.conservation,
-        userId,
-      );
+        await this.userXlsxTemplatesParser.parse(files);
+
       await this.dataSource.transaction(async (manager) => {
-        const userCostInputsRepo = manager.getRepository(UserUploadCostInputs);
-        const userRestorationInputsRepo = manager.getRepository(
-          UserUploadRestorationInputs,
-        );
-        const userConservationInputsRepo = manager.getRepository(
-          UserUploadConservationInputs,
-        );
-        await userCostInputsRepo.save(mappedCostInputs);
-        await userRestorationInputsRepo.save(mappedRestorationInputs);
-        await userConservationInputsRepo.save(mappedConservationInputs);
+        if (costInputs) {
+          const mappedCostInputs = userDataCostInputsMapJsonToEntity(
+            costInputs,
+            userId,
+          );
+
+          const userCostInputsRepo =
+            manager.getRepository(UserUploadCostInputs);
+          await userCostInputsRepo.save(mappedCostInputs);
+        }
+
+        if (carbonInputs) {
+          const mappedRestorationInputs =
+            userDataRestorationInputMapJsonToEntity(
+              carbonInputs.restoration,
+              userId,
+            );
+          const mappedConservationInputs =
+            userDataConservationInputMapJsonToEntity(
+              carbonInputs.conservation,
+              userId,
+            );
+
+          const userRestorationInputsRepo = manager.getRepository(
+            UserUploadRestorationInputs,
+          );
+          const userConservationInputsRepo = manager.getRepository(
+            UserUploadConservationInputs,
+          );
+          await userRestorationInputsRepo.save(mappedRestorationInputs);
+          await userConservationInputsRepo.save(mappedConservationInputs);
+        }
       });
 
       this.logger.warn('importDataProvidedByPartner completed successfully');
       this.registerImportEvent(userId, this.eventMap.SUCCESS);
-      return carbonInputs;
+      return [undefined, carbonInputs];
     } catch (e) {
       this.logger.error('importDataProvidedByPartner failed', e);
       this.registerImportEvent(userId, this.eventMap.FAILED, {
         error: { type: e.constructor.name, message: e.message },
       });
-      throw new ConflictException(e);
+
+      if (e instanceof ZodError) return [e.errors, undefined];
+      throw new ConflictException(e.message);
     }
   }
 }
