@@ -9,6 +9,7 @@ import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { UpdateUserPasswordSchema } from "@shared/schemas/users/update-password.schema";
 import { RequestEmailUpdateSchema } from "@shared/schemas/users/request-email-update.schema";
 import { UpdateUserSchema } from "@shared/schemas/users/update-user.schema";
+import { UploadDataFilesDto } from "@shared/dtos/users/upload-data-files.dto";
 
 const contract = initContract();
 export const usersContract = contract.router({
@@ -58,7 +59,6 @@ export const usersContract = contract.router({
     },
     body: null,
   },
-
   uploadData: {
     method: "POST",
     path: "/users/upload-data",
@@ -66,6 +66,6 @@ export const usersContract = contract.router({
       201: contract.type<any>(),
     },
     contentType: "multipart/form-data",
-    body: contract.type<FormData>(),
+    body: contract.type<UploadDataFilesDto>(),
   },
 });
