@@ -9,12 +9,6 @@ def load_country_code(master_table, country):
     return country_code
 
 
-def initialize_restoration_plan():
-    restoration_plan = {i: 0 for i in range(1, 41)}
-    restoration_plan[-1] = 250
-    return restoration_plan
-
-
 def get_value_from_master_table(master_table, country_code, ecosystem, column):
     """Utility function to get a value from the master table."""
     return master_table.loc[
@@ -103,7 +97,7 @@ def create_simple_plan(total_base_cost, years=None):
     """Utility to create a simple fixed-cost plan over the provided years."""
     if years is None:
         years = [-4, -3, -2, -1]
-    return {year: total_base_cost for year in years}
+    return dict.fromkeys(years, total_base_cost)
 
 
 def find_first_zero_value(cost_plan):

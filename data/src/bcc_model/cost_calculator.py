@@ -1,7 +1,8 @@
-# src/cost_calculator.py
+import re
 
 import matplotlib.pyplot as plt  # noqa: I001
 import pandas as pd
+from IPython.display import Markdown, display
 from revenue_profit_calculator import RevenueProfitCalculator
 from sequestration_credits_calculator import SequestrationCreditsCalculator
 from utils import (
@@ -16,6 +17,12 @@ from utils import (
 
 
 class CostCalculator:
+    """
+    Class to calculate the costs associated with a project.
+    It includes methods to calculate capital and operating expenditures,
+    as well as revenue and credits.
+    """
+
     def __init__(self, project):
         """Initialize the CostCalculator with a project object."""
         self.project = project
@@ -34,15 +41,14 @@ class CostCalculator:
         }
 
         # Calculate Capital expenditure (NPV)
-        self.capex_cost_plan = self.calculate_capex_total() # done
-        self.opex_cost_plan = self.calculate_opex_total()  # done
-        self.total_capex = sum(self.capex_cost_plan.values()) # done
-        self.total_capex_NPV = calculate_npv(self.capex_cost_plan, self.project.discount_rate) # done
+        self.capex_cost_plan = self.calculate_capex_total()
+        self.opex_cost_plan = self.calculate_opex_total()
+        self.total_capex = sum(self.capex_cost_plan.values())
+        self.total_capex_NPV = calculate_npv(self.capex_cost_plan, self.project.discount_rate)
         # Operating expenditure (NPV)
-
-        self.total_opex = sum(self.opex_cost_plan.values()) # done
-        self.total_opex_NPV = calculate_npv(self.opex_cost_plan, self.project.discount_rate) # done
-        self.total_NPV = self.total_capex_NPV + self.total_opex_NPV # done
+        self.total_opex = sum(self.opex_cost_plan.values())  # done
+        self.total_opex_NPV = calculate_npv(self.opex_cost_plan, self.project.discount_rate)  # done
+        self.total_NPV = self.total_capex_NPV + self.total_opex_NPV  # done
         # Calculate estimated revenue (NPV)
         self.estimated_revenue_plan = self.revenue_profit_calculator.calculate_est_revenue()
         # Total revenue (non-discounted)
@@ -115,10 +121,11 @@ class CostCalculator:
             use_capex=True,
         )
 
-        # Proforma summary
-        self.proforma = self.get_yearly_cost_breakdown()
-
     def calculate_capex_total(self):
+        """
+        Calculate the total capital expenditure (CAPEX) for the project.
+        This includes various cost functions that are aggregated into a single plan.
+        """
         # List of cost functions to call
         cost_functions = [
             self.calculate_feasibility_analysis_cost,
@@ -138,6 +145,10 @@ class CostCalculator:
         return self.capex_total_cost_plan
 
     def calculate_opex_total(self):
+        """
+        Calculate the total operating expenditure (OPEX) for the project.
+        This includes various cost functions that are aggregated into a single plan.
+        """
         # List of cost functions to call
         cost_functions = [
             self.calculate_monitoring,
@@ -507,10 +518,12 @@ class CostCalculator:
         return long_term_project_operating_cost_plan
 
     def get_summary(self):
-        """Return a dictionary summary of the project metrics."""
-        return {
-            "Project": f"""{self.project.country} {self.project.ecosystem}
-             {self.project.activity} ({self.project.project_size_ha} ha)""",
+        """
+        Displays a markdown table with a summary of the project costs and revenues.
+        """
+        # Project summary
+        summary_dict = {
+            "Project": f"{self.project.country} {self.project.ecosystem} {self.project.activity} ({self.project.project_size_ha} ha)",
             "$/tCO2e (total cost, NPV)": f"${self.cost_per_tCO2e:,.0f}",
             "$/ha": f"${self.cost_per_ha:,.0f}",
             "NPV covering cost": f"${self.NPV_covering_cost:,.0f}",
@@ -525,13 +538,24 @@ class CostCalculator:
             "Financing cost": f"${self.financing_cost:,.0f}",
             "Funding gap (NPV)": f"${self.funding_gap_NPV:,.0f}",
             "Funding gap per tCO2e (NPV)": f"${self.funding_gap_per_tco2_NPV:,.1f}",
-            "Community benefit sharing fund % of revenue": f"""
-            {self.community_benefit_sharing_fund:.0%}""",
+            "Community benefit sharing fund % of revenue": f"{self.community_benefit_sharing_fund:.0%}",
         }
+        summary_table = """\
+        ### Project Summary
+
+        | Parameter                            | Value                                             |
+        | ------------------------------------ | ------------------------------------------------- |
+        """
+        for key, value in summary_dict.items():
+            summary_table += f"| {key} | {value} |\n"
+        summary_table = re.sub(r"\n\s+\|", "\n|", summary_table.strip())
+
+        display(Markdown(summary_table))
 
     def get_cost_estimates(self):
         """
-        Return a dataframe with all the CAPEX and OPEX cost estimates as Total cost and NPV cost.
+        Displays a markdown table with all the CAPEX and OPEX cost estimates as well as the
+        Total cost and NPV cost.
         """
         # Define the data with cost categories, total costa and NPV values
         data = {
@@ -612,19 +636,35 @@ class CostCalculator:
                 self.total_capex_NPV + self.total_opex_NPV,
             ],
         }
+        # Create a Markdown table from the data
+        cost_estimates_table = """\
+        ### Cost Estimates
 
-        # Create the dataframe
-        df = pd.DataFrame(data)
+        | Cost estimates (USD)   | Total cost      | NPV             |
+        | ---------------------- | --------------- | --------------- |
+        """
+        for n in range(len(data["Cost estimates (USD)"])):
+            key = data["Cost estimates (USD)"][n]
+            # Format Total cost and NPV columns as currency with thousands separators
+            total_cost = (
+                f"${data['Total cost'][n]:,.0f}"
+                if isinstance(data["Total cost"][n], (int, float))
+                else data["Total cost"][n]
+            )
+            npv = (
+                f"${data['NPV'][n]:,.0f}"
+                if isinstance(data["NPV"][n], (int, float))
+                else data["NPV"][n]
+            )
+            if key in ["Capital expenditure", "Operating expenditure", "Total cost"]:
+                cost_estimates_table += f"| **{key}** | **{total_cost}** | **{npv}** |\n"
+            else:
+                cost_estimates_table += f"| {key} | {total_cost} | {npv} |\n"
+        cost_estimates_table = re.sub(r"\n\s+\|", "\n|", cost_estimates_table.strip())
 
-        # Format Total cost and NPV columns as currency with thousands separators
-        df["Total cost"] = df["Total cost"].apply(
-            lambda x: f"${x:,.0f}" if isinstance(x, (int, float)) else x
-        )
-        df["NPV"] = df["NPV"].apply(lambda x: f"${x:,.0f}" if isinstance(x, (int, float)) else x)
+        display(Markdown(cost_estimates_table))
 
-        return df
-
-    def get_yearly_cost_breakdown(self):
+    def get_yearly_cost_breakdown(self, table=True):
         """
         Returns dataframe with yearly breakdown for each cost category.
         """
@@ -836,6 +876,31 @@ class CostCalculator:
                 round(x, 2) if key == "Est. credits issued" else round(x, 0) for x in value
             ]
 
+        # Create a Markdown table from the data
+        pro_forma_table = """\
+        ### Pro Forma Financials
+        """
+        pro_forma_table += "| Year |"
+        for year in years:
+            pro_forma_table += f" {year} |"
+        pro_forma_table += "\n| --- |" + "|".join([" --- " for _ in years]) + "|\n"
+
+        for key, value in data.items():
+            if key in ["Total capex", "Total opex", "Total cost", "Est. revenue"]:
+                pro_forma_table += f"| **{key}** |"
+                for x in value:
+                    pro_forma_table += f" **{x}** |"
+            else:
+                pro_forma_table += f"| {key} |"
+                for x in value:
+                    pro_forma_table += f" {x} |"
+            pro_forma_table += "\n"
+
+        pro_forma_table = re.sub(r"\n\s+\|", "\n|", pro_forma_table.strip())
+
+        if table:
+            display(Markdown(pro_forma_table))
+
         # Create a df
         df = pd.DataFrame(data, index=years).transpose()
 
@@ -845,7 +910,7 @@ class CostCalculator:
         """Plot the summary of the financial data."""
 
         # Extract relevant time period from the df
-        df = self.proforma
+        df = self.get_yearly_cost_breakdown(table=False)
         time_period = df.columns[:-2]  # Exclude the total and NPV columns
 
         total_capex = df.loc["Total capex", time_period]
