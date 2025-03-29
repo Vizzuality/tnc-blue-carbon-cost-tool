@@ -53,12 +53,14 @@ export class CalculationEngine {
 
     const costPlans = costCalculator.initializeCostPlans();
 
-    return {
+    const costOutput = {
       costPlans,
       summary: costCalculator.getSummary(costPlans),
       yearlyBreakdown: costCalculator.getYearlyBreakdown(costPlans),
       costDetails: costCalculator.getCostDetails(costPlans),
     };
+
+    return costOutput;
   }
 
   calculateBreakevenPrice(dto: {

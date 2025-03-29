@@ -11,7 +11,7 @@ import { ProjectsFiltersBoundsDto } from '@shared/dtos/projects/projects-filters
 import {
   CreateProjectDto,
   ProjectsCalculationService,
-} from '@api/modules/projects/projects-calculation.service';
+} from '@api/modules/projects/calculation/projects-calculation.service';
 import { ProjectBuilder } from '@api/modules/projects/project.builder';
 import { ProjectsScorecardService } from '@api/modules/projects/projects-scorecard.service';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';

@@ -1,7 +1,7 @@
 /**
  * @description: Simple builder wrapper to handle the assignment of properties to a project entity and return the instance
  */
-import { CreateProjectDto } from '@api/modules/projects/projects-calculation.service';
+import { CreateProjectDto } from '@api/modules/projects/calculation/projects-calculation.service';
 import { CostOutput } from '@api/modules/calculations/calculation.engine';
 import { Project } from '@shared/entities/projects.entity';
 import { PROJECT_SCORE } from '@shared/entities/project-score.enum';
