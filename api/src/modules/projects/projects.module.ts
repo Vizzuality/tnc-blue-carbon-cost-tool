@@ -8,7 +8,7 @@ import { ProjectsMapRepository } from '@api/modules/projects/projects-map.reposi
 import { ProjectScorecardView } from '@shared/entities/project-scorecard.view';
 import { ProjectsScorecardService } from './projects-scorecard.service';
 import { CalculationsModule } from '@api/modules/calculations/calculations.module';
-import { ProjectsCalculationService } from '@api/modules/projects/projects-calculation.service';
+import { ProjectsCalculationService } from '@api/modules/projects/calculation/projects-calculation.service';
 import { CustomProjectsModule } from '@api/modules/custom-projects/custom-projects.module';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 @Module({
