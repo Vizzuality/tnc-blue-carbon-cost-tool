@@ -434,7 +434,7 @@ class BlueCarbonProject:
         for year, hectares in self.restoration_plan.items():
             self.logger.info("Year %s: %s ha", year, hectares)
 
-    def get_project_parameters(self):
+    def get_project_parameters(self, table=True):
         """
         Display the project parameters in a markdown format.
         """
@@ -490,19 +490,23 @@ class BlueCarbonProject:
             }
 
         # Main parameters
-        main_table = f"""\
+        main_dict = {
+            "Project size (ha)": f"{self.project_size_ha}",
+            "Initial carbon price assumption ($)": f"{self.carbon_price}",
+            "Country": f"{self.country}",
+            "Ecosystem": f"{self.ecosystem}",
+            "Activity": f"{self.activity}",
+            "Carbon revenues to cover": f"{self.carbon_revenues_to_cover}",
+            "Carbon revenues will not cover": f"{self.carbon_revenues_will_not_cover}",
+        }
+        main_table = """\
         ### Project Parameters
 
         | Parameter                                      | Value                                   |
         | ---------------------------------------------- | --------------------------------------- |
-        | Project size (ha)                              | {self.project_size_ha}                  |
-        | Initial carbon price assumption ($)            | {self.carbon_price}                     |
-        | Country                                        | {self.country}                          |
-        | Ecosystem                                      | {self.ecosystem}                        |
-        | Activity                                       | {self.activity}                         |
-        | Carbon revenues to cover                       | {self.carbon_revenues_to_cover}         |
-        | Carbon revenues will not cover                 | {self.carbon_revenues_will_not_cover}   |
         """
+        for key, value in main_dict.items():
+            main_table += f"| {key} | {value} |\n"
         main_table = re.sub(r"\n\s+\|", "\n|", main_table.strip())
         # Additional parameters
         additional_parameters_table = f"""\
@@ -511,18 +515,23 @@ class BlueCarbonProject:
         for key, value in additional_parameters.items():
             additional_parameters_table += f"| {key} | {value} |\n"
         additional_parameters_table = re.sub(r"\n\s+\|", "\n|", additional_parameters_table.strip())
+
         # Assumptions
-        assumptions_table = f"""\
+        assumptions_dict = {
+            "Verification frequency (yr)": f"{self.verification_frequency}",
+            "Discount rate (%)": f"{self.discount_rate * 100}",
+            "Carbon price increase (%)": f"{self.carbon_price_increase * 100}",
+            "Buffer (%)": f"{round(self.buffer * 100)}",
+            "Baseline reassessment frequency (yr)": f"{self.baseline_reassessment_frequency}",
+        }
+        assumptions_table = """\
         ### Assumptions
 
         | Parameter                                      | Value                                   |
         | ---------------------------------------------- | --------------------------------------- |
-        | Verification frequency (yr)                    | {self.verification_frequency}           |
-        | Discount rate (%)                              | {self.discount_rate * 100}              |
-        | Carbon price increase (%)                      | {self.carbon_price_increase * 100}      |
-        | Buffer (%)                                     | {round(self.buffer * 100)}              |
-        | Baseline reassessment frequency (yr)           | {self.baseline_reassessment_frequency}  |
         """
+        for key, value in assumptions_dict.items():
+            assumptions_table += f"| {key} | {value} |\n"
         assumptions_table = re.sub(r"\n\s+\|", "\n|", assumptions_table.strip())
         # Additional parameters
         additional_assumptions_table = f"""\
@@ -533,33 +542,59 @@ class BlueCarbonProject:
         additional_assumptions_table = re.sub(
             r"\n\s+\|", "\n|", additional_assumptions_table.strip()
         )
+
         # Cost inputs
-        cost_inputs_table = f"""\
+        capex_cost_dict = {
+            "Feasibility_analysis ($/project)": f"{float(self.feasibility_analysis):,.0f}",
+            "Conservation planning and admin ($/yr)": f"{
+                float(self.conservation_planning_and_admin):,.0f
+            }",
+            "Data collection and field cost ($/yr)": f"{
+                float(self.data_collection_and_field_cost):,.0f
+            }",
+            "Community representation ($/yr)": f"{float(self.community_representation):,.0f}",
+            "Blue carbon project planning ($/project)": f"{
+                float(self.blue_carbon_project_planning):,.0f
+            }",
+            "Establishing carbon rights ($/yr)": f"{float(self.blue_carbon_project_planning):,.0f}",
+            "Validation ($/project)": f"{float(self.validation):,.0f}",
+            "Implementation labor ($/ha)": f"{float(self.implementation_labor):,.0f}",
+        }
+        opex_cost_dict = {
+            "Monitoring ($/yr)": f"{float(self.monitoring):,.0f}",
+            "Maintenance (% of implementation labor)": f"{float(self.maintenance * 100):,.0f}",
+            "Community benefit sharing fund (% of revenue)": f"{
+                float(self.community_benefit_sharing_fund * 100):,.0f
+            }",
+            "Carbon standard fees ($/credit)": f"{float(self.carbon_standard_fees):,.2f}",
+            "Baseline reassessment ($/event)": f"{float(self.baseline_reassessment):,.0f}",
+            "MRV ($/event)": f"{float(self.MRV):,.0f}",
+            "Long-term project operating ($/yr)": f"{float(self.long_term_project_operating):,.0f}",
+        }
+        other_cost_dict = {
+            "Financing cost (% of capex)": f"{float(self.financing_cost * 100):,.0f}",
+        }
+        cost_inputs_table = """\
         ### Cost Inputs
 
         | Parameter                                      | Value                                   |
         | ---------------------------------------------- | --------------------------------------- |
         | **CAPEX**                                      |                                         |
-        | Conservation planning and admin ($/yr)         | {float(self.conservation_planning_and_admin):,.0f}|
-        | Conservation planning and admin ($/yr)         | {float(self.conservation_planning_and_admin):,.0f}|
-        | Data collection and field cost ($/yr)          | {float(self.data_collection_and_field_cost):,.0f}|
-        | Community representation ($/yr)                | {float(self.community_representation):,.0f}|
-        | Blue carbon project planning ($/project)       | {float(self.blue_carbon_project_planning):,.0f}|
-        | Establishing carbon rights ($/yr)              | {float(self.blue_carbon_project_planning):,.0f}  |
-        | Validation ($/project)                         | {float(self.validation):,.0f}           |
-        | Implementation labor ($/ha)                    | {float(self.implementation_labor):,.0f} |
-        | **OPEX**                                       |                                         |
-        | Monitoring ($/yr)                              | {float(self.monitoring):,.0f}           |
-        | Maintenance (% of implementation labor)        | {float(self.maintenance * 100):,.0f}    |
-        | Community benefit sharing fund (% of revenue)  | {float(self.community_benefit_sharing_fund * 100):,.0f}|
-        | Carbon standard fees ($/credit)                | {float(self.carbon_standard_fees):,.2f} |
-        | Baseline reassessment ($/event)                | {float(self.baseline_reassessment):,.0f}|
-        | MRV ($/event)                                  | {float(self.MRV):,.0f}                  |
-        | Long-term project operating ($/yr)             | {float(self.long_term_project_operating):,.0f}|
-        | **Other**                                      |                                         |
-        | Financing cost (% of capex)                    | {float(self.financing_cost * 100):,.0f} |
         """
+        for key, value in capex_cost_dict.items():
+            cost_inputs_table += f"| {key} | {value} |\n"
+        cost_inputs_table += """\
+        | **OPEX**                                       |                                         |
+        """
+        for key, value in opex_cost_dict.items():
+            cost_inputs_table += f"| {key} | {value} |\n"
+        cost_inputs_table += """\
+        | **Other**                                       |                                         |
+        """
+        for key, value in other_cost_dict.items():
+            cost_inputs_table += f"| {key} | {value} |\n"
         cost_inputs_table = re.sub(r"\n\s+\|", "\n|", cost_inputs_table.strip())
+
         # Restoration plan
         restoration_plan_table = """\
         ### Restoration Plan
@@ -582,4 +617,22 @@ class BlueCarbonProject:
             ]
         )
 
-        display(Markdown(full_markdown))
+        if table:
+            # Display the markdown table
+            display(Markdown(full_markdown))
+
+        return {
+            "Project parameters": {
+                **main_dict,
+                f"For {self.activity} Projects Only": additional_parameters,
+            },
+            "Assumptions": {
+                **assumptions_dict,
+                f"For {self.activity} Projects Only": additional_assumptions,
+            },
+            "Cost Inputs": {
+                "CAPEX": capex_cost_dict,
+                "OPEX": opex_cost_dict,
+                "Other": other_cost_dict,
+            },
+        }
