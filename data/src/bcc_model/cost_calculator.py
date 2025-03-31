@@ -517,7 +517,7 @@ class CostCalculator:
                 long_term_project_operating_cost_plan[year] = 0
         return long_term_project_operating_cost_plan
 
-    def get_summary(self):
+    def get_summary(self, table=True):
         """
         Displays a markdown table with a summary of the project costs and revenues.
         """
@@ -550,9 +550,15 @@ class CostCalculator:
             summary_table += f"| {key} | {value} |\n"
         summary_table = re.sub(r"\n\s+\|", "\n|", summary_table.strip())
 
-        display(Markdown(summary_table))
+        # Display the summary table
+        if table:
+            display(Markdown(summary_table))
 
-    def get_cost_estimates(self):
+        return {
+            "Project summary": summary_dict,
+        }
+
+    def get_cost_estimates(self, table=True):
         """
         Displays a markdown table with all the CAPEX and OPEX cost estimates as well as the
         Total cost and NPV cost.
@@ -662,7 +668,20 @@ class CostCalculator:
                 cost_estimates_table += f"| {key} | {total_cost} | {npv} |\n"
         cost_estimates_table = re.sub(r"\n\s+\|", "\n|", cost_estimates_table.strip())
 
-        display(Markdown(cost_estimates_table))
+        # Display the cost estimates table
+        if table:
+            display(Markdown(cost_estimates_table))
+
+        # Create the dataframe
+        df = pd.DataFrame(data)
+
+        # Format Total cost and NPV columns as currency with thousands separators
+        df["Total cost"] = df["Total cost"].apply(
+            lambda x: f"${x:,.0f}" if isinstance(x, (int, float)) else x
+        )
+        df["NPV"] = df["NPV"].apply(lambda x: f"${x:,.0f}" if isinstance(x, (int, float)) else x)
+
+        return df
 
     def get_yearly_cost_breakdown(self, table=True):
         """
