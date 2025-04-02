@@ -164,6 +164,7 @@ export class CustomProjectFactory {
   ): CustomProject {
     const customProject = new CustomProject();
     customProject.projectName = dto.projectName;
+    customProject.abatementPotential = costOutput.costPlans.abatementPotential;
     customProject.country = {
       code: country.code,
       name: country.name,
