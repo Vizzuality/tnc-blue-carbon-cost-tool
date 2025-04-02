@@ -13,11 +13,7 @@ import {
   CustomProjectSummary,
   YearlyBreakdown,
 } from '@shared/dtos/custom-projects/custom-project-output.dto';
-import {
-  AbatementPotentialCalculator,
-  AbatementPotentialParams,
-} from '@api/modules/calculations/calculators/abatement-potential.calculator';
-import { ACTIVITY } from '@shared/entities/activity.enum';
+import { AbatementPotentialCalculator } from '@api/modules/calculations/calculators/abatement-potential.calculator';
 
 export type CostOutput = {
   costPlans: CostPlansOutput;
@@ -48,10 +44,10 @@ export class CalculationEngine {
       sequestrationRateCalculator,
     );
 
-    const abatementPotentialCalculator = new AbatementPotentialCalculator({
+    const abatementPotentialCalculator = new AbatementPotentialCalculator(
       projectInput,
       sequestrationRateCalculator,
-    });
+    );
 
     const costCalculator = new CostCalculator(
       projectInput,
@@ -59,6 +55,7 @@ export class CalculationEngine {
       baseIncrease,
       revenueProfitCalculator,
       sequestrationRateCalculator,
+      abatementPotentialCalculator,
     );
 
     const costPlans = costCalculator.initializeCostPlans();

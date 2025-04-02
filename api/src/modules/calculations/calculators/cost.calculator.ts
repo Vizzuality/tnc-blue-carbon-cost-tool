@@ -19,6 +19,7 @@ import {
 import { PROJECT_DEVELOPMENT_TYPE } from '@shared/dtos/projects/project-development.type';
 import { OverridableCostInputsDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
+import { AbatementPotentialCalculator } from '@api/modules/calculations/calculators/abatement-potential.calculator';
 
 export type CostPlans = Record<
   keyof OverridableCostInputsDto | string,
@@ -43,6 +44,7 @@ export type CostPlansOutput = {
   fundingGap: number;
   fundingGapNPV: number;
   fundingGapPerTCO2e: number;
+  abatementPotential: number;
   totalCommunityBenefitSharingFund: number;
   annualNetCashFlow: CostPlanMap;
   annualNetIncome: CostPlanMap;
@@ -82,12 +84,14 @@ export class CostCalculator {
   totalOpexNPV: number;
   revenueProfitCalculator: RevenueProfitCalculator;
   sequestrationRateCalculator: SequestrationRateCalculator;
+  abatementPotentialCalculator: AbatementPotentialCalculator;
   constructor(
     projectInput: ProjectInput,
     baseSize: BaseSize,
     baseIncrease: BaseIncrease,
     revenueProfitCalculator: RevenueProfitCalculator,
     sequestrationRateCalculator: SequestrationRateCalculator,
+    abatementPotentialCalculator: AbatementPotentialCalculator,
   ) {
     this.projectInput = projectInput;
     this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
@@ -96,6 +100,7 @@ export class CostCalculator {
     this.baseSize = baseSize;
     this.revenueProfitCalculator = revenueProfitCalculator;
     this.sequestrationRateCalculator = sequestrationRateCalculator;
+    this.abatementPotentialCalculator = abatementPotentialCalculator;
   }
 
   initializeCostPlans(): CostPlansOutput {
@@ -175,6 +180,8 @@ export class CostCalculator {
       annualNetIncome,
       true,
     );
+    const abatementPotential =
+      this.abatementPotentialCalculator.calculateAbatementPotential();
 
     return {
       totalOpex,
@@ -199,6 +206,7 @@ export class CostCalculator {
       annualNetIncome,
       estimatedRevenuePlan,
       creditsIssuedPlan,
+      abatementPotential,
     };
   }
 
