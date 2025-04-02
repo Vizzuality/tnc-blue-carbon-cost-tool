@@ -5,8 +5,8 @@ import { ConservationProjectInput } from '@api/modules/custom-projects/input-fac
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
-import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculator';
-import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
+import { RevenueProfitCalculator } from '@api/modules/calculations/calculators/revenue-profit.calculator';
+import { SequestrationRateCalculator } from '@api/modules/calculations/calculators/sequestration-rate.calculator';
 import { parseInt, sum } from 'lodash';
 import { irr } from 'node-irr';
 import {

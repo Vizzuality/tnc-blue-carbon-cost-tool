@@ -3,16 +3,21 @@ import {
   CostCalculator,
   CostPlansOutput,
   ProjectInput,
-} from '@api/modules/calculations/cost.calculator';
+} from '@api/modules/calculations/calculators/cost.calculator';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { BaseSize } from '@shared/entities/base-size.entity';
-import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
-import { RevenueProfitCalculator } from '@api/modules/calculations/revenue-profit.calculator';
+import { SequestrationRateCalculator } from '@api/modules/calculations/calculators/sequestration-rate.calculator';
+import { RevenueProfitCalculator } from '@api/modules/calculations/calculators/revenue-profit.calculator';
 import {
   CustomProjectCostDetails,
   CustomProjectSummary,
   YearlyBreakdown,
 } from '@shared/dtos/custom-projects/custom-project-output.dto';
+import {
+  AbatementPotentialCalculator,
+  AbatementPotentialParams,
+} from '@api/modules/calculations/calculators/abatement-potential.calculator';
+import { ACTIVITY } from '@shared/entities/activity.enum';
 
 export type CostOutput = {
   costPlans: CostPlansOutput;
@@ -42,6 +47,11 @@ export class CalculationEngine {
       projectInput,
       sequestrationRateCalculator,
     );
+
+    const abatementPotentialCalculator = new AbatementPotentialCalculator({
+      projectInput,
+      sequestrationRateCalculator,
+    });
 
     const costCalculator = new CostCalculator(
       projectInput,
