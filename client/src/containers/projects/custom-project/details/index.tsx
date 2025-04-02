@@ -67,7 +67,10 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
         <h2 className="text-base font-semibold">Project details</h2>
         {showEditButton && (
           <Button type="button" variant="ghost" asChild>
-            <Link href={`/projects/${projectId}/edit`}>
+            <Link
+              href={`/projects/${projectId}/edit`}
+              data-testid="edit-project-link"
+            >
               <FileEdit />
               <span>Edit project</span>
             </Link>

@@ -10,7 +10,6 @@ import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emis
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
@@ -47,18 +46,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-export type CustomProjectForm = Omit<
-  ValidatedCustomProjectForm,
-  "costInputs" | "assumptions"
-> & {
-  costInputs?: {
-    [K in keyof ValidatedCustomProjectForm["costInputs"]]: number | undefined;
-  };
-  assumptions?: {
-    [K in keyof ValidatedCustomProjectForm["assumptions"]]: number | undefined;
-  };
-};
 
 export default function SetupProjectForm() {
   const { queryKey } = queryKeys.customProjects.countries;

@@ -11,12 +11,11 @@ import {
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import {
   ConservationCustomProjectSchema,
+  CustomProjectForm,
   LOSS_RATE_USED,
   RestorationCustomProjectSchema,
 } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { z } from "zod";
-
-import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 export const DEFAULT_COMMON_FORM_VALUES: Omit<
   CustomProjectForm,

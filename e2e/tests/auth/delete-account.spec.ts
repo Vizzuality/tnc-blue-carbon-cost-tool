@@ -2,7 +2,7 @@ import { expect, Page, test } from "@playwright/test";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
 import { User } from "@shared/entities/users/user.entity";
 import { ROLES } from "@shared/entities/users/roles.enum";
-import { ROUTES } from "e2e/constants";
+import { ROUTES } from "e2e/lib/constants";
 
 let testManager: E2eTestManager;
 let page: Page;

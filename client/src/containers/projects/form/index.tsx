@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { type CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { CustomProjectFormSchema } from "@shared/schemas/custom-projects/custom-project-form.schema";
 import { useSetAtom } from "jotai";
 import { parseAsBoolean, useQueryState } from "nuqs";
@@ -13,7 +14,6 @@ import { useScrollSpy } from "@/hooks/use-scroll-spy";
 
 import Header from "@/containers/projects/form/header";
 import ProjectForm from "@/containers/projects/form/project-form";
-import { type CustomProjectForm } from "@/containers/projects/form/setup";
 import ProjectSidebar from "@/containers/projects/form/sidebar";
 import { useDefaultFormValues } from "@/containers/projects/form/utils";
 import { formStepAtom } from "@/containers/projects/store";

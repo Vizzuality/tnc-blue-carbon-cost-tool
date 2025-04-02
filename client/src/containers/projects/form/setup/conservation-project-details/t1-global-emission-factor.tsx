@@ -3,13 +3,13 @@ import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
+import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 import { formatNumber } from "@/lib/format";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import ReadonlyInput from "@/containers/projects/form/readonly-input";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 import { FormLabel } from "@/components/ui/form";
 
