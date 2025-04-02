@@ -12,7 +12,8 @@ const signInUser = async (testManager: E2eTestManager) => {
 };
 
 const createAndSignInUser = async (testManager: E2eTestManager) => {
-  await testManager.login(TEST_USER as User);
+  await createUser(testManager);
+  await signInUser(testManager);
 };
 
 const insertProjectName = async (page: Page, projectName = PROJECT_NAME) => {
