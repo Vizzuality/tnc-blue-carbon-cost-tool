@@ -34,6 +34,7 @@ export type AdditionalBaseData = {
   otherCommunityCashFlow: BaseDataView['otherCommunityCashFlow'];
   tier1SequestrationRate: BaseDataView['tier1SequestrationRate'];
   tier2SequestrationRate: BaseDataView['tier2SequestrationRate'];
+  restorableLand: BaseDataView['restorableLand'];
 };
 
 const COMMON_OVERRIDABLE_COST_INPUTS = [
@@ -167,6 +168,7 @@ export class DataRepository extends Repository<BaseDataView> {
         'otherCommunityCashFlow',
         'tier1SequestrationRate',
         'tier2SequestrationRate',
+        'restorableLand',
       ],
     });
 
