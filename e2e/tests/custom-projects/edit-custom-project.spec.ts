@@ -3,8 +3,9 @@ import { E2eTestManager } from "@shared/lib/e2e-test-manager";
 import { EXTENDED_TIMEOUT, PROJECT_NAME } from "e2e/lib/constants";
 import {
   createAndSaveCustomProject,
-  createAndSignInUser,
+  createUser,
   navigateToEditCustomProject,
+  signInUser,
 } from "e2e/lib/utils";
 import {
   getCapexCostInputsKeys,
@@ -21,6 +22,7 @@ test.describe("Custom Projects - Edit", () => {
     page = await browser.newPage();
     testManager = await E2eTestManager.load(page);
     await testManager.ingestBaseData();
+    await createUser(testManager);
   });
 
   test.afterAll(async () => {
@@ -29,7 +31,7 @@ test.describe("Custom Projects - Edit", () => {
   });
 
   test("A user can see two Edit project links with correct URL patterns after creating a custom project", async () => {
-    await createAndSignInUser(testManager);
+    await signInUser(testManager);
     await createAndSaveCustomProject(page);
 
     await page.waitForLoadState("networkidle");
@@ -47,7 +49,7 @@ test.describe("Custom Projects - Edit", () => {
   });
 
   test("A user can see the edit project page with the pre-filled data from the created custom project", async () => {
-    await createAndSignInUser(testManager);
+    await signInUser(testManager);
     const responsePromise = page.waitForResponse(`**/custom-projects`);
     await createAndSaveCustomProject(page);
     // check for post request to custom-projects
