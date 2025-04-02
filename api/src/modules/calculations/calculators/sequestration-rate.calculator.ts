@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProjectInput } from '@api/modules/calculations/cost.calculator';
+import { ProjectInput } from '@api/modules/calculations/calculators/cost.calculator';
 import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
@@ -9,6 +9,7 @@ import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
 import { OverridableAssumptionsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
+import { CalculationException } from '@api/modules/calculations/calculators/error';
 
 @Injectable()
 export class SequestrationRateCalculator {
@@ -23,6 +24,9 @@ export class SequestrationRateCalculator {
   sequestrationRate: RestorationProjectInput['sequestrationRate'];
   restorationRate: OverridableAssumptionsDto['restorationRate'];
   soilOrganicCarbonReleaseLength: NonOverridableModelAssumptions['soilOrganicCarbonReleaseLength'];
+  cumulativeLoss: CostPlanMap;
+  projectedLoss: CostPlanMap;
+  annualAvoidedLoss: CostPlanMap;
   constructor(projectInput: ProjectInput) {
     this.projectInput = projectInput;
     this.activity = projectInput.activity;
@@ -38,6 +42,10 @@ export class SequestrationRateCalculator {
     }
     this.soilOrganicCarbonReleaseLength =
       projectInput.assumptions.soilOrganicCarbonReleaseLength;
+
+    this.projectedLoss = this.calculateProjectedLoss();
+    this.annualAvoidedLoss = this.calculateAnnualAvoidedLoss();
+    this.cumulativeLoss = this.calculateCumulativeLossRate();
   }
 
   calculateEstimatedCreditsIssuedPlan(): CostPlanMap {
@@ -197,7 +205,7 @@ export class SequestrationRateCalculator {
     const cumulativeLoss = this.calculateCumulativeLossRate();
     const cumulativeLossRateIncorporatingSOC =
       this.calculateCumulativeLossRateIncorporatingSOCReleaseTime();
-    const annualAvoidedLoss = this.calculateAnnualAvoidedLoss();
+    const annualAvoidedLoss = this.getAnnualAvoidedLoss();
 
     for (const yearStr in baselineEmissionPlan) {
       const year = Number(yearStr);
@@ -281,8 +289,7 @@ export class SequestrationRateCalculator {
       cumulativeLossRate[year] = 0;
     }
 
-    const annualAvoidedLoss: { [year: number]: number } =
-      this.calculateAnnualAvoidedLoss();
+    const annualAvoidedLoss = this.getAnnualAvoidedLoss();
 
     for (const yearStr in cumulativeLossRate) {
       const year = Number(yearStr);
@@ -315,7 +322,7 @@ export class SequestrationRateCalculator {
       cumulativeLossRateIncorporatingSOC[year] = 0;
     }
 
-    const cumulativeLoss = this.calculateCumulativeLossRate();
+    const cumulativeLoss = this.cumulativeLoss;
 
     for (const yearStr in cumulativeLossRateIncorporatingSOC) {
       const year = Number(yearStr);
@@ -344,8 +351,7 @@ export class SequestrationRateCalculator {
       );
     }
 
-    const projectedLoss: { [year: number]: number } =
-      this.calculateProjectedLoss();
+    const projectedLoss = this.projectedLoss;
 
     const annualAvoidedLoss: { [year: number]: number } = {};
     for (let year = 1; year <= this.defaultProjectLength; year++) {
@@ -367,6 +373,8 @@ export class SequestrationRateCalculator {
         annualAvoidedLoss[year] = 0;
       }
     }
+
+    this.annualAvoidedLoss = annualAvoidedLoss;
 
     return annualAvoidedLoss;
   }
@@ -405,5 +413,14 @@ export class SequestrationRateCalculator {
     }
 
     return annualProjectedLoss;
+  }
+
+  getAnnualAvoidedLoss(): CostPlanMap {
+    if (!this.annualAvoidedLoss) {
+      throw new CalculationException(
+        `Could not retrieve annual avoided loss as it is not computed yet`,
+      );
+    }
+    return this.annualAvoidedLoss;
   }
 }
