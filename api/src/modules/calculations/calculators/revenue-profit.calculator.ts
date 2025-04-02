@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ProjectInput } from '@api/modules/calculations/cost.calculator';
-import { SequestrationRateCalculator } from '@api/modules/calculations/sequestration-rate.calculator';
+import { ProjectInput } from '@api/modules/calculations/calculators/cost.calculator';
+import { SequestrationRateCalculator } from '@api/modules/calculations/calculators/sequestration-rate.calculator';
 import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
 @Injectable()

@@ -4,7 +4,7 @@ import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
 import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
 import { CostOutput } from '@api/modules/calculations/calculation.engine';
-import { ProjectInput } from '@api/modules/calculations/cost.calculator';
+import { ProjectInput } from '@api/modules/calculations/calculators/cost.calculator';
 import {
   CARBON_REVENUES_TO_COVER,
   CustomProject,
