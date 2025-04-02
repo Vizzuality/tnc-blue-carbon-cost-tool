@@ -3,8 +3,15 @@ import { User } from "@shared/entities/users/user.entity";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
 import { PROJECT_NAME, ROUTES, TEST_USER } from "e2e/lib/constants";
 
-const createAndSignInUser = async (testManager: E2eTestManager) => {
+const createUser = async (testManager: E2eTestManager) => {
   await testManager.mocks().createUser(TEST_USER);
+};
+
+const signInUser = async (testManager: E2eTestManager) => {
+  await testManager.login(TEST_USER as User);
+};
+
+const createAndSignInUser = async (testManager: E2eTestManager) => {
   await testManager.login(TEST_USER as User);
 };
 
@@ -44,7 +51,9 @@ const getDataFromNetworkRequest = async (page: Page, url: string) => {
 };
 
 export {
+  createUser,
   createAndSignInUser,
+  signInUser,
   insertProjectName,
   insertProjectSpecificLossRate,
   submitCustomProject,
