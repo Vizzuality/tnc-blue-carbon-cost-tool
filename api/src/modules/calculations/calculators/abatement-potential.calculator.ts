@@ -17,9 +17,11 @@ export class AbatementPotentialCalculator {
     this.projectLength = input.assumptions.projectLength;
     this.sequestrationRate = sequestrationRateCalculator.sequestrationRate;
     this.restorableLand = input.costAndCarbonInputs.restorableLand;
-    this.annualAvoidedEmissions = sum(
-      Object.values(sequestrationRateCalculator.getAnnualAvoidedLoss()),
-    );
+    if (this.activity === ACTIVITY.CONSERVATION) {
+      this.annualAvoidedEmissions = sum(
+        Object.values(sequestrationRateCalculator.getAnnualAvoidedLoss()),
+      );
+    }
   }
 
   calculateAbatementPotential(): number {
