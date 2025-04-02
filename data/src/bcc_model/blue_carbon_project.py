@@ -77,9 +77,6 @@ class BlueCarbonProject:
 
         # Conservation-specific attributes:
         self.loss_rate_used = loss_rate_used
-        if self.activity == "Conservation":
-            self._get_loss_rate()
-            self._get_emission_factor()
         self.project_specific_loss_rate = project_specific_loss_rate
         self.emission_factor_used = emission_factor_used
         self.tier_3_project_specific_emission = tier_3_project_specific_emission
@@ -88,6 +85,9 @@ class BlueCarbonProject:
         )
         self.tier_3_emission_factor_agb = tier_3_emission_factor_agb
         self.tier_3_emission_factor_soc = tier_3_emission_factor_soc
+        if self.activity == "Conservation":
+            self._get_loss_rate()
+            self._get_emission_factor()
 
         # Restoration-specific attributes:
         self.restoration_activity = restoration_activity
@@ -195,16 +195,25 @@ class BlueCarbonProject:
             raise ValueError("Emission factor can only be calculated for conservation projects.")
         if self.emission_factor_used == "Tier 1 - Global emission factor":
             self.emission_factor = get_value_from_master_table(
-                self.master_table, self.country_code, self.ecosystem, "tier_1_emission_factor"
+                self.master_table,
+                self.country_code,
+                self.ecosystem,
+                "tier_1_global_emission_factor",
             )
             self.emission_factor_AGB = None
             self.emission_factor_SOC = None
         elif self.emission_factor_used == "Tier 2 - Country-specific emission factor":
             self.emission_factor_AGB = get_value_from_master_table(
-                self.master_table, self.country_code, self.ecosystem, "emission_factor_AGB"
+                self.master_table,
+                self.country_code,
+                self.ecosystem,
+                "tier_2_country_specific_emission_factor_agb",
             )
             self.emission_factor_SOC = get_value_from_master_table(
-                self.master_table, self.country_code, self.ecosystem, "emission_factor_SOC"
+                self.master_table,
+                self.country_code,
+                self.ecosystem,
+                "tier_2_country_specific_emission_factor_soc",
             )
             self.emission_factor = None
         elif self.emission_factor_used == "Tier 3 - Project specific emission factor":
@@ -451,8 +460,8 @@ class BlueCarbonProject:
                 else None,
             }
             additional_assumptions = {
-                "Restoration project length (yr)": self.restoration_project_length,
                 "Restoration rate (ha/yr)": self.restoration_rate,
+                "Restoration project length (yr)": self.restoration_project_length,
             }
         else:
             additional_parameters = {
@@ -492,7 +501,7 @@ class BlueCarbonProject:
         # Main parameters
         main_dict = {
             "Project size (ha)": f"{self.project_size_ha}",
-            "Initial carbon price assumption ($)": f"{self.carbon_price}",
+            "Initial carbon price assumption ($)": self.carbon_price,
             "Country": f"{self.country}",
             "Ecosystem": f"{self.ecosystem}",
             "Activity": f"{self.activity}",
@@ -556,7 +565,7 @@ class BlueCarbonProject:
             "Blue carbon project planning ($/project)": f"{
                 float(self.blue_carbon_project_planning):,.0f
             }",
-            "Establishing carbon rights ($/yr)": f"{float(self.blue_carbon_project_planning):,.0f}",
+            "Establishing carbon rights ($/yr)": f"{float(self.establishing_carbon_rights):,.0f}",
             "Validation ($/project)": f"{float(self.validation):,.0f}",
             "Implementation labor ($/ha)": f"{float(self.implementation_labor):,.0f}",
         }

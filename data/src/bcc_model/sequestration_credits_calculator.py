@@ -110,24 +110,24 @@ class SequestrationCreditsCalculator:
             sequestration_rate_tier_1 = self.project.master_table.loc[
                 (self.project.master_table["country_code"] == self.project.country_code)
                 & (self.project.master_table["ecosystem"] == self.project.ecosystem),
-                "tier_1_sequestration_rate",
+                "tier_1_ipcc_default_value",
             ].values[0]
             if self.project.emission_factor_used == "Tier 1 - Global emission factor":
                 emission_factor = self.project.master_table.loc[
                     (self.project.master_table["country_code"] == self.project.country_code)
                     & (self.project.master_table["ecosystem"] == self.project.ecosystem),
-                    "tier_1_emission_factor",
+                    "tier_1_global_emission_factor",
                 ].values[0]
             elif self.project.emission_factor_used == "Tier 2 - Country-specific emission factor":
                 emission_factor_agb = self.project.master_table.loc[
                     (self.project.master_table["country_code"] == self.project.country_code)
                     & (self.project.master_table["ecosystem"] == self.project.ecosystem),
-                    "emission_factor_AGB",
+                    "tier_2_country_specific_emission_factor_agb",
                 ].values[0]
                 emission_factor_soc = self.project.master_table.loc[
                     (self.project.master_table["country_code"] == self.project.country_code)
                     & (self.project.master_table["ecosystem"] == self.project.ecosystem),
-                    "emission_factor_SOC",
+                    "tier_2_country_specific_emission_factor_soc",
                 ].values[0]
             else:
                 emission_factor_agb = self.project.emission_factor_AGB
@@ -198,9 +198,9 @@ class SequestrationCreditsCalculator:
                 "Cumulative loss rate can only be calculated for conservation projects."
             )
         else:
-            cumulative_loss_rate = {
-                year: 0 for year in range(1, self.project.default_project_length + 1)
-            }
+            cumulative_loss_rate = dict.fromkeys(
+                range(1, self.project.default_project_length + 1), 0
+            )
             annual_avoided_loss = self.calculate_annual_avoided_loss()
             for year, _ in cumulative_loss_rate.items():
                 if year <= self.project_length:
@@ -223,9 +223,9 @@ class SequestrationCreditsCalculator:
                 "Cumulative loss rate can only be calculated for conservation projects."
             )
         else:
-            cumulative_loss_rate_incorporating_soc = {
-                year: 0 for year in range(1, self.project.default_project_length + 1)
-            }
+            cumulative_loss_rate_incorporating_soc = dict.fromkeys(
+                range(1, self.project.default_project_length + 1), 0
+            )
             cumulative_loss = self.calculate_cumulative_loss_rate()
             for year, _ in cumulative_loss_rate_incorporating_soc.items():
                 if year <= self.project_length:
@@ -249,9 +249,9 @@ class SequestrationCreditsCalculator:
             raise ValueError("Avoided loss can only be calculated for conservation projects.")
         else:
             projected_loss = self.calculate_projected_loss()
-            annual_avoided_loss = {
-                year: 0 for year in range(1, self.project.default_project_length + 1)
-            }
+            annual_avoided_loss = dict.fromkeys(
+                range(1, self.project.default_project_length + 1), 0
+            )
             for year, _ in annual_avoided_loss.items():
                 if year <= self.project_length:
                     if year == 1:
