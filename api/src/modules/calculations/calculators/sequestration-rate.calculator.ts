@@ -43,9 +43,11 @@ export class SequestrationRateCalculator {
     this.soilOrganicCarbonReleaseLength =
       projectInput.assumptions.soilOrganicCarbonReleaseLength;
 
-    this.projectedLoss = this.calculateProjectedLoss();
-    this.annualAvoidedLoss = this.calculateAnnualAvoidedLoss();
-    this.cumulativeLoss = this.calculateCumulativeLossRate();
+    if (this.activity === ACTIVITY.CONSERVATION) {
+      this.projectedLoss = this.calculateProjectedLoss();
+      this.annualAvoidedLoss = this.calculateAnnualAvoidedLoss();
+      this.cumulativeLoss = this.calculateCumulativeLossRate();
+    }
   }
 
   calculateEstimatedCreditsIssuedPlan(): CostPlanMap {
