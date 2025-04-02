@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ImportService } from './import.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { ImportController } from '@api/modules/import/import.controller';
 import { XlsxParser } from '@api/modules/import/services/xlsx.parser';
@@ -11,6 +10,7 @@ import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingest
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 import { ProjectsModule } from '@api/modules/projects/projects.module';
+import { ImportServiceProvider } from '@api/modules/import/import-service.provider';
 
 @Module({
   imports: [
@@ -21,13 +21,13 @@ import { ProjectsModule } from '@api/modules/projects/projects.module';
   ],
   controllers: [ImportController],
   providers: [
-    ImportService,
     EntityPreprocessor,
     ImportRepository,
     ImportEventHandler,
     // TODO: Which parser is being used here?
     DataIngestionExcelParser,
     { provide: ExcelParserToken, useClass: XlsxParser },
+    ImportServiceProvider,
   ],
 })
 export class ImportModule {}
