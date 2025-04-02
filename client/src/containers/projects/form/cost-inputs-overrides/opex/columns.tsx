@@ -1,13 +1,11 @@
 import React from "react";
 
+import { COST_INPUTS_KEYS } from "@shared/dtos/custom-projects/custom-projects.constants";
+import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { createColumnHelper } from "@tanstack/react-table";
 
 import CellValue from "@/containers/projects/form/cell-value";
-import {
-  COST_INPUTS_KEYS,
-  DataColumnDef,
-} from "@/containers/projects/form/cost-inputs-overrides/constants";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
+import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
 import {
   formatCellValue,
   shouldFormatToPercentage,

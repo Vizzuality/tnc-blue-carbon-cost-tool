@@ -1,13 +1,12 @@
 import { useFormContext, useWatch } from "react-hook-form";
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
+import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 import AssumptionsProjectForm from "@/containers/projects/form/assumptions";
 import CostInputsOverridesProjectForm from "@/containers/projects/form/cost-inputs-overrides";
 import RestorationPlanProjectForm from "@/containers/projects/form/restoration-plan";
-import SetupProjectForm, {
-  CustomProjectForm,
-} from "@/containers/projects/form/setup";
+import SetupProjectForm from "@/containers/projects/form/setup";
 import {
   PROJECT_SETUP_STEPS,
   RESTORATION_STEPS,

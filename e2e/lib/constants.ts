@@ -10,6 +10,8 @@ export const TEST_USER: Pick<
   partnerName: "admin",
 };
 
+export const PROJECT_NAME = "test";
+
 export const EXTENDED_TIMEOUT = 60_000;
 
 export const ROUTES = {

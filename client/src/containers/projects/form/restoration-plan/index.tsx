@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 
 import { useFormContext } from "react-hook-form";
 
+import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import {
   flexRender,
   getCoreRowModel,
@@ -13,7 +14,6 @@ import { queryKeys } from "@/lib/query-keys";
 
 import { useFormValues } from "@/containers/projects/form/project-form";
 import { COLUMNS } from "@/containers/projects/form/restoration-plan/columns";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
 import { getRestorationPlanTableData } from "@/containers/projects/form/utils";
 
 import {

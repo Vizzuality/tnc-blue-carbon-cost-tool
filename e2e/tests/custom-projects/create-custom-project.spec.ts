@@ -1,7 +1,12 @@
 import { Page, test, expect, Locator } from "@playwright/test";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
-import { EXTENDED_TIMEOUT, ROUTES } from "e2e/constants";
+import { EXTENDED_TIMEOUT, ROUTES } from "e2e/lib/constants";
+import {
+  insertProjectName,
+  insertProjectSpecificLossRate,
+  submitCustomProject,
+} from "e2e/lib/utils";
 
 let testManager: E2eTestManager;
 let page: Page;
@@ -26,28 +31,18 @@ test.describe("Custom Projects - Create", () => {
   });
 
   test.describe("Form validation", () => {
-    const projectName = "test project";
-    const insertProjectName = async () => {
-      await page.getByRole("textbox", { name: "Insert project name" }).click();
-      await page
-        .getByRole("textbox", { name: "Insert project name" })
-        .fill(projectName);
-    };
-    const submitCustomProjectAndCheckPreview = async () => {
-      await page.getByRole("button", { name: "Continue" }).click();
-      await page.waitForURL(ROUTES.projects.preview);
-      await expect(
-        page.getByRole("heading", { name: projectName }),
-      ).toBeVisible();
-    };
     test.beforeAll(async () => {
       await page.goto(ROUTES.projects.new);
     });
 
     test("I can create a custom project with default values", async () => {
-      await insertProjectName();
-      await page.locator("#parameters\\.projectSpecificLossRate").fill("-1");
-      await submitCustomProjectAndCheckPreview();
+      const projectName = "test project";
+      await insertProjectName(page, projectName);
+      await insertProjectSpecificLossRate(page);
+      await submitCustomProject(page);
+      await expect(
+        page.getByRole("heading", { name: projectName }),
+      ).toBeVisible();
     });
 
     test("The correct errors are displayed upon invalid form submission", async () => {

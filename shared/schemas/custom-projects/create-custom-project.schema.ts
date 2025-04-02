@@ -298,3 +298,15 @@ const ValidateAssumptionsSchema = (
 export type ValidatedCustomProjectForm = z.infer<
   typeof CreateCustomProjectSchema
 >;
+
+export type CustomProjectForm = Omit<
+  ValidatedCustomProjectForm,
+  "costInputs" | "assumptions"
+> & {
+  costInputs?: {
+    [K in keyof ValidatedCustomProjectForm["costInputs"]]: number | undefined;
+  };
+  assumptions?: {
+    [K in keyof ValidatedCustomProjectForm["assumptions"]]: number | undefined;
+  };
+};

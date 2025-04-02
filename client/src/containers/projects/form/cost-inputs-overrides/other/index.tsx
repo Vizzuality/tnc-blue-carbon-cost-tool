@@ -1,3 +1,4 @@
+import { COST_INPUTS_KEYS } from "@shared/dtos/custom-projects/custom-projects.constants";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { COSTS_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -5,17 +6,13 @@ import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
-import {
-  COST_INPUTS_KEYS,
-  DataColumnDef,
-} from "@/containers/projects/form/cost-inputs-overrides/constants";
+import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
 import {
   COLUMNS,
   OtherFormProperty,
 } from "@/containers/projects/form/cost-inputs-overrides/other/columns";
 import { useFormValues } from "@/containers/projects/form/project-form";
 import FormTable from "@/containers/projects/form/table";
-
 const NO_DATA: DataColumnDef<OtherFormProperty>[] = [];
 
 export default function OtherCostInputsTable() {

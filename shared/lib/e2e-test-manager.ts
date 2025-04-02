@@ -14,7 +14,7 @@ import * as path from "path";
 import { adminContract } from "@shared/contracts/admin.contract";
 import { API_URL } from "e2e/playwright.config";
 import { ROLES } from "@shared/entities/users/roles.enum";
-import { ROUTES } from "e2e/constants";
+import { ROUTES } from "e2e/lib/constants";
 
 const AppDataSource = new DataSource({
   type: "postgres",
