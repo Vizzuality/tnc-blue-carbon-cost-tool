@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import {
   CreateCustomProjectSchema,
+  CustomProjectForm,
   LOSS_RATE_USED,
 } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useQueryClient } from "@tanstack/react-query";
@@ -14,7 +15,6 @@ import { useSession } from "next-auth/react";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
 
-import { CustomProjectForm } from "@/containers/projects/form/setup";
 import {
   createCustomProject,
   updateCustomProject,

@@ -1,8 +1,8 @@
+import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { createColumnHelper } from "@tanstack/react-table";
 
 import CellValue from "@/containers/projects/form/cell-value";
 import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
 import {
   formatCellValue,
   shouldFormatToPercentage,

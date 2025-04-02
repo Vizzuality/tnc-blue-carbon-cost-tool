@@ -8,6 +8,7 @@ import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject } from "@shared/entities/custom-project.entity";
 import { MAX_PROJECT_LENGTH } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
@@ -21,8 +22,6 @@ import {
   DEFAULT_RESTORATION_FORM_VALUES,
 } from "@/containers/projects/form/constants";
 import { RestorationPlanFormProperty } from "@/containers/projects/form/restoration-plan/columns";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
-
 /**
  * Note: All percentage values are kept in decimal form,
  * formatting to whole percentage values (for UI display) is done at input component level
@@ -100,6 +99,7 @@ export const useDefaultFormValues = (
       | "carbonRevenuesToCover"
       | "initialCarbonPriceAssumption"
       | "assumptions"
+      | "costInputs"
     > = {
       projectName: project.projectName,
       ecosystem: project.ecosystem,
@@ -117,6 +117,7 @@ export const useDefaultFormValues = (
         restorationRate: project?.input.assumptions.restorationRate,
         verificationFrequency: project?.input.assumptions.verificationFrequency,
       },
+      costInputs: project?.input.costInputs,
     };
 
     if (project.activity === ACTIVITY.RESTORATION) {

@@ -4,6 +4,7 @@ import {
   ASSUMPTIONS_NAME_TO_DTO_MAP,
   ASSUMPTIONS_NAME_TO_TOOLTIP_MAP,
 } from "@shared/schemas/assumptions/assumptions.enums";
+import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 import { client } from "@/lib/query-client";
@@ -16,7 +17,6 @@ import {
   COLUMNS,
 } from "@/containers/projects/form/assumptions/columns";
 import { DataColumnDef } from "@/containers/projects/form/cost-inputs-overrides/constants";
-import { CustomProjectForm } from "@/containers/projects/form/setup";
 import FormTable from "@/containers/projects/form/table";
 
 import {

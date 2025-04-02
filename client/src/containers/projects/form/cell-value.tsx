@@ -2,10 +2,10 @@ import { ComponentProps } from "react";
 
 import { useFormContext } from "react-hook-form";
 
-import { toDecimalPercentageValue } from "@/lib/format";
-import { cn } from "@/lib/utils";
+import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
-import { CustomProjectForm } from "@/containers/projects/form/setup";
+import { toDecimalPercentageValue, toPercentageValue } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 import {
   FormControl,
@@ -43,7 +43,11 @@ export default function CellValue({
                 type="number"
                 placeholder="Insert value"
                 min={0}
-                defaultValue={value as number}
+                defaultValue={
+                  isPercentage
+                    ? toPercentageValue(value as number)
+                    : (value as number)
+                }
                 onChange={(e) => {
                   const value = e.target.value;
                   if (isPercentage && value) {

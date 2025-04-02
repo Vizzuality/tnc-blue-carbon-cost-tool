@@ -9,13 +9,12 @@ import {
   assumptionsArrayToMap,
 } from "@shared/lib/transform-create-custom-project-payload";
 import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
 import { getQueryClient } from "@/app/providers";
-
-import { CustomProjectForm } from "@/containers/projects/form/setup";
 
 // These will be overridden by actual values from the API or user input
 const DEFAULT_COST_INPUTS = {
