@@ -181,7 +181,7 @@ export class CostCalculator {
       true,
     );
     const abatementPotential =
-      this.abatementPotentialCalculator.calculateAbatementPotential();
+      this.abatementPotentialCalculator.calculateCountryLevelAbatementPotential();
 
     return {
       totalOpex,
