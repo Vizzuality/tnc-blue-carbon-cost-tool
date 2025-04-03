@@ -130,7 +130,7 @@ export default function RestorationProjectDetails() {
           <div className="basis-1/2 space-y-2">
             <FormField
               control={form.control}
-              name="parameters.restorationActivity"
+              name="parameters.tierSelector"
               render={() => (
                 <FormItem className="basis-1/2">
                   <FormLabel
@@ -191,7 +191,7 @@ export default function RestorationProjectDetails() {
                 formItemClassName="basis-1/2"
                 formControlClassName="after:content-['%']"
                 min={0}
-                initialValue={form.getValues("parameters.plantingSuccessRate")}
+                value={form.getValues("parameters.plantingSuccessRate")}
                 isPercentage
                 readOnly
                 disabled
