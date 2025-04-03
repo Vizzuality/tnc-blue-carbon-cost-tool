@@ -9,6 +9,11 @@ import { CustomProject } from "@shared/entities/custom-project.entity";
 import { MAX_PROJECT_LENGTH } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import {
+  DEFAULT_COMMON_FORM_VALUES,
+  DEFAULT_CONSERVATION_FORM_VALUES,
+  DEFAULT_RESTORATION_FORM_VALUES,
+} from "@shared/schemas/custom-projects/custom-project-form.constants";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
@@ -16,11 +21,6 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
 
-import {
-  DEFAULT_COMMON_FORM_VALUES,
-  DEFAULT_CONSERVATION_FORM_VALUES,
-  DEFAULT_RESTORATION_FORM_VALUES,
-} from "@/containers/projects/form/constants";
 import { RestorationPlanFormProperty } from "@/containers/projects/form/restoration-plan/columns";
 /**
  * Note: All percentage values are kept in decimal form,
