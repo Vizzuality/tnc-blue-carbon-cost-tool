@@ -8,7 +8,7 @@ export class AbatementPotentialCalculator {
   projectLength: number;
   sequestrationRate: number;
   restorableLand: number;
-  annualAvoidedEmissions: number;
+  annualAvoidedEmissionsSum: number;
   constructor(
     input: ProjectInput,
     sequestrationRateCalculator: SequestrationRateCalculator,
@@ -18,7 +18,7 @@ export class AbatementPotentialCalculator {
     this.sequestrationRate = sequestrationRateCalculator.sequestrationRate;
     this.restorableLand = input.costAndCarbonInputs.restorableLand;
     if (this.activity === ACTIVITY.CONSERVATION) {
-      this.annualAvoidedEmissions = sum(
+      this.annualAvoidedEmissionsSum = sum(
         Object.values(sequestrationRateCalculator.getAnnualAvoidedLoss()),
       );
     }
@@ -34,7 +34,7 @@ export class AbatementPotentialCalculator {
       case ACTIVITY.CONSERVATION:
         return this.calculateConservationAbatementPotential({
           projectLength: this.projectLength,
-          annualAvoidedEmissions: this.annualAvoidedEmissions,
+          annualAvoidedEmissionsSum: this.annualAvoidedEmissionsSum,
         });
     }
   }
@@ -47,16 +47,15 @@ export class AbatementPotentialCalculator {
     return abatementPotential;
   }
 
+  // TODO: Check if we should use project length or default project length to compute abatement potential, and if there is any difference
+  //       between regular projects and custom projects when computing abatement potential
+
   calculateConservationAbatementPotential(params: {
     projectLength: number;
-    annualAvoidedEmissions: number;
+    annualAvoidedEmissionsSum: number;
   }): number {
-    const annualAvoidedEmissionsTotal = sum(
-      Object.values(params.annualAvoidedEmissions),
-    );
-
     const abatementPotential =
-      annualAvoidedEmissionsTotal * params.projectLength;
+      params.annualAvoidedEmissionsSum * params.projectLength;
     return abatementPotential;
   }
 }

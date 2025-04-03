@@ -41,7 +41,7 @@ describe.skip('ProjectsCalculationService', () => {
     const createProjectDTO: CreateProjectDto = {
       projectName: 'United States Mangrove Conservation Small',
       countryCode: 'USA',
-      ecosystem: 'Mangrove' as ECOSYSTEM,
+      ecosystem: 'Seagrass' as ECOSYSTEM,
       activity: 'Conservation' as ACTIVITY,
       //restorationActivity: 'Planting' as RESTORATION_ACTIVITY_SUBTYPE,
       projectSizeHa: 4000,
