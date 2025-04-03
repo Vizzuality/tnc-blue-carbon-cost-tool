@@ -45,6 +45,7 @@ export type CostPlansOutput = {
   fundingGapNPV: number;
   fundingGapPerTCO2e: number;
   abatementPotential: number;
+  countryAbatementPotential: number;
   totalCommunityBenefitSharingFund: number;
   annualNetCashFlow: CostPlanMap;
   annualNetIncome: CostPlanMap;
@@ -183,6 +184,9 @@ export class CostCalculator {
     const abatementPotential =
       this.abatementPotentialCalculator.calculateProjectLevelAbatementPotential();
 
+    const countryAbatementPotential =
+      this.abatementPotentialCalculator.calculateCountryLevelAbatementPotential();
+
     return {
       totalOpex,
       totalCapex,
@@ -207,6 +211,7 @@ export class CostCalculator {
       estimatedRevenuePlan,
       creditsIssuedPlan,
       abatementPotential,
+      countryAbatementPotential,
     };
   }
 
