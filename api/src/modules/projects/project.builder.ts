@@ -52,19 +52,21 @@ export class ProjectBuilder {
     project.projectSize = this.dto.projectSizeHa;
     project.priceType = this.dto.priceType;
     project.initialPriceAssumption = this.dto.initialCarbonPriceAssumption;
-    project.initialPriceAssumption = this.dto.initialCarbonPriceAssumption;
     project.scoreCardRating = this.score;
-    this.assignCosts();
-    this.assignProjectSizeFilter();
+    const projectWithCosts = this.assignCosts(project);
+    const projectWithSizeFilter =
+      this.assignProjectSizeFilter(projectWithCosts);
+    this.project = projectWithSizeFilter;
     return this.project;
   }
 
-  private assignCosts(): void {
+  private assignCosts(computedProject: Project): Project {
     // assign costs to project
-    const computedProject = this.project;
     const costOutputs = this.costOutput;
-    // TODO: We are missing abatement potential here (need to compute)
-    //computedProject.abatementPotential = this.dto.abatementPotential;
+    computedProject.countryAbatementPotential =
+      costOutputs.costPlans.countryAbatementPotential;
+    computedProject.abatementPotential =
+      costOutputs.costPlans.abatementPotential;
     computedProject.totalCostNPV = costOutputs.costDetails.npv.totalCost;
     computedProject.totalCost = costOutputs.costDetails.total.totalCost;
     computedProject.capexNPV = costOutputs.costDetails.npv.capitalExpenditure;
@@ -135,7 +137,7 @@ export class ProjectBuilder {
     computedProject.totalRevenueNPV = costOutputs.costPlans.totalRevenueNPV;
     computedProject.totalRevenue = costOutputs.costPlans.totalRevenue;
     computedProject.creditsIssued = costOutputs.costPlans.totalCreditsIssued;
-    this.project = computedProject;
+    return computedProject;
   }
 
   // TODO: As was questioned previously, it seems that size filter criteria is not a single criteria but it's a combination of
@@ -143,14 +145,13 @@ export class ProjectBuilder {
   //       be able to change the criteria dynamically. Double check with the science team.
   //       for reference, check cell number 6 in https://github.com/Vizzuality/tnc-blue-carbon-cost-tool/blob/96f57ab451d4171f341365cdba75f7bd89a1e66d/data/notebooks/High_level_overview.ipynb
 
-  private assignProjectSizeFilter(): void {
-    const project = this.project;
+  private assignProjectSizeFilter(project: Project): Project {
     const { ecosystem, activity } = project;
     project.projectSizeFilter = getProjectSizeFilter(
       ecosystem,
       activity,
       this.projectSize,
     );
-    this.project = project;
+    return project;
   }
 }
