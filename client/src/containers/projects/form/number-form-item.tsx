@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 
 import { toPercentageValue, toDecimalPercentageValue } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -34,17 +34,18 @@ export default function NumberFormItem({
   formControlClassName,
   onValueChange,
   placeholder,
+  value,
   "data-testid": dataTestId,
   ...props
 }: NumberFormItemProps) {
-  const [value, setValue] = useState<string>(
+  const [state, setState] = useState<string>(
     isPercentage && typeof initialValue === "number"
       ? toPercentageValue(initialValue)
       : (initialValue?.toString() ?? ""),
   );
   const handleOnChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    setValue(newValue);
+    setState(newValue);
 
     if (onValueChange) {
       if (newValue === "") {
@@ -57,6 +58,12 @@ export default function NumberFormItem({
       }
     }
   };
+
+  useEffect(() => {
+    if (value) {
+      setState(value.toString());
+    }
+  }, [value]);
 
   return (
     <FormItem className={formItemClassName} data-testid={dataTestId}>
@@ -82,7 +89,7 @@ export default function NumberFormItem({
               type="number"
               className="w-full pr-12"
               min={0}
-              value={value}
+              value={state}
               onChange={handleOnChange}
               placeholder={placeholder || "Insert value"}
               {...props}
