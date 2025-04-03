@@ -243,15 +243,6 @@ export class ProjectsService extends AppBaseService<
     this.logger.log(
       `Computing ${fromExcel.length} projects from Excel file...`,
     );
-    const conservationProjects = fromExcel.filter(
-      (project) => project.activity === 'Conservation',
-    );
-    for (const excelProject of conservationProjects) {
-      const createProjectDto = ProjectBuilder.excelInputToDto(excelProject);
-      const project = await this.create(createProjectDto);
-      // TODO: Before saving, do we need to run final computing as in custom projects
-      await this.repository.save(project);
-    }
     await Promise.all(
       fromExcel.map(async (projectFromExcel) => {
         const createProjectDto =
