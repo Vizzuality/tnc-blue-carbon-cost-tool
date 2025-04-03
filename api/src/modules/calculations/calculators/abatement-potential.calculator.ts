@@ -9,6 +9,7 @@ export class AbatementPotentialCalculator {
   sequestrationRate: number;
   restorableLand: number;
   annualAvoidedEmissionsSum: number;
+  netEmissionsReductionSum: number;
   constructor(
     input: ProjectInput,
     sequestrationRateCalculator: SequestrationRateCalculator,
@@ -17,6 +18,14 @@ export class AbatementPotentialCalculator {
     this.projectLength = input.assumptions.projectLength;
     this.sequestrationRate = sequestrationRateCalculator.sequestrationRate;
     this.restorableLand = input.costAndCarbonInputs.restorableLand;
+    // TODO: This implies recalculating something that can already be calculated, and it will be calculated later on
+    //       Taking in account that we probably need to extract the calculations module, it would be best to handle the redundancies in the sequestration calculator,
+    //       instead of passing the calculated output from the main calculator to here (probably)
+    this.netEmissionsReductionSum = sum(
+      Object.values(
+        sequestrationRateCalculator.calculateNetEmissionsReductions(),
+      ),
+    );
     if (this.activity === ACTIVITY.CONSERVATION) {
       this.annualAvoidedEmissionsSum = sum(
         Object.values(sequestrationRateCalculator.getAnnualAvoidedLoss()),
@@ -24,7 +33,12 @@ export class AbatementPotentialCalculator {
     }
   }
 
-  calculateAbatementPotential(): number {
+  /**
+   * Calculate the country level abatement potential based on the activity type.
+   * @returns The calculated abatement potential.
+   */
+
+  calculateCountryLevelAbatementPotential(): number {
     switch (this.activity) {
       case ACTIVITY.RESTORATION:
         return this.calculateRestorationAbatementPotential({
@@ -57,5 +71,13 @@ export class AbatementPotentialCalculator {
     const abatementPotential =
       params.annualAvoidedEmissionsSum * params.projectLength;
     return abatementPotential;
+  }
+
+  /**
+   * Calculate the project level abatement potential based on the activity type.
+   * @returns The calculated abatement potential, which is the sum of net emissions reductions.
+   */
+  calculateProjectLevelAbatementPotential(): number {
+    return this.netEmissionsReductionSum;
   }
 }
