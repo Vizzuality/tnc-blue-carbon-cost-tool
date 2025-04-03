@@ -1,3 +1,4 @@
+import { DEFAULT_RESTORATION_FORM_VALUES } from "@shared/schemas/custom-projects/custom-project-form.constants";
 import { Page, test, expect } from "@playwright/test";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
 import { EXTENDED_TIMEOUT, PROJECT_NAME } from "e2e/lib/constants";
@@ -10,6 +11,7 @@ import {
   getCapexCostInputsKeys,
   getOpexCostInputsKeys,
 } from "@shared/lib/utils";
+import { ACTIVITY } from "@shared/entities/activity.enum";
 let testManager: E2eTestManager;
 let page: Page;
 
@@ -29,7 +31,7 @@ test.describe("Custom Projects - Edit", () => {
     await testManager.close();
   });
 
-  test("A user can see two Edit project links with correct URL patterns after creating a custom project", async () => {
+  test("User can see two Edit project links with correct URL patterns after creating a custom project", async () => {
     await createAndSaveCustomProject(page);
 
     await page.waitForLoadState("networkidle");
@@ -46,7 +48,7 @@ test.describe("Custom Projects - Edit", () => {
     }
   });
 
-  test("A user can see the edit project page with the pre-filled data from the created custom project", async () => {
+  test("User can see the edit project page with pre-filled data from the created custom project", async () => {
     const responsePromise = page.waitForResponse(`**/custom-projects`);
     await createAndSaveCustomProject(page);
     // check for post request to custom-projects
@@ -103,5 +105,18 @@ test.describe("Custom Projects - Edit", () => {
       const value = unit?.includes("%") ? v * 100 : v;
       expect(row.locator("input")).toHaveValue(value.toString());
     }
+  });
+
+  test("User sees default values pre-filled when switching to restoration project", async () => {
+    await createAndSaveCustomProject(page);
+    await navigateToEditCustomProject(page);
+
+    await page.locator(`#${ACTIVITY.RESTORATION}`).click();
+
+    expect(
+      page.locator("input[name='parameters.plantingSuccessRate']"),
+    ).toHaveValue(
+      DEFAULT_RESTORATION_FORM_VALUES.parameters.plantingSuccessRate.toString(),
+    );
   });
 });

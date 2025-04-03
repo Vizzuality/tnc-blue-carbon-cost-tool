@@ -5,15 +5,15 @@ import { useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { ACTIVITY } from "@shared/entities/activity.enum";
+import { type CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { DEFAULT_RESTORATION_FORM_VALUES } from "@shared/schemas/custom-projects/custom-project-form.constants";
 import { CustomProjectFormSchema } from "@shared/schemas/custom-projects/custom-project-form.schema";
 import { useSetAtom } from "jotai";
 import { parseAsBoolean, useQueryState } from "nuqs";
 
 import { useScrollSpy } from "@/hooks/use-scroll-spy";
 
-import { DEFAULT_RESTORATION_FORM_VALUES } from "@/containers/projects/form/constants";
 import Header from "@/containers/projects/form/header";
 import ProjectForm from "@/containers/projects/form/project-form";
 import ProjectSidebar from "@/containers/projects/form/sidebar";

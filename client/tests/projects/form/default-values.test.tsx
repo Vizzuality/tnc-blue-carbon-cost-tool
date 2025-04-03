@@ -12,7 +12,7 @@ import { queryKeys } from "@/lib/query-keys";
 import {
   DEFAULT_CONSERVATION_FORM_VALUES,
   DEFAULT_RESTORATION_FORM_VALUES,
-} from "@/containers/projects/form/constants";
+} from "@shared/schemas/custom-projects/custom-project-form.constants";
 
 const queryClient = new QueryClient();
 

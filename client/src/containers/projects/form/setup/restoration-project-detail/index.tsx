@@ -183,6 +183,7 @@ export default function RestorationProjectDetails() {
             name="parameters.plantingSuccessRate"
             render={() => (
               <NumberFormItem
+                name="parameters.plantingSuccessRate"
                 label="Planting Success Rate"
                 tooltip={{
                   title: "Planting Success Rate",
