@@ -77,6 +77,9 @@ export class Project extends BaseEntity {
   })
   priceType: PROJECT_PRICE_TYPE;
 
+  @Column({name: 'country_abatement_potential', type: 'decimal', nullable: true})
+  countryAbatementPotential: number;
+
   @Column({ name: "abatement_potential", type: "decimal", nullable: true })
   abatementPotential: number;
 
