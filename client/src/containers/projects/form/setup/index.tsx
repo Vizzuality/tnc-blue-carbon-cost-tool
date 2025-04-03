@@ -387,7 +387,7 @@ export default function SetupProjectForm() {
                     content:
                       GENERAL_ASSUMPTIONS.INITIAL_CARBON_PRICE_ASSUMPTIONS,
                   }}
-                  value={form.getValues("initialCarbonPriceAssumption")}
+                  initialValue={form.getValues("initialCarbonPriceAssumption")}
                   formItemClassName="flex items-center justify-between gap-4"
                   formControlClassName="after:content-['$']"
                   onValueChange={async (v) =>

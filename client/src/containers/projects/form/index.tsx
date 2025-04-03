@@ -1,17 +1,19 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { FormProvider, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProjectFormSchema } from "@shared/schemas/custom-projects/custom-project-form.schema";
 import { useSetAtom } from "jotai";
 import { parseAsBoolean, useQueryState } from "nuqs";
 
 import { useScrollSpy } from "@/hooks/use-scroll-spy";
 
+import { DEFAULT_RESTORATION_FORM_VALUES } from "@/containers/projects/form/constants";
 import Header from "@/containers/projects/form/header";
 import ProjectForm from "@/containers/projects/form/project-form";
 import ProjectSidebar from "@/containers/projects/form/sidebar";
@@ -38,6 +40,7 @@ export default function CustomProjectForm({ id }: CustomProjectFormProps) {
     mode: "all",
   });
   const activity = methods.watch("activity");
+  const plantingSuccessRate = methods.watch("parameters.plantingSuccessRate");
   useScrollSpy({
     id: "custom-project-steps-container",
     containerRef: ref,
@@ -47,6 +50,18 @@ export default function CustomProjectForm({ id }: CustomProjectFormProps) {
     },
     deps: [activity],
   });
+
+  useEffect(() => {
+    // Setting the default value in edit mode
+    if (!id) return;
+    if (activity === ACTIVITY.RESTORATION && !plantingSuccessRate) {
+      methods.setValue(
+        "parameters.plantingSuccessRate",
+        DEFAULT_RESTORATION_FORM_VALUES.parameters.plantingSuccessRate,
+      );
+      methods.trigger("parameters.plantingSuccessRate");
+    }
+  }, [plantingSuccessRate, activity, methods, id]);
 
   return (
     <FormProvider {...methods}>
