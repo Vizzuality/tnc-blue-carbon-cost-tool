@@ -183,4 +183,67 @@ export class ProjectsMapRepository extends Repository<Project> {
 
     return queryBuilder;
   }
+
+  async getProjectsMapV2(
+    projectIds: Project['id'][],
+    costRangeSelector: 'npv' | 'total',
+  ): Promise<ProjectMap> {
+    const geoQueryBuilder = this.manager.createQueryBuilder();
+    geoQueryBuilder
+      .select(
+        `
+      json_build_object(
+          'type', 'FeatureCollection',
+          'features', json_agg(
+              json_build_object(
+                  'type', 'Feature',
+                  'geometry', ST_AsGeoJSON(country.geometry)::jsonb, 
+                  'properties', json_build_object(
+                      'country', country.name,
+                      'abatementPotential', filtered_projects.avg_abatement_potential,
+                      'cost', filtered_projects.avg_weighted_cost
+                  )
+              )
+          )
+      ) as geojson
+      `,
+      )
+      .from('countries', 'country')
+      .innerJoin(
+        (subQuery) => {
+          subQuery
+            .select('p.country_code', 'country_code')
+            .addSelect(
+              'AVG(p.country_abatement_potential)',
+              'avg_abatement_potential',
+            );
+          if (costRangeSelector === 'total') {
+            subQuery.addSelect(
+              'AVG(p.total_cost / c.area_ha)',
+              'avg_weighted_cost',
+            );
+          }
+          if (costRangeSelector === 'npv') {
+            subQuery.addSelect(
+              'AVG(p.total_cost_npv / c.area_ha)',
+              'avg_weighted_cost',
+            );
+          }
+          subQuery
+            .from(Project, 'p')
+            .innerJoin('countries', 'c', 'c.code = p.country_code')
+            .where('p.id IN (:...projectIds)', { projectIds })
+            .groupBy('p.country_code');
+          return subQuery;
+        },
+        'filtered_projects',
+        'filtered_projects.country_code = country.code',
+      )
+      .setParameter('costRangeSelector', costRangeSelector);
+
+    const { geojson } = await geoQueryBuilder.getRawOne<{
+      geojson: ProjectMap;
+    }>();
+    return geojson;
+  }
 }
