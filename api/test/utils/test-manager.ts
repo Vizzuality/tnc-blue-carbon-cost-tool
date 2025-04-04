@@ -123,6 +123,9 @@ export class TestManager {
     );
     const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, 'utf8');
     await this.dataSource.query(geoCountriesSql);
+    await this.dataSource.query(
+      'UPDATE countries SET area_ha = ST_Area(geography(geometry)) / 10000;',
+    );
   }
 
   async ingestProjectScoreCards(jwtToken: string) {
