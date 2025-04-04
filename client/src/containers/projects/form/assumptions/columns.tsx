@@ -46,6 +46,7 @@ export const COLUMNS = [
     header: () => <span>Override value</span>,
     cell: (props) => (
       <CellValue
+        key={props.row.original.property}
         name={
           props.row.original.property as keyof CustomProjectForm["assumptions"]
         }

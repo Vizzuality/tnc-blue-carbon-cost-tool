@@ -50,6 +50,7 @@ export const COLUMNS = [
     cell: (props) => {
       return (
         <CellValue
+          key={props.row.original.property}
           name={
             props.row.original.property as keyof CustomProjectForm["costInputs"]
           }
