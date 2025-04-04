@@ -48,61 +48,65 @@ export default function ConservationProjectDetails() {
         control={form?.control}
         name="parameters.lossRateUsed"
         render={() => (
-          <FormItem className="flex items-center justify-between gap-4 space-y-0">
-            <FormLabel
-              tooltip={{
-                title: "Loss rate used",
-                content: CONSERVATION_PROJECT_DETAILS.LOSS_RATE_USED,
-              }}
-            >
-              Loss rate used
-            </FormLabel>
-            <FormControl>
-              <div className="relative flex items-center">
-                <RadioGroup
-                  className="flex gap-4"
-                  defaultValue={
-                    form.getValues("parameters.lossRateUsed") as LOSS_RATE_USED
-                  }
-                  onValueChange={async (v) => {
-                    form.setValue(
-                      "parameters.lossRateUsed",
-                      v as LOSS_RATE_USED,
-                    );
-                    if (v === LOSS_RATE_USED.NATIONAL_AVERAGE) {
+          <FormItem>
+            <div className="flex items-center justify-between gap-4 space-y-0">
+              <FormLabel
+                tooltip={{
+                  title: "Loss rate used",
+                  content: CONSERVATION_PROJECT_DETAILS.LOSS_RATE_USED,
+                }}
+              >
+                Loss rate used
+              </FormLabel>
+              <FormControl>
+                <div className="relative flex items-center">
+                  <RadioGroup
+                    className="flex gap-4"
+                    defaultValue={
+                      form.getValues(
+                        "parameters.lossRateUsed",
+                      ) as LOSS_RATE_USED
+                    }
+                    onValueChange={async (v) => {
                       form.setValue(
-                        "parameters.projectSpecificLossRate",
-                        // prettier-ignore
-                        form.getFieldState("parameters.projectSpecificLossRate").invalid ?
+                        "parameters.lossRateUsed",
+                        v as LOSS_RATE_USED,
+                      );
+                      if (v === LOSS_RATE_USED.NATIONAL_AVERAGE) {
+                        form.setValue(
+                          "parameters.projectSpecificLossRate",
+                          // prettier-ignore
+                          form.getFieldState("parameters.projectSpecificLossRate").invalid ?
                             // @ts-expect-error fix later
                             form.formState.defaultValues?.parameters?.projectSpecificLossRate
                             // @ts-expect-error fix later
                           : form.getValues().parameters?.projectSpecificLossRate,
-                      );
-                    }
+                        );
+                      }
 
-                    await form.trigger("parameters.projectSpecificLossRate");
-                    await form.trigger("parameters.lossRateUsed");
-                  }}
-                >
-                  {Object.values(LOSS_RATE_USED).map((rate) => (
-                    <div className="flex items-center gap-2" key={rate}>
-                      <RadioGroupItem
-                        id={`lossRateUsed-${rate}`}
-                        className="flex-1"
-                        value={rate}
-                      />
-                      <FormLabel
-                        htmlFor={`lossRateUsed-${rate}`}
-                        className="cursor-pointer"
-                      >
-                        {rate}
-                      </FormLabel>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </div>
-            </FormControl>
+                      await form.trigger("parameters.projectSpecificLossRate");
+                      await form.trigger("parameters.lossRateUsed");
+                    }}
+                  >
+                    {Object.values(LOSS_RATE_USED).map((rate) => (
+                      <div className="flex items-center gap-2" key={rate}>
+                        <RadioGroupItem
+                          id={`lossRateUsed-${rate}`}
+                          className="flex-1"
+                          value={rate}
+                        />
+                        <FormLabel
+                          htmlFor={`lossRateUsed-${rate}`}
+                          className="cursor-pointer"
+                        >
+                          {rate}
+                        </FormLabel>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+              </FormControl>
+            </div>
             <FormMessage />
           </FormItem>
         )}
