@@ -41,6 +41,7 @@ export default function CustomProjectForm({ id }: CustomProjectFormProps) {
   });
   const activity = methods.watch("activity");
   const plantingSuccessRate = methods.watch("parameters.plantingSuccessRate");
+
   useScrollSpy({
     id: "custom-project-steps-container",
     containerRef: ref,
@@ -53,8 +54,8 @@ export default function CustomProjectForm({ id }: CustomProjectFormProps) {
 
   useEffect(() => {
     // Setting the default value in edit mode
-    if (!id) return;
-    if (activity === ACTIVITY.RESTORATION && !plantingSuccessRate) {
+    if (!id || activity !== ACTIVITY.RESTORATION) return;
+    if (plantingSuccessRate === undefined) {
       methods.setValue(
         "parameters.plantingSuccessRate",
         DEFAULT_RESTORATION_FORM_VALUES.parameters.plantingSuccessRate,
