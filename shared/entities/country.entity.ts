@@ -44,7 +44,7 @@ export class Country extends BaseEntity {
   @Column({ name: "hdi", type: "int", nullable: true })
   hdi?: number;
 
-  @Column({ name: 'area_ha', type: 'numeric', nullable: true })
+  @Column({ name: 'area_ha', type: 'double precision', nullable: true })
   areaHa: number;
 
   @Index({ spatial: true })
