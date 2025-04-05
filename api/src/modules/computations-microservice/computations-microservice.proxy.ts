@@ -6,6 +6,10 @@ import {
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { AxiosError } from '@nestjs/terminus/dist/errors/axios.error';
+import {
+  CalculationInput,
+  CostOutput,
+} from '@api/modules/calculations/calculation.engine';
 
 @Injectable()
 export class ComputationsMicroserviceProxy {
@@ -13,10 +17,10 @@ export class ComputationsMicroserviceProxy {
 
   constructor(private readonly httpService: HttpService) {}
 
-  async compute(dto: any): Promise<any> {
+  async compute(dto: CalculationInput): Promise<CostOutput> {
     try {
       const response = await firstValueFrom(
-        this.httpService.post<any>('/compute', dto),
+        this.httpService.post<CostOutput>('/compute', dto),
       );
 
       return response.data;

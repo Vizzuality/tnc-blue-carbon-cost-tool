@@ -25,16 +25,18 @@ export type CostOutput = {
   };
 };
 
+export type CalculationInput = {
+  projectInput: ProjectInput;
+  baseIncrease: BaseIncrease;
+  baseSize: BaseSize;
+};
+
 @Injectable()
 export class CalculationEngine {
   logger = new Logger(CalculationEngine.name);
   constructor() {}
 
-  calculateCostOutput(dto: {
-    projectInput: ProjectInput;
-    baseIncrease: BaseIncrease;
-    baseSize: BaseSize;
-  }): CostOutput {
+  calculateCostOutput(dto: CalculationInput): CostOutput {
     const { projectInput, baseIncrease, baseSize } = dto;
     const sequestrationRateCalculator = new SequestrationRateCalculator(
       projectInput,

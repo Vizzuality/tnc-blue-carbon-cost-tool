@@ -17,13 +17,6 @@ import {
   RestorationProjectParamsDto,
 } from '@api/modules/custom-projects/dto/create-custom-project.dto';
 
-export type ConservationProjectCarbonInputs = {
-  lossRate: number;
-  emissionFactor: number | null;
-  emissionFactorAgb: number | null;
-  emissionFactorSoc: number | null;
-};
-
 export type GeneralProjectInputs = {
   projectName: CreateCustomProjectDto['projectName'];
   countryCode: CreateCustomProjectDto['countryCode'];
