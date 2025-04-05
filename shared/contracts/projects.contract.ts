@@ -104,4 +104,15 @@ export const projectsContract = contract.router({
       partialProjectName: true,
     }),
   },
+  getProjectsMapV2: {
+    method: "GET",
+    path: "/projects/map/v2",
+    responses: {
+      200: contract.type<ProjectMap>(),
+    },
+    query: z.object({
+      projectIds: z.string().uuid().array(),
+      costRangeSelector: z.nativeEnum(COST_TYPE_SELECTOR),
+  }),
+  },
 });
