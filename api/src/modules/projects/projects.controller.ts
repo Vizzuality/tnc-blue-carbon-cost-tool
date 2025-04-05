@@ -102,6 +102,26 @@ export class ProjectsController {
     });
   }
 
+  /**
+   * @description: new endpoint to return country level cost and abatement potential averages
+   *               need to remove the first version once validated
+   */
+
+  @TsRestHandler(projectsContract.getProjectsMapV2)
+  async getProjectsMapV2(): ControllerResponse {
+    return tsRestHandler(
+      projectsContract.getProjectsMapV2,
+      async ({ query }) => {
+        const { projectIds, costRangeSelector } = query;
+        const data = await this.projectMapRepository.getProjectsMapV2(
+          projectIds,
+          costRangeSelector,
+        );
+        return { body: data, status: HttpStatus.OK } as any;
+      },
+    );
+  }
+
   @TsRestHandler(projectsContract.getProject)
   async getProject(): ControllerResponse {
     return tsRestHandler(
