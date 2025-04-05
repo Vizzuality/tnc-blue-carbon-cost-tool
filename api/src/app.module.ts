@@ -24,6 +24,7 @@ import { ProjectsModule } from '@api/modules/projects/projects.module';
 import { CustomProjectsModule } from '@api/modules/custom-projects/custom-projects.module';
 import { TerminusModule } from '@nestjs/terminus';
 import { MethodologyModule } from '@api/modules/methodology/methodology.module';
+import { ComputationsMicroserviceProxy } from '@api/modules/computations-microservice/computations-microservice.proxy';
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -36,6 +37,7 @@ const NODE_ENV = process.env.NODE_ENV;
       isGlobal: true,
       validateRequestHeaders: false,
     }),
+    ComputationsMicroserviceProxy,
     ApiConfigModule,
     AuthModule,
     NotificationsModule,

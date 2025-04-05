@@ -64,6 +64,10 @@ export class ApiConfigService {
     };
   }
 
+  getComputationsMicroserviceUrl(): string {
+    return this.configService.getOrThrow('COMPUTATIONS_MICROSERVICE_URL');
+  }
+
   get(envVarName: string): string {
     return this.configService.get(envVarName);
   }

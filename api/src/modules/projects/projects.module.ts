@@ -11,12 +11,14 @@ import { CalculationsModule } from '@api/modules/calculations/calculations.modul
 import { ProjectsCalculationService } from '@api/modules/projects/calculation/projects-calculation.service';
 import { CustomProjectsModule } from '@api/modules/custom-projects/custom-projects.module';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
+import { ComputationsMicroserviceProxy } from '@api/modules/computations-microservice/computations-microservice.proxy';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Project, ProjectScorecardView, ProjectScorecard]),
     CountriesModule,
     CalculationsModule,
     CustomProjectsModule,
+    ComputationsMicroserviceProxy,
   ],
   controllers: [ProjectsController],
   providers: [
