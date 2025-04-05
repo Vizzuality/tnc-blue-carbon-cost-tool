@@ -2,6 +2,23 @@ import { z } from 'zod';
 
 const EXPIRES_IN_REGEX = /^[0-9]+\w$/;
 
+const COMPUTATIONS_MICROSERVICE_SCHEMA = z
+  .string()
+  .url({ message: 'Invalid URL for COMPUTATIONS_MICROSERVICE_URL' })
+  .refine(
+    (val) => {
+      try {
+        const url = new URL(val);
+        return !!url.port;
+      } catch {
+        return false;
+      }
+    },
+    {
+      message: 'COMPUTATIONS_MICROSERVICE_URL must include a port',
+    },
+  );
+
 const envConfigSchema = z
   .object({
     NODE_ENV: z.string().default('development'),
@@ -10,6 +27,8 @@ const envConfigSchema = z
     DB_NAME: z.string(),
     DB_USERNAME: z.string(),
     DB_PASSWORD: z.string(),
+
+    COMPUTATIONS_MICROSERVICE_URL: COMPUTATIONS_MICROSERVICE_SCHEMA,
 
     ACCESS_TOKEN_SECRET: z.string(),
     ACCESS_TOKEN_EXPIRES_IN: z.string().regex(EXPIRES_IN_REGEX),
