@@ -8,14 +8,16 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { PROJECT_PRICE_TYPE } from '@shared/entities/projects.entity';
 import { CalculationEngine } from '@api/modules/calculations/calculation.engine';
 import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
+import { ProjectsService } from '@api/modules/projects/projects.service';
 
 // TODO: No point adding tests now as we need a validated scenarios to replicate in the tests
 
 describe.skip('ProjectsCalculationService', () => {
-  let service: ProjectsCalculationService;
+  let projectsCalculationService: ProjectsCalculationService;
   let testManager: TestManager;
   let engine: CalculationEngine;
   let customProjectService: CustomProjectsService;
+  let projectsService: ProjectsService;
 
   beforeEach(async () => {
     testManager = await TestManager.createTestManager();
@@ -23,13 +25,16 @@ describe.skip('ProjectsCalculationService', () => {
     await testManager.ingestCountries();
     await testManager.ingestProjectScoreCards(jwtToken);
     await testManager.ingestExcel(jwtToken);
-    service = testManager
+    projectsCalculationService = testManager
       .getApp()
       .get<ProjectsCalculationService>(ProjectsCalculationService);
     engine = testManager.getApp().get<CalculationEngine>(CalculationEngine);
     customProjectService = testManager
       .getApp()
       .get<CustomProjectsService>(CustomProjectsService);
+    projectsService = testManager
+      .getApp()
+      .get<ProjectsService>(ProjectsService);
   });
 
   afterAll(async () => {
@@ -49,6 +54,7 @@ describe.skip('ProjectsCalculationService', () => {
       initialCarbonPriceAssumption: 13.19896761,
     };
 
-    const result = await service.computeCostForProject(createProjectDTO);
+    const result =
+      await projectsCalculationService.computeCostForProject(createProjectDTO);
   });
 });
