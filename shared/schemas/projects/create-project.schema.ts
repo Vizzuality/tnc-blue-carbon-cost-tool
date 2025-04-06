@@ -19,5 +19,8 @@ export const CreateProjectSchema = z.object({
   projectSizeHa: z.number().nonnegative(),
   priceType: z.nativeEnum(PROJECT_PRICE_TYPE),
   initialCarbonPriceAssumption: z.number().nonnegative(),
-  restorationActivity: z.nativeEnum(RESTORATION_ACTIVITY_SUBTYPE).optional(),
+  restorationActivity: z
+    .nativeEnum(RESTORATION_ACTIVITY_SUBTYPE)
+    .optional()
+    .nullable(),
 });
