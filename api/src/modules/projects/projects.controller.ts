@@ -1,5 +1,5 @@
 import { ProjectsScorecardService } from './projects-scorecard.service';
-import { Controller, HttpStatus } from '@nestjs/common';
+import { Controller, HttpStatus, UseGuards } from '@nestjs/common';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { ControllerResponse } from '@api/types/controller-response.type';
 import { projectsContract } from '@shared/contracts/projects.contract';
@@ -11,6 +11,10 @@ import {
   OtherProjectFilters,
   ProjectFilters,
 } from '@shared/dtos/projects/projects-map.dto';
+import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
+import { JwtCookieAuthGuard } from '@api/modules/auth/guards/jwt-cookie-auth.guard';
+import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
+import { ROLES } from '@shared/entities/users/roles.enum';
 
 @Controller()
 export class ProjectsController {
@@ -136,6 +140,32 @@ export class ProjectsController {
         const data =
           this.projectsScorecardService.adaptDbViewToApiView(project);
         return { body: { data }, status: HttpStatus.OK };
+      },
+    );
+  }
+
+  @UseGuards(JwtCookieAuthGuard, RolesGuard)
+  @RequiredRoles(ROLES.ADMIN)
+  @TsRestHandler(projectsContract.createProject)
+  public async createProject(): ControllerResponse {
+    return tsRestHandler(projectsContract.createProject, async ({ body }) => {
+      const project = await this.projectsService.createProject(body);
+      return { body: { data: project }, status: HttpStatus.CREATED };
+    });
+  }
+
+  @UseGuards(JwtCookieAuthGuard, RolesGuard)
+  @RequiredRoles(ROLES.ADMIN)
+  @TsRestHandler(projectsContract.updateProject)
+  public async updateProject(): ControllerResponse {
+    return tsRestHandler(
+      projectsContract.updateProject,
+      async ({ params, body }) => {
+        const project = await this.projectsService.updateProject(
+          params.id,
+          body,
+        );
+        return { body: { data: project }, status: HttpStatus.OK };
       },
     );
   }

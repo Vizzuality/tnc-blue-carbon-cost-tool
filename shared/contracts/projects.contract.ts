@@ -14,6 +14,7 @@ import { PaginatedProjectsWithMaximums } from "@shared/dtos/projects/projects.dt
 import { ProjectScorecardDto } from "@shared/dtos/projects/project-scorecard.dto";
 import { ProjectKeyCosts } from "@shared/dtos/projects/project-key-costs.dto";
 import { ProjectsFiltersBoundsDto } from "@shared/dtos/projects/projects-filters-bounds.dto";
+import { CreateProjectSchema } from "@shared/schemas/projects/create-project.schema";
 
 const contract = initContract();
 
@@ -35,7 +36,6 @@ export const projectScorecardQuerySchema =
 export const getProjectsQuerySchema = projectsQuerySchema.merge(otherParams);
 export const getProjectScorecardQuerySchema =
   projectScorecardQuerySchema.merge(otherParams);
-
 
 export const projectsContract = contract.router({
   getProjects: {
@@ -103,6 +103,25 @@ export const projectsContract = contract.router({
       costRangeSelector: true,
       partialProjectName: true,
     }),
+  },
+  createProject: {
+    method: "POST",
+    path: "/projects",
+    body: CreateProjectSchema,
+    responses: {
+      201: contract.type<ApiResponse<Project>>(),
+    },
+  },
+  updateProject: {
+    method: "PUT",
+    path: "/projects/:id",
+    pathParams: z.object({
+      id: z.coerce.string().uuid(),
+    }),
+    body: CreateProjectSchema,
+    responses: {
+      200: contract.type<ApiResponse<Project>>(),
+    },
   },
   getProjectsMapV2: {
     method: "GET",
