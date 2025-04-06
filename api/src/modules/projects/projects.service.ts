@@ -287,7 +287,9 @@ export class ProjectsService extends AppBaseService<
       scoreCardRating,
       costs,
       projectSize.sizeHa,
-    ).build();
+    )
+      .setId(id)
+      .build();
 
     return this.projectRepository.save(project);
   }
