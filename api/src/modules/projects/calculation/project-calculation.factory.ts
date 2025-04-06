@@ -9,7 +9,7 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
 import { SEQUESTRATION_RATE_TIER_TYPES } from '@shared/entities/carbon-inputs/sequestration-rate.entity';
 import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
-import { CreateProjectDto } from '@api/modules/projects/calculation/projects-calculation.service';
+import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 
 export class ProjectCalculationFactory {
   dto: CreateProjectDto;

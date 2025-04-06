@@ -1,13 +1,13 @@
 /**
  * @description: Simple builder wrapper to handle the assignment of properties to a project entity and return the instance
  */
-import { CreateProjectDto } from '@api/modules/projects/calculation/projects-calculation.service';
 import { CostOutput } from '@api/modules/calculations/calculation.engine';
 import { Project } from '@shared/entities/projects.entity';
 import { PROJECT_SCORE } from '@shared/entities/project-score.enum';
 import { ExcelProject } from '@api/modules/import/dtos/excel-projects.dto';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { getProjectSizeFilter } from '@api/modules/projects/threshold/project-size-threshold';
+import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 
 export class ProjectBuilder {
   dto: CreateProjectDto;
@@ -15,6 +15,9 @@ export class ProjectBuilder {
   costOutput: CostOutput;
   project: Project;
   projectSize: ProjectSize['sizeHa'];
+  id?: string; // Workaround to support updates
+
+  // Idk if the builder pattern is the best one here, specially if we pass everything from the constructor
   constructor(
     createDto: CreateProjectDto,
     score: PROJECT_SCORE,
@@ -42,8 +45,14 @@ export class ProjectBuilder {
     };
   }
 
+  setId(id: string): ProjectBuilder {
+    this.id = id;
+    return this;
+  }
+
   build(): Project {
     const project = this.project;
+    project.id = this.id;
     project.projectName = this.dto.projectName;
     project.countryCode = this.dto.countryCode;
     project.ecosystem = this.dto.ecosystem;
