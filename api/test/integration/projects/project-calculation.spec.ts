@@ -1,13 +1,11 @@
-import {
-  CreateProjectDto,
-  ProjectsCalculationService,
-} from '@api/modules/projects/calculation/projects-calculation.service';
+import { ProjectsCalculationService } from '@api/modules/projects/calculation/projects-calculation.service';
 import { TestManager } from '../../utils/test-manager';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { PROJECT_PRICE_TYPE } from '@shared/entities/projects.entity';
 import { CalculationEngine } from '@api/modules/calculations/calculation.engine';
 import { CustomProjectsService } from '@api/modules/custom-projects/custom-projects.service';
+import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 import { ProjectsService } from '@api/modules/projects/projects.service';
 
 // TODO: No point adding tests now as we need a validated scenarios to replicate in the tests

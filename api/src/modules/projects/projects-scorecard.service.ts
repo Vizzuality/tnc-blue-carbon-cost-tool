@@ -17,9 +17,9 @@ import {
 } from '@shared/entities/projects.entity';
 import { PROJECT_SCORE } from '@shared/entities/project-score.enum';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
-import { CreateProjectDto } from '@api/modules/projects/calculation/projects-calculation.service';
 import { ProjectScoreCardNotFoundError } from '@api/modules/import/services/entity.preprocessor';
 import { ProjectScoreUtils } from '@shared/entities/project-score.utils';
+import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 
 export type ProjectFetchSpecificacion = z.infer<typeof getProjectsQuerySchema>;
 

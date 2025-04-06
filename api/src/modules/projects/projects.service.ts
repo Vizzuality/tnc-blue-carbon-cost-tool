@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
 import { COST_TYPE_SELECTOR, Project } from '@shared/entities/projects.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
@@ -8,14 +8,13 @@ import { getProjectsQuerySchema } from '@shared/contracts/projects.contract';
 import { PaginatedProjectsWithMaximums } from '@shared/dtos/projects/projects.dto';
 import { PROJECT_KEY_COSTS_FIELDS } from '@shared/dtos/projects/project-key-costs.dto';
 import { ProjectsFiltersBoundsDto } from '@shared/dtos/projects/projects-filters-bounds.dto';
-import {
-  CreateProjectDto,
-  ProjectsCalculationService,
-} from '@api/modules/projects/calculation/projects-calculation.service';
+import { ProjectsCalculationService } from '@api/modules/projects/calculation/projects-calculation.service';
 import { ProjectBuilder } from '@api/modules/projects/project.builder';
 import { ProjectsScorecardService } from '@api/modules/projects/projects-scorecard.service';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { ExcelProject } from '@api/modules/import/dtos/excel-projects.dto';
+import { UpdateProjectDto } from '@shared/dtos/projects/update-project.dto';
+import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 
 export type ProjectFetchSpecification = z.infer<typeof getProjectsQuerySchema>;
 
@@ -215,30 +214,6 @@ export class ProjectsService extends AppBaseService<
     };
   }
 
-  async create(dto: CreateProjectDto): Promise<Project> {
-    const costs = await this.projectCalculation.computeCostForProject(dto);
-    const projectSize = await this.dataSource
-      .getRepository(ProjectSize)
-      .findOne({
-        select: ['sizeHa'],
-        where: {
-          ecosystem: dto.ecosystem,
-          activity: dto.activity,
-          countryCode: dto.countryCode,
-        },
-      });
-    const scoreCardRating = await this.scorecard.getRating(dto);
-    // TODO: Not clear if sizeHa has to come from the DTO or be retrieved from the database. Does it make sense to have it in the DB?
-    //       Would make sense to have thresholds defined?
-    const projectBuilder = new ProjectBuilder(
-      dto,
-      scoreCardRating,
-      costs,
-      projectSize.sizeHa,
-    );
-    return projectBuilder.build();
-  }
-
   async createFromExcel(fromExcel: ExcelProject[]): Promise<void> {
     this.logger.log(
       `Computing ${fromExcel.length} projects from Excel file...`,
@@ -252,5 +227,68 @@ export class ProjectsService extends AppBaseService<
       }),
     );
     this.logger.warn(`Computed and saved ${fromExcel.length} projects`);
+  }
+
+  public async createProject(
+    createProjectDto: CreateProjectDto,
+  ): Promise<Project> {
+    const scoreCardRating = await this.scorecard.getRating(createProjectDto);
+    const costs =
+      await this.projectCalculation.computeCostForProject(createProjectDto);
+    const projectSize = await this.dataSource
+      .getRepository(ProjectSize)
+      .findOne({
+        select: ['sizeHa'],
+        where: {
+          ecosystem: createProjectDto.ecosystem,
+          activity: createProjectDto.activity,
+          countryCode: createProjectDto.countryCode,
+        },
+      });
+
+    // TODO: Not clear if sizeHa has to come from the DTO or be retrieved from the database. Does it make sense to have it in the DB?
+    //       Would make sense to have thresholds defined?
+    const project = new ProjectBuilder(
+      createProjectDto,
+      scoreCardRating,
+      costs,
+      projectSize.sizeHa,
+    ).build();
+    return this.projectRepository.save(project);
+  }
+
+  public async updateProject(
+    id: string,
+    updateProjectDto: UpdateProjectDto,
+  ): Promise<Project> {
+    const projectToUpdate = await this.projectRepository.findOneBy({ id });
+    if (!projectToUpdate) {
+      throw new NotFoundException(`Project with id ${id} not found`);
+    }
+
+    const scoreCardRating = await this.scorecard.getRating(updateProjectDto);
+    const costs =
+      await this.projectCalculation.computeCostForProject(updateProjectDto);
+    const projectSize = await this.dataSource
+      .getRepository(ProjectSize)
+      .findOne({
+        select: ['sizeHa'],
+        where: {
+          ecosystem: updateProjectDto.ecosystem,
+          activity: updateProjectDto.activity,
+          countryCode: updateProjectDto.countryCode,
+        },
+      });
+
+    // TODO: Not clear if sizeHa has to come from the DTO or be retrieved from the database. Does it make sense to have it in the DB?
+    //       Would make sense to have thresholds defined?
+    const project = new ProjectBuilder(
+      updateProjectDto,
+      scoreCardRating,
+      costs,
+      projectSize.sizeHa,
+    ).build();
+
+    return this.projectRepository.save(project);
   }
 }
