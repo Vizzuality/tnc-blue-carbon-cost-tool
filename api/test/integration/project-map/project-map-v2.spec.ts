@@ -32,8 +32,6 @@ describe('Project Map V2', () => {
       .get(projectsContract.getProjectsMapV2.path)
       .query({});
 
-    console.log(response.body);
-
     expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     expect(response.body.errors).toHaveLength(2);
   });
