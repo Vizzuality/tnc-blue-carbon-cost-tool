@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import { User } from "@shared/entities/users/user.entity";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
 import { PROJECT_NAME, ROUTES, TEST_USER } from "e2e/lib/constants";
@@ -51,6 +51,12 @@ const getDataFromNetworkRequest = async (page: Page, url: string) => {
   return data;
 };
 
+const expectEditProjectHeadingVisible = async (page: Page) => {
+  await expect(
+    page.getByRole("heading", { name: `Edit ${PROJECT_NAME}` }),
+  ).toBeVisible();
+};
+
 export {
   createUser,
   createAndSignInUser,
@@ -61,4 +67,5 @@ export {
   createAndSaveCustomProject,
   navigateToEditCustomProject,
   getDataFromNetworkRequest,
+  expectEditProjectHeadingVisible,
 };

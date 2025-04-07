@@ -29,3 +29,6 @@ export const ROUTES = {
       `/auth/confirm-email/${token}${`?newEmail=${email}`}`,
   },
 };
+
+export const EDIT_PROJECT_LINK_REGEX =
+  /\/projects\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/edit/;
