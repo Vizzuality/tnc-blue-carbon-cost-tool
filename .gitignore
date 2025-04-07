@@ -137,6 +137,11 @@ dist
 /infrastructure/vars/local.tfvars
 /infrastructure/.terraform/
 
+# Infra migration phase
+/infrastructure-tnc/vars/local.tfvars
+/infrastructure-tnc/.terraform/
+
+
 # MacOs
 .DS_Store
 
