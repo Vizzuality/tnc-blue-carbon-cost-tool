@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { getCapexCostInputsKeys } from "@shared/lib/utils";
 import { COSTS_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
@@ -64,10 +66,22 @@ export default function CapexCostInputsTable() {
             (activity === ACTIVITY.RESTORATION && !!restorationActivity)),
       },
     );
+  const tableData = useMemo(
+    () =>
+      data?.filter((item) => {
+        if (
+          activity === ACTIVITY.CONSERVATION &&
+          item.property.includes("implementationLabor")
+        )
+          return false;
+        return true;
+      }),
+    [data, activity],
+  );
 
   const table = useReactTable({
     // @ts-expect-error fix later
-    data: isSuccess ? data : NO_DATA,
+    data: isSuccess ? tableData : NO_DATA,
     columns: COLUMNS,
     getCoreRowModel: getCoreRowModel(),
   });
