@@ -5,6 +5,7 @@ import { EXTENDED_TIMEOUT, PROJECT_NAME } from "e2e/lib/constants";
 import {
   createAndSaveCustomProject,
   createAndSignInUser,
+  expectEditProjectHeadingVisible,
   navigateToEditCustomProject,
 } from "e2e/lib/utils";
 import {
@@ -65,9 +66,7 @@ test.describe("Custom Projects - Edit", () => {
 
     await navigateToEditCustomProject(page);
 
-    await expect(
-      page.getByRole("heading", { name: `Edit ${PROJECT_NAME}` }),
-    ).toBeVisible();
+    await expectEditProjectHeadingVisible(page);
 
     expect(
       page.locator("input[name='costInputs.implementationLabor']"),

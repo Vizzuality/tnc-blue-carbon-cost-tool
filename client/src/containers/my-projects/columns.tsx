@@ -115,7 +115,11 @@ const ActionsDropdown = ({
     <div className="flex w-full justify-end">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            data-testid="actions-dropdown-button"
+          >
             <DotsHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>
