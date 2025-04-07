@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
 
+import { useActivityConstraints } from "@/containers/projects/form/hooks";
 import {
   createCustomProject,
   updateCustomProject,
@@ -37,6 +38,7 @@ export default function Header({ name, id }: HeaderProps) {
   const router = useRouter();
   const { toast } = useToast();
   const isEdit = !!id;
+  useActivityConstraints(isEdit);
   const handleSubmit = useCallback(
     async (data: CustomProjectForm) => {
       try {
