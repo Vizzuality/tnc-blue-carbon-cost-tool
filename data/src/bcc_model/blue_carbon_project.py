@@ -350,22 +350,22 @@ class BlueCarbonProject:
         """
         # Define the mapping between input arguments and the corresponding master table columns
         cost_items = {
-            "feasibility_analysis": "feasibility_analysis",
-            "conservation_planning_and_admin": "conservation_planning_and_admin",
+            "feasibility_analysis": "feasibility_analysis_cost",
+            "conservation_planning_and_admin": "planning_and_admin_cost",
             "data_collection_and_field_cost": "data_collection_and_field_cost",
-            "community_representation": "community_representation",
-            "blue_carbon_project_planning": "blue_carbon_project_planning",
+            "community_representation": "community_representation_liaison_cost",
+            "blue_carbon_project_planning": "blue_carbon_project_planning_cost",
             "establishing_carbon_rights": "establishing_carbon_rights",
-            "validation": "validation",
-            "implementation_labor": "implementation_labor",
-            "monitoring": "monitoring",
-            "maintenance": "maintenance",
-            "community_benefit_sharing_fund": "community_benefit_sharing_fund",
-            "carbon_standard_fees": "carbon standard_fees",
-            "baseline_reassessment": "baseline_reassessment",
-            "MRV": "MRV",
-            "long_term_project_operating": "long_term_project_operating_cost",
             "financing_cost": "financing_cost",
+            "validation": "validation_cost",
+            "implementation_labor": "implementation_labor",
+            "monitoring": "monitoring_cost",
+            "maintenance": "maintenance",
+            "carbon_standard_fees": "carbon_standard_fees",
+            "community_benefit_sharing_fund": "community_benefit_sharing_fund_cost",
+            "baseline_reassessment": "baseline_reassessment_cost",
+            "MRV": "mrv_cost",
+            "long_term_project_operating": "long_term_project_operating_cost",
         }
 
         # Loop through the cost items.
