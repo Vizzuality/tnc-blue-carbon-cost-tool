@@ -1,6 +1,6 @@
 # This user's access key & secret access key will be needed in GH Secrets
 resource "aws_iam_user" "pipeline_user" {
-  name = "ProjectPipelineUser"
+  name = "BCCProjectPipelineUser"
 }
 
 resource "aws_iam_access_key" "pipeline_user_access_key" {

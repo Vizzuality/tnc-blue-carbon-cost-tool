@@ -14,7 +14,7 @@ resource "aws_ses_domain_dkim" "domain_dkim" {
 }
 
 resource "aws_iam_user" "email_sender_user" {
-  name = "${replace(title(replace(var.domain, "/\\W/", " ")), " ","")}EmailSender"
+  name = "${replace(title(replace(var.domain, "/\\W/", " ")), " ", "")}EmailSender"
 }
 
 resource "aws_iam_user_policy" "get_ecr_token_policy" {
@@ -24,7 +24,7 @@ resource "aws_iam_user_policy" "get_ecr_token_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action:[
+        Action : [
           "ses:SendEmail",
           "ses:SendRawEmail"
         ],
