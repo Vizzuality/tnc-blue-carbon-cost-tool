@@ -110,9 +110,12 @@ export const projectsContract = contract.router({
     responses: {
       200: contract.type<ProjectMap>(),
     },
-    query: z.object({
-      projectIds: z.string().uuid().array(),
-      costRangeSelector: z.nativeEnum(COST_TYPE_SELECTOR),
-  }),
+    query: getProjectsQuerySchema.pick({
+      filter: true,
+      costRange: true,
+      abatementPotentialRange: true,
+      costRangeSelector: true,
+      partialProjectName: true,
+    }),
   },
 });

@@ -112,10 +112,15 @@ export class ProjectsController {
     return tsRestHandler(
       projectsContract.getProjectsMapV2,
       async ({ query }) => {
-        const { projectIds, costRangeSelector } = query;
+        // Get filtered project Ids to match table results
+        const [projectIds] = await this.projectsService.findAll({
+          fields: ['id'],
+          ...query,
+          disablePagination: true,
+        });
         const data = await this.projectMapRepository.getProjectsMapV2(
-          projectIds,
-          costRangeSelector,
+          projectIds.map((p) => p.id),
+          query.costRangeSelector,
         );
         return { body: data, status: HttpStatus.OK } as any;
       },
