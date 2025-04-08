@@ -35,6 +35,7 @@ export default function CustomProjectForm({ id }: CustomProjectFormProps) {
   const methods = useForm<CustomProjectForm>({
     resolver: zodResolver(CustomProjectFormSchema),
     defaultValues: formValues,
+    values: formValues,
     mode: "all",
   });
   const activity = methods.watch("activity");

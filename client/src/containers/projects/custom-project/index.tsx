@@ -32,18 +32,19 @@ interface CustomProjectProps {
 }
 
 const CustomProject: FC<CustomProjectProps> = ({ id }) => {
-  const data = useGetCustomProject(id);
+  const { data, isFetching } = useGetCustomProject(id);
 
   // TODO: Maybe add a spinner/skeleton?
   if (!data) return null;
 
-  return <CustomProjectView data={data} id={id} />;
+  return <CustomProjectView data={data} isFetching={isFetching} id={id} />;
 };
 
 const CustomProjectView: FC<{
   data: InstanceType<typeof CustomProjectEntity>;
+  isFetching: boolean;
   id?: string;
-}> = ({ data, id }) => {
+}> = ({ data, isFetching, id }) => {
   const { projectSummaryOpen } = useAtomValue(projectsUIState);
   const { open: navOpen } = useSidebar();
   const {
@@ -56,7 +57,7 @@ const CustomProjectView: FC<{
   } = useCustomProjectOutput(data);
 
   const hasOpenBreakEvenPrice =
-    data.output?.breakevenPriceComputationOutput !== null;
+    data.output.breakevenPriceComputationOutput !== null;
   const redirectPath = id
     ? `/projects/${id}/edit`
     : "/projects/new?useCache=true";
@@ -107,7 +108,7 @@ const CustomProjectView: FC<{
       </motion.aside>
       <div className="mx-4 flex flex-1 flex-col">
         <BreakevenPriceModal
-          open={!hasOpenBreakEvenPrice}
+          open={!isFetching && !hasOpenBreakEvenPrice}
           redirectPath={redirectPath}
         />
         <CustomProjectHeader data={data} />
@@ -118,7 +119,7 @@ const CustomProjectView: FC<{
           {costDetailsProps && (
             <CostDetails
               data={costDetailsProps}
-              hasOpenBreakEvenPrice={hasOpenBreakEvenPrice}
+              hasOpenBreakEvenPrice={!isFetching && hasOpenBreakEvenPrice}
             />
           )}
         </div>
