@@ -21,6 +21,8 @@ import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
 
+import { getQueryClient } from "@/app/providers";
+
 import { RestorationPlanFormProperty } from "@/containers/projects/form/restoration-plan/columns";
 /**
  * Note: All percentage values are kept in decimal form,
@@ -189,6 +191,11 @@ export const updateCustomProject = async (options: {
         body?.errors?.[0].title || "Something went wrong updating the project",
       );
     }
+
+    const queryClient = getQueryClient();
+    queryClient.invalidateQueries({
+      queryKey: queryKeys.customProjects.one(options.params.id).queryKey,
+    });
   } catch (e) {
     throw new Error("Something went wrong updating the project");
   }
