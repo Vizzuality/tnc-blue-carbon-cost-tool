@@ -1,7 +1,7 @@
 
 
 module "beanstalk" {
-  source = "../beanstalk"
+  source                                        = "../beanstalk"
   project                                       = var.project
   environment                                   = var.environment
   region                                        = var.aws_region
@@ -20,7 +20,7 @@ module "beanstalk" {
 }
 
 module "postgresql" {
-  source = "../rds"
+  source                      = "../rds"
   log_retention_period        = var.rds_log_retention_period
   subnet_ids                  = var.subnet_ids
   project                     = var.project
@@ -40,12 +40,12 @@ module "postgresql" {
 
 
 module "github" {
-  source = "../github"
-  repo_name    = var.repo_name
-  github_owner = var.github_owner
-  github_token = var.github_token
-  github_environment = var.environment
-  environment_secret_map = merge(local.api_secret_env_vars, local.client_secret_env_vars, var.github_additional_environment_secrets)
+  source                   = "../github"
+  repo_name                = var.repo_name
+  github_owner             = var.github_owner
+  github_token             = var.github_token
+  github_environment       = var.environment
+  environment_secret_map   = merge(local.api_secret_env_vars, local.client_secret_env_vars, var.github_additional_environment_secrets)
   environment_variable_map = merge(local.api_env_vars, local.client_env_vars, var.github_additional_environment_variables)
 }
 

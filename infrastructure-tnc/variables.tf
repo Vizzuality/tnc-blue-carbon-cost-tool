@@ -20,8 +20,8 @@ variable "project_name" {
 }
 
 variable "domain" {
-    type        = string
-    description = "Domain name for the project"
+  type        = string
+  description = "Domain name for the project"
 }
 
 variable "github_owner" {
@@ -32,4 +32,9 @@ variable "github_owner" {
 variable "github_token" {
   type        = string
   description = "Github token to access the repository"
+}
+
+variable "mapbox_api_token" {
+  type        = string
+  description = "Mapbox API token"
 }
