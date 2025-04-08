@@ -143,7 +143,6 @@ const Many2ManySources: React.FC<Many2ManySourcesProps> = ({
     );
     const data = await res.json();
     if (data) {
-      // console.log(data);
       setAvailableSourceTypes(
         data.sourceTypes!.map((entry: string) => {
           return {
