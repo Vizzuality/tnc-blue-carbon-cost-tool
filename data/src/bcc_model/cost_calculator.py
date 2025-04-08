@@ -167,7 +167,7 @@ class CostCalculator:
         return self.opex_total_cost_plan
 
     def calculate_feasibility_analysis_cost(self):
-        "CAPEX function to calculate feseability analysis cost."
+        "CAPEX function to calculate feasibility analysis cost."
         total_base_cost = calculate_cost_plan(
             self.project.base_size,
             self.project.base_increase,
