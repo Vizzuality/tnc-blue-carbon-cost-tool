@@ -32,7 +32,7 @@ resource "aws_db_instance" "postgresql" {
   password                = random_password.postgresql_superuser.result
   backup_retention_period = 5
   allocated_storage       = 5
-  skip_final_snapshot = true
+  skip_final_snapshot     = true
 
   maintenance_window = "Mon:00:00-Mon:03:00"
   backup_window      = "03:00-06:00"
@@ -63,7 +63,7 @@ resource "aws_security_group" "postgresql" {
   description            = "Security Group for PostgreSQL DB"
   name                   = "${var.project}-${var.environment}-PostgreSQL-ingress"
   revoke_rules_on_delete = true
-  tags                   = merge(
+  tags = merge(
     {
       Name = "${var.project} ${var.environment} RDS SG"
     },
@@ -104,7 +104,7 @@ resource "aws_secretsmanager_secret" "postgresql-admin" {
 
 resource "aws_secretsmanager_secret_version" "postgresql-admin" {
 
-  secret_id     = aws_secretsmanager_secret.postgresql-admin.id
+  secret_id = aws_secretsmanager_secret.postgresql-admin.id
   secret_string = jsonencode({
     "username" = var.rds_user_name,
     "engine"   = "postgresql",
