@@ -44,5 +44,5 @@ export function useGetCustomProject(id?: string) {
     }
   }, [queryCache, pathname, router]);
 
-  return data;
+  return { data, isFetching: getCustomProjectQuery.isFetching };
 }

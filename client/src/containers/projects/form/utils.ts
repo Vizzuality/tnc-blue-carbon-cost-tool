@@ -194,6 +194,11 @@ export const updateCustomProject = async (options: {
 
     const queryClient = getQueryClient();
     queryClient.invalidateQueries({
+      queryKey: queryKeys.customProjects.one(options.params.id, {
+        include: ["country"],
+      }).queryKey,
+    });
+    queryClient.invalidateQueries({
       queryKey: queryKeys.customProjects.one(options.params.id).queryKey,
     });
   } catch (e) {
