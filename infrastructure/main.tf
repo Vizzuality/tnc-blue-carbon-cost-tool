@@ -88,7 +88,7 @@ module "dev" {
 
 module "staging" {
   source      = "./modules/env"
-  domain      = "staging.${var.project_name}.${var.domain}"
+  domain      = "staging.bcct.naturebase.org"
   project     = var.project_name
   environment = "staging"
 
@@ -104,6 +104,39 @@ module "staging" {
 
   elasticbeanstalk_iam_service_linked_role_name = "AWSServiceRoleForElasticBeanstalk"
   cname_prefix                                  = "${var.project_name}-staging-environment"
+
+  rds_instance_class          = "db.t3.micro"
+  rds_engine_version          = "15.7"
+  rds_backup_retention_period = 3
+
+  repo_name    = "tnc-blue-carbon-cost-tool"
+  github_owner = var.github_owner
+  github_token = var.github_token
+
+  github_additional_environment_variables = {
+    JWT_EXPIRES_IN = "1d"
+  }
+}
+
+
+module "production" {
+  source      = "./modules/env"
+  domain      = "bcct.naturebase.org"
+  project     = var.project_name
+  environment = "production"
+
+  aws_region = var.aws_region
+
+  vpc                = module.vpc.vpc
+  subnet_ids         = module.vpc.public_subnet_ids
+  availability_zones = module.vpc.availability_zones
+
+  beanstalk_platform = "64bit Amazon Linux 2023 v4.5.0 running Docker"
+  beanstalk_tier     = "WebServer"
+  ec2_instance_type  = "t3.medium"
+
+  elasticbeanstalk_iam_service_linked_role_name = "AWSServiceRoleForElasticBeanstalk"
+  cname_prefix                                  = "${var.project_name}-production-environment"
 
   rds_instance_class          = "db.t3.micro"
   rds_engine_version          = "15.7"
