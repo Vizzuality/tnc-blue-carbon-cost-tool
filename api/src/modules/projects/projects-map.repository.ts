@@ -186,7 +186,7 @@ export class ProjectsMapRepository extends Repository<Project> {
 
   async getProjectsMapV2(
     projectIds: Project['id'][],
-    costRangeSelector: 'npv' | 'total',
+    costRangeSelector: 'npv' | 'total' = 'total',
   ): Promise<ProjectMap> {
     const geoQueryBuilder = this.manager.createQueryBuilder();
     geoQueryBuilder
