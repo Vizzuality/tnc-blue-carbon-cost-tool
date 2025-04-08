@@ -1,2 +1,0 @@
-aws_profile = ""
-aws_region  = ""

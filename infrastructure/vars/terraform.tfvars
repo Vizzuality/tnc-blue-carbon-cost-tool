@@ -1,2 +1,2 @@
-aws_profile=""
-aws_region="eu-west-3"
+aws_profile = ""
+aws_region  = ""

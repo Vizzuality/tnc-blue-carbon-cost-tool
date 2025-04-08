@@ -10,7 +10,7 @@ variable "state_project_name" {
 }
 
 variable "state_aws_profile" {
-    type        = string
-    description = "AWS profile to use to perform TF operations"
+  type        = string
+  description = "AWS profile to use to perform TF operations"
 }
 

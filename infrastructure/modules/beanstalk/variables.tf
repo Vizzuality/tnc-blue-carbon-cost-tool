@@ -57,7 +57,7 @@ variable "elasticbeanstalk_iam_service_linked_role_name" {
 }
 
 variable "cname_prefix" {
-    type        = string
-    description = "The CNAME prefix to use for the environment"
-    default = null
+  type        = string
+  description = "The CNAME prefix to use for the environment"
+  default     = null
 }
