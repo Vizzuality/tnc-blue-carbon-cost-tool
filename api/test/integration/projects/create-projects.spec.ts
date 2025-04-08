@@ -4,8 +4,8 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 import { Project, PROJECT_PRICE_TYPE } from '@shared/entities/projects.entity';
-import { TestManager } from 'api/test/utils/test-manager';
-import { TestUser } from 'api/test/utils/user.auth';
+import { TestManager } from '../../utils/test-manager';
+import { TestUser } from '../../utils/user.auth';
 
 describe('Create projects', () => {
   let testManager: TestManager;
