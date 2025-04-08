@@ -16,6 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
 import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
 import { ROLES } from '@shared/entities/users/roles.enum';
+import { handleImplementationLabor } from '@api/modules/custom-projects/handle-implementation-labor';
 
 @Controller()
 export class CustomProjectsController {
@@ -76,7 +77,8 @@ export class CustomProjectsController {
     return tsRestHandler(
       customProjectContract.createCustomProject,
       async ({ body }) => {
-        const customProject = await this.customProjects.create(body);
+        const dto = handleImplementationLabor(body);
+        const customProject = await this.customProjects.create(dto);
         return {
           status: 201,
           body: { data: customProject },
@@ -84,7 +86,6 @@ export class CustomProjectsController {
       },
     );
   }
-
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
   @TsRestHandler(customProjectContract.saveCustomProject)
@@ -153,8 +154,8 @@ export class CustomProjectsController {
         ) {
           throw new ForbiddenException();
         }
-        const recalculatedCustomProject =
-          await this.customProjects.create(body);
+        const dto = handleImplementationLabor(body);
+        const recalculatedCustomProject = await this.customProjects.create(dto);
         const updatedEntity = await this.customProjects.update(id, {
           id,
           ...recalculatedCustomProject,
