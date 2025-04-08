@@ -61,9 +61,9 @@ variable "repo_name" {
 }
 
 variable "cname_prefix" {
-    type        = string
-    description = "The CNAME prefix to use for the environment"
-    default = null
+  type        = string
+  description = "The CNAME prefix to use for the environment"
+  default     = null
 }
 
 
@@ -83,13 +83,13 @@ variable "github_token" {
 variable "rds_instance_class" {
   type        = string
   description = "Instance type of Aurora PostgreSQL server"
-  default = null
+  default     = null
 }
 
 variable "rds_engine_version" {
   type        = string
   description = "RDS Database engine version"
-  default = null
+  default     = null
 }
 
 variable "rds_instance_count" {
@@ -113,7 +113,7 @@ variable "rds_backup_retention_period" {
 variable "contact_email" {
   type        = string
   description = "Email address where contact form submissions will be sent"
-  default = null
+  default     = null
 }
 
 variable "github_additional_environment_secrets" {

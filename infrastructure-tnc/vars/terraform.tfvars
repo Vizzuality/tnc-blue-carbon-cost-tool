@@ -1,2 +1,2 @@
-aws_profile=""
-aws_region=""
+aws_profile = ""
+aws_region  = ""

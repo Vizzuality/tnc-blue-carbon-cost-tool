@@ -8,38 +8,38 @@ terraform {
 
   // TF does not allow vars here. Use main vars or module outputs for other variables
   backend "s3" {
-    bucket = "blue-carbon-cost-terraform-state"
-    key = "state"
-    region = "us-east-2"
-    profile = "tnc-aws"
+    bucket         = "blue-carbon-cost-terraform-state"
+    key            = "state"
+    region         = "us-east-2"
+    profile        = "tnc-aws"
     dynamodb_table = "blue-carbon-cost-terraform-state-lock"
   }
 
   required_version = "~> 1.9.0"
 }
 
-module state {
-  source = "./modules/state"
+module "state" {
+  source             = "./modules/state"
   state_project_name = var.project_name
-  state_aws_region = var.aws_region
-  state_aws_profile = var.aws_profile
+  state_aws_region   = var.aws_region
+  state_aws_profile  = var.aws_profile
 }
 
-module client_ecr {
-  source = "./modules/ecr"
-  project_name = var.project_name
+module "client_ecr" {
+  source        = "./modules/ecr"
+  project_name  = var.project_name
   ecr_repo_name = "client"
 }
 
-module api_ecr {
-  source = "./modules/ecr"
-  project_name = var.project_name
+module "api_ecr" {
+  source        = "./modules/ecr"
+  project_name  = var.project_name
   ecr_repo_name = "api"
 }
 
-module admin_ecr {
-  source = "./modules/ecr"
-  project_name = var.project_name
+module "admin_ecr" {
+  source        = "./modules/ecr"
+  project_name  = var.project_name
   ecr_repo_name = "admin"
 }
 
@@ -49,7 +49,7 @@ module "iam" {
 
 
 module "vpc" {
-  source = "./modules/vpc"
+  source  = "./modules/vpc"
   project = var.project_name
 }
 
@@ -61,8 +61,8 @@ module "dev" {
 
   aws_region = var.aws_region
 
-  vpc        = module.vpc.vpc
-  subnet_ids = module.vpc.public_subnet_ids
+  vpc                = module.vpc.vpc
+  subnet_ids         = module.vpc.public_subnet_ids
   availability_zones = module.vpc.availability_zones
 
   beanstalk_platform = "64bit Amazon Linux 2023 v4.5.0 running Docker"
@@ -94,8 +94,8 @@ module "staging" {
 
   aws_region = var.aws_region
 
-  vpc        = module.vpc.vpc
-  subnet_ids = module.vpc.public_subnet_ids
+  vpc                = module.vpc.vpc
+  subnet_ids         = module.vpc.public_subnet_ids
   availability_zones = module.vpc.availability_zones
 
   beanstalk_platform = "64bit Amazon Linux 2023 v4.5.0 running Docker"
@@ -131,5 +131,8 @@ module "github" {
     API_REPOSITORY_NAME             = module.api_ecr.repository_name
     ADMIN_REPOSITORY_NAME           = module.admin_ecr.repository_name
     AWS_REGION                      = var.aws_region
+  }
+  global_variable_map = {
+    NEXT_PUBLIC_MAPBOX_API_TOKEN = var.mapbox_api_token
   }
 }
