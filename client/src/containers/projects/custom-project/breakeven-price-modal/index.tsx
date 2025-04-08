@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Link from "next/link";
 
@@ -22,6 +22,10 @@ const BreakevenPriceModal = ({
   redirectPath,
 }: BreakevenPriceModalProps) => {
   const [isOpen, setIsOpen] = useState(open);
+
+  useEffect(() => {
+    setIsOpen(open);
+  }, [open]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
