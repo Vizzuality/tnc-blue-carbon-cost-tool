@@ -76,7 +76,7 @@ export const customProjectContract = contract.router({
     method: "PATCH",
     path: "/custom-projects/:id",
     pathParams: z.object({
-      id: z.coerce.string(),
+      id: z.coerce.string().uuid(),
     }),
     responses: {
       200: contract.type<ApiResponse<CustomProject>>(),
