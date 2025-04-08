@@ -74,7 +74,6 @@ const beforeHook = async (request: any, context: ActionContext) => {
   }
 
   const responseData = await res.json();
-  //   console.log('Response data:', responseData);
   if (responseData.errors) {
     const validationErrors = responseData.errors.reduce(
       (acc: any, error: any) => {
