@@ -3,18 +3,4 @@
 import { CreateProjectSchema } from "@shared/schemas/projects/create-project.schema";
 import { z } from "zod";
 
-// //      do we want to use country code? name? both?
-// export type CreateProjectDto = {
-//   projectName: string;
-//   countryCode: Country["code"];
-//   ecosystem: ECOSYSTEM;
-//   activity: ACTIVITY;
-//   restorationActivity?: RESTORATION_ACTIVITY_SUBTYPE;
-//   // is this a required field??? there is a project size entity in the DB, but does make sense to not be able to define the size when creating a project
-//   // from the backoffice, or when importing an excel????
-//   projectSizeHa: Project["projectSize"];
-//   priceType: Project["priceType"];
-//   initialCarbonPriceAssumption: Project["initialPriceAssumption"];
-// };
-
 export type CreateProjectDto = z.infer<typeof CreateProjectSchema>;
