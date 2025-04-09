@@ -100,10 +100,11 @@ export class TestManager {
     return this.moduleFixture.get(typeOrToken);
   }
 
-  async setUpTestUser() {
+  async setUpTestUser(params?: Partial<User>) {
     const user = await createUser(this.getDataSource(), {
       role: ROLES.ADMIN,
       isActive: true,
+      ...params,
     });
     return logUserIn(this, user);
   }

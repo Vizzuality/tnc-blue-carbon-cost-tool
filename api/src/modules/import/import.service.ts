@@ -1,4 +1,11 @@
-import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { EntityPreprocessor } from '@api/modules/import/services/entity.preprocessor';
 import {
   ExcelParserInterface,
@@ -9,19 +16,16 @@ import { EventBus } from '@nestjs/cqrs';
 import { API_EVENT_TYPES } from '@api/modules/api-events/events.enum';
 import { ImportEvent } from '@api/modules/import/events/import.event';
 import { DataSource } from 'typeorm';
-import {
-  userDataConservationInputMapJsonToEntity,
-  userDataCostInputsMapJsonToEntity,
-  userDataRestorationInputMapJsonToEntity,
-} from '@api/modules/import/services/user-data-parser';
-import { UserUploadCostInputs } from '@shared/entities/users/user-upload-cost-inputs.entity';
-import { UserUploadRestorationInputs } from '@shared/entities/users/user-upload-restoration-inputs.entity';
-import { UserUploadConservationInputs } from '@shared/entities/users/user-upload-conservation-inputs.entity';
 import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingestion.xlsx-parser';
-import { UploadDataFilesDto } from '@shared/dtos/users/upload-data-files.dto';
-import { UserXlsxTemplatesParser } from '@api/modules/import/services/user-xlsx-templates.parser';
-import { ZodError, ZodIssue } from 'zod';
 import { ProjectsService } from '@api/modules/projects/projects.service';
+import {
+  UploadDataFilesDto,
+  UploadDataFilesWithKeyDto,
+} from '@shared/dtos/users/upload-data-files.dto';
+import { S3Service } from '@api/modules/import/s3.service';
+import { UserUpload, UserUploadFile } from '@shared/entities/users/user-upload';
+import { User } from '@shared/entities/users/user.entity';
+import { Readable } from 'stream';
 
 @Injectable()
 export class ImportService {
@@ -36,12 +40,12 @@ export class ImportService {
     private readonly dataIngestionParser: DataIngestionExcelParser,
     @Inject(ExcelParserToken)
     private readonly excelParser: ExcelParserInterface,
-    private readonly userXlsxTemplatesParser: UserXlsxTemplatesParser,
     private readonly importRepo: ImportRepository,
     private readonly preprocessor: EntityPreprocessor,
     private readonly eventBus: EventBus,
     private readonly dataSource: DataSource,
     private readonly projectsService: ProjectsService,
+    private readonly s3Service: S3Service,
   ) {}
 
   async importProjectScorecard(fileBuffer: Buffer, userId: string) {
@@ -94,60 +98,65 @@ export class ImportService {
   async importDataProvidedByPartner(
     files: UploadDataFilesDto,
     userId: string,
-  ): Promise<[ZodIssue[] | undefined, any]> {
+  ): Promise<UserUpload> {
     this.logger.warn('importDataProvidedByPartner started...');
     this.registerImportEvent(userId, this.eventMap.STARTED);
 
+    let userUpload = new UserUpload();
     try {
-      const { costInputs, carbonInputs } =
-        await this.userXlsxTemplatesParser.parse(files);
+      const preparedFiles = files.map((file, idx) => ({
+        id: idx + 1,
+        originalName: file.originalname,
+        mimeType: file.mimetype,
+        size: file.size,
+        key: this.s3Service.generateS3Key(userId, file.originalname),
+        buffer: file.buffer,
+      }));
 
-      await this.dataSource.transaction(async (manager) => {
-        if (costInputs) {
-          const mappedCostInputs = userDataCostInputsMapJsonToEntity(
-            costInputs,
-            userId,
-          );
-
-          const userCostInputsRepo =
-            manager.getRepository(UserUploadCostInputs);
-          await userCostInputsRepo.save(mappedCostInputs);
-        }
-
-        if (carbonInputs) {
-          const mappedRestorationInputs =
-            userDataRestorationInputMapJsonToEntity(
-              carbonInputs.restoration,
-              userId,
-            );
-          const mappedConservationInputs =
-            userDataConservationInputMapJsonToEntity(
-              carbonInputs.conservation,
-              userId,
-            );
-
-          const userRestorationInputsRepo = manager.getRepository(
-            UserUploadRestorationInputs,
-          );
-          const userConservationInputsRepo = manager.getRepository(
-            UserUploadConservationInputs,
-          );
-          await userRestorationInputsRepo.save(mappedRestorationInputs);
-          await userConservationInputsRepo.save(mappedConservationInputs);
-        }
-      });
+      userUpload.user = { id: userId } as User;
+      userUpload.files = preparedFiles.map((file) => ({
+        ...file,
+        buffer: undefined,
+      }));
+      userUpload = await this.importRepo.createUserUpload(userUpload);
+      await this.s3Service.uploadUserFiles(
+        preparedFiles as unknown as UploadDataFilesWithKeyDto,
+      );
 
       this.logger.warn('importDataProvidedByPartner completed successfully');
       this.registerImportEvent(userId, this.eventMap.SUCCESS);
-      return [undefined, carbonInputs];
+      return userUpload;
     } catch (e) {
       this.logger.error('importDataProvidedByPartner failed', e);
       this.registerImportEvent(userId, this.eventMap.FAILED, {
         error: { type: e.constructor.name, message: e.message },
       });
+      this.importRepo.removeUserUpload(userUpload);
 
-      if (e instanceof ZodError) return [e.errors, undefined];
       throw new ConflictException(e.message);
     }
+  }
+
+  public async downloadUserUploadFile(
+    userUploadId: number,
+    fileId: number,
+  ): Promise<[UserUploadFile, Readable]> {
+    const userUpload = await this.importRepo.findUserUploadById(userUploadId);
+    if (userUpload === null) {
+      throw new NotFoundException('User upload not found');
+    }
+
+    const userUploadFile = userUpload.files.find((file) => file.id == fileId);
+    if (!userUploadFile) {
+      throw new NotFoundException('User upload file not found');
+    }
+
+    const fileStream = await this.s3Service.downloadFileByKey(
+      userUploadFile.key,
+    );
+    if (!fileStream) {
+      throw new InternalServerErrorException('File not found in directory');
+    }
+    return [userUploadFile, fileStream];
   }
 }

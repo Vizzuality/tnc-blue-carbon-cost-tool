@@ -30,14 +30,12 @@ import { BaseSize } from "@shared/entities/base-size.entity";
 import { BaseIncrease } from "@shared/entities/base-increase.entity";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { CustomProject } from "@shared/entities/custom-project.entity";
-import { UserUploadCostInputs } from "@shared/entities/users/user-upload-cost-inputs.entity";
-import { UserUploadRestorationInputs } from "@shared/entities/users/user-upload-restoration-inputs.entity";
-import { UserUploadConservationInputs } from "@shared/entities/users/user-upload-conservation-inputs.entity";
 import { ProjectScorecard } from "@shared/entities/project-scorecard.entity";
 import { ProjectScorecardView } from "@shared/entities/project-scorecard.view";
 import { BackOfficeSession } from "@shared/entities/users/backoffice-session";
 import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 import { ModelComponentSourceM2M } from "@shared/entities/methodology/model-source-m2m.entity";
+import { UserUpload } from "@shared/entities/users/user-upload";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -72,9 +70,7 @@ export const COMMON_DATABASE_ENTITIES = [
   BaseIncrease,
   ModelAssumptions,
   CustomProject,
-  UserUploadCostInputs,
-  UserUploadRestorationInputs,
-  UserUploadConservationInputs,
+  UserUpload,
   ProjectScorecard,
   ProjectScorecardView,
   BackOfficeSession,

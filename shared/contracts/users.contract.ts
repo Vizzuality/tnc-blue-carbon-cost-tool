@@ -68,4 +68,18 @@ export const usersContract = contract.router({
     contentType: "multipart/form-data",
     body: contract.type<UploadDataFilesDto>(),
   },
+  listUploadDataTemplates: {
+    method: "GET",
+    path: "/users/upload-data/templates",
+    responses: {
+      200: contract.type<any>(),
+    },
+  },
+  downloadUploadDataTemplate: {
+    method: "GET",
+    path: "/users/upload-data/templates/:templateId",
+    responses: {
+      200: contract.type<any>(),
+    },
+  },
 });
