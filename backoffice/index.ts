@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import AdminJS, { BaseAuthProvider, ComponentLoader } from 'adminjs';
+import AdminJS, { BaseAuthProvider } from 'adminjs';
 import AdminJSExpress from '@adminjs/express';
 import express, { Request, Response } from 'express';
 import * as AdminJSTypeorm from '@adminjs/typeorm';
@@ -35,10 +35,6 @@ import { ImplementationLaborCostResource } from './resources/implementation-labo
 import { BaseSizeResource } from './resources/base-size/base-size.resource.js';
 import { BaseIncreaseResource } from './resources/base-increase/base-increase.resource.js';
 import { ModelAssumptionResource } from './resources/model-assumptions/model-assumptions.resource.js';
-import { UserUploadCostInputs } from '@shared/entities/users/user-upload-cost-inputs.entity.js';
-import { UserUploadConservationInputs } from '@shared/entities/users/user-upload-conservation-inputs.entity.js';
-import { UserUploadRestorationInputs } from '@shared/entities/users/user-upload-restoration-inputs.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from './resources/common/common.resources.js';
 import { BACKOFFICE_SESSIONS_TABLE } from '@shared/entities/users/backoffice-session.js';
 import { CountryResource } from './resources/countries/country.resource.js';
 import { componentLoader, Components } from 'backoffice/components/index.js';
@@ -46,6 +42,7 @@ import { ModelComponentSourceResource } from 'backoffice/resources/model-compone
 import { EcosystemExtentResource } from 'backoffice/resources/ecosystem-extent/ecosystem-extent.resource.js';
 import path from 'path';
 import { Config } from 'backoffice/components/config/Config.js';
+import { UserUploadResource } from 'backoffice/resources/users/user-upload.resource.js';
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -98,45 +95,7 @@ const start = async () => {
     componentLoader,
     resources: [
       UserResource,
-      {
-        resource: UserUploadCostInputs,
-        name: 'UserUploadCostInputs',
-        options: {
-          navigation: {
-            name: 'User Data',
-            icon: 'File',
-          },
-          properties: {
-            ...GLOBAL_COMMON_PROPERTIES,
-          },
-        },
-      },
-      {
-        resource: UserUploadConservationInputs,
-        name: 'UserUploadConservationInputs',
-        options: {
-          navigation: {
-            name: 'User Data',
-            icon: 'File',
-          },
-          properties: {
-            ...GLOBAL_COMMON_PROPERTIES,
-          },
-        },
-      },
-      {
-        resource: UserUploadRestorationInputs,
-        name: 'UserUploadRestorationInputs',
-        options: {
-          navigation: {
-            name: 'User Data',
-            icon: 'File',
-          },
-          properties: {
-            ...GLOBAL_COMMON_PROPERTIES,
-          },
-        },
-      },
+      UserUploadResource,
       ProjectSizeResource,
       FeasibilityAnalysisResource,
       ConservationAndPlanningAdminResource,

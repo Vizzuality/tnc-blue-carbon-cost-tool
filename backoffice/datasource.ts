@@ -32,22 +32,18 @@ import { ImplementationLaborCost } from '@shared/entities/cost-inputs/implementa
 import { BaseSize } from '@shared/entities/base-size.entity.js';
 import { BaseIncrease } from '@shared/entities/base-increase.entity.js';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity.js';
-import { UserUploadCostInputs } from '@shared/entities/users/user-upload-cost-inputs.entity.js';
-import { UserUploadRestorationInputs } from '@shared/entities/users/user-upload-restoration-inputs.entity.js';
-import { UserUploadConservationInputs } from '@shared/entities/users/user-upload-conservation-inputs.entity.js';
 import { BackOfficeSession } from '@shared/entities/users/backoffice-session.js';
 import { CustomProject } from '@shared/entities/custom-project.entity.js';
 import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity.js';
 import { ModelComponentSourceM2M } from '@shared/entities/methodology/model-source-m2m.entity.js';
+import { UserUpload } from '@shared/entities/users/user-upload.js';
 
 // TODO: If we import the COMMON_DATABASE_ENTITIES from shared, we get an error where DataSouce is not set for a given entity
 export const ADMINJS_ENTITIES = [
   ModelComponentSource,
   User,
   CustomProject,
-  UserUploadCostInputs,
-  UserUploadRestorationInputs,
-  UserUploadConservationInputs,
+  UserUpload,
   ApiEventsEntity,
   Country,
   ProjectSize,
