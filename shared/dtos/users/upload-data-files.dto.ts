@@ -3,6 +3,7 @@ export const UPLOAD_DATA_FILE_KEYS = {
   CARBON_INPUTS_TEMPLATE: "carbon-inputs-template",
 } as const;
 
-export type UploadDataFilesDto = {
-  [key in keyof typeof UPLOAD_DATA_FILE_KEYS]?: Express.Multer.File;
-};
+export type UploadDataFilesDto = Express.Multer.File[];
+export type UploadDataFilesWithKeyDto = (Express.Multer.File & {
+  key: string;
+})[];

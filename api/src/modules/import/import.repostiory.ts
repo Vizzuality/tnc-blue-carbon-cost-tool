@@ -35,6 +35,7 @@ import {
 } from '@api/modules/import/services/parsed-db-entities.type';
 import { MethodologySourcesConfig } from '@shared/config/methodology.config';
 import { ModelComponentSourceM2M } from '@shared/entities/methodology/model-source-m2m.entity';
+import { UserUpload } from '@shared/entities/users/user-upload';
 
 type ClassifiedEntities = {
   withoutSources: Partial<ParsedEntities>;
@@ -236,5 +237,19 @@ export class ImportRepository {
     }
 
     return parsedEntitiesWithSources;
+  }
+
+  public async createUserUpload(userUpload: UserUpload) {
+    return this.dataSource.getRepository(UserUpload).save(userUpload);
+  }
+
+  public async removeUserUpload(userUpload: UserUpload) {
+    return this.dataSource.getRepository(UserUpload).remove(userUpload);
+  }
+
+  public async findUserUploadById(userUploadId: number) {
+    return this.dataSource
+      .getRepository(UserUpload)
+      .findOneBy({ id: userUploadId });
   }
 }

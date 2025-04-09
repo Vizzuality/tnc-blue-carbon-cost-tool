@@ -16,4 +16,8 @@ export const Components = {
     'CountrySelector',
     './atoms/country-selector.tsx',
   ),
+  DownloadUserFiles: componentLoader.add(
+    'DownloadUserFiles',
+    './molecules/download-user-files',
+  ),
 };

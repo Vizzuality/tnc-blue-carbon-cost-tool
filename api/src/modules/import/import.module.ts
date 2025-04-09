@@ -9,6 +9,7 @@ import { ImportEventHandler } from '@api/modules/import/events/handlers/import-e
 import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingestion.xlsx-parser';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
+import { S3Service } from '@api/modules/import/s3.service';
 import { ProjectsModule } from '@api/modules/projects/projects.module';
 import { ImportServiceProvider } from '@api/modules/import/import-service.provider';
 
@@ -27,6 +28,7 @@ import { ImportServiceProvider } from '@api/modules/import/import-service.provid
     // TODO: Which parser is being used here?
     DataIngestionExcelParser,
     { provide: ExcelParserToken, useClass: XlsxParser },
+    S3Service,
     ImportServiceProvider,
   ],
 })
