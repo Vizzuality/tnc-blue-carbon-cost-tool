@@ -29,6 +29,25 @@ class BlueCarbonProject:
     RESTORATION_RATE = 250
     DEFAULT_PROJECT_LENGTH = 40
 
+    cost_items = {
+        "feasibility_analysis": "feasibility_analysis_cost",
+        "conservation_planning_and_admin": "planning_and_admin_cost",
+        "data_collection_and_field_cost": "data_collection_and_field_cost",
+        "community_representation": "community_representation_liaison_cost",
+        "blue_carbon_project_planning": "blue_carbon_project_planning_cost",
+        "establishing_carbon_rights": "establishing_carbon_rights",
+        "financing_cost": "financing_cost",
+        "validation": "validation_cost",
+        "implementation_labor": "implementation_labor",
+        "monitoring": "monitoring_cost",
+        "maintenance": "maintenance",
+        "carbon_standard_fees": "carbon_standard_fees",
+        "community_benefit_sharing_fund": "community_benefit_sharing_fund_cost",
+        "baseline_reassessment": "baseline_reassessment_cost",
+        "MRV": "mrv_cost",
+        "long_term_project_operating": "long_term_project_operating_cost",
+    }
+
     def __init__(
         self,
         activity,
@@ -244,26 +263,8 @@ class BlueCarbonProject:
 
     def _initialize_cost_inputs(self):
         # Initialize cost inputs with default values from the master table
-        cost_items = {
-            "feasibility_analysis": "feasibility_analysis_cost",
-            "conservation_planning_and_admin": "planning_and_admin_cost",
-            "data_collection_and_field_cost": "data_collection_and_field_cost",
-            "community_representation": "community_representation_liaison_cost",
-            "blue_carbon_project_planning": "blue_carbon_project_planning_cost",
-            "establishing_carbon_rights": "establishing_carbon_rights",
-            "financing_cost": "financing_cost",
-            "validation": "validation_cost",
-            "implementation_labor": "implementation_labor",
-            "monitoring": "monitoring_cost",
-            "maintenance": "maintenance",
-            "carbon_standard_fees": "carbon_standard_fees",
-            "community_benefit_sharing_fund": "community_benefit_sharing_fund_cost",
-            "baseline_reassessment": "baseline_reassessment_cost",
-            "MRV": "mrv_cost",
-            "long_term_project_operating": "long_term_project_operating_cost",
-        }
 
-        for key, column in cost_items.items():
+        for key, column in self.cost_items.items():
             # For 'implementation_labor', handle based on activity type
             if key == "implementation_labor":
                 if self.activity == "Restoration":
@@ -341,6 +342,14 @@ class BlueCarbonProject:
                     "restoration_rate", BlueCarbonProject.RESTORATION_RATE
                 )
 
+    def get_cost_inputs(self):
+        """
+        Get the cost inputs for the project.
+        This method retrieves the cost inputs setted in the project
+        """
+
+        return {key: getattr(self, key) for key in self.cost_items.keys()}
+
     def override_cost_input(self, **kwargs):
         """
         Override cost inputs with user-defined values.
@@ -349,28 +358,10 @@ class BlueCarbonProject:
         the default values from the master table will be used.
         """
         # Define the mapping between input arguments and the corresponding master table columns
-        cost_items = {
-            "feasibility_analysis": "feasibility_analysis_cost",
-            "conservation_planning_and_admin": "planning_and_admin_cost",
-            "data_collection_and_field_cost": "data_collection_and_field_cost",
-            "community_representation": "community_representation_liaison_cost",
-            "blue_carbon_project_planning": "blue_carbon_project_planning_cost",
-            "establishing_carbon_rights": "establishing_carbon_rights",
-            "financing_cost": "financing_cost",
-            "validation": "validation_cost",
-            "implementation_labor": "implementation_labor",
-            "monitoring": "monitoring_cost",
-            "maintenance": "maintenance",
-            "carbon_standard_fees": "carbon_standard_fees",
-            "community_benefit_sharing_fund": "community_benefit_sharing_fund_cost",
-            "baseline_reassessment": "baseline_reassessment_cost",
-            "MRV": "mrv_cost",
-            "long_term_project_operating": "long_term_project_operating_cost",
-        }
 
         # Loop through the cost items.
         # Use the provided value or look it up in the master table
-        for key, column in cost_items.items():
+        for key, column in self.cost_items.items():
             if key in kwargs and kwargs[key] is not None:
                 # Set the value from kwargs
                 setattr(self, key, kwargs[key])
