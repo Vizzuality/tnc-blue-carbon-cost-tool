@@ -47,7 +47,7 @@ const beforeHook = async (request: any, context: ActionContext) => {
 
   let res: Response;
   if (context.action.name === 'edit') {
-    const url = `${process.env.API_URL}/${projectsContract.updateProject.path.replace(':id', context.record!.id())}`;
+    const url = `${process.env.API_URL}${projectsContract.updateProject.path.replace(':id', context.record!.id())}`;
     res = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -57,7 +57,7 @@ const beforeHook = async (request: any, context: ActionContext) => {
       body: JSON.stringify(requestBody),
     });
   } else {
-    const url = `${process.env.API_URL}/${projectsContract.createProject.path}`;
+    const url = `${process.env.API_URL}${projectsContract.createProject.path}`;
     res = await fetch(url, {
       method: 'POST',
       headers: {
@@ -68,7 +68,7 @@ const beforeHook = async (request: any, context: ActionContext) => {
     });
   }
 
-  if (!res.ok) {
+  if (res.status > 499) {
     console.error('Error response:', res);
     throw new Error(`Failed to send request: ${res.statusText}`);
   }
