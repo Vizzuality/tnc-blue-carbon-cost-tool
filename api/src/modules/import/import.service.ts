@@ -18,10 +18,7 @@ import { ImportEvent } from '@api/modules/import/events/import.event';
 import { DataSource } from 'typeorm';
 import { DataIngestionExcelParser } from '@api/modules/import/parser/data-ingestion.xlsx-parser';
 import { ProjectsService } from '@api/modules/projects/projects.service';
-import {
-  UploadDataFilesDto,
-  UploadDataFilesWithKeyDto,
-} from '@shared/dtos/users/upload-data-files.dto';
+import { UploadDataFilesDto } from '@shared/dtos/users/upload-data-files.dto';
 import { S3Service } from '@api/modules/import/s3.service';
 import { UserUpload, UserUploadFile } from '@shared/entities/users/user-upload';
 import { User } from '@shared/entities/users/user.entity';
@@ -120,7 +117,7 @@ export class ImportService {
       }));
       userUpload = await this.importRepo.createUserUpload(userUpload);
       await this.s3Service.uploadUserFiles(
-        preparedFiles as unknown as UploadDataFilesWithKeyDto,
+        preparedFiles as unknown as UploadDataFilesDto,
       );
 
       this.logger.warn('importDataProvidedByPartner completed successfully');
