@@ -307,10 +307,12 @@ export class DataRepository extends Repository<BaseDataView> {
           implementationLaborToSelect = 'implementationLaborHydrology';
           break;
       }
-      queryBuilder.select(
-        queryBuilder.alias + '.' + implementationLaborToSelect + ' :: float',
-        'implementationLabor',
-      );
+      if (implementationLaborToSelect) {
+        queryBuilder.select(
+          queryBuilder.alias + '.' + implementationLaborToSelect + ' :: float',
+          'implementationLabor',
+        );
+      }
     }
     // Set implementation labor to 0 if the activity is Conservation, since there is no implementation labor data for Conservation
     if (dto.activity === ACTIVITY.CONSERVATION) {
