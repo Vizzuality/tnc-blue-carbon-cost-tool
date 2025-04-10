@@ -9,7 +9,7 @@ import {
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
-import { UploadDataFilesWithKeyDto } from '@shared/dtos/users/upload-data-files.dto';
+import { UploadDataFilesDto } from '@shared/dtos/users/upload-data-files.dto';
 import { S3Utils } from '@api/modules/import/utils/s3.utils';
 
 @Injectable()
@@ -62,7 +62,7 @@ export class S3Service implements OnModuleInit {
     return S3Utils.generateS3Key(userId, fileName);
   }
 
-  public async uploadUserFiles(files: UploadDataFilesWithKeyDto): Promise<any> {
+  public async uploadUserFiles(files: UploadDataFilesDto): Promise<any> {
     const uploadPromises = files.map((file) => {
       return this.s3Client.send(
         new PutObjectCommand({
