@@ -67,6 +67,10 @@ test.describe("Custom Projects - Edit", () => {
       page.getByRole("heading", { name: `Edit ${PROJECT_NAME}` }),
     ).toBeVisible();
 
+    expect(
+      page.locator("input[name='costInputs.implementationLabor']"),
+    ).not.toBeVisible();
+
     for (const [k, v] of Object.entries<number>(input.assumptions)) {
       const row = page.locator(
         `#assumptions-table tbody tr:has(input[name="assumptions.${k}"])`,
@@ -113,6 +117,9 @@ test.describe("Custom Projects - Edit", () => {
 
     await page.locator(`#${ACTIVITY.RESTORATION}`).click();
 
+    expect(
+      page.locator("input[name='costInputs.implementationLabor']"),
+    ).toHaveValue("0");
     expect(
       page.locator("input[name='parameters.plantingSuccessRate']"),
     ).toHaveValue(
