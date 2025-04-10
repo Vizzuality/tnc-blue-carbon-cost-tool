@@ -222,7 +222,28 @@ export class ProjectsService extends AppBaseService<
       fromExcel.map(async (projectFromExcel) => {
         const createProjectDto =
           ProjectBuilder.excelInputToDto(projectFromExcel);
-        const project = await this.create(createProjectDto);
+
+        const scoreCardRating =
+          await this.scorecard.getRating(createProjectDto);
+        const costs =
+          await this.projectCalculation.computeCostForProject(createProjectDto);
+        const projectSize = await this.dataSource
+          .getRepository(ProjectSize)
+          .findOne({
+            select: ['sizeHa'],
+            where: {
+              ecosystem: createProjectDto.ecosystem,
+              activity: createProjectDto.activity,
+              countryCode: createProjectDto.countryCode,
+            },
+          });
+
+        const project = new ProjectBuilder(
+          createProjectDto,
+          scoreCardRating,
+          costs,
+          projectSize.sizeHa,
+        ).build();
         return this.repository.save(project);
       }),
     );
