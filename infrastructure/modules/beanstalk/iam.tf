@@ -26,6 +26,32 @@ resource "aws_iam_role" "beanstalk_ec2" {
 EOF
 }
 
+## Instance S3 bucket access policy
+
+resource "aws_iam_role_policy" "beanstalk_ec2_s3_access" {
+  name = "${var.application_name}-beanstalk-ec2-s3-access"
+  role = aws_iam_role.beanstalk_ec2.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject",
+          "s3:ListBucket"
+        ],
+        Resource = [
+          var.s3.arn,
+          "${var.s3.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy_attachment" "beanstalk_ec2_worker" {
   role       = aws_iam_role.beanstalk_ec2.id
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"

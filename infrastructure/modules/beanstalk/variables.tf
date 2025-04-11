@@ -61,3 +61,11 @@ variable "cname_prefix" {
   description = "The CNAME prefix to use for the environment"
   default     = null
 }
+
+variable "s3" {
+  description = "S3 Bucket Inputs"
+  type = object({
+    name = string
+    arn  = string
+  })
+}
