@@ -31,21 +31,23 @@ test.describe("Custom Projects - Edit", () => {
     await testManager.close();
   });
 
-  test("User can see two Edit project links with correct URL patterns after creating a custom project", async () => {
+  test("User can navigate to the edit project page from the summary panel", async () => {
     await createAndSaveCustomProject(page);
-
     await page.waitForLoadState("networkidle");
-    const editProjectLinks = page.getByRole("link", { name: "Edit project" });
-    const linkCount = await editProjectLinks.count();
-    expect(linkCount).toBe(2);
-
-    for (let i = 0; i < linkCount; i++) {
-      const link = editProjectLinks.nth(i);
-      const href = await link.getAttribute("href");
-      expect(href).toMatch(
-        /\/projects\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/edit/,
-      );
-    }
+    const btn = page.getByTestId("project-summary-button");
+    await btn.click();
+    expect(
+      page.getByRole("heading", { name: "Summary", level: 2 }),
+    ).toBeVisible();
+    const aside = page.locator("aside");
+    const editProjectLink = aside
+      .locator("a")
+      .filter({ hasText: "Edit project" });
+    expect(editProjectLink).toBeVisible();
+    await editProjectLink.click();
+    await expect(
+      page.getByRole("heading", { name: `Edit ${PROJECT_NAME}` }),
+    ).toBeVisible();
   });
 
   test("User can see the edit project page with pre-filled data from the created custom project", async () => {
