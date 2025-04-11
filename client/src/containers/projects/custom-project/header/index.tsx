@@ -114,6 +114,7 @@ const CustomProjectHeader: FC<CustomProjectHeaderProps> = ({ data }) => {
               projectSummaryOpen: !prev.projectSummaryOpen,
             }));
           }}
+          data-testid="project-summary-button"
         >
           <LayoutListIcon className="h-4 w-4" />
           <span className={cn({ hidden: projectSummaryOpen })}>
