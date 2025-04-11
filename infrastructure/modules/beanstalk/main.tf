@@ -153,6 +153,11 @@ locals {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "HealthCheckPath"
       value     = "/health"
+    },
+    {
+      namespace = "aws:elasticbeanstalk:application:environment"
+      name      = "S3_BUCKET_NAME"
+      value     = var.s3.name
     }
   ]
 }

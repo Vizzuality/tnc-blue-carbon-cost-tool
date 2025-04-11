@@ -17,6 +17,7 @@ module "beanstalk" {
   acm_certificate                               = aws_acm_certificate.acm_certificate
   elasticbeanstalk_iam_service_linked_role_name = var.elasticbeanstalk_iam_service_linked_role_name
   cname_prefix                                  = var.cname_prefix
+  s3                                            = module.s3.s3_outputs
 }
 
 module "postgresql" {
@@ -36,6 +37,12 @@ module "postgresql" {
   vpc_cidr_block              = var.vpc.cidr_block
   availability_zones          = var.availability_zones
   database_name               = var.project
+}
+
+module "s3" {
+  source      = "../s3"
+  project     = var.project
+  environment = var.environment
 }
 
 
