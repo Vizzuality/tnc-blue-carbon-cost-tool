@@ -48,11 +48,11 @@ export class ProjectsCalculationService {
       additionalAssumptions,
     );
 
-    const output = this.engine.calculateCostOutput({
+    const output = this.engine.calculate({
       projectInput,
       baseIncrease,
       baseSize,
     });
-    return output;
+    return output.costOutput;
   }
 }
