@@ -61,7 +61,6 @@ export class CalculationEngine {
       baseSize,
       baseIncrease,
       revenueProfitCalculator,
-      sequestrationRateCalculator,
       abatementPotentialCalculator,
       estimatedCreditIssuedPlan,
       areaRestoredOrConservedPlan,
