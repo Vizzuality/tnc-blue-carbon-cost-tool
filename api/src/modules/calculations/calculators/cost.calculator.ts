@@ -84,7 +84,6 @@ export class CostCalculator {
   costPlans: CostPlans;
   totalOpexNPV: number;
   revenueProfitCalculator: RevenueProfitCalculator;
-  sequestrationRateCalculator: SequestrationRateCalculator;
   abatementPotentialCalculator: AbatementPotentialCalculator;
   estimatedCreditsIssuedPlan: CostPlanMap;
   areaRestoredOrConservedPlan: CostPlanMap;
@@ -93,7 +92,6 @@ export class CostCalculator {
     baseSize: BaseSize,
     baseIncrease: BaseIncrease,
     revenueProfitCalculator: RevenueProfitCalculator,
-    sequestrationRateCalculator: SequestrationRateCalculator,
     abatementPotentialCalculator: AbatementPotentialCalculator,
     estimatedCreditsIssuedPlan: CostPlanMap,
     areaRestoredOrConservedPlan: CostPlanMap,
@@ -104,7 +102,6 @@ export class CostCalculator {
     this.baseIncrease = baseIncrease;
     this.baseSize = baseSize;
     this.revenueProfitCalculator = revenueProfitCalculator;
-    this.sequestrationRateCalculator = sequestrationRateCalculator;
     this.abatementPotentialCalculator = abatementPotentialCalculator;
     this.estimatedCreditsIssuedPlan = estimatedCreditsIssuedPlan;
     this.areaRestoredOrConservedPlan = areaRestoredOrConservedPlan;
