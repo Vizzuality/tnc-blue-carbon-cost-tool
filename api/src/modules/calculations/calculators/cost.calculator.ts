@@ -86,6 +86,8 @@ export class CostCalculator {
   revenueProfitCalculator: RevenueProfitCalculator;
   sequestrationRateCalculator: SequestrationRateCalculator;
   abatementPotentialCalculator: AbatementPotentialCalculator;
+  estimatedCreditsIssuedPlan: CostPlanMap;
+  areaRestoredOrConservedPlan: CostPlanMap;
   constructor(
     projectInput: ProjectInput,
     baseSize: BaseSize,
@@ -93,6 +95,8 @@ export class CostCalculator {
     revenueProfitCalculator: RevenueProfitCalculator,
     sequestrationRateCalculator: SequestrationRateCalculator,
     abatementPotentialCalculator: AbatementPotentialCalculator,
+    estimatedCreditsIssuedPlan: CostPlanMap,
+    areaRestoredOrConservedPlan: CostPlanMap,
   ) {
     this.projectInput = projectInput;
     this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
@@ -102,6 +106,8 @@ export class CostCalculator {
     this.revenueProfitCalculator = revenueProfitCalculator;
     this.sequestrationRateCalculator = sequestrationRateCalculator;
     this.abatementPotentialCalculator = abatementPotentialCalculator;
+    this.estimatedCreditsIssuedPlan = estimatedCreditsIssuedPlan;
+    this.areaRestoredOrConservedPlan = areaRestoredOrConservedPlan;
   }
 
   initializeCostPlans(): CostPlansOutput {
@@ -132,8 +138,7 @@ export class CostCalculator {
       estimatedRevenuePlan,
       this.projectInput.assumptions.discountRate,
     );
-    const creditsIssuedPlan =
-      this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
+    const creditsIssuedPlan = this.estimatedCreditsIssuedPlan;
     const totalCreditsIssued = sum(Object.values(creditsIssuedPlan));
     const costPerTCO2e =
       totalCreditsIssued != 0 ? totalNPV / totalCreditsIssued : 0;
@@ -616,8 +621,7 @@ export class CostCalculator {
 
   private implementationLaborCosts() {
     const baseCost = this.projectInput.costAndCarbonInputs.implementationLabor;
-    const areaRestoredOrConservedPlan =
-      this.sequestrationRateCalculator.calculateAreaRestoredOrConserved();
+    const areaRestoredOrConservedPlan = this.areaRestoredOrConservedPlan;
     const implementationLaborCostPlan: CostPlanMap = {};
     for (
       let year = -4;
@@ -812,8 +816,7 @@ export class CostCalculator {
       }
     }
 
-    const estimatedCreditsIssued: CostPlanMap =
-      this.sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
+    const estimatedCreditsIssued: CostPlanMap = this.estimatedCreditsIssuedPlan;
 
     for (const yearStr in carbonStandardFeesCostPlan) {
       const year = Number(yearStr);

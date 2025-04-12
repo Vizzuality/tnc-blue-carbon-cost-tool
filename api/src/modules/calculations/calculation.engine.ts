@@ -39,6 +39,13 @@ export class CalculationEngine {
     const sequestrationRateCalculator = new SequestrationRateCalculator(
       projectInput,
     );
+
+    // This costs seems to be only calculated once with no parameters so probably I can calculate them once and reuse them in the sensitivity analysis loop
+    const estimatedCreditIssuedPlan =
+      sequestrationRateCalculator.calculateEstimatedCreditsIssuedPlan();
+    const areaRestoredOrConservedPlan =
+      sequestrationRateCalculator.calculateAreaRestoredOrConserved();
+
     const revenueProfitCalculator = new RevenueProfitCalculator(
       projectInput,
       sequestrationRateCalculator,
@@ -56,6 +63,8 @@ export class CalculationEngine {
       revenueProfitCalculator,
       sequestrationRateCalculator,
       abatementPotentialCalculator,
+      estimatedCreditIssuedPlan,
+      areaRestoredOrConservedPlan,
     );
 
     const costPlans = costCalculator.initializeCostPlans();
