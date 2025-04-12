@@ -69,6 +69,8 @@ export enum COST_KEYS {
   LONG_TERM_PROJECT_OPERATING_COST = 'longTermProjectOperatingCost',
   IMPLEMENTATION_LABOR = 'implementationLabor',
   MAINTENANCE = 'maintenance',
+  COMMUNITY_BENEFIT_SHARING_FUND = 'communityBenefitSharingFund',
+  CARBON_STANDARD_FEES = 'carbonStandardFees',
 }
 
 export type ProjectInput = ConservationProjectInput | RestorationProjectInput;
