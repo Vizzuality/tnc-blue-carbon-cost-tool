@@ -6,11 +6,9 @@ import { RestorationProjectInput } from '@api/modules/custom-projects/input-fact
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { RevenueProfitCalculator } from '@api/modules/calculations/calculators/revenue-profit.calculator';
-import { SequestrationRateCalculator } from '@api/modules/calculations/calculators/sequestration-rate.calculator';
 import { parseInt, sum } from 'lodash';
 import { irr } from 'node-irr';
 import {
-  CostPlanMap,
   CustomProjectCostDetails,
   CustomProjectSummary,
   YearlyBreakdown,
@@ -19,42 +17,20 @@ import {
 import { PROJECT_DEVELOPMENT_TYPE } from '@shared/dtos/projects/project-development.type';
 import { OverridableCostInputsDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
-import { AbatementPotentialCalculator } from '@api/modules/calculations/calculators/abatement-potential.calculator';
+import {
+  CalculatorCostPlansOutput,
+  CalculatorDependencies,
+  COST_KEYS,
+  CostPlanMap,
+} from '@api/modules/calculations/types';
 
 export type CostPlans = Record<
   keyof OverridableCostInputsDto | string,
   CostPlanMap
 >;
 
-export type CostPlansOutput = {
-  totalOpex: number;
-  totalCapex: number;
-  totalCapexNPV: number;
-  totalOpexNPV: number;
-  totalNPV: number;
-  costPerTCO2e: number;
-  costPerHa: number;
-  npvCoveringCosts: number;
-  totalCreditsIssued: number;
-  IRROpex: number;
-  IRRTotalCost: number;
-  totalRevenueNPV: number;
-  totalRevenue: number;
-  financingCost: number;
-  fundingGap: number;
-  fundingGapNPV: number;
-  fundingGapPerTCO2e: number;
-  abatementPotential: number;
-  countryAbatementPotential: number;
-  totalCommunityBenefitSharingFund: number;
-  annualNetCashFlow: CostPlanMap;
-  annualNetIncome: CostPlanMap;
-  estimatedRevenuePlan: CostPlanMap;
-  creditsIssuedPlan: CostPlanMap;
-};
-
 // TODO: Strongly type this to bound it to existing types
-export enum COST_KEYS {
+export enum COST_KEYSOLD {
   FEASIBILITY_ANALYSIS = 'feasibilityAnalysis',
   CONSERVATION_PLANNING_AND_ADMIN = 'conservationPlanningAndAdmin',
   DATA_COLLECTION_AND_FIELD_COST = 'dataCollectionAndFieldCost',
@@ -86,30 +62,25 @@ export class CostCalculator {
   costPlans: CostPlans;
   totalOpexNPV: number;
   revenueProfitCalculator: RevenueProfitCalculator;
-  abatementPotentialCalculator: AbatementPotentialCalculator;
   estimatedCreditsIssuedPlan: CostPlanMap;
   areaRestoredOrConservedPlan: CostPlanMap;
-  constructor(
-    projectInput: ProjectInput,
-    baseSize: BaseSize,
-    baseIncrease: BaseIncrease,
-    revenueProfitCalculator: RevenueProfitCalculator,
-    abatementPotentialCalculator: AbatementPotentialCalculator,
-    estimatedCreditsIssuedPlan: CostPlanMap,
-    areaRestoredOrConservedPlan: CostPlanMap,
-  ) {
-    this.projectInput = projectInput;
-    this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
-    this.startingPointScaling = projectInput.assumptions.startingPointScaling;
-    this.baseIncrease = baseIncrease;
-    this.baseSize = baseSize;
-    this.revenueProfitCalculator = revenueProfitCalculator;
-    this.abatementPotentialCalculator = abatementPotentialCalculator;
-    this.estimatedCreditsIssuedPlan = estimatedCreditsIssuedPlan;
-    this.areaRestoredOrConservedPlan = areaRestoredOrConservedPlan;
+  constructor(calculatorDependencies: CalculatorDependencies) {
+    this.projectInput = calculatorDependencies.engineInput.projectInput;
+    this.defaultProjectLength =
+      calculatorDependencies.engineInput.projectInput.assumptions.defaultProjectLength;
+    this.startingPointScaling =
+      calculatorDependencies.engineInput.projectInput.assumptions.startingPointScaling;
+    this.baseIncrease = calculatorDependencies.engineInput.baseIncrease;
+    this.baseSize = calculatorDependencies.engineInput.baseSize;
+    this.revenueProfitCalculator =
+      calculatorDependencies.revenueProfitCalculator;
+    this.estimatedCreditsIssuedPlan =
+      calculatorDependencies.sequestrationRateOutputs.estimatedCreditIssuedPlan;
+    this.areaRestoredOrConservedPlan =
+      calculatorDependencies.sequestrationRateOutputs.areaRestoredOrConservedPlan;
   }
 
-  initializeCostPlans(): CostPlansOutput {
+  initializeCostPlans(): CalculatorCostPlansOutput {
     this.capexTotalCostPlan = this.initializeTotalCostPlan(
       this.defaultProjectLength,
     );
@@ -185,11 +156,6 @@ export class CostCalculator {
       annualNetIncome,
       true,
     );
-    const abatementPotential =
-      this.abatementPotentialCalculator.calculateProjectLevelAbatementPotential();
-
-    const countryAbatementPotential =
-      this.abatementPotentialCalculator.calculateCountryLevelAbatementPotential();
 
     return {
       totalOpex,
@@ -214,12 +180,10 @@ export class CostCalculator {
       annualNetIncome,
       estimatedRevenuePlan,
       creditsIssuedPlan,
-      abatementPotential,
-      countryAbatementPotential,
     };
   }
 
-  getSummary(costPlanOutput: CostPlansOutput): CustomProjectSummary {
+  getSummary(costPlanOutput: CalculatorCostPlansOutput): CustomProjectSummary {
     const {
       costPerTCO2e,
       costPerHa,
@@ -264,7 +228,7 @@ export class CostCalculator {
     return summary as CustomProjectSummary;
   }
 
-  getCostDetails(costPlanOutput: CostPlansOutput): {
+  getCostDetails(costPlanOutput: CalculatorCostPlansOutput): {
     total: CustomProjectCostDetails;
     npv: CustomProjectCostDetails;
   } {
@@ -374,7 +338,9 @@ export class CostCalculator {
     };
   }
 
-  getYearlyBreakdown(costPlanOutput: CostPlansOutput): any {
+  getYearlyBreakdown(
+    costPlanOutput: CalculatorCostPlansOutput,
+  ): YearlyBreakdown[] {
     const {
       annualNetCashFlow,
       annualNetIncome,

@@ -11,39 +11,39 @@ export class BaseIncrease extends BaseEntity {
   @Column({ name: "ecosystem", enum: ECOSYSTEM, type: "enum" })
   ecosystem: ECOSYSTEM;
 
-  @Column("decimal", { name: "feasibility_analysis" })
+  @Column({ name: "feasibility_analysis", type: "double precision" })
   feasibilityAnalysis: number;
 
-  @Column("decimal", { name: "conservation_planning_and_admin" })
+  @Column({ name: "conservation_planning_and_admin", type: "double precision" })
   conservationPlanningAndAdmin: number;
 
-  @Column("decimal", { name: "data_collection_and_field_cost" })
+  @Column({ name: "data_collection_and_field_cost", type: "double precision" })
   dataCollectionAndFieldCost: number;
 
-  @Column("decimal", { name: "community_representation" })
+  @Column({ name: "community_representation", type: "double precision" })
   communityRepresentation: number;
 
-  @Column("decimal", { name: "blue_carbon_project_planning" })
+  @Column({ name: "blue_carbon_project_planning", type: "double precision" })
   blueCarbonProjectPlanning: number;
 
-  @Column("decimal", { name: "establishing_carbon_rights" })
+  @Column({ name: "establishing_carbon_rights", type: "double precision" })
   establishingCarbonRights: number;
 
-  @Column("decimal", { name: "financing_cost" })
+  @Column({ name: "financing_cost", type: "double precision" })
   financingCost: number;
 
-  @Column("decimal", { name: "validation" })
+  @Column({ name: "validation", type: "double precision" })
   validation: number;
 
-  @Column("decimal", { name: "monitoring" })
+  @Column({ name: "monitoring", type: "double precision" })
   monitoring: number;
 
-  @Column("decimal", { name: "baseline_reassessment" })
+  @Column({ name: "baseline_reassessment", type: "double precision" })
   baselineReassessment: number;
 
-  @Column("decimal", { name: "mrv" })
+  @Column({ name: "mrv", type: "double precision" })
   mrv: number;
 
-  @Column("decimal", { name: "long_term_project_operating_cost" })
+  @Column({ name: "long_term_project_operating_cost", type: "double precision" })
   longTermProjectOperatingCost: number;
 }

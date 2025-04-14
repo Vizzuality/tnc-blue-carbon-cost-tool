@@ -1,13 +1,13 @@
 /**
  * @description: Simple builder wrapper to handle the assignment of properties to a project entity and return the instance
  */
-import { CostOutput } from '@api/modules/calculations/calculation.engine';
 import { Project } from '@shared/entities/projects.entity';
 import { PROJECT_SCORE } from '@shared/entities/project-score.enum';
 import { ExcelProject } from '@api/modules/import/dtos/excel-projects.dto';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { getProjectSizeFilter } from '@api/modules/projects/threshold/project-size-threshold';
 import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
+import { CostOutput } from '@api/modules/calculations/types';
 
 export class ProjectBuilder {
   dto: CreateProjectDto;
