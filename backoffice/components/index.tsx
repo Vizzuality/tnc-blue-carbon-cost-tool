@@ -12,4 +12,8 @@ export const Components = {
     'Many2ManySources',
     './molecules/many-2-many-sources',
   ),
+  CountrySelector: componentLoader.add(
+    'CountrySelector',
+    './atoms/country-selector.tsx',
+  ),
 };

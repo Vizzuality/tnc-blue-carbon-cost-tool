@@ -45,6 +45,7 @@ import { componentLoader, Components } from 'backoffice/components/index.js';
 import { ModelComponentSourceResource } from 'backoffice/resources/model-component-source/model-component-source.resource.js';
 import { EcosystemExtentResource } from 'backoffice/resources/ecosystem-extent/ecosystem-extent.resource.js';
 import path from 'path';
+import { Config } from 'backoffice/components/config/Config.js';
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -235,6 +236,19 @@ const start = async () => {
       },
     },
   );
+
+  // Config ENDPOINT
+  adminRouter.get('/config', async (req, res) => {
+    const user = (
+      req.session as undefined | (session.Session & { adminUser: any })
+    )?.adminUser as any;
+
+    if (!user || user.role !== 'admin') {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    res.json({ apiUrl: process.env.API_URL });
+  });
 
   app.use(`${ROOT_PATH}/public`, express.static(path.join('.', 'public')));
   app.use(admin.options.rootPath, adminRouter);
