@@ -48,12 +48,10 @@ export class ApiConfigService {
   getS3Config() {
     return {
       region: this.configService.getOrThrow('AWS_REGION'),
-      endpoint: this.configService.getOrThrow('AWS_S3_ENDPOINT'),
-      accessKeyId: this.configService.getOrThrow('AWS_S3_ACCESS_KEY_ID'),
-      secretAccessKey: this.configService.getOrThrow(
-        'AWS_S3_SECRET_ACCESS_KEY',
-      ),
-      bucketName: this.configService.getOrThrow('AWS_S3_BUCKET_NAME'),
+      endpoint: this.configService.getOrThrow('S3_ENDPOINT'),
+      accessKeyId: this.configService.getOrThrow('S3_ACCESS_KEY_ID'),
+      secretAccessKey: this.configService.getOrThrow('S3_SECRET_ACCESS_KEY'),
+      bucketName: this.configService.getOrThrow('S3_BUCKET_NAME'),
     };
   }
 
