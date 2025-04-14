@@ -1,24 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectInput } from '@api/modules/calculations/calculators/cost.calculator';
-import { SequestrationRateCalculator } from '@api/modules/calculations/calculators/sequestration-rate.calculator';
 import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
 @Injectable()
 export class RevenueProfitCalculator {
-  sequestrationCreditsCalculator: SequestrationRateCalculator;
   projectLength: number;
   defaultProjectLength: number;
   carbonPrice: number;
   carbonPriceIncrease: number;
+  estimatedCreditsIssuedPlan: CostPlanMap;
   constructor(
     projectInput: ProjectInput,
-    sequestrationRateCalculator: SequestrationRateCalculator,
+    estimatedCreditsIssuedPlan: CostPlanMap,
   ) {
     this.projectLength = projectInput.assumptions.projectLength;
     this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
     this.carbonPrice = projectInput.assumptions.carbonPrice;
     this.carbonPriceIncrease = projectInput.assumptions.carbonPriceIncrease;
-    this.sequestrationCreditsCalculator = sequestrationRateCalculator;
+    this.estimatedCreditsIssuedPlan = estimatedCreditsIssuedPlan;
   }
 
   calculateEstimatedRevenuePlan(): CostPlanMap {
@@ -30,8 +29,7 @@ export class RevenueProfitCalculator {
       }
     }
 
-    const estimatedCreditsIssued =
-      this.sequestrationCreditsCalculator.calculateEstimatedCreditsIssuedPlan();
+    const estimatedCreditsIssued = this.estimatedCreditsIssuedPlan;
 
     for (const yearStr in estimatedRevenuePlan) {
       const year = Number(yearStr);

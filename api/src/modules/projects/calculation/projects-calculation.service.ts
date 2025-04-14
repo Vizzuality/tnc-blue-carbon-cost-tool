@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import {
-  CalculationEngine,
-  CostOutput,
-} from '@api/modules/calculations/calculation.engine';
+import { CalculationEngine } from '@api/modules/calculations/calculation.engine';
 import { DataRepository } from '@api/modules/calculations/data.repository';
 import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import { ProjectCalculationFactory } from '@api/modules/projects/calculation/project-calculation.factory';
 import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
+import { CostOutput } from '@api/modules/calculations/types';
 
 @Injectable()
 export class ProjectsCalculationService {
