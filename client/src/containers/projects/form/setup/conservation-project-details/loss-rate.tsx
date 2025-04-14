@@ -52,46 +52,52 @@ export default function LossRate() {
 
   if (!isSuccess) return null;
 
-  if (lossRateUsed === LOSS_RATE_USED.NATIONAL_AVERAGE) {
-    return (
-      <div className="flex justify-between gap-3">
-        <FormLabel
-          className="grow basis-1/2 flex-nowrap"
-          tooltip={{
-            title: "National loss rate",
-            content: "TBD",
-          }}
-        >
-          National loss rate
-        </FormLabel>
-        <div className="relative flex basis-1/2 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['%']">
-          <ReadonlyInput value={toPercentageValue(data)} />
+  switch (lossRateUsed) {
+    case LOSS_RATE_USED.NATIONAL_AVERAGE:
+      return (
+        <div className="flex justify-between gap-3">
+          <FormLabel
+            className="grow basis-1/2 flex-nowrap"
+            tooltip={{
+              title: "National loss rate",
+              content: "TBD",
+            }}
+          >
+            National loss rate
+          </FormLabel>
+          <div className="relative flex basis-1/2 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['%']">
+            <ReadonlyInput value={toPercentageValue(data)} />
+          </div>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <FormField
-      name="parameters.projectSpecificLossRate"
-      render={() => (
-        <NumberFormItem
-          id="parameters.projectSpecificLossRate"
-          label="Project Specific Loss Rate"
-          tooltip={{
-            title: "Project Specific Loss Rate",
-            content: CONSERVATION_PROJECT_DETAILS.PROJECT_SPECIFIC_LOSS_RATE,
-          }}
-          initialValue={form.getValues("parameters.projectSpecificLossRate")}
-          formItemClassName="flex items-center justify-between gap-4"
-          formControlClassName="after:content-['%']"
-          max={0}
-          onValueChange={async (v) =>
-            handleFormChange("parameters.projectSpecificLossRate", v)
-          }
-          isPercentage
+      );
+    case LOSS_RATE_USED.PROJECT_SPECIFIC:
+      return (
+        <FormField
+          name="parameters.projectSpecificLossRate"
+          render={() => (
+            <NumberFormItem
+              id="parameters.projectSpecificLossRate"
+              label="Project Specific Loss Rate"
+              tooltip={{
+                title: "Project Specific Loss Rate",
+                content:
+                  CONSERVATION_PROJECT_DETAILS.PROJECT_SPECIFIC_LOSS_RATE,
+              }}
+              initialValue={form.getValues(
+                "parameters.projectSpecificLossRate",
+              )}
+              formItemClassName="flex items-center justify-between gap-4"
+              formControlClassName="after:content-['%']"
+              max={0}
+              onValueChange={async (v) =>
+                handleFormChange("parameters.projectSpecificLossRate", v)
+              }
+              isPercentage
+            />
+          )}
         />
-      )}
-    />
-  );
+      );
+    default:
+      return null;
+  }
 }

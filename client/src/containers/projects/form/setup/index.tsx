@@ -16,9 +16,9 @@ import { queryKeys } from "@/lib/query-keys";
 
 import { CUSTOM_PROJECT, GENERAL_ASSUMPTIONS } from "@/constants/tooltip";
 
-import { ACTIVITIES } from "@/containers/overview/filters/constants";
 import NumberFormItem from "@/containers/projects/form/number-form-item";
 import { useFormValues } from "@/containers/projects/form/project-form";
+import Activity from "@/containers/projects/form/setup/activity";
 import ConservationProjectDetails from "@/containers/projects/form/setup/conservation-project-details";
 import { CARBON_REVENUES_TO_COVER_DESCRIPTIONS } from "@/containers/projects/form/setup/constants";
 import RestorationProjectDetails from "@/containers/projects/form/setup/restoration-project-detail";
@@ -262,59 +262,8 @@ export default function SetupProjectForm() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="activity"
-              render={() => (
-                <FormItem className="flex-1">
-                  <FormLabel
-                    tooltip={{
-                      title: "Activity",
-                      content: CUSTOM_PROJECT.ACTIVITY_TYPE,
-                    }}
-                  >
-                    Activity type
-                  </FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      className="flex gap-4"
-                      onValueChange={async (v) => {
-                        form.setValue("activity", v as ACTIVITY);
-                        await form.trigger("activity");
 
-                        // ? we default to a restoration activity ensuring costs are always calculated
-                        if (
-                          v === ACTIVITY.RESTORATION &&
-                          !restorationActivity
-                        ) {
-                          form.setValue(
-                            "parameters.restorationActivity",
-                            RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
-                          );
-                        }
-                      }}
-                    >
-                      {ACTIVITIES.map((activity) => (
-                        <RadioGroupItemBox
-                          key={activity.value}
-                          className="flex-1"
-                          label={activity.label}
-                          value={activity.value}
-                          defaultChecked={
-                            form.formState.defaultValues?.activity ===
-                            activity.value
-                          }
-                          checked={
-                            form.getValues("activity") === activity.value
-                          }
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <Activity />
 
             {form.getValues("activity") === ACTIVITY.CONSERVATION && (
               <ConservationProjectDetails />
