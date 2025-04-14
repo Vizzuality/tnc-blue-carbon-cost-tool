@@ -3,6 +3,7 @@ import { Project } from '@shared/entities/projects.entity.js';
 import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
 import { projectsContract } from '@shared/contracts/projects.contract.js';
 import { ProjectActions } from 'backoffice/resources/projects/project.actions.js';
+import { Components } from 'backoffice/components/index.js';
 
 const CREATE_EDIT_FORM_FIELDS = [
   'projectName',
@@ -20,6 +21,11 @@ export const ProjectsResource: ResourceWithOptions = {
   options: {
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+      countryCode: {
+        components: {
+          edit: Components.CountrySelector,
+        },
+      },
       initialPriceAssumption: {
         description: 'Initial carbon price assumption',
       },
