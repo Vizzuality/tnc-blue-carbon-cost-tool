@@ -30,10 +30,10 @@ const envConfigSchema = z
     AWS_SES_ACCESS_KEY_SECRET: z.string(),
     AWS_SES_DOMAIN: z.string(),
 
-    AWS_S3_ENDPOINT: z.string().optional(),
-    AWS_S3_ACCESS_KEY_ID: z.string(),
-    AWS_S3_SECRET_ACCESS_KEY: z.string(),
-    AWS_S3_BUCKET_NAME: z.string(),
+    S3_ENDPOINT: z.string().optional(),
+    S3_ACCESS_KEY_ID: z.string(),
+    S3_SECRET_ACCESS_KEY: z.string(),
+    S3_BUCKET_NAME: z.string(),
   })
   .passthrough();
 
