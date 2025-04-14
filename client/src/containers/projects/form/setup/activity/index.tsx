@@ -29,13 +29,6 @@ import { RadioGroupItemBox } from "@/components/ui/radio-group";
 type RestorationParameters = z.infer<typeof RestorationCustomProjectSchema>;
 type ConservationParameters = z.infer<typeof ConservationCustomProjectSchema>;
 
-const isRestorationParams = (
-  params: RestorationParameters | ConservationParameters,
-): params is RestorationParameters => "restorationActivity" in params;
-const isConservationParams = (
-  params: RestorationParameters | ConservationParameters,
-): params is ConservationParameters => "lossRateUsed" in params;
-
 export default function Activity() {
   const { id } = useParams();
   const isEdit = !!id;
@@ -43,8 +36,7 @@ export default function Activity() {
   const { parameters, assumptions } = useFormValues();
   const handleRestorationConstraints = useCallback(() => {
     if (
-      isRestorationParams(parameters) &&
-      parameters.plantingSuccessRate === undefined
+      (parameters as RestorationParameters).plantingSuccessRate === undefined
     ) {
       form.setValue(
         "parameters.plantingSuccessRate",
@@ -60,8 +52,8 @@ export default function Activity() {
     }
 
     if (
-      isConservationParams(parameters) &&
-      parameters.projectSpecificEmission === undefined
+      (parameters as ConservationParameters).projectSpecificEmission ===
+      undefined
     ) {
       form.setValue(
         "parameters.projectSpecificEmission",
@@ -86,13 +78,13 @@ export default function Activity() {
     // ? we default to a restoration activity ensuring costs are always calculated
     if (
       v === ACTIVITY.RESTORATION &&
-      isRestorationParams(parameters) &&
-      !parameters.restorationActivity
+      (parameters as RestorationParameters)?.restorationActivity === undefined
     ) {
       form.setValue(
         "parameters.restorationActivity",
         RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
       );
+      form.trigger("parameters.restorationActivity");
     }
   };
 
