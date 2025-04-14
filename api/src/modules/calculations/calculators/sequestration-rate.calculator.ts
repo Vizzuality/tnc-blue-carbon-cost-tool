@@ -348,9 +348,8 @@ export class SequestrationRateCalculator {
 
   calculateAnnualAvoidedLoss(): CostPlanMap {
     if (this.activity !== ACTIVITY.CONSERVATION) {
-      throw new Error(
-        'Annual avoided loss can only be calculated for conservation projects.',
-      );
+      // Annual avoided loss can only be calculated for conservation projects.
+      return;
     }
 
     const projectedLoss = this.projectedLoss;

@@ -1,36 +1,28 @@
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { sum } from 'lodash';
-import { ProjectInput } from '@api/modules/calculations/calculators/cost.calculator';
-import { SequestrationRateCalculator } from '@api/modules/calculations/calculators/sequestration-rate.calculator';
+import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
+import { AbatementPotentialInput } from '@api/modules/calculations/types';
 
 export class AbatementPotentialCalculator {
   activity: ACTIVITY;
   projectLength: number;
   sequestrationRate: number;
   restorableLand: number;
-  annualAvoidedEmissionsSum: number;
+  annualAvoidedLossSum: number;
   netEmissionsReductionSum: number;
-  constructor(
-    input: ProjectInput,
-    sequestrationRateCalculator: SequestrationRateCalculator,
-  ) {
-    this.activity = input.activity;
-    this.projectLength = input.assumptions.projectLength;
-    this.sequestrationRate = sequestrationRateCalculator.sequestrationRate;
-    this.restorableLand = input.costAndCarbonInputs.restorableLand;
-    // TODO: This implies recalculating something that can already be calculated, and it will be calculated later on
-    //       Taking in account that we probably need to extract the calculations module, it would be best to handle the redundancies in the sequestration calculator,
-    //       instead of passing the calculated output from the main calculator to here (probably)
-    this.netEmissionsReductionSum = sum(
-      Object.values(
-        sequestrationRateCalculator.calculateNetEmissionsReductions(),
-      ),
-    );
-    if (this.activity === ACTIVITY.CONSERVATION) {
-      this.annualAvoidedEmissionsSum = sum(
-        Object.values(sequestrationRateCalculator.getAnnualAvoidedLoss()),
-      );
+  constructor(input: AbatementPotentialInput) {
+    this.activity = input.projectInput.activity;
+    this.projectLength = input.projectInput.assumptions.projectLength;
+    if (input instanceof RestorationProjectInput) {
+      this.sequestrationRate = input.sequestrationRate;
     }
+    this.restorableLand = input.projectInput.costAndCarbonInputs.restorableLand;
+    if (this.activity === ACTIVITY.CONSERVATION) {
+      this.annualAvoidedLossSum = sum(Object.values(input.annualAvoidedLoss));
+    }
+    this.netEmissionsReductionSum = sum(
+      Object.values(input.netEmissionsReduction),
+    );
   }
 
   /**
@@ -48,7 +40,7 @@ export class AbatementPotentialCalculator {
       case ACTIVITY.CONSERVATION:
         return this.calculateConservationAbatementPotential({
           projectLength: this.projectLength,
-          annualAvoidedEmissionsSum: this.annualAvoidedEmissionsSum,
+          annualAvoidedEmissionsSum: this.annualAvoidedLossSum,
         });
     }
   }

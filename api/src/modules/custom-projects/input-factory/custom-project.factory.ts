@@ -3,7 +3,6 @@ import { ACTIVITY } from '@shared/entities/activity.enum';
 import { AdditionalBaseData } from '@api/modules/calculations/data.repository';
 import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
 import { NonOverridableModelAssumptions } from '@api/modules/calculations/assumptions.repository';
-import { CostOutput } from '@api/modules/calculations/calculation.engine';
 import { ProjectInput } from '@api/modules/calculations/calculators/cost.calculator';
 import {
   CARBON_REVENUES_TO_COVER,
@@ -16,6 +15,7 @@ import {
   CreateCustomProjectDto,
   RestorationProjectParamsDto,
 } from '@api/modules/custom-projects/dto/create-custom-project.dto';
+import { CostOutput } from '@api/modules/calculations/types';
 
 export type ConservationProjectCarbonInputs = {
   lossRate: number;
