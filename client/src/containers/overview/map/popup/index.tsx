@@ -24,7 +24,7 @@ export default function CostAbatementPopup() {
       <table className="mt-2">
         <thead>
           <tr>
-            <th className={cn(HEADER_CLASSES, "pr-2")}>Cost (total, USD)</th>
+            <th className={cn(HEADER_CLASSES, "pr-2")}>AVG Cost (USD)</th>
             <th className={cn(HEADER_CLASSES, "px-2")}>Abatement (tCO2e)</th>
           </tr>
         </thead>
@@ -42,7 +42,7 @@ export default function CostAbatementPopup() {
         </tbody>
       </table>
       <p className="mt-2 text-xs text-muted-foreground">
-        Values for the SUM of all project combinations.
+        Values for the country
       </p>
     </MapPopup>
   );
