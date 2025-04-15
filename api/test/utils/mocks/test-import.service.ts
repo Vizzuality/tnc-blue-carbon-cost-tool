@@ -1,4 +1,11 @@
-import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   EntityPreprocessor,
   ProjectScoreCardNotFoundError,
@@ -51,6 +58,11 @@ import {
 import { ImportRepository } from '@api/modules/import/import.repostiory';
 import { EventBus } from '@nestjs/cqrs';
 import { ProjectsService } from '@api/modules/projects/projects.service';
+import { UploadDataFilesDto } from '@shared/dtos/users/upload-data-files.dto';
+import { UserUpload, UserUploadFile } from '@shared/entities/users/user-upload';
+import { User } from '@shared/entities/users/user.entity';
+import { S3Service } from '@api/modules/import/s3.service';
+import { Readable } from 'stream';
 
 @Injectable()
 export class TestImportService {
@@ -72,6 +84,7 @@ export class TestImportService {
     private readonly projectsService: ProjectsService,
     @InjectRepository(ProjectScorecard)
     private readonly projectScoreCardRepository: Repository<ProjectScorecard>,
+    private readonly s3Service: S3Service,
   ) {}
 
   async importProjectScorecard(fileBuffer: Buffer, userId: string) {
@@ -373,5 +386,70 @@ export class TestImportService {
       }
     }
     return parsedEntitiesWithSources;
+  }
+
+  async importDataProvidedByPartner(
+    files: UploadDataFilesDto,
+    userId: string,
+  ): Promise<UserUpload> {
+    this.logger.warn('importDataProvidedByPartner started...');
+    // this.registerImportEvent(userId, this.eventMap.STARTED);
+
+    let userUpload = new UserUpload();
+    try {
+      const preparedFiles = files.map((file, idx) => ({
+        id: idx + 1,
+        originalName: file.originalname,
+        mimeType: file.mimetype,
+        size: file.size,
+        key: this.s3Service.generateS3Key(userId, file.originalname),
+        buffer: file.buffer,
+      }));
+
+      userUpload.user = { id: userId } as User;
+      userUpload.files = preparedFiles.map((file) => ({
+        ...file,
+        buffer: undefined,
+      }));
+      userUpload = await this.importRepo.createUserUpload(userUpload);
+      await this.s3Service.uploadUserFiles(
+        preparedFiles as unknown as UploadDataFilesDto,
+      );
+
+      this.logger.warn('importDataProvidedByPartner completed successfully');
+      // this.registerImportEvent(userId, this.eventMap.SUCCESS);
+      return userUpload;
+    } catch (e) {
+      this.logger.error('importDataProvidedByPartner failed', e);
+      // this.registerImportEvent(userId, this.eventMap.FAILED, {
+      //   error: { type: e.constructor.name, message: e.message },
+      // });
+      this.importRepo.removeUserUpload(userUpload);
+
+      throw new ConflictException(e.message);
+    }
+  }
+
+  public async downloadUserUploadFile(
+    userUploadId: number,
+    fileId: number,
+  ): Promise<[UserUploadFile, Readable]> {
+    const userUpload = await this.importRepo.findUserUploadById(userUploadId);
+    if (userUpload === null) {
+      throw new NotFoundException('User upload not found');
+    }
+
+    const userUploadFile = userUpload.files.find((file) => file.id == fileId);
+    if (!userUploadFile) {
+      throw new NotFoundException('User upload file not found');
+    }
+
+    const fileStream = await this.s3Service.downloadFileByKey(
+      userUploadFile.key,
+    );
+    if (!fileStream) {
+      throw new InternalServerErrorException('File not found in directory');
+    }
+    return [userUploadFile, fileStream];
   }
 }
