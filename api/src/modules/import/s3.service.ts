@@ -21,21 +21,19 @@ export class S3Service implements OnModuleInit {
 
   constructor(private readonly configService: ApiConfigService) {
     const s3ConfigParams = this.configService.getS3Config();
-    this.s3Config = {
-      region: s3ConfigParams.region,
-      endpoint: s3ConfigParams.endpoint,
-      credentials: {
-        accessKeyId: s3ConfigParams.accessKeyId,
-        secretAccessKey: s3ConfigParams.secretAccessKey,
-      },
-    };
+    this.s3Config = { region: s3ConfigParams.region };
 
     if (!configService.isProduction()) {
       this.s3Config.endpoint = s3ConfigParams.endpoint;
+      this.s3Config.credentials = {
+        accessKeyId: s3ConfigParams.accessKeyId,
+        secretAccessKey: s3ConfigParams.secretAccessKey,
+      };
       this.s3Config.forcePathStyle = true;
     }
+
     this.s3Client = new S3Client(this.s3Config);
-    this.bucketName = s3ConfigParams.bucketName;
+    this.bucketName = this.configService.getS3BucketName();
   }
 
   async onModuleInit() {

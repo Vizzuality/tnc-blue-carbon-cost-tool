@@ -51,8 +51,11 @@ export class ApiConfigService {
       endpoint: this.configService.getOrThrow('S3_ENDPOINT'),
       accessKeyId: this.configService.getOrThrow('S3_ACCESS_KEY_ID'),
       secretAccessKey: this.configService.getOrThrow('S3_SECRET_ACCESS_KEY'),
-      bucketName: this.configService.getOrThrow('S3_BUCKET_NAME'),
     };
+  }
+
+  getS3BucketName() {
+    return this.configService.getOrThrow('S3_BUCKET_NAME');
   }
 
   public isProduction(): boolean {
