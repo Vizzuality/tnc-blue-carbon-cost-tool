@@ -17,7 +17,7 @@ export default function ProjectsLayer() {
 
   const queryKey = geometriesKeys.all(filters).queryKey;
 
-  const { data, isSuccess } = client.projects.getProjectsMap.useQuery(
+  const { data, isSuccess } = client.projects.getProjectsMapV2.useQuery(
     queryKey,
     {
       query: {
