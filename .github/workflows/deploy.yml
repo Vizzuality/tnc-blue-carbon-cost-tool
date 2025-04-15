@@ -256,6 +256,8 @@ jobs:
             api:
               image: $ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG
               restart: always
+              environment:
+                S3_BUCKET_NAME: files
               ports:
                 - 4000:4000
             backoffice:
