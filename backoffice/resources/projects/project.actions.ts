@@ -5,6 +5,7 @@ import {
   ActionResponse,
   ValidationError,
 } from 'adminjs';
+import cookie from 'cookie';
 
 const RESPONSE_BODY_TO_FORM_FIELD_NAME = {
   projectName: 'projectName',
@@ -37,12 +38,22 @@ const convertFormToRequestBody = (request: ActionRequest) => {
 const beforeHook = async (request: any, context: ActionContext) => {
   if (request.method !== 'post') return request;
 
-  const cookieIdx = request.rawHeaders.indexOf('Cookie') + 1;
-  const cookie = request.rawHeaders[cookieIdx];
-  if (!cookie) {
-    throw new Error('No cookie found in request headers');
+  const cookieIdx = request.rawHeaders.indexOf('cookie');
+
+  let parsedCookies: Record<string, string | undefined> = {};
+  if (cookieIdx !== -1) {
+    const cookieHeaderValue = request.rawHeaders[cookieIdx + 1];
+    parsedCookies = cookie.parse(cookieHeaderValue);
+  } else {
+    throw new Error('Cookie header not found');
   }
 
+  const backofficeCookie = parsedCookies['backoffice'];
+  if (!backofficeCookie) {
+    throw new Error('Backoffice cookie is missing');
+  }
+
+  const cookieToSend = `backoffice=${parsedCookies.backoffice};`;
   const requestBody = convertFormToRequestBody(request);
 
   let res: Response;
@@ -52,7 +63,7 @@ const beforeHook = async (request: any, context: ActionContext) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Cookie: cookie,
+        Cookie: cookieToSend,
       },
       body: JSON.stringify(requestBody),
     });
@@ -62,7 +73,7 @@ const beforeHook = async (request: any, context: ActionContext) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Cookie: cookie,
+        Cookie: cookieToSend,
       },
       body: JSON.stringify(requestBody),
     });
