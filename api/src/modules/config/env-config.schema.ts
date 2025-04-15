@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+const isDev = process.env.NODE_ENV === 'development';
 const EXPIRES_IN_REGEX = /^[0-9]+\w$/;
 
 const envConfigSchema = z
@@ -30,9 +31,9 @@ const envConfigSchema = z
     AWS_SES_ACCESS_KEY_SECRET: z.string(),
     AWS_SES_DOMAIN: z.string(),
 
-    S3_ENDPOINT: z.string().optional(),
-    S3_ACCESS_KEY_ID: z.string(),
-    S3_SECRET_ACCESS_KEY: z.string(),
+    S3_ENDPOINT: isDev ? z.string() : z.string().optional(),
+    S3_ACCESS_KEY_ID: isDev ? z.string() : z.string().optional(),
+    S3_SECRET_ACCESS_KEY: isDev ? z.string() : z.string().optional(),
     S3_BUCKET_NAME: z.string(),
   })
   .passthrough();
