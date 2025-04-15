@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
 import { COMMON_DATABASE_ENTITIES } from '@shared/lib/db-entities';
+import { S3ClientConfig } from '@aws-sdk/client-s3';
 // import { BACKEND_DB_ENTITIES } from '@shared/lib/db-entities';
 
 export type JWTConfig = {
@@ -16,6 +17,8 @@ export type EmailConfig = {
   region: string;
   domain: string;
 };
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 @Injectable()
 export class ApiConfigService {
@@ -45,13 +48,21 @@ export class ApiConfigService {
     };
   }
 
-  getS3Config() {
-    return {
+  getS3Config(): S3ClientConfig {
+    const config: S3ClientConfig = {
       region: this.configService.getOrThrow('AWS_REGION'),
-      endpoint: this.configService.getOrThrow('S3_ENDPOINT'),
-      accessKeyId: this.configService.getOrThrow('S3_ACCESS_KEY_ID'),
-      secretAccessKey: this.configService.getOrThrow('S3_SECRET_ACCESS_KEY'),
     };
+
+    if (!isProduction) {
+      config.endpoint = this.configService.getOrThrow('S3_ENDPOINT');
+      config.credentials = {
+        accessKeyId: this.configService.getOrThrow('S3_ACCESS_KEY_ID'),
+        secretAccessKey: this.configService.getOrThrow('S3_SECRET_ACCESS_KEY'),
+      };
+      config.forcePathStyle = true;
+    }
+
+    return config;
   }
 
   getS3BucketName() {
