@@ -1,7 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ProjectInput } from '@api/modules/calculations/calculators/cost.calculator';
-import { BaseIncrease } from '@shared/entities/base-increase.entity';
-import { BaseSize } from '@shared/entities/base-size.entity';
 import { AbatementPotentialCalculator } from '@api/modules/calculations/calculators/abatement-potential.calculator';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
@@ -11,26 +8,21 @@ import {
   AbatementPotentialInput,
   AbatementPotentialOutput,
   BreakEvenOutput,
+  CalculationEngineOutput,
   CalculatorDependencies,
+  EngineInput,
   SensitivityAnalysisInput,
   SensitivityAnalysisResults,
 } from '@api/modules/calculations/types';
 import { CostOutput } from '@api/modules/calculations/types';
 import { SensitivityAnalyzer } from '@api/modules/calculations/calculators/sensitivity-analyzer.calculator';
 
-export type EngineInput = {
-  projectInput: ProjectInput;
-  baseIncrease: BaseIncrease;
-  baseSize: BaseSize;
-};
-
-export
 @Injectable()
-class CalculationEngine {
+export class CalculationEngine {
   logger = new Logger(CalculationEngine.name);
   constructor(private readonly costCalculatorFactory: CostCalculatorFactory) {}
 
-  calculate(input: EngineInput) {
+  calculate(input: EngineInput): CalculationEngineOutput {
     const dependencies: CalculatorDependencies =
       this.costCalculatorFactory.assemblyCostCalculatorDependencies(input);
     const costOutput = this.calculateCostOutput(dependencies, true);

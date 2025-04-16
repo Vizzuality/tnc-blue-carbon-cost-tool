@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ProjectInput } from '@api/modules/calculations/calculators/cost.calculator';
 import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
+import { ProjectInput } from '@api/modules/calculations/types';
 
 @Injectable()
 export class RevenueProfitCalculator {

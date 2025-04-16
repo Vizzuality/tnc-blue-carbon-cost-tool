@@ -1,6 +1,5 @@
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
-import { ProjectInput } from '@api/modules/calculations/calculators/cost.calculator';
 import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import { RevenueProfitCalculator } from '@api/modules/calculations/calculators/revenue-profit.calculator';
@@ -12,7 +11,7 @@ import { CostPlanMap } from '@api/modules/calculations/types/cost-types';
 
 // Input for calculation engine
 
-export type EngineInputV2 = {
+export type EngineInput = {
   projectInput: ProjectInput;
   baseSize: BaseSize;
   baseIncrease: BaseIncrease;
@@ -20,10 +19,10 @@ export type EngineInputV2 = {
 
 // Input with project data to compute costs for
 
-export type ProjectInputV2 = ConservationProjectInput | RestorationProjectInput;
+export type ProjectInput = ConservationProjectInput | RestorationProjectInput;
 
 // Input for cost calculator
-export type CalculatorDependencies = { engineInput: EngineInputV2 } & {
+export type CalculatorDependencies = { engineInput: EngineInput } & {
   sequestrationRateOutputs: SequestrationRateOutputs;
 } & {
   revenueProfitCalculator: RevenueProfitCalculator;

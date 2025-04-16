@@ -86,3 +86,13 @@ export type BreakEvenOutput = {
   breakEvenCost: CostOutput;
   breakEvenCarbonPrice: number;
 } | null;
+
+/**
+ * @description: Output for the calculation engine. This output includes the cost output and the break-even cost output.
+ *                The break-even cost output is optional as it can be null if the break-even cost cannot be calculated.
+ */
+
+export type CalculationEngineOutput = {
+  costOutput: CostOutput;
+  breakEvenCostOutput?: BreakEvenOutput;
+};
