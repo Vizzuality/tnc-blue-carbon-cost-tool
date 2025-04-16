@@ -73,7 +73,7 @@ module "dev" {
   cname_prefix                                  = "${var.project_name}-dev-environment"
 
   rds_instance_class          = "db.t3.micro"
-  rds_engine_version          = "15.7"
+  rds_engine_version          = "15.8"
   rds_backup_retention_period = 3
 
   repo_name    = "tnc-blue-carbon-cost-tool"
@@ -106,7 +106,7 @@ module "staging" {
   cname_prefix                                  = "${var.project_name}-staging-environment"
 
   rds_instance_class          = "db.t3.micro"
-  rds_engine_version          = "15.7"
+  rds_engine_version          = "15.8"
   rds_backup_retention_period = 3
 
   repo_name    = "tnc-blue-carbon-cost-tool"
@@ -139,7 +139,7 @@ module "production" {
   cname_prefix                                  = "${var.project_name}-production-environment"
 
   rds_instance_class          = "db.t3.micro"
-  rds_engine_version          = "15.7"
+  rds_engine_version          = "15.8"
   rds_backup_retention_period = 3
 
   repo_name    = "tnc-blue-carbon-cost-tool"
