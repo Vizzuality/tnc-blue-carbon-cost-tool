@@ -75,37 +75,11 @@ export class CustomProjectsService extends AppBaseService<
       additionalAssumptions,
     );
 
-    // const costOutput = this.calculationEngine.calculateCostOutput({
-    //   projectInput,
-    //   baseIncrease,
-    //   baseSize,
-    // });
-
     const calculationOutput = this.calculationEngine.calculate({
       projectInput,
       baseIncrease,
       baseSize,
     });
-
-    // const projectInputClone =
-    //   projectInput.activity === ACTIVITY.CONSERVATION
-    //     ? Object.assign(
-    //         new ConservationProjectInput(),
-    //         structuredClone(projectInput),
-    //       )
-    //     : Object.assign(
-    //         new RestorationProjectInput(),
-    //         structuredClone(projectInput),
-    //       );
-    //
-    // const breakevenPriceCostOutput =
-    //   this.calculationEngine.calculateBreakevenPrice({
-    //     projectInput: projectInputClone,
-    //     baseIncrease,
-    //     baseSize,
-    //     maxIterations: 100,
-    //     tolerance: 0.00001,
-    //   });
     const { costOutput, breakEvenCostOutput } = calculationOutput;
 
     const customProject = this.customProjectFactory.createProject(
@@ -115,7 +89,6 @@ export class CustomProjectsService extends AppBaseService<
       breakEvenCostOutput?.breakEvenCarbonPrice || null,
       costOutput,
       breakEvenCostOutput?.breakEvenCost || null,
-      //breakevenPriceCostOutput?.costOutput || null,
     );
 
     return customProject;

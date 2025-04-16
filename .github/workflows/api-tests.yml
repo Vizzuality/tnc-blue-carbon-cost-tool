@@ -19,8 +19,8 @@ on:
 
 jobs:
 
-  api-tests-integration:
-    name: API Integration Tests
+  api-tests:
+    name: API Tests
     runs-on: ubuntu-22.04
 
     services:

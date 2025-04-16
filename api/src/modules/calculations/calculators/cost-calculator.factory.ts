@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {
   CalculatorDependencies,
-  EngineInputV2,
-  ProjectInputV2,
+  EngineInput,
+  ProjectInput,
   SequestrationRateOutputs,
 } from '@api/modules/calculations/types';
 import { SequestrationRateCalculator } from '@api/modules/calculations/calculators/sequestration-rate.calculator';
@@ -22,7 +22,7 @@ export class CostCalculatorFactory {
    * @returns The assembled dependencies for the cost calculation
    */
   assemblyCostCalculatorDependencies(
-    input: EngineInputV2,
+    input: EngineInput,
   ): CalculatorDependencies {
     const sequestrationRateOutputs = this.computeSequestrationRateOutputs(
       input.projectInput,
@@ -48,7 +48,7 @@ export class CostCalculatorFactory {
   }
 
   computeSequestrationRateOutputs(
-    projectInput: ProjectInputV2,
+    projectInput: ProjectInput,
   ): SequestrationRateOutputs {
     const sequestrationRateCalculator = new SequestrationRateCalculator(
       projectInput,
@@ -72,7 +72,7 @@ export class CostCalculatorFactory {
   }
 
   getRevenueProfitCalculator(
-    projectInput: ProjectInputV2,
+    projectInput: ProjectInput,
     estimatedCreditIssuedPlan: CostPlanMap,
   ): RevenueProfitCalculator {
     const revenueProfitCalculator = new RevenueProfitCalculator(
