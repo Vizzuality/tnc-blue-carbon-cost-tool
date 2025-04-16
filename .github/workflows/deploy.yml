@@ -148,6 +148,7 @@ jobs:
             AWS_SES_ACCESS_KEY_SECRET=${{ secrets.AWS_SES_ACCESS_KEY_SECRET }}
             AWS_SES_DOMAIN=${{ secrets.AWS_SES_DOMAIN }}
             AWS_REGION=${{ secrets.AWS_REGION }}
+            S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
             BACKOFFICE_SESSION_COOKIE_NAME=${{ vars.BACKOFFICE_SESSION_COOKIE_NAME }}
             BACKOFFICE_SESSION_COOKIE_SECRET=${{ secrets.BACKOFFICE_SESSION_COOKIE_SECRET }}
           context: .
@@ -256,8 +257,6 @@ jobs:
             api:
               image: $ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG
               restart: always
-              environment:
-                S3_BUCKET_NAME: files
               ports:
                 - 4000:4000
             backoffice:
