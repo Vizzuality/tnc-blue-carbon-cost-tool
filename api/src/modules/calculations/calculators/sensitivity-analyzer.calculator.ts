@@ -1,10 +1,8 @@
-import {
-  CostCalculator,
-  ProjectInput,
-} from '@api/modules/calculations/calculators/cost.calculator';
+import { CostCalculator } from '@api/modules/calculations/calculators/cost.calculator';
 import {
   CalculatorDependencies,
   COST_KEYS,
+  ProjectInput,
   SensitivityAnalysisInput,
   SensitivityAnalysisResults,
 } from '@api/modules/calculations/types';

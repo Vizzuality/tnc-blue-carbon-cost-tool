@@ -1,8 +1,3 @@
-/**
- * @description: Once we understand how the cost is calculated, we might move the common logic to this class, and extend it for each specific project type
- */
-import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
-import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { RevenueProfitCalculator } from '@api/modules/calculations/calculators/revenue-profit.calculator';
@@ -22,6 +17,7 @@ import {
   CalculatorDependencies,
   COST_KEYS,
   CostPlanMap,
+  ProjectInput,
 } from '@api/modules/calculations/types';
 
 export type CostPlans = Record<
@@ -48,8 +44,6 @@ export enum COST_KEYSOLD {
   COMMUNITY_BENEFIT_SHARING_FUND = 'communityBenefitSharingFund',
   CARBON_STANDARD_FEES = 'carbonStandardFees',
 }
-
-export type ProjectInput = ConservationProjectInput | RestorationProjectInput;
 
 export class CostCalculator {
   projectInput: ProjectInput;
