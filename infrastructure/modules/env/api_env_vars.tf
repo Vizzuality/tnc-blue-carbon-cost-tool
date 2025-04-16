@@ -43,6 +43,7 @@ locals {
     AWS_SES_ACCESS_KEY_SECRET           = aws_iam_access_key.email_user_access_key.secret
     AWS_SES_DOMAIN                      = module.email.mail_from_domain
     BACKOFFICE_SESSION_COOKIE_SECRET    = random_password.backoffice_session_cookie_secret.result
+    S3_BUCKET_NAME                     = module.s3.s3_outputs.name
 
   }
   api_env_vars = {
