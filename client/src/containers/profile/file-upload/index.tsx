@@ -4,6 +4,7 @@ import { useDropzone } from "react-dropzone";
 
 import Link from "next/link";
 
+import { ALLOWED_USER_UPLOAD_FILE_EXTENSIONS } from "@shared/dtos/users/upload-data-files.constants";
 import { FileUpIcon, XIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -15,83 +16,62 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/toast/use-toast";
 
-// Array should be in this order
-export const TEMPLATE_FILES = [
-  {
-    name: "carbon-input-template.xlsx",
-    path: "/templates/carbon-input-template.xlsx",
-  },
-  {
-    name: "cost-input-template.xlsx",
-    path: "/templates/cost-input-template.xlsx",
-  },
-];
+const MAX_FILES = 3;
+const getUniqueFileName = (fileName: string, existingFiles: File[]): string => {
+  const baseName = fileName.substring(0, fileName.lastIndexOf("."));
+  const extension = fileName.substring(fileName.lastIndexOf("."));
+  let newName = fileName;
+  let counter = 1;
 
-const REQUIRED_FILE_NAMES = TEMPLATE_FILES.map((f) => f.name);
-const EXCEL_EXTENSIONS = [".xlsx", ".xls"];
-const MAX_FILES = 2;
+  while (existingFiles.some((f) => f.name === newName)) {
+    newName = `${baseName} (${counter})${extension}`;
+    counter++;
+  }
+
+  return newName;
+};
 
 const FileUpload: FC = () => {
   const [files, setFiles] = useState<File[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const { data: session } = useSession();
   const { toast } = useToast();
-  const onDropAccepted = useCallback(
-    (acceptedFiles: File[]) => {
-      const validFiles = acceptedFiles.filter((file) =>
-        REQUIRED_FILE_NAMES.includes(file.name),
-      );
 
-      if (validFiles.length !== acceptedFiles.length) {
-        return toast({
-          variant: "destructive",
-          description:
-            "Only carbon-input-template.xlsx and cost-input-template.xlsx files are allowed",
-        });
-      }
-
-      setFiles((prevFiles) => {
-        const remainingSlots = MAX_FILES - prevFiles.length;
-        const filesToAdd = acceptedFiles.slice(0, remainingSlots);
-        return [...prevFiles, ...filesToAdd];
+  const onDropAccepted = useCallback((acceptedFiles: File[]) => {
+    setFiles((prevFiles) => {
+      const remainingSlots = MAX_FILES - prevFiles.length;
+      const filesToAdd = acceptedFiles.slice(0, remainingSlots).map((file) => {
+        const newFileName = getUniqueFileName(file.name, prevFiles);
+        if (newFileName !== file.name) {
+          return new File([file], newFileName, { type: file.type });
+        }
+        return file;
       });
-    },
-    [toast],
-  );
+      return [...prevFiles, ...filesToAdd];
+    });
+  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDropAccepted,
-    accept: {
-      "application/vnd.ms-excel": EXCEL_EXTENSIONS,
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-        EXCEL_EXTENSIONS,
-    },
+    accept: Object.entries(ALLOWED_USER_UPLOAD_FILE_EXTENSIONS).reduce(
+      (acc, [ext, mime]) => ({ ...acc, [mime]: [ext] }),
+      {},
+    ),
     maxFiles: MAX_FILES,
     disabled: files.length >= MAX_FILES,
     noClick: files.length >= MAX_FILES,
     noDrag: files.length >= MAX_FILES,
   });
+
   const removeFile = (fileToRemove: File) => {
     setFiles((prevFiles) => prevFiles.filter((file) => file !== fileToRemove));
   };
+
   const handleUploadClick = async () => {
-    const fileNames = files.map((file) => file.name);
-    const missingFiles = REQUIRED_FILE_NAMES.filter(
-      (name) => !fileNames.includes(name),
-    );
-
-    if (missingFiles.length > 0) {
-      return toast({
-        variant: "destructive",
-        description: `Missing required file${missingFiles.length > 1 ? "s" : ""}: ${missingFiles.join(", ")}`,
-      });
-    }
-
+    setIsUploading(true);
     const formData = new FormData();
-    const sortedFiles = REQUIRED_FILE_NAMES.map(
-      (name) => files.find((file) => file.name === name)!,
-    );
 
-    sortedFiles.forEach((file) => {
+    files.forEach((file) => {
       formData.append("files", file);
     });
 
@@ -119,6 +99,8 @@ const FileUpload: FC = () => {
         variant: "destructive",
         description: "Something went wrong uploading your files",
       });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -137,16 +119,21 @@ const FileUpload: FC = () => {
         <input id="share-information-input" {...getInputProps()} />
         <div className="flex flex-col items-center gap-2">
           <FileUpIcon className="h-5 w-5" strokeWidth={1} />
-          <p className="text-sm">
-            {files.length < MAX_FILES ? (
-              <>
-                Drag and drop the files or&nbsp;
+          {files.length < MAX_FILES ? (
+            <>
+              <p className="text-sm">
+                Drag and drop your files (
+                {Object.keys(ALLOWED_USER_UPLOAD_FILE_EXTENSIONS).join(", ")})
+                here, or&nbsp;
                 <span className="text-primary">click</span> to upload
-              </>
-            ) : (
-              "You've attached the maximum of 2 files"
-            )}
-          </p>
+              </p>
+              <p className="text-sm">Maximum of {MAX_FILES} files allowed.</p>
+            </>
+          ) : (
+            <p className="text-sm">
+              You&apos;ve attached the maximum of {MAX_FILES} files
+            </p>
+          )}
         </div>
       </Card>
       {files.length > 0 && (
@@ -170,8 +157,12 @@ const FileUpload: FC = () => {
             ))}
           </ol>
           <div className="flex justify-end">
-            <Button type="button" onClick={handleUploadClick}>
-              Upload
+            <Button
+              type="button"
+              onClick={handleUploadClick}
+              disabled={isUploading}
+            >
+              {isUploading ? "Uploading..." : "Upload"}
             </Button>
           </div>
         </div>

@@ -6,10 +6,13 @@ import { z } from "zod";
 import { JSONAPIError } from "@shared/dtos/json-api.error";
 
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
+import {
+  UploadDataFilesDto,
+  UploadDataTemplateDto,
+} from "@shared/dtos/users/upload-data-files.dto";
 import { UpdateUserPasswordSchema } from "@shared/schemas/users/update-password.schema";
 import { RequestEmailUpdateSchema } from "@shared/schemas/users/request-email-update.schema";
 import { UpdateUserSchema } from "@shared/schemas/users/update-user.schema";
-import { UploadDataFilesDto } from "@shared/dtos/users/upload-data-files.dto";
 
 const contract = initContract();
 export const usersContract = contract.router({
@@ -79,7 +82,7 @@ export const usersContract = contract.router({
     method: "GET",
     path: "/users/upload-data/templates",
     responses: {
-      200: contract.type<any>(),
+      200: contract.type<ApiResponse<UploadDataTemplateDto[]>>(),
     },
   },
   downloadUploadDataTemplate: {

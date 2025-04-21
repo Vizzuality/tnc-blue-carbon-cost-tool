@@ -24,6 +24,7 @@ export const authKeys = createQueryKeys("auth", {
 
 export const userKeys = createQueryKeys("user", {
   me: (token: string) => ["me", token],
+  listUploadDataTemplates: null,
 });
 
 export const geometriesKeys = createQueryKeys("geometries", {
