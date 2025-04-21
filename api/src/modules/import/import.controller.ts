@@ -23,22 +23,15 @@ import { Response } from 'express';
 import { GetUser } from '@api/modules/auth/decorators/get-user.decorator';
 import { User } from '@shared/entities/users/user.entity';
 import { usersContract } from '@shared/contracts/users.contract';
+import {
+  ALLOWED_USER_UPLOAD_FILE_EXTENSIONS,
+  AVAILABLE_USER_UPLOAD_TEMPLATES,
+} from '@shared/dtos/users/upload-data-files.constants';
 import { JwtCookieAuthGuard } from '@api/modules/auth/guards/jwt-cookie-auth.guard';
 import { extname, join } from 'path';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { Multer } from 'multer';
 
-const ALLOWED_USER_UPLOAD_FILE_EXTENSIONS = ['.xlsx', '.xlsm', '.pdf'];
-const AVAILABLE_USER_UPLOAD_TEMPLATES = [
-  {
-    id: '1',
-    fileName: 'carbon-input-template.xlsx',
-  },
-  {
-    id: '2',
-    fileName: 'cost-input-template.xlsx',
-  },
-];
 @Controller()
 @UseGuards(JwtCookieAuthGuard, RolesGuard)
 export class ImportController {
@@ -95,9 +88,14 @@ export class ImportController {
 
       for (const file of files) {
         const ext = extname(file.originalname).toLowerCase();
-        if (ALLOWED_USER_UPLOAD_FILE_EXTENSIONS.includes(ext) === false) {
+        const allowedExtensions = Object.keys(
+          ALLOWED_USER_UPLOAD_FILE_EXTENSIONS,
+        );
+        if (allowedExtensions.includes(ext) === false) {
           throw new BadRequestException(
-            `Invalid file type: ${ext}. Only ${ALLOWED_USER_UPLOAD_FILE_EXTENSIONS.join(',')} are allowed.`,
+            `Invalid file type: ${ext}. Only ${allowedExtensions.join(
+              ',',
+            )} are allowed.`,
           );
         }
       }

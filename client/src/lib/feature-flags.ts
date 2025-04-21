@@ -45,7 +45,7 @@ interface FeatureFlags {
 const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
   "intro-modal": true,
   "edit-project": true,
-  "share-information": false,
+  "share-information": true,
   "project-comparison": false,
   "update-selection": false,
   "methodology-page": true,
