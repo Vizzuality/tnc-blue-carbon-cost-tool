@@ -4,7 +4,10 @@ import { useDropzone } from "react-dropzone";
 
 import Link from "next/link";
 
-import { ALLOWED_USER_UPLOAD_FILE_EXTENSIONS } from "@shared/dtos/users/upload-data-files.constants";
+import {
+  ALLOWED_USER_UPLOAD_FILE_EXTENSIONS,
+  MAX_USER_UPLOAD_FILES,
+} from "@shared/dtos/users/upload-data-files.constants";
 import { FileUpIcon, XIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -16,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/toast/use-toast";
 
-const MAX_FILES = 3;
+const MAX_FILES = MAX_USER_UPLOAD_FILES;
 const getUniqueFileName = (fileName: string, existingFiles: File[]): string => {
   const baseName = fileName.substring(0, fileName.lastIndexOf("."));
   const extension = fileName.substring(fileName.lastIndexOf("."));

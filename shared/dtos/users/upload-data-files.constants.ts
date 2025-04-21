@@ -17,3 +17,5 @@ export const AVAILABLE_USER_UPLOAD_TEMPLATES = [
     fileName: "cost-input-template.xlsx",
   },
 ];
+
+export const MAX_USER_UPLOAD_FILES = 3;
