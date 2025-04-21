@@ -13,7 +13,6 @@ import { useScrollSpy } from "@/hooks/use-scroll-spy";
 
 import CustomProjects from "@/containers/profile/custom-projects";
 import DeleteAccount from "@/containers/profile/delete-account";
-import { TEMPLATE_FILES } from "@/containers/profile/file-upload";
 import ProfileSection from "@/containers/profile/profile-section";
 import ProfileSidebar from "@/containers/profile/profile-sidebar";
 import { profileStepAtom } from "@/containers/profile/store";
@@ -51,7 +50,7 @@ export const PROFILE_SECTIONS = [
   {
     id: "share-information",
     title: "Share information",
-    description: <FileUploadDescription files={TEMPLATE_FILES} />,
+    description: <FileUploadDescription />,
     Component: FileUpload,
   },
   {

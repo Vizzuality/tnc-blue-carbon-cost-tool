@@ -10,3 +10,8 @@ export type UploadDataFilesDto = {
   buffer: any;
   key?: string;
 }[];
+
+export type UploadDataTemplateDto = {
+  id: string;
+  fileName: string;
+};
