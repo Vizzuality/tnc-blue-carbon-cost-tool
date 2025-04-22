@@ -124,7 +124,9 @@ test.describe("Custom Projects - Edit", () => {
     expect(
       page.locator("input[name='parameters.plantingSuccessRate']"),
     ).toHaveValue(
-      DEFAULT_RESTORATION_FORM_VALUES.parameters.plantingSuccessRate.toString(),
+      (
+        DEFAULT_RESTORATION_FORM_VALUES.parameters.plantingSuccessRate * 100
+      ).toString(),
     );
   });
 });
