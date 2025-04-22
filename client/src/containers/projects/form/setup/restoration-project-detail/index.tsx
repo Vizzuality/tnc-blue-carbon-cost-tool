@@ -193,9 +193,10 @@ export default function RestorationProjectDetails() {
                 formControlClassName="after:content-['%']"
                 min={0}
                 value={form.getValues("parameters.plantingSuccessRate")}
+                onValueChange={async (v) =>
+                  handleFormChange("parameters.plantingSuccessRate", v)
+                }
                 isPercentage
-                readOnly
-                disabled
               />
             )}
           />

@@ -61,7 +61,10 @@ export default function NumberFormItem({
 
   useEffect(() => {
     if (value) {
-      setState(value.toString());
+      const newValue = isPercentage
+        ? toPercentageValue(Number(value))
+        : value.toString();
+      setState(newValue);
     }
   }, [value]);
 
