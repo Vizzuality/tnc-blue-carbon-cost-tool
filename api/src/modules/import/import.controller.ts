@@ -28,6 +28,7 @@ import {
   AVAILABLE_USER_UPLOAD_TEMPLATES,
 } from '@shared/dtos/users/upload-data-files.constants';
 import { JwtCookieAuthGuard } from '@api/modules/auth/guards/jwt-cookie-auth.guard';
+import { Public } from '@api/modules/auth/decorators/is-public.decorator';
 import { extname, join } from 'path';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { Multer } from 'multer';
@@ -120,9 +121,8 @@ export class ImportController {
   }
 
   @Get('/users/upload-data/templates/:templateId')
-  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @Public()
   public async downloadUserUploadTemplate(
-    @GetUser() user: User,
     @Param('templateId') templateId: string,
     @Res() res: Response,
   ): Promise<ControllerResponse> {
