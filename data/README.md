@@ -104,11 +104,7 @@ In order to run the code and notebooks in this repository, you will need to set 
 git clone <github-repo-url>
 ```
 
-2- Navigate to the project directory:
-
-```bash
-cd TNC_Blue_Carbon_Cost_Tool
-```
+2- Navigate to the project directory
 
 3- Install and run the environment locally:
 
