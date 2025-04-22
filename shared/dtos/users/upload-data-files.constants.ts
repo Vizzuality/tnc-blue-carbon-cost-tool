@@ -4,7 +4,6 @@ export const ALLOWED_USER_UPLOAD_FILE_EXTENSIONS = {
   ".pdf": "application/pdf",
   ".xlsm": "application/vnd.ms-excel.sheet.macroEnabled.12",
   ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  ".xlm": "application/xml",
 } as const;
 
 export const AVAILABLE_USER_UPLOAD_TEMPLATES = [
