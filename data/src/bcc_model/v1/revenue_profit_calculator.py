@@ -1,7 +1,7 @@
 # src/revenue_profit_calculator.py
 import math
 
-from sequestration_credits_calculator import SequestrationCreditsCalculator
+from v1.sequestration_credits_calculator import SequestrationCreditsCalculator
 
 
 class RevenueProfitCalculator:
