@@ -94,3 +94,24 @@ This folder contains legacy or restored versions of the code.
 - **Carbon-Cost Data Upload.xlsm**  
   An Excel workbook designed for uploading and managing carbon cost data.
 
+## Development and Testing
+
+In order to run the code and notebooks in this repository, you will need to set up a Python environment using [uv](https://docs.astral.sh/uv/) with the required dependencies. The following steps outline the process:
+
+1- Clone the repository:
+
+```bash
+git clone <github-repo-url>
+```
+
+2- Navigate to the project directory:
+
+```bash
+cd TNC_Blue_Carbon_Cost_Tool
+```
+
+3- Install and run the environment locally:
+
+```bash
+uv run --refresh --with jupyter jupyter lab --allow-root --no-browser --ServerApp.disable_check_xsrf=True --ServerApp.allow_remote_access=True --ServerApp.token='' --ServerApp.password=''  --ServerApp.port=<notebook port: 8887>
+```
