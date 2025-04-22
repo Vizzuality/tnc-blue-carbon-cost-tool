@@ -1,7 +1,7 @@
 # utils.py
 
 import numpy_financial as npf
-
+import pandas as pd
 
 def load_country_code(master_table, country):
     """Utility function to get the country code from the master table."""
@@ -130,3 +130,37 @@ def calculate_irr(net_cash_flow, net_income, use_capex=False):
         irr = npf.irr(net_income_array)
 
     return irr
+
+def generate_master_table(data_path):
+    index = pd.read_excel(data_path, sheet_name="Index", header=11)
+    index = index.iloc[:, 2:]
+    cost_tables = index[index["Type"] == "Cost Tables"]["Sheet Name"].values[1:]
+    carbon_tables = index[index["Type"] == "Carbon Tables"]["Sheet Name"].values[1:]
+    tables = list(cost_tables[1:]) + list(carbon_tables)
+
+    master_table = pd.read_excel(data_path, sheet_name=cost_tables[0]).drop(columns=["Source"])
+    for table in tables:
+        # Read the table and drop the source columns
+        df_table = pd.read_excel(data_path, sheet_name=table)
+        df_table = df_table.drop(
+            columns=[col for col in df_table.columns if col.startswith("Source")], errors="ignore"
+        )
+        # Determine which columns exist in df_table from the list
+        common_columns = [
+            col
+            for col in ["Country", "Country code", "Activity", "Ecosystem"]
+            if col in df_table.columns
+        ]
+
+        # Merge using only the found columns
+        master_table = pd.merge(master_table, df_table, on=common_columns, how="left")
+
+    # Convert master_table's column names to lower case and replace spaces with underscores
+    master_table.columns = (
+        master_table.columns.str.lower()
+        .str.replace(" - ", "_")
+        .str.replace("-", "_")
+        .str.replace(" / ", "_")
+        .str.replace(" ", "_")
+    )
+    return master_table

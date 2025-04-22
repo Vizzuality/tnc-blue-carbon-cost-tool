@@ -3,9 +3,9 @@ import re
 import matplotlib.pyplot as plt  # noqa: I001
 import pandas as pd
 from IPython.display import Markdown, display
-from revenue_profit_calculator import RevenueProfitCalculator
-from sequestration_credits_calculator import SequestrationCreditsCalculator
-from utils import (
+from v1.revenue_profit_calculator import RevenueProfitCalculator
+from v1.sequestration_credits_calculator import SequestrationCreditsCalculator
+from v1.utils import (
     aggregate_costs,
     calculate_cost_plan,
     calculate_funding_gap,
