@@ -11,6 +11,7 @@ import { getAuthHeader } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const getDownloadUrl = (file: UploadDataTemplateDto) => {
+  // This endpoint is not available in the ts-rest contract
   return `${process.env.NEXT_PUBLIC_API_URL}/users/upload-data/templates/${file.id}`;
 };
 const downloadFiles = (files?: UploadDataTemplateDto[]) => {
@@ -45,17 +46,8 @@ const FileUploadDescription: FC = () => {
 
   return (
     <>
-      <p>
+      <p className="text-center">
         Provide your input on the methodology and data by&nbsp;
-        <Button
-          variant="link"
-          className="h-auto p-0 text-primary"
-          onClick={() => downloadFiles(data)}
-        >
-          downloading
-        </Button>
-        &nbsp;the required templates, completing them with the necessary
-        information, and&nbsp;
         <Button
           variant="link"
           className="h-auto p-0 text-primary"
@@ -63,11 +55,19 @@ const FileUploadDescription: FC = () => {
         >
           uploading
         </Button>
-        &nbsp;them to contribute new insights for evaluation.
+        &nbsp;files in accepted formats or by using the&nbsp;
+        <Button
+          variant="link"
+          className="h-auto p-0 text-primary"
+          onClick={() => downloadFiles(data)}
+        >
+          downloadable
+        </Button>
+        &nbsp;templates.
       </p>
 
       {data && (
-        <ol className="flex gap-4">
+        <ol className="flex justify-center gap-4">
           {data.map((f) => (
             <li key={`file-${f.fileName}`}>
               <Button variant="link" className="p-0" asChild>
