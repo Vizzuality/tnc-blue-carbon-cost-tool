@@ -396,13 +396,14 @@ export class TestImportService {
     // this.registerImportEvent(userId, this.eventMap.STARTED);
 
     let userUpload = new UserUpload();
+    const date = new Date();
     try {
       const preparedFiles = files.map((file, idx) => ({
         id: idx + 1,
         originalName: file.originalname,
         mimeType: file.mimetype,
         size: file.size,
-        key: this.s3Service.generateS3Key(userId, file.originalname),
+        key: this.s3Service.generateS3Key(date, userId, file.originalname),
         buffer: file.buffer,
       }));
 
@@ -451,5 +452,16 @@ export class TestImportService {
       throw new InternalServerErrorException('File not found in directory');
     }
     return [userUploadFile, fileStream];
+  }
+
+  public async deleteUserUpload(id: number): Promise<void> {
+    const userUpload = await this.importRepo.findUserUploadById(id);
+    if (userUpload === null) {
+      throw new NotFoundException('User upload not found');
+    }
+
+    await this.s3Service.deleteFilesByKeys(userUpload.files.map((f) => f.key));
+    // User upload row is deleted by adminjs
+    await this.importRepo.removeUserUpload(userUpload);
   }
 }

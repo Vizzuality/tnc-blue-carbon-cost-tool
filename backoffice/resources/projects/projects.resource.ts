@@ -60,16 +60,13 @@ export const ProjectsResource: ResourceWithOptions = {
     actions: {
       new: {
         isAccessible: true,
-        before: ProjectActions.beforeHook,
-        after: ProjectActions.afterHook,
+        before: ProjectActions.upsertBeforeHook,
+        after: ProjectActions.upsertAfterHook,
       },
       edit: {
         isAccessible: true,
-        before: ProjectActions.beforeHook,
-        after: ProjectActions.afterHook,
-      },
-      delete: {
-        isAccessible: true,
+        before: ProjectActions.upsertBeforeHook,
+        after: ProjectActions.upsertAfterHook,
       },
       bulkDelete: {
         isAccessible: false,

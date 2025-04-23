@@ -68,6 +68,13 @@ export const usersContract = contract.router({
     contentType: "multipart/form-data",
     body: contract.type<UploadDataFilesDto>(),
   },
+  deleteUploadedData: {
+    method: "DELETE",
+    path: "/users/upload-data/:id",
+    responses: {
+      204: contract.type<null>(),
+    },
+  },
   listUploadDataTemplates: {
     method: "GET",
     path: "/users/upload-data/templates",
