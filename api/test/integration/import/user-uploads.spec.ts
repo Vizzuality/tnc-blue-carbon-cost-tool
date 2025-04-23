@@ -1,3 +1,6 @@
+import { S3Service } from '@api/modules/import/s3.service';
+import { S3 } from '@aws-sdk/client-s3';
+import { usersContract } from '@shared/contracts/users.contract';
 import { ROLES } from '@shared/entities/users/roles.enum';
 import { TestManager } from 'api/test/utils/test-manager';
 
@@ -83,5 +86,35 @@ describe('User Uploads', () => {
 
     expect(uploadResponse.status).toBe(400);
     expect(uploadResponse.body.errors).toHaveLength(1);
+  });
+
+  test('User uploads files and admin can delete them', async () => {
+    const fileName = 'user_upload_test_file.xlsx';
+    const filePath = `${__dirname}/../data/${fileName}`;
+
+    const uploadResponse = await testManager
+      .request()
+      .post('/users/upload-data')
+      .set('Authorization', `Bearer ${testUserToken}`)
+      .attach('file', filePath, fileName);
+
+    expect(uploadResponse.status).toBe(201);
+
+    const userUpload = uploadResponse.body.data;
+    const deleteResponse = await testManager
+      .request()
+      .delete(
+        usersContract.deleteUploadedData.path.replace(':id', userUpload.id),
+      )
+      .set('Authorization', `Bearer ${testUserToken}`);
+
+    expect(deleteResponse.status).toBe(204);
+
+    const s3Service = testManager.getApp().get(S3Service);
+    const s3Files = await s3Service.listFiles();
+    for (const file of userUpload.files) {
+      const foundFile = s3Files.find((s3File) => s3File.Key === file.key);
+      expect(foundFile).toBeUndefined();
+    }
   });
 });

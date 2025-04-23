@@ -13,9 +13,12 @@ const sanitizeFileName = (originalName: string): string => {
 
   return ext ? `${cleanBase}.${ext}` : cleanBase;
 };
-const generateS3Key = (userId: string, originalName: string): string => {
-  const now = new Date();
-  const timestamp = now.toISOString().replace(/[:.]/g, '-'); // e.g., 2025-04-08T15-34-22-123Z
+const generateS3Key = (
+  date: Date,
+  userId: string,
+  originalName: string,
+): string => {
+  const timestamp = date.toISOString().replace(/[:.]/g, '-'); // e.g., 2025-04-08T15-34-22-123Z
   const safeName = sanitizeFileName(originalName);
   return `${userId}/${timestamp}/${safeName}`;
 };
