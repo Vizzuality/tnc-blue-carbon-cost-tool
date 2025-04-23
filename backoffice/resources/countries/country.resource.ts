@@ -16,8 +16,8 @@ export const CountryResource: ResourceWithOptions = {
       direction: 'asc',
     },
     navigation: {
-      name: 'Data Management',
-      icon: 'Database',
+      name: 'Model Components',
+      icon: 'Settings',
     },
   },
 };

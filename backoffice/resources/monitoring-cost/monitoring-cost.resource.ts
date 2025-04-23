@@ -1,17 +1,17 @@
-import { ResourceWithOptions } from "adminjs";
-import { MonitoringCost } from "@shared/entities/cost-inputs/monitoring.entity.js";
-import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
+import { ResourceWithOptions } from 'adminjs';
+import { MonitoringCost } from '@shared/entities/cost-inputs/monitoring.entity.js';
+import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
 
 export const MonitoringCostResource: ResourceWithOptions = {
   resource: MonitoringCost,
   options: {
     sort: {
-      sortBy: "monitoringCost",
-      direction: "desc",
+      sortBy: 'monitoringCost',
+      direction: 'desc',
     },
     navigation: {
-      name: "Data Management",
-      icon: "Database",
+      name: 'Model Components',
+      icon: 'Settings',
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,

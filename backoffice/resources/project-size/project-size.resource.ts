@@ -9,8 +9,8 @@ export const ProjectSizeResource: ResourceWithOptions = {
       direction: 'desc',
     },
     navigation: {
-      name: 'Data Management',
-      icon: 'Database',
+      name: 'Model Components',
+      icon: 'Settings',
     },
     listProperties: ['countryCode', 'ecosystem', 'activity', 'sizeHa'],
     showProperties: ['countryCode', 'ecosystem', 'activity', 'sizeHa'],

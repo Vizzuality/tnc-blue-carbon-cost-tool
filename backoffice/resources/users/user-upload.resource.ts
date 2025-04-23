@@ -9,9 +9,16 @@ const FIELD_NAMES = ['user', 'uploadedAt', 'files'];
 export const UserUploadResource: ResourceWithOptions = {
   resource: UserUpload,
   options: {
+    translations: {
+      en: {
+        labels: {
+          UserUpload: 'File submissions',
+        },
+      },
+    },
     navigation: {
-      name: 'Files',
-      icon: 'File',
+      name: 'User Management',
+      icon: 'User',
     },
     showProperties: FIELD_NAMES,
     editProperties: FIELD_NAMES,
