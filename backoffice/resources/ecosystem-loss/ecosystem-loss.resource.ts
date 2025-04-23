@@ -9,8 +9,8 @@ export const EcosystemLossResource: ResourceWithOptions = {
       direction: 'desc',
     },
     navigation: {
-      name: 'Data Management',
-      icon: 'Database',
+      name: 'Model Components',
+      icon: 'Settings',
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,

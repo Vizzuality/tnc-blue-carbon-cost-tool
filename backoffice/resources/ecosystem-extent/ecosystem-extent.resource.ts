@@ -21,8 +21,8 @@ export const EcosystemExtentResource: ResourceWithOptions = {
   resource: EcosystemExtent,
   options: {
     navigation: {
-      name: 'Data Management',
-      icon: 'Database',
+      name: 'Model Components',
+      icon: 'Settings',
     },
     sort: {
       sortBy: 'countryCode',

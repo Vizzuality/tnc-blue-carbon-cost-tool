@@ -1,6 +1,6 @@
-import { ResourceWithOptions } from "adminjs";
-import { ConservationPlanningAndAdmin } from "@shared/entities/cost-inputs/conservation-and-planning-admin.entity.js";
-import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
+import { ResourceWithOptions } from 'adminjs';
+import { ConservationPlanningAndAdmin } from '@shared/entities/cost-inputs/conservation-and-planning-admin.entity.js';
+import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
 
 export const ConservationAndPlanningAdminResource: ResourceWithOptions = {
   resource: ConservationPlanningAndAdmin,
@@ -12,12 +12,12 @@ export const ConservationAndPlanningAdminResource: ResourceWithOptions = {
       },
     },
     sort: {
-      sortBy: "planningCost",
-      direction: "desc",
+      sortBy: 'planningCost',
+      direction: 'desc',
     },
     navigation: {
-      name: "Data Management",
-      icon: "Database",
+      name: 'Model Components',
+      icon: 'Settings',
     },
   },
 };

@@ -54,8 +54,8 @@ export const ProjectsResource: ResourceWithOptions = {
       direction: 'asc',
     },
     navigation: {
-      name: 'Data Management',
-      icon: 'Database',
+      name: 'Projects',
+      icon: 'Folder',
     },
     actions: {
       new: {

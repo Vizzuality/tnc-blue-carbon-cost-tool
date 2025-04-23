@@ -31,8 +31,8 @@ export const EmissionFactorsResource: ResourceWithOptions = {
       direction: 'asc',
     },
     navigation: {
-      name: 'Data Management',
-      icon: 'Database',
+      name: 'Model Components',
+      icon: 'Settings',
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,

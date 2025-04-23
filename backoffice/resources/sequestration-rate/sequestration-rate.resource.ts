@@ -21,8 +21,8 @@ export const SequestrationRateResource: ResourceWithOptions = {
   resource: SequestrationRate,
   options: {
     navigation: {
-      name: 'Data Management',
-      icon: 'Database',
+      name: 'Model Components',
+      icon: 'Settings',
     },
     sort: {
       sortBy: 'countryCode',
