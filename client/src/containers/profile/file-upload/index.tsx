@@ -170,7 +170,7 @@ const FileUpload: FC = () => {
           </div>
         </div>
       )}
-      <p className="text-sm text-muted-foreground">
+      <p className="text-center text-sm text-muted-foreground">
         By sharing your data with us, you consent to being contacted for future
         follow-ups. For more details, please review our&nbsp;
         <Button
