@@ -5,7 +5,7 @@ import {
   ActionResponse,
   ValidationError,
 } from 'adminjs';
-import cookie from 'cookie';
+import { CommonActions } from 'backoffice/resources/common.actions.js';
 
 const RESPONSE_BODY_TO_FORM_FIELD_NAME = {
   projectName: 'projectName',
@@ -18,7 +18,7 @@ const RESPONSE_BODY_TO_FORM_FIELD_NAME = {
   projectSizeHa: 'projectSize',
 } as const;
 
-const convertFormToRequestBody = (request: ActionRequest) => {
+const convertUpsertFormToRequestBody = (request: ActionRequest) => {
   if (request.payload == null) return {};
 
   const requestBody = {
@@ -35,26 +35,12 @@ const convertFormToRequestBody = (request: ActionRequest) => {
   return requestBody;
 };
 
-const beforeHook = async (request: any, context: ActionContext) => {
+const upsertBeforeHook = async (request: any, context: ActionContext) => {
   if (request.method !== 'post') return request;
 
-  const cookieIdx = request.rawHeaders.indexOf('cookie');
-
-  let parsedCookies: Record<string, string | undefined> = {};
-  if (cookieIdx !== -1) {
-    const cookieHeaderValue = request.rawHeaders[cookieIdx + 1];
-    parsedCookies = cookie.parse(cookieHeaderValue);
-  } else {
-    throw new Error('Cookie header not found');
-  }
-
-  const backofficeCookie = parsedCookies['backoffice'];
-  if (!backofficeCookie) {
-    throw new Error('Backoffice cookie is missing');
-  }
-
-  const cookieToSend = `backoffice=${parsedCookies.backoffice};`;
-  const requestBody = convertFormToRequestBody(request);
+  const backofficeCookie = CommonActions.extractBackofficeCookie(request);
+  const cookieToSend = `backoffice=${backofficeCookie};`;
+  const requestBody = convertUpsertFormToRequestBody(request);
 
   let res: Response;
   if (context.action.name === 'edit') {
@@ -109,7 +95,7 @@ const beforeHook = async (request: any, context: ActionContext) => {
   };
 };
 
-const afterHook = async (
+const upsertAfterHook = async (
   response: ActionResponse,
   request: ActionRequest,
   context: ActionContext,
@@ -148,6 +134,6 @@ const afterHook = async (
 };
 
 export const ProjectActions = {
-  beforeHook,
-  afterHook,
+  upsertBeforeHook,
+  upsertAfterHook,
 };

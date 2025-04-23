@@ -1,4 +1,9 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  OnModuleInit,
+} from '@nestjs/common';
 import {
   S3Client,
   HeadBucketCommand,
@@ -7,6 +12,7 @@ import {
   PutObjectCommand,
   ListObjectsV2Command,
   GetObjectCommand,
+  DeleteObjectsCommand,
 } from '@aws-sdk/client-s3';
 import { ApiConfigService } from '@api/modules/config/app-config.service';
 import { UploadDataFilesDto } from '@shared/dtos/users/upload-data-files.dto';
@@ -47,8 +53,8 @@ export class S3Service implements OnModuleInit {
     }
   }
 
-  public generateS3Key(userId: string, fileName: string): string {
-    return S3Utils.generateS3Key(userId, fileName);
+  public generateS3Key(date: Date, userId: string, fileName: string): string {
+    return S3Utils.generateS3Key(date, userId, fileName);
   }
 
   public async uploadUserFiles(files: UploadDataFilesDto): Promise<any> {
@@ -85,6 +91,21 @@ export class S3Service implements OnModuleInit {
     } catch (e) {
       this.logger.error('Error downloading file:', s3Key, e);
       return undefined;
+    }
+  }
+
+  public async deleteFilesByKeys(s3Keys: string[]): Promise<void> {
+    try {
+      const deleteCommand = new DeleteObjectsCommand({
+        Bucket: this.bucketName,
+        Delete: {
+          Objects: s3Keys.map((key) => ({ Key: key })),
+        },
+      });
+      await this.s3Client.send(deleteCommand);
+    } catch (e) {
+      this.logger.error('Error deleting files:', s3Keys, e);
+      throw new InternalServerErrorException('Error deleting files from S3');
     }
   }
 }

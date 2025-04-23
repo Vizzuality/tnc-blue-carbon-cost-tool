@@ -121,6 +121,20 @@ export class ImportController {
     });
   }
 
+  @TsRestHandler(usersContract.deleteUploadedData)
+  @RequiredRoles(ROLES.ADMIN)
+  public async deleteUploadedData(
+    @Param('id') id: number,
+  ): Promise<ControllerResponse> {
+    return tsRestHandler(usersContract.deleteUploadedData, async () => {
+      await this.service.deleteUserUpload(id);
+      return {
+        status: 204,
+        body: null,
+      };
+    });
+  }
+
   @Get('/users/upload-data/templates/:templateId')
   @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
   public async downloadUserUploadTemplate(
