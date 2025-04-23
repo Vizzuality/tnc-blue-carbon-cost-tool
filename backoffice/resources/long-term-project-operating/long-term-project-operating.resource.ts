@@ -1,16 +1,16 @@
-import { ResourceWithOptions } from "adminjs";
-import { LongTermProjectOperating } from "@shared/entities/cost-inputs/long-term-project-operating.entity.js";
-import { GLOBAL_COMMON_PROPERTIES } from "../common/common.resources.js";
+import { ResourceWithOptions } from 'adminjs';
+import { LongTermProjectOperating } from '@shared/entities/cost-inputs/long-term-project-operating.entity.js';
+import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
 export const LongTermProjectOperatingResource: ResourceWithOptions = {
   resource: LongTermProjectOperating,
   options: {
     sort: {
-      sortBy: "longTermProjectOperatingCost",
-      direction: "desc",
+      sortBy: 'longTermProjectOperatingCost',
+      direction: 'desc',
     },
     navigation: {
-      name: "Data Management",
-      icon: "Database",
+      name: 'Model Components',
+      icon: 'Settings',
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,

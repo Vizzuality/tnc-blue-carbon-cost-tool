@@ -43,6 +43,7 @@ import { EcosystemExtentResource } from 'backoffice/resources/ecosystem-extent/e
 import path from 'path';
 import { Config } from 'backoffice/components/config/Config.js';
 import { UserUploadResource } from 'backoffice/resources/users/user-upload.resource.js';
+import { User } from '@shared/entities/users/user.entity.js';
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -94,37 +95,44 @@ const start = async () => {
     rootPath: ROOT_PATH,
     componentLoader,
     resources: [
-      UserResource,
+      // User management
       UserUploadResource,
-      ProjectSizeResource,
-      FeasibilityAnalysisResource,
-      ConservationAndPlanningAdminResource,
-      CommunityRepresentationResource,
-      CarbonRightsResource,
-      FinancingCostResource,
-      ValidationCostResource,
-      MonitoringCostResource,
-      MaintenanceResource,
-      DataCollectionAndFieldCostResource,
-      CommunityBenefitResource,
-      CarbonStandardFeesResource,
-      CommunityCashFlowResource,
-      EcosystemLossResource,
-      RestorableLandResource,
-      EmissionFactorsResource,
-      BaselineReassessmentResource,
-      MRVResource,
-      BlueCarbonProjectPlanningResource,
-      LongTermProjectOperatingResource,
-      SequestrationRateResource,
+      UserResource,
+
+      // Projects
       ProjectsResource,
-      ImplementationLaborCostResource,
-      BaseSizeResource,
+
+      // Model Components
       BaseIncreaseResource,
-      ModelAssumptionResource,
+      BaseSizeResource,
+      BaselineReassessmentResource,
+      BlueCarbonProjectPlanningResource,
+      CarbonRightsResource,
+      CarbonStandardFeesResource,
+      CommunityBenefitResource,
+      CommunityCashFlowResource,
+      CommunityRepresentationResource,
+      ConservationAndPlanningAdminResource,
       CountryResource,
-      ModelComponentSourceResource,
+      DataCollectionAndFieldCostResource,
       EcosystemExtentResource,
+      EcosystemLossResource,
+      EmissionFactorsResource,
+      FeasibilityAnalysisResource,
+      FinancingCostResource,
+      ImplementationLaborCostResource,
+      LongTermProjectOperatingResource,
+      MaintenanceResource,
+      ModelAssumptionResource,
+      MonitoringCostResource,
+      MRVResource,
+      ProjectSizeResource,
+      RestorableLandResource,
+      SequestrationRateResource,
+      ValidationCostResource,
+
+      // Methodology
+      ModelComponentSourceResource,
     ],
     pages: {
       'data-upload': {
@@ -152,7 +160,7 @@ const start = async () => {
             ProjectSize: 'Project Sizes',
             // Note: This is the title of the pages section in the sidebar.
             // see full example here: https://github.com/SoftwareBrothers/adminjs/blob/master/src/locale/en/translation.json
-            pages: 'Uploads',
+            // pages: 'Uploads',
           },
           resources: {
             ProjectSize: {

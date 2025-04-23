@@ -19,8 +19,8 @@ export const BlueCarbonProjectPlanningResource: ResourceWithOptions = {
       direction: 'desc',
     },
     navigation: {
-      name: 'Data Management',
-      icon: 'Database',
+      name: 'Model Components',
+      icon: 'Settings',
     },
   },
 };

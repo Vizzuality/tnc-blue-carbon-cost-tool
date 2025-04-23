@@ -6,6 +6,13 @@ import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
 export const UserResource: ResourceWithOptions = {
   resource: User,
   options: {
+    translations: {
+      en: {
+        labels: {
+          User: 'User Accounts',
+        },
+      },
+    },
     navigation: {
       name: 'User Management',
       icon: 'User',

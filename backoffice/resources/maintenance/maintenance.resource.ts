@@ -24,8 +24,8 @@ export const MaintenanceResource: ResourceWithOptions = {
       direction: 'desc',
     },
     navigation: {
-      name: 'Data Management',
-      icon: 'Database',
+      name: 'Model Components',
+      icon: 'Settings',
     },
     listProperties: FIELD_ORDER,
     showProperties: FIELD_ORDER,
