@@ -35,6 +35,17 @@ import {
 
 export default function ConservationProjectDetails() {
   const { form, handleFormChange } = useCustomProjectForm();
+  const emissionFactors = Object.values(PROJECT_EMISSION_FACTORS).map(
+    (factor) => {
+      return {
+        label: factor,
+        value: factor,
+        disabled:
+          factor === PROJECT_EMISSION_FACTORS.TIER_2 &&
+          form.getValues("ecosystem") !== ECOSYSTEM.MANGROVE,
+      };
+    },
+  );
 
   return (
     <Card variant="secondary" className="flex flex-col gap-4">
@@ -151,9 +162,13 @@ export default function ConservationProjectDetails() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.values(PROJECT_EMISSION_FACTORS).map((option) => (
-                      <SelectItem key={option} value={option}>
-                        {option}
+                    {emissionFactors.map((option) => (
+                      <SelectItem
+                        key={option.value}
+                        value={option.value}
+                        disabled={option.disabled}
+                      >
+                        {option.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
