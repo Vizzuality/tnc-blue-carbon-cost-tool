@@ -220,10 +220,6 @@ export default function SetupProjectForm() {
                         form.setValue("ecosystem", v as ECOSYSTEM);
                         await form.trigger("ecosystem");
 
-                        if (activity === ACTIVITY.CONSERVATION) {
-                          form.resetField("parameters.emissionFactorUsed");
-                        }
-
                         if (activity === ACTIVITY.RESTORATION) {
                           if (
                             [
