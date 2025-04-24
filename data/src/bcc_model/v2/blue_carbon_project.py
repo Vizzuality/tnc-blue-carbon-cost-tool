@@ -257,8 +257,24 @@ class BlueCarbonProject:
 
     def _initialize_restoration_plan(self):
         restoration_plan = {}
-        restoration_plan[-1] = 230
-        restoration_plan.update(dict.fromkeys(range(1, 31), 0))
+        # Baseline restoration value
+        if self.project_size_ha > self.restoration_rate:
+            restoration_plan[-1] = self.restoration_rate
+        else:
+            restoration_plan[-1] = self.project_size_ha
+        # Initialize remaining hectares to be restored
+        remaining = self.project_size_ha
+        # Years run from -1 to the restoration project length
+        for year in range(-1, self.restoration_project_length + 1):
+            if remaining > 0:
+                if remaining >= self.restoration_rate:
+                    restoration_plan[year] = self.restoration_rate
+                    remaining -= self.restoration_rate
+                else:
+                    restoration_plan[year] = remaining
+                    remaining = 0
+            else:
+                restoration_plan[year] = 0
         return restoration_plan
 
     def _initialize_cost_inputs(self):
