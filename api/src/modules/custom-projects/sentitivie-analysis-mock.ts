@@ -1,0 +1,118 @@
+// Mock response for sentitive analysis so that FE can be developed, to remove once the backend implementation is done
+
+import { SensitivityAnalysisResults } from '@shared/dtos/custom-projects/custom-project-output.dto';
+
+export const mockSensitiveAnalysis: SensitivityAnalysisResults = {
+  feasibilityAnalysis: {
+    decreased25: 103.36916539087143,
+    increased25: 103.5876968991359,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.0010559278191908878,
+    changePctHigher: 0.0010559278191908878,
+  },
+  conservationPlanningAndAdmin: {
+    decreased25: 102.102645606455,
+    increased25: 104.85421668355231,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.013295384587158938,
+    changePctHigher: 0.013295384587158664,
+  },
+  dataCollectionAndFieldCost: {
+    decreased25: 103.31024377907704,
+    increased25: 103.64661851093028,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.0016253374163640675,
+    changePctHigher: 0.00162533741636393,
+  },
+  communityRepresentation: {
+    decreased25: 102.8794983241044,
+    increased25: 104.0773639659029,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.005787996728129593,
+    changePctHigher: 0.005787996728129318,
+  },
+  blueCarbonProjectPlanning: {
+    decreased25: 103.28415742990168,
+    increased25: 103.67270486010564,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.0018774319725600693,
+    changePctHigher: 0.001877431972559932,
+  },
+  establishingCarbonRights: {
+    decreased25: 103.1954235581079,
+    increased25: 103.76143873189939,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.0027349427679202714,
+    changePctHigher: 0.0027349427679198594,
+  },
+  financingCost: {
+    decreased25: 103.47843114500367,
+    increased25: 103.47843114500367,
+    baseValue: 103.47843114500367,
+    changePctLower: 0,
+    changePctHigher: 0,
+  },
+  validation: {
+    decreased25: 103.38129428745268,
+    increased25: 103.57556800255465,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.0009387159862800347,
+    changePctHigher: 0.0009387159862798973,
+  },
+  monitoring: {
+    decreased25: 103.16424220557393,
+    increased25: 103.7926200844334,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.003036274670510513,
+    changePctHigher: 0.0030362746705103754,
+  },
+  baselineReassessment: {
+    decreased25: 103.31275831959083,
+    increased25: 103.64410397041651,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.0016010372749146605,
+    changePctHigher: 0.0016010372749146605,
+  },
+  mrv: {
+    decreased25: 103.11283578589642,
+    increased25: 103.84402650411091,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.0035330585810190687,
+    changePctHigher: 0.0035330585810190687,
+  },
+  longTermProjectOperatingCost: {
+    decreased25: 102.6520350270078,
+    increased25: 104.30482726299951,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.007986167830838546,
+    changePctHigher: 0.007986167830838272,
+  },
+  implementationLabor: {
+    decreased25: 84.72818468017869,
+    increased25: 122.22867760982862,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.18119956262721437,
+    changePctHigher: 0.1811995626272141,
+  },
+  maintenance: {
+    decreased25: 99.95786161197005,
+    increased25: 106.99900067803726,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.03402225462908566,
+    changePctHigher: 0.03402225462908538,
+  },
+  communityBenefitSharingFund: {
+    decreased25: 100.8873956495489,
+    increased25: 106.06946664045843,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.0250393774507845,
+    changePctHigher: 0.0250393774507845,
+  },
+  carbonStandardFees: {
+    decreased25: 103.44854820003364,
+    increased25: 103.5083140899737,
+    baseValue: 103.47843114500367,
+    changePctLower: -0.0002887842871153664,
+    changePctHigher: 0.0002887842871153664,
+  },
+};

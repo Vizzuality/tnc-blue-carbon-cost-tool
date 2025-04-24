@@ -2,7 +2,7 @@ import { S3Service } from '@api/modules/import/s3.service';
 import { S3 } from '@aws-sdk/client-s3';
 import { usersContract } from '@shared/contracts/users.contract';
 import { ROLES } from '@shared/entities/users/roles.enum';
-import { TestManager } from 'api/test/utils/test-manager';
+import { TestManager } from '../../utils/test-manager';
 
 describe('User Uploads', () => {
   let testManager: TestManager;

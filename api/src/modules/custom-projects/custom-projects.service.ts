@@ -27,6 +27,7 @@ import {
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
+import { mockSensitiveAnalysis } from '@api/modules/custom-projects/sentitivie-analysis-mock';
 
 export type CustomProjectFetchSpecificacion = z.infer<
   typeof customProjectsQuerySchema
@@ -109,6 +110,19 @@ export class CustomProjectsService extends AppBaseService<
       costOutput,
       breakevenPriceCostOutput?.costOutput || null,
     );
+
+    customProject.output.initialCarbonPriceComputationOutput.sensitivityAnalysis =
+      {
+        total: mockSensitiveAnalysis,
+        npv: mockSensitiveAnalysis,
+      };
+    if (customProject.output.breakevenPriceComputationOutput) {
+      customProject.output.breakevenPriceComputationOutput.sensitivityAnalysis =
+        {
+          total: mockSensitiveAnalysis,
+          npv: mockSensitiveAnalysis,
+        };
+    }
 
     return customProject;
   }

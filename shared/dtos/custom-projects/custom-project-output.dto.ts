@@ -1,5 +1,6 @@
 import { OverridableCostInputs } from "@shared/dtos/custom-projects/cost.inputs";
 import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
+import {COST_KEYS} from "@api/modules/calculations/calculators/cost.calculator";
 
 export type CustomProjectSummary = {
   "$/tCO2e (total cost, NPV)": number;
@@ -156,6 +157,10 @@ export class RestorationProjectOutput {
     npv: CustomProjectCostDetails;
   };
   yearlyBreakdown: YearlyBreakdown[];
+  sensitivityAnalysis?: {
+    total: SensitivityAnalysisResults;
+    npv: SensitivityAnalysisResults;
+  };
 }
 
 export class ConservationProjectOutput {
@@ -197,4 +202,25 @@ export class ConservationProjectOutput {
     npv: CustomProjectCostDetails;
   };
   yearlyBreakdown: YearlyBreakdown[];
+  sensitivityAnalysis?: {
+    total: SensitivityAnalysisResults;
+    npv: SensitivityAnalysisResults;
+  };
 }
+
+
+// Provisional mock type for sensitive analysis
+
+/**
+ * @description: Results of the sensitivity analysis
+ */
+export type SensitivityAnalysisResults = Record<
+    COST_KEYS,
+    {
+      decreased25: number;
+      increased25: number;
+      baseValue: number;
+      changePctLower: number;
+      changePctHigher: number;
+    }
+>;
