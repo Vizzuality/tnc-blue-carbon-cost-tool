@@ -110,6 +110,7 @@ const FileIngestion = () => {
 
   const handleFileUpload = (tab: string, file: File) => {
     if (tab === 'scorecard') {
+      setScoreCardFile(file);
       console.log('Uploading scorecard file', file?.name);
     } else if (tab === 'data') {
       setDataFile(file);
