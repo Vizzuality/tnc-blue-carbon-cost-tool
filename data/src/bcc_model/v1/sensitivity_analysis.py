@@ -11,7 +11,7 @@ def compute_pct_change(min, max, base):
     return pct_min, pct_max
 
 
-def sensitivity_analysis(carbon_project, range_value=25):
+def sensitivity_analysis(carbon_project, costCalculatorEngine, range_value=25):
     min_range_factor = 1 - (range_value / 100)
     max_range_factor = 1 + (range_value / 100)
     # Calculate the range of values for each cost input parameter
@@ -23,7 +23,7 @@ def sensitivity_analysis(carbon_project, range_value=25):
         k: v * max_range_factor for k, v in cost_input_base_parameters.items()
     }
     # Calculate the cost per tCO2e for the base project
-    base_carbon_cost_per_tCO2e = CostCalculator(carbon_project).cost_per_tCO2e
+    base_carbon_cost_per_tCO2e = costCalculatorEngine(carbon_project).cost_per_tCO2e
     # Calculate the cost per tCO2e for the min and max cost inputs
     min_cost_per_tCO2e = {}
     max_cost_per_tCO2e = {}
@@ -35,11 +35,11 @@ def sensitivity_analysis(carbon_project, range_value=25):
         cost_input_override_parameters = cost_input_base_parameters.copy()
         cost_input_override_parameters[key] = min_cost_input_base_parameters[key]
         carbon_project.override_cost_input(**cost_input_override_parameters)
-        min_cost_per_tCO2e[key] = CostCalculator(carbon_project).cost_per_tCO2e
+        min_cost_per_tCO2e[key] = costCalculatorEngine(carbon_project).cost_per_tCO2e
         # Create a new project with the modified max cost input
         cost_input_override_parameters[key] = max_cost_input_base_parameters[key]
         carbon_project.override_cost_input(**cost_input_override_parameters)
-        max_cost_per_tCO2e[key] = CostCalculator(carbon_project).cost_per_tCO2e
+        max_cost_per_tCO2e[key] = costCalculatorEngine(carbon_project).cost_per_tCO2e
         # Calculate the percentage change
         (pct_change[f"{key}_min"], pct_change[f"{key}_max"]) = compute_pct_change(
             min_cost_per_tCO2e[key], max_cost_per_tCO2e[key], base_carbon_cost_per_tCO2e
@@ -47,10 +47,10 @@ def sensitivity_analysis(carbon_project, range_value=25):
     return min_cost_per_tCO2e, max_cost_per_tCO2e, pct_change, base_carbon_cost_per_tCO2e
 
 
-def plot_sensitivity_analysis(carbon_project):
+def plot_sensitivity_analysis(carbon_project, calculatorEngine, export_table=False):
     # Perform the sensitivity analysis
     min_cost_per_tCO2e, max_cost_per_tCO2e, pct_change, base_carbon_cost_per_tCO2e = (
-        sensitivity_analysis(carbon_project)
+        sensitivity_analysis(carbon_project, calculatorEngine)
     )
     # Get the base cost input parameters
     cost_input_base_parameters = carbon_project.get_cost_inputs()
@@ -66,6 +66,11 @@ def plot_sensitivity_analysis(carbon_project):
             "Max Cost per tCO2e": list(max_cost_per_tCO2e.values()),
         }
     )
+    if export_table:
+        # Export the DataFrame to a CSV file
+        df.to_json("../test_data/sensitivity_analysis_results_v1.json", orient="records")
+        print("Sensitivity analysis results exported to sensitivity_analysis_results.csv")
+
     # Display the DataFrame
     display(Markdown("## Sensitivity Analysis (±25%)"))
     # Plot the results
