@@ -68,7 +68,7 @@ const UploadTab = ({
         p="xl"
       >
         <Box width="100%" maxWidth="400px">
-          {false == false ? (
+          {isUploading == false ? (
             <DropZone
               onChange={(files) => handleFileUpload(id, files[0])}
               multiple={false}
