@@ -148,3 +148,5 @@ dist
 
 # Development data
 .tmp/
+# notebooks cache
+*.ipynb_checkpoints
