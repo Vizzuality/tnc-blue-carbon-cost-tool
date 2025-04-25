@@ -68,7 +68,7 @@ const UploadTab = ({
         p="xl"
       >
         <Box width="100%" maxWidth="400px">
-          {isUploading == false ? (
+          {false == false ? (
             <DropZone
               onChange={(files) => handleFileUpload(id, files[0])}
               multiple={false}
@@ -110,6 +110,7 @@ const FileIngestion = () => {
 
   const handleFileUpload = (tab: string, file: File) => {
     if (tab === 'scorecard') {
+      setScoreCardFile(file);
       console.log('Uploading scorecard file', file?.name);
     } else if (tab === 'data') {
       setDataFile(file);
