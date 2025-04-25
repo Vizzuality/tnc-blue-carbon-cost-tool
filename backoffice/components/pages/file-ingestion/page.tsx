@@ -11,8 +11,9 @@ import {
 } from '@adminjs/design-system';
 import { ApiClient } from 'adminjs';
 import styled from 'styled-components';
+import { Loader } from '@adminjs/design-system';
 
-const CustomAlert = ({ title, message, onClose }) => {
+const CustomAlert = ({ title, message, onClose }: any) => {
   const Overlay = styled.div`
     position: fixed;
     top: 0;
@@ -55,8 +56,8 @@ const CustomAlert = ({ title, message, onClose }) => {
 };
 
 const UploadTab = ({
-  props: { id, label, file, handleFileUpload, handleSubmit },
-}) => {
+  props: { id, label, file, handleFileUpload, handleSubmit, isUploading },
+}: any) => {
   return (
     <Tab id={id} label={label}>
       <Box
@@ -67,10 +68,14 @@ const UploadTab = ({
         p="xl"
       >
         <Box width="100%" maxWidth="400px">
-          <DropZone
-            onChange={(files) => handleFileUpload(id, files[0])}
-            multiple={false}
-          />
+          {isUploading == false ? (
+            <DropZone
+              onChange={(files) => handleFileUpload(id, files[0])}
+              multiple={false}
+            />
+          ) : (
+            <Loader />
+          )}
         </Box>
         {file && <Text mt="md">File selected: {file.name}</Text>}
         <Box display="flex" justifyContent="center" width="100%" mt="lg">
@@ -86,6 +91,7 @@ const FileIngestion = () => {
   const [activeTab, setActiveTab] = useState<'scorecard' | 'data'>('scorecard');
   const [scoreCardFile, setScoreCardFile] = useState<File | null>(null);
   const [dataFile, setDataFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [alertData, setAlertData] = useState<{
     title: string;
     message?: string;
@@ -104,11 +110,10 @@ const FileIngestion = () => {
 
   const handleFileUpload = (tab: string, file: File) => {
     if (tab === 'scorecard') {
-      setScoreCardFile(file);
-      console.log('Uploading scorecard file', file.name);
+      console.log('Uploading scorecard file', file?.name);
     } else if (tab === 'data') {
       setDataFile(file);
-      console.log('Uploading data ingestion file', file.name);
+      console.log('Uploading data ingestion file', file?.name);
     }
   };
 
@@ -134,6 +139,7 @@ const FileIngestion = () => {
 
     try {
       // /admin is not exposed when the app runs behind a reverse proxy
+      setIsUploading(true);
       const response = await fetch(endPoint, {
         method: 'POST',
         body: formData,
@@ -158,6 +164,8 @@ const FileIngestion = () => {
       }
     } catch (error) {
       setAlertData({ title: '❌ Error', message: error.message });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -189,6 +197,7 @@ const FileIngestion = () => {
               file: scoreCardFile,
               handleFileUpload,
               handleSubmit,
+              isUploading,
             }}
           />
           <UploadTab
@@ -198,6 +207,7 @@ const FileIngestion = () => {
               file: dataFile,
               handleFileUpload,
               handleSubmit,
+              isUploading,
             }}
           />
         </Tabs>
