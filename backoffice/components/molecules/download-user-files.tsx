@@ -29,7 +29,7 @@ const DownloadUserFiles: React.FC<DownloadUserFilesProps> = ({
     api.getPage({ pageName: 'data-upload' }).then((res: any) => {
       setConfig(res.data.config);
     });
-  });
+  }, []);
 
   useEffect(() => {
     const params = record?.params || {};
@@ -46,7 +46,7 @@ const DownloadUserFiles: React.FC<DownloadUserFilesProps> = ({
         }
         reconstructedFiles[index][prop] = value;
       }
-    });
+    }, []);
 
     setFiles(reconstructedFiles);
   }, [record?.params]);
