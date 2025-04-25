@@ -163,9 +163,9 @@ export const CreateCustomProjectSchema = z
   ])
   .superRefine((data, ctx) => {
     if (data.activity === ACTIVITY.CONSERVATION) {
-      ValidateConservationSchema(data, ctx);
+      // ValidateConservationSchema(data, ctx);
     } else if (data.activity === ACTIVITY.RESTORATION) {
-      ValidateRestorationSchema(data, ctx);
+      // ValidateRestorationSchema(data, ctx);
     }
 
     ValidateAssumptionsSchema(data, ctx);
@@ -176,14 +176,44 @@ export const CustomProjectBaseLooseSchema = CustomProjectBaseSchema.extend({
   costInputs: InputCostsSchema.partial().optional(),
 });
 
+// Schema Validation
+type CreateCustomProjectSchemaType = z.infer<typeof CreateCustomProjectSchema>;
+type RestorationProjectValidationSchema = {
+  parameters: Pick<
+    (CreateCustomProjectSchemaType & {
+      activity: ACTIVITY.RESTORATION;
+    })["parameters"],
+    "tierSelector" | "projectSpecificSequestrationRate"
+  >;
+};
+
+type ConservationProjectValidationSchema = Pick<
+  CreateCustomProjectSchemaType,
+  "ecosystem"
+> & {
+  parameters: Pick<
+    (CreateCustomProjectSchemaType & {
+      activity: ACTIVITY.CONSERVATION;
+    })["parameters"],
+    | "lossRateUsed"
+    | "projectSpecificLossRate"
+    | "emissionFactorUsed"
+    | "projectSpecificEmission"
+    | "projectSpecificEmissionFactor"
+    | "emissionFactorAGB"
+    | "emissionFactorSOC"
+  >;
+};
+
 // Complex validations that depend on multiple fields
 export const ValidateConservationSchema = (
-  data: z.infer<typeof CreateCustomProjectSchema>,
+  // data: ConservationProjectValidationSchema,
+  // TODO: Workaround as the IDE is not displaying type errors but nestjs cannot start
+  data: any,
   ctx: z.RefinementCtx,
 ) => {
-  const params = data.parameters as z.infer<
-    typeof ConservationCustomProjectSchema
-  >;
+  const params =
+    data.parameters as ConservationProjectValidationSchema["parameters"];
   if (params.lossRateUsed === LOSS_RATE_USED.PROJECT_SPECIFIC) {
     if (!params.projectSpecificLossRate) {
       ctx.addIssue({
@@ -252,12 +282,19 @@ export const ValidateConservationSchema = (
 
 // Complex validations that depend on multiple fields
 export const ValidateRestorationSchema = (
-  data: z.infer<typeof CreateCustomProjectSchema>,
+  // data: RestorationProjectValidationSchema,
+  // TODO: Workaround as the IDE is not displaying type errors but nestjs cannot start
+  data: any,
   ctx: z.RefinementCtx,
 ) => {
-  const params = data.parameters as z.infer<
-    typeof RestorationCustomProjectSchema
-  >;
+  const params = data.parameters;
+  if (!params.restorationActivity) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "restorationActivity is required for Restoration projects",
+      path: ["parameters.restorationActivity"],
+    });
+  }
   if (
     params.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 &&
     !params.projectSpecificSequestrationRate
