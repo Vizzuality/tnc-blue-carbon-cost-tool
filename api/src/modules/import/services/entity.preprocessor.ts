@@ -1,5 +1,5 @@
 import { ExcelEstablishingCarbonRights } from './../dtos/excel-establishing-carbon-rights.dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Country } from '@shared/entities/country.entity';
 import { ExcelProjectSize } from '@api/modules/import/dtos/excel-project-size.dto';
 import { ACTIVITY } from '@shared/entities/activity.enum';
@@ -77,7 +77,7 @@ import { AvailabilityOfAlternatingFunding } from '@shared/entities/project-score
 import { CoastalProtectionBenefits } from '@shared/entities/project-score-card/value-object/coastal-protection-benefits.value-object';
 import { BiodiversityBenefit } from '@shared/entities/project-score-card/value-object/biodiversity-benefit.value-object';
 
-export class ProjectScoreCardNotFoundError extends Error {
+export class ProjectScoreCardNotFoundError extends NotFoundException {
   constructor(projectName: string) {
     super(`Project scorecard for project ${projectName} not found.`);
   }
