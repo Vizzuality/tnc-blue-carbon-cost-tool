@@ -71,22 +71,30 @@ const upsertBeforeHook = async (request: any, context: ActionContext) => {
   }
 
   const responseData = await res.json();
-  if (responseData.errors) {
-    const validationErrors = responseData.errors.reduce(
-      (acc: any, error: any) => {
-        const errorDetail = JSON.parse(error.detail);
-        const fieldName =
-          RESPONSE_BODY_TO_FORM_FIELD_NAME[
-            errorDetail.path[0] as keyof typeof RESPONSE_BODY_TO_FORM_FIELD_NAME
-          ];
-        if (fieldName) {
-          acc[fieldName] = { message: errorDetail.message };
-        }
-        return acc;
-      },
-      {},
-    );
-    throw new ValidationError(validationErrors);
+  if (Array.isArray(responseData.errors) && responseData.errors.length > 0) {
+    const firstError = responseData.errors[0];
+    const firstErrorCode = firstError.status;
+
+    if (firstErrorCode === '400') {
+      const validationErrors = responseData.errors.reduce(
+        (acc: any, error: any) => {
+          const errorDetail = JSON.parse(error.detail);
+          const fieldName =
+            RESPONSE_BODY_TO_FORM_FIELD_NAME[
+              errorDetail
+                .path[0] as keyof typeof RESPONSE_BODY_TO_FORM_FIELD_NAME
+            ];
+          if (fieldName) {
+            acc[fieldName] = { message: errorDetail.message };
+          }
+          return acc;
+        },
+        {},
+      );
+      throw new ValidationError(validationErrors);
+    }
+
+    throw new ValidationError({}, new Error(firstError.title));
   }
 
   return {
