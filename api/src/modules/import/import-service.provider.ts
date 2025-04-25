@@ -1,5 +1,6 @@
 import { ImportService } from '@api/modules/import/import.service';
 import { TestImportService } from '../../../test/utils/mocks/test-import.service';
+import * as process from 'node:process';
 
 /**
  * @description: Custom provider to inject the testing import service (temporarily) this is required for e2e tests, because

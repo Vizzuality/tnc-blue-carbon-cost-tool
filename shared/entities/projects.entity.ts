@@ -83,17 +83,6 @@ export class Project extends BaseEntity {
   @Column({ name: "abatement_potential", type: "decimal", nullable: true })
   abatementPotential: number;
 
-  /**
-   * total weighted cost and total weighted cost npv are used to compute values only for the maps, not sure if it's worht
-   * having them precomputed or just compute them on the fly
-   */
-
-  @Column({ name: "total_weighted_cost", type: "double precision", nullable: true })
-  totalWeightedCost: number;
-
-  @Column({ name: "total_weighted_cost_npv", type: "double precision", nullable: true })
-  totalWeightedCostNPV: number;
-
   @Column({ name: "total_cost_npv", type: "decimal", nullable: true })
   totalCostNPV: number;
 
