@@ -1,5 +1,6 @@
 import { ImportService } from '@api/modules/import/import.service';
 import { TestImportService } from '../../../test/utils/mocks/test-import.service';
+import * as process from 'node:process';
 
 /**
  * @description: Custom provider to inject the testing import service (temporarily) this is required for e2e tests, because
@@ -13,10 +14,17 @@ import { TestImportService } from '../../../test/utils/mocks/test-import.service
 const FLAG_USE_COMPUTE_PROJECT_AT_IMPORT =
   process.env.API_USE_COMPUTE_PROJECT_AT_IMPORT === 'true';
 
+console.log(
+  'FLAG_USE_COMPUTE_PROJECT_AT_IMPORT',
+  process.env.API_USE_COMPUTE_PROJECT_AT_IMPORT,
+);
+
+const classToUse =
+  !FLAG_USE_COMPUTE_PROJECT_AT_IMPORT || process.env.NODE_ENV === 'test'
+    ? TestImportService
+    : ImportService;
+
 export const ImportServiceProvider = {
   provide: ImportService,
-  useClass:
-    FLAG_USE_COMPUTE_PROJECT_AT_IMPORT || process.env.NODE_ENV === 'test'
-      ? TestImportService
-      : ImportService,
+  useClass: classToUse,
 };
