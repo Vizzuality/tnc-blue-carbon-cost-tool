@@ -143,3 +143,6 @@ dist
 # e2e
 /e2e/playwright-report/
 /e2e/test-results/
+
+# notebooks cache
+*.ipynb_checkpoints
