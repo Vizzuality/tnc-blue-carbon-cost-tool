@@ -8,7 +8,9 @@ import { CustomProjectsService } from '@api/modules/custom-projects/custom-proje
 import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 import { ProjectsService } from '@api/modules/projects/projects.service';
 
-// TODO: No point adding tests now as we need a validated scenarios to replicate in the tests
+// TODO: Issues: All restoration projects have a NaN country level abatement potential
+
+// TODO: Issues: All conservation and mangrove projects have a 0 country level abatement potential
 
 describe.skip('ProjectsCalculationService', () => {
   let projectsCalculationService: ProjectsCalculationService;
