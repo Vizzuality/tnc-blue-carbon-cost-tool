@@ -44,10 +44,10 @@ const CONSERVATION_INDONESIA_MANGROVE_CREATE_CUSTOM_PROJECT_DTO: CreateCustomPro
       financingCost: 0.05,
     },
     parameters: {
-      lossRateUsed: LOSS_RATE_USED.NATIONAL_AVERAGE,
+      lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
       emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_2,
       projectSpecificEmission: PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
-      // projectSpecificLossRate: -0.001,
+      projectSpecificLossRate: -0.001,
       projectSpecificEmissionFactor: 15,
       emissionFactorAGB: 200,
       emissionFactorSOC: 15,
