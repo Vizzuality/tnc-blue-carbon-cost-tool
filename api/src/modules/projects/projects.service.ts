@@ -1,6 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AppBaseService } from '@api/utils/app-base.service';
-import { COST_TYPE_SELECTOR, Project } from '@shared/entities/projects.entity';
+import {
+  COST_TYPE_SELECTOR,
+  Project,
+  PROJECT_PRICE_TYPE,
+} from '@shared/entities/projects.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
 import { z } from 'zod';
@@ -238,10 +242,25 @@ export class ProjectsService extends AppBaseService<
             },
           });
 
+        const { costOutput, breakEvenCostOutput } = costs;
+        if (breakEvenCostOutput) {
+          const { breakEvenCost, breakEvenCarbonPrice } = breakEvenCostOutput;
+          createProjectDto.priceType = PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE;
+          createProjectDto.initialCarbonPriceAssumption = breakEvenCarbonPrice;
+          const project = new ProjectBuilder(
+            createProjectDto,
+            scoreCardRating,
+            breakEvenCost,
+            projectSize.sizeHa,
+          );
+          await this.projectRepository.save(project.build());
+        }
+
+        createProjectDto.priceType = PROJECT_PRICE_TYPE.MARKET_PRICE;
         const project = new ProjectBuilder(
           createProjectDto,
           scoreCardRating,
-          costs,
+          costOutput,
           projectSize.sizeHa,
         ).build();
         return this.repository.save(project);
@@ -267,15 +286,34 @@ export class ProjectsService extends AppBaseService<
         },
       });
 
+    const { costOutput, breakEvenCostOutput } = costs;
+    if (breakEvenCostOutput) {
+      const { breakEvenCost, breakEvenCarbonPrice } = breakEvenCostOutput;
+      const openBreakEvenPriceCreateDto = structuredClone(createProjectDto);
+      openBreakEvenPriceCreateDto.priceType =
+        PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE;
+      openBreakEvenPriceCreateDto.initialCarbonPriceAssumption =
+        breakEvenCarbonPrice;
+      const project = new ProjectBuilder(
+        openBreakEvenPriceCreateDto,
+        scoreCardRating,
+        breakEvenCost,
+        projectSize.sizeHa,
+      );
+      await this.projectRepository.save(project.build());
+    }
+
     // TODO: Not clear if sizeHa has to come from the DTO or be retrieved from the database. Does it make sense to have it in the DB?
     //       Would make sense to have thresholds defined?
+
+    createProjectDto.priceType = PROJECT_PRICE_TYPE.MARKET_PRICE;
     const project = new ProjectBuilder(
       createProjectDto,
       scoreCardRating,
-      costs,
+      costOutput,
       projectSize.sizeHa,
-    ).build();
-    return this.projectRepository.save(project);
+    );
+    return this.projectRepository.save(project.build());
   }
 
   public async updateProject(
@@ -300,13 +338,19 @@ export class ProjectsService extends AppBaseService<
           countryCode: updateProjectDto.countryCode,
         },
       });
+    const { costOutput, breakEvenCostOutput } = costs;
+
+    const costsToUse =
+      projectToUpdate.priceType === PROJECT_PRICE_TYPE.MARKET_PRICE
+        ? costOutput
+        : breakEvenCostOutput.breakEvenCost;
 
     // TODO: Not clear if sizeHa has to come from the DTO or be retrieved from the database. Does it make sense to have it in the DB?
     //       Would make sense to have thresholds defined?
     const project = new ProjectBuilder(
       updateProjectDto,
       scoreCardRating,
-      costs,
+      costsToUse,
       projectSize.sizeHa,
     )
       .setId(id)

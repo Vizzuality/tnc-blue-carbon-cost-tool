@@ -4,10 +4,9 @@ import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 import { UpdateProjectDto } from '@shared/dtos/projects/update-project.dto';
 import { ACTIVITY } from '@shared/entities/activity.enum';
 import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
-import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
-import { Project, PROJECT_PRICE_TYPE } from '@shared/entities/projects.entity';
-import { TestManager } from 'api/test/utils/test-manager';
-import { TestUser } from 'api/test/utils/user.auth';
+import { Project } from '@shared/entities/projects.entity';
+import { TestManager } from '../../utils/test-manager';
+import { TestUser } from '../../utils/user.auth';
 
 describe('Update projects', () => {
   let testManager: TestManager;
@@ -23,10 +22,6 @@ describe('Update projects', () => {
 
   afterEach(async () => {
     await testManager.getDataSource().getRepository(Project).delete({});
-    await testManager
-      .getDataSource()
-      .getRepository(ProjectScorecard)
-      .delete({});
   });
 
   afterAll(async () => {
@@ -38,11 +33,10 @@ describe('Update projects', () => {
     const createProjectDto: CreateProjectDto = {
       countryCode: 'IND',
       projectName: 'Conservation project',
-      ecosystem: ECOSYSTEM.MANGROVE,
+      ecosystem: ECOSYSTEM.SEAGRASS,
       activity: ACTIVITY.CONSERVATION,
       projectSizeHa: 10000,
       initialCarbonPriceAssumption: 20,
-      priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
     };
     const projectsService = testManager.getApp().get(ProjectsService);
     const project = await projectsService.createProject(createProjectDto);

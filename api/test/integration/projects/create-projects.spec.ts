@@ -39,7 +39,6 @@ describe('Create projects', () => {
         activity: ACTIVITY.CONSERVATION,
         projectSizeHa: 10000,
         initialCarbonPriceAssumption: 20,
-        priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
       };
 
       const res = await testManager
@@ -111,7 +110,7 @@ const expectedConservationProjectOutput = {
   activity: 'Conservation',
   restorationActivity: null,
   projectSize: 10000,
-  priceType: 'Opex breakeven',
+  priceType: 'Market price',
   initialPriceAssumption: 20,
   scoreCardRating: 'medium',
   countryAbatementPotential: 81911.08475289373,
@@ -173,7 +172,7 @@ const expectedRestorationProjectOutput = {
   activity: 'Restoration',
   restorationActivity: 'Planting',
   projectSize: 10000,
-  priceType: 'Opex breakeven',
+  priceType: 'Market price',
   initialPriceAssumption: 20,
   scoreCardRating: 'medium',
   countryAbatementPotential: 105368.13621180001,
