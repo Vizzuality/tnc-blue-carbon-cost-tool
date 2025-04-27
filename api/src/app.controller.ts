@@ -18,16 +18,13 @@ export class AppController {
     return null;
   }
 
-  @Get('/test')
-  public test() {
-    return 'test 2';
-  }
-
   @Get('/health')
   @HealthCheck({ noCache: true })
   public checkHealth(): ControllerResponse {
     return this.health.check([
-      async () => this.db.pingCheck('database', { timeout: 1500 }),
+      // TODO: Right now importing the excel blocks the event loop making this check unhealthy in prod. Temporarily bumping it to avoid
+      //       forced restarts until we decide if we offload the excel import from the main thread
+      async () => this.db.pingCheck('database', { timeout: 3600 }),
     ]);
   }
 }
