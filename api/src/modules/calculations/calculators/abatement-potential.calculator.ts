@@ -13,8 +13,8 @@ export class AbatementPotentialCalculator {
   constructor(input: AbatementPotentialInput) {
     this.activity = input.projectInput.activity;
     this.projectLength = input.projectInput.assumptions.projectLength;
-    if (input instanceof RestorationProjectInput) {
-      this.sequestrationRate = input.sequestrationRate;
+    if (input.projectInput instanceof RestorationProjectInput) {
+      this.sequestrationRate = input.projectInput.sequestrationRate;
     }
     this.restorableLand = input.projectInput.costAndCarbonInputs.restorableLand;
     if (this.activity === ACTIVITY.CONSERVATION) {
@@ -54,7 +54,7 @@ export class AbatementPotentialCalculator {
   }
 
   // TODO: Check if we should use project length or default project length to compute abatement potential, and if there is any difference
-  //       between regular projects and custom projects when computing abatement potential
+  //      between regular projects and custom projects when computing abatement potential
 
   calculateConservationAbatementPotential(params: {
     projectLength: number;
