@@ -4,7 +4,7 @@ import { DataRepository } from '@api/modules/calculations/data.repository';
 import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import { ProjectCalculationFactory } from '@api/modules/projects/calculation/project-calculation.factory';
 import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
-import { CostOutput } from '@api/modules/calculations/types';
+import { CalculationEngineOutput } from '@api/modules/calculations/types';
 
 @Injectable()
 export class ProjectsCalculationService {
@@ -14,7 +14,9 @@ export class ProjectsCalculationService {
     private readonly customProjectFactory: CustomProjectFactory,
   ) {}
 
-  async computeCostForProject(dto: CreateProjectDto): Promise<CostOutput> {
+  async computeCostForProject(
+    dto: CreateProjectDto,
+  ): Promise<CalculationEngineOutput> {
     const { countryCode, ecosystem, activity, restorationActivity } = dto;
     const {
       defaultAssumptions,
@@ -51,6 +53,7 @@ export class ProjectsCalculationService {
       baseIncrease,
       baseSize,
     });
-    return output.costOutput;
+
+    return output;
   }
 }
