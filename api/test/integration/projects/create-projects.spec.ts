@@ -30,51 +30,77 @@ describe('Create projects', () => {
     await testManager.close();
   });
 
-  // Conservation Mangrove, country level abatement potential is always 0 because of national average loss rate is always 0 from the data
-  test('Create a conservation project with the minimum required fields', async () => {
-    const requestBody: CreateProjectDto = {
-      countryCode: 'IND',
-      projectName: 'Conservation project',
-      ecosystem: ECOSYSTEM.SEAGRASS,
-      activity: ACTIVITY.CONSERVATION,
-      projectSizeHa: 10000,
-      initialCarbonPriceAssumption: 20,
-      priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
-    };
+  describe('Conservation project', () => {
+    test('Create a conservation project with the minimum required fields', async () => {
+      const requestBody: CreateProjectDto = {
+        countryCode: 'IND',
+        projectName: 'Conservation project',
+        ecosystem: ECOSYSTEM.SEAGRASS,
+        activity: ACTIVITY.CONSERVATION,
+        projectSizeHa: 10000,
+        initialCarbonPriceAssumption: 20,
+        priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+      };
 
-    const res = await testManager
-      .request()
-      .post(projectsContract.createProject.path)
-      .set('Cookie', user.backofficeSessionCookie)
-      .send(requestBody);
+      const res = await testManager
+        .request()
+        .post(projectsContract.createProject.path)
+        .set('Cookie', user.backofficeSessionCookie)
+        .send(requestBody);
 
-    expect(res.status).toBe(201);
-    const { id, ...project } = res.body.data;
-    expect(project).toEqual(expectedConservationProjectOutput);
+      expect(res.status).toBe(201);
+      const { id, ...project } = res.body.data;
+      expect(project).toEqual(expectedConservationProjectOutput);
+    });
   });
 
-  // Restoration country level is NaN
-  test('Create a Restoration project with the minimum required fields', async () => {
-    const requestBody: CreateProjectDto = {
-      countryCode: 'IND',
-      projectName: 'Restoration project',
-      ecosystem: ECOSYSTEM.MANGROVE,
-      activity: ACTIVITY.RESTORATION,
-      restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
-      projectSizeHa: 10000,
-      initialCarbonPriceAssumption: 20,
-      priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
-    };
+  describe('Restoration project', () => {
+    test('Create a Restoration project with the minimum required fields', async () => {
+      const requestBody: CreateProjectDto = {
+        countryCode: 'IND',
+        projectName: 'Restoration project',
+        ecosystem: ECOSYSTEM.MANGROVE,
+        activity: ACTIVITY.RESTORATION,
+        restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
+        projectSizeHa: 10000,
+        initialCarbonPriceAssumption: 20,
+        priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+      };
 
-    const res = await testManager
-      .request()
-      .post(projectsContract.createProject.path)
-      .set('Cookie', user.backofficeSessionCookie)
-      .send(requestBody);
+      const res = await testManager
+        .request()
+        .post(projectsContract.createProject.path)
+        .set('Cookie', user.backofficeSessionCookie)
+        .send(requestBody);
 
-    expect(res.status).toBe(201);
-    const { id, ...project } = res.body.data;
-    expect(project).toEqual(expectedRestorationProjectOutput);
+      expect(res.status).toBe(201);
+      const { id, ...project } = res.body.data;
+      expect(project).toEqual(expectedRestorationProjectOutput);
+    });
+
+    test('Should throw an error when restorationActivity is not provided', async () => {
+      const requestBody: CreateProjectDto = {
+        countryCode: 'IND',
+        projectName: 'Restoration project',
+        ecosystem: ECOSYSTEM.MANGROVE,
+        activity: ACTIVITY.RESTORATION,
+        projectSizeHa: 10000,
+        initialCarbonPriceAssumption: 20,
+        priceType: PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE,
+      };
+
+      const res = await testManager
+        .request()
+        .post(projectsContract.createProject.path)
+        .set('Cookie', user.backofficeSessionCookie)
+        .send(requestBody);
+
+      expect(res.status).toBe(400);
+      expect(res.body.errors).toHaveLength(1);
+      expect(res.body.errors[0].title).toEqual(
+        'restorationActivity is required when activity is RESTORATION',
+      );
+    });
   });
 });
 
