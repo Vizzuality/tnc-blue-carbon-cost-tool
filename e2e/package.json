@@ -14,8 +14,12 @@
     "typescript": "catalog:"
   },
   "scripts": {
+    "setup:db": "docker-compose -f ../docker-compose.yml up -d database",
+    "setup:s3": "docker-compose -f ../docker-compose.test.yml down minio && docker-compose -f ../docker-compose.test.yml up -d minio",
+    "setup:infra": "pnpm setup:db && pnpm setup:s3",
     "pretest": "tsc && tsc-alias",
-    "test": "playwright test -c ./dist/e2e",
+    "test:ci": "pnpm pretest && playwright test -c ./dist/e2e",
+    "test": "pnpm setup:infra && playwright test -c ./dist/e2e",
     "test:ui": "pnpm pretest && playwright test --ui -c ./dist/e2e",
     "test:watch": "pnpm pretest && concurrently \"tsc -w\" \"tsc-alias -w\" \"playwright test --ui -c ./dist/e2e\"",
     "codegen": "pnpm --filter api start:dev & pnpm --filter client dev & playwright codegen localhost:3000"
