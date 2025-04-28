@@ -38,7 +38,7 @@ describe('Create Custom Projects - Setup', () => {
     });
   });
 
-  describe.skip('Get Overridable Model Assumptions', () => {
+  describe('Get Overridable Model Assumptions', () => {
     test('Should return overridable model assumptions based on ecosystem and activity', async () => {
       const response = await testManager
         .request()
