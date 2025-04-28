@@ -13,10 +13,12 @@ import { TestImportService } from '../../../test/utils/mocks/test-import.service
 const FLAG_USE_COMPUTE_PROJECT_AT_IMPORT =
   process.env.API_USE_COMPUTE_PROJECT_AT_IMPORT === 'true';
 
+const classToUse =
+  !FLAG_USE_COMPUTE_PROJECT_AT_IMPORT || process.env.NODE_ENV === 'test'
+    ? TestImportService
+    : ImportService;
+
 export const ImportServiceProvider = {
   provide: ImportService,
-  useClass:
-    FLAG_USE_COMPUTE_PROJECT_AT_IMPORT || process.env.NODE_ENV === 'test'
-      ? TestImportService
-      : ImportService,
+  useClass: classToUse,
 };
