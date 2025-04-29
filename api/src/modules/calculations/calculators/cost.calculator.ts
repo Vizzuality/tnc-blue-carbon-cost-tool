@@ -19,31 +19,16 @@ import {
   CostPlanMap,
   ProjectInput,
 } from '@api/modules/calculations/types';
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from '@shared/entities/activity.enum';
+import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 
 export type CostPlans = Record<
   keyof OverridableCostInputsDto | string,
   CostPlanMap
 >;
-
-// TODO: Strongly type this to bound it to existing types
-export enum COST_KEYSOLD {
-  FEASIBILITY_ANALYSIS = 'feasibilityAnalysis',
-  CONSERVATION_PLANNING_AND_ADMIN = 'conservationPlanningAndAdmin',
-  DATA_COLLECTION_AND_FIELD_COST = 'dataCollectionAndFieldCost',
-  COMMUNITY_REPRESENTATION = 'communityRepresentation',
-  BLUE_CARBON_PROJECT_PLANNING = 'blueCarbonProjectPlanning',
-  ESTABLISHING_CARBON_RIGHTS = 'establishingCarbonRights',
-  FINANCING_COST = 'financingCost',
-  VALIDATION = 'validation',
-  MONITORING = 'monitoring',
-  BASELINE_REASSESSMENT = 'baselineReassessment',
-  MRV = 'mrv',
-  LONG_TERM_PROJECT_OPERATING_COST = 'longTermProjectOperatingCost',
-  IMPLEMENTATION_LABOR = 'implementationLabor',
-  MAINTENANCE = 'maintenance',
-  COMMUNITY_BENEFIT_SHARING_FUND = 'communityBenefitSharingFund',
-  CARBON_STANDARD_FEES = 'carbonStandardFees',
-}
 
 export class CostCalculator {
   projectInput: ProjectInput;
@@ -106,7 +91,7 @@ export class CostCalculator {
     const totalCreditsIssued = sum(Object.values(creditsIssuedPlan));
     const costPerTCO2e =
       totalCreditsIssued != 0 ? totalNPV / totalCreditsIssued : 0;
-    const costPerHa = totalNPV / this.projectInput.projectSizeHa;
+    const costPerHa = this.calculateCostPerHa(totalNPV);
     const npvCoveringCosts =
       this.projectInput.carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
         ? totalRevenueNPV - totalOpexNPV
@@ -1039,6 +1024,28 @@ export class CostCalculator {
     const cashFlowArray = sortedYears.map((year) => cashFlowPlan[year]);
 
     return irr(cashFlowArray);
+  }
+
+  /**
+   * @description: Calculate the cost per ha for the project, If its a Planting Restoration project,
+   * the calculation of hectares incorporates the planting success rate for a more conservative estimate.
+   * otherwise, the value is computed by dividing the total NPV cost by the project size in hectares.
+   */
+  calculateCostPerHa(totalNPV: number): number {
+    const projectSizeHa = this.projectInput.projectSizeHa;
+    const plantingSuccessRate =
+      this.projectInput.assumptions.plantingSuccessRate;
+    if (this.projectInput.activity === ACTIVITY.RESTORATION) {
+      // Type cast so that restoration activity can be checked
+      const projectInput = this.projectInput as RestorationProjectInput;
+      if (
+        projectInput.restorationActivity ===
+        RESTORATION_ACTIVITY_SUBTYPE.PLANTING
+      ) {
+        return totalNPV / (projectSizeHa * plantingSuccessRate);
+      }
+    }
+    return totalNPV / projectSizeHa;
   }
 
   calculateCostPlans(): this {
