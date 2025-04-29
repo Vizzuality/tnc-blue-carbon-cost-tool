@@ -103,12 +103,16 @@ export class TestImportService {
   }
 
   async import(fileBuffer: Buffer, userId: string): Promise<void> {
+    this.logger.log('Excel file import started...');
     try {
       const parsedSheets =
         await this.dataIngestionParser.parseBuffer(fileBuffer);
+      this.logger.debug('Sheets parsed...');
       const parsedDBEntities =
         await this.preprocessor.toDbEntities(parsedSheets);
+      this.logger.debug('DB entities parsed...');
       const parsedProjects = await this.processProjects(parsedSheets.Projects);
+      this.logger.debug('Projects processed...');
       const parsedEntitiesWithProjects = parsedDBEntities as ParsedEntities & {
         projects: any;
       };
@@ -116,6 +120,7 @@ export class TestImportService {
         entity: Project,
         records: parsedProjects,
       };
+      this.logger.log('Starting ingestion...');
       await this.ingestForTests(parsedEntitiesWithProjects);
       this.logger.warn('Excel file import completed successfully');
     } catch (e) {
