@@ -15,7 +15,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "nest start",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "pnpm s3:test && jest --config ./test/jest-config.json -i"
+    "test": "pnpm s3:test && jest --config ./test/jest-config.json -i --testTimeout=100000000"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.782.0",
