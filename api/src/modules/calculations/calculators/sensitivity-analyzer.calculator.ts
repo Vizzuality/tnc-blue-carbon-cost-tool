@@ -19,10 +19,13 @@ export class SensitivityAnalyzer {
     this.projectInput = input.engineInput.projectInput;
   }
 
-  run(): SensitivityAnalysisResults {
+  run(
+    baseValue: number = this.input.initialCostPlanOutput.costPerTCO2e,
+  ): SensitivityAnalysisResults {
     const results: SensitivityAnalysisResults =
       {} as SensitivityAnalysisResults;
-    const baseValue = this.input.initialCostPlanOutput.costPerTCO2e;
+    // The code is to coupled to the input, I made it a param with a default value
+    // const baseValue = this.input.initialCostPlanOutput.costPerTCO2e;
 
     for (const costKey of Object.values(COST_KEYS)) {
       const decreased25 = this.calculateModifiedCost(costKey, 0.75);

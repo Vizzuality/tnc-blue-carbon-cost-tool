@@ -1,0 +1,146 @@
+[
+  {
+    "Cost Input": "feasibility_analysis",
+    "Min % Change": -0.0092223381,
+    "Max % Change": 0.0092214876,
+    "Base params": 50000.0,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5207.406676527,
+    "Max Cost per tCO2e": 5208.3672544106
+  },
+  {
+    "Cost Input": "conservation_planning_and_admin",
+    "Min % Change": -0.1161201827,
+    "Max % Change": 0.1159855002,
+    "Base params": 166766.666666667,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5201.8395576083,
+    "Max Cost per tCO2e": 5213.9343733293
+  },
+  {
+    "Cost Input": "data_collection_and_field_cost",
+    "Min % Change": -0.0141954884,
+    "Max % Change": 0.0141934736,
+    "Base params": 26666.6666666667,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5207.1476804784,
+    "Max Cost per tCO2e": 5208.6262504593
+  },
+  {
+    "Cost Input": "community_representation",
+    "Min % Change": -0.0579556459,
+    "Max % Change": 0.0579220768,
+    "Base params": 83233.3333333333,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5204.868700942,
+    "Max Cost per tCO2e": 5210.9052299957
+  },
+  {
+    "Cost Input": "blue_carbon_project_planning",
+    "Min % Change": -0.0163972499,
+    "Max % Change": 0.0163945617,
+    "Base params": 100000.0,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5207.0330152281,
+    "Max Cost per tCO2e": 5208.7409157095
+  },
+  {
+    "Cost Input": "establishing_carbon_rights",
+    "Min % Change": -0.0255928277,
+    "Max % Change": 0.0255862794,
+    "Base params": 50000.0,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5206.5541199331,
+    "Max Cost per tCO2e": 5209.2198110045
+  },
+  {
+    "Cost Input": "financing_cost",
+    "Min % Change": 0.0,
+    "Max % Change": 0.0,
+    "Base params": 0.05,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5207.8869654688,
+    "Max Cost per tCO2e": 5207.8869654688
+  },
+  {
+    "Cost Input": "validation",
+    "Min % Change": -0.008198625,
+    "Max % Change": 0.0081979528,
+    "Base params": 50000.0,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5207.4599903485,
+    "Max Cost per tCO2e": 5208.3139405892
+  },
+  {
+    "Cost Input": "implementation_labor",
+    "Min % Change": -24.5004918448,
+    "Max % Change": 19.6790321723,
+    "Base params": 249340.689549023,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 3931.9290442055,
+    "Max Cost per tCO2e": 6483.8448867321
+  },
+  {
+    "Cost Input": "monitoring",
+    "Min % Change": -0.0432317316,
+    "Max % Change": 0.0432130499,
+    "Base params": 19400.0,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5205.6355057528,
+    "Max Cost per tCO2e": 5210.1384251848
+  },
+  {
+    "Cost Input": "maintenance",
+    "Min % Change": 0.0,
+    "Max % Change": 0.0,
+    "Base params": 0.08,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5207.8869654688,
+    "Max Cost per tCO2e": 5207.8869654688
+  },
+  {
+    "Cost Input": "carbon_standard_fees",
+    "Min % Change": -0.0005738017,
+    "Max % Change": 0.0005737984,
+    "Base params": 0.2,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5207.8570825239,
+    "Max Cost per tCO2e": 5207.9168484138
+  },
+  {
+    "Cost Input": "community_benefit_sharing_fund",
+    "Min % Change": -0.0497521454,
+    "Max % Change": 0.049727405,
+    "Base params": 0.5,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5205.2959299734,
+    "Max Cost per tCO2e": 5210.4780009643
+  },
+  {
+    "Cost Input": "baseline_reassessment",
+    "Min % Change": -0.0139832541,
+    "Max % Change": 0.0139812991,
+    "Base params": 40000.0,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5207.1587334017,
+    "Max Cost per tCO2e": 5208.615197536
+  },
+  {
+    "Cost Input": "MRV",
+    "Min % Change": -0.0308572802,
+    "Max % Change": 0.0308477615,
+    "Base params": 75000.0,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5206.2799531937,
+    "Max Cost per tCO2e": 5209.493977744
+  },
+  {
+    "Cost Input": "long_term_project_operating",
+    "Min % Change": -0.1134275845,
+    "Max % Change": 0.1132990721,
+    "Base params": 63625.0,
+    "Base Cost per tCO2e": 5207.8869654688,
+    "Min Cost per tCO2e": 5201.97978508,
+    "Max Cost per tCO2e": 5213.7941458577
+  }
+]

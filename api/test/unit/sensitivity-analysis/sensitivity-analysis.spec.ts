@@ -4,18 +4,16 @@ import {
   SensitivityAnalysisResults,
 } from '@api/modules/calculations/types';
 import { SENSITIVITY_ANALYSIS_INPUT_FIXTURES } from './fixtures';
+import { loadFixtures } from './fixtures/index';
+
+const FIXTURE_CASES = loadFixtures();
 
 describe('SensitivityAnalyzer', () => {
-  let baseValue: number;
-  let analyzer: SensitivityAnalyzer;
-
-  beforeEach(() => {
-    baseValue =
-      SENSITIVITY_ANALYSIS_INPUT_FIXTURES.initialCostPlanOutput.costPerTCO2e;
-    analyzer = new SensitivityAnalyzer(SENSITIVITY_ANALYSIS_INPUT_FIXTURES);
-  });
-
   test('should return a numeric result for every COST_KEY in a specific shape', () => {
+    const analyzer = new SensitivityAnalyzer(
+      SENSITIVITY_ANALYSIS_INPUT_FIXTURES,
+    );
+
     const results = analyzer.run();
     const keys = Object.values(COST_KEYS);
 
@@ -35,6 +33,12 @@ describe('SensitivityAnalyzer', () => {
   });
 
   test('should calculate change percentages correctly', () => {
+    const baseValue =
+      SENSITIVITY_ANALYSIS_INPUT_FIXTURES.initialCostPlanOutput.costPerTCO2e;
+    const analyzer = new SensitivityAnalyzer(
+      SENSITIVITY_ANALYSIS_INPUT_FIXTURES,
+    );
+
     const results: SensitivityAnalysisResults = analyzer.run();
 
     for (const key of Object.values(COST_KEYS)) {
@@ -53,4 +57,15 @@ describe('SensitivityAnalyzer', () => {
       expect(changePctHigher).toBeCloseTo(higherDiff, 6);
     }
   });
+
+  for (const fixture of FIXTURE_CASES) {
+    const { name, data } = fixture;
+    describe(`Fixture: ${name}`, () => {
+      test("should calculate change percentages correctly (science people's inputs and expectations)", () => {
+        // I don't like overusing constructor params as makes the code less flexible for future changes/tests
+        const analyzer = new SensitivityAnalyzer();
+        const results: SensitivityAnalysisResults = analyzer.run();
+      });
+    });
+  }
 });
