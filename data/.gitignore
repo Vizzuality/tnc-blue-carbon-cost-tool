@@ -7,3 +7,4 @@ test_data/*
 #ignore compiled python modules
 **/__pycache__/
 *.pyc
+/src/gadm/countries.geojson
