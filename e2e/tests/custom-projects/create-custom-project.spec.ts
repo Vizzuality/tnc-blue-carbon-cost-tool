@@ -158,6 +158,26 @@ test.describe("Custom Projects - Create", () => {
     });
 
     test("The correct form fields are displayed for each selected Emission factor used", async () => {
+      // check that tier 2 is disabled for Seagrass
+      await expect(page.locator("#Seagrass")).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+      await page.getByTestId("parameters.emissionFactorUsed").click();
+      await expect(
+        page.getByRole("option", {
+          name: "Tier 2 - Country-specific emission factor",
+        }),
+      ).toBeDisabled();
+
+      // Click to close dropdown
+      await page
+        .getByRole("option", {
+          name: "Tier 1 - Global emission factor",
+        })
+        .click();
+
+      await page.locator("#Mangrove").click();
       // Tier 1 - Global emission factor (default)
       await expect(page.getByText("T1 Global Emission Factor")).toBeVisible();
 
