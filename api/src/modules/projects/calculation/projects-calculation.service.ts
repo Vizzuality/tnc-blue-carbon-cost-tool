@@ -5,6 +5,7 @@ import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory
 import { ProjectCalculationFactory } from '@api/modules/projects/calculation/project-calculation.factory';
 import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 import { CalculationEngineOutput } from '@api/modules/calculations/types';
+import { ACTIVITY } from '@shared/entities/activity.enum';
 
 @Injectable()
 export class ProjectsCalculationService {
@@ -14,9 +15,7 @@ export class ProjectsCalculationService {
     private readonly customProjectFactory: CustomProjectFactory,
   ) {}
 
-  async computeCostForProject(
-    dto: CreateProjectDto,
-  ): Promise<CalculationEngineOutput> {
+  async computeCostForProject(dto: CreateProjectDto): Promise<CostOutput> {
     const { countryCode, ecosystem, activity, restorationActivity } = dto;
     const {
       defaultAssumptions,
@@ -29,7 +28,10 @@ export class ProjectsCalculationService {
       countryCode,
       ecosystem,
       activity,
-      restorationActivity,
+      restorationActivity:
+        activity === ACTIVITY.RESTORATION
+          ? parameters.restorationActivity
+          : undefined,
     });
 
     if (dto.initialCarbonPriceAssumption) {

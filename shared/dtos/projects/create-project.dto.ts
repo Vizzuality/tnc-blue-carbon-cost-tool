@@ -3,4 +3,4 @@
 import { CreateProjectSchema } from "@shared/schemas/projects/create-project.schema";
 import { z } from "zod";
 
-export type CreateProjectDto = z.infer<typeof CreateProjectSchema> | any;
+export type CreateProjectDto = z.infer<typeof CreateProjectSchema>;
