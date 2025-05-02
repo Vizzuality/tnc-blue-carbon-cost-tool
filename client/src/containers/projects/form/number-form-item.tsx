@@ -66,7 +66,7 @@ export default function NumberFormItem({
         : value.toString();
       setState(newValue);
     }
-  }, [value]);
+  }, [value, isPercentage]);
 
   return (
     <FormItem className={formItemClassName} data-testid={dataTestId}>

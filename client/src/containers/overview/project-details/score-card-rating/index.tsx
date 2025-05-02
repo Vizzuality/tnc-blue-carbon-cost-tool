@@ -27,9 +27,7 @@ const ScoreCardRating: FC<ScoreCardRatingProps> = ({ value }) => {
         </div>
       </div>
       <div className="mt-4 space-y-2">
-        <span className="text-xl font-normal capitalize text-wheat-200">
-          {value}
-        </span>
+        <span className="text-xl font-normal capitalize">{value}</span>
       </div>
     </>
   );
