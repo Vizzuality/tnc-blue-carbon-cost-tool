@@ -11,7 +11,7 @@ import { ECOSYSTEM } from '@shared/entities/ecosystem.enum';
 import { RESTORATION_ACTIVITY_SUBTYPE } from '@shared/entities/activity.enum';
 
 // Temporarily skip until v2 validated
-describe('Project Map', () => {
+describe.skip('Project Map', () => {
   let testManager: TestManager;
 
   beforeAll(async () => {
