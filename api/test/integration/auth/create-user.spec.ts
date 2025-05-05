@@ -37,7 +37,7 @@ describe('Create Users', () => {
     // But the user has the role partner
 
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'random@test.com',
     });
     const { jwtToken } = await testManager.logUserIn(user);
@@ -95,7 +95,7 @@ describe('Create Users', () => {
       .findOne({ where: { email: newUser.email } });
 
     expect(createdUser.isActive).toBe(false);
-    expect(createdUser.role).toBe(ROLES.PARTNER);
+    expect(createdUser.role).toBe(ROLES.USER);
     expect(mockEmailService.sendMail).toHaveBeenCalledTimes(1);
   });
 

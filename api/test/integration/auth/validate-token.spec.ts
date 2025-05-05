@@ -33,7 +33,7 @@ describe('Validate Token', () => {
   test('Validating a valid reset-password token', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: true,
       password: '12345678',
@@ -100,7 +100,7 @@ describe('Validate Token', () => {
   test('Validating a reset-password token with an incorrect type parameter', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: true,
       password: '12345678',
@@ -125,7 +125,7 @@ describe('Validate Token', () => {
   test('Validating a reset-password token without specifying the type', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: true,
       password: '12345678',
@@ -150,7 +150,7 @@ describe('Validate Token', () => {
   test('Validating a valid access token', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: true,
       password: '12345678',
@@ -213,7 +213,7 @@ describe('Validate Token', () => {
   test('Validating an access token with an incorrect type parameter', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: true,
       password: '12345678',

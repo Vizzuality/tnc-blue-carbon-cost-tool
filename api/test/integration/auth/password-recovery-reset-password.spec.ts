@@ -31,7 +31,7 @@ describe('Password Recovery - Reset Password', () => {
   test('Successfully resetting the password with a valid token', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: true,
       password: '12345678',
@@ -70,7 +70,7 @@ describe('Password Recovery - Reset Password', () => {
   test('Failing to reset the password with an expired token', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: true,
       password: '12345678',

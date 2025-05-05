@@ -76,7 +76,7 @@ export class ImportController {
   }
 
   @UseInterceptors(AnyFilesInterceptor({ limits: { files: 3, fields: 0 } }))
-  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @RequiredRoles(ROLES.USER, ROLES.ADMIN)
   @TsRestHandler(usersContract.uploadData)
   async uploadData(
     @GetUser() user: User,
@@ -110,7 +110,7 @@ export class ImportController {
   }
 
   @TsRestHandler(usersContract.listUploadDataTemplates)
-  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @RequiredRoles(ROLES.USER, ROLES.ADMIN)
   public async downloadUserUploadTemplates(): Promise<ControllerResponse> {
     return tsRestHandler(usersContract.listUploadDataTemplates, async () => {
       return {

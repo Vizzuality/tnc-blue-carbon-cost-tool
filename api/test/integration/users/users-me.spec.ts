@@ -26,7 +26,7 @@ describe('Users ME (e2e)', () => {
         createdUsers.push(
           await testManager.mocks().createUser({
             email: `user${n}@mail.com`,
-            role: ROLES.PARTNER,
+            role: ROLES.USER,
           }),
         );
       }
@@ -45,7 +45,7 @@ describe('Users ME (e2e)', () => {
     it('should update my own password', async () => {
       const user = await testManager
         .mocks()
-        .createUser({ email: 'test@test.com', role: ROLES.PARTNER });
+        .createUser({ email: 'test@test.com', role: ROLES.USER });
 
       const { jwtToken, password: oldPassword } =
         await testManager.logUserIn(user);
@@ -75,7 +75,7 @@ describe('Users ME (e2e)', () => {
     it('should update a user name', async () => {
       const user = await testManager.mocks().createUser({
         email: 'user@test.com',
-        role: ROLES.PARTNER,
+        role: ROLES.USER,
       });
 
       const { jwtToken } = await testManager.logUserIn(user);
@@ -106,7 +106,7 @@ describe('Users ME (e2e)', () => {
         users.push(
           await testManager
             .mocks()
-            .createUser({ email: `user${n}@test.com`, role: ROLES.PARTNER }),
+            .createUser({ email: `user${n}@test.com`, role: ROLES.USER }),
         );
       }
       const user = users[0];

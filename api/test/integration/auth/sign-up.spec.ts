@@ -27,7 +27,7 @@ describe('Sign Up', () => {
     // Given a user exists with valid credentials
     // But the user has the role partner
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'random@test.com',
     });
 
@@ -46,7 +46,7 @@ describe('Sign Up', () => {
 
   test('Sign up should fail if the auto-generated password is incorrect', async () => {
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'random@test.com',
       isActive: false,
     });
@@ -67,7 +67,7 @@ describe('Sign Up', () => {
 
   test('Sign up should succeed if the auto-generated password is correct and the user should be activated and allowed to get a access token', async () => {
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: false,
       password: '1234567812345678',

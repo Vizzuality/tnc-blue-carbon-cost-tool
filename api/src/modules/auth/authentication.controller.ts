@@ -42,7 +42,7 @@ export class AuthenticationController {
     @Headers('origin') origin: string,
   ): Promise<ControllerResponse> {
     return tsRestHandler(authContract.register, async ({ body }) => {
-      const userToRegister = { ...body, role: ROLES.PARTNER };
+      const userToRegister = { ...body, role: ROLES.USER };
       await this.authService.addUser(origin, userToRegister);
       return {
         body: null,
