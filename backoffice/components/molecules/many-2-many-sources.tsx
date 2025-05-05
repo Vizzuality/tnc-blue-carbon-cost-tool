@@ -7,10 +7,12 @@ import {
   Button,
   Select,
   Link,
+  theme,
 } from '@adminjs/design-system';
 import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity.js';
 import { styled } from 'styled-components';
 import { SelectorOption } from '../atoms/selector.type.js';
+import { ThemeProvider } from 'styled-components';
 
 export type ComputeAddParamsFuncType = (
   entityName: string,
@@ -226,7 +228,7 @@ const Many2ManySources: React.FC<Many2ManySourcesProps> = ({
   };
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       {isListView === false && (
         <Label
           style={{
@@ -236,37 +238,30 @@ const Many2ManySources: React.FC<Many2ManySourcesProps> = ({
           {property.label}
         </Label>
       )}
-      <div>
+      <SourcesList>
         {relatedSources.map((item: any) => (
-          <div
-            key={item.sourceType + item.source.id}
-            style={{
-              marginBottom: '1rem',
-            }}
-          >
-            <Badge>
-              <Link
-                href={`/admin/resources/ModelComponentSource/records/${item.source.id}/show`}
+          <ListSourceItem key={item.sourceType + item.source.id}>
+            <Link
+              href={`/admin/resources/ModelComponentSource/records/${item.source.id}/show`}
+              style={{
+                color: 'inherit',
+              }}
+            >
+              {item.sourceType} - {item.source.name}
+            </Link>
+            {isEditView === true && (
+              <span
                 style={{
-                  color: 'inherit',
+                  cursor: 'pointer',
+                  marginLeft: '.5rem',
                 }}
               >
-                {item.sourceType} - {item.source.name}
-              </Link>
-              {isEditView === true && (
-                <span
-                  style={{
-                    cursor: 'pointer',
-                    marginLeft: '.5rem',
-                  }}
-                >
-                  <Icon icon="X" onClick={() => handleDeleteClick(item)} />
-                </span>
-              )}
-            </Badge>
-          </div>
+                <Icon icon="X" onClick={() => handleDeleteClick(item)} />
+              </span>
+            )}
+          </ListSourceItem>
         ))}
-      </div>
+      </SourcesList>
       {isEditView === true && (
         <AddSourceGrid>
           <AddSourceGridItem
@@ -335,7 +330,7 @@ const Many2ManySources: React.FC<Many2ManySourcesProps> = ({
           </AddSourceGridItem>
         </AddSourceGrid>
       )}
-    </>
+    </ThemeProvider>
   );
 };
 
@@ -362,5 +357,19 @@ const GridLabelStyle: CSSProperties = {
   display: 'flex',
   alignItems: 'flex-end',
 };
+
+const SourcesList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const ListSourceItem = styled(Badge)`
+  margin-bottom: 1rem;
+
+  a {
+    white-space: break-spaces;
+  }
+`;
 
 export default Many2ManySources;
