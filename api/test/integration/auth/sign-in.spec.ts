@@ -36,7 +36,7 @@ describe('Sign In', () => {
   test('Should return 401 when user tries to sign in with an incorrect password', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'random@test.com',
     });
 
@@ -57,7 +57,7 @@ describe('Sign In', () => {
   test('Should return 201 and an access token when user successfully signs in', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: true,
       password: '12345678',
@@ -108,7 +108,7 @@ describe('Sign In', () => {
   test('Should return UNAUTHORIZED when trying to sign in with an inactive account', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: false,
       password: '12345678',

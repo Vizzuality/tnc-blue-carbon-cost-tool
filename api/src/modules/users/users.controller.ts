@@ -23,7 +23,7 @@ import { ROLES } from '@shared/entities/users/roles.enum';
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard, RolesGuard)
-@RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+@RequiredRoles(ROLES.USER, ROLES.ADMIN)
 export class UsersController {
   constructor(
     private usersService: UsersService,

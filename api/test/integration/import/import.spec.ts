@@ -46,7 +46,7 @@ describe('Import Tests', () => {
     it('should throw an error if the user is not an admin', async () => {
       const nonAdminUser = await testManager
         .mocks()
-        .createUser({ role: ROLES.PARTNER, email: 'testtt@user.com' });
+        .createUser({ role: ROLES.USER, email: 'testtt@user.com' });
 
       const { jwtToken } = await testManager.logUserIn(nonAdminUser);
 

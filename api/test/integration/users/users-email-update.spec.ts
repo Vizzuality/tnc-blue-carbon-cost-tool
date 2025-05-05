@@ -35,10 +35,10 @@ describe('Users ME (e2e)', () => {
     it('Should fail if the new email is already in use, and no email should be sent', async () => {
       const previousUser = await testManager
         .mocks()
-        .createUser({ role: ROLES.PARTNER });
+        .createUser({ role: ROLES.USER });
       const user = await testManager
         .mocks()
-        .createUser({ email: 'user2@mail.com', role: ROLES.PARTNER });
+        .createUser({ email: 'user2@mail.com', role: ROLES.USER });
 
       const { jwtToken } = await testManager.logUserIn(user);
 
@@ -53,9 +53,7 @@ describe('Users ME (e2e)', () => {
     });
 
     it('Should send an email to the new email address', async () => {
-      const user = await testManager
-        .mocks()
-        .createUser({ role: ROLES.PARTNER });
+      const user = await testManager.mocks().createUser({ role: ROLES.USER });
       const { jwtToken } = await testManager.logUserIn(user);
 
       const newEmail = 'newmail@test.com';
@@ -73,7 +71,7 @@ describe('Users ME (e2e)', () => {
     it('should update the email and return the updated user', async () => {
       const user = await testManager
         .mocks()
-        .createUser({ email: 'test@test.com', role: ROLES.PARTNER });
+        .createUser({ email: 'test@test.com', role: ROLES.USER });
 
       const { emailUpdateToken } = await jwt.signEmailUpdateToken(user.id);
       const newEmail = 'new-mail@mail.com';
@@ -90,7 +88,7 @@ describe('Users ME (e2e)', () => {
     it('should fail if the new email is already in use', async () => {
       const user = await createUser(testManager.getDataSource(), {
         email: 'user@test.com',
-        role: ROLES.PARTNER,
+        role: ROLES.USER,
       });
 
       const { emailUpdateToken } = await jwt.signEmailUpdateToken(user.id);

@@ -87,7 +87,7 @@ export class CustomProjectsController {
     );
   }
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @RequiredRoles(ROLES.USER, ROLES.ADMIN)
   @TsRestHandler(customProjectContract.saveCustomProject)
   async snapshot(@GetUser() user: User): Promise<ControllerResponse> {
     return tsRestHandler(
@@ -103,7 +103,7 @@ export class CustomProjectsController {
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @RequiredRoles(ROLES.USER, ROLES.ADMIN)
   @TsRestHandler(customProjectContract.getCustomProject)
   async getCustomProjectById(
     @GetUser() user: User,
@@ -118,7 +118,7 @@ export class CustomProjectsController {
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @RequiredRoles(ROLES.USER, ROLES.ADMIN)
   @TsRestHandler(customProjectContract.getCustomProjects)
   async getCustomProjects(@GetUser() user: User): Promise<ControllerResponse> {
     return tsRestHandler(
@@ -141,7 +141,7 @@ export class CustomProjectsController {
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @RequiredRoles(ROLES.USER, ROLES.ADMIN)
   @TsRestHandler(customProjectContract.updateCustomProject)
   async updateCustomProject(
     @GetUser() user: User,
@@ -169,7 +169,7 @@ export class CustomProjectsController {
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @RequiredRoles(ROLES.PARTNER, ROLES.ADMIN)
+  @RequiredRoles(ROLES.USER, ROLES.ADMIN)
   @TsRestHandler(customProjectContract.deleteCustomProjects)
   async deleteCustomProjects(
     @GetUser() user: User,

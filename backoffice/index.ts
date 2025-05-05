@@ -156,7 +156,7 @@ const start = async () => {
           labels: {
             User: 'Users',
             Country: 'Countries',
-            Project: 'Projects',
+            Project: 'Project Scenarios',
             ProjectSize: 'Project Sizes',
             // Note: This is the title of the pages section in the sidebar.
             // see full example here: https://github.com/SoftwareBrothers/adminjs/blob/master/src/locale/en/translation.json

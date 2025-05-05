@@ -21,7 +21,7 @@ describe('Delete Account', () => {
   test("An existing user should be able to delete it's account", async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: true,
       password: '12345678',

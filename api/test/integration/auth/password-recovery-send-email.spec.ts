@@ -25,7 +25,7 @@ describe('Password Recovery - Send Email', () => {
   test('An email should be sent if a user is found', async () => {
     // Given a user exists with valid credentials
     const user = await testManager.mocks().createUser({
-      role: ROLES.PARTNER,
+      role: ROLES.USER,
       email: 'test@test.com',
       isActive: true,
       password: '12345678',
