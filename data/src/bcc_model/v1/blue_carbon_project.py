@@ -198,7 +198,7 @@ class BlueCarbonProject:
             raise ValueError("Loss rate can only be calculated for conservation projects.")
         if self.loss_rate_used == "National average":
             self.loss_rate = get_value_from_master_table(
-                self.master_table, self.country_code, self.ecosystem, "ecosystem_loss_rate"
+                self.master_table, self.country_code, self.ecosystem, "loss_rate"
             )
         else:
             if self.project_specific_loss_rate is not None:
