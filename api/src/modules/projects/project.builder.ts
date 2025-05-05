@@ -8,6 +8,7 @@ import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { getProjectSizeFilter } from '@api/modules/projects/threshold/project-size-threshold';
 import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 import { CostOutput } from '@api/modules/calculations/types';
+import { ACTIVITY } from '@shared/entities/activity.enum';
 
 export class ProjectBuilder {
   dto: CreateProjectDto;
@@ -38,11 +39,13 @@ export class ProjectBuilder {
       countryCode: excelInput.country_code,
       ecosystem: excelInput.ecosystem,
       activity: excelInput.activity,
-      restorationActivity: excelInput.activity_type,
+      parameters: {
+        restorationActivity: excelInput.activity_type,
+      },
       projectSizeHa: excelInput.project_size_ha,
       priceType: excelInput.price_type,
       initialCarbonPriceAssumption: excelInput.initial_price_assumption,
-    };
+    } as CreateProjectDto;
   }
 
   setId(id: string): ProjectBuilder {
@@ -57,11 +60,13 @@ export class ProjectBuilder {
     project.countryCode = this.dto.countryCode;
     project.ecosystem = this.dto.ecosystem;
     project.activity = this.dto.activity;
-    project.restorationActivity = this.dto.restorationActivity;
     project.projectSize = this.dto.projectSizeHa;
     project.priceType = this.dto.priceType;
     project.initialPriceAssumption = this.dto.initialCarbonPriceAssumption;
     project.scoreCardRating = this.score;
+    if (this.dto.activity === ACTIVITY.RESTORATION) {
+      project.restorationActivity = this.dto.parameters.restorationActivity;
+    }
     const projectWithCosts = this.assignCosts(project);
     const projectWithSizeFilter =
       this.assignProjectSizeFilter(projectWithCosts);

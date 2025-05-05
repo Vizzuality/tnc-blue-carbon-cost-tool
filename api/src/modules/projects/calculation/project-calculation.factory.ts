@@ -86,7 +86,7 @@ export class ProjectCalculationFactory {
     } else {
       return {
         tierSelector: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
-        restorationActivity: dto.restorationActivity,
+        restorationActivity: dto.parameters.restorationActivity,
       };
     }
   }

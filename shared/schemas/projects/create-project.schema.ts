@@ -27,6 +27,7 @@ export const CreateProjectBaseSchema = z.object({
   ecosystem: z.nativeEnum(ECOSYSTEM),
   activity: z.nativeEnum(ACTIVITY),
   carbonRevenuesToCover: z.nativeEnum(CARBON_REVENUES_TO_COVER),
+  projectSizeHa: z.number().nonnegative(),
 });
 
 const parseNumber = (v: unknown) => Number(v);

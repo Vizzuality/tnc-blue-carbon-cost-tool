@@ -15,8 +15,11 @@ export class ProjectsCalculationService {
     private readonly customProjectFactory: CustomProjectFactory,
   ) {}
 
-  async computeCostForProject(dto: CreateProjectDto): Promise<CostOutput> {
-    const { countryCode, ecosystem, activity, restorationActivity } = dto;
+  async computeCostForProject(
+    dto: CreateProjectDto,
+  ): Promise<CalculationEngineOutput> {
+    const { countryCode, ecosystem, activity, parameters } = dto;
+
     const {
       defaultAssumptions,
       defaultCostInputs,

@@ -288,13 +288,6 @@ export const ValidateRestorationSchema = (
   ctx: z.RefinementCtx,
 ) => {
   const params = data.parameters;
-  if (!params.restorationActivity) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "restorationActivity is required for Restoration projects",
-      path: ["parameters.restorationActivity"],
-    });
-  }
   if (
     params.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 &&
     !params.projectSpecificSequestrationRate
