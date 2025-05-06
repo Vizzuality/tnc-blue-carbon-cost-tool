@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { ComponentProps, FC } from "react";
 
 import { useAtom } from "jotai";
 
@@ -18,11 +18,7 @@ import {
 } from "@/components/ui/sheet";
 
 interface CostDetailsProps {
-  data: {
-    costName: string;
-    label: string;
-    value: string;
-  }[];
+  data: ComponentProps<typeof CostDetailTable>["data"];
   hasOpenBreakEvenPrice: boolean;
 }
 const CostDetails: FC<CostDetailsProps> = ({ data, hasOpenBreakEvenPrice }) => {

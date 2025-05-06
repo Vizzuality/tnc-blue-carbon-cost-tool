@@ -3,6 +3,7 @@ import { ComponentProps, PropsWithChildren, useState } from "react";
 import { Column, SortingState, Updater } from "@tanstack/react-table";
 
 import { TableCell } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 export const NO_DATA = [];
 
@@ -33,8 +34,11 @@ export const HeaderText = ({ children }: PropsWithChildren) => (
   <span className="text-xs font-normal">{children}</span>
 );
 
-export const CellText = ({ children }: PropsWithChildren) => (
-  <span className="text-sm font-normal">{children}</span>
+export const CellText = ({
+  children,
+  className,
+}: PropsWithChildren<{ className?: HTMLSpanElement["className"] }>) => (
+  <span className={cn("text-sm font-normal", className)}>{children}</span>
 );
 
 export const NoResults = (props: ComponentProps<typeof TableCell>) => (

@@ -84,12 +84,19 @@ export const useCustomProjectOutput = (
         output?.costDetails.npv,
       ),
     };
-    const result = costDetails[costRangeSelector];
-    return result;
+
+    return costDetails[costRangeSelector].map((cost) => ({
+      ...cost,
+      sensitivityAnalysis:
+        output?.sensitivityAnalysis[
+          cost.costName as keyof typeof output.sensitivityAnalysis
+        ],
+    }));
   }, [
     costRangeSelector,
     output?.costDetails.total,
     output?.costDetails.npv,
+    output?.sensitivityAnalysis,
     projectDetailsProps.data.activity,
   ]);
 
