@@ -152,7 +152,7 @@ def generate_master_table(data_path):
         # Determine which columns exist in df_table from the list
         common_columns = [
             col
-            for col in ["Country", "Country code", "Activity", "Ecosystem", "continent_id"]
+            for col in ["Country", "Country code", "Activity", "Ecosystem"]
             if col in df_table.columns
         ]
 
