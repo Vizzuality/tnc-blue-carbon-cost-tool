@@ -115,6 +115,14 @@ export type CustomProjectOutput = {
     | null;
 };
 
+export type SensitivityAnalysis = Record<Exclude<keyof CustomProjectCostDetails, "capitalExpenditure" | "operationalExpenditure" | "totalCost">, {
+  baseValue: number;
+  changePctHigher: number;
+  changePctLower: number;
+  decreased25: number;
+  increased25: number;
+}>
+
 export class RestorationProjectOutput {
   // lossRate: number;
   // emissionFactors: {
@@ -155,6 +163,7 @@ export class RestorationProjectOutput {
     total: CustomProjectCostDetails;
     npv: CustomProjectCostDetails;
   };
+  sensitivityAnalysis: SensitivityAnalysis;
   yearlyBreakdown: YearlyBreakdown[];
 }
 
@@ -196,5 +205,6 @@ export class ConservationProjectOutput {
     total: CustomProjectCostDetails;
     npv: CustomProjectCostDetails;
   };
+  sensitivityAnalysis: SensitivityAnalysis;
   yearlyBreakdown: YearlyBreakdown[];
 }

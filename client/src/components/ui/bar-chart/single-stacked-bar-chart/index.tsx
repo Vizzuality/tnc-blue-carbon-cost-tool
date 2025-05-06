@@ -6,6 +6,7 @@ interface SingleStackedBarChartProps {
   total: Segment;
   segments: Segment[];
 }
+
 interface Segment {
   id: string;
   value: number;
@@ -30,7 +31,7 @@ const SingleStackedBarChart: FC<SingleStackedBarChartProps> = ({
           style={{
             width: getSize(s.value, total.value),
           }}
-        ></div>
+        />
       ))}
     </div>
   );

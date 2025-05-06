@@ -1,16 +1,19 @@
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 
 import {
-  useReactTable,
-  getCoreRowModel,
   flexRender,
-  SortingState,
+  getCoreRowModel,
   getSortedRowModel,
+  SortingState,
+  useReactTable,
 } from "@tanstack/react-table";
 
 import { cn } from "@/lib/utils";
 
-import { columns } from "@/containers/projects/custom-project/cost-details/table/columns";
+import {
+  columns,
+  ColumnsTypes,
+} from "@/containers/projects/custom-project/cost-details/table/columns";
 
 import {
   Table,
@@ -20,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useCustomProjectOutput } from "@/hooks/use-custom-project-output";
 
 export interface CostItem {
   costName: string;
@@ -28,12 +32,46 @@ export interface CostItem {
 }
 
 interface CostDetailTableProps {
-  data: CostItem[];
+  data: ReturnType<typeof useCustomProjectOutput>["costDetailsProps"];
 }
+
 const CostDetailTable: FC<CostDetailTableProps> = ({ data }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
+
+  const parsedData = useMemo(() => {
+    const higherNegative = Math.max(
+      ...data.map(({ sensitivityAnalysis }) =>
+        Math.abs(sensitivityAnalysis?.changePctLower ?? 0),
+      ),
+    );
+    const higherPositive = Math.max(
+      ...data.map(({ sensitivityAnalysis }) =>
+        Math.abs(sensitivityAnalysis?.changePctHigher ?? 0),
+      ),
+    );
+
+    return data.map((item) => ({
+      ...item,
+      ...(item.sensitivityAnalysis && {
+        sensitivityAnalysis: {
+          ...item.sensitivityAnalysis,
+          scaledNegative: item.sensitivityAnalysis?.changePctLower
+            ? (Math.abs(item.sensitivityAnalysis.changePctLower) /
+                higherNegative) *
+              100
+            : 0,
+          scaledPositive: item.sensitivityAnalysis?.changePctHigher
+            ? (Math.abs(item.sensitivityAnalysis.changePctHigher) /
+                higherPositive) *
+              100
+            : 0,
+        },
+      }),
+    }));
+  }, [data]) as ColumnsTypes[];
+
   const table = useReactTable({
-    data,
+    data: parsedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
