@@ -1,6 +1,7 @@
 import { PROJECT_EMISSION_FACTORS } from '@shared/entities/custom-project.entity';
 import { TestManager } from '../../utils/test-manager';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
+import { RestorationCreateCustomProjectDTO } from './fixtures';
 
 describe('Create Custom Projects - Request Validations', () => {
   let testManager: TestManager;
@@ -260,6 +261,66 @@ describe('Create Custom Projects - Request Validations', () => {
           'Project Specific Emission Factor must be provided when emissionFactorUsed is Tier 3 and projectSpecificEmission is One emission factor',
         ]),
       );
+    });
+  });
+  describe('Restoration Project Validations', () => {
+    describe('Restoration Yearly Breakdown', () => {
+      test('Should fail if restored areas has negative values', async () => {
+        const { parameters, ...rest } = RestorationCreateCustomProjectDTO;
+        const yearlyBreakdown = [
+          {
+            year: -1,
+            annualHectaresRestored: -100,
+          },
+          {
+            year: 1,
+            annualHectaresRestored: 200,
+          },
+        ];
+        parameters.restorationPlan = yearlyBreakdown;
+        const response = await testManager
+          .request()
+          .post(customProjectContract.createCustomProject.path)
+          .send({
+            ...rest,
+            parameters,
+          });
+
+        expect(response.status).toEqual(400);
+        expect(response.body.errors[0].title).toEqual(
+          'Annual hectares restored cannot be negative',
+        );
+      });
+      test('Should fail if year or annual hectares restored are not numbers', async () => {
+        const { parameters, ...rest } = RestorationCreateCustomProjectDTO;
+        const yearlyBreakdown = [
+          {
+            year: 'Invalid',
+            annualHectaresRestored: 200,
+          },
+          {
+            year: 1,
+            annualHectaresRestored: 'Invalid',
+          },
+        ];
+        parameters.restorationPlan = yearlyBreakdown;
+        const response = await testManager
+          .request()
+          .post(customProjectContract.createCustomProject.path)
+          .send({
+            ...rest,
+            parameters,
+          });
+
+        expect(response.status).toEqual(400);
+        expect(response.body.errors).toHaveLength(2);
+        expect(response.body.errors[0].title).toEqual(
+          'Year should be a number',
+        );
+        expect(response.body.errors[1].title).toEqual(
+          'Annual hectares restored should be a number',
+        );
+      });
     });
   });
 });

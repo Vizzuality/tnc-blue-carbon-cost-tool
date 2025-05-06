@@ -10,6 +10,7 @@ import {
   CARBON_REVENUES_TO_COVER,
 } from "@shared/entities/custom-project.entity";
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
+import {isNumber} from "lodash";
 
 export const MAX_PROJECT_LENGTH = 40;
 export enum LOSS_RATE_USED {
@@ -17,7 +18,10 @@ export enum LOSS_RATE_USED {
   PROJECT_SPECIFIC = "Project specific",
 }
 
-const parseNumber = (v: unknown) => Number(v);
+const parseNumber = (value: unknown): number | undefined => {
+    const parsed = Number(value);
+    return isNaN(parsed) || !isNumber(parsed) ? undefined : parsed
+};
 
 export const ConservationCustomProjectSchema = z.object({
   lossRateUsed: z.nativeEnum(LOSS_RATE_USED),
@@ -67,9 +71,33 @@ export const RestorationCustomProjectSchema = z.object({
       message: "Planting Success Rate should be a non-negative number",
     }),
   ),
+  // TODO: Agree with FE team on the type of this field. The naming should match the concept in the platform
   restorationYearlyBreakdown: z
-    .array(z.preprocess(parseNumber, z.number()).optional())
-    .optional(),
+      .array(
+          z.object({
+            year: z
+                .preprocess(
+                    parseNumber,
+                    z.number({
+                      required_error: "Year should be a number",
+                      invalid_type_error: "Year must be a number",
+                    })
+                        .int("Year must be an integer")
+                )
+                .optional(),
+
+            annualHectaresRestored: z
+                .preprocess(
+                    parseNumber,
+                    z.number({
+                      required_error: "Annual hectares restored should be a number",
+                      invalid_type_error: "Annual hectares restored must be a number",
+                    }).nonnegative("Annual hectares restored cannot be negative")
+                )
+                .optional(),
+          })
+      )
+      .optional()
 });
 
 export const AssumptionsSchema = z.object({
