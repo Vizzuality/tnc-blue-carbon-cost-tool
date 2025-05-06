@@ -140,6 +140,8 @@ def generate_master_table(data_path):
     carbon_tables = index[index["Type"] == "Carbon Tables"]["Sheet Name"].values[1:]
     tables = list(cost_tables[1:]) + list(carbon_tables)
 
+    # print(tables)
+
     master_table = pd.read_excel(data_path, sheet_name=cost_tables[0]).drop(columns=["Source"])
     for table in tables:
         # Read the table and drop the source columns
@@ -150,11 +152,12 @@ def generate_master_table(data_path):
         # Determine which columns exist in df_table from the list
         common_columns = [
             col
-            for col in ["Country", "Country code", "Activity", "Ecosystem"]
+            for col in ["Country", "Country code", "Activity", "Ecosystem", "continent_id"]
             if col in df_table.columns
         ]
 
         # Merge using only the found columns
+        # print(common_columns)
         master_table = pd.merge(master_table, df_table, on=common_columns, how="left")
 
     # Convert master_table's column names to lower case and replace spaces with underscores
