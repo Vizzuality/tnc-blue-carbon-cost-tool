@@ -16,6 +16,8 @@ import {
   OverridableCostInputsDto,
   RestorationProjectParamsDto,
 } from '@api/modules/custom-projects/dto/create-custom-project.dto';
+import { BadRequestException } from '@nestjs/common';
+import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
 export class RestorationProjectInput {
   countryCode: string;
@@ -47,6 +49,8 @@ export class RestorationProjectInput {
   emissionFactorSoc: number;
 
   assumptions: ModelAssumptionsForCalculations;
+
+  customRestorationPlan?: CostPlanMap;
 
   setSequestrationRate(
     parameters: RestorationProjectParamsDto,
@@ -101,5 +105,54 @@ export class RestorationProjectInput {
     this.carbonRevenuesToCover = generalInputs.carbonRevenuesToCover;
     this.restorationActivity = generalInputs.restorationActivity;
     return this;
+  }
+
+  setRestorationPlan(
+    parameters: RestorationProjectParamsDto,
+    projectSizeHa: number,
+    restorationProjectLength: number,
+  ): this {
+    const { restorationYearlyBreakdown } = parameters;
+    if (!restorationYearlyBreakdown?.length) {
+      // TODO: We are missing how the restoration plan plays a role in the model, so I am not sure if it's not provided, we should return
+      //.      a default year + 0 value until reach the restoration project length
+      return;
+    }
+    const restorationPlanHarea = restorationYearlyBreakdown.reduce(
+      (acc, plan) => {
+        return acc + plan.annualHectaresRestored;
+      },
+      0,
+    );
+    if (restorationPlanHarea > projectSizeHa) {
+      throw new BadRequestException('Restoration plan exceeds project size');
+    }
+    this.customRestorationPlan = this.buildRestorationPlan(
+      restorationYearlyBreakdown,
+      restorationProjectLength,
+    );
+    return this;
+  }
+
+  private buildRestorationPlan(
+    restorationPlan: RestorationProjectParamsDto['restorationYearlyBreakdown'],
+    projectLength: number,
+  ): CostPlanMap {
+    const result: CostPlanMap = {};
+
+    const planMap = new Map<number, number>();
+    for (const { year, annualHectaresRestored } of restorationPlan ?? []) {
+      planMap.set(year, annualHectaresRestored);
+    }
+
+    // First year has to be -1
+    result[-1] = planMap.get(-1) ?? 0;
+
+    // Fill until project length, using 0 for non received years
+    for (let year = 1; year <= projectLength; year++) {
+      result[year] = planMap.get(year) ?? 0;
+    }
+
+    return result;
   }
 }

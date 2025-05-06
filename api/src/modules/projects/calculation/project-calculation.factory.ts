@@ -48,7 +48,9 @@ export class ProjectCalculationFactory {
     createDto.costInputs = this.setCostInputs(dto.activity, defaultCostInputs);
     //createDto.parameters = this.setDefaultParameters(dto);
     // Just keep the original parameters from the DTO, that should be validated in the controller
-    createDto.parameters = dto.parameters;
+
+    // TODO!! Type error here
+    createDto.parameters = dto.parameters as any;
     return createDto;
   }
 

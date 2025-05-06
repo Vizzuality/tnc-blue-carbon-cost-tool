@@ -95,6 +95,11 @@ export class CustomProjectFactory {
       assumptions,
       additionalAssumptions,
     );
+    restorationProjectInput.setRestorationPlan(
+      projectParams,
+      projectSizeHa,
+      assumptions.projectLength,
+    );
     return restorationProjectInput;
   }
 
