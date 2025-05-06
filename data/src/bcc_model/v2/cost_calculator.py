@@ -549,18 +549,19 @@ class CostCalculator:
             "Funding gap per tCO2e (NPV)": f"${self.funding_gap_per_tco2_NPV:,.1f}",
             "Community benefit sharing fund % of revenue": f"{self.community_benefit_sharing_fund:.0%}",
         }
-        summary_table = """\
-        ### Project Summary
-
-        | Parameter                            | Value                                             |
-        | ------------------------------------ | ------------------------------------------------- |
-        """
-        for key, value in summary_dict.items():
-            summary_table += f"| {key} | {value} |\n"
-        summary_table = re.sub(r"\n\s+\|", "\n|", summary_table.strip())
 
         # Display the summary table
         if table:
+            summary_table = """\
+            ### Project Summary
+
+            | Parameter | Value |
+            | --------- | ----- |
+            """
+            for key, value in summary_dict.items():
+                summary_table += f"| {key} | {value} |\n"
+            summary_table = re.sub(r"\n\s+\|", "\n|", summary_table.strip())
+
             display(Markdown(summary_table))
 
         return {
@@ -651,40 +652,41 @@ class CostCalculator:
                 self.total_capex_NPV + self.total_opex_NPV,
             ],
         }
-        # Create a Markdown table from the data
-        cost_estimates_table = """\
-        ### Cost Estimates
-
-        | Cost estimates (USD)   | Total cost      | NPV             |
-        | ---------------------- | --------------- | --------------- |
-        """
-        for n in range(len(data["Cost estimates (USD)"])):
-            key = data["Cost estimates (USD)"][n]
-            # Format Total cost and NPV columns as currency with thousands separators
-            total_cost = (
-                f"${data['Total cost'][n]:,.0f}"
-                if isinstance(data["Total cost"][n], (int, float))
-                else data["Total cost"][n]
-            )
-            npv = (
-                f"${data['NPV'][n]:,.0f}"
-                if isinstance(data["NPV"][n], (int, float))
-                else data["NPV"][n]
-            )
-            if key in ["Capital expenditure", "Operating expenditure", "Total cost"]:
-                cost_estimates_table += f"| **{key}** | **{total_cost}** | **{npv}** |\n"
-            else:
-                cost_estimates_table += f"| {key} | {total_cost} | {npv} |\n"
-        cost_estimates_table = re.sub(r"\n\s+\|", "\n|", cost_estimates_table.strip())
-
-        # Display the cost estimates table
+        # Display the cost estimates table if required
         if table:
+            # Create a Markdown table from the data
+            cost_estimates_table = """\
+            ### Cost Estimates
+
+            | Cost estimates (USD)   | Total cost  | NPV    |
+            | ---------------------- | ----------- | ------ |
+            """
+            for n in range(len(data["Cost estimates (USD)"])):
+                key = data["Cost estimates (USD)"][n]
+                # Format Total cost and NPV columns as currency with thousands separators
+                total_cost = (
+                    f"${data['Total cost'][n]:,.0f}"
+                    if isinstance(data["Total cost"][n], (int, float))
+                    else data["Total cost"][n]
+                )
+                npv = (
+                    f"${data['NPV'][n]:,.0f}"
+                    if isinstance(data["NPV"][n], (int, float))
+                    else data["NPV"][n]
+                )
+                if key in ["Capital expenditure", "Operating expenditure", "Total cost"]:
+                    cost_estimates_table += f"| **{key}** | **{total_cost}** | **{npv}** |\n"
+                else:
+                    cost_estimates_table += f"| {key} | {total_cost} | {npv} |\n"
+            cost_estimates_table = re.sub(r"\n\s+\|", "\n|", cost_estimates_table.strip())
+
             display(Markdown(cost_estimates_table))
 
         # Create the dataframe
         df = pd.DataFrame(data)
 
         # Format Total cost and NPV columns as currency with thousands separators
+        # TODO: instead of modifying datatypes is much better to use pandas formatter like .style.format(na_rep='MISS', precision=1, subset=[0]).format(na_rep='PASS', precision=2, subset=[1, 2])
         df["Total cost"] = df["Total cost"].apply(
             lambda x: f"${x:,.0f}" if isinstance(x, (int, float)) else x
         )
@@ -903,30 +905,29 @@ class CostCalculator:
             data[key] = [
                 round(x, 2) if key == "Est. credits issued" else round(x, 0) for x in value
             ]
-
-        # Create a Markdown table from the data
-        pro_forma_table = """\
-        ### Pro Forma Financials
-        """
-        pro_forma_table += "| Year |"
-        for year in years:
-            pro_forma_table += f" {year} |"
-        pro_forma_table += "\n| --- |" + "|".join([" --- " for _ in years]) + "|\n"
-
-        for key, value in data.items():
-            if key in ["Total capex", "Total opex", "Total cost", "Est. revenue"]:
-                pro_forma_table += f"| **{key}** |"
-                for x in value:
-                    pro_forma_table += f" **{x}** |"
-            else:
-                pro_forma_table += f"| {key} |"
-                for x in value:
-                    pro_forma_table += f" {x} |"
-            pro_forma_table += "\n"
-
-        pro_forma_table = re.sub(r"\n\s+\|", "\n|", pro_forma_table.strip())
-
         if table:
+            # Create a Markdown table from the data
+            pro_forma_table = """\
+            ### Pro Forma Financials
+            """
+            pro_forma_table += "| Year |"
+            for year in years:
+                pro_forma_table += f" {year} |"
+            pro_forma_table += "\n| --- |" + "|".join([" --- " for _ in years]) + " |\n"
+
+            for key, value in data.items():
+                if key in ["Total capex", "Total opex", "Total cost", "Est. revenue"]:
+                    pro_forma_table += f"| **{key}** |"
+                    for x in value:
+                        pro_forma_table += f" **{x}** |"
+                else:
+                    pro_forma_table += f"| {key} |"
+                    for x in value:
+                        pro_forma_table += f" {x} |"
+                pro_forma_table += "\n"
+
+            pro_forma_table = re.sub(r"\n\s+\|", "\n|", pro_forma_table.strip())
+
             display(Markdown(pro_forma_table))
 
         # Create a df
