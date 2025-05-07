@@ -11,8 +11,10 @@ import {
   RestorationCustomProjectSchema,
 } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { DEFAULT_CONSERVATION_FORM_VALUES } from "@shared/schemas/custom-projects/custom-project-form.constants";
-import { DEFAULT_RESTORATION_FORM_VALUES } from "@shared/schemas/custom-projects/custom-project-form.constants";
 import { z } from "zod";
+
+import { client } from "@/lib/query-client";
+import { queryKeys } from "@/lib/query-keys";
 
 import { CUSTOM_PROJECT } from "@/constants/tooltip";
 
@@ -34,17 +36,44 @@ export default function Activity() {
   const isEdit = !!id;
   const { form } = useCustomProjectForm();
   const { parameters, assumptions } = useFormValues();
+  const { ecosystem, countryCode } = form.getValues();
+
+  const queryKey = queryKeys.customProjects.defaultActivityTypes({
+    ecosystem,
+    countryCode,
+  }).queryKey;
+
+  const { data: plantingSuccessRate } =
+    client.customProjects.getActivityTypesDefaults.useQuery(
+      queryKey,
+      { query: { ecosystem, countryCode } },
+      {
+        queryKey,
+        enabled: !!ecosystem && !!countryCode,
+        select: (response) =>
+          response.body.data.Restoration.plantingSuccessRate,
+      },
+    );
   const handleRestorationConstraints = useCallback(() => {
     if (
-      (parameters as RestorationParameters).plantingSuccessRate === undefined
+      (parameters as RestorationParameters).plantingSuccessRate === undefined &&
+      plantingSuccessRate
     ) {
-      form.setValue(
-        "parameters.plantingSuccessRate",
-        DEFAULT_RESTORATION_FORM_VALUES.parameters.plantingSuccessRate,
-      );
+      form.setValue("parameters.plantingSuccessRate", plantingSuccessRate);
       form.trigger("parameters.plantingSuccessRate");
     }
-  }, [form, parameters]);
+
+    if (
+      (parameters as RestorationParameters)?.restorationActivity === undefined
+    ) {
+      // ? we default to a restoration activity ensuring costs are always calculated
+      form.setValue(
+        "parameters.restorationActivity",
+        RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
+      );
+      form.trigger("parameters.restorationActivity");
+    }
+  }, [form, parameters, plantingSuccessRate]);
   const handleConservationConstraints = useCallback(() => {
     if (assumptions?.restorationRate !== undefined) {
       form.setValue("assumptions.restorationRate", undefined);
@@ -66,25 +95,12 @@ export default function Activity() {
     form.setValue("activity", v as ACTIVITY);
     await form.trigger("activity");
 
-    if (isEdit) {
-      const activityHandlers = {
-        [ACTIVITY.RESTORATION]: handleRestorationConstraints,
-        [ACTIVITY.CONSERVATION]: handleConservationConstraints,
-      };
-
-      activityHandlers[v as ACTIVITY]();
+    if (isEdit && v === ACTIVITY.CONSERVATION) {
+      handleConservationConstraints();
     }
 
-    // ? we default to a restoration activity ensuring costs are always calculated
-    if (
-      v === ACTIVITY.RESTORATION &&
-      (parameters as RestorationParameters)?.restorationActivity === undefined
-    ) {
-      form.setValue(
-        "parameters.restorationActivity",
-        RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
-      );
-      form.trigger("parameters.restorationActivity");
+    if (v === ACTIVITY.RESTORATION) {
+      handleRestorationConstraints();
     }
   };
 

@@ -1,11 +1,11 @@
-import { DEFAULT_RESTORATION_FORM_VALUES } from "@shared/schemas/custom-projects/custom-project-form.constants";
 import { Page, test, expect } from "@playwright/test";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
-import { EXTENDED_TIMEOUT, PROJECT_NAME } from "e2e/lib/constants";
+import { EXTENDED_TIMEOUT, PROJECT_NAME, ROUTES } from "e2e/lib/constants";
 import {
   createAndSaveCustomProject,
   createAndSignInUser,
   expectEditProjectHeadingVisible,
+  getDataFromNetworkRequest,
   navigateToEditCustomProject,
 } from "e2e/lib/utils";
 import {
@@ -113,6 +113,13 @@ test.describe("Custom Projects - Edit", () => {
   });
 
   test("User sees default values pre-filled when switching to restoration project", async () => {
+    await page.goto(ROUTES.projects.new);
+    const data = await getDataFromNetworkRequest(
+      page,
+      "**/custom-projects/activity-types-defaults?**",
+    );
+    const plantingSuccessRate = data.Restoration.plantingSuccessRate;
+
     await createAndSaveCustomProject(page);
     await navigateToEditCustomProject(page);
 
@@ -123,10 +130,6 @@ test.describe("Custom Projects - Edit", () => {
     ).toHaveValue("0");
     expect(
       page.locator("input[name='parameters.plantingSuccessRate']"),
-    ).toHaveValue(
-      (
-        DEFAULT_RESTORATION_FORM_VALUES.parameters.plantingSuccessRate * 100
-      ).toString(),
-    );
+    ).toHaveValue((plantingSuccessRate * 100).toString());
   });
 });
