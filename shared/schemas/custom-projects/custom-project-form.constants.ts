@@ -63,7 +63,6 @@ export const DEFAULT_RESTORATION_FORM_VALUES: Pick<
     z.infer<typeof RestorationCustomProjectSchema>,
     | "restorationActivity"
     | "tierSelector"
-    | "plantingSuccessRate"
     | "projectSpecificSequestrationRate"
     | "restorationYearlyBreakdown"
   >;
@@ -73,7 +72,6 @@ export const DEFAULT_RESTORATION_FORM_VALUES: Pick<
   parameters: {
     restorationActivity: RESTORATION_ACTIVITY_SUBTYPE.PLANTING,
     tierSelector: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
-    plantingSuccessRate: 0.6,
     projectSpecificSequestrationRate: 15,
     restorationYearlyBreakdown: [],
   },
