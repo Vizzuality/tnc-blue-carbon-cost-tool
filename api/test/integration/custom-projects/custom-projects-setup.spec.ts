@@ -35,6 +35,25 @@ describe('Create Custom Projects - Setup', () => {
         });
 
       expect(response.status).toBe(200);
+      expect(response.body.data).toEqual({
+        Conservation: {
+          ecosystemLossRate: expect.any(Number),
+          emissionFactor: {
+            tier1: expect.any(Number),
+            tier2: {
+              emissionFactorAgb: expect.any(Number),
+              emissionFactorSoc: expect.any(Number),
+            },
+          },
+        },
+        Restoration: {
+          sequestrationRate: {
+            tier1: expect.any(Number),
+            tier2: expect.any(Number),
+          },
+          plantingSuccessRate: expect.any(Number),
+        },
+      });
     });
   });
 
