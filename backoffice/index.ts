@@ -184,6 +184,7 @@ const start = async () => {
     .BACKOFFICE_SESSION_COOKIE_NAME as string;
   const sessionCookieSecret = process.env
     .BACKOFFICE_SESSION_COOKIE_SECRET as string;
+  const noAuthRouter = AdminJSExpress.buildRouter(admin);
   const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
     admin,
     {
@@ -218,7 +219,7 @@ const start = async () => {
   });
 
   app.use(`${ROOT_PATH}/public`, express.static(path.join('.', 'public')));
-  app.use(admin.options.rootPath, adminRouter);
+  app.use(admin.options.rootPath, noAuthRouter);
   admin.watch();
   app.listen(PORT, () => {
     console.log(
