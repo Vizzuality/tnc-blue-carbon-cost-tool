@@ -6,6 +6,7 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { PROJECT_PRICE_TYPE } from "@shared/entities/projects.entity";
 import { z } from "zod";
 
+
 export const CreateProjectSchema = z.object({
   projectName: z
       .string()
