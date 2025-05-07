@@ -12,11 +12,11 @@ export type ConvervationActivityDefaults = {
 };
 
 export type RestorationActivityDefaults = {
-  activity: string;
   sequestrationRate: {
     tier1: number;
     tier2: number;
   };
+  plantingSuccessRate: number
 };
 
 export type ActivityTypesDefaults = {

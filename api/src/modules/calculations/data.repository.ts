@@ -226,18 +226,23 @@ export class DataRepository extends Repository<BaseDataView> {
   ): Promise<RestorationActivityDefaults> {
     const { countryCode, ecosystem } = dto;
 
-    const result = await this.findOne({
+    const baseCostAndCarbonInputs = await this.findOneOrFail({
       where: { countryCode, ecosystem, activity: ACTIVITY.RESTORATION },
-      select: ['activity', 'tier1SequestrationRate', 'tier2SequestrationRate'],
+      select: ['tier1SequestrationRate', 'tier2SequestrationRate'],
     });
-    if (result === null) return null;
+
+    const plantingSuccessRate = await this.assumptionsRepository.findOneOrFail({
+      where: { name: 'Planting success rate' },
+    });
+
+    if (baseCostAndCarbonInputs === null) return null;
 
     return {
-      activity: result.activity,
       sequestrationRate: {
-        tier1: result.tier1SequestrationRate,
-        tier2: result.tier2SequestrationRate,
+        tier1: baseCostAndCarbonInputs.tier1SequestrationRate,
+        tier2: baseCostAndCarbonInputs.tier2SequestrationRate,
       },
+      plantingSuccessRate: parseFloat(plantingSuccessRate.value),
     };
   }
 
