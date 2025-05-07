@@ -171,16 +171,17 @@ class SequestrationCreditsCalculator:
             else:
                 if self.project.activity == "Restoration":
                     if year == -1:
-                        cumulative_ha_restored_in_year[year] = self.project.restoration_rate
+                        cumulative_ha_restored_in_year[year] = self.project.restoration_plan[year]
                     elif year == 1:
                         # Accumulate restored area year by year
                         cumulative_ha_restored_in_year[year] = (
-                            cumulative_ha_restored_in_year[-1] + self.project.restoration_rate
+                            cumulative_ha_restored_in_year[-1] + self.project.restoration_plan[year]
                         )
                     else:
                         # Accumulate restored area year by year
                         cumulative_ha_restored_in_year[year] = (
-                            cumulative_ha_restored_in_year[year - 1] + self.project.restoration_rate
+                            cumulative_ha_restored_in_year[year - 1]
+                            + self.project.restoration_plan[year]
                         )
                     # Cap the restored area at the project size
                     if cumulative_ha_restored_in_year[year] > self.project.project_size_ha:

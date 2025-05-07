@@ -264,8 +264,9 @@ class BlueCarbonProject:
             restoration_plan[-1] = self.project_size_ha
         # Initialize remaining hectares to be restored
         remaining = self.project_size_ha
-        # Years run from -1 to the restoration project length
-        for year in range(-1, self.restoration_project_length + 1):
+        remaining -= restoration_plan[-1]
+        # Calculate the restoration plan for each year
+        for year in range(1, self.restoration_project_length + 1):
             if remaining > 0:
                 if remaining >= self.restoration_rate:
                     restoration_plan[year] = self.restoration_rate
