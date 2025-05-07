@@ -3,7 +3,6 @@ import re
 import matplotlib.pyplot as plt  # noqa: I001
 import pandas as pd
 from IPython.display import Markdown, display
-
 from v2.revenue_profit_calculator import RevenueProfitCalculator
 from v2.sequestration_credits_calculator import SequestrationCreditsCalculator
 from v2.utils import (
@@ -339,6 +338,7 @@ class CostCalculator:
             & (self.project.master_table["ecosystem"] == self.project.ecosystem),
             "maintenance",
         ].values[0]
+
         if float(base_cost) < 1:
             key = "% of implementation labor"
         else:
