@@ -26,12 +26,14 @@ export const CreateProjectBaseSchema = z.object({
   projectSizeHa: z.number().nonnegative(),
   carbonRevenuesToCover: z.nativeEnum(CARBON_REVENUES_TO_COVER),
   initialCarbonPriceAssumption: z.number().nonnegative(),
+  // We need this property to exist due to type constraint in later stages, but it is not required in the DTO
+  priceType: z.any().optional(),
 });
 
 
 const parseNumber = (v: unknown) => Number(v);
 
-export const ConservationProjectSchema = z.object({
+export const ConservationProjectParametersSchema = z.object({
   lossRateUsed: z.nativeEnum(LOSS_RATE_USED),
   emissionFactorUsed: z.nativeEnum(EMISSION_FACTORS_TIER_TYPES),
   projectSpecificEmission: z.nativeEnum(PROJECT_SPECIFIC_EMISSION).optional(),
@@ -66,7 +68,7 @@ export const ConservationProjectSchema = z.object({
       .optional(),
 });
 
-export const RestorationProjectSchema = z.object({
+export const RestorationProjectParametersSchema = z.object({
   restorationActivity: z.nativeEnum(RESTORATION_ACTIVITY_SUBTYPE, {message: 'Restoration Activity is required for Restoration Projects'}),
   tierSelector: z.nativeEnum(SEQUESTRATION_RATE_TIER_TYPES),
   projectSpecificSequestrationRate: z
@@ -89,12 +91,12 @@ export const CreateProjectSchema = z
       z.object({
         ...CreateProjectBaseSchema.shape,
         activity: z.literal(ACTIVITY.CONSERVATION),
-        parameters: ConservationProjectSchema,
+        parameters: ConservationProjectParametersSchema,
       }),
       z.object({
         ...CreateProjectBaseSchema.shape,
         activity: z.literal(ACTIVITY.RESTORATION),
-        parameters: RestorationProjectSchema,
+        parameters: RestorationProjectParametersSchema,
       }),
     ])
     .superRefine((data, ctx) => {
@@ -111,7 +113,7 @@ export const ValidateConservationSchema = (
     ctx: z.RefinementCtx,
 ) => {
   const params = data.parameters as z.infer<
-      typeof ConservationProjectSchema
+      typeof ConservationProjectParametersSchema
   >;
   if (params.lossRateUsed === LOSS_RATE_USED.PROJECT_SPECIFIC) {
     if (!params.projectSpecificLossRate) {
@@ -193,7 +195,7 @@ export const ValidateRestorationSchema = (
     ctx: z.RefinementCtx,
 ) => {
   const params = data.parameters as z.infer<
-      typeof RestorationProjectSchema
+      typeof RestorationProjectParametersSchema
   >;
   if (
       params.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 &&

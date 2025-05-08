@@ -6,8 +6,21 @@ import { PROJECT_SCORE } from '@shared/entities/project-score.enum';
 import { ExcelProject } from '@api/modules/import/dtos/excel-projects.dto';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { getProjectSizeFilter } from '@api/modules/projects/threshold/project-size-threshold';
-import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
+import {
+  ConservationProjectParameters,
+  CreateProjectDto,
+  RestorationProjectParameters,
+} from '@shared/dtos/projects/create-project.dto';
 import { CostOutput } from '@api/modules/calculations/types';
+import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from '@shared/entities/activity.enum';
+import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
+import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
+import { SEQUESTRATION_RATE_TIER_TYPES } from '@shared/entities/carbon-inputs/sequestration-rate.entity';
+import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
 
 export class ProjectBuilder {
   dto: CreateProjectDto;
@@ -32,16 +45,23 @@ export class ProjectBuilder {
     this.project = new Project();
   }
 
+  // TODO: In the excel file we are missing some required fields to know which values to use to compute a project. We might need to hardcode some default conf:
+  // https://vizzuality.atlassian.net/browse/TBCCT-380?focusedCommentId=35375
+
   static excelInputToDto(excelInput: ExcelProject): CreateProjectDto {
     return {
       projectName: excelInput.project_name,
       countryCode: excelInput.country_code,
       ecosystem: excelInput.ecosystem,
       activity: excelInput.activity,
-      restorationActivity: excelInput.activity_type,
       projectSizeHa: excelInput.project_size_ha,
       priceType: excelInput.price_type,
       initialCarbonPriceAssumption: excelInput.initial_price_assumption,
+      carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.OPEX,
+      // parameters: this.setDefaultParameters({
+      //   activity: excelInput.activity,
+      //   parameters: { restorationActivity: excelInput.activity_type },
+      // }),
     };
   }
 
@@ -57,7 +77,10 @@ export class ProjectBuilder {
     project.countryCode = this.dto.countryCode;
     project.ecosystem = this.dto.ecosystem;
     project.activity = this.dto.activity;
-    project.restorationActivity = this.dto.restorationActivity;
+    project.restorationActivity =
+      this.dto instanceof RestorationProjectInput
+        ? this.dto.restorationActivity
+        : undefined;
     project.projectSize = this.dto.projectSizeHa;
     project.priceType = this.dto.priceType;
     project.initialPriceAssumption = this.dto.initialCarbonPriceAssumption;
@@ -162,5 +185,22 @@ export class ProjectBuilder {
       this.projectSize,
     );
     return project;
+  }
+
+  setDefaultParameters(dto: {
+    activity: ACTIVITY;
+    restorationActivity?: RESTORATION_ACTIVITY_SUBTYPE;
+  }) {
+    if (dto.activity === ACTIVITY.CONSERVATION) {
+      return {
+        lossRateUsed: LOSS_RATE_USED.NATIONAL_AVERAGE,
+        emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
+      };
+    } else {
+      return {
+        tierSelector: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
+        restorationActivity,
+      };
+    }
   }
 }
