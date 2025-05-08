@@ -7,8 +7,7 @@ import {CARBON_REVENUES_TO_COVER, PROJECT_SPECIFIC_EMISSION} from "@shared/entit
 import {EMISSION_FACTORS_TIER_TYPES} from "@shared/entities/carbon-inputs/emission-factors.entity";
 import {SEQUESTRATION_RATE_TIER_TYPES} from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import {
-  ConservationCustomProjectSchema,
-   LOSS_RATE_USED, RestorationCustomProjectSchema
+   LOSS_RATE_USED
 } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 
