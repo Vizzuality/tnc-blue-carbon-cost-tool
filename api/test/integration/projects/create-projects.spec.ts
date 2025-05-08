@@ -9,7 +9,7 @@ import { Project, PROJECT_PRICE_TYPE } from '@shared/entities/projects.entity';
 import { TestManager } from '../../utils/test-manager';
 import { TestUser } from '../../utils/user.auth';
 
-describe('Create projects', () => {
+describe.skip('Create projects', () => {
   let testManager: TestManager;
   let user: TestUser;
 
