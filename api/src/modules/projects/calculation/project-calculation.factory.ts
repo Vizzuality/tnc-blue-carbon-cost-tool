@@ -6,9 +6,6 @@ import {
 import { assumptionsArrayToMap } from '@shared/lib/transform-create-custom-project-payload';
 import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
 import { ACTIVITY } from '@shared/entities/activity.enum';
-import { LOSS_RATE_USED } from '@shared/schemas/custom-projects/create-custom-project.schema';
-import { SEQUESTRATION_RATE_TIER_TYPES } from '@shared/entities/carbon-inputs/sequestration-rate.entity';
-import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
 import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 
 export class ProjectCalculationFactory {
@@ -49,7 +46,9 @@ export class ProjectCalculationFactory {
     createDto.initialCarbonPriceAssumption = dto.initialCarbonPriceAssumption;
     createDto.assumptions = parsedAssumptions;
     createDto.costInputs = this.setCostInputs(dto.activity, defaultCostInputs);
-    createDto.parameters = this.setDefaultParameters(dto);
+    //createDto.parameters = this.setDefaultParameters(dto);
+    // Just keep the original parameters from the DTO, that should be validated in the controller
+    createDto.parameters = dto.parameters;
     return createDto;
   }
 
@@ -71,23 +70,23 @@ export class ProjectCalculationFactory {
     }
   }
 
-  /**
-   * @description: It seems that for computing projects, we need to set some default parameters as the tier used and more. this needs to be
-   *               clarified with the science team.
-   *
-   *               Additionally, setting restorationActivity in parameters for CustomProjects was not a good design choice. This needs to be discussed with the team
-   */
-  setDefaultParameters(dto: CreateProjectDto) {
-    if (dto.activity === ACTIVITY.CONSERVATION) {
-      return {
-        lossRateUsed: LOSS_RATE_USED.NATIONAL_AVERAGE,
-        emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
-      };
-    } else {
-      return {
-        tierSelector: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
-        restorationActivity: dto.restorationActivity,
-      };
-    }
-  }
+  // /**
+  //  * @description: It seems that for computing projects, we need to set some default parameters as the tier used and more. this needs to be
+  //  *               clarified with the science team.
+  //  *
+  //  *               Additionally, setting restorationActivity in parameters for CustomProjects was not a good design choice. This needs to be discussed with the team
+  //  */
+  // setDefaultParameters(dto: CreateProjectDto) {
+  //   if (dto.activity === ACTIVITY.CONSERVATION) {
+  //     return {
+  //       lossRateUsed: LOSS_RATE_USED.NATIONAL_AVERAGE,
+  //       emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
+  //     };
+  //   } else {
+  //     return {
+  //       tierSelector: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
+  //       restorationActivity: dto.restorationActivity,
+  //     };
+  //   }
+  // }
 }

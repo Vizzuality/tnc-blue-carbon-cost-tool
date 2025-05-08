@@ -3,7 +3,10 @@ import { CalculationEngine } from '@api/modules/calculations/calculation.engine'
 import { DataRepository } from '@api/modules/calculations/data.repository';
 import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import { ProjectCalculationFactory } from '@api/modules/projects/calculation/project-calculation.factory';
-import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
+import {
+  CreateProjectDto,
+  RestorationProjectParameters,
+} from '@shared/dtos/projects/create-project.dto';
 import { CalculationEngineOutput } from '@api/modules/calculations/types';
 
 @Injectable()
@@ -17,7 +20,8 @@ export class ProjectsCalculationService {
   async computeCostForProject(
     dto: CreateProjectDto,
   ): Promise<CalculationEngineOutput> {
-    const { countryCode, ecosystem, activity, restorationActivity } = dto;
+    const { countryCode, ecosystem, activity, parameters } = dto;
+    const params = parameters as RestorationProjectParameters;
     const {
       defaultAssumptions,
       defaultCostInputs,
@@ -29,7 +33,7 @@ export class ProjectsCalculationService {
       countryCode,
       ecosystem,
       activity,
-      restorationActivity,
+      restorationActivity: params.restorationActivity,
     });
 
     if (dto.initialCarbonPriceAssumption) {
