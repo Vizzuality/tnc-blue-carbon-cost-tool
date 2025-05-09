@@ -224,46 +224,9 @@ export class ProjectsService extends AppBaseService<
     );
     await Promise.all(
       fromExcel.map(async (projectFromExcel) => {
-        const createProjectDto =
-          ProjectBuilder.excelInputToDto(projectFromExcel);
-
-        const scoreCardRating =
-          await this.scorecard.getRating(createProjectDto);
-        const costs =
-          await this.projectCalculation.computeCostForProject(createProjectDto);
-        const projectSize = await this.dataSource
-          .getRepository(ProjectSize)
-          .findOne({
-            select: ['sizeHa'],
-            where: {
-              ecosystem: createProjectDto.ecosystem,
-              activity: createProjectDto.activity,
-              countryCode: createProjectDto.countryCode,
-            },
-          });
-
-        const { costOutput, breakEvenCostOutput } = costs;
-        if (breakEvenCostOutput) {
-          const { breakEvenCost, breakEvenCarbonPrice } = breakEvenCostOutput;
-          createProjectDto.priceType = PROJECT_PRICE_TYPE.OPEN_BREAK_EVEN_PRICE;
-          createProjectDto.initialCarbonPriceAssumption = breakEvenCarbonPrice;
-          const project = new ProjectBuilder(
-            createProjectDto,
-            scoreCardRating,
-            breakEvenCost,
-            projectSize.sizeHa,
-          );
-          await this.projectRepository.save(project.build());
-        }
-
-        createProjectDto.priceType = PROJECT_PRICE_TYPE.MARKET_PRICE;
-        const project = new ProjectBuilder(
-          createProjectDto,
-          scoreCardRating,
-          costOutput,
-          projectSize.sizeHa,
-        ).build();
-        return this.repository.save(project);
+        const projectDto = ProjectBuilder.excelInputToDto(projectFromExcel);
+        const project = await this.createProject(projectDto);
+        return project;
       }),
     );
     this.logger.warn(`Computed and saved ${fromExcel.length} projects`);
@@ -275,16 +238,6 @@ export class ProjectsService extends AppBaseService<
     const scoreCardRating = await this.scorecard.getRating(createProjectDto);
     const costs =
       await this.projectCalculation.computeCostForProject(createProjectDto);
-    const projectSize = await this.dataSource
-      .getRepository(ProjectSize)
-      .findOne({
-        select: ['sizeHa'],
-        where: {
-          ecosystem: createProjectDto.ecosystem,
-          activity: createProjectDto.activity,
-          countryCode: createProjectDto.countryCode,
-        },
-      });
 
     const { costOutput, breakEvenCostOutput } = costs;
     if (breakEvenCostOutput) {
@@ -298,24 +251,24 @@ export class ProjectsService extends AppBaseService<
         openBreakEvenPriceCreateDto,
         scoreCardRating,
         breakEvenCost,
-        projectSize.sizeHa,
+        openBreakEvenPriceCreateDto.projectSizeHa,
       );
+      // Save the breakeven price project if found
       await this.projectRepository.save(project.build());
     }
 
-    // TODO: Not clear if sizeHa has to come from the DTO or be retrieved from the database. Does it make sense to have it in the DB?
-    //       Would make sense to have thresholds defined?
-
+    // Save the market price project
     createProjectDto.priceType = PROJECT_PRICE_TYPE.MARKET_PRICE;
     const project = new ProjectBuilder(
       createProjectDto,
       scoreCardRating,
       costOutput,
-      projectSize.sizeHa,
+      createProjectDto.projectSizeHa,
     );
     return this.projectRepository.save(project.build());
   }
 
+  // TODO: we need to decide what to do with the update
   public async updateProject(
     id: string,
     updateProjectDto: UpdateProjectDto,
@@ -328,16 +281,6 @@ export class ProjectsService extends AppBaseService<
     const scoreCardRating = await this.scorecard.getRating(updateProjectDto);
     const costs =
       await this.projectCalculation.computeCostForProject(updateProjectDto);
-    const projectSize = await this.dataSource
-      .getRepository(ProjectSize)
-      .findOne({
-        select: ['sizeHa'],
-        where: {
-          ecosystem: updateProjectDto.ecosystem,
-          activity: updateProjectDto.activity,
-          countryCode: updateProjectDto.countryCode,
-        },
-      });
     const { costOutput, breakEvenCostOutput } = costs;
 
     const costsToUse =
@@ -345,13 +288,11 @@ export class ProjectsService extends AppBaseService<
         ? costOutput
         : breakEvenCostOutput.breakEvenCost;
 
-    // TODO: Not clear if sizeHa has to come from the DTO or be retrieved from the database. Does it make sense to have it in the DB?
-    //       Would make sense to have thresholds defined?
     const project = new ProjectBuilder(
       updateProjectDto,
       scoreCardRating,
       costsToUse,
-      projectSize.sizeHa,
+      updateProjectDto.projectSizeHa,
     )
       .setId(id)
       .build();
