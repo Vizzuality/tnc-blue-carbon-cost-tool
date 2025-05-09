@@ -6,11 +6,7 @@ import { PROJECT_SCORE } from '@shared/entities/project-score.enum';
 import { ExcelProject } from '@api/modules/import/dtos/excel-projects.dto';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { getProjectSizeFilter } from '@api/modules/projects/threshold/project-size-threshold';
-import {
-  ConservationProjectParameters,
-  CreateProjectDto,
-  RestorationProjectParameters,
-} from '@shared/dtos/projects/create-project.dto';
+import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 import { CostOutput } from '@api/modules/calculations/types';
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import {
@@ -58,10 +54,10 @@ export class ProjectBuilder {
       priceType: excelInput.price_type,
       initialCarbonPriceAssumption: excelInput.initial_price_assumption,
       carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.OPEX,
-      // parameters: this.setDefaultParameters({
-      //   activity: excelInput.activity,
-      //   parameters: { restorationActivity: excelInput.activity_type },
-      // }),
+      parameters: this.setDefaultParameters({
+        activity: excelInput.activity,
+        restorationActivity: excelInput.activity_type,
+      }),
     };
   }
 
@@ -187,7 +183,7 @@ export class ProjectBuilder {
     return project;
   }
 
-  setDefaultParameters(dto: {
+  static setDefaultParameters(dto: {
     activity: ACTIVITY;
     restorationActivity?: RESTORATION_ACTIVITY_SUBTYPE;
   }) {
@@ -199,7 +195,7 @@ export class ProjectBuilder {
     } else {
       return {
         tierSelector: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
-        restorationActivity,
+        restorationActivity: dto.restorationActivity,
       };
     }
   }
