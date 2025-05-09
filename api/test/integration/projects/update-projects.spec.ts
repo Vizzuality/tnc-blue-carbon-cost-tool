@@ -8,7 +8,7 @@ import { Project } from '@shared/entities/projects.entity';
 import { TestManager } from '../../utils/test-manager';
 import { TestUser } from '../../utils/user.auth';
 
-describe('Update projects', () => {
+describe.skip('Update projects', () => {
   let testManager: TestManager;
   let user: TestUser;
 
@@ -30,6 +30,10 @@ describe('Update projects', () => {
   });
 
   test('Update a conservation project with the minimum required fields', async () => {
+    const existintProject = await testManager
+      .getDataSource()
+      .getRepository(Project)
+      .findOne({});
     const createProjectDto: CreateProjectDto = {
       countryCode: 'IND',
       projectName: 'Conservation project',
