@@ -74,9 +74,9 @@ export class ProjectBuilder {
     project.ecosystem = this.dto.ecosystem;
     project.activity = this.dto.activity;
     project.restorationActivity =
-      this.dto instanceof RestorationProjectInput
-        ? this.dto.restorationActivity
-        : undefined;
+      this.dto.activity === ACTIVITY.RESTORATION
+        ? this.dto.parameters.restorationActivity
+        : null;
     project.projectSize = this.dto.projectSizeHa;
     project.priceType = this.dto.priceType;
     project.initialPriceAssumption = this.dto.initialCarbonPriceAssumption;
