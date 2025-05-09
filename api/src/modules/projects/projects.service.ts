@@ -15,7 +15,6 @@ import { ProjectsFiltersBoundsDto } from '@shared/dtos/projects/projects-filters
 import { ProjectsCalculationService } from '@api/modules/projects/calculation/projects-calculation.service';
 import { ProjectBuilder } from '@api/modules/projects/project.builder';
 import { ProjectsScorecardService } from '@api/modules/projects/projects-scorecard.service';
-import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { ExcelProject } from '@api/modules/import/dtos/excel-projects.dto';
 import { UpdateProjectDto } from '@shared/dtos/projects/update-project.dto';
 import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
@@ -225,8 +224,7 @@ export class ProjectsService extends AppBaseService<
     await Promise.all(
       fromExcel.map(async (projectFromExcel) => {
         const projectDto = ProjectBuilder.excelInputToDto(projectFromExcel);
-        const project = await this.createProject(projectDto);
-        return project;
+        await this.createProject(projectDto);
       }),
     );
     this.logger.warn(`Computed and saved ${fromExcel.length} projects`);
@@ -265,6 +263,7 @@ export class ProjectsService extends AppBaseService<
       costOutput,
       createProjectDto.projectSizeHa,
     );
+    const test = project.build();
     return this.projectRepository.save(project.build());
   }
 
