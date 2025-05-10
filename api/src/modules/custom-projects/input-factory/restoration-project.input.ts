@@ -145,10 +145,8 @@ export class RestorationProjectInput {
       planMap.set(year, annualHectaresRestored);
     }
 
-    // First year has to be -1
-    result[-1] = planMap.get(-1) ?? 0;
-
-    // Fill until project length, using 0 for non received years
+    // The plan that can be modified by the user starts at year 1 and does not have to be continuous
+    // TODO!!!: According to science example, the missing years are filled with 0! Double check this
     for (let year = 1; year <= projectLength; year++) {
       result[year] = planMap.get(year) ?? 0;
     }
