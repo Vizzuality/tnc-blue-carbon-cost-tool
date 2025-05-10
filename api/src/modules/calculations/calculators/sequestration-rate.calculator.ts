@@ -39,13 +39,13 @@ export class SequestrationRateCalculator {
     this.tier1SequestrationRate =
       projectInput.costAndCarbonInputs.tier1SequestrationRate;
     this.restorationRate = projectInput.assumptions.restorationRate;
-    this.restorationPlan = this.initializeRestorationPlan(
-      projectInput.projectSizeHa,
-      this.restorationRate,
-      this.projectLength,
-    );
     if (projectInput instanceof RestorationProjectInput) {
       this.sequestrationRate = projectInput.sequestrationRate;
+      this.restorationPlan = this.initializeRestorationPlan(
+        projectInput.projectSizeHa,
+        this.restorationRate,
+        this.projectLength,
+      );
       this.restorationPlan = this.updateRestorationPlan(projectInput);
     }
     this.soilOrganicCarbonReleaseLength =
