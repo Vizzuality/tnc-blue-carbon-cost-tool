@@ -10,6 +10,7 @@ import { OverridableAssumptionsDto } from '@api/modules/custom-projects/dto/crea
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import { CalculationException } from '@api/modules/calculations/calculators/error';
 import { ProjectInput } from '@api/modules/calculations/types';
+import { RestorationProjectParameters } from '@shared/dtos/projects/create-project.dto';
 
 @Injectable()
 export class SequestrationRateCalculator {
@@ -27,6 +28,7 @@ export class SequestrationRateCalculator {
   cumulativeLoss: CostPlanMap;
   projectedLoss: CostPlanMap;
   annualAvoidedLoss: CostPlanMap;
+  restorationPlan: CostPlanMap;
   constructor(projectInput: ProjectInput) {
     this.projectInput = projectInput;
     this.activity = projectInput.activity;
@@ -37,8 +39,14 @@ export class SequestrationRateCalculator {
     this.tier1SequestrationRate =
       projectInput.costAndCarbonInputs.tier1SequestrationRate;
     this.restorationRate = projectInput.assumptions.restorationRate;
+    this.restorationPlan = this.initializeRestorationPlan(
+      projectInput.projectSizeHa,
+      this.restorationRate,
+      this.projectLength,
+    );
     if (projectInput instanceof RestorationProjectInput) {
       this.sequestrationRate = projectInput.sequestrationRate;
+      this.restorationPlan = this.updateRestorationPlan(projectInput);
     }
     this.soilOrganicCarbonReleaseLength =
       projectInput.assumptions.soilOrganicCarbonReleaseLength;
@@ -423,5 +431,70 @@ export class SequestrationRateCalculator {
       );
     }
     return this.annualAvoidedLoss;
+  }
+
+  /**
+   * @description: Initializes a restoration plan
+   * @param projectSizeHa
+   * @param restorationRate
+   * @param projectLength
+   */
+
+  initializeRestorationPlan(
+    projectSizeHa: number,
+    restorationRate: number,
+    // TODO: Since the restoration plan seems to be used for conservation as well, we should apply the conservation project length here>?
+    projectLength: number,
+  ): CostPlanMap {
+    const restorationPlan: CostPlanMap = {};
+
+    restorationPlan[-1] =
+      projectSizeHa > restorationRate ? restorationRate : projectSizeHa;
+
+    let remainingHa = projectSizeHa - restorationPlan[-1];
+
+    for (let year = 1; year <= projectLength; year++) {
+      if (remainingHa > 0) {
+        if (remainingHa >= restorationRate) {
+          restorationPlan[year] = restorationRate;
+          remainingHa -= restorationRate;
+        } else {
+          restorationPlan[year] = remainingHa;
+          remainingHa = 0;
+        }
+      } else {
+        restorationPlan[year] = 0;
+      }
+    }
+
+    return restorationPlan;
+  }
+
+  /**
+   * @description: If the project is restoration, the user can provide a custom plan to have more control over how many hectares are restored each year.
+   *               if provided, updates the plan, otherwise it leaves the default plan.
+   * @param restorationProjectInput
+   */
+  updateRestorationPlan(
+    restorationProjectInput: RestorationProjectInput,
+  ): CostPlanMap {
+    const { customRestorationPlan } = restorationProjectInput;
+
+    const originalPlanToModify = structuredClone(this.restorationPlan);
+    if (customRestorationPlan) {
+      for (const [yearStr, hectares] of Object.entries(customRestorationPlan)) {
+        const year = Number(yearStr);
+
+        if (year in originalPlanToModify) {
+          originalPlanToModify[year] = hectares;
+        } else {
+          // This should not happen as the number of years are limited by the project length which cannot be modified by the user, but just in case
+          throw new CalculationException(
+            `Year ${year} is out of bounds for the restoration plan`,
+          );
+        }
+      }
+      return originalPlanToModify;
+    }
   }
 }
