@@ -10,7 +10,6 @@ import { OverridableAssumptionsDto } from '@api/modules/custom-projects/dto/crea
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import { CalculationException } from '@api/modules/calculations/calculators/error';
 import { ProjectInput } from '@api/modules/calculations/types';
-import { RestorationProjectParameters } from '@shared/dtos/projects/create-project.dto';
 
 @Injectable()
 export class SequestrationRateCalculator {
@@ -259,16 +258,13 @@ export class SequestrationRateCalculator {
         cumulativeHaRestoredInYear[year] = 0;
       } else if (this.activity === ACTIVITY.RESTORATION) {
         if (year === -1) {
-          cumulativeHaRestoredInYear[year] =
-            this.projectInput.assumptions.restorationRate;
+          cumulativeHaRestoredInYear[year] = this.restorationPlan[year];
         } else if (year === 1) {
           cumulativeHaRestoredInYear[year] =
-            cumulativeHaRestoredInYear[-1] +
-            this.projectInput.assumptions.restorationRate;
+            cumulativeHaRestoredInYear[-1] + this.restorationPlan[year];
         } else {
           cumulativeHaRestoredInYear[year] =
-            cumulativeHaRestoredInYear[year - 1] +
-            this.projectInput.assumptions.restorationRate;
+            cumulativeHaRestoredInYear[year - 1] + this.restorationPlan[year];
         }
         if (
           cumulativeHaRestoredInYear[year] > this.projectInput.projectSizeHa
