@@ -95,7 +95,7 @@ export class CustomProjectFactory {
       assumptions,
       additionalAssumptions,
     );
-    restorationProjectInput.setRestorationPlan(
+    restorationProjectInput.setCustomRestorationPlan(
       projectParams,
       projectSizeHa,
       assumptions.projectLength,

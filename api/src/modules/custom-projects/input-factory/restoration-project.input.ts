@@ -107,7 +107,7 @@ export class RestorationProjectInput {
     return this;
   }
 
-  setRestorationPlan(
+  setCustomRestorationPlan(
     parameters: RestorationProjectParamsDto,
     projectSizeHa: number,
     restorationProjectLength: number,
