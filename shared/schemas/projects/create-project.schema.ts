@@ -1,26 +1,27 @@
 import {
-  ACTIVITY, RESTORATION_ACTIVITY_SUBTYPE,
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
 } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { z } from "zod";
-import {CARBON_REVENUES_TO_COVER, PROJECT_SPECIFIC_EMISSION} from "@shared/entities/custom-project.entity";
-import {EMISSION_FACTORS_TIER_TYPES} from "@shared/entities/carbon-inputs/emission-factors.entity";
-import {SEQUESTRATION_RATE_TIER_TYPES} from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import {
-   LOSS_RATE_USED
-} from "@shared/schemas/custom-projects/create-custom-project.schema";
-
+  CARBON_REVENUES_TO_COVER,
+  PROJECT_SPECIFIC_EMISSION,
+} from "@shared/entities/custom-project.entity";
+import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
+import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
+import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 // TODO: This is a partial replica of the custom project schema due to time constraints, we should refactor this at some point
 
 export const CreateProjectBaseSchema = z.object({
   countryCode: z.string().min(3).max(3),
   projectName: z
-      .string()
-      .min(3, {
-        message: "Name must contain at least 3 characters.",
-      })
-      .max(255, { message: "Name must be less than 255 characters" }),
+    .string()
+    .min(3, {
+      message: "Name must contain at least 3 characters.",
+    })
+    .max(255, { message: "Name must be less than 255 characters" }),
   ecosystem: z.nativeEnum(ECOSYSTEM),
   activity: z.nativeEnum(ACTIVITY),
   projectSizeHa: z.number().nonnegative(),
@@ -30,7 +31,6 @@ export const CreateProjectBaseSchema = z.object({
   priceType: z.any().optional(),
 });
 
-
 const parseNumber = (v: unknown) => Number(v);
 
 export const ConservationProjectParametersSchema = z.object({
@@ -38,88 +38,92 @@ export const ConservationProjectParametersSchema = z.object({
   emissionFactorUsed: z.nativeEnum(EMISSION_FACTORS_TIER_TYPES),
   projectSpecificEmission: z.nativeEnum(PROJECT_SPECIFIC_EMISSION).optional(),
   projectSpecificLossRate: z.preprocess(
-      (value) =>
-          value === undefined || value === null ? undefined : parseNumber(value),
-      z
-          .number({ message: "Project Specific Loss Rate should be a number" })
-          .negative({ message: "Project Specific Loss Rate must be negative" })
-          .optional(),
+    (value) =>
+      value === undefined || value === null ? undefined : parseNumber(value),
+    z
+      .number({ message: "Project Specific Loss Rate should be a number" })
+      .negative({ message: "Project Specific Loss Rate must be negative" })
+      .optional(),
   ),
   projectSpecificEmissionFactor: z
-      .number({
-        message:
-            "Project Specific Emission Factor must be provided when emissionFactorUsed is Tier 3 and projectSpecificEmission is One emission factor",
-      })
-      .nonnegative()
-      .optional(),
+    .number({
+      message:
+        "Project Specific Emission Factor must be provided when emissionFactorUsed is Tier 3 and projectSpecificEmission is One emission factor",
+    })
+    .nonnegative()
+    .optional(),
   emissionFactorAGB: z
-      .number({
-        message:
-            "Emission Factor AGB is required when emissionFactorUsed is Tier 3 and projectSpecificEmission is Two emission factors",
-      })
-      .nonnegative()
-      .optional(),
+    .number({
+      message:
+        "Emission Factor AGB is required when emissionFactorUsed is Tier 3 and projectSpecificEmission is Two emission factors",
+    })
+    .nonnegative()
+    .optional(),
   emissionFactorSOC: z
-      .number({
-        message:
-            "Emission Factor SOC is required when emissionFactorUsed is Tier 3 and projectSpecificEmission is Two emission factors",
-      })
-      .nonnegative()
-      .optional(),
+    .number({
+      message:
+        "Emission Factor SOC is required when emissionFactorUsed is Tier 3 and projectSpecificEmission is Two emission factors",
+    })
+    .nonnegative()
+    .optional(),
 });
 
 export const RestorationProjectParametersSchema = z.object({
-  restorationActivity: z.nativeEnum(RESTORATION_ACTIVITY_SUBTYPE, {message: 'Restoration Activity is required for Restoration Projects'}),
+  restorationActivity: z.nativeEnum(RESTORATION_ACTIVITY_SUBTYPE, {
+    message: "Restoration Activity is required for Restoration Projects",
+  }),
   tierSelector: z.nativeEnum(SEQUESTRATION_RATE_TIER_TYPES),
   projectSpecificSequestrationRate: z
-      .number({ message: "Project Specific Rate should be a number" })
-      .positive({ message: "Project Specific Rate must be positive" })
-      .optional(),
-  plantingSuccessRate: z.preprocess(
+    .number({ message: "Project Specific Rate should be a number" })
+    .positive({ message: "Project Specific Rate must be positive" })
+    .optional(),
+  plantingSuccessRate: z
+    .preprocess(
       parseNumber,
       z.number().nonnegative({
         message: "Planting Success Rate should be a non-negative number",
       }),
-  ).optional(),
+    )
+    .optional(),
   restorationYearlyBreakdown: z
-      .array(z.preprocess(parseNumber, z.number()).optional())
-      .optional(),
+    .array(z.preprocess(parseNumber, z.number()).optional())
+    .optional(),
 });
 
 export const CreateProjectSchema = z
-    .discriminatedUnion("activity", [
-      z.object({
-        ...CreateProjectBaseSchema.shape,
-        activity: z.literal(ACTIVITY.CONSERVATION),
-        parameters: ConservationProjectParametersSchema,
-      }),
-      z.object({
-        ...CreateProjectBaseSchema.shape,
-        activity: z.literal(ACTIVITY.RESTORATION),
-        parameters: RestorationProjectParametersSchema,
-      }),
-    ])
-    .superRefine((data, ctx) => {
-      if (data.activity === ACTIVITY.CONSERVATION) {
-        ValidateConservationSchema(data, ctx);
-      } else if (data.activity === ACTIVITY.RESTORATION) {
-        ValidateRestorationSchema(data, ctx);
-      }
-    });
-
+  .discriminatedUnion("activity", [
+    z.object({
+      ...CreateProjectBaseSchema.shape,
+      activity: z.literal(ACTIVITY.CONSERVATION),
+      parameters: ConservationProjectParametersSchema,
+    }),
+    z.object({
+      ...CreateProjectBaseSchema.shape,
+      activity: z.literal(ACTIVITY.RESTORATION),
+      parameters: RestorationProjectParametersSchema,
+    }),
+  ])
+  .superRefine((data, ctx) => {
+    if (data.activity === ACTIVITY.CONSERVATION) {
+      ValidateConservationSchema(data, ctx);
+    } else if (data.activity === ACTIVITY.RESTORATION) {
+      ValidateRestorationSchema(data, ctx);
+    }
+  });
 
 export const ValidateConservationSchema = (
-    data: z.infer<typeof CreateProjectSchema>,
-    ctx: z.RefinementCtx,
+  data: z.infer<typeof CreateProjectSchema>,
+  ctx: z.RefinementCtx,
 ) => {
   const params = data.parameters as z.infer<
-      typeof ConservationProjectParametersSchema
+    typeof ConservationProjectParametersSchema
   >;
   if (params.lossRateUsed === LOSS_RATE_USED.PROJECT_SPECIFIC) {
     if (!params.projectSpecificLossRate) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Project Specific Loss Rate is required when loss rate used is Project Specific",
+        message:
+          "Project Specific Loss Rate is required when loss rate used is Project Specific",
         path: ["parameters.projectSpecificLossRate"],
       });
     }
@@ -128,12 +132,11 @@ export const ValidateConservationSchema = (
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message:
-            "projectSpecificLossRate should not be provided unless lossRateUsed is Project Specific",
+          "projectSpecificLossRate should not be provided unless lossRateUsed is Project Specific",
         path: ["parameters.projectSpecificLossRate"],
       });
     }
   }
-
 
   if (params.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_2) {
     if (data.ecosystem !== ECOSYSTEM.MANGROVE) {
@@ -143,36 +146,37 @@ export const ValidateConservationSchema = (
         path: ["parameters.emissionFactorUsed"],
       });
     }
-    if(!params.emissionFactorSOC || !params.emissionFactorAGB){
+    if (!params.emissionFactorSOC || !params.emissionFactorAGB) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Emission Factor AGB and SOC are required when emissionFactorUsed is Tier 2",
+        message:
+          "Emission Factor AGB and SOC are required when emissionFactorUsed is Tier 2",
         path: ["parameters.emissionFactorAGB", "parameters.emissionFactorSOC"],
       });
     }
   } else if (params.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_3) {
     if (
-        params.projectSpecificEmission ===
+      params.projectSpecificEmission ===
         PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR &&
-        !params.projectSpecificEmissionFactor
+      !params.projectSpecificEmissionFactor
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message:
-            "Project Specific Emission Factor must be provided when emissionFactorUsed is Tier 3 and projectSpecificEmission is One emission factor",
+          "Project Specific Emission Factor must be provided when emissionFactorUsed is Tier 3 and projectSpecificEmission is One emission factor",
         path: ["parameters.projectSpecificEmissionFactor"],
       });
     }
 
     if (
-        params.projectSpecificEmission ===
-        PROJECT_SPECIFIC_EMISSION.TWO_EMISSION_FACTORS
+      params.projectSpecificEmission ===
+      PROJECT_SPECIFIC_EMISSION.TWO_EMISSION_FACTORS
     ) {
       if (!params.emissionFactorAGB) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message:
-              "Emission Factor AGB is required when emissionFactorUsed is Tier 3 and projectSpecificEmission is Two emission factors",
+            "Emission Factor AGB is required when emissionFactorUsed is Tier 3 and projectSpecificEmission is Two emission factors",
           path: ["parameters.emissionFactorAGB"],
         });
       }
@@ -181,7 +185,7 @@ export const ValidateConservationSchema = (
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message:
-              "Emission Factor SOC is required when emissionFactorUsed is Tier 3 and projectSpecificEmission is Two emission factors",
+            "Emission Factor SOC is required when emissionFactorUsed is Tier 3 and projectSpecificEmission is Two emission factors",
           path: ["parameters.emissionFactorSOC"],
         });
       }
@@ -191,22 +195,21 @@ export const ValidateConservationSchema = (
 
 // Complex validations that depend on multiple fields
 export const ValidateRestorationSchema = (
-    data: z.infer<typeof CreateProjectSchema>,
-    ctx: z.RefinementCtx,
+  data: z.infer<typeof CreateProjectSchema>,
+  ctx: z.RefinementCtx,
 ) => {
   const params = data.parameters as z.infer<
-      typeof RestorationProjectParametersSchema
+    typeof RestorationProjectParametersSchema
   >;
   if (
-      params.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 &&
-      !params.projectSpecificSequestrationRate
+    params.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_3 &&
+    !params.projectSpecificSequestrationRate
   ) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Project Specific Rate is required for Tier 3 Sequestration rate",
+      message:
+        "Project Specific Rate is required for Tier 3 Sequestration rate",
       path: ["parameters.projectSpecificSequestrationRate"],
     });
   }
 };
-
-
