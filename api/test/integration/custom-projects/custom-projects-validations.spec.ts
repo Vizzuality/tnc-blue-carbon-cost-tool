@@ -108,6 +108,58 @@ describe('Create Custom Projects - Request Validations', () => {
       );
       expect(expectedError).toBeDefined();
     });
+    test('If Project Specific Loss rate value is not within -0.3%, -0.001%, should fail', async () => {
+      const response = await testManager
+        .request()
+        .post(customProjectContract.createCustomProject.path)
+        .send({
+          countryCode: 'IND',
+          activity: 'Conservation',
+          ecosystem: 'Seagrass',
+          projectName: 'My custom project',
+          projectSizeHa: 1000,
+          initialCarbonPriceAssumption: 1000,
+          carbonRevenuesToCover: 'Opex',
+          parameters: {
+            lossRateUsed: 'Project specific',
+            projectSpecificLossRate: -0.004,
+            emissionFactorUsed: PROJECT_EMISSION_FACTORS.TIER_2,
+            projectSpecificEmission: 'One emission factor',
+          },
+          assumptions: {
+            verificationFrequency: 1,
+            baselineReassessmentFrequency: 1,
+            discountRate: 1,
+            restorationRate: 1,
+            carbonPriceIncrease: 1,
+            buffer: 1,
+            projectLength: 1,
+          },
+          costInputs: {
+            feasibilityAnalysis: 1,
+            conservationPlanningAndAdmin: 1,
+            dataCollectionAndFieldCost: 1,
+            communityRepresentation: 1,
+            blueCarbonProjectPlanning: 1,
+            establishingCarbonRights: 1,
+            validation: 1,
+            implementationLabor: 1,
+            monitoring: 1,
+            maintenance: 1,
+            communityBenefitSharingFund: 1,
+            carbonStandardFees: 1,
+            baselineReassessment: 1,
+            mrv: 1,
+            longTermProjectOperatingCost: 1,
+            financingCost: 1,
+          },
+        });
+      expect(response.status).toEqual(400);
+
+      expect(response.body.errors[0].title).toEqual(
+        'Project Specific Loss Rate must be between -0.3% and -0.001%',
+      );
+    });
     test('If Emission Factor Used is Tier 2, only Mangroves is accepted as ecosystem', async () => {
       const res = await testManager
         .request()
