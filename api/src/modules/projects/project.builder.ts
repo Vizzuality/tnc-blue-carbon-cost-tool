@@ -8,7 +8,6 @@ import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { getProjectSizeFilter } from '@api/modules/projects/threshold/project-size-threshold';
 import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 import { CostOutput } from '@api/modules/calculations/types';
-import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
@@ -165,6 +164,8 @@ export class ProjectBuilder {
     computedProject.totalRevenueNPV = costOutputs.costPlans.totalRevenueNPV;
     computedProject.totalRevenue = costOutputs.costPlans.totalRevenue;
     computedProject.creditsIssued = costOutputs.costPlans.totalCreditsIssued;
+    // TODO: Check how is this computed for custom projects in custom-project.factory.ts
+    computedProject.leftoverAfterOpex = costOutputs.costPlans.
     return computedProject;
   }
 
