@@ -1,7 +1,6 @@
 import { ActionContext, ActionRequest, ResourceWithOptions } from 'adminjs';
 import { Project } from '@shared/entities/projects.entity.js';
 import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
-import { projectsContract } from '@shared/contracts/projects.contract.js';
 import { ProjectActions } from 'backoffice/resources/projects/project.actions.js';
 import { Components } from 'backoffice/components/index.js';
 
@@ -60,13 +59,11 @@ export const ProjectsResource: ResourceWithOptions = {
     actions: {
       new: {
         isAccessible: true,
-        before: ProjectActions.upsertBeforeHook,
-        after: ProjectActions.upsertAfterHook,
+        component: Components.ProjectDynamicForm,
       },
       edit: {
         isAccessible: true,
-        before: ProjectActions.upsertBeforeHook,
-        after: ProjectActions.upsertAfterHook,
+        component: Components.ProjectDynamicForm,
       },
       bulkDelete: {
         isAccessible: false,

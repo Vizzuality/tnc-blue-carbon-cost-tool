@@ -20,4 +20,8 @@ export const Components = {
     'DownloadUserFiles',
     './molecules/download-user-files',
   ),
+  ProjectDynamicForm: componentLoader.add(
+    'ProjectDynamicForm',
+    './organisms/project-dynamic-form',
+  ),
 };
