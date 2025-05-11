@@ -23,12 +23,20 @@ export const ConservationCustomProjectSchema = z.object({
   emissionFactorUsed: z.nativeEnum(EMISSION_FACTORS_TIER_TYPES),
   projectSpecificEmission: z.nativeEnum(PROJECT_SPECIFIC_EMISSION),
   projectSpecificLossRate: z.preprocess(
-    (value) =>
-      value === undefined || value === null ? undefined : parseNumber(value),
-    z
-      .number({ message: "Project Specific Loss Rate should be a number" })
-      .negative({ message: "Project Specific Loss Rate must be negative" })
-      .optional(),
+      (value) =>
+          value === undefined || value === null ? undefined : parseNumber(value),
+      z
+          .number({
+            required_error: "Project Specific Loss Rate is required",
+            invalid_type_error: "Project Specific Loss Rate should be a number",
+          })
+          .refine(
+              (val) => val >= -0.003 && val <= -0.00001,
+              {
+                message: "Project Specific Loss Rate must be between -0.3% and -0.001%",
+              }
+          )
+          .optional()
   ),
   projectSpecificEmissionFactor: z
     .number({
