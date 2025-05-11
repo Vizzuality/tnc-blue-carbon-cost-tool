@@ -476,8 +476,9 @@ export class SequestrationRateCalculator {
   ): CostPlanMap {
     const { customRestorationPlan } = restorationProjectInput;
 
-    const originalPlanToModify = structuredClone(this.restorationPlan);
     if (customRestorationPlan) {
+      // If a custom restoration plan is provided, update it
+      const originalPlanToModify = structuredClone(this.restorationPlan);
       for (const [yearStr, hectares] of Object.entries(customRestorationPlan)) {
         const year = Number(yearStr);
 
@@ -492,5 +493,7 @@ export class SequestrationRateCalculator {
       }
       return originalPlanToModify;
     }
+    // If no custom plan is provided, return the default plan
+    return this.restorationPlan;
   }
 }
