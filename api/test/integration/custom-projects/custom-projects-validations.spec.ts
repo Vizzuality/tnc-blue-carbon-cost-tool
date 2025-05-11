@@ -265,7 +265,7 @@ describe('Create Custom Projects - Request Validations', () => {
   });
   describe('Restoration Project Validations', () => {
     describe('Restoration Yearly Breakdown', () => {
-      test('Should fail if restored areas has negative values', async () => {
+      test('Should fail if year and/or restored areas has negative values', async () => {
         const { parameters, ...rest } = RestorationCreateCustomProjectDTO;
         const yearlyBreakdown = [
           {
@@ -277,7 +277,7 @@ describe('Create Custom Projects - Request Validations', () => {
             annualHectaresRestored: 200,
           },
         ];
-        parameters.restorationPlan = yearlyBreakdown;
+        parameters.restorationYearlyBreakdown = yearlyBreakdown;
         const response = await testManager
           .request()
           .post(customProjectContract.createCustomProject.path)
@@ -288,6 +288,9 @@ describe('Create Custom Projects - Request Validations', () => {
 
         expect(response.status).toEqual(400);
         expect(response.body.errors[0].title).toEqual(
+          'Year cannot be negative',
+        );
+        expect(response.body.errors[1].title).toEqual(
           'Annual hectares restored cannot be negative',
         );
       });
@@ -303,7 +306,7 @@ describe('Create Custom Projects - Request Validations', () => {
             annualHectaresRestored: 'Invalid',
           },
         ];
-        parameters.restorationPlan = yearlyBreakdown;
+        parameters.restorationYearlyBreakdown = yearlyBreakdown;
         const response = await testManager
           .request()
           .post(customProjectContract.createCustomProject.path)

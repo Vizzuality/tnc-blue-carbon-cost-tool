@@ -83,6 +83,7 @@ export const RestorationCustomProjectSchema = z.object({
                       invalid_type_error: "Year must be a number",
                     })
                         .int("Year must be an integer")
+                        .nonnegative("Year cannot be negative")
                 )
                 .optional(),
 
