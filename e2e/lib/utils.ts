@@ -24,7 +24,7 @@ const insertProjectName = async (page: Page, projectName = PROJECT_NAME) => {
 };
 
 const insertProjectSpecificLossRate = async (page: Page) => {
-  await page.locator("#parameters\\.projectSpecificLossRate").fill("-1");
+  await page.locator("#parameters\\.projectSpecificLossRate").fill("-0.2");
 };
 
 const submitCustomProject = async (page: Page) => {
