@@ -73,7 +73,7 @@ export default function ConservationProjectDetails() {
                 <div className="relative flex items-center">
                   <RadioGroup
                     className="flex gap-4"
-                    defaultValue={
+                    value={
                       form.getValues(
                         "parameters.lossRateUsed",
                       ) as LOSS_RATE_USED
@@ -91,7 +91,7 @@ export default function ConservationProjectDetails() {
                             // @ts-expect-error fix later
                             form.formState.defaultValues?.parameters?.projectSpecificLossRate
                             // @ts-expect-error fix later
-                          : form.getValues().parameters?.projectSpecificLossRate,
+                            : form.getValues().parameters?.projectSpecificLossRate,
                         );
                       }
 

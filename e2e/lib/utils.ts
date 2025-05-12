@@ -40,6 +40,15 @@ const createAndSaveCustomProject = async (page: Page) => {
   await page.getByRole("button", { name: "Save project" }).click();
 };
 
+
+const createAndSaveRestorationCustomProject = async (page: Page) => {
+  await page.goto(ROUTES.projects.new);
+  await insertProjectName(page);
+  await page.getByLabel("Restoration").click();
+  await submitCustomProject(page);
+  await page.getByRole("button", { name: "Save project" }).click();
+};
+
 const navigateToEditCustomProject = async (page: Page) => {
   await page.getByTestId("edit-project-link").click();
 };
@@ -65,6 +74,7 @@ export {
   insertProjectSpecificLossRate,
   submitCustomProject,
   createAndSaveCustomProject,
+  createAndSaveRestorationCustomProject,
   navigateToEditCustomProject,
   getDataFromNetworkRequest,
   expectEditProjectHeadingVisible,

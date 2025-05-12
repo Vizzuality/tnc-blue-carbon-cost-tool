@@ -22,11 +22,14 @@ import { ACTIVITIES } from "@/containers/overview/filters/constants";
 import { useFormValues } from "@/containers/projects/form/project-form";
 import { useCustomProjectForm } from "@/containers/projects/form/utils";
 
-import { FormItem, FormLabel } from "@/components/ui/form";
-import { FormControl } from "@/components/ui/form";
-import { FormField, FormMessage } from "@/components/ui/form";
-import { RadioGroup } from "@/components/ui/radio-group";
-import { RadioGroupItemBox } from "@/components/ui/radio-group";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { RadioGroup, RadioGroupItemBox } from "@/components/ui/radio-group";
 
 type RestorationParameters = z.infer<typeof RestorationCustomProjectSchema>;
 type ConservationParameters = z.infer<typeof ConservationCustomProjectSchema>;
@@ -89,6 +92,14 @@ export default function Activity() {
         DEFAULT_CONSERVATION_FORM_VALUES.parameters.projectSpecificEmission,
       );
       form.trigger("parameters.projectSpecificEmission");
+    }
+
+    if ((parameters as ConservationParameters).lossRateUsed === undefined) {
+      form.setValue(
+        "parameters.lossRateUsed",
+        DEFAULT_CONSERVATION_FORM_VALUES.parameters.lossRateUsed,
+      );
+      form.trigger("parameters.lossRateUsed");
     }
   }, [form, parameters, assumptions?.restorationRate]);
   const handleOnValueChange = async (v: string) => {
