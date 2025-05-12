@@ -42,10 +42,14 @@ export class S3Service implements OnModuleInit {
     } catch (err: any) {
       if (err?.$metadata?.httpStatusCode === 404 || err?.name === 'NotFound') {
         this.logger.log(`Creating bucket "${this.bucketName}"...`);
-        await this.s3Client.send(
-          new CreateBucketCommand({ Bucket: this.bucketName }),
-        );
+        try {
+          await this.s3Client.send(
+            new CreateBucketCommand({ Bucket: this.bucketName }),
+          );
+        } catch (err) {}
         this.logger.log(`Bucket "${this.bucketName}" created`);
+      } else if (err.name === 'BucketAlreadyOwnedByYou') {
+        // Ignored
       } else {
         this.logger.error('Failed to check/create bucket:', err);
         throw err;

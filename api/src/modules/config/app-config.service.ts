@@ -4,6 +4,7 @@ import { TOKEN_TYPE_ENUM } from '@shared/schemas/auth/token-type.schema';
 import { JwtConfigHandler } from '@api/modules/config/auth-config.handler';
 import { COMMON_DATABASE_ENTITIES } from '@shared/lib/db-entities';
 import { S3ClientConfig } from '@aws-sdk/client-s3';
+import { DataSourceOptions } from 'typeorm';
 // import { BACKEND_DB_ENTITIES } from '@shared/lib/db-entities';
 
 export type JWTConfig = {
@@ -34,7 +35,7 @@ export class ApiConfigService {
    * @note: Maybe it's a good idea to move the datasource config to shared folder, to be used potentially for a e2e test agent
    */
   getDatabaseConfig() {
-    return {
+    const config = {
       host: this.configService.getOrThrow('DB_HOST'),
       port: this.configService.getOrThrow('DB_PORT'),
       username: this.configService.getOrThrow('DB_USERNAME'),
@@ -46,6 +47,12 @@ export class ApiConfigService {
         ? { require: true, rejectUnauthorized: false }
         : false,
     };
+
+    if (process.env.NODE_ENV === 'test' && process.env.TEST_DB_NAME) {
+      config.database = process.env.TEST_DB_NAME;
+    }
+
+    return config;
   }
 
   getS3Config(): S3ClientConfig {

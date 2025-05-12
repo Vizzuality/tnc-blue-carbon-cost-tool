@@ -33,6 +33,15 @@ import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { ImportService } from '@api/modules/import/import.service';
 import { TestImportService } from './mocks/test-import.service';
+
+function hashFilePath(filePath: string) {
+  let hash = 5381;
+  for (let i = 0; i < filePath.length; i++) {
+    hash = (hash << 5) + hash + filePath.charCodeAt(i);
+  }
+  return hash >>> 0;
+}
+
 /**
  * @description: Abstraction for NestJS testing workflow. For now its a basic implementation to create a test app, but can be extended to encapsulate
  * common testing utilities
@@ -53,6 +62,29 @@ export class TestManager {
   }
 
   static async createTestManager(options: { logger?: Logger | false } = {}) {
+    const line = new Error().stack.split('\n')[2];
+    const match = line.match(/\((.*\.ts):\d+:\d+\)/);
+    const fullPath = match ? match[1] : null;
+    const dBName = `test-${hashFilePath(fullPath)}`;
+
+    const rootSource = new DataSource({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+    });
+    await rootSource.initialize();
+    try {
+      await rootSource.query(`CREATE DATABASE "${dBName}"`);
+    } catch (err) {
+      if (!/already exists/.test(err.message)) throw err;
+    }
+    await rootSource.destroy();
+    process.env.TEST_DB_NAME = dBName;
+    process.env.S3_BUCKET_NAME = dBName;
+
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     })

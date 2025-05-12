@@ -4,6 +4,7 @@
   "roots": ["<rootDir>/src/", "<rootDir>/test/"],
   "testEnvironment": "node",
   "setupFiles": ["<rootDir>/test/set-up-jest-env.ts"],
+  "globalTeardown": "<rootDir>/test/global-teardown.ts",
   "testRegex": "(.steps.ts|.spec.ts)$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
