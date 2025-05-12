@@ -165,7 +165,7 @@ export class ProjectBuilder {
     computedProject.totalRevenue = costOutputs.costPlans.totalRevenue;
     computedProject.creditsIssued = costOutputs.costPlans.totalCreditsIssued;
     // TODO: Check how is this computed for custom projects in custom-project.factory.ts
-    computedProject.leftoverAfterOpex = costOutputs.costPlans.
+    //computedProject.leftoverAfterOpex = costOutputs.costPlans.
     return computedProject;
   }
 

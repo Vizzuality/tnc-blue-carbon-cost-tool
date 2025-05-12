@@ -60,6 +60,7 @@ export class ProjectScorecardDto {
       mrv: number;
       longTermProjectOperating: number;
       totalRevenue: number;
+      leftover: number;
     };
     npv: {
       totalCost: number;
@@ -83,8 +84,10 @@ export class ProjectScorecardDto {
       mrv: number;
       longTermProjectOperating: number;
       totalRevenue: number;
+      leftover: number
     };
   };
+  // TODO: remove this when we have the new cost details
   leftoverAfterOpex: number;
   creditsIssued: number;
 }
