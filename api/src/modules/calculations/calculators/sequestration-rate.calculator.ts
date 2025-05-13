@@ -470,13 +470,17 @@ export class SequestrationRateCalculator {
    * @description: If the project is restoration, the user can provide a custom plan to have more control over how many hectares are restored each year.
    *               if provided, updates the plan, otherwise it leaves the default plan.
    * @param restorationProjectInput
+   * @returns The updated restoration plan if custom plan is provided, otherwise the default plan
    */
   updateRestorationPlan(
     restorationProjectInput: RestorationProjectInput,
   ): CostPlanMap {
     const { customRestorationPlan } = restorationProjectInput;
 
-    if (customRestorationPlan) {
+    if (
+      customRestorationPlan &&
+      Object.keys(customRestorationPlan).length > 0
+    ) {
       // If a custom restoration plan is provided, update it
       const originalPlanToModify = structuredClone(this.restorationPlan);
       for (const [yearStr, hectares] of Object.entries(customRestorationPlan)) {
