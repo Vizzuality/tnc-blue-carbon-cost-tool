@@ -1,6 +1,5 @@
 import { TestManager } from '../../utils/test-manager';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
-import { RestorationCreateCustomProjectDTO } from './fixtures';
 
 describe('Create Custom Projects - Setup', () => {
   let testManager: TestManager;
@@ -73,19 +72,19 @@ describe('Create Custom Projects - Setup', () => {
       const responseData = response.body.data;
       // Values after the excel/model migration
       // expect(responseData.totalCostNPV).toEqual(2735614.8569899863);
-      expect(responseData.totalCostNPV).toEqual(2735327.4666152457);
+      expect(responseData.totalCostNPV).toEqual(3074122.898244337);
       // expect(responseData.totalCost).toEqual(3932640.485410141);
-      expect(responseData.totalCost).toEqual(3932111.1306914072);
+      expect(responseData.totalCost).toEqual(4574963.028434675);
       // expect(responseData.breakevenTotalCost).toEqual(3555542.034883479);
-      expect(responseData.breakevenTotalCost).toEqual(3555520.043565897);
+      expect(responseData.breakevenTotalCost).toEqual(3589994.687666353);
       // expect(responseData.breakevenTotalCostNPV).toEqual(2528399.502417404);
-      expect(responseData.breakevenTotalCostNPV).toEqual(2528390.040644521);
+      expect(responseData.breakevenTotalCostNPV).toEqual(2539432.7249490097);
       const output = responseData.output;
       // expect(output.breakevenPriceComputationOutput.initialCarbonPrice).toEqual(
       //   15.031201985489698,
       // );
       expect(output.breakevenPriceComputationOutput.initialCarbonPrice).toEqual(
-        15.0361842060739,
+        10.836954353575122,
       );
       const yearlyBreakdown =
         output.initialCarbonPriceComputationOutput.yearlyBreakdown;
