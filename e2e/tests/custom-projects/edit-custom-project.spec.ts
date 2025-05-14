@@ -1,18 +1,17 @@
-import { Page, test, expect } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
 import { EXTENDED_TIMEOUT, PROJECT_NAME, ROUTES } from "e2e/lib/constants";
 import {
   createAndSaveCustomProject,
+  createAndSaveRestorationCustomProject,
   createAndSignInUser,
   expectEditProjectHeadingVisible,
   getDataFromNetworkRequest,
   navigateToEditCustomProject,
 } from "e2e/lib/utils";
-import {
-  getCapexCostInputsKeys,
-  getOpexCostInputsKeys,
-} from "@shared/lib/utils";
+import { getCapexCostInputsKeys, getOpexCostInputsKeys } from "@shared/lib/utils";
 import { ACTIVITY } from "@shared/entities/activity.enum";
+
 let testManager: E2eTestManager;
 let page: Page;
 
@@ -37,14 +36,14 @@ test.describe("Custom Projects - Edit", () => {
     await page.waitForLoadState("networkidle");
     const btn = page.getByTestId("project-summary-button");
     await btn.click();
-    expect(
+    await expect(
       page.getByRole("heading", { name: "Summary", level: 2 }),
     ).toBeVisible();
     const aside = page.locator("aside");
     const editProjectLink = aside
       .locator("a")
       .filter({ hasText: "Edit project" });
-    expect(editProjectLink).toBeVisible();
+    await expect(editProjectLink).toBeVisible();
     await editProjectLink.click();
     await expect(
       page.getByRole("heading", { name: `Edit ${PROJECT_NAME}` }),
@@ -68,7 +67,7 @@ test.describe("Custom Projects - Edit", () => {
 
     await expectEditProjectHeadingVisible(page);
 
-    expect(
+    await expect(
       page.locator("input[name='costInputs.implementationLabor']"),
     ).not.toBeVisible();
 
@@ -79,7 +78,7 @@ test.describe("Custom Projects - Edit", () => {
 
       const unit = await row.locator("td").nth(2).textContent();
       const value = unit?.includes("%") ? v * 100 : v;
-      expect(row.locator("input")).toHaveValue(value.toString());
+      await expect(row.locator("input")).toHaveValue(value.toString());
     }
 
     const capexCostInputsKeys = getCapexCostInputsKeys(input.costInputs);
@@ -95,7 +94,7 @@ test.describe("Custom Projects - Edit", () => {
       const v = input.costInputs[key];
       const unit = await row.locator("td").nth(2).textContent();
       const value = unit?.includes("%") ? v * 100 : v;
-      expect(row.locator("input")).toHaveValue(value.toString());
+      await expect(row.locator("input")).toHaveValue(value.toString());
     }
 
     const opexCostInputsKeys = getOpexCostInputsKeys(input.costInputs);
@@ -108,7 +107,7 @@ test.describe("Custom Projects - Edit", () => {
       const v = input.costInputs[key];
       const unit = await row.locator("td").nth(2).textContent();
       const value = unit?.includes("%") ? v * 100 : v;
-      expect(row.locator("input")).toHaveValue(value.toString());
+      await expect(row.locator("input")).toHaveValue(value.toString());
     }
   });
 
@@ -125,11 +124,20 @@ test.describe("Custom Projects - Edit", () => {
 
     await page.locator(`#${ACTIVITY.RESTORATION}`).click();
 
-    expect(
+    await expect(
       page.locator("input[name='costInputs.implementationLabor']"),
     ).toHaveValue("0");
-    expect(
+    await expect(
       page.locator("input[name='parameters.plantingSuccessRate']"),
     ).toHaveValue((plantingSuccessRate * 100).toString());
+  });
+
+
+  test("After creating a Restoration project and switching to Conservation, project-specific loss rate used is checked by default", async () => {
+    await createAndSaveRestorationCustomProject(page);
+    await navigateToEditCustomProject(page);
+
+    await page.locator("label").filter({ hasText: /^Conservation$/ }).click();
+    await expect(page.getByText("Project specific", { exact: true })).toBeChecked();
   });
 });
