@@ -30,7 +30,7 @@ const costEstimatesLabelMap: Record<
   opex: "Operating expenditure",
   monitoring: "Monitoring",
   maintenance: "Maintenance",
-  communityBenefit: "Community benefit sharing fund",
+  communityBenefit: "Landowner/community benefit share",
   carbonStandardFees: "Carbon standard fees",
   baselineReassessment: "Baseline reassessment",
   mrv: "MRV",

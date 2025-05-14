@@ -70,7 +70,7 @@ export const FAKE_PROJECT = {
       "Funding gap per tCO2e (NPV)": -8.110001226263627,
       "Operating expenditure (NPV)": -2.739651474795e33,
       "IRR when priced to cover OpEx": 33.40846607519514,
-      "Community benefit sharing fund": 0.5,
+      "Landowner/community benefit share": 0.5,
       "Total revenue (non-discounted)": -1.338766124151795e34,
       "Leftover after OpEx / total cost": null,
       "IRR when priced to cover total cost": 91.02860607863423,

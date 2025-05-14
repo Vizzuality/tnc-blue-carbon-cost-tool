@@ -79,7 +79,7 @@ describe('Snapshot Custom Projects', () => {
               'Funding gap': 493830.3621939037,
               'Funding gap (NPV)': 493830.3621939037,
               'Funding gap per tCO2e (NPV)': 18.965162372675024,
-              'Community benefit sharing fund': 0.5,
+              'Landowner/community benefit share': 0.5,
             },
             costDetails: {
               total: {

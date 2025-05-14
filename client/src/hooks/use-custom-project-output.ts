@@ -123,9 +123,6 @@ export const useCustomProjectOutput = (
       "IRR when priced to cover OpEx": parseFloat(
         toPercentageValue(output.summary["IRR when priced to cover OpEx"]),
       ),
-      "Community benefit sharing fund": parseFloat(
-        toPercentageValue(output.summary["Landowner/community benefit share"]),
-      ),
     };
   }, [output?.summary]);
   const leftOverProps = useMemo(() => {

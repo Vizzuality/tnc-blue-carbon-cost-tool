@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-import { SCORECARD_PRIORITIZATION, KEY_COSTS } from "@/constants/tooltip";
+import { KEY_COSTS, SCORECARD_PRIORITIZATION } from "@/constants/tooltip";
 
 import SearchProjectsTable from "@/containers/overview/table/toolbar/search";
 import TabsProjectsTable from "@/containers/overview/table/toolbar/table-selector";
@@ -9,13 +9,13 @@ import InfoButton from "@/components/ui/info-button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table,
-  TableHeader,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ScorecardMetric {
   name: string;
@@ -75,7 +75,7 @@ const KEY_COSTS_DATA: KeyCost[] = [
     description: "IMPLEMENTATION_LABOR",
   },
   {
-    name: "Community benefit sharing fund",
+    name: "Landowner/community benefit share",
     description: "COMMUNITY_BENEFIT_SHARING_FUND",
   },
   {
