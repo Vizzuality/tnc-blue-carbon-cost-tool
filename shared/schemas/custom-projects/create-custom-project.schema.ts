@@ -1,26 +1,21 @@
 import { z } from "zod";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import {
-  ACTIVITY,
-  RESTORATION_ACTIVITY_SUBTYPE,
-} from "@shared/entities/activity.enum";
+import { ACTIVITY, RESTORATION_ACTIVITY_SUBTYPE } from "@shared/entities/activity.enum";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
-import {
-  PROJECT_SPECIFIC_EMISSION,
-  CARBON_REVENUES_TO_COVER,
-} from "@shared/entities/custom-project.entity";
+import { CARBON_REVENUES_TO_COVER, PROJECT_SPECIFIC_EMISSION } from "@shared/entities/custom-project.entity";
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
-import {isNumber} from "lodash";
+import { isNumber } from "lodash";
 
 export const MAX_PROJECT_LENGTH = 40;
+
 export enum LOSS_RATE_USED {
   NATIONAL_AVERAGE = "National average",
   PROJECT_SPECIFIC = "Project specific",
 }
 
 const parseNumber = (value: unknown): number | undefined => {
-    const parsed = Number(value);
-    return isNaN(parsed) || !isNumber(parsed) ? undefined : parsed
+  const parsed = Number(value);
+  return isNaN(parsed) || !isNumber(parsed) ? undefined : parsed;
 };
 
 export const ConservationCustomProjectSchema = z.object({
@@ -58,6 +53,33 @@ export const ConservationCustomProjectSchema = z.object({
     .optional(),
 });
 
+export const RestorationPlanDTOSchema = z
+  .array(
+    z.object({
+      year: z
+        .preprocess(
+          parseNumber,
+          z.number({
+            required_error: "Year should be a number",
+            invalid_type_error: "Year must be a number",
+          })
+            .int("Year must be an integer"),
+        )
+        .optional(),
+
+      annualHectaresRestored: z
+        .preprocess(
+          parseNumber,
+          z.number({
+            required_error: "Annual hectares restored should be a number",
+            invalid_type_error: "Annual hectares restored must be a number",
+          }).nonnegative("Annual hectares restored cannot be negative"),
+        )
+        .optional(),
+    }),
+  )
+  .optional();
+
 export const RestorationCustomProjectSchema = z.object({
   restorationActivity: z.nativeEnum(RESTORATION_ACTIVITY_SUBTYPE),
   tierSelector: z.nativeEnum(SEQUESTRATION_RATE_TIER_TYPES),
@@ -71,34 +93,14 @@ export const RestorationCustomProjectSchema = z.object({
       message: "Planting Success Rate should be a non-negative number",
     }),
   ),
-  // TODO: Agree with FE team on the type of this field. The naming should match the concept in the platform
+  // sharing the custom restoration plan DTO among client and API requires a lot of changes,
+  // so we are keeping it as a separate schema for now: customRestorationPlan is used by the API
+  // and restorationYearlyBreakdown is used by the client, eventually parsed as customRestorationPlan
+  // before sending it to the API
+  customRestorationPlan: RestorationPlanDTOSchema,
   restorationYearlyBreakdown: z
-      .array(
-          z.object({
-            year: z
-                .preprocess(
-                    parseNumber,
-                    z.number({
-                      required_error: "Year should be a number",
-                      invalid_type_error: "Year must be a number",
-                    })
-                        .int("Year must be an integer")
-                        .nonnegative("Year cannot be negative")
-                )
-                .optional(),
-
-            annualHectaresRestored: z
-                .preprocess(
-                    parseNumber,
-                    z.number({
-                      required_error: "Annual hectares restored should be a number",
-                      invalid_type_error: "Annual hectares restored must be a number",
-                    }).nonnegative("Annual hectares restored cannot be negative")
-                )
-                .optional(),
-          })
-      )
-      .optional()
+    .array(z.preprocess(parseNumber, z.number()).optional())
+    .optional(),
 });
 
 export const AssumptionsSchema = z.object({
@@ -243,7 +245,7 @@ export const ValidateConservationSchema = (
   } else if (params.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_3) {
     if (
       params.projectSpecificEmission ===
-        PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR &&
+      PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR &&
       !params.projectSpecificEmissionFactor
     ) {
       ctx.addIssue({

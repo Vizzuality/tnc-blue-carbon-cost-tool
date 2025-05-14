@@ -8,6 +8,7 @@ import {
   CreateCustomProjectSchema,
   CustomProjectForm,
   LOSS_RATE_USED,
+  RestorationPlanDTOSchema,
 } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -24,6 +25,9 @@ import parseFormValues from "@/containers/projects/form/utils/parse-form-values"
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useToast } from "@/components/ui/toast/use-toast";
+import { ACTIVITY } from "@shared/entities/activity.enum";
+import { getRestorationPlanDTO } from "@shared/lib/transform-create-custom-project-payload";
+import { z } from "zod";
 
 interface HeaderProps {
   name: string;
@@ -38,14 +42,43 @@ export default function Header({ name, id }: HeaderProps) {
   const { toast } = useToast();
   const isEdit = !!id;
   const handleSubmit = useCallback(
-    async (data: CustomProjectForm) => {
+    async (formValues: CustomProjectForm) => {
       try {
-        const formValues = parseFormValues(data);
-        const result = CreateCustomProjectSchema.safeParse(formValues);
+        const data = parseFormValues(formValues);
+        const customProjectValidation =
+          CreateCustomProjectSchema.safeParse(data);
 
-        if (!result.success) {
+        let restorationPlanValidation: ReturnType<
+          typeof RestorationPlanDTOSchema.safeParse
+        > = {
+          success: true,
+          data: [],
+          error: z.NEVER,
+        };
+
+        if (data.activity === ACTIVITY.RESTORATION) {
+          restorationPlanValidation = RestorationPlanDTOSchema.safeParse(
+            getRestorationPlanDTO(
+              data.parameters.restorationYearlyBreakdown || [],
+            ),
+          );
+
+          if (restorationPlanValidation.success) {
+            delete data.parameters.restorationYearlyBreakdown;
+            data.parameters.customRestorationPlan =
+              restorationPlanValidation.data;
+          }
+        }
+
+        if (
+          !customProjectValidation.success ||
+          !restorationPlanValidation.success
+        ) {
           // Set errors for each field that failed validation
-          result.error.errors.forEach((error) => {
+          [
+            ...(customProjectValidation.error?.errors || []),
+            ...(restorationPlanValidation.error?.errors || []),
+          ].forEach((error) => {
             methods.setError(error.path.join(".") as keyof CustomProjectForm, {
               type: "custom",
               message: error.message,
@@ -56,7 +89,7 @@ export default function Header({ name, id }: HeaderProps) {
 
         if (isEdit) {
           await updateCustomProject({
-            body: formValues,
+            body: data,
             params: { id: id as string },
             extraHeaders: {
               ...getAuthHeader(session?.accessToken as string),
@@ -65,7 +98,7 @@ export default function Header({ name, id }: HeaderProps) {
           router.push(`/projects/${id}`);
         } else {
           const result = await createCustomProject({
-            body: formValues,
+            body: data,
           });
 
           queryClient.setQueryData(

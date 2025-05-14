@@ -1,7 +1,11 @@
-import { COST_INPUTS_KEYS } from "@shared/dtos/custom-projects/custom-projects.constants";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { ASSUMPTIONS_NAME_TO_DTO_MAP } from "@shared/schemas/assumptions/assumptions.enums";
-import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import {
+  RestorationCustomProjectSchema,
+  RestorationPlanDTOSchema,
+  ValidatedCustomProjectForm,
+} from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { z } from "zod";
 
 /**
  * Transforms model assumptions array to key-value map expected by the API
@@ -61,13 +65,13 @@ export const applyUserCostInputsOverDefaults = (
   userValues: Partial<ValidatedCustomProjectForm["costInputs"]>,
 ) => applyUserValuesOverDefaults(defaults, userValues);
 
-export function getRestorationYearlyBreakdown(
-  data: number[],
-): { year: number; annualHectaresRestored: number }[] {
+export function getRestorationPlanDTO(
+  data: NonNullable<z.infer<typeof RestorationCustomProjectSchema>["restorationYearlyBreakdown"]>,
+): z.infer<typeof RestorationPlanDTOSchema> {
   return data
-    .map((value, index) => ({
+    .map((value, index): NonNullable<z.infer<typeof RestorationPlanDTOSchema>>[number] => ({
       year: index == 0 ? -1 : index,
       annualHectaresRestored: value,
     }))
-    .filter((v) => v.annualHectaresRestored > 0);
+    .filter((v) => (v.annualHectaresRestored || 0) > 0);
 }
