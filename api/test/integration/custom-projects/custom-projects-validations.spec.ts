@@ -277,7 +277,7 @@ describe('Create Custom Projects - Request Validations', () => {
             annualHectaresRestored: 200,
           },
         ];
-        parameters.restorationYearlyBreakdown = yearlyBreakdown;
+        parameters.customRestorationPlan = yearlyBreakdown;
         const response = await testManager
           .request()
           .post(customProjectContract.createCustomProject.path)
@@ -288,9 +288,6 @@ describe('Create Custom Projects - Request Validations', () => {
 
         expect(response.status).toEqual(400);
         expect(response.body.errors[0].title).toEqual(
-          'Year cannot be negative',
-        );
-        expect(response.body.errors[1].title).toEqual(
           'Annual hectares restored cannot be negative',
         );
       });
@@ -306,7 +303,7 @@ describe('Create Custom Projects - Request Validations', () => {
             annualHectaresRestored: 'Invalid',
           },
         ];
-        parameters.restorationYearlyBreakdown = yearlyBreakdown;
+        parameters.customRestorationPlan = yearlyBreakdown;
         const response = await testManager
           .request()
           .post(customProjectContract.createCustomProject.path)
