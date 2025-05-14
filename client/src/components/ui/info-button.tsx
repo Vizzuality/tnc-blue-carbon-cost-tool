@@ -1,5 +1,5 @@
-import { PropsWithChildren } from "react";
 import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { InfoIcon } from "lucide-react";
 
@@ -12,6 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function InfoButton({
   title,
@@ -28,10 +30,12 @@ export default function InfoButton({
           <InfoIcon className="h-7 w-7 text-foreground hover:text-muted-foreground" />
         </Button>
       </DialogTrigger>
-      <DialogContent className={className}>
-        <DialogHeader>
+      <DialogContent className={cn(className, "max-h-[80%] overflow-auto")}>
+        <DialogHeader className="space-y-4">
           {title && <DialogTitle>{title}</DialogTitle>}
-          <DialogContentContainer>{children}</DialogContentContainer>
+          <ScrollArea className="h-full">
+            <DialogContentContainer>{children}</DialogContentContainer>
+          </ScrollArea>
         </DialogHeader>
       </DialogContent>
     </Dialog>
