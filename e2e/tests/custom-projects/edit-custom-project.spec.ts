@@ -37,10 +37,10 @@ test.describe("Custom Projects - Edit", () => {
     const btn = page.getByTestId("project-summary-button");
     await btn.click();
     await expect(
-      page.getByRole("heading", { name: "Summary", level: 2 }),
+      page.getByText("Summary", { exact: true }),
     ).toBeVisible();
-    const aside = page.locator("aside");
-    const editProjectLink = aside
+    const summarySidebar = page.getByLabel("Summary");
+    const editProjectLink = summarySidebar
       .locator("a")
       .filter({ hasText: "Edit project" });
     await expect(editProjectLink).toBeVisible();
