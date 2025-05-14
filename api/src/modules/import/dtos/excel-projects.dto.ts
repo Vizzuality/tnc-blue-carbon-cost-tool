@@ -15,7 +15,8 @@ export type ExcelProject = {
   activity_type: RESTORATION_ACTIVITY_SUBTYPE;
   project_size_ha: number;
   project_size_filter: string;
-  abatement_potential: number;
+  project_abatement_potential: number;
+  country_abatement_potential: number;
   total_cost_npv: number;
   total_cost: number;
   capex_npv: number;
