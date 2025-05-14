@@ -11,7 +11,7 @@ import { Country } from "@shared/entities/country.entity";
 import { ECOSYSTEM } from "./ecosystem.enum";
 import { ACTIVITY, RESTORATION_ACTIVITY_SUBTYPE } from "./activity.enum";
 import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
-import {EmptyStringToNull} from "@api/utils/empty-string-to-null";
+import {EmptyStringToNull} from "@shared/lib/empty-string-to-null";
 
 export enum PROJECT_SIZE_FILTER {
   SMALL = "Small",

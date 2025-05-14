@@ -7,6 +7,7 @@ on:
       - 'api/**'
       - 'shared/**'
       - '.github/workflows/api-tests.yml'
+      - 'data/excel/Carbon-Cost Data Upload.xlsm' # include changes in base ingestion file
       - '/*'               # include changes in root
       - '!client/**'       # exclude client folder
       - '!infrastructure/**'  # exclude infra folder
