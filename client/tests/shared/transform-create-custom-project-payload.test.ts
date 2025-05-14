@@ -2,7 +2,7 @@ import {
   applyUserAssumptionsOverDefaults,
   applyUserCostInputsOverDefaults,
   assumptionsArrayToMap,
-  getRestorationYearlyBreakdown,
+  getRestorationPlanDTO,
 } from "@shared/lib/transform-create-custom-project-payload";
 
 describe("transform-create-custom-project-payload", () => {
@@ -123,7 +123,7 @@ describe("transform-create-custom-project-payload", () => {
     });
   });
 
-  describe("getRestorationYearlyBreakdown", () => {
+  describe("getRestorationPlanDTO", () => {
     const fixtures = {
       mixedData: [100, 200, 300, 0, 500],
       zeroData: [0, 0, 300, 0, 0],
@@ -131,12 +131,12 @@ describe("transform-create-custom-project-payload", () => {
     } as const;
 
     it("should return empty array for empty input", () => {
-      const result = getRestorationYearlyBreakdown([]);
+      const result = getRestorationPlanDTO([]);
       expect(result).toEqual([]);
     });
 
     it("should transform yearly breakdown with mixed values correctly", () => {
-      const result = getRestorationYearlyBreakdown([...fixtures.mixedData]);
+      const result = getRestorationPlanDTO([...fixtures.mixedData]);
 
       expect(result).toEqual([
         { year: -1, annualHectaresRestored: 100 },
@@ -147,13 +147,13 @@ describe("transform-create-custom-project-payload", () => {
     });
 
     it("should filter out zero values", () => {
-      const result = getRestorationYearlyBreakdown([...fixtures.zeroData]);
+      const result = getRestorationPlanDTO([...fixtures.zeroData]);
 
       expect(result).toEqual([{ year: 2, annualHectaresRestored: 300 }]);
     });
 
     it("should handle all zero values", () => {
-      const result = getRestorationYearlyBreakdown([...fixtures.allZeros]);
+      const result = getRestorationPlanDTO([...fixtures.allZeros]);
 
       expect(result).toEqual([]);
     });

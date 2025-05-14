@@ -112,30 +112,27 @@ export class RestorationProjectInput {
     projectSizeHa: number,
     restorationProjectLength: number,
   ): this {
-    const { restorationYearlyBreakdown } = parameters;
-    if (!restorationYearlyBreakdown?.length) {
+    const { customRestorationPlan } = parameters;
+    if (!customRestorationPlan?.length) {
       // TODO: We are missing how the restoration plan plays a role in the model, so I am not sure if it's not provided, we should return
       //.      a default year + 0 value until reach the restoration project length
       return;
     }
-    const restorationPlanHarea = restorationYearlyBreakdown.reduce(
-      (acc, plan) => {
-        return acc + plan.annualHectaresRestored;
-      },
-      0,
-    );
+    const restorationPlanHarea = customRestorationPlan.reduce((acc, plan) => {
+      return acc + plan.annualHectaresRestored;
+    }, 0);
     if (restorationPlanHarea > projectSizeHa) {
       throw new BadRequestException('Restoration plan exceeds project size');
     }
     this.customRestorationPlan = this.buildRestorationPlan(
-      restorationYearlyBreakdown,
+      customRestorationPlan,
       restorationProjectLength,
     );
     return this;
   }
 
   private buildRestorationPlan(
-    restorationPlan: RestorationProjectParamsDto['restorationYearlyBreakdown'],
+    restorationPlan: RestorationProjectParamsDto['customRestorationPlan'],
     projectLength: number,
   ): CostPlanMap {
     const result: CostPlanMap = {};

@@ -5,11 +5,12 @@ import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import {
   applyUserAssumptionsOverDefaults,
   applyUserCostInputsOverDefaults,
-  getRestorationYearlyBreakdown,
   assumptionsArrayToMap,
 } from "@shared/lib/transform-create-custom-project-payload";
-import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
-import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import {
+  CustomProjectForm,
+  ValidatedCustomProjectForm,
+} from "@shared/schemas/custom-projects/create-custom-project.schema";
 
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
@@ -95,36 +96,16 @@ const parseFormValues = (
     data.ecosystem,
     data.activity,
   );
-  const isRestoration = data.activity === ACTIVITY.RESTORATION;
-
-  const validYears = isRestoration
-    ? getRestorationYearlyBreakdown(
-        // @ts-expect-error fix later
-        originalValues.parameters.restorationYearlyBreakdown as number[],
-      )
-    : [];
-
-  const {
-    // @ts-expect-error fix later
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    restorationYearlyBreakdown,
-    ...restParameters
-  } = originalValues.parameters;
 
   return {
     ...originalValues,
     parameters: {
-      ...restParameters,
+      ...originalValues.parameters,
       // @ts-expect-error fix later
-      ...(restParameters?.plantingSuccessRate && {
+      ...(originalValues.parameters?.plantingSuccessRate && {
         plantingSuccessRate:
           // @ts-expect-error fix later
-          restParameters.plantingSuccessRate,
-      }),
-      ...(isRestoration && {
-        ...(validYears.length > 0 && {
-          restorationYearlyBreakdown: validYears,
-        }),
+          originalValues.parameters.plantingSuccessRate,
       }),
     },
     assumptions: {
