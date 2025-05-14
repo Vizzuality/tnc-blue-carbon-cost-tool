@@ -150,7 +150,8 @@ export class TestImportService {
         project.restorationActivity = row.activity_type;
         project.projectSize = row.project_size_ha;
         project.projectSizeFilter = row.project_size_filter;
-        project.abatementPotential = row.abatement_potential;
+        project.abatementPotential = row.project_abatement_potential;
+        project.countryAbatementPotential = row.country_abatement_potential;
         project.opexNPV = row.opex_npv;
         project.opex = row.opex;
         project.capexNPV = row.capex_npv;
