@@ -39,10 +39,12 @@ const customProjectSummaryUnitMap: Record<keyof CustomProjectSummary, string> =
     "Funding gap per tCO2e (NPV)": "$",
     "Landowner/community benefit share": "%",
   } as const;
+
 interface ProjectSummaryProps {
   id?: string;
   data: CustomProjectSummary;
 }
+
 const ProjectSummary: FC<ProjectSummaryProps> = ({ id, data }) => {
   const setProjectSummaryOpen = useSetAtom(projectsUIState);
   const idAtom = useAtomValue(customProjectIdAtom);
@@ -111,7 +113,7 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ id, data }) => {
           <Button type="button" variant="outline" asChild>
             <Link href={`/projects/${projectId}/edit`}>
               <FileEdit />
-              <span>Edit Project</span>
+              <span>Edit project</span>
             </Link>
           </Button>
         )}
