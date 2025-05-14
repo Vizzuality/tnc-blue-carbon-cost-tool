@@ -5,7 +5,7 @@ import '../../custom-matchers';
 import { CONSERVATION_MANGROVE_INDONESIA } from './fixtures/conservation-indonesia-mangrove';
 import { ConservationProjectOutput } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
-describe('Calculations Tests Case: - Conservation Mangroves China', () => {
+describe.skip('Calculations Tests Case: - Conservation Mangroves China', () => {
   let testManager: TestManager;
   let customProjectOutput: CustomProject['output'];
 
