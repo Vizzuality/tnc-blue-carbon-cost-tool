@@ -21,6 +21,7 @@ interface CostDetailsProps {
   data: ComponentProps<typeof CostDetailTable>["data"];
   hasOpenBreakEvenPrice: boolean;
 }
+
 const CostDetails: FC<CostDetailsProps> = ({ data, hasOpenBreakEvenPrice }) => {
   const [isVisible, setIsVisible] = useAtom(showCostDetailsAtom);
 
@@ -30,12 +31,7 @@ const CostDetails: FC<CostDetailsProps> = ({ data, hasOpenBreakEvenPrice }) => {
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <h2 className="text-xl font-semibold">Cost details</h2>
-            <InfoButton
-              title="Cost details"
-              className="max-h-screen overflow-y-auto"
-            >
-              {COST_DETAILS}
-            </InfoButton>
+            <InfoButton title="Cost details">{COST_DETAILS}</InfoButton>
           </SheetTitle>
         </SheetHeader>
         <CustomProjectParameters
