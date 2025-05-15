@@ -216,9 +216,9 @@ export const projectCostsAssumptionsAndMethodologyData = {
       category: "opex",
     },
     {
-      id: "project-costs-assumptions-and-methodology-community-benefit-sharing-fund",
+      id: "project-costs-assumptions-and-methodology-landowner/community-benefit-share",
       costComponent: (
-        <p className="font-bold">Community benefit sharing fund</p>
+        <p className="font-bold">Landowner/community benefit share</p>
       ),
       costAssumption:
         "5% of carbon credit revenues (developed countries), 50%-85% (developing country)",
