@@ -91,6 +91,15 @@ export class CustomProjectFactory {
       costInputs,
       additionalBaseData,
     );
+
+    // TODO: This is a workaround as it seems that planting success rate is defined as parameter, and it was previously a non overridable assumption
+    //       However, now we need to use this as overridable assumption. To make this right:
+    //       1. we need to remove it from the non overridable assumptions definition
+    //       2. the FE should send it as assumption instead of parameter
+    if (projectParams.plantingSuccessRate) {
+      additionalAssumptions.plantingSuccessRate =
+        projectParams.plantingSuccessRate;
+    }
     restorationProjectInput.setModelAssumptions(
       assumptions,
       additionalAssumptions,
