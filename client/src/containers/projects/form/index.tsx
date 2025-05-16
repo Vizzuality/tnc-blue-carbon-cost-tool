@@ -49,6 +49,8 @@ export default function CustomProjectForm({ id }: CustomProjectFormProps) {
     deps: [activity],
   });
 
+  console.log("???", formValues);
+
   return (
     <FormProvider {...methods}>
       <div className="ml-4 flex flex-1 flex-col">

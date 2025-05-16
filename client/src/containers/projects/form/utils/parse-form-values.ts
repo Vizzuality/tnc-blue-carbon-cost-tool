@@ -21,7 +21,10 @@ import { getQueryClient } from "@/app/providers";
 import { z } from "zod";
 
 // These will be overridden by actual values from the API or user input
-const DEFAULT_COST_INPUTS: z.infer<typeof InputCostsSchema> = {
+const COMMON_DEFAULT_COST_INPUTS: Omit<
+  z.infer<typeof InputCostsSchema>,
+  "implementationLabor"
+> = {
   validation: 0,
   feasibilityAnalysis: 0,
   conservationPlanningAndAdmin: 0,
@@ -29,7 +32,6 @@ const DEFAULT_COST_INPUTS: z.infer<typeof InputCostsSchema> = {
   communityRepresentation: 0,
   blueCarbonProjectPlanning: 0,
   establishingCarbonRights: 0,
-  implementationLabor: 0,
   maintenance: 0,
   monitoring: 0,
   communityBenefitSharingFund: 0,
@@ -38,7 +40,14 @@ const DEFAULT_COST_INPUTS: z.infer<typeof InputCostsSchema> = {
   baselineReassessment: 0,
   mrv: 0,
   longTermProjectOperatingCost: 0,
-} satisfies z.infer<typeof InputCostsSchema>;
+} satisfies Omit<z.infer<typeof InputCostsSchema>, "implementationLabor">;
+
+const RESTORATION_DEFAULT_COST_INPUTS: Pick<
+  z.infer<typeof InputCostsSchema>,
+  "implementationLabor"
+> = {
+  implementationLabor: 0,
+} satisfies Pick<z.infer<typeof InputCostsSchema>, "implementationLabor">;
 
 const DEFAULT_ASSUMPTIONS: z.infer<typeof AssumptionsSchema> = {
   baselineReassessmentFrequency: 0,
@@ -49,7 +58,10 @@ const DEFAULT_ASSUMPTIONS: z.infer<typeof AssumptionsSchema> = {
   projectLength: 0,
 } satisfies z.infer<typeof AssumptionsSchema>;
 
-const getDefaultAssumptions = (ecosystem: ECOSYSTEM, activity: ACTIVITY) => {
+export const getDefaultAssumptions = (
+  ecosystem: ECOSYSTEM,
+  activity: ACTIVITY,
+) => {
   const queryClient = getQueryClient();
 
   const assumptionsData =
@@ -64,7 +76,7 @@ const getDefaultAssumptions = (ecosystem: ECOSYSTEM, activity: ACTIVITY) => {
   return assumptionsData ? assumptionsArrayToMap(assumptionsData) : {};
 };
 
-const getDefaultCostInputs = (data: CustomProjectForm) => {
+export const getDefaultCostInputs = (data: CustomProjectForm) => {
   const { ecosystem, activity, countryCode } = data;
   const queryClient = getQueryClient();
 
@@ -84,7 +96,7 @@ const getDefaultCostInputs = (data: CustomProjectForm) => {
   )?.body.data;
 };
 
-const parseFormValues = (
+export const parseFormValues = (
   data: CustomProjectForm,
 ): ValidatedCustomProjectForm => {
   const originalValues = { ...data };
@@ -92,6 +104,8 @@ const parseFormValues = (
     data.ecosystem,
     data.activity,
   );
+
+  return defaultAssumptions;
 
   return {
     ...originalValues,
@@ -112,7 +126,10 @@ const parseFormValues = (
       ),
     },
     costInputs: {
-      ...DEFAULT_COST_INPUTS,
+      ...COMMON_DEFAULT_COST_INPUTS,
+      ...(originalValues.activity === ACTIVITY.RESTORATION && {
+        ...RESTORATION_DEFAULT_COST_INPUTS,
+      }),
       ...applyUserCostInputsOverDefaults(
         getDefaultCostInputs(data) ?? {},
         originalValues.costInputs ?? {},
@@ -120,5 +137,3 @@ const parseFormValues = (
     },
   };
 };
-
-export default parseFormValues;

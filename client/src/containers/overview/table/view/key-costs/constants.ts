@@ -1,7 +1,7 @@
-import { PROJECT_KEY_COSTS_FIELDS } from "@shared/dtos/projects/project-key-costs.dto";
+import { ProjectKeyCosts } from "@shared/dtos/projects/project-key-costs.dto";
 
 export const KEY_COSTS_LABELS: Omit<
-  Record<(typeof PROJECT_KEY_COSTS_FIELDS)[number], string>,
+  Record<keyof ProjectKeyCosts, string>,
   "id" | "projectName"
 > = {
   implementationLabor: "Restoration implementation labor",

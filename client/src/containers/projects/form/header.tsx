@@ -20,7 +20,7 @@ import {
   createCustomProject,
   updateCustomProject,
 } from "@/containers/projects/form/utils";
-import parseFormValues from "@/containers/projects/form/utils/parse-form-values";
+import { parseFormValues } from "@/containers/projects/form/utils/parse-form-values";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
