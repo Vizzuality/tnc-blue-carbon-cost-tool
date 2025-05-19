@@ -78,7 +78,7 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ id, data }) => {
           edit project details.
         </p>
         {showEditButton && (
-          <Button type="button" variant="outline" asChild>
+          <Button type="button" variant="secondary" asChild>
             <Link href={`/projects/${projectId}/edit`}>
               <FileEdit />
               <span>Edit project</span>
