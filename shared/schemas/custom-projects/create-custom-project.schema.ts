@@ -176,10 +176,7 @@ export const CustomProjectBaseSchema = z.object({
   carbonRevenuesToCover: z.nativeEnum(CARBON_REVENUES_TO_COVER),
   initialCarbonPriceAssumption: z.number().nonnegative(),
   assumptions: AssumptionsSchema,
-  // todo: superefine to evaluate based on activity
-  costInputs: InputCostsSchema.or(InputCostsSchema.omit({
-    implementationLabor: true,
-  })),
+  costInputs: InputCostsSchema,
 });
 
 export const CreateCustomProjectSchema = z

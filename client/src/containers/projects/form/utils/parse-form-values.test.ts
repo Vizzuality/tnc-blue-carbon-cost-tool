@@ -1,106 +1,184 @@
-import { describe, expect, it, vi } from "vitest";
-import * as cart from "./parse-form-values";
-import { parseFormValues } from "./parse-form-values"; // const mocks = vi.hoisted(() => {
-import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ACTIVITY } from "@shared/entities/activity.enum";
-import { z } from "zod";
+import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
+import {
+  CARBON_REVENUES_TO_COVER,
+  PROJECT_SPECIFIC_EMISSION,
+} from "@shared/entities/custom-project.entity";
+import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { applyUserValuesOverDefaults } from "@shared/lib/transform-create-custom-project-payload";
 import {
   AssumptionsSchema,
+  CustomProjectBaseSchema,
   CustomProjectForm,
+  LOSS_RATE_USED,
 } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import { describe, expect, it } from "vitest";
+import { z } from "zod";
 
-// const mocks = vi.hoisted(() => {
-//   return {
-//     getDefaultAssumptions: vi.fn().mockReturnValueOnce({
-//       baselineReassessmentFrequency: 666,
-//     }),
-//   };
-// });
-//
-// vi.mock("./parse-form-values.ts", () => {
-//   return {
-//     parseFormValues: vi.fn(),
-//     getDefaultAssumptions: vi.fn().mockReturnValueOnce({
-//       baselineReassessmentFrequency: 666,
-//     }),
-//   };
-// });
+import mockedImport, { parseFormValues } from "./parse-form-values";
 
-describe("parseFormValues", () => {
-  it("should parse form values with default assumptions and cost inputs", () => {
-    const assumptionsMock: z.infer<typeof AssumptionsSchema> = {
-      baselineReassessmentFrequency: 10,
-      buffer: 0.2,
-      carbonPriceIncrease: 30,
-      discountRate: 0.04,
+describe("parse form values - helpers", () => {
+  it("overrides assumptions successfully", () => {
+    vi.spyOn(mockedImport, "getDefaultAssumptions").mockReturnValueOnce({
       verificationFrequency: 5,
-      projectLength: 500,
+      baselineReassessmentFrequency: 10,
+      discountRate: 0.04,
+      carbonPriceIncrease: 0.015,
+      buffer: 0.2,
+      projectLength: 20,
+    });
+
+    const userAssumptions: Partial<
+      z.infer<typeof CustomProjectBaseSchema>["assumptions"]
+    > = {
+      carbonPriceIncrease: 0.02,
+      buffer: 0.3,
+      projectLength: 30,
     };
 
-    const spy = vi
-      .spyOn(cart, "getDefaultAssumptions")
-      .mockReturnValue(assumptionsMock);
+    const defaultAssumptions = mockedImport.getDefaultAssumptions(
+      ECOSYSTEM.MANGROVE,
+      ACTIVITY.RESTORATION,
+    );
 
-    // expect(
-    //   cart.getDefaultAssumptions(ECOSYSTEM.MANGROVE, ACTIVITY.RESTORATION),
-    // ).toStrictEqual(assumptionsMock);
+    const finalAssumptions = applyUserValuesOverDefaults(
+      defaultAssumptions,
+      userAssumptions,
+    );
 
-    // expect(spy).toHaveBeenCalledWith(ECOSYSTEM.MANGROVE, ACTIVITY.RESTORATION);
-    //
-    // expect(spy).toHaveBeenCalledTimes(1);
+    expect(finalAssumptions).toStrictEqual({
+      verificationFrequency: 5,
+      baselineReassessmentFrequency: 10,
+      discountRate: 0.04,
+      carbonPriceIncrease: 0.02,
+      buffer: 0.3,
+      projectLength: 30,
+    });
+  });
 
-    // expect(
-    //   getDefaultAssumptions(ECOSYSTEM.MANGROVE, ACTIVITY.RESTORATION),
-    // ).toStrictEqual({
-    //   baselineReassessmentFrequency: 666,
-    // });
+  it("overrides cost inputs successfully", () => {
+    vi.spyOn(mockedImport, "getDefaultCostInputs").mockReturnValueOnce({
+      feasibilityAnalysis: 70000,
+      conservationPlanningAndAdmin: 166766.666666667,
+      dataCollectionAndFieldCost: 26666.6666666667,
+      communityRepresentation: 113016.666666667,
+      blueCarbonProjectPlanning: 115000,
+      establishingCarbonRights: 120000,
+      validation: 50000,
+      monitoring: 40200,
+      maintenance: 0.0833,
+      communityBenefitSharingFund: 0.05,
+      carbonStandardFees: 0.2,
+      baselineReassessment: 40000,
+      mrv: 100000,
+      longTermProjectOperatingCost: 105800,
+      financingCost: 0.05,
+    });
 
-    const input: CustomProjectForm = {
-      ecosystem: ECOSYSTEM.MANGROVE,
-      activity: ACTIVITY.RESTORATION,
-      countryCode: "US",
-      parameters: { plantingSuccessRate: 80 },
-      assumptions: { discountRate: 5 },
-      costInputs: { validation: 50 },
+    const userInputCosts: Partial<
+      z.infer<typeof CustomProjectBaseSchema>["costInputs"]
+    > = {
+      baselineReassessment: 80000,
+      mrv: 400000,
+      financingCost: 0.25,
     };
 
-    const result = cart.parseFormValues(input);
+    const userInput: CustomProjectForm = {
+      countryCode: "AUS",
+      projectName: "aus-test",
+      ecosystem: ECOSYSTEM.SEAGRASS,
+      activity: ACTIVITY.CONSERVATION,
+      projectSizeHa: 10000,
+      carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.OPEX,
+      initialCarbonPriceAssumption: 30,
+      parameters: {
+        lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
+        emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
+        projectSpecificEmission: PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
+        projectSpecificLossRate: -0.001,
+        projectSpecificEmissionFactor: 15,
+        emissionFactorAGB: 200,
+        emissionFactorSOC: 15,
+      },
+    };
 
-    expect(result).toStrictEqual(assumptionsMock);
+    const defaultCostInputs = mockedImport.getDefaultCostInputs(userInput);
 
-    //
-    // expect(result).toEqual({
-    //   ...input,
-    //   parameters: {
-    //     ...input.parameters,
-    //     plantingSuccessRate: 80,
-    //   },
-    //   assumptions: {
-    //     baselineReassessmentFrequency: 0,
-    //     buffer: 10,
-    //     carbonPriceIncrease: 0,
-    //     discountRate: 5,
-    //     verificationFrequency: 0,
-    //     projectLength: 0,
-    //   },
-    //   costInputs: {
-    //     validation: 50,
-    //     feasibilityAnalysis: 0,
-    //     conservationPlanningAndAdmin: 0,
-    //     dataCollectionAndFieldCost: 0,
-    //     communityRepresentation: 0,
-    //     blueCarbonProjectPlanning: 0,
-    //     establishingCarbonRights: 0,
-    //     maintenance: 0,
-    //     monitoring: 0,
-    //     communityBenefitSharingFund: 0,
-    //     financingCost: 0,
-    //     carbonStandardFees: 0,
-    //     baselineReassessment: 0,
-    //     mrv: 0,
-    //     longTermProjectOperatingCost: 0,
-    //     implementationLabor: 0,
-    //   },
-    // });
+    const finalCostInputs = applyUserValuesOverDefaults(
+      defaultCostInputs,
+      userInputCosts,
+    );
+
+    expect(finalCostInputs).toStrictEqual({
+      feasibilityAnalysis: 70000,
+      conservationPlanningAndAdmin: 166766.666666667,
+      dataCollectionAndFieldCost: 26666.6666666667,
+      communityRepresentation: 113016.666666667,
+      blueCarbonProjectPlanning: 115000,
+      establishingCarbonRights: 120000,
+      validation: 50000,
+      monitoring: 40200,
+      maintenance: 0.0833,
+      communityBenefitSharingFund: 0.05,
+      carbonStandardFees: 0.2,
+      baselineReassessment: 80000,
+      mrv: 400000,
+      longTermProjectOperatingCost: 105800,
+      financingCost: 0.25,
+    });
+  });
+
+  it("should parse form values along with assumptions and cost inputs", () => {
+    const userInput: CustomProjectForm = {
+      countryCode: "AUS",
+      projectName: "aus-test",
+      ecosystem: ECOSYSTEM.SEAGRASS,
+      activity: ACTIVITY.CONSERVATION,
+      projectSizeHa: 10000,
+      carbonRevenuesToCover: CARBON_REVENUES_TO_COVER.OPEX,
+      initialCarbonPriceAssumption: 30,
+      parameters: {
+        lossRateUsed: LOSS_RATE_USED.PROJECT_SPECIFIC,
+        emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
+        projectSpecificEmission: PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR,
+        projectSpecificLossRate: -0.001,
+        projectSpecificEmissionFactor: 15,
+        emissionFactorAGB: 200,
+        emissionFactorSOC: 15,
+      },
+    };
+
+    const userAssumptions: z.infer<typeof AssumptionsSchema> = {
+      verificationFrequency: 5,
+      baselineReassessmentFrequency: 10,
+      discountRate: 0.04,
+      carbonPriceIncrease: 0.015,
+      buffer: 0.2,
+      projectLength: 20,
+    };
+
+    const userCostInputs: z.infer<
+      typeof CustomProjectBaseSchema
+    >["costInputs"] = {
+      feasibilityAnalysis: 70000,
+      conservationPlanningAndAdmin: 166766.666666667,
+      dataCollectionAndFieldCost: 26666.6666666667,
+      communityRepresentation: 113016.666666667,
+      blueCarbonProjectPlanning: 115000,
+      establishingCarbonRights: 120000,
+      validation: 50000,
+      monitoring: 40200,
+      maintenance: 0.0833,
+      communityBenefitSharingFund: 0.05,
+      carbonStandardFees: 0.2,
+      baselineReassessment: 40000,
+      mrv: 100000,
+      longTermProjectOperatingCost: 105800,
+      financingCost: 0.05,
+    };
+
+    const result = parseFormValues(userInput, userAssumptions, userCostInputs);
+    expect(result.costInputs).toStrictEqual(userCostInputs);
+    expect(result.assumptions).toStrictEqual(userAssumptions);
   });
 });

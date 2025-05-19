@@ -99,6 +99,7 @@ describe("transform-create-custom-project-payload", () => {
         fixtures.costs.userValues,
       );
       expect(costsResult).toEqual({
+        feasibilityAnalysis: 2000,
         validation: 1200,
       });
     });
@@ -118,6 +119,7 @@ describe("transform-create-custom-project-payload", () => {
         fixtures.costs.withUndefined,
       );
       expect(costsResult).toEqual({
+        feasibilityAnalysis: 2000,
         validation: 1000,
       });
     });

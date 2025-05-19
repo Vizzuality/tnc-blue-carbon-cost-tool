@@ -10,6 +10,8 @@ import {
 
 import { cn } from "@/lib/utils";
 
+import { useCustomProjectOutput } from "@/hooks/use-custom-project-output";
+
 import {
   columns,
   ColumnsTypes,
@@ -23,7 +25,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useCustomProjectOutput } from "@/hooks/use-custom-project-output";
 
 export interface CostItem {
   costName: string;

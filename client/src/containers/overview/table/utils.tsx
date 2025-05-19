@@ -2,8 +2,9 @@ import { ComponentProps, PropsWithChildren, useState } from "react";
 
 import { Column, SortingState, Updater } from "@tanstack/react-table";
 
-import { TableCell } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+
+import { TableCell } from "@/components/ui/table";
 
 export const NO_DATA = [];
 

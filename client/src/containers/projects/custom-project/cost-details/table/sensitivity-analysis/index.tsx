@@ -1,8 +1,11 @@
-import { useCustomProjectOutput } from "@/hooks/use-custom-project-output";
-import { cn } from "@/lib/utils";
 import * as React from "react";
-import { CellText } from "@/containers/overview/table/utils";
+
 import { formatNumber } from "@/lib/format";
+import { cn } from "@/lib/utils";
+
+import { useCustomProjectOutput } from "@/hooks/use-custom-project-output";
+
+import { CellText } from "@/containers/overview/table/utils";
 
 export default function SensitivityAnalysisColumn({
   datum,
