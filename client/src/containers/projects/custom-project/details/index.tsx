@@ -66,7 +66,7 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold">Project details</h2>
         {showEditButton && (
-          <Button type="button" variant="outline" asChild>
+          <Button type="button" variant="secondary" asChild>
             <Link
               href={`/projects/${projectId}/edit`}
               data-testid="edit-project-link"
