@@ -260,7 +260,9 @@ const GraphLegend: FC<GraphLegendProps> = ({ items }) => {
           className="flex items-center gap-4"
         >
           <div className="flex items-center gap-2">
-            <div className={cn("h-3 w-3 rounded-full", circleClassName)}></div>
+            <div
+              className={cn("h-3 w-3 shrink-0 rounded-full", circleClassName)}
+            ></div>
             <span className={cn("text-xs", labelClassName)}>{label}</span>
           </div>
         </div>

@@ -2,12 +2,7 @@
 import { FC, useEffect } from "react";
 
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
-import { motion } from "framer-motion";
-import { useAtomValue, useSetAtom } from "jotai";
-
-import { toPercentageValue } from "@/lib/format";
-
-import { LAYOUT_TRANSITIONS } from "@/app/(overview)/constants";
+import { useAtom, useSetAtom } from "jotai";
 import { projectsUIState } from "@/app/projects/store";
 
 import { useCustomProjectOutput } from "@/hooks/use-custom-project-output";
@@ -21,9 +16,14 @@ import ProjectDetails from "@/containers/projects/custom-project/details";
 import CustomProjectHeader from "@/containers/projects/custom-project/header";
 import LeftOver from "@/containers/projects/custom-project/left-over";
 import { customProjectIdAtom } from "@/containers/projects/custom-project/store";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import ProjectSummary from "@/containers/projects/custom-project/summary";
-
-import { useSidebar } from "@/components/ui/sidebar";
+import { toPercentageValue } from "@/lib/format";
 
 export const SUMMARY_SIDEBAR_WIDTH = 460;
 
@@ -45,8 +45,8 @@ const CustomProjectView: FC<{
   isFetching: boolean;
   id?: string;
 }> = ({ data, isFetching, id }) => {
-  const { projectSummaryOpen } = useAtomValue(projectsUIState);
-  const { open: navOpen } = useSidebar();
+  const [{ projectSummaryOpen }, setProjectSummaryOpen] =
+    useAtom(projectsUIState);
   const {
     projectCostProps,
     projectDetailsProps,
@@ -68,44 +68,47 @@ const CustomProjectView: FC<{
   }, [setProjectId]);
 
   return (
-    <motion.div
-      layout
-      layoutDependency={navOpen}
-      className="flex flex-1"
-      transition={LAYOUT_TRANSITIONS}
-    >
-      <motion.aside
-        layout
-        initial={projectSummaryOpen ? "open" : "closed"}
-        animate={projectSummaryOpen ? "open" : "closed"}
-        variants={{
-          open: {
-            width: SUMMARY_SIDEBAR_WIDTH,
-          },
-          closed: {
-            width: 0,
-          },
+    <div className="flex flex-1">
+      <Sheet
+        open={projectSummaryOpen}
+        onOpenChange={(v) => {
+          setProjectSummaryOpen((prev) => ({
+            ...prev,
+            projectSummaryOpen: v,
+          }));
         }}
-        transition={LAYOUT_TRANSITIONS}
-        className="overflow-hidden"
       >
-        {summaryData && (
+        <SheetContent
+          className="flex h-full flex-col gap-4 overflow-hidden bg-big-stone-950"
+          style={{
+            width: `${SUMMARY_SIDEBAR_WIDTH}px`,
+          }}
+        >
+          <SheetHeader>
+            <SheetTitle className="flex items-center gap-2">
+              <h2 className="text-xl font-semibold">Summary</h2>
+            </SheetTitle>
+          </SheetHeader>
           <ProjectSummary
             id={id}
             data={{
-              ...summaryData,
-              "IRR when priced to cover OpEx": parseFloat(
-                toPercentageValue(summaryData["IRR when priced to cover OpEx"]),
-              ),
-              "Landowner/community benefit share": parseFloat(
-                toPercentageValue(
-                  summaryData["Landowner/community benefit share"],
+              ...(summaryData as NonNullable<typeof summaryData>),
+              ...(summaryData && {
+                "IRR when priced to cover OpEx": parseFloat(
+                  toPercentageValue(
+                    summaryData["IRR when priced to cover OpEx"],
+                  ),
                 ),
-              ),
+                "Landowner/community benefit share": parseFloat(
+                  toPercentageValue(
+                    summaryData["Landowner/community benefit share"],
+                  ),
+                ),
+              }),
             }}
           />
-        )}
-      </motion.aside>
+        </SheetContent>
+      </Sheet>
       <div className="mx-4 flex flex-1 flex-col">
         <BreakevenPriceModal
           open={!isFetching && !hasOpenBreakEvenPrice}
@@ -125,7 +128,7 @@ const CustomProjectView: FC<{
         </div>
         <AnnualProjectCashFlow {...annualProjectCashFlowProps} />
       </div>
-    </motion.div>
+    </div>
   );
 };
 
