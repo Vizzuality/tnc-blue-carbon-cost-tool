@@ -46,12 +46,12 @@ export function applyUserValuesOverDefaults<
   T extends Record<string, number | undefined>,
 >(defaults: Partial<T>, userValues: Partial<T>) {
   return {
-    ...Object.keys(userValues ?? {}).reduce((acc, key) => {
+    ...Object.keys(defaults ?? {}).reduce((acc, key) => {
       return {
         ...acc,
         [key]: userValues[key as keyof T] ?? defaults[key as keyof T],
       };
-    }, {}),
+    }, {} as T),
   };
 }
 

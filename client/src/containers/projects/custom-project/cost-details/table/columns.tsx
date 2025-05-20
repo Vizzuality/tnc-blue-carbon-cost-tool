@@ -1,8 +1,9 @@
+import { SensitivityAnalysis } from "@shared/dtos/custom-projects/custom-project-output.dto";
 import { createColumnHelper } from "@tanstack/react-table";
 
-import SensitivityAnalysisColumn from "@/containers/projects/custom-project/cost-details/table/sensitivity-analysis";
 import { useCustomProjectOutput } from "@/hooks/use-custom-project-output";
-import { SensitivityAnalysis } from "@shared/dtos/custom-projects/custom-project-output.dto";
+
+import SensitivityAnalysisColumn from "@/containers/projects/custom-project/cost-details/table/sensitivity-analysis";
 
 export type ColumnsTypes = ReturnType<
   typeof useCustomProjectOutput

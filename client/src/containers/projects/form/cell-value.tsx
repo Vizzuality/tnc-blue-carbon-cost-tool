@@ -53,7 +53,7 @@ export default function CellValue({
                   if (isPercentage && value) {
                     onChange(toDecimalPercentageValue(value));
                   } else {
-                    onChange(value);
+                    onChange(value === "" ? undefined : value);
                   }
                 }}
                 className={cn({

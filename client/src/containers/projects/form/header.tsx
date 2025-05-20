@@ -4,6 +4,11 @@ import { useFormContext } from "react-hook-form";
 
 import { useRouter } from "next/navigation";
 
+import { ACTIVITY } from "@shared/entities/activity.enum";
+import {
+  applyUserValuesOverDefaults,
+  getRestorationPlanDTO,
+} from "@shared/lib/transform-create-custom-project-payload";
 import {
   CreateCustomProjectSchema,
   CustomProjectForm,
@@ -12,6 +17,7 @@ import {
 } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { z } from "zod";
 
 import { queryKeys } from "@/lib/query-keys";
 import { getAuthHeader } from "@/lib/utils";
@@ -20,14 +26,15 @@ import {
   createCustomProject,
   updateCustomProject,
 } from "@/containers/projects/form/utils";
-import parseFormValues from "@/containers/projects/form/utils/parse-form-values";
+import {
+  getDefaultAssumptions,
+  getDefaultCostInputs,
+  parseFormValues,
+} from "@/containers/projects/form/utils/parse-form-values";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useToast } from "@/components/ui/toast/use-toast";
-import { ACTIVITY } from "@shared/entities/activity.enum";
-import { getRestorationPlanDTO } from "@shared/lib/transform-create-custom-project-payload";
-import { z } from "zod";
 
 interface HeaderProps {
   name: string;
@@ -44,7 +51,27 @@ export default function Header({ name, id }: HeaderProps) {
   const handleSubmit = useCallback(
     async (formValues: CustomProjectForm) => {
       try {
-        const data = parseFormValues(formValues);
+        const defaultAssumptions = getDefaultAssumptions(
+          formValues.ecosystem,
+          formValues.activity,
+        );
+
+        const userAssumptions = applyUserValuesOverDefaults(
+          defaultAssumptions,
+          formValues.assumptions ?? {},
+        );
+
+        const userCostInputs = applyUserValuesOverDefaults(
+          getDefaultCostInputs(formValues) ?? {},
+          formValues.costInputs ?? {},
+        );
+
+        const data = parseFormValues(
+          formValues,
+          userAssumptions,
+          userCostInputs,
+        );
+
         const customProjectValidation =
           CreateCustomProjectSchema.safeParse(data);
 
