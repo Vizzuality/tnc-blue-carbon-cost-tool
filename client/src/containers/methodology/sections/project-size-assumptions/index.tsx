@@ -16,8 +16,12 @@ const ProjectSizeAssumptions: MethodologySection = {
           meaningful comparisons across different projects. These sizes were
           determined based on their carbon equivalency and representativeness,
           allowing for straightforward “apples-to-apples” comparisons across
-          various activities and ecosystem types. The table below outlines the
-          project sizes for each activity and ecosystem:
+          various activities and ecosystem types. Note: calculation of
+          conservation hectares considers ecosystem loss rates to determine the
+          equivalent carbon impact in comparison to restoration efforts (hence
+          the difference between ‘Conservation size’ and ‘avoided loss area’ in
+          the table). The table below outlines the project sizes for each
+          activity and ecosystem:
         </p>
       </ContentWrapper>
       <MethodologyTable data={projectSizeAssumptionsData} />

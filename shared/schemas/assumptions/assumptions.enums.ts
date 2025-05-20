@@ -125,7 +125,7 @@ export const COSTS_DTO_MAP = {
     label: "MRV",
     unit: "$/event",
     tooltipContent:
-      "The costs associated with measuring, reporting, and verifying GHG emissions that occur post-implementation to enable carbon benefit sales through a third party.",
+      "The costs associated with measuring, reporting, and verifying GHG emissions that occur post-implementation to enable carbon benefit sales through a third party. Most standards require this at least every 5 years.",
   },
   longTermProjectOperatingCost: {
     label: "Long term project operating cost",

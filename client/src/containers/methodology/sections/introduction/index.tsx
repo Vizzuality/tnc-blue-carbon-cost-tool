@@ -6,22 +6,23 @@ import Title from "@/components/ui/title";
 
 const Introduction: MethodologySection = {
   id: "introduction",
-  title: "Introduction",
+  title: "Introduction & Tool Overview",
   href: "#introduction",
   Content: (
     <ContentWrapper>
       <p>
         To better understand the financials of blue carbon projects, The Nature
-        Conservancy (TNC), in collaboration with Bain & Company, has developed
-        the <strong>Blue Carbon Cost Tool</strong>. This&nbsp;
+        Conservancy (TNC), in consultation with a panel of blue carbon experts,
+        has developed the <strong>Blue Carbon Cost Tool</strong>. This&nbsp;
         <strong>pre-feasibility tool</strong> provides high-level estimations of
         project costs and carbon benefits for blue carbon projects, allowing for
         project-specific scenario analysis and qualitative metrics for&nbsp;
         <strong>project prioritization</strong>. Stakeholders can utilize this
         tool to gain valuable insights into the financial aspects of blue carbon
         projects. Designed as an early-stage planning resource, the tool offers
-        both default values and customizable options for tailored assessments,
-        while not being intended for tracking cost over time.
+        both default values and customizable options for tailored assessments.
+        While the tool allows for visualization of costs through time, it is not
+        intended for tracking cost over time.
       </p>
       <p>
         As blue carbon ecosystems—including mangroves, salt marshes, and
@@ -42,23 +43,19 @@ const Introduction: MethodologySection = {
           The <strong>Projects Overview</strong> offers a comprehensive view of
           typical project costs and carbon benefits. Beyond financial
           considerations, it also incorporates non-financial aspects across
-          countries, ecosystems, and activities, providing a more holistic
-          perspective even though customization options are somewhat limited.
-          The key use case for the Projects overview tool revolves around
-          understanding feasibility of blue carbon projects, and prioritizing
-          projects based on both financial and non-financial information.
+          countries, ecosystems, activities, and typical project sizes,
+          providing a more holistic perspective. The key use case for the
+          Projects Overview tool is to understand how the general cost and
+          feasibility of blue carbon projects can vary, which may help in
+          prioritizing project types or regions for project development.
         </li>
         <li>
-          The <strong>Create Custom Project</strong> feature of the Blue Carbon
-          Cost Tool provides a detailed framework and scenario modelling for
-          generating &lsquo;snapshot&rsquo; estimations of project costs and
-          carbon benefits while enabling project-specific scenario analysis.
-          This version features a comprehensive model that integrates key
-          analyses, assumptions, and data sources, allowing users to select
-          either default values or customize inputs based on their specific
-          project needs. Its primary purpose is to simulate the financial and
-          carbon outcomes of a user-defined project, offering insights to
-          support informed decision-making.
+          The <strong>Create Custom Project</strong> feature provides
+          customizable scenario modelling for estimating project costs and
+          carbon benefits. Users may select either default values or customize
+          inputs based on their specific project needs. Its primary purpose is
+          to simulate the financial and carbon outcomes of a user-defined
+          project, offering insights to support informed decision-making.
         </li>
       </List>
 
@@ -71,8 +68,8 @@ const Introduction: MethodologySection = {
           projects of coastal blue carbon ecosystems, specifically&nbsp;
           <strong>targeting mangroves, salt marshes, and seagrass</strong>.
           These have been prioritized due to their significant potential as
-          actionable blue carbon pathways as well as current availability of
-          data.
+          actionable blue carbon market pathways as well as current availability
+          of data.
         </p>
       </div>
       <p>
@@ -81,10 +78,7 @@ const Introduction: MethodologySection = {
       <List>
         <li>
           <strong>Conservation (avoided loss):</strong> Preserving existing blue
-          carbon stocks through avoided degradation. This approach is
-          cost-effective, prevents biodiversity and carbon stock loss, enhances
-          resilience, and aligns with the climate mitigation hierarchy by
-          prioritizing prevention before restoration.
+          carbon stocks through avoided deforestation or degradation.
         </li>
         <li>
           <strong>Restoration (removals):</strong> Focused on three project
@@ -112,11 +106,9 @@ const Introduction: MethodologySection = {
         </Title>
         <p>
           The countries included in the Blue Carbon Cost Tool are limited to
-          those <strong>countries or regions</strong> which have data available
-          for blue carbon projects. As of 2025, the selected countries or
-          regions represent a significant proportion of the global blue carbon
-          sink potential, approximately 63% of global restoration potential and
-          37% of global conservation potential.
+          those <strong>countries</strong> which have data available for blue
+          carbon market projects. The country list may be expanded as more data
+          becomes available.
         </p>
       </div>
     </ContentWrapper>
