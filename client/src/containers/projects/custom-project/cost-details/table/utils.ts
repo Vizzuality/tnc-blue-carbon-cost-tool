@@ -31,10 +31,11 @@ const CONSERVATION_PROJECT_COST_LABELS: Record<
 const RESTORATION_PROJECT_COST_LABELS: Record<
   keyof CustomProjectCostDetails,
   string
-> = {
-  ...CONSERVATION_PROJECT_COST_LABELS,
-  implementationLabor: "Implementation labor",
-} as const;
+> = Object.fromEntries([
+  ...Object.entries(CONSERVATION_PROJECT_COST_LABELS).slice(0, 6),
+  ...Object.entries({ implementationLabor: "Implementation labor" }),
+  ...Object.entries(CONSERVATION_PROJECT_COST_LABELS).slice(6),
+]) as Record<keyof CustomProjectCostDetails, string>;
 
 function parseCostDetailsForTable(
   activity: ACTIVITY,
