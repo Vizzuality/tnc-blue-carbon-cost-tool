@@ -1,4 +1,4 @@
-from v2.cost_calculator import CostCalculator
+from bcc_model.cost_calculator import CostCalculator
 
 
 class BreakevenCostCalculator:

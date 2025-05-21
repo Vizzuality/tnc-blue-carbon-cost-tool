@@ -1,7 +1,7 @@
 # src/revenue_profit_calculator.py
 import math
 
-from v2.sequestration_credits_calculator import SequestrationCreditsCalculator
+from bcc_model.sequestration_credits_calculator import SequestrationCreditsCalculator
 
 
 class RevenueProfitCalculator:

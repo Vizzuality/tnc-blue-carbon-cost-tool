@@ -7,4 +7,4 @@ test_data/*
 #ignore compiled python modules
 **/__pycache__/
 *.pyc
-/src/gadm/countries.geojson
+/src/bcc_model/gadm/countries.geojson

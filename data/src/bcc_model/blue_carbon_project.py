@@ -2,7 +2,7 @@ import logging
 import re
 
 from IPython.display import Markdown, display
-from v2.utils import get_value_from_master_table, load_country_code
+from bcc_model.utils import get_value_from_master_table, load_country_code
 
 
 class BlueCarbonProject:

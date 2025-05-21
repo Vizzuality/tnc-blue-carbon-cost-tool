@@ -152,5 +152,5 @@ if __name__ == "__main__":
     merged_gdf = join_with_csv(adm0_gdf, csv_path, key="GID_0")
 
     # Generate and save SQL file
-    sql_file = "./insert_countries.sql"
+    sql_file = "insert_countries.sql"
     write_sql_file(merged_gdf, sql_file)

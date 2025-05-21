@@ -1,5 +1,5 @@
 import pandas as pd
-from v2.cost_calculator import CostCalculator
+from bcc_model.cost_calculator import CostCalculator
 from IPython.display import Markdown, display
 
 
