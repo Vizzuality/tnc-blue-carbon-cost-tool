@@ -1,7 +1,10 @@
 import { SubHeader } from "@/containers/methodology/header";
 import { MethodologySection } from "@/containers/methodology/sections";
 import MethodologyTable from "@/containers/methodology/table";
-import { projectCostsAssumptionsAndMethodologyData } from "@/containers/methodology/table/data";
+import {
+  costComponentsData,
+  projectCostsAssumptionsAndMethodologyData,
+} from "@/containers/methodology/table/data";
 import ContentWrapper from "@/containers/methodology/wrapper";
 
 import { List } from "@/components/ui/list";
@@ -14,11 +17,18 @@ const ProjectCostsAssumptionsAndMethodology: MethodologySection = {
     <div className="space-y-4">
       <ContentWrapper>
         <SubHeader
+          title="Cost default values"
+          description="The table below shows default values for each cost component. These default values serve as a baseline, but users have the flexibility to customize the output by overwriting specific cost components."
+        />
+        <MethodologyTable data={costComponentsData} categorized />
+        <SubHeader
           title="Cost associated with project"
           description="There are different costs associated with each step of the blue carbon lifecycle. Below are detailed descriptions of each cost component:"
         />
         <p>
-          <strong>Project setup cost (Capital Expenditures, CAPEX):</strong>
+          <strong>
+            Below are detailed descriptions of each cost component.
+          </strong>
         </p>
         <List>
           <li>
@@ -113,7 +123,8 @@ const ProjectCostsAssumptionsAndMethodology: MethodologySection = {
             <strong>Measuring, reporting, and verification (MRV):</strong> The
             costs associated with measuring, reporting, and verifying GHG
             emissions that occur post-implementation to enable carbon benefit
-            sales through a third party.
+            sales through a third party. Most standards require this at least
+            every 5 years.
           </li>
           <li>
             <strong>Long-term project operation and administration:</strong> The

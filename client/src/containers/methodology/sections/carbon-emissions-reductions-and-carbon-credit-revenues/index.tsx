@@ -63,19 +63,11 @@ const CarbonEmissionsReductionsAndCarbonCreditRevenues: MethodologySection = {
           </li>
         </List>
         <p>
-          Blue carbon credits can play a supporting role in sustaining coastal
-          ecosystem projects. Though carbon finance will not typically cover all
-          expenses, it is suggested that carbon finance could play a critical
-          role in supporting longer term operational costs, such as monitoring,
-          maintenance, and community benefits.
-        </p>
-        <p>
           The model assumes a default premium price of $30/ton for carbon offset
           credits, reflecting the limited availability of blue carbon credits
-          and many co benefits provided by blue carbon projects. Users can
+          and many other benefits provided by blue carbon projects. Users can
           customize this price and calculate the operational (OPEX) breakeven
-          price using the tool. While additional revenue streams will likely be
-          needed, the model focuses specifically on carbon credit revenues.
+          price using the tool.
         </p>
         <p>
           Additional details below for calculating credible emission benefits
@@ -110,16 +102,16 @@ const CarbonEmissionsReductionsAndCarbonCreditRevenues: MethodologySection = {
           <Math3 />
         </MathComponent>
         <div>
-          <h5 className="underline">Tier 2 (only for mangroves):</h5>
+          <h5 className="underline">Tier 2:</h5>
           <p>
             For tier 2 estimates, we have assumed that all avoided above-ground
             biomass (AGB) emissions are accounted for in the year when the
             conversion was avoided. For the soil organic carbon (SOC), we have
             assumed that emissions were released over a specific period (10
-            years). This resembles typical carbon accounting methodologies of
-            carbon standards more closely. On top of AGB and SOC, the additional
-            sequestration is calculated using a Tier 1 assumption to remain
-            conservative. This option is currently only available for mangroves.
+            years). This more closely resembles typical carbon accounting
+            methodologies of carbon standards. On top of AGB and SOC, the
+            additional sequestration is calculated using a Tier 1 assumption to
+            remain conservative.
           </p>
         </div>
         <MathComponent name="4">

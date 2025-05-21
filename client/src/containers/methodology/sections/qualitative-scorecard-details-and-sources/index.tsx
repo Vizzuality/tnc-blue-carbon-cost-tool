@@ -22,7 +22,7 @@ const QualitativeScorecardDetailsAndSources: MethodologySection = {
           information to evaluate projects.
         </p>
         <p>
-          Appendix: Qualitative scorecard for more details behind assumptions
+          Table below: Qualitative scorecard for more details behind assumptions
           and sources used to calculate these.
         </p>
       </ContentWrapper>

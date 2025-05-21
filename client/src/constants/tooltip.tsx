@@ -623,9 +623,8 @@ export const ASSUMPTIONS = {
   ),
   DISCOUNT_RATE: (
     <p>
-      The model currently utilizes a fixed discount rate of 4%. However, this
-      value can be adjusted to incorporate country-specific premiums or other
-      relevant circumstances.
+      The user has an option to customize their restoration rate depending on
+      what is feasibly restorable per year.
     </p>
   ),
   CARBON_PRICE_INCREASE: (
@@ -636,48 +635,12 @@ export const ASSUMPTIONS = {
     </p>
   ),
   BUFFER: (
-    <>
-      <p>
-        When considering carbon credits, it is crucial to account for
-        non-permanence, leakage, and uncertainty, which are significant factors.
-        These factors are encompassed within the &apos;buffer&apos; assumption
-        in the Blue Carbon Cost Tool, where the default value is set at 20%.
-      </p>
-      <p>
-        While modeling specific scenarios, it is valuable to undertake the
-        exercise of calculating non-permanence, leakage, and uncertainty.
-      </p>
-      <List>
-        <li>
-          Non-permanence: Verra offers the VCS Non-permanence risk tool, which
-          can be employed to estimate non-permanence. This tool considers
-          various risks, including internal factors (e.g., project management,
-          project longevity), natural elements (e.g., extreme weather events),
-          and external influences (e.g., land tenure, political aspects).
-        </li>
-        <li>
-          Leakage: Estimating leakage can be challenging. However, it may be
-          minimal if the project satisfies specific conditions, for example the
-          project area having been abandoned or previous commercial activities
-          having been unprofitable. Additionally, inclusion of leakage
-          mitigation activities (e.g., ecosystem services payments) within the
-          project can further reduce leakage potential.
-        </li>
-        <li>
-          Uncertainty: The allowable uncertainty is 20% at 90% confidence level
-          (or 30% of Net Emissions Reductions at 95% confidence level). In cases
-          where the uncertainty falls below these thresholds, no deduction for
-          uncertainty would be applicable. More guidance can be found in
-          Verra&apos;s Tidal wetlands and seagrass restoration methodology. In
-          cases where uncertainty falls above this threshold, you must deduct an
-          amount equal to the amount that exceeds uncertainty. For example, if
-          uncertainty is 28% at a 90% confidence level, you must deduct an
-          additional 8% from your emissions reductions. When using the tool,
-          this amount should be added to the buffer (in addition to
-          non-permanence and leakage amounts).
-        </li>
-      </List>
-    </>
+    <p>
+      When considering carbon credits, it is crucial to account for
+      non-permanence, leakage, and uncertainty, which are significant factors.
+      These factors are encompassed within the &apos;buffer&apos; assumption in
+      the Blue Carbon Cost Tool, where the default value is set at 20%.
+    </p>
   ),
 
   BASELINE_REASSESSMENT_FREQUENCY: (
