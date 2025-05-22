@@ -13,7 +13,7 @@ catalog:
   zod: "3.24.3"
   class-transformer: "0.5.1"
   bcrypt: "5.1.1"
-  "@types/node": 20.14.2
+  "@types/node": 22.15.21
   "@types/geojson": 7946.0.16
   typescript: 5.8.3
   reflect-metadata: "^0.2.0"
