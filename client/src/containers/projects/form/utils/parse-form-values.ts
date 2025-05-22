@@ -72,8 +72,10 @@ export const parseFormValues = (
   };
 };
 
-export default {
+const modules = {
   getDefaultAssumptions,
   getDefaultCostInputs,
   parseFormValues,
 };
+
+export default modules;

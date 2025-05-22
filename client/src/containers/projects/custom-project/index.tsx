@@ -3,6 +3,9 @@ import { FC, useEffect } from "react";
 
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { useAtom, useSetAtom } from "jotai";
+
+import { toPercentageValue } from "@/lib/format";
+
 import { projectsUIState } from "@/app/projects/store";
 
 import { useCustomProjectOutput } from "@/hooks/use-custom-project-output";
@@ -16,14 +19,14 @@ import ProjectDetails from "@/containers/projects/custom-project/details";
 import CustomProjectHeader from "@/containers/projects/custom-project/header";
 import LeftOver from "@/containers/projects/custom-project/left-over";
 import { customProjectIdAtom } from "@/containers/projects/custom-project/store";
+import ProjectSummary from "@/containers/projects/custom-project/summary";
+
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import ProjectSummary from "@/containers/projects/custom-project/summary";
-import { toPercentageValue } from "@/lib/format";
 
 export const SUMMARY_SIDEBAR_WIDTH = 460;
 
