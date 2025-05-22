@@ -1,4 +1,6 @@
-## Runner for the project
+## Script for creating a random project, calculating costs etc... for debugging purposes
+
+## We might use the projects folder inside /runner to store specification for specific projects
 from bcc_model.blue_carbon_project import BlueCarbonProject
 from bcc_model.breakeven_cost_calculator import BreakevenCostCalculator
 from bcc_model.cost_calculator import CostCalculator
