@@ -1,10 +1,10 @@
 from typing import Optional, Literal, TypedDict
 import pandas as pd
-import pydantic
+from pydantic import BaseModel
 
 
 ## Param type definition for the BlueCarbonCost class
-class BlueCarbonProjectParams(TypedDict, total=False):
+class BlueCarbonProjectParams(BaseModel):
     project_name: str
     activity: Literal["Restoration", "Conservation"]
     ecosystem: Literal["Mangrove", "Seagrass", "Salt marsh"]
