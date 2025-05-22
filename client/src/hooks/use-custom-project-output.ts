@@ -92,13 +92,7 @@ export const useCustomProjectOutput = (
           cost.costName as keyof typeof output.sensitivityAnalysis
         ],
     }));
-  }, [
-    costRangeSelector,
-    output?.costDetails.total,
-    output?.costDetails.npv,
-    output?.sensitivityAnalysis,
-    projectDetailsProps.data.activity,
-  ]);
+  }, [costRangeSelector, output, projectDetailsProps.data.activity]);
 
   const chartData = useMemo(
     () =>
