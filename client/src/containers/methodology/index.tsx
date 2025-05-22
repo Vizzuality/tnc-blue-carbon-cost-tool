@@ -24,7 +24,7 @@ export default function Methodology() {
     setCurrentStep: setMethodologyStep,
     options: {
       threshold: 0.05,
-      rootMargin: "0% 0% -70% 0%",
+      rootMargin: "0% 0% -35% 0%",
     },
   });
 
