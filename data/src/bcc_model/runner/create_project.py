@@ -5,6 +5,7 @@ from bcc_model.blue_carbon_project import BlueCarbonProject
 from bcc_model.breakeven_cost_calculator import BreakevenCostCalculator
 from bcc_model.cost_calculator import CostCalculator
 from bcc_model.runner.build_dependencies import get_data_dependencies
+from bcc_model.runner.build_output import BreakEvenCostOutput
 from bcc_model.types import BlueCarbonProjectParams
 
 data_path = "../../../excel/Carbon-Cost Data Upload.xlsm"
@@ -27,16 +28,13 @@ params = BlueCarbonProjectParams(project_name='Test_Project',
     planting_success_rate=0.6,
                                  )
 
+
 project = BlueCarbonProject(params)
 
-calculator = CostCalculator(project)
-
-
-cost_estimates = calculator.get_cost_estimates()
-
-yearly_cost_breakdown = calculator.get_yearly_cost_breakdown()
-
 breakeven_cost_calculator = BreakevenCostCalculator(project)
-
 breakeven_cost = breakeven_cost_calculator.calculate_breakeven_cost()
-print(f"The breakeven cost is: {breakeven_cost['breakeven_carbon_price']}")
+
+
+output = BreakEvenCostOutput(breakeven_cost).build()
+
+print("THIS IS THE OUTPUT", output)

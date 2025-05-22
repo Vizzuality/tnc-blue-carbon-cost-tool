@@ -17,6 +17,7 @@ dependencies = [
     "pre-commit>=4.0.1",
     "shapely>=2.0.6",
     "formulas>=1.2.9",
+    "pydantic>=2.9.2",
 ]
 
 [build-system]
