@@ -16,7 +16,7 @@ const List = ({ children, className, as = "ul" }: ListProps) => {
   const ListElement = as;
 
   return (
-    <ListElement className={cn("list-disc space-y-2 pl-4", className)}>
+    <ListElement className={cn("list-disc space-y-2 pl-5", className)}>
       {children}
     </ListElement>
   );

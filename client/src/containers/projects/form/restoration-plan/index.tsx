@@ -12,6 +12,8 @@ import {
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
+import { RESTORATION_PLAN } from "@/constants/tooltip";
+
 import { useFormValues } from "@/containers/projects/form/project-form";
 import { COLUMNS } from "@/containers/projects/form/restoration-plan/columns";
 import { getRestorationPlanTableData } from "@/containers/projects/form/utils";
@@ -22,6 +24,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import InfoButton from "@/components/ui/info-button";
 import {
   Table,
   TableBody,
@@ -118,7 +121,12 @@ export default function RestorationPlanProjectForm() {
         <AccordionTrigger className="pt-0">
           <div className="flex flex-col gap-3">
             <div className="flex items-baseline gap-2">
-              <h2 className="text-2xl font-medium">Restoration Plan</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-2xl font-medium">Restoration Plan</h2>
+                <InfoButton title="Restoration Plan">
+                  {RESTORATION_PLAN}
+                </InfoButton>
+              </div>
               <span className="font-normal text-muted-foreground">
                 optional
               </span>

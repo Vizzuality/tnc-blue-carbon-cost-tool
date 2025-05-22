@@ -149,20 +149,32 @@ export default function ToolbarProjectsTable() {
                   className="mt-4 h-full space-y-2 text-sm data-[state=inactive]:hidden"
                 >
                   <p>
-                    This table offers three distinct views, showcasing example
-                    projects across various countries and activity types. Use
-                    the filters to refine your results, or adjust the selectors
-                    —&quot;Project Size,&quot; &quot;Carbon Pricing Type,&quot;
-                    and &quot;Cost&quot;—to see different perspectives.
+                    This table offers three distinct views, showcasing modelled
+                    project scenarios across various countries, activity types,
+                    and sizes. Use the filters to refine your results, or adjust
+                    the selectors at the top (Carbon price type, Cost type). The
+                    modelled scenarios can provide insight to the financial
+                    feasibility of blue carbon market projects across
+                    geographies, types and sizes.
                   </p>
                   <p>
-                    Abatement potential is the estimated annual blue carbon
-                    potential of each country, ecosystem, and activity
-                    (conservation or restoration). The Cost represents the NPV
-                    cost per ton CO2e (including CAPEX + OPEX) for a typical
-                    project, categorized by ecosystem, activity and country. The
-                    project name includes the country, ecosystem, activity and
-                    typical project size.
+                    The project name includes the country, ecosystem, activity
+                    and project size for each modelled scenario. Scorecard
+                    rating is the overall score for the modeled project
+                    scenario, based on weighted non-economic scores and economic
+                    feasibility. See the &quot;Scorecard prioritization
+                    table&quot; tab for more details.
+                  </p>
+                  <p>
+                    Cost $(USD)/tCO2e is the total cost at NPV per credit,
+                    measured as a metric ton of CO2e, for the project scenario.
+                    Abatement potential (tCO2e/yr) is the estimated blue carbon
+                    credit potential of each project scenario, measured in
+                    metric tons of CO2e per year.
+                  </p>
+                  <p>
+                    Total cost (CAPEX + OPEX) is in USD for each modelled
+                    project scenario.
                   </p>
                 </TabsContent>
 

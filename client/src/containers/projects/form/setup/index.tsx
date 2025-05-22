@@ -183,9 +183,9 @@ export default function SetupProjectForm() {
                 render={() => (
                   <NumberFormItem
                     data-testid="projectSizeHa"
-                    label="Project Size"
+                    label="Project size"
                     tooltip={{
-                      title: "Project Size",
+                      title: "Project size",
                       content: CUSTOM_PROJECT.PROJECT_SIZE,
                     }}
                     min={0}

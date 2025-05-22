@@ -26,7 +26,7 @@ import {
 export const PROJECT_PARAMETERS: Parameter[] = [
   {
     key: FILTER_KEYS[2],
-    label: "Carbon pricing type",
+    label: "Carbon price type",
     className: "w-[195px]",
     tooltipContent: FILTERS.CARBON_PRICING_TYPE,
     options: [

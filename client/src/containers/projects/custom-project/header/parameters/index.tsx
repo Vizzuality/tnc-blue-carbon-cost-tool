@@ -41,7 +41,7 @@ export const getProjectParameters = (hasOpenBreakEvenPrice: boolean) =>
     },
     {
       key: FILTER_KEYS[2],
-      label: "Carbon pricing type",
+      label: "Carbon price type",
       className: "w-[240px]",
       disabled: !hasOpenBreakEvenPrice,
       options: [
