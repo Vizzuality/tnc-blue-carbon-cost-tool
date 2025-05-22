@@ -207,7 +207,7 @@ export default function RestorationProjectDetails() {
                   <FormLabel
                     tooltip={{
                       title: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
-                      content: "TBD",
+                      content: "IPCC default value",
                     }}
                   >
                     {SEQUESTRATION_RATE_TIER_TYPES.TIER_1}

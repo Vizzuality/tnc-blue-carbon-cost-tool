@@ -38,6 +38,8 @@ export const ASSUMPTIONS_NAME_TO_TOOLTIP_MAP = {
   "Discount rate": "DISCOUNT_RATE",
   "Verification frequency": "VERIFICATION_FREQUENCY",
   "Seagrass restoration rate": "RESTORATION_RATE",
+  "Mangrove restoration rate": "RESTORATION_RATE",
+  "Salt marsh restoration rate": "RESTORATION_RATE",
   "Conservation project length": "CONSERVATION_PROJECT_LENGTH",
   "Restoration project length": "RESTORATION_PROJECT_LENGTH",
 } as const;
@@ -47,13 +49,13 @@ export const COSTS_DTO_MAP = {
     label: "Feasibility analysis",
     unit: "$/project",
     tooltipContent:
-      "The production of a feasibility assessment, evaluating GHG mitigation potential and financial and non-financial considerations (e.g., legal, social).",
+      "Conducting a feasibility assessment is a first step to project development and includes evaluating GHG mitigation potential, financial and non-financial considerations (e.g., legal, social).",
   },
   conservationPlanningAndAdmin: {
     label: "Conservation planning and admin",
     unit: "$/yr",
     tooltipContent:
-      "Activities involved in the project start-up phase, such as project management, vendor coordination, fundraising, research, and travel.",
+      "Activities involved in the project start-up phase, such as project management, vendor coordination, fundraising, research, and travel. See Methodology section (Project costs - assumptions) for more details.",
   },
   dataCollectionAndFieldCost: {
     label: "Data collection and field cost",
@@ -83,7 +85,7 @@ export const COSTS_DTO_MAP = {
     label: "Validation",
     unit: "$/project",
     tooltipContent:
-      "The fee or price associated with the validation of the PD (e.g., by Verra).",
+      "The fee or price associated with the validation of the PD (e.g., third-party validations required by carbon standards).",
   },
   implementationLabor: {
     label: "Implementation labor",
@@ -95,7 +97,7 @@ export const COSTS_DTO_MAP = {
     label: "Monitoring",
     unit: "$/yr",
     tooltipContent:
-      "The expenses related to individuals moving throughout the project site to prevent degradation and report necessary actions/changes.",
+      "The expenses related to individuals moving throughout the project site to prevent degradation and report necessary actions/changes. See Methodology section (Project costs - assumptions) for more details.",
   },
   maintenance: {
     label: "Maintenance",
@@ -119,19 +121,19 @@ export const COSTS_DTO_MAP = {
     label: "Baseline reassessment",
     unit: "$/event",
     tooltipContent:
-      "The costs associated with a third-party assessment to ensure the initial GHG emission/reduction estimates are accurate and remain so over time.",
+      "The costs associated with a third-party assessment to ensure the initial GHG emission/reduction estimates are accurate and remain so over time. This amount will be applied according to the 'baseline reassessment frequency' assigned in the above assumptions box.",
   },
   mrv: {
     label: "MRV",
     unit: "$/event",
     tooltipContent:
-      "The costs associated with measuring, reporting, and verifying GHG emissions that occur post-implementation to enable carbon benefit sales through a third party. Most standards require this at least every 5 years.",
+      "The costs associated with measuring, reporting, and verifying GHG emissions that occur post-implementation to enable carbon benefit sales through a third party. This amount will be applied according to the 'verification frequency' assigned in the above assumptions box.",
   },
   longTermProjectOperatingCost: {
     label: "Long term project operating cost",
     unit: "$/yr",
     tooltipContent:
-      "The expenses related to project oversight, vendor coordination, community engagement, stakeholder management, etc., during the ongoing operating years of the project.",
+      "The expenses related to project oversight, vendor coordination, community engagement, stakeholder management, etc., during the ongoing operating years of the project. See Methodology section (Project costs - assumptions) for more details.",
   },
   financingCost: {
     label: "Financing cost",

@@ -6,7 +6,7 @@ import { ACTIVITY } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { PROJECT_SIZE_FILTER } from "@shared/entities/projects.entity";
 import { keepPreviousData } from "@tanstack/react-query";
-import { useSetAtom } from "jotai/index";
+import { useSetAtom } from "jotai";
 import { XIcon } from "lucide-react";
 import { useDebounce } from "rooks";
 import { z } from "zod";
@@ -368,7 +368,7 @@ export default function ProjectsFilters() {
           <div className="flex flex-col gap-3">
             <Label
               tooltip={{
-                title: "Abatement Potential (tCO2e/yr)",
+                title: "Abatement (credit) potential (tCO2e/yr)",
                 content: FILTERS.ABATEMENT_POTENTIAL,
               }}
             >

@@ -55,7 +55,8 @@ export const KEY_COSTS = {
         <li>
           Monitoring: The expenses related to individuals moving throughout the
           project site to prevent degradation and report necessary
-          actions/changes.
+          actions/changes. See Methodology section (Project costs - assumptions)
+          for more details.
         </li>
         <li>
           Maintenance: Only applicable to restoration. The costs associated with
@@ -80,9 +81,35 @@ export const FILTERS = {
   CONTINENT:
     "Continents are displayed based on the inclusion of countries with available data for blue carbon projects within each region.",
   COUNTRY:
-    "Select a country. Countries included based on the availability of data supporting blue carbon projects.",
-  ECOSYSTEM:
-    "Ecosystems included based on their role in carbon sequestration and eligibility on the carbon market. These include mangroves, seagrasses, and salt marshes.",
+    "Select a country. Country options are based on the availability of data supporting blue carbon projects. If your country is not listed, we suggest choosing a country that is most similar in terms of ecosystem, climate and/or cost of labor. ",
+  ECOSYSTEM: (
+    <>
+      <p>
+        Activity refers to the overarching strategy implemented in a blue carbon
+        project to protect or enhance ecosystem health and carbon sequestration.
+        Projects can focus on either Restoration (removals) or Conservation
+        (avoided loss):
+      </p>
+      <List>
+        <li>
+          Conservation: Aims to maintain existing ecosystems, preventing
+          degradation and preserving their carbon storage and sequestration
+          potential. Conservation is cost-effective and crucial for long-term
+          climate mitigation, offering benefits like avoiding biodiversity loss,
+          ensuring ecosystem resilience, and reducing financial investment
+          compared to restoration. However, proving additionality can be
+          challenging.
+        </li>
+        <li>
+          Restoration: Focuses on rehabilitating lost or degraded ecosystems to
+          restore their functionality and enhance carbon capture and storage.
+          While often more resource-intensive, restoration projects are highly
+          visible and impactful. Restoration is implemented through one of three
+          approaches: planting, hydrology, or a hybrid of the two.
+        </li>
+      </List>
+    </>
+  ),
   ACTIVITY_TYPE: (
     <>
       <p>
@@ -115,8 +142,9 @@ export const FILTERS = {
       </List>
     </>
   ),
-  COST: "Total cost (incl. CAPEX and OPEX)",
-  ABATEMENT_POTENTIAL: "The estimated annual abatement potential (tCO2e/year).",
+  COST: "Total project cost (incl. CAPEX and OPEX).",
+  ABATEMENT_POTENTIAL:
+    "The estimated annual credit potential, measured as tons of carbon dioxide equivalents (tCO2e/year).",
   PROJECT_SIZE: (
     <>
       <p>
@@ -152,28 +180,27 @@ export const FILTERS = {
       <p>
         The Carbon Price Type defines the pricing approach used to calculate the
         sale of carbon credits, which impacts project costs, including
-        contributions to the &quot;landowner/community benefit share.&quot;
+        contributions to the &apos;landowner/community benefit share.&apos;
         There are two pricing archetypes available:
       </p>
       <List>
         <li>
-          <strong>Market Price:</strong> A standardized premium price of $30 per
-          ton of CO₂e, reflecting the added value of co-benefits such as climate
-          resilience and biodiversity. This price is consistent across all
-          projects.
+          <strong>Market Price:</strong> A standard price of $30 per ton of
+          CO₂e, reflecting the market averages in 2025 and the added value of
+          blue carbon co-benefits such as climate resilience and biodiversity.
+          This price is consistent across all projects.
         </li>
         <li>
           <strong>OPEX Breakeven Price:</strong> A project-specific price
           modeled to cover the operational expenditure (OPEX) of an individual
-          project. operational expenditure (OPEX) of an individual project. This
-          price varies depending on the unique costs associated with each
-          project.
+          project. This price varies depending on the unique costs associated
+          with each project.
         </li>
       </List>
       <p>
-        These two options allow for flexible cost assessments based on
-        standardized market values or project-specific operational needs, and
-        can inform carbon credit sale negotiations.
+        These two options allow for flexible cost assessments based on a
+        standard market value or project-specific operational needs, and can
+        inform carbon credit sale negotiations.
       </p>
     </>
   ),
@@ -209,7 +236,7 @@ export const FILTERS = {
 };
 
 export const MAP_LEGEND =
-  "Comparison of the average project cost ($USD/tCO2e) and the estimated total abatement potential (tCO₂e/yr) for each geography.";
+  "Comparison of the average project cost per credit ($USD/tCO2e) and the estimated total abatement potential (tCO₂e/yr) for each geography.";
 
 export const PROJECT_DETAILS = {
   TOTAL_PROJECT_COST_NPV:
@@ -315,17 +342,17 @@ export const PROJECT_DETAILS = {
 
 export const CUSTOM_PROJECT = {
   COUNTRY:
-    "Select a country. Countries included based on the availability of data supporting blue carbon projects.",
+    "Select a country. Country options are based on the availability of data supporting blue carbon projects. If your country is not listed, we suggest choosing a country that is most similar in terms of ecosystem, climate and/or cost of labor.",
   PROJECT_SIZE: "Insert project size in hectares.",
   ECOSYSTEM:
-    "Ecosystems included based on their role in carbon sequestration and eligibility on the carbon market. These include mangroves, seagrasses, and salt marshes.",
+    "Select a single ecosystem. Ecosystems included based on their role in carbon sequestration and eligibility on the carbon market. These include mangroves, seagrasses, and salt marshes.",
   ACTIVITY_TYPE: (
     <>
       <p>
-        Activity refers to the overarching strategy implemented in a blue carbon
-        project to protect or enhance ecosystem health and carbon sequestration.
-        Projects can focus on either Restoration (removals) or Conservation
-        (avoided loss):
+        Select a single activity. Activity refers to the overarching strategy
+        implemented in a blue carbon project to protect or enhance ecosystem
+        health and carbon sequestration. Projects can focus on either
+        Restoration (removals) or Conservation (avoided loss):
       </p>
       <List>
         <li>
@@ -399,8 +426,8 @@ export const RESTORATION_PROJECT_DETAILS = {
         </li>
         <li>
           Tier 2 - Country-Specific Sequestration Rate: National-level
-          sequestration rates, which are more specific but currently available
-          only for mangroves.
+          sequestration rates, which are more specific but limited in
+          availability.
         </li>
         <li>
           Tier 3 - Project-Specific Sequestration Rate: Allows users to provode
@@ -409,13 +436,12 @@ export const RESTORATION_PROJECT_DETAILS = {
         </li>
       </List>
       <p>
-        <strong>Note:</strong> only mangroves have Tier 2 default values.
+        <strong>Note:</strong> not all ecosystems have Tier 2 default values.
       </p>
       <List>
         <li>
           Methane (CH4) and nitrous oxide (N2O) emissions are not currently
-          included in the default sequestration rate values of the model (please
-          refer to the “Limitations of the tool” section for further details).
+          included in the default sequestration rate values of the model.
           However, it is possible to incorporate CH4 and N2O emissions if the
           user possesses project-specific data. In such cases, the emissions
           should be converted to their respective CO2e before being added to the
@@ -450,12 +476,12 @@ export const CONSERVATION_PROJECT_DETAILS = {
       <List>
         <li>
           <strong>National average loss rate:</strong> Reflects the average rate
-          of ecosystem loss specific to the country. Note: Only available for
-          mangroves.
+          of ecosystem loss specific to the country. Note: Not available for all
+          ecosystems.
         </li>
         <li>
-          <strong>Global average loss rate:</strong> Default values applicable
-          to salt marshes and seagrass.
+          <strong>Global average loss rate:</strong> Default values applied for
+          loss rates where no national or project-specific data is available.
         </li>
         <li>
           <strong>Project-specific loss rate:</strong> A customized rate based
@@ -499,9 +525,8 @@ export const CONSERVATION_PROJECT_DETAILS = {
         <li>
           <strong>Tier 2:</strong> Uses country-specific values derived from
           literature sources, modeling Above-Ground Biomass (AGB) and Soil
-          modeling Above-Ground Biomass (AGB) and Soil Organic Carbon (SOC)
-          emissions separately. Note: Tier 2 default values are only available
-          for mangrove ecosystems.
+          Organic Carbon (SOC) emissions separately. Note: Tier 2 default values
+          are not available for all ecosystems.
         </li>
         <li>
           <strong>Tier 3:</strong> Enables the use of project-specific emission
@@ -579,28 +604,8 @@ export const CONSERVATION_PROJECT_DETAILS = {
 };
 
 export const GENERAL_ASSUMPTIONS = {
-  CARBON_REVENUES_TO_COVER: (
-    <>
-      <p>
-        Carbon Revenues to Cover provides the flexibility to determine whether
-        carbon revenues should be used to cover only OPEX (Operational
-        Expenditures) or both CAPEX (Capital Expenditures) and OPEX. This option
-        allows developers to account for external funding sources such as grants
-        or philanthropic contributions that may be used to cover a portion of
-        the costs.
-      </p>
-      <p>
-        Given that CAPEX, which includes start-up and implementation costs, is
-        typically higher in blue carbon projects, it is generally recommended
-        that these costs be covered by other funding sources. In contrast, OPEX,
-        which includes ongoing operational and maintenance costs, could be
-        sustainably supported by the revenue generated from carbon credits. This
-        feature provides flexibility based on the funding strategy and the
-        expected financial structure of the project.
-      </p>
-    </>
-  ),
-
+  CARBON_REVENUES_TO_COVER:
+    "Carbon Revenues to Cover provides the flexibility to determine whether carbon revenues should be used to cover only OPEX (Operational Expenditures) or both CAPEX (Capital Expenditures) and OPEX. This option allows developers to account for external funding sources such as grants or philanthropic contributions that may be used to cover a portion of the costs.",
   INITIAL_CARBON_PRICE_ASSUMPTIONS: (
     <p>
       Initial Carbon Price Assumptions (in $USD) sets the default market price
@@ -615,9 +620,9 @@ export const ASSUMPTIONS = {
   VERIFICATION_FREQUENCY: (
     <p>
       Verification Frequency refers to how often the carbon credits generated by
-      the project will be verified by a third-party entity. It is typically set
-      at regular intervals to ensure the project&apos;s carbon sequestration
-      claims are accurate and to issue verified carbon credits accordingly. Most
+      the project will be verified by a third-party entity. As verification
+      incurs separate fees, project proponents must decide how often to verify
+      depending on the anticipated rate of accrued climate benefit. Most carbon
       standards require verification at least every 5 years.
     </p>
   ),
@@ -636,10 +641,13 @@ export const ASSUMPTIONS = {
   ),
   BUFFER: (
     <p>
-      When considering carbon credits, it is crucial to account for
-      non-permanence, leakage, and uncertainty, which are significant factors.
-      These factors are encompassed within the &apos;buffer&apos; assumption in
-      the Blue Carbon Cost Tool, where the default value is set at 20%.
+      Carbon credit calculations include a buffer deduction that accounts for
+      uncertainty, leakage, and non-permanence risks associated with the
+      project. A default deduction, which can be adjusted by a tool user, of 20%
+      is applied, based on expert consultation, feasibility studies and Perera
+      et al., 2024 reporting that most registered blue carbon project buffers
+      were between 10 and 30%. A 20% buffer also aligns with the Integrity
+      Council for the Voluntary Carbon Market’s Core Carbon Principles (2024).
     </p>
   ),
 
@@ -659,13 +667,8 @@ export const ASSUMPTIONS = {
   CONSERVATION_PROJECT_LENGTH: (
     <p>
       Conservation Project Length refers to the duration over which conservation
-      efforts are implemented and maintained. This includes activities aimed at
-      preserving and protecting existing ecosystems to prevent further
-      degradation and enhance carbon sequestration over time. The length of a
-      conservation project is typically long-term, as it involves ongoing
-      monitoring and management to ensure ecosystem stability and carbon storage
-      potential. The tool default project length is 20 years but may be adjusted
-      to up to 30 years.
+      efforts are implemented and maintained. The tool default project length is
+      20 years but may be adjusted to up to 30 years.
     </p>
   ),
 
@@ -677,10 +680,10 @@ export const ASSUMPTIONS = {
       </p>
       <p>
         Users have the option to adapt the restoration rate depending on what is
-        feasibly restorable per year. Make sure the project size is adapted
-        according to this rate and the duration of the restoration activity. For
-        example, if the reasonable restoration rate is 50 ha / year and you will
-        restore for five years, your project size will be 250 ha total.
+        feasibly restorable per year. Make sure the project size aligns with
+        this rate and the duration of the restoration activity. For example, if
+        the reasonable restoration rate is 50 ha / year and you will restore for
+        five years, your project size will be 250 ha total.
       </p>
     </div>
   ),
@@ -721,7 +724,7 @@ export const PROJECT_SUMMARY: Record<keyof CustomProjectSummary, string> = {
   "Operating expenditure (NPV)":
     "The NPV of the OPEX associated with the hypothetical blue carbon project.",
   "Credits issued":
-    "The carbon credits issued as part of the project. The buffer has already been subtracted from this total number.",
+    "The carbon credits issued over the indicated project timeline. The buffer has already been subtracted from this total number",
   "Total revenue (NPV)": "The NPV of the carbon credit revenues.",
   "Total revenue (non-discounted)":
     "The non-discounted carbon credit revenues.",
@@ -732,8 +735,9 @@ export const PROJECT_SUMMARY: Record<keyof CustomProjectSummary, string> = {
   "Funding gap per tCO2e (NPV)":
     "The gap for NPV to cover OPEX or OPEX + CAPEX, depending on which parameter is chosen, divided by tCO2e.",
   "Landowner/community benefit share":
-    "The percentage of the revenues assumed to go back to the community, after OPEX is covered.",
-  "Net revenue after OPEX": "TODO",
+    "The USD($) allocated to landowner/community, as dictated by the default or assigned percentage.",
+  "Net revenue after OPEX":
+    "Net revenue from sale of carbon credits at indicated price/ton, after accounting for OPEX.",
   "Net revenue after Total cost": "TODO",
 };
 
@@ -843,3 +847,9 @@ export const COST_DETAILS = (
 
 export const ANNUAL_PROJECT_CASHFLOW =
   "The Annual Project Cash Flow represents the year-by-year net financial outcome of the project, calculated as the total revenues (primarily from carbon credit sales) minus the annual operating expenditures (OPEX). This metric provides insight into the financial viability and sustainability of the project over its operational lifespan, highlighting when the project is expected to become profitable or break even.";
+
+export const COST_INPUT_OVERRIDES =
+  "While the tool as attempts to capture project costs into the below define cost buckets, users may want to be creative with entering their cost data depending on how it is tracked for your specific project. We recommend refering to the cost unit column to tailor cost assumptions accordingly. For example, if your project cost are not divided into cost buckets but you have an annual project cost amount, enter the annual cost into one of the cost line items which uses the $/yr unit and zero into all other cost buckets, as appropriate.";
+
+export const RESTORATION_PLAN =
+  "This feature allows users to customize the annual hectares restored in the project (otherwise the tool defaults to a fixed restoration rate, averaged over time). Be sure this number cooresponds to the total project size and timeline listed above.";
