@@ -2,7 +2,10 @@ import logging
 import re
 
 from IPython.display import Markdown, display
+
+from bcc_model.types import BlueCarbonProjectParams
 from bcc_model.utils import get_value_from_master_table, load_country_code
+
 
 
 class BlueCarbonProject:
@@ -50,43 +53,45 @@ class BlueCarbonProject:
 
     def __init__(
         self,
-        activity,
-        ecosystem,
-        country,
-        master_table,
-        base_size,
-        base_increase,
-        carbon_price=30,
-        carbon_revenues_to_cover="Opex",
-        project_size_ha=0,
-        restoration_activity=None,
-        sequestration_rate_used=None,
-        project_specific_sequestration_rate=None,
-        planting_success_rate=0.6,
-        loss_rate_used=None,
-        project_specific_loss_rate=None,
-        emission_factor_used=None,
-        tier_3_project_specific_emission=None,
-        tier_3_project_specific_emission_one_factor=None,
-        tier_3_emission_factor_agb=None,
-        tier_3_emission_factor_soc=None,
+        params: BlueCarbonProjectParams,
+        # activity,
+        # ecosystem,
+        # country,
+        # master_table,
+        # base_size,
+        # base_increase,
+        # carbon_price=30,
+        # carbon_revenues_to_cover="Opex",
+        # project_size_ha=0,
+        # restoration_activity=None,
+        # sequestration_rate_used=None,
+        # project_specific_sequestration_rate=None,
+        # planting_success_rate=0.6,
+        # loss_rate_used=None,
+        # project_specific_loss_rate=None,
+        # emission_factor_used=None,
+        # tier_3_project_specific_emission=None,
+        # tier_3_project_specific_emission_one_factor=None,
+        # tier_3_emission_factor_agb=None,
+        # tier_3_emission_factor_soc=None,
     ):
         """Initialize a Blue Carbon Project with default values and user inputs."""
 
         # Initialize logger
+        self.project_name = params.project_name
         self.logger = logging.getLogger(__name__)
 
-        self.master_table = master_table
-        self.base_size = base_size
-        self.base_increase = base_increase
+        self.master_table = params.master_table
+        self.base_size = params.base_size
+        self.base_increase = params.base_increase
 
         # Set project attributes
-        self.project_size_ha = project_size_ha
-        self.carbon_price = carbon_price
-        self.country = country
-        self.ecosystem = ecosystem
-        self.activity = activity  # 'Conservation' or 'Restoration'
-        self.carbon_revenues_to_cover = carbon_revenues_to_cover
+        self.project_size_ha = params.project_size_ha
+        self.carbon_price = params.carbon_price
+        self.country = params.country
+        self.ecosystem = params.ecosystem
+        self.activity = params.activity  # 'Conservation' or 'Restoration'
+        self.carbon_revenues_to_cover = params.carbon_revenues_to_cover
         self.carbon_revenues_will_not_cover = (
             "Capex" if self.carbon_revenues_to_cover == "Opex" else "None"
         )
@@ -95,27 +100,27 @@ class BlueCarbonProject:
         self.country_code = load_country_code(self.master_table, self.country)
 
         # Conservation-specific attributes:
-        self.loss_rate_used = loss_rate_used
-        self.project_specific_loss_rate = project_specific_loss_rate
-        self.emission_factor_used = emission_factor_used
-        self.tier_3_project_specific_emission = tier_3_project_specific_emission
+        self.loss_rate_used = params.loss_rate_used
+        self.project_specific_loss_rate = params.project_specific_loss_rate
+        self.emission_factor_used = params.emission_factor_used
+        self.tier_3_project_specific_emission = params.tier_3_project_specific_emission
         self.tier_3_project_specific_emission_one_factor = (
-            tier_3_project_specific_emission_one_factor
+            params.tier_3_project_specific_emission_one_factor
         )
-        self.tier_3_emission_factor_agb = tier_3_emission_factor_agb
-        self.tier_3_emission_factor_soc = tier_3_emission_factor_soc
+        self.tier_3_emission_factor_agb = params.tier_3_emission_factor_agb
+        self.tier_3_emission_factor_soc = params.tier_3_emission_factor_soc
         if self.activity == "Conservation":
             self._get_loss_rate()
             self._get_emission_factor()
 
         # Restoration-specific attributes:
-        self.restoration_activity = restoration_activity
-        self.sequestration_rate_used = sequestration_rate_used
-        self.project_specific_sequestration_rate = project_specific_sequestration_rate
+        self.restoration_activity = params.restoration_activity
+        self.sequestration_rate_used = params.sequestration_rate_used
+        self.project_specific_sequestration_rate = params.project_specific_sequestration_rate
         self.tier_1_sequestration_rate = get_value_from_master_table(
             self.master_table, self.country_code, self.ecosystem, "tier_1_ipcc_default_value"
         )
-        self.planting_success_rate = planting_success_rate
+        self.planting_success_rate = params.planting_success_rate
         if self.activity == "Restoration":
             self._get_sequestration_rate()
             self._get_planting_success_rate()
@@ -125,6 +130,7 @@ class BlueCarbonProject:
             self.master_table, self.country_code, self.ecosystem, "extent"
         )
 
+        # TODO: This can be evil as fuck and the source of divergences
         # Initialize default values for additional assumptions
         self.verification_frequency = BlueCarbonProject.VERIFICATION_FREQUENCY
         self.discount_rate = BlueCarbonProject.DISCOUNT_RATE

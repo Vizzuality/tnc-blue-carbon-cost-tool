@@ -3,6 +3,8 @@ import re
 import matplotlib.pyplot as plt  # noqa: I001
 import pandas as pd
 from IPython.display import Markdown, display
+
+from bcc_model.blue_carbon_project import BlueCarbonProject
 from bcc_model.revenue_profit_calculator import RevenueProfitCalculator
 from bcc_model.sequestration_credits_calculator import SequestrationCreditsCalculator
 from bcc_model.utils import (
@@ -23,7 +25,7 @@ class CostCalculator:
     as well as revenue and credits.
     """
 
-    def __init__(self, project):
+    def __init__(self, project: BlueCarbonProject):
         """Initialize the CostCalculator with a project object."""
         self.project = project
         self.revenue_profit_calculator = RevenueProfitCalculator(self.project)

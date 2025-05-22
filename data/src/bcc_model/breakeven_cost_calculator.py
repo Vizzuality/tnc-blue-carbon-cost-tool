@@ -1,3 +1,4 @@
+from bcc_model.blue_carbon_project import BlueCarbonProject
 from bcc_model.cost_calculator import CostCalculator
 
 
@@ -18,7 +19,7 @@ class BreakevenCostCalculator:
         result = breakeven_cost_calculator.calculate_breakeven_cost()
     """
 
-    def __init__(self, project):
+    def __init__(self, project: BlueCarbonProject):
         """Initialize the BreakevenCostCalculator with a project object."""
         self.project = project
 
