@@ -7,6 +7,7 @@ import { CustomProjectsController } from './custom-projects.controller';
 import { CalculationsModule } from '@api/modules/calculations/calculations.module';
 import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import { SaveCustomProjectEventHandler } from '@api/modules/custom-projects/events/handlers/save-custom-project.handler';
+import { RestorationPlanService } from '@api/modules/custom-projects/restoration-plan.service';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SaveCustomProjectEventHandler } from '@api/modules/custom-projects/even
     CustomProjectsService,
     CustomProjectFactory,
     SaveCustomProjectEventHandler,
+    RestorationPlanService,
   ],
   controllers: [CustomProjectsController],
   // TODO: since probably the project factory will be needed for both regular and custom projects, we should move it to the calculations module
