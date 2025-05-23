@@ -17,12 +17,14 @@ import { RolesGuard } from '@api/modules/auth/guards/roles.guard';
 import { RequiredRoles } from '@api/modules/auth/decorators/roles.decorator';
 import { ROLES } from '@shared/entities/users/roles.enum';
 import { handleImplementationLabor } from '@api/modules/custom-projects/handle-implementation-labor';
+import { RestorationPlanService } from '@api/modules/custom-projects/restoration-plan.service';
 
 @Controller()
 export class CustomProjectsController {
   constructor(
     private readonly countries: CountriesService,
     private readonly customProjects: CustomProjectsService,
+    private readonly restorationPlanService: RestorationPlanService,
   ) {}
 
   @TsRestHandler(customProjectContract.getActivityTypesDefaults)
@@ -68,6 +70,18 @@ export class CustomProjectsController {
       async ({ query }) => {
         const data = await this.customProjects.getDefaultCostInputs(query);
         return { body: { data }, status: HttpStatus.OK };
+      },
+    );
+  }
+
+  @TsRestHandler(customProjectContract.getRestorationPlan)
+  async getRestorationPlan(): Promise<ControllerResponse> {
+    return tsRestHandler(
+      customProjectContract.getRestorationPlan,
+      async ({ query }) => {
+        const restorationPlan =
+          await this.restorationPlanService.getRestorationPlan(query);
+        return { body: { data: restorationPlan }, status: HttpStatus.OK };
       },
     );
   }
