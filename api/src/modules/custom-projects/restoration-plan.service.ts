@@ -5,7 +5,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { RestorationPlanDto } from '@shared/dtos/custom-projects/restoration-plan.dto';
 
-type GetRestorationPlan = z.infer<typeof GetRestorationPlanSchema>;
+export type GetRestorationPlan = z.infer<typeof GetRestorationPlanSchema>;
 
 @Injectable()
 export class RestorationPlanService {
@@ -36,10 +36,10 @@ export class RestorationPlanService {
       annualHectaresRestored: number;
     }[] = [];
 
-    // If project size is bigger than the restoration rate, then the initial hectares value is
-    // the project size itself
+    // If project size in hectares is greater than restoration rate, then we start with the restoration rate.
+    // Otherwise, the initial value is the project size itself, as there won't be any remaining hectares to restore.
     const initialValue =
-      projectSizeHa > restorationRate ? projectSizeHa : restorationRate;
+      projectSizeHa > restorationRate ? restorationRate : projectSizeHa;
     restorationPlanArray.push({
       year: -1,
       annualHectaresRestored: initialValue,
