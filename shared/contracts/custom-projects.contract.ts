@@ -17,6 +17,8 @@ import { z } from "zod";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { ActivityTypesDefaults } from "@shared/dtos/custom-projects/activity-types-defaults";
 import { GetActivityTypesDefaultsSchema } from "@shared/schemas/custom-projects/activity-types-defaults.schema";
+import {RestorationPlanDto} from "@shared/dtos/custom-projects/restoration-plan.dto";
+import {GetRestorationPlanSchema} from "@shared/schemas/custom-projects/get-restoration-plan.schema";
 
 export const customProjectsQuerySchema = generateEntityQuerySchema(
   CustomProject,
@@ -116,6 +118,15 @@ export const customProjectContract = contract.router({
     },
     body: contract.type<{ ids: string[] }>(),
   },
+  getRestorationPlan: {
+    method: "GET",
+    path: "/custom-projects/restoration-plan",
+    responses: {
+      200: contract.type<ApiResponse<RestorationPlanDto[]>>(),
+    },
+    query: GetRestorationPlanSchema,
+    summary: "Get the restoration plan for a custom project",
+  }
 });
 
 export type AssumptionsResponse = ClientInferResponses<typeof customProjectContract.getDefaultAssumptions, 200>;
