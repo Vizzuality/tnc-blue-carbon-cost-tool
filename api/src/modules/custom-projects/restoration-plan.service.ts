@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { GetRestorationPlanSchema } from '@shared/schemas/custom-projects/get-restoration-plan.schema';
 import { z } from 'zod';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
 import { RestorationPlanDto } from '@shared/dtos/custom-projects/restoration-plan.dto';
 
 export type GetRestorationPlan = z.infer<typeof GetRestorationPlanSchema>;
 
 @Injectable()
 export class RestorationPlanService {
-  constructor(@InjectDataSource() dataSource: DataSource) {}
+  constructor() {}
 
   async getRestorationPlan(dto: GetRestorationPlan) {
     const { projectSizeHa, restorationRate, restorationProjectLength } = dto;
@@ -19,12 +17,6 @@ export class RestorationPlanService {
       restorationProjectLength,
     );
   }
-
-  private hasCustomProjectLengthOrRate(dto: GetRestorationPlan) {
-    return dto.restorationProjectLength || dto.restorationRate;
-  }
-
-  async getDefaultValues(dto: any) {}
 
   buildRestorationPlan(
     projectSizeHa: number,
