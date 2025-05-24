@@ -9,10 +9,6 @@ describe('Restoration Plan - Get Tests', () => {
     testManager = await TestManager.createTestManager();
   });
 
-  afterEach(async () => {
-    await testManager.close();
-  });
-
   afterAll(async () => {
     await testManager.clearDatabase();
     await testManager.close();
