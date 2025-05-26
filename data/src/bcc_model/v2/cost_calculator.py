@@ -61,6 +61,15 @@ class CostCalculator:
             self.sequestration_credits_calculator.calculate_est_credits_issued()
         )
         self.credits_issued = sum(self.total_credits_plan.values())
+        # Calculate project abatement potential
+        net_emissions_reduction_plan = (
+            self.sequestration_credits_calculator.calculate_net_emissions_reductions()
+        )
+        try:
+            self.project_abatement_potential = round(sum(net_emissions_reduction_plan.values()))
+        except Exception as e:
+            print(f"Error calculating project abatement potential: {e}")
+            self.project_abatement_potential = 0
         # Calculate $/tCO2e (NPV)
         self.cost_per_tCO2e = (
             self.total_NPV / self.credits_issued if self.credits_issued != 0 else 0
@@ -542,6 +551,7 @@ class CostCalculator:
             "Capital expenditure (NPV)": f"${self.total_capex_NPV:,.0f}",
             "Operating expenditure (NPV)": f"${self.total_opex_NPV:,.0f}",
             "Credits issued": f"{self.credits_issued:,.0f}",
+            "Total abatement potential (tCO2e, without buffer)": f"{self.project_abatement_potential:,.0f}",
             "Total revenue (NPV)": f"${self.total_revenue_NPV:,.0f}",
             "Total revenue (non-discounted)": f"${self.total_revenue:,.0f}",
             "Financing cost": f"${self.financing_cost:,.0f}",
