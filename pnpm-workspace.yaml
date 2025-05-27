@@ -10,7 +10,7 @@ packages:
 catalog:
   pg: "8.14.1"
   typeorm: "0.3.21"
-  zod: "3.25.20"
+  zod: "3.25.28"
   class-transformer: "0.5.1"
   bcrypt: "5.1.1"
   "@types/node": 22.15.21
