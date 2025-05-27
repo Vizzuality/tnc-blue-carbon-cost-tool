@@ -89,6 +89,20 @@ export const customProjectKeys = createQueryKeys("customProjects", {
     ecosystem: ECOSYSTEM;
     countryCode: string;
   }) => ["defaultActivityTypes", ecosystem, countryCode],
+  restorationPlan: ({
+    projectSizeHa,
+    restorationProjectLength,
+    restorationRate,
+  }: {
+    projectSizeHa: number;
+    restorationProjectLength: number;
+    restorationRate: number;
+  }) => [
+    "restorationPlan",
+    projectSizeHa,
+    restorationProjectLength,
+    restorationRate,
+  ],
 });
 
 const methodologyKeys = createQueryKeys("methodology", {

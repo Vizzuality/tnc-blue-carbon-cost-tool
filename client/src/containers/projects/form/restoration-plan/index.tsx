@@ -2,6 +2,10 @@ import { useEffect, useMemo } from "react";
 
 import { useFormContext } from "react-hook-form";
 
+import {
+  ACTIVITY_PROJECT_LENGTH_NAMES,
+  ECOSYSTEM_RESTORATION_RATE_NAMES,
+} from "@shared/schemas/assumptions/assumptions.enums";
 import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import {
   flexRender,
@@ -15,8 +19,10 @@ import { queryKeys } from "@/lib/query-keys";
 import { RESTORATION_PLAN } from "@/constants/tooltip";
 
 import { useFormValues } from "@/containers/projects/form/project-form";
-import { COLUMNS } from "@/containers/projects/form/restoration-plan/columns";
-import { getRestorationPlanTableData } from "@/containers/projects/form/utils";
+import {
+  COLUMNS,
+  RestorationPlanData,
+} from "@/containers/projects/form/restoration-plan/columns";
 
 import {
   Accordion,
@@ -34,6 +40,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+const EMPTY_ARRAY: RestorationPlanData[] = [];
+
 export default function RestorationPlanProjectForm() {
   const form = useFormContext<CustomProjectForm>();
 
@@ -44,6 +52,8 @@ export default function RestorationPlanProjectForm() {
     assumptions: {
       // @ts-expect-error fix later
       projectLength,
+      // @ts-expect-error fix later
+      restorationRate,
     },
     parameters: {
       // @ts-expect-error fix later
@@ -55,7 +65,7 @@ export default function RestorationPlanProjectForm() {
     ecosystem,
     activity,
   });
-  const { data: defaultRestorationProjectLength } =
+  const { data: defaultAssumptions, isSuccess: defaultAssumptionsSuccess } =
     client.customProjects.getDefaultAssumptions.useQuery(
       queryKey,
       {
@@ -63,35 +73,86 @@ export default function RestorationPlanProjectForm() {
       },
       {
         queryKey,
-        select: (data) =>
-          Number(
-            data.body.data.find(
-              (assumption) => assumption.name === "Restoration project length",
-            )?.value,
-          ),
+        select: (data) => data.body.data,
       },
     );
 
-  const DATA = useMemo(
-    () =>
-      getRestorationPlanTableData(
-        projectLength,
-        defaultRestorationProjectLength,
-      ),
-    [projectLength, defaultRestorationProjectLength],
-  );
+  const defaultRestorationProjectLength = useMemo(() => {
+    if (!defaultAssumptionsSuccess) return undefined;
 
-  const table = useReactTable({
-    data: DATA,
-    columns: COLUMNS,
-    getCoreRowModel: getCoreRowModel(),
-  });
+    return Number(
+      defaultAssumptions.find(
+        (assumption) =>
+          assumption.name === ACTIVITY_PROJECT_LENGTH_NAMES.RESTORATION,
+      )?.value,
+    );
+  }, [defaultAssumptionsSuccess, defaultAssumptions]);
+
+  const defaultRestorationRate = useMemo(() => {
+    if (!defaultAssumptionsSuccess) return undefined;
+
+    return Number(
+      defaultAssumptions.find((assumption) =>
+        [
+          ECOSYSTEM_RESTORATION_RATE_NAMES.MANGROVE,
+          ECOSYSTEM_RESTORATION_RATE_NAMES.SEAGRASS,
+          ECOSYSTEM_RESTORATION_RATE_NAMES.SALT_MARSH,
+        ].includes(assumption.name as ECOSYSTEM_RESTORATION_RATE_NAMES),
+      )?.value,
+    );
+  }, [defaultAssumptionsSuccess, defaultAssumptions]);
 
   const { setError, clearErrors } = form;
 
   const breakDownError =
     // @ts-expect-error fix later
     form.formState.errors.parameters?.restorationYearlyBreakdown;
+
+  const usedProjectLength = projectLength ?? defaultRestorationProjectLength;
+  const usedRestorationRate = restorationRate ?? defaultRestorationRate;
+
+  const { queryKey: restorationPlanQueryKey } =
+    queryKeys.customProjects.restorationPlan({
+      projectSizeHa,
+      restorationProjectLength: usedProjectLength,
+      restorationRate: usedRestorationRate,
+    });
+
+  const { data: restorationPlan, isSuccess: restorationPlanSuccess } =
+    client.customProjects.getRestorationPlan.useQuery(
+      restorationPlanQueryKey,
+      {
+        query: {
+          projectSizeHa,
+          restorationProjectLength: usedProjectLength,
+          restorationRate: usedRestorationRate,
+        },
+      },
+      {
+        queryKey: restorationPlanQueryKey,
+        enabled: !!(projectSizeHa && usedProjectLength && usedRestorationRate),
+        select: (data) => data.body.data,
+      },
+    );
+
+  const dataTable = useMemo(() => {
+    if (!restorationPlanSuccess) return EMPTY_ARRAY;
+
+    return restorationPlan.map<RestorationPlanData>((defaultPlan) => ({
+      ...defaultPlan,
+      defaultAnnualHectaresRestored: defaultPlan.annualHectaresRestored,
+      annualHectaresRestored:
+        restorationYearlyBreakdown[
+          defaultPlan.year === -1 ? 0 : defaultPlan.year
+        ] ?? undefined,
+    }));
+  }, [restorationPlanSuccess, restorationPlan, restorationYearlyBreakdown]);
+
+  const table = useReactTable({
+    data: restorationPlanSuccess ? dataTable : EMPTY_ARRAY,
+    columns: COLUMNS,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   useEffect(() => {
     const totalHectares = (restorationYearlyBreakdown as string[])

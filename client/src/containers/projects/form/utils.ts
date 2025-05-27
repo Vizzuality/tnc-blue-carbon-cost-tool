@@ -3,12 +3,14 @@ import { useCallback } from "react";
 import { Path, useFormContext } from "react-hook-form";
 
 import { AssumptionsResponse } from "@shared/contracts/custom-projects.contract";
+import { RestorationPlanDto } from "@shared/dtos/custom-projects/restoration-plan.dto";
 import { ApiResponse } from "@shared/dtos/global/api-response.dto";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject } from "@shared/entities/custom-project.entity";
-import { MAX_PROJECT_LENGTH } from "@shared/schemas/custom-projects/create-custom-project.schema";
-import { ValidatedCustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
-import { CustomProjectForm } from "@shared/schemas/custom-projects/create-custom-project.schema";
+import {
+  CustomProjectForm,
+  ValidatedCustomProjectForm,
+} from "@shared/schemas/custom-projects/create-custom-project.schema";
 import {
   DEFAULT_COMMON_FORM_VALUES,
   DEFAULT_CONSERVATION_FORM_VALUES,
@@ -23,7 +25,6 @@ import { getAuthHeader } from "@/lib/utils";
 
 import { getQueryClient } from "@/app/providers";
 
-import { RestorationPlanFormProperty } from "@/containers/projects/form/restoration-plan/columns";
 /**
  * Note: All percentage values are kept in decimal form,
  * formatting to whole percentage values (for UI display) is done at input component level
@@ -123,6 +124,16 @@ export const useDefaultFormValues = (
     };
 
     if (project.activity === ACTIVITY.RESTORATION) {
+      const restorationPlanValues = new Array(
+        project.input.assumptions.projectLength,
+      );
+
+      project.input.parameters.customRestorationPlan?.forEach(
+        (a: RestorationPlanDto) => {
+          restorationPlanValues[a.year] = a.annualHectaresRestored;
+        },
+      );
+
       return {
         activity: project.activity,
         ...commonAttributes,
@@ -130,8 +141,7 @@ export const useDefaultFormValues = (
           tierSelector: project.input.parameters.tierSelector,
           plantingSuccessRate: project.input.parameters.plantingSuccessRate,
           restorationActivity: project.input.parameters.restorationActivity,
-          restorationYearlyBreakdown:
-            project.input.parameters.restorationYearlyBreakdown,
+          restorationYearlyBreakdown: restorationPlanValues,
           projectSpecificSequestrationRate:
             project.input.parameters.projectSpecificSequestrationRate,
         },
@@ -241,40 +251,3 @@ export const useCustomProjectForm = () => {
     handleFormChange,
   };
 };
-
-/**
- *
- * @param projectLength - The number of years the restoration project will run
- *
- * @param defaultLength - Fallback length to use if projectLength is not provided
- *
- * @param maxProjectLength - The maximum number of years the restoration project can run
- *
- * @returns An array of yearly restoration data where:
- *          - First entry is year -1
- *          - Followed by years 1 through projectLength
- */
-export function getRestorationPlanTableData(
-  projectLength?: number | null,
-  defaultLength?: number,
-  maxProjectLength?: number,
-): RestorationPlanFormProperty[] {
-  const totalYears = projectLength ? Number(projectLength) : defaultLength;
-  let maxYears = MAX_PROJECT_LENGTH;
-
-  if (typeof maxProjectLength === "number" && maxProjectLength > 0) {
-    maxYears = maxProjectLength;
-  }
-
-  if (!totalYears || totalYears <= 0 || totalYears > maxYears) {
-    return [];
-  }
-
-  return [
-    { year: -1, annualHectaresRestored: 0 },
-    ...Array.from({ length: totalYears }, (_, i) => ({
-      year: i + 1,
-      annualHectaresRestored: 0,
-    })),
-  ];
-}
