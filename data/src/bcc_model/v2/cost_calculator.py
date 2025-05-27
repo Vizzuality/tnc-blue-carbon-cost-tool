@@ -342,11 +342,7 @@ class CostCalculator:
 
     def calculate_maintenance(self):
         "OPEX function to calculate the maintenance cost."
-        base_cost = self.project.master_table.loc[
-            (self.project.master_table["country_code"] == self.project.country_code)
-            & (self.project.master_table["ecosystem"] == self.project.ecosystem),
-            "maintenance",
-        ].values[0]
+        base_cost = self.project.maintenance
 
         if float(base_cost) < 1:
             key = "% of implementation labor"
