@@ -350,14 +350,17 @@ class BlueCarbonProject:
                 self.restoration_rate = kwargs.get(
                     "restoration_rate", BlueCarbonProject.RESTORATION_RATE
                 )
+                self.restoration_plan = self._initialize_restoration_plan()
             elif self.ecosystem == "Seagrass":
                 self.restoration_rate = kwargs.get(
                     "restoration_rate", BlueCarbonProject.RESTORATION_RATE
                 )
+                self.restoration_plan = self._initialize_restoration_plan()
             elif self.ecosystem == "Salt marsh":
                 self.restoration_rate = kwargs.get(
                     "restoration_rate", BlueCarbonProject.RESTORATION_RATE
                 )
+                self.restoration_plan = self._initialize_restoration_plan()
 
     def get_cost_inputs(self):
         """
