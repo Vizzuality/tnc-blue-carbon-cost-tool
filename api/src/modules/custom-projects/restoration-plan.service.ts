@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { GetRestorationPlanSchema } from '@shared/schemas/custom-projects/get-restoration-plan.schema';
 import { z } from 'zod';
 import { RestorationPlanDto } from '@shared/dtos/custom-projects/restoration-plan.dto';
@@ -16,17 +16,7 @@ export type RestorationPlanParams = {
 export class RestorationPlanService {
   constructor() {}
 
-  async getRestorationPlanForProjectCreation(dto: GetRestorationPlan) {
-    const { projectSizeHa, restorationRate, restorationProjectLength } = dto;
-
-    return this.buildRestorationPlan(
-      projectSizeHa,
-      restorationRate,
-      restorationProjectLength,
-    );
-  }
-
-  buildRestorationPlan(
+  createDefaultRestorationPlan(
     projectSizeHa: number,
     restorationRate: number,
     projectLength: number,
@@ -75,14 +65,20 @@ export class RestorationPlanService {
       customRestorationPlan,
     } = params;
 
+    let restorationPlan: RestorationPlanDto[] = [];
+
     if (!customRestorationPlan?.length) {
-      return this.buildRestorationPlan(
+      restorationPlan = this.createDefaultRestorationPlan(
         projectSizeHa,
         restorationRate,
         restorationProjectLength,
       );
+    } else {
+      restorationPlan = this.createCustomRestorationPlan(params);
     }
-    return this.createCustomRestorationPlan(params);
+
+    this.validateRestorationPlanOrThrow(restorationPlan, projectSizeHa);
+    return restorationPlan;
   }
 
   createCustomRestorationPlan(
@@ -103,5 +99,20 @@ export class RestorationPlanService {
     }
 
     return restorationPlan;
+  }
+
+  private validateRestorationPlanOrThrow(
+    restorationPlan: RestorationPlanDto[],
+    projectSizeHa: number,
+  ): void {
+    const totalAreaToRestore = restorationPlan.reduce(
+      (acc, plan) => acc + plan.annualHectaresRestored,
+      0,
+    );
+    if (totalAreaToRestore > projectSizeHa) {
+      throw new BadRequestException(
+        `Total area to restore (${totalAreaToRestore} ha) exceeds project size (${projectSizeHa} ha).`,
+      );
+    }
   }
 }
