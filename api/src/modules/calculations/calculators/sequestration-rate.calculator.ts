@@ -40,12 +40,7 @@ export class SequestrationRateCalculator {
     this.restorationRate = projectInput.assumptions.restorationRate;
     if (projectInput instanceof RestorationProjectInput) {
       this.sequestrationRate = projectInput.sequestrationRate;
-      this.restorationPlan = this.initializeRestorationPlan(
-        projectInput.projectSizeHa,
-        this.restorationRate,
-        this.projectLength,
-      );
-      this.restorationPlan = this.updateRestorationPlan(projectInput);
+      this.restorationPlan = projectInput.restorationPlan;
     }
     this.soilOrganicCarbonReleaseLength =
       projectInput.assumptions.soilOrganicCarbonReleaseLength;
@@ -427,77 +422,5 @@ export class SequestrationRateCalculator {
       );
     }
     return this.annualAvoidedLoss;
-  }
-
-  /**
-   * @description: Initializes a restoration plan
-   * @param projectSizeHa
-   * @param restorationRate
-   * @param projectLength
-   */
-
-  initializeRestorationPlan(
-    projectSizeHa: number,
-    restorationRate: number,
-    // TODO: Since the restoration plan seems to be used for conservation as well, we should apply the conservation project length here>?
-    projectLength: number,
-  ): CostPlanMap {
-    const restorationPlan: CostPlanMap = {};
-
-    restorationPlan[-1] =
-      projectSizeHa > restorationRate ? restorationRate : projectSizeHa;
-
-    let remainingHa = projectSizeHa - restorationPlan[-1];
-
-    for (let year = 1; year <= projectLength; year++) {
-      if (remainingHa > 0) {
-        if (remainingHa >= restorationRate) {
-          restorationPlan[year] = restorationRate;
-          remainingHa -= restorationRate;
-        } else {
-          restorationPlan[year] = remainingHa;
-          remainingHa = 0;
-        }
-      } else {
-        restorationPlan[year] = 0;
-      }
-    }
-
-    return restorationPlan;
-  }
-
-  /**
-   * @description: If the project is restoration, the user can provide a custom plan to have more control over how many hectares are restored each year.
-   *               if provided, updates the plan, otherwise it leaves the default plan.
-   * @param restorationProjectInput
-   * @returns The updated restoration plan if custom plan is provided, otherwise the default plan
-   */
-  updateRestorationPlan(
-    restorationProjectInput: RestorationProjectInput,
-  ): CostPlanMap {
-    const { customRestorationPlan } = restorationProjectInput;
-
-    if (
-      customRestorationPlan &&
-      Object.keys(customRestorationPlan).length > 0
-    ) {
-      // If a custom restoration plan is provided, update it
-      const originalPlanToModify = structuredClone(this.restorationPlan);
-      for (const [yearStr, hectares] of Object.entries(customRestorationPlan)) {
-        const year = Number(yearStr);
-
-        if (year in originalPlanToModify) {
-          originalPlanToModify[year] = hectares;
-        } else {
-          // This should not happen as the number of years are limited by the project length which cannot be modified by the user, but just in case
-          throw new CalculationException(
-            `Year ${year} is out of bounds for the restoration plan`,
-          );
-        }
-      }
-      return originalPlanToModify;
-    }
-    // If no custom plan is provided, return the default plan
-    return this.restorationPlan;
   }
 }
