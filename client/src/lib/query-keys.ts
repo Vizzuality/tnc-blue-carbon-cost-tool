@@ -104,13 +104,7 @@ export const customProjectKeys = createQueryKeys("customProjects", {
       typeof GetRestorationPlanSchema
     >["restorationRate"];
     ecosystem: ECOSYSTEM;
-  }) => [
-    "restorationPlan",
-    projectSizeHa,
-    restorationProjectLength,
-    restorationRate,
-    ecosystem,
-  ],
+  }) => [projectSizeHa, restorationProjectLength, restorationRate, ecosystem],
 });
 
 const methodologyKeys = createQueryKeys("methodology", {
