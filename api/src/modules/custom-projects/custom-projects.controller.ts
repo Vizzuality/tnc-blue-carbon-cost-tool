@@ -79,10 +79,15 @@ export class CustomProjectsController {
     return tsRestHandler(
       customProjectContract.getRestorationPlan,
       async ({ query }) => {
+        const { projectSizeHa, restorationRate, restorationProjectLength } =
+          query;
         const restorationPlan =
-          await this.restorationPlanService.getRestorationPlanForProjectCreation(
-            query,
+          this.restorationPlanService.createDefaultRestorationPlan(
+            projectSizeHa,
+            restorationRate,
+            restorationProjectLength,
           );
+
         return { body: { data: restorationPlan }, status: HttpStatus.OK };
       },
     );
