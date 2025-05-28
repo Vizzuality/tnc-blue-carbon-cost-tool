@@ -16,8 +16,8 @@ import {
   OverridableCostInputsDto,
   RestorationProjectParamsDto,
 } from '@api/modules/custom-projects/dto/create-custom-project.dto';
-import { BadRequestException } from '@nestjs/common';
 import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
+import { RestorationPlanDto } from '@shared/dtos/custom-projects/restoration-plan.dto';
 
 export class RestorationProjectInput {
   countryCode: string;
@@ -50,7 +50,7 @@ export class RestorationProjectInput {
 
   assumptions: ModelAssumptionsForCalculations;
 
-  customRestorationPlan?: CostPlanMap;
+  restorationPlan: CostPlanMap;
 
   setSequestrationRate(
     parameters: RestorationProjectParamsDto,
@@ -107,51 +107,17 @@ export class RestorationProjectInput {
     return this;
   }
 
-  setCustomRestorationPlan(
-    parameters: RestorationProjectParamsDto,
-    projectSizeHa: number,
-    restorationProjectLength: number,
-  ): this {
-    const { customRestorationPlan } = parameters;
-    if (!customRestorationPlan?.length) {
-      // TODO: We are missing how the restoration plan plays a role in the model, so I am not sure if it's not provided, we should return
-      //.      a default year + 0 value until reach the restoration project length
-      return;
+  /**
+   * @description: Builds the CostPlanMap from the restoration plan DTO array, to be used in the calculation engine
+   * @param restorationPlan
+   */
+
+  setRestorationPlanMap(restorationPlan: RestorationPlanDto[]): this {
+    const restorationPlanMap: CostPlanMap = {};
+    for (const { year, annualHectaresRestored } of restorationPlan) {
+      restorationPlanMap[year] = annualHectaresRestored;
     }
-    const restorationPlanHarea = customRestorationPlan.reduce((acc, plan) => {
-      return acc + plan.annualHectaresRestored;
-    }, 0);
-    if (restorationPlanHarea > projectSizeHa) {
-      throw new BadRequestException('Restoration plan exceeds project size');
-    }
-    this.customRestorationPlan = this.buildRestorationPlan(
-      customRestorationPlan,
-      restorationProjectLength,
-    );
+    this.restorationPlan = restorationPlanMap;
     return this;
-  }
-
-  private buildRestorationPlan(
-    restorationPlan: RestorationProjectParamsDto['customRestorationPlan'],
-    projectLength: number,
-  ): CostPlanMap {
-    const result: CostPlanMap = {};
-
-    const planMap = new Map<number, number>();
-    for (const { year, annualHectaresRestored } of restorationPlan ?? []) {
-      planMap.set(year, annualHectaresRestored);
-    }
-
-    // The plan that can be modified by the user starts at year -1 and does not have to be continuous.
-    // We the missing years with 0
-    for (let year = -1; year <= projectLength; year++) {
-      // Ignore year 0, as it is not a valid year for restoration
-      if (year === 0) {
-        continue;
-      }
-      result[year] = planMap.get(year) ?? 0;
-    }
-
-    return result;
   }
 }

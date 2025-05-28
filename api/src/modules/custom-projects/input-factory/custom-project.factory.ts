@@ -15,6 +15,8 @@ import {
   RestorationProjectParamsDto,
 } from '@api/modules/custom-projects/dto/create-custom-project.dto';
 import { CostOutput, ProjectInput } from '@api/modules/calculations/types';
+import { RestorationPlanService } from '@api/modules/custom-projects/restoration-plan.service';
+import { RestorationPlanDto } from '@shared/dtos/custom-projects/restoration-plan.dto';
 
 export type GeneralProjectInputs = {
   projectName: CreateCustomProjectDto['projectName'];
@@ -28,6 +30,9 @@ export type GeneralProjectInputs = {
 
 @Injectable()
 export class CustomProjectFactory {
+  constructor(
+    private readonly restorationPlanService: RestorationPlanService,
+  ) {}
   createProjectInput(
     dto: CreateCustomProjectDto,
     additionalBaseData: AdditionalBaseData,
@@ -68,8 +73,16 @@ export class CustomProjectFactory {
       countryCode,
     } = dto;
 
-    //TODO: This inherits only Conservation param type
     const projectParams = parameters as RestorationProjectParamsDto;
+    const customRestorationPlan =
+      projectParams.customRestorationPlan as RestorationPlanDto[];
+
+    const restorationPlan = this.restorationPlanService.createRestorationPlan({
+      projectSizeHa,
+      customRestorationPlan,
+      restorationRate: assumptions.restorationRate,
+      restorationProjectLength: assumptions.projectLength,
+    });
 
     const restorationProjectInput: RestorationProjectInput =
       new RestorationProjectInput();
@@ -104,11 +117,7 @@ export class CustomProjectFactory {
       assumptions,
       additionalAssumptions,
     );
-    restorationProjectInput.setCustomRestorationPlan(
-      projectParams,
-      projectSizeHa,
-      assumptions.projectLength,
-    );
+    restorationProjectInput.setRestorationPlanMap(restorationPlan);
     return restorationProjectInput;
   }
 

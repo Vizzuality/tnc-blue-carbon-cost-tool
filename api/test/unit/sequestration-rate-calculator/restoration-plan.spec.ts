@@ -160,7 +160,7 @@ describe('Restoration Plan - Unit Tests', () => {
         '20': 0,
       };
 
-      input.customRestorationPlan = customRestorationPlan;
+      input.restorationPlan = customRestorationPlan;
 
       const calculator = new SequestrationRateCalculator(input);
 
