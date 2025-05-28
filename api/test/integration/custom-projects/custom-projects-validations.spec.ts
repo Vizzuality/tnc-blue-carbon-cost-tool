@@ -108,7 +108,7 @@ describe('Create Custom Projects - Request Validations', () => {
       );
       expect(expectedError).toBeDefined();
     });
-    test('If Project Specific Loss rate value is not within -0.3%, -0.001%, should fail', async () => {
+    test('If Project Specific Loss rate value is not within -100% - 0%, should fail', async () => {
       const response = await testManager
         .request()
         .post(customProjectContract.createCustomProject.path)
@@ -122,7 +122,7 @@ describe('Create Custom Projects - Request Validations', () => {
           carbonRevenuesToCover: 'Opex',
           parameters: {
             lossRateUsed: 'Project specific',
-            projectSpecificLossRate: -0.004,
+            projectSpecificLossRate: -1.1,
             emissionFactorUsed: PROJECT_EMISSION_FACTORS.TIER_2,
             projectSpecificEmission: 'One emission factor',
           },
@@ -157,7 +157,7 @@ describe('Create Custom Projects - Request Validations', () => {
       expect(response.status).toEqual(400);
 
       expect(response.body.errors[0].title).toEqual(
-        'Project Specific Loss Rate must be between -0.3% and -0.001%',
+        'Project Specific Loss Rate must be between -100% and 0%',
       );
     });
     test('If Emission Factor Used is Tier 2, only Mangroves is accepted as ecosystem', async () => {
