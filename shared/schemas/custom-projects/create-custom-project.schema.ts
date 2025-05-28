@@ -31,12 +31,11 @@ export const ConservationCustomProjectSchema = z.object({
             invalid_type_error: "Project Specific Loss Rate should be a number",
           })
           .refine(
-              (val) => val >= -0.003 && val <= -0.00001,
+              (val) => val >= -1 && val <= 0,
               {
-                message: "Project Specific Loss Rate must be between -0.3% and -0.001%",
+                message: "Project Specific Loss Rate must be between -100% and 0%",
               }
           )
-          .optional()
   ),
   projectSpecificEmissionFactor: z
     .number({

@@ -1,6 +1,6 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
-import { toPercentageValue, toDecimalPercentageValue } from "@/lib/format";
+import { toDecimalPercentageValue, toPercentageValue } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import {
@@ -91,7 +91,6 @@ export default function NumberFormItem({
             <Input
               type="number"
               className="w-full pr-12"
-              min={0}
               value={state}
               onChange={handleOnChange}
               placeholder={placeholder || "Insert value"}
