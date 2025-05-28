@@ -1,16 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { GetRestorationPlanSchema } from '@shared/schemas/custom-projects/get-restoration-plan.schema';
 import { z } from 'zod';
 import { RestorationPlanDto } from '@shared/dtos/custom-projects/restoration-plan.dto';
 
+import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
+import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
+
 export type GetRestorationPlan = z.infer<typeof GetRestorationPlanSchema>;
+
+export type RestorationPlanParams = {
+  projectSizeHa: number;
+  restorationRate: number;
+  restorationProjectLength: number;
+  customRestorationPlan?: RestorationPlanDto[];
+};
 
 @Injectable()
 export class RestorationPlanService {
   constructor() {}
 
-  async getRestorationPlan(dto: GetRestorationPlan) {
+  async getRestorationPlanForProjectCreation(dto: GetRestorationPlan) {
     const { projectSizeHa, restorationRate, restorationProjectLength } = dto;
+
     return this.buildRestorationPlan(
       projectSizeHa,
       restorationRate,
@@ -23,10 +34,7 @@ export class RestorationPlanService {
     restorationRate: number,
     projectLength: number,
   ): RestorationPlanDto[] {
-    const restorationPlanArray: {
-      year: number;
-      annualHectaresRestored: number;
-    }[] = [];
+    const restorationPlanArray: RestorationPlanDto[] = [];
 
     // If project size in hectares is greater than restoration rate, then we start with the restoration rate.
     // Otherwise, the initial value is the project size itself, as there won't be any remaining hectares to restore.
@@ -60,5 +68,43 @@ export class RestorationPlanService {
     }
 
     return restorationPlanArray;
+  }
+
+  createRestorationPlan(params: RestorationPlanParams): RestorationPlanDto[] {
+    const {
+      projectSizeHa,
+      restorationRate,
+      restorationProjectLength,
+      customRestorationPlan,
+    } = params;
+
+    if (!customRestorationPlan?.length) {
+      return this.buildRestorationPlan(
+        projectSizeHa,
+        restorationRate,
+        restorationProjectLength,
+      );
+    }
+    return this.createCustomRestorationPlan(params);
+  }
+
+  createCustomRestorationPlan(
+    params: RestorationPlanParams,
+  ): RestorationPlanDto[] {
+    const { restorationProjectLength, customRestorationPlan } = params;
+
+    const restorationPlan: RestorationPlanDto[] = [];
+    for (let year = -1; year <= restorationProjectLength; year++) {
+      if (year === 0) continue; // omit year 0 explicitly
+      const customEntry = customRestorationPlan?.find(
+        (entry) => entry.year === year,
+      );
+      restorationPlan.push({
+        year,
+        annualHectaresRestored: customEntry?.annualHectaresRestored ?? 0,
+      });
+    }
+
+    return restorationPlan;
   }
 }

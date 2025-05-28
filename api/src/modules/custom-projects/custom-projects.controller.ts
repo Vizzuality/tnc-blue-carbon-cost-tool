@@ -80,7 +80,9 @@ export class CustomProjectsController {
       customProjectContract.getRestorationPlan,
       async ({ query }) => {
         const restorationPlan =
-          await this.restorationPlanService.getRestorationPlan(query);
+          await this.restorationPlanService.getRestorationPlanForProjectCreation(
+            query,
+          );
         return { body: { data: restorationPlan }, status: HttpStatus.OK };
       },
     );
