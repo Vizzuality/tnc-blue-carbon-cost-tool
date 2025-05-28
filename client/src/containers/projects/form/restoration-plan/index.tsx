@@ -116,6 +116,7 @@ export default function RestorationPlanProjectForm() {
       projectSizeHa,
       restorationProjectLength: usedProjectLength,
       restorationRate: usedRestorationRate,
+      ecosystem,
     });
 
   const { data: restorationPlan, isSuccess: restorationPlanSuccess } =
