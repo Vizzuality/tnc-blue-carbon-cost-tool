@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 
 // Schema to get the restoration plan that will be used to create the custom project
 

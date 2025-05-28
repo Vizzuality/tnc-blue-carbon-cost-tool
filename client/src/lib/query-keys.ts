@@ -9,6 +9,7 @@ import {
   RESTORATION_ACTIVITY_SUBTYPE,
 } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
+import { GetRestorationPlanSchema } from "@shared/schemas/custom-projects/get-restoration-plan.schema";
 import { PaginationState, SortingState } from "@tanstack/react-table";
 import { z } from "zod";
 
@@ -89,6 +90,21 @@ export const customProjectKeys = createQueryKeys("customProjects", {
     ecosystem: ECOSYSTEM;
     countryCode: string;
   }) => ["defaultActivityTypes", ecosystem, countryCode],
+  restorationPlan: ({
+    projectSizeHa,
+    restorationProjectLength,
+    restorationRate,
+    ecosystem,
+  }: {
+    projectSizeHa: z.infer<typeof GetRestorationPlanSchema>["projectSizeHa"];
+    restorationProjectLength: z.infer<
+      typeof GetRestorationPlanSchema
+    >["restorationProjectLength"];
+    restorationRate: z.infer<
+      typeof GetRestorationPlanSchema
+    >["restorationRate"];
+    ecosystem: ECOSYSTEM;
+  }) => [projectSizeHa, restorationProjectLength, restorationRate, ecosystem],
 });
 
 const methodologyKeys = createQueryKeys("methodology", {
