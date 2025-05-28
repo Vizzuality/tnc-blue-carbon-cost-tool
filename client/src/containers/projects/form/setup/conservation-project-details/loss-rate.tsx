@@ -88,7 +88,6 @@ export default function LossRate() {
               )}
               formItemClassName="flex items-center justify-between gap-4"
               formControlClassName="after:content-['%']"
-              max={0}
               onValueChange={async (v) =>
                 handleFormChange("parameters.projectSpecificLossRate", v)
               }
