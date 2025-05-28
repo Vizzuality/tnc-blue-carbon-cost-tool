@@ -1,10 +1,7 @@
-import { Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GetRestorationPlanSchema } from '@shared/schemas/custom-projects/get-restoration-plan.schema';
 import { z } from 'zod';
 import { RestorationPlanDto } from '@shared/dtos/custom-projects/restoration-plan.dto';
-
-import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
-import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
 
 export type GetRestorationPlan = z.infer<typeof GetRestorationPlanSchema>;
 
