@@ -1,12 +1,8 @@
-import { Page, test, expect, Locator } from "@playwright/test";
+import { expect, Locator, Page, test } from "@playwright/test";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { E2eTestManager } from "@shared/lib/e2e-test-manager";
 import { EXTENDED_TIMEOUT, ROUTES } from "e2e/lib/constants";
-import {
-  insertProjectName,
-  insertProjectSpecificLossRate,
-  submitCustomProject,
-} from "e2e/lib/utils";
+import { insertProjectName, insertProjectSpecificLossRate, submitCustomProject } from "e2e/lib/utils";
 
 let testManager: E2eTestManager;
 let page: Page;
@@ -48,7 +44,7 @@ test.describe("Custom Projects - Create", () => {
     test("The correct errors are displayed upon invalid form submission", async () => {
       const defaultErrorMessages = [
         "Name must contain at least 3 characters.",
-        "required",
+        "Project Specific Loss Rate must be between -100% and 0%",
       ];
       const errorMessages = ["Name must contain at least 3 characters."];
 
