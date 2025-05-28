@@ -35,7 +35,7 @@ export const ConservationCustomProjectSchema = z.object({
               {
                 message: "Project Specific Loss Rate must be between -100% and 0%",
               }
-          )
+          ).optional(),
   ),
   projectSpecificEmissionFactor: z
     .number({
@@ -223,10 +223,10 @@ export const ValidateConservationSchema = (
     typeof ConservationCustomProjectSchema
   >;
   if (params.lossRateUsed === LOSS_RATE_USED.PROJECT_SPECIFIC) {
-    if (!params.projectSpecificLossRate) {
+    if (params.projectSpecificLossRate === undefined || params.projectSpecificLossRate === null) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "required",
+        message: "Project Specific Loss Rate must be between -100% and 0%",
         path: ["parameters.projectSpecificLossRate"],
       });
     }
