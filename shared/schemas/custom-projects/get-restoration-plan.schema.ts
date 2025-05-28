@@ -1,11 +1,9 @@
-import {
-    AssumptionsSchema,
-    CustomProjectBaseSchema,
-} from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { z } from "zod";
 
+// Schema to get the restoration plan that will be used to create the custom project
+
 export const GetRestorationPlanSchema = z.object({
-    projectSizeHa: CustomProjectBaseSchema.shape.projectSizeHa,
-    restorationProjectLength: AssumptionsSchema.shape.projectLength,
-    restorationRate: AssumptionsSchema.shape.restorationRate,
-})
+    projectSizeHa: z.preprocess(Number, z.number().positive()),
+    restorationProjectLength: z.preprocess(Number, z.number().positive()),
+    restorationRate: z.preprocess(Number, z.number().positive())
+});
