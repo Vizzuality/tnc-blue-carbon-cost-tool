@@ -65,7 +65,8 @@ const Metric: FC<MetricProps> = ({
     [compactUnit, unit],
   );
 
-  if (!value) return <span className="text-base font-medium">-</span>;
+  if (value === undefined || value === null)
+    return <span className="text-base font-medium">-</span>;
 
   if (isCurrency) {
     return (
