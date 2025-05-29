@@ -185,9 +185,14 @@ export default function RestorationPlanProjectForm() {
             <div className="flex items-baseline gap-2">
               <div className="flex items-center gap-2">
                 <h2 className="text-2xl font-medium">Restoration Plan</h2>
-                <InfoButton title="Restoration Plan">
-                  {RESTORATION_PLAN}
-                </InfoButton>
+                <div
+                  className="inline-flex"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <InfoButton title="Restoration Plan">
+                    {RESTORATION_PLAN}
+                  </InfoButton>
+                </div>
               </div>
               <span className="font-normal text-muted-foreground">
                 optional

@@ -21,9 +21,14 @@ export default function CostInputsOverridesProjectForm() {
             <div className="flex items-baseline gap-2">
               <div className="flex items-center gap-2">
                 <h2 className="text-2xl font-medium">Cost inputs overrides</h2>
-                <InfoButton title="Cost inputs overrides">
-                  {COST_INPUT_OVERRIDES}
-                </InfoButton>
+                <div
+                  className="inline-flex"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <InfoButton title="Cost inputs overrides">
+                    {COST_INPUT_OVERRIDES}
+                  </InfoButton>
+                </div>
               </div>
               <span className="font-normal text-muted-foreground">
                 optional
