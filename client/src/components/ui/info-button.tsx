@@ -1,11 +1,11 @@
 import * as React from "react";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 
 import { InfoIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -24,12 +24,27 @@ export default function InfoButton({
   title?: string;
   className?: string;
 }>) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" className="h-5 w-5 p-0 hover:bg-transparent">
+        <div
+          role="button"
+          onClick={() => {
+            setOpen(true);
+          }}
+          className={cn(
+            buttonVariants({
+              variant: "ghost",
+            }),
+            {
+              "z-50 h-5 w-5 p-0 hover:bg-transparent": true,
+            },
+          )}
+        >
           <InfoIcon className="h-7 w-7 text-foreground hover:text-muted-foreground" />
-        </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className={cn(className, "max-h-[80%] overflow-auto")}>
         <DialogHeader className="space-y-4">
