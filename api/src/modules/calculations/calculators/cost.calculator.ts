@@ -1019,6 +1019,7 @@ export class CostCalculator {
     // We are suffering the same issue in several parts, but we agreed that it would be costly to use sorted maps everywhere instead of object literals.
     const sortedYears = Object.keys(cashFlowPlan)
       .map(Number)
+      .filter((year) => year !== 0)
       .sort((a, b) => a - b);
 
     const cashFlowArray = sortedYears.map((year) => cashFlowPlan[year]);
