@@ -476,11 +476,11 @@ export class CostCalculator {
   private getTotalBaseCost(costType: COST_KEYS): number {
     const baseCost = this.projectInput.costAndCarbonInputs[costType];
     const increasedBy: number = this.baseIncrease[costType];
+    const baseSize = this.baseSize[costType];
     const sizeDifference =
       this.projectInput.projectSizeHa - this.startingPointScaling;
-    const scalingFactor = Math.max(Math.round(sizeDifference / baseCost), 0);
+    const scalingFactor = Math.max(Math.round(sizeDifference / baseSize), 0);
     const totalBaseCost = baseCost + increasedBy * scalingFactor * baseCost;
-
     this.throwIfValueIsNotValid(totalBaseCost, costType);
     return totalBaseCost;
   }
