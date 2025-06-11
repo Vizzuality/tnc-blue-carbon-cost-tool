@@ -223,16 +223,11 @@ test.describe("Custom Projects - Create", () => {
       ).toBeVisible();
 
       await page.getByTestId("parameters.tierSelector").click();
-      await page
+      await expect(page
         .getByRole("option", {
           name: "Tier 2 - Country-specific rate",
-        })
-        .click();
-      await expect(
-        page.locator("label", { hasText: "Country-specific rate" }),
-      ).toBeVisible();
+        })).toBeDisabled()
 
-      await page.getByTestId("parameters.tierSelector").click();
       await page
         .getByRole("option", {
           name: "Tier 3 - Project-specific rate",
