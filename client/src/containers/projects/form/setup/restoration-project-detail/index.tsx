@@ -76,6 +76,16 @@ export default function RestorationProjectDetails() {
       ].includes(activity),
   }));
 
+  const SEQUESTRATION_RATE_TIER_OPTIONS = Object.values(
+    SEQUESTRATION_RATE_TIER_TYPES,
+  ).map((tier) => ({
+    value: tier,
+    label: tier,
+    disabled:
+      tier === SEQUESTRATION_RATE_TIER_TYPES.TIER_2 &&
+      ecosystem !== ECOSYSTEM.MANGROVE,
+  }));
+
   return (
     <Card variant="secondary">
       <div className="flex flex-col gap-4">
@@ -151,23 +161,21 @@ export default function RestorationProjectDetails() {
                           v as SEQUESTRATION_RATE_TIER_TYPES,
                         );
                         await form.trigger("parameters.tierSelector");
-
-                        if (v === SEQUESTRATION_RATE_TIER_TYPES.TIER_2) {
-                          form.setValue("ecosystem", ECOSYSTEM.MANGROVE);
-                        }
                       }}
                     >
                       <SelectTrigger data-testid="parameters.tierSelector">
                         <SelectValue placeholder="Select sequestration tier" />
                       </SelectTrigger>
                       <SelectContent>
-                        {Object.values(SEQUESTRATION_RATE_TIER_TYPES)?.map(
-                          (option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ),
-                        )}
+                        {SEQUESTRATION_RATE_TIER_OPTIONS?.map((option) => (
+                          <SelectItem
+                            key={option.value}
+                            value={option.value}
+                            disabled={option.disabled}
+                          >
+                            {option.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormControl>
