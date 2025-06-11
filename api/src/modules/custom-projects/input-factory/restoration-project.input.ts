@@ -74,8 +74,8 @@ export class RestorationProjectInput {
     additionalBaseData: AdditionalBaseData,
   ): this {
     this.costAndCarbonInputs = {
-      ...overridableCostInputs,
       ...additionalBaseData,
+      ...overridableCostInputs,
     };
     return this;
   }
