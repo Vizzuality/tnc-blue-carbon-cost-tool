@@ -43,6 +43,7 @@ export default function CellValue({
                 type="number"
                 placeholder="Insert value"
                 min={0}
+                onWheel={(e) => e.currentTarget.blur()}
                 defaultValue={
                   isPercentage
                     ? toPercentageValue(value as number)

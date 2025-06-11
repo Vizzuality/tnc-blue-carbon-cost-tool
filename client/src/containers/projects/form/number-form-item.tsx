@@ -94,6 +94,7 @@ export default function NumberFormItem({
               value={state}
               onChange={handleOnChange}
               placeholder={placeholder || "Insert value"}
+              onWheel={(e) => e.currentTarget.blur()}
               {...props}
             />
           </div>
