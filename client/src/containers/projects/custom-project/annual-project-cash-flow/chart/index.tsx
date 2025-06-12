@@ -8,18 +8,18 @@ import {
   CartesianGrid,
   ComposedChart,
   Line,
+  ReferenceLine,
   XAxis,
   YAxis,
-  ReferenceLine,
 } from "recharts";
 
 import { formatCurrency } from "@/lib/format";
 
 import {
-  YearlyBreakdownChartData,
+  cashflowConfig,
   cumulativeNetIncomePlanTooltipLabel,
+  YearlyBreakdownChartData,
 } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
-import { cashflowConfig } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
 
 import {
   ChartContainer,
@@ -91,9 +91,7 @@ const CashflowChart: FC<CashflowChartProps> = ({
           horizontal={true}
           vertical={true}
         />
-        {typeof breakevenPoint === "number" && (
-          <ReferenceLine x={breakevenPoint} stroke="hsl(var(--destructive))" />
-        )}
+
         <YAxis
           axisLine={false}
           tickLine={false}
@@ -123,6 +121,9 @@ const CashflowChart: FC<CashflowChartProps> = ({
           fill={CHART_COLORS.capexTotalCostPlan}
           radius={[6, 6, 0, 0]}
         />
+        {typeof breakevenPoint === "number" && (
+          <ReferenceLine x={breakevenPoint} stroke="hsl(var(--destructive))" />
+        )}
         <Line
           type="linear"
           dataKey="annualNetCashFlow"
