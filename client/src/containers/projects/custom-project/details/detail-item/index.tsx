@@ -57,7 +57,7 @@ const DetailItem: FC<DetailItemProps> = ({
             numberFormatOptions={numberFormatOptions}
             compactUnit
           />
-        ) : value ? (
+        ) : value !== undefined && value !== null ? (
           <span className="text-xl">{formatValue(value)}</span>
         ) : null}
       </div>
