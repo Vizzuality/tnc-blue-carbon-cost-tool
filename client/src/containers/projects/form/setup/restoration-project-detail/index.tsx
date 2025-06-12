@@ -231,12 +231,13 @@ export default function RestorationProjectDetails() {
                   <FormLabel
                     tooltip={{
                       title: SEQUESTRATION_RATE_TIER_TYPES.TIER_2,
-                      content: "TBD",
+                      content:
+                        "Growth rate and carbon accumulation rate in soils.",
                     }}
                   >
                     Country-specific rate
                   </FormLabel>
-                  <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['??']">
+                  <div className="relative flex flex-1 items-center after:absolute after:right-6 after:inline-block after:text-sm after:text-muted-foreground after:content-['tCO2e/ha/yr']">
                     <ReadonlyInput value={formatNumber(data?.tier2)} />
                   </div>
                 </div>
