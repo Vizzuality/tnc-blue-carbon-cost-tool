@@ -340,6 +340,22 @@ class CostCalculator:
                     monitoring_cost_plan[year] = total_base_cost
         return monitoring_cost_plan
 
+    def _compute_maintenance_end_year(self, maintenance_duration, first_zero_value):
+        restoration_plan = self.project.restoration_plan
+        # Use the plan’s items to filter out positive values
+        valid_keys = [key for key, value in restoration_plan.items() if value > 0]
+
+        if self.project.updated_restoration_plan:
+            if not valid_keys:
+                raise ValueError("No valid restoration plan entries found with value > 0.")
+            # replicate MAXIFS: get max key for which value > 0
+            max_value = max(valid_keys)
+            return float(max_value) + float(maintenance_duration) + 1
+        elif (self.project.project_size_ha / self.project.restoration_rate) <= 20:
+            return float(first_zero_value) + float(maintenance_duration) - 1
+        else:
+            return 30 + float(maintenance_duration)
+
     def calculate_maintenance(self):
         "OPEX function to calculate the maintenance cost."
         base_cost = self.project.maintenance
@@ -348,6 +364,8 @@ class CostCalculator:
             key = "% of implementation labor"
         else:
             key = "$/yr"
+
+        # Get the maintenance duration from the master table
         maintenance_duration = self.project.master_table.loc[
             (self.project.master_table["country_code"] == self.project.country_code)
             & (self.project.master_table["ecosystem"] == self.project.ecosystem),
@@ -363,40 +381,37 @@ class CostCalculator:
         if first_zero_value is None:
             raise ValueError("No zero value found in the implementation labor cost plan.")
         # Calculate when maintenance should end
-        maintenance_end_year = (
-            (float(first_zero_value) + float(maintenance_duration) - 1)
-            if self.project.project_size_ha / self.project.restoration_rate <= 20
-            else float(self.project.default_project_length) + float(maintenance_duration)
+        maintenance_end_year = self._compute_maintenance_end_year(
+            maintenance_duration, first_zero_value
         )
         # Initialize the maintenance cost plan excluding year 0
         # NOTE: Double check with the client because they are fixing the implementation_labor_cost
         maintenance_cost_plan = {
             year: 0 for year in range(-4, self.project.default_project_length + 1) if year != 0
         }
-        implementation_labor_value = implementation_labor_cost_plan[-1]
-        for year, _ in maintenance_cost_plan.items():
-            if year < 1:
-                continue
+
+        for year in range(1, self.project_length + 1):
+            if year > self.project_length or year > maintenance_end_year:
+                maintenance_cost_plan[year] = 0
             else:
-                if year <= self.project_length:
-                    if year <= maintenance_end_year:
-                        if key == "$/yr":
-                            maintenance_cost_plan[year] = float(base_cost)
-                        else:
-                            maintenance_cost_plan[year] = (
-                                float(base_cost)
-                                * float(implementation_labor_value)
-                                * min(
-                                    float(year),
-                                    float(maintenance_end_year) - float(maintenance_duration) + 1,
-                                    float(maintenance_end_year) - float(year) + 1,
-                                    float(maintenance_duration),
-                                )
-                            )
-                    else:
-                        maintenance_cost_plan[year] = 0
+                if key == "$/yr":
+                    # Flat cost per year
+                    maintenance_cost_plan[year] = float(base_cost)
                 else:
-                    maintenance_cost_plan[year] = 0
+                    if year < maintenance_duration + 2:
+                        lower_bound = year - 2 - maintenance_duration
+                    else:
+                        lower_bound = year - 1 - maintenance_duration
+                    upper_bound = year - 1
+
+                    labor_sum = sum(
+                        cost
+                        for yr, cost in implementation_labor_cost_plan.items()
+                        if lower_bound < yr <= upper_bound
+                    )
+
+                    # Apply multiplier (base cost)
+                    maintenance_cost_plan[year] = labor_sum * float(base_cost)
         return maintenance_cost_plan
 
     def calculate_cummunity_benefit_sharing_fund(self):

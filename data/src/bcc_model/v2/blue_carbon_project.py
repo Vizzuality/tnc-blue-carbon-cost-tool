@@ -257,6 +257,7 @@ class BlueCarbonProject:
 
     def _initialize_restoration_plan(self):
         restoration_plan = {}
+        self.updated_restoration_plan = False
         # Baseline restoration value
         if self.project_size_ha > self.restoration_rate:
             restoration_plan[-1] = self.restoration_rate
@@ -433,6 +434,7 @@ class BlueCarbonProject:
         """
         Update the restoration plan with user-defined values for specific years.
         """
+        self.updated_restoration_plan = True
         for year, hectares in restoration_plan.items():
             if year in self.restoration_plan:
                 self.restoration_plan[year] = hectares
