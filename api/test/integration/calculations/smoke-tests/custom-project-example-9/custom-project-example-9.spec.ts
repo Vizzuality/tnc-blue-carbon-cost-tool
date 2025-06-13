@@ -2,10 +2,10 @@ import { TestManager } from '../../../../utils/test-manager';
 import { customProjectContract } from '@shared/contracts/custom-projects.contract';
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CustomProjectOutput } from '@shared/dtos/custom-projects/custom-project-output.dto';
-import { promises as fs } from 'fs';
 import { expectedOutput } from './expected-output';
 import { inputDto } from './input-dto';
 import '../../../../custom-matchers';
+import { promises as fs } from 'fs';
 
 // Maps the summary keys from the API to the expected keys from the prototype
 export const summaryToExpectedKeyMap = {
@@ -27,7 +27,7 @@ export const summaryToExpectedKeyMap = {
   // "Leftover after OpEx / total cost": "NPV covering cost"
 };
 
-describe('custom-project-example-1', () => {
+describe('custom-project-example-9', () => {
   let testManager: TestManager;
   let initialCarbonPrice: CustomProjectOutput['initialCarbonPriceComputationOutput'];
   let breakEvenPrice: CustomProjectOutput['breakevenPriceComputationOutput'];

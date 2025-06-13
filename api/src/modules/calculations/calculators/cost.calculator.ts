@@ -17,6 +17,7 @@ import {
   CalculatorDependencies,
   COST_KEYS,
   CostPlanMap,
+  EngineInput,
   ProjectInput,
 } from '@api/modules/calculations/types';
 import {
@@ -43,6 +44,9 @@ export class CostCalculator {
   revenueProfitCalculator: RevenueProfitCalculator;
   estimatedCreditsIssuedPlan: CostPlanMap;
   areaRestoredOrConservedPlan: CostPlanMap;
+
+  engineInput: EngineInput;
+
   constructor(calculatorDependencies: CalculatorDependencies) {
     this.projectInput = calculatorDependencies.engineInput.projectInput;
     this.defaultProjectLength =
@@ -57,6 +61,7 @@ export class CostCalculator {
       calculatorDependencies.sequestrationRateOutputs.estimatedCreditIssuedPlan;
     this.areaRestoredOrConservedPlan =
       calculatorDependencies.sequestrationRateOutputs.areaRestoredOrConservedPlan;
+    this.engineInput = calculatorDependencies.engineInput;
   }
 
   initializeCostPlans(): CalculatorCostPlansOutput {
@@ -661,11 +666,38 @@ export class CostCalculator {
       this.projectInput.assumptions.defaultProjectLength;
 
     let maintenanceEndYear: number;
-
     if (projectSizeHa / restorationRate <= 20) {
       maintenanceEndYear = firstZeroValue + maintenanceDuration - 1;
     } else {
       maintenanceEndYear = defaultProjectLength + maintenanceDuration;
+    }
+
+    const { activity, parameters } = this.engineInput.dto;
+    if (activity === ACTIVITY.RESTORATION) {
+      const customRestorationPlan = parameters.customRestorationPlan;
+      if (
+        Array.isArray(customRestorationPlan) === true &&
+        customRestorationPlan.length > 0
+      ) {
+        const latestYearWithValue = (implementationLaborCostPlan): number => {
+          let maxYear = 0;
+
+          const keys = Object.keys(implementationLaborCostPlan)
+            .map((v) => +v)
+            .sort((a, b) => a - b);
+          for (let idx = 0; idx < keys.length; idx++) {
+            const key = keys[idx];
+            if (implementationLaborCostPlan[key] !== 0) {
+              maxYear = +key;
+            }
+          }
+
+          return maxYear;
+        };
+        maintenanceEndYear =
+          maintenanceDuration +
+          latestYearWithValue(implementationLaborCostPlan);
+      }
     }
 
     const maintenanceCostPlan: CostPlanMap = {};
@@ -680,33 +712,47 @@ export class CostCalculator {
       }
     }
 
-    const implementationLaborValue = implementationLaborCostPlan[-1];
-
     for (const yearStr in maintenanceCostPlan) {
       const year = Number(yearStr);
       if (year < 1) {
         continue;
+      }
+
+      if (year > this.projectInput.assumptions.defaultProjectLength) {
+        maintenanceCostPlan[year] = 0;
+        continue;
+      }
+
+      if (year > maintenanceEndYear) {
+        maintenanceCostPlan[year] = 0;
+        continue;
+      }
+
+      if (key === '$/yr') {
+        maintenanceCostPlan[year] = baseCost;
       } else {
-        if (year <= this.projectInput.assumptions.defaultProjectLength) {
-          if (year <= maintenanceEndYear) {
-            if (key === '$/yr') {
-              maintenanceCostPlan[year] = baseCost;
-            } else {
-              const minValue = Math.min(
-                year,
-                maintenanceEndYear - maintenanceDuration + 1,
-                maintenanceEndYear - year + 1,
-                maintenanceDuration,
-              );
-              maintenanceCostPlan[year] =
-                baseCost * implementationLaborValue * minValue;
-            }
-          } else {
-            maintenanceCostPlan[year] = 0;
-          }
+        let lowerBound: number;
+        if (year < maintenanceDuration + 2) {
+          lowerBound = year - 2 - maintenanceDuration;
         } else {
-          maintenanceCostPlan[year] = 0;
+          lowerBound = year - 1 - maintenanceDuration;
         }
+        const uppperBound: number = year - 1;
+
+        let laborSum: number = 0;
+        const implementationLaborCostPlanKeys = Object.keys(
+          implementationLaborCostPlan,
+        );
+        for (let idx = 0; idx < implementationLaborCostPlanKeys.length; idx++) {
+          const yr = Number.parseInt(implementationLaborCostPlanKeys[idx]);
+          const cost = implementationLaborCostPlan[yr];
+
+          if (lowerBound < yr && yr <= uppperBound) {
+            laborSum += cost;
+          }
+        }
+
+        maintenanceCostPlan[year] = laborSum * baseCost;
       }
     }
     return maintenanceCostPlan;

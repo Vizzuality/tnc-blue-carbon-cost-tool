@@ -56,6 +56,7 @@ export class ProjectsCalculationService {
       projectInput,
       baseIncrease,
       baseSize,
+      dto,
     });
 
     return output;
