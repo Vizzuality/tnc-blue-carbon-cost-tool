@@ -8,6 +8,7 @@ import {
   SequestrationRateOutputs,
 } from '@api/modules/calculations/types/output-types';
 import { CostPlanMap } from '@api/modules/calculations/types/cost-types';
+import { CreateCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 
 // Input for calculation engine
 
@@ -15,6 +16,7 @@ export type EngineInput = {
   projectInput: ProjectInput;
   baseSize: BaseSize;
   baseIncrease: BaseIncrease;
+  dto: CreateCustomProjectDto;
 };
 
 // Input with project data to compute costs for

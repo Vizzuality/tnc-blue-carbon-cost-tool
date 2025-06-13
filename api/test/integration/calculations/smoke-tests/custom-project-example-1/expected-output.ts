@@ -31,7 +31,7 @@ export const expectedOutput = {
     summary: {
       '$/tCO2e (total cost, NPV)': 111.98160697772516,
       '$/ha': 9164.57417754532,
-      'IRR when priced to cover OpEx': -0.9999999962747097, // TODO: Check. It's ok for now.
+      'IRR when priced to cover OpEx': -0.9999999962747097,
       'IRR when priced to cover total cost': -0.9999999962747097,
       'Total cost (NPV)': 2749372.253263596,
       'Capital expenditure (NPV)': 1438897.005144124,

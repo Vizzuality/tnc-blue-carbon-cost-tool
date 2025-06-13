@@ -79,6 +79,7 @@ export class CustomProjectsService extends AppBaseService<
       projectInput,
       baseIncrease,
       baseSize,
+      dto,
     });
     const { costOutput, breakEvenCostOutput } = calculationOutput;
 

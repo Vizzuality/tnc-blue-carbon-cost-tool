@@ -75,6 +75,7 @@ export class SensitivityAnalyzer {
         projectInput: modifiedProjectInput,
         baseSize: this.input.engineInput.baseSize,
         baseIncrease: this.input.engineInput.baseIncrease,
+        dto: this.input.engineInput.dto,
       },
       sequestrationRateOutputs: this.input.sequestrationRateOutputs,
       revenueProfitCalculator: this.input.revenueProfitCalculator,
