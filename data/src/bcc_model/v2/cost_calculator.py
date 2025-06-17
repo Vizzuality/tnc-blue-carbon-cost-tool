@@ -174,7 +174,7 @@ class CostCalculator:
             self.calculate_carbon_standard_fees,
             self.calculate_baseline_reassessment,
             self.calculate_mrv,
-            self.calculate_long_term_project_operating,
+            self.calculate_long_term_project_operating_cost,
         ]
 
         for cost_func in cost_functions:
@@ -342,10 +342,10 @@ class CostCalculator:
 
     def _compute_maintenance_end_year(self, maintenance_duration, first_zero_value):
         restoration_plan = self.project.restoration_plan
-        # Use the plan’s items to filter out positive values
-        valid_keys = [key for key, value in restoration_plan.items() if value > 0]
 
         if self.project.updated_restoration_plan:
+            # Use the plan’s items to filter out positive values
+            valid_keys = [key for key, value in restoration_plan.items() if value > 0]
             if not valid_keys:
                 raise ValueError("No valid restoration plan entries found with value > 0.")
             # replicate MAXIFS: get max key for which value > 0
@@ -479,7 +479,7 @@ class CostCalculator:
 
     def calculate_mrv(self):
         "OPEX function to calculate the MRV cost."
-        base_cost = self.project.MRV
+        base_cost = self.project.mrv
         # Compute MRV cost plan
         mrv_cost_plan = {
             year: 0 for year in range(-4, self.project.default_project_length + 1) if year != 0
@@ -500,7 +500,7 @@ class CostCalculator:
                 mrv_cost_plan[year] = 0
         return mrv_cost_plan
 
-    def calculate_long_term_project_operating(self):
+    def calculate_long_term_project_operating_cost(self):
         "OPEX function to calculate the long-term project operating cost."
         base_size = self.project.base_size.loc[
             (self.project.base_size["activity"] == self.project.activity)
@@ -509,7 +509,7 @@ class CostCalculator:
         ].values[0]
         if base_size == 0:
             raise ValueError("Base size must be non-zero to avoid division errors.")
-        base_cost = self.project.long_term_project_operating
+        base_cost = self.project.long_term_project_operating_cost
         increased_by = self.project.base_increase.loc[
             self.project.base_increase["ecosystem"] == self.project.ecosystem,
             "long_term_project_operating_cost",
@@ -633,7 +633,7 @@ class CostCalculator:
                 sum(self.calculate_carbon_standard_fees().values()),
                 sum(self.calculate_baseline_reassessment().values()),
                 sum(self.calculate_mrv().values()),
-                sum(self.calculate_long_term_project_operating().values()),
+                sum(self.calculate_long_term_project_operating_cost().values()),
                 sum(self.capex_total_cost_plan.values()) + sum(self.opex_total_cost_plan.values()),
             ],
             "NPV": [
@@ -668,7 +668,7 @@ class CostCalculator:
                 calculate_npv(self.calculate_baseline_reassessment(), self.project.discount_rate),
                 calculate_npv(self.calculate_mrv(), self.project.discount_rate),
                 calculate_npv(
-                    self.calculate_long_term_project_operating(), self.project.discount_rate
+                    self.calculate_long_term_project_operating_cost(), self.project.discount_rate
                 ),
                 self.total_capex_NPV + self.total_opex_NPV,
             ],
@@ -749,7 +749,7 @@ class CostCalculator:
             "carbon_standard_fees": self.calculate_carbon_standard_fees(),
             "baseline_reassessment": self.calculate_baseline_reassessment(),
             "MRV": self.calculate_mrv(),
-            "long_term_project_operating": self.calculate_long_term_project_operating(),
+            "long_term_project_operating": self.calculate_long_term_project_operating_cost(),
             "opex_total": self.opex_total_cost_plan,
         }
 
@@ -885,11 +885,11 @@ class CostCalculator:
                 sum(cost_plans["MRV"].values()),
                 calculate_npv(cost_plans["MRV"], self.project.discount_rate),
             ],
-            "Long-term project operating": extended_costs["long_term_project_operating"]
+            "Long-term project operating": extended_costs["long_term_project_operating_cost"]
             + [
-                sum(cost_plans["long_term_project_operating"].values()),
+                sum(cost_plans["long_term_project_operating_cost"].values()),
                 calculate_npv(
-                    cost_plans["long_term_project_operating"], self.project.discount_rate
+                    cost_plans["long_term_project_operating_cost"], self.project.discount_rate
                 ),
             ],
             "Total opex": extended_costs["opex_total"] + [-self.total_opex, -self.total_opex_NPV],
