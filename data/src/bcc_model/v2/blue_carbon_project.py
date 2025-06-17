@@ -44,8 +44,8 @@ class BlueCarbonProject:
         "carbon_standard_fees": "carbon_standard_fees",
         "community_benefit_sharing_fund": "community_benefit_sharing_fund_cost",
         "baseline_reassessment": "baseline_reassessment_cost",
-        "MRV": "mrv_cost",
-        "long_term_project_operating": "long_term_project_operating_cost",
+        "mrv": "mrv_cost",
+        "long_term_project_operating_cost": "long_term_project_operating_cost",
     }
 
     def __init__(
@@ -589,8 +589,8 @@ class BlueCarbonProject:
             }",
             "Carbon standard fees ($/credit)": f"{float(self.carbon_standard_fees):,.2f}",
             "Baseline reassessment ($/event)": f"{float(self.baseline_reassessment):,.0f}",
-            "MRV ($/event)": f"{float(self.MRV):,.0f}",
-            "Long-term project operating ($/yr)": f"{float(self.long_term_project_operating):,.0f}",
+            "MRV ($/event)": f"{float(self.mrv):,.0f}",
+            "Long-term project operating ($/yr)": f"{float(self.long_term_project_operating_cost):,.0f}",
         }
         other_cost_dict = {
             "Financing cost (% of capex)": f"{float(self.financing_cost * 100):,.0f}",
@@ -657,3 +657,95 @@ class BlueCarbonProject:
                 "Other": other_cost_dict,
             },
         }
+
+    @classmethod
+    def from_json(cls, data, master_table, base_size, base_increase):
+        # Create instance
+        if data["activity"] == "Restoration":
+            project = cls(
+                activity=data["activity"],
+                ecosystem=data["ecosystem"],
+                country=data["countryName"],
+                master_table=master_table,
+                base_size=base_size,
+                base_increase=base_increase,
+                carbon_price=data["initialCarbonPriceAssumption"],
+                carbon_revenues_to_cover=data["carbonRevenuesToCover"],
+                project_size_ha=data["projectSizeHa"],
+                restoration_activity=data["parameters"]["restorationActivity"],
+                sequestration_rate_used=data["parameters"]["tierSelector"],
+                project_specific_sequestration_rate=data["parameters"][
+                    "projectSpecificSequestrationRate"
+                ],
+                planting_success_rate=data["parameters"]["plantingSuccessRate"],
+            )
+        elif data["activity"] == "Conservation":
+            project = cls(
+                activity=data["activity"],
+                ecosystem=data["ecosystem"],
+                country=data["countryName"],
+                master_table=master_table,
+                base_size=base_size,
+                base_increase=base_increase,
+                carbon_price=data["initialCarbonPriceAssumption"],
+                carbon_revenues_to_cover=data["carbonRevenuesToCover"],
+                project_size_ha=data["projectSizeHa"],
+                loss_rate_used=data["parameters"]["lossRateUsed"],
+                project_specific_loss_rate=data["parameters"]["projectSpecificLossRate"],
+                emission_factor_used=data["parameters"]["emissionFactorUsed"],
+                tier_3_project_specific_emission=data["parameters"]["projectSpecificEmission"],
+                tier_3_project_specific_emission_one_factor=data["parameters"][
+                    "projectSpecificEmissionFactor"
+                ],
+                tier_3_emission_factor_agb=data["parameters"]["emissionFactorAGB"],
+                tier_3_emission_factor_soc=data["parameters"]["emissionFactorSOC"],
+            )
+        else:
+            raise ValueError("Activity must be either 'Restoration' or 'Conservation'.")
+
+        # Set assumptions
+        assumptions = data["assumptions"]
+        if data["activity"] == "Restoration":
+            project.set_additional_assumptions(
+                verification_frequency=assumptions["verificationFrequency"],
+                discount_rate=assumptions["discountRate"],
+                carbon_price_increase=assumptions["carbonPriceIncrease"],
+                buffer=assumptions["buffer"],
+                baseline_reassessment_frequency=assumptions["baselineReassessmentFrequency"],
+                restoration_project_length=assumptions["projectLength"],
+                restoration_rate=assumptions["restorationRate"],
+            )
+        elif data["activity"] == "Conservation":
+            project.set_additional_assumptions(
+                verification_frequency=assumptions["verificationFrequency"],
+                discount_rate=assumptions["discountRate"],
+                carbon_price_increase=assumptions["carbonPriceIncrease"],
+                buffer=assumptions["buffer"],
+                baseline_reassessment_frequency=assumptions["baselineReassessmentFrequency"],
+                restoration_project_length=assumptions["projectLength"],
+            )
+        else:
+            raise ValueError("Activity must be either 'Restoration' or 'Conservation'.")
+
+        # Override cost inputs
+        # Convert keys from camelCase to snake_case if needed
+        cost_inputs = data["costInputs"]
+
+        def snake_case(k):
+            return "".join(["_" + c.lower() if c.isupper() else c for c in k]).lstrip("_")
+
+        normalized_costs = {snake_case(k): v for k, v in cost_inputs.items()}
+        project.override_cost_input(**normalized_costs)
+
+        # Set custom restoration plan
+        custom_plan = {
+            item["year"]: item["annualHectaresRestored"]
+            for item in data["parameters"].get("customRestorationPlan", [])
+        }
+
+        if sum(custom_plan.values()) <= project.project_size_ha:
+            project.update_restoration_plan(custom_plan)
+        else:
+            raise ValueError("Restoration plan exceeds total project size.")
+
+        return project
