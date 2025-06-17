@@ -1,5 +1,7 @@
 # utils.py
 
+import math
+
 import numpy_financial as npf
 import pandas as pd
 
@@ -89,7 +91,7 @@ def calculate_cost_plan(
     )
     starting_point_scaling = 500 if activity == "Restoration" else 20000
     size_difference = project_size_ha - starting_point_scaling
-    value = max(round(size_difference / base_size), 0)
+    value = max(math.floor(size_difference / base_size), 0)
     total_base_cost = base_cost_value + (increased_by * value * base_cost_value)
     return total_base_cost
 
