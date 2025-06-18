@@ -722,7 +722,7 @@ class BlueCarbonProject:
                 carbon_price_increase=assumptions["carbonPriceIncrease"],
                 buffer=assumptions["buffer"],
                 baseline_reassessment_frequency=assumptions["baselineReassessmentFrequency"],
-                restoration_project_length=assumptions["projectLength"],
+                conservation_project_length=assumptions["projectLength"],
             )
         else:
             raise ValueError("Activity must be either 'Restoration' or 'Conservation'.")
