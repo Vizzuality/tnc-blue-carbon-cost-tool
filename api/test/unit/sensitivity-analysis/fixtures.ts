@@ -107,6 +107,12 @@ const engineInput = {
   },
 } as EngineInput;
 
+engineInput.dto = {
+  activity: engineInput.projectInput.activity,
+  ecosystem: engineInput.projectInput.ecosystem,
+  parameters: {},
+};
+
 const sequestrationRateOutputs = {
   estimatedCreditIssuedPlan: {
     '1': 3465.720283126324,
