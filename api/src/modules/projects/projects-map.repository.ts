@@ -214,7 +214,7 @@ export class ProjectsMapRepository extends Repository<Project> {
           subQuery
             .select('p.country_code', 'country_code')
             .addSelect(
-              'AVG(p.country_abatement_potential)',
+              'SUM(p.country_abatement_potential)',
               'avg_abatement_potential',
             );
           if (costRangeSelector === 'total') {

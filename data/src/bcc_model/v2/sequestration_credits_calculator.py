@@ -28,54 +28,51 @@ class SequestrationCreditsCalculator:
 
     def calculate_net_emissions_reductions(self):
         "Calculate either the conservation or the restoration net emissions reductions"
-        net_emission_reductions_plan = {
+        computation_methods = {
+            "Conservation": self._calculate_conservation_emissions,
+            "Restoration": self._calculate_restoration_emissions,
+        }
+        init_net_emission_reductions_plan = {
             year: 0 for year in range(-1, self.project.default_project_length + 1) if year != 0
         }
-        if self.project.activity == "Conservation":
-            net_emission_reductions_plan = self._calculate_conservation_emissions(
-                net_emission_reductions_plan
-            )
-        if self.project.activity == "Restoration":
-            net_emission_reductions_plan = self._calculate_restoration_emissions(
-                net_emission_reductions_plan
-            )
+        net_emission_reductions_plan = computation_methods[self.project.activity](
+            init_net_emission_reductions_plan
+        )
         return net_emission_reductions_plan
 
     def _calculate_conservation_emissions(self, net_emission_reductions_plan):
         """Calculate emissions reductions for conservation projects."""
         baseline_emissions = self.calculate_baseline_emissions()
+        net_emission_reductions_plan[-1] = 0  # Initial year has no emissions reductions
         for year, _ in net_emission_reductions_plan.items():
-            if year <= self.project_length:
-                if year == -1:
-                    net_emission_reductions_plan[year] = 0
-                else:
-                    net_emission_reductions_plan[year] = baseline_emissions[year]
-            else:
-                net_emission_reductions_plan[year] = 0
+            if year > -1 and year <= self.project_length:
+                net_emission_reductions_plan[year] = baseline_emissions[year]
+
         return net_emission_reductions_plan
 
     def _calculate_restoration_emissions(self, net_emission_reductions_plan):
         """Calculate emissions reductions for restoration projects."""
         area_restored_or_conserved_plan = self.calculate_area_restored_or_conserved()
-        sequestration_rate = self.project.sequestration_rate
+        sequestration_rate = (
+            float(self.project.sequestration_rate) if self.project.sequestration_rate else 0
+        )
+        net_emission_reductions_plan[-1] = 0  # Initial year has no emissions reductions
 
         for year, _ in net_emission_reductions_plan.items():
-            if year <= self.project_length:
-                if year == -1:
-                    net_emission_reductions_plan[year] = 0
-                elif self.project.restoration_activity == "Planting":
+            if year > -1 and year <= self.project_length:
+                if self.project.restoration_activity == "Planting":
                     net_emission_reductions_plan[year] = self._calculate_planting_emissions(
                         area_restored_or_conserved_plan, sequestration_rate, year
                     )
                 else:
                     if year == 1:
-                        net_emission_reductions_plan[year] = float(
-                            area_restored_or_conserved_plan[-1]
-                        ) * float(sequestration_rate)
+                        net_emission_reductions_plan[year] = (
+                            float(area_restored_or_conserved_plan[-1]) * sequestration_rate
+                        )
                     else:
-                        net_emission_reductions_plan[year] = float(
-                            area_restored_or_conserved_plan[year - 1]
-                        ) * float(sequestration_rate)
+                        net_emission_reductions_plan[year] = (
+                            float(area_restored_or_conserved_plan[year - 1]) * sequestration_rate
+                        )
             else:
                 net_emission_reductions_plan[year] = 0
         return net_emission_reductions_plan
@@ -84,18 +81,17 @@ class SequestrationCreditsCalculator:
         self, area_restored_or_conserved_plan, sequestration_rate, year
     ):
         """Calculate planting-based emissions reductions for restoration projects."""
-        planting_success_rate = self.project.planting_success_rate
         if year == 1:
             return (
                 float(area_restored_or_conserved_plan[year - 2])
                 * float(sequestration_rate)
-                * float(planting_success_rate)
+                * float(self.project.planting_success_rate)
             )
         else:
             return (
                 float(area_restored_or_conserved_plan[year - 1])
                 * float(sequestration_rate)
-                * float(planting_success_rate)
+                * float(self.project.planting_success_rate)
             )
 
     def calculate_baseline_emissions(self):
@@ -105,59 +101,59 @@ class SequestrationCreditsCalculator:
         if this is for conservation projects."""
         if self.project.activity != "Conservation":
             raise ValueError("Baseline emissions can only be calculated for conservation projects.")
-        else:
-            # Get sequestration rate
-            sequestration_rate_tier_1 = self.project.master_table.loc[
+        # Get sequestration rate
+        sequestration_rate_tier_1 = self.project.master_table.loc[
+            (self.project.master_table["country_code"] == self.project.country_code)
+            & (self.project.master_table["ecosystem"] == self.project.ecosystem),
+            "tier_1_ipcc_default_value",
+        ].values[0]
+        if self.project.emission_factor_used == "Tier 1 - Global emission factor":
+            emission_factor = self.project.master_table.loc[
                 (self.project.master_table["country_code"] == self.project.country_code)
                 & (self.project.master_table["ecosystem"] == self.project.ecosystem),
-                "tier_1_ipcc_default_value",
+                "tier_1_global_emission_factor",
             ].values[0]
-            if self.project.emission_factor_used == "Tier 1 - Global emission factor":
-                emission_factor = self.project.master_table.loc[
-                    (self.project.master_table["country_code"] == self.project.country_code)
-                    & (self.project.master_table["ecosystem"] == self.project.ecosystem),
-                    "tier_1_global_emission_factor",
-                ].values[0]
-            elif self.project.emission_factor_used == "Tier 2 - Country-specific emission factor":
-                emission_factor_agb = self.project.master_table.loc[
-                    (self.project.master_table["country_code"] == self.project.country_code)
-                    & (self.project.master_table["ecosystem"] == self.project.ecosystem),
-                    "tier_2_country_specific_emission_factor_agb",
-                ].values[0]
-                emission_factor_soc = self.project.master_table.loc[
-                    (self.project.master_table["country_code"] == self.project.country_code)
-                    & (self.project.master_table["ecosystem"] == self.project.ecosystem),
-                    "tier_2_country_specific_emission_factor_soc",
-                ].values[0]
-            else:
-                emission_factor_agb = self.project.emission_factor_AGB
-                emission_factor_soc = self.project.emission_factor_SOC
-            # Baseline emissions plan
-            baseline_emission_plan = {
-                year: 0 for year in range(1, self.project.default_project_length + 1) if year != 0
-            }
-            cumulative_loss = self.calculate_cumulative_loss_rate()
-            cumulative_loss_rate_incorporating_soc = (
-                self.calculate_cumulative_loss_rate_incorporating_soc_release_time()
-            )
-            annual_avoided_loss = self.calculate_annual_avoided_loss()
-            for year, value in baseline_emission_plan.items():
-                if year <= self.project_length:
-                    if self.project.emission_factor_used != "Tier 1 - Global emission factor":
-                        value = (
-                            emission_factor_agb * annual_avoided_loss[year]
-                            + cumulative_loss_rate_incorporating_soc[year] * emission_factor_soc
-                            + sequestration_rate_tier_1 * cumulative_loss[year]
-                        )
-                    else:
-                        value = (
-                            cumulative_loss[year] * emission_factor
-                            + sequestration_rate_tier_1 * cumulative_loss[year]
-                        )
-                    baseline_emission_plan[year] = value
+        elif self.project.emission_factor_used == "Tier 2 - Country-specific emission factor":
+            emission_factor_agb = self.project.master_table.loc[
+                (self.project.master_table["country_code"] == self.project.country_code)
+                & (self.project.master_table["ecosystem"] == self.project.ecosystem),
+                "tier_2_country_specific_emission_factor_agb",
+            ].values[0]
+            emission_factor_soc = self.project.master_table.loc[
+                (self.project.master_table["country_code"] == self.project.country_code)
+                & (self.project.master_table["ecosystem"] == self.project.ecosystem),
+                "tier_2_country_specific_emission_factor_soc",
+            ].values[0]
+        else:
+            emission_factor_agb = self.project.emission_factor_AGB
+            emission_factor_soc = self.project.emission_factor_SOC
+        # Baseline emissions plan
+        baseline_emission_plan = {
+            year: 0 for year in range(1, self.project.default_project_length + 1) if year != 0
+        }
+        cumulative_loss = self.calculate_cumulative_loss_rate()
+        cumulative_loss_rate_incorporating_soc = (
+            self.calculate_cumulative_loss_rate_incorporating_soc_release_time()
+        )
+        annual_avoided_loss = self.calculate_annual_avoided_loss()
+        for year, value in baseline_emission_plan.items():
+            if year <= self.project_length:
+                if self.project.emission_factor_used != "Tier 1 - Global emission factor":
+                    value = (
+                        emission_factor_agb * annual_avoided_loss[year]
+                        + cumulative_loss_rate_incorporating_soc[year] * emission_factor_soc
+                        + sequestration_rate_tier_1 * cumulative_loss[year]
+                    )
                 else:
-                    baseline_emission_plan[year] = 0
-            return baseline_emission_plan
+                    value = (
+                        cumulative_loss[year] * emission_factor
+                        + sequestration_rate_tier_1 * cumulative_loss[year]
+                    )
+                baseline_emission_plan[year] = value
+            else:
+                baseline_emission_plan[year] = 0
+
+        return baseline_emission_plan
 
     def calculate_area_restored_or_conserved(self):
         """SEQUESTRATION + CREDITS: Utility function to calculate area restored or conserved needed
@@ -248,45 +244,36 @@ class SequestrationCreditsCalculator:
         NOTE: For conservation projects only."""
         if self.project.activity != "Conservation":
             raise ValueError("Avoided loss can only be calculated for conservation projects.")
-        else:
-            projected_loss = self.calculate_projected_loss()
-            annual_avoided_loss = dict.fromkeys(
-                range(1, self.project.default_project_length + 1), 0
-            )
-            for year, _ in annual_avoided_loss.items():
-                if year <= self.project_length:
-                    if year == 1:
-                        annual_avoided_loss[year] = (projected_loss[year] - projected_loss[-1]) * (
-                            -1
-                        )
-                    else:
-                        annual_avoided_loss[year] = (
-                            projected_loss[year] - projected_loss[year - 1]
-                        ) * (-1)
-                else:
-                    annual_avoided_loss[year] = 0
-            return annual_avoided_loss
+
+        projected_loss = self.calculate_projected_loss()
+        annual_avoided_loss = dict.fromkeys(range(1, self.project.default_project_length + 1), 0)
+        annual_avoided_loss[1] = projected_loss[-1] * (-1)  # Initial avoided loss
+
+        for year, _ in annual_avoided_loss.items():
+            if year > 1 and year <= self.project_length:
+                annual_avoided_loss[year] = (projected_loss[year] - projected_loss[year - 1]) * (-1)
+
+        return annual_avoided_loss
 
     def calculate_projected_loss(self):
         """SEQUESTRATION + CREDITS: Calculate the projected loss for the project.
         NOTE: For conservation projects only."""
         if self.project.activity != "Conservation":
             raise ValueError("Projected loss can only be calculated for conservation projects.")
-        else:  # Conservation
-            loss_rate = self.project.loss_rate
-            project_size_ha = self.project.project_size_ha
-            annual_projected_loss = {
-                year: 0 for year in range(-1, self.project.default_project_length + 1) if year != 0
-            }
-            for year, _ in annual_projected_loss.items():
-                if year <= self.project_length:
-                    if year == -1:
-                        annual_projected_loss[year] = project_size_ha
-                    else:
-                        annual_projected_loss[year] = project_size_ha * (1 + loss_rate) ** year
-                else:
-                    annual_projected_loss[year] = 0
-            return annual_projected_loss
+
+        annual_projected_loss = {
+            year: 0 for year in range(-1, self.project.default_project_length + 1) if year != 0
+        }
+
+        annual_projected_loss[-1] = self.project.project_size_ha
+
+        for year, _ in annual_projected_loss.items():
+            if year > -1 and year <= self.project_length:
+                annual_projected_loss[year] = (
+                    self.project.project_size_ha * (1 + self.project.loss_rate) ** year
+                )
+
+        return annual_projected_loss
 
     def calculate_annual_avoided_emissions(self):
         """
@@ -295,38 +282,29 @@ class SequestrationCreditsCalculator:
         annual_avoided_emissions_plan = {
             year: 0 for year in range(-4, self.project.default_project_length + 1) if year != 0
         }
-        for year, _ in annual_avoided_emissions_plan.items():
-            if year <= 0:
+
+        annual_loss_plan = self.calculate_annual_loss()
+        cumulative_loss_plan = self.calculate_cumulative_loss()
+        cumulative_loss_soc_plan = self.calculate_loss_incorporating_soc()
+
+        for year in annual_avoided_emissions_plan:
+            if year <= 0 or year > self.project_length:
                 continue
-            elif year <= self.project_length:
-                # Calculate annual loss
-                annual_loss_plan = self.calculate_annual_loss()
-                # Calculate commulative loss
-                cummulative_loss_plan = self.calculate_cumulative_loss()
-                # Calculate cumulative loss incorporating SOC release time
-                cummulative_loss_soc_plan = self.calculate_loss_incorporating_soc()
-                if self.project.emission_factor_used == "Tier 1 - Global emission factor":
-                    emission_factor = self.project.emission_factor
-                    # Calculate annual_avoided_emissions:
-                    annual_avoided_loss = (
-                        emission_factor * cummulative_loss_plan[year]
-                        + self.project.tier_1_sequestration_rate * cummulative_loss_plan[year]
-                    )
-                else:
-                    emission_factor_agb = self.project.emission_factor_AGB
-                    emission_factor_soc = self.project.emission_factor_SOC
-                    # Calculate annual_avoided_emissions:
-                    annual_avoided_loss = (
-                        emission_factor_agb * annual_loss_plan[year]
-                        + cummulative_loss_soc_plan[year] * emission_factor_soc
-                        + cummulative_loss_plan[year] * self.project.tier_1_sequestration_rate
-                    )
-                if annual_avoided_loss:
-                    annual_avoided_emissions_plan[year] = float(annual_avoided_loss)
-                else:
-                    annual_avoided_emissions_plan[year] = 0
+
+            if self.project.emission_factor_used == "Tier 1 - Global emission factor":
+                annual_avoided_loss = (
+                    cumulative_loss_plan[year] * self.project.emission_factor
+                    + cumulative_loss_plan[year] * self.project.tier_1_sequestration_rate
+                )
             else:
-                annual_avoided_emissions_plan[year] = 0
+                annual_avoided_loss = (
+                    annual_loss_plan[year] * self.project.emission_factor_AGB
+                    + cumulative_loss_soc_plan[year] * self.project.emission_factor_SOC
+                    + cumulative_loss_plan[year] * self.project.tier_1_sequestration_rate
+                )
+
+            annual_avoided_emissions_plan[year] = float(annual_avoided_loss)
+
         return annual_avoided_emissions_plan
 
     def calculate_extent_over_time(self):
@@ -378,16 +356,16 @@ class SequestrationCreditsCalculator:
                 "restorable_land",
             ].values[0]
             sequestration_rate = self.project.sequestration_rate
-            abatement_potential = restorable_land * sequestration_rate
-            return abatement_potential
+            restorable_potential = restorable_land * sequestration_rate
+            return restorable_potential  # restorable potential
         elif self.project.activity == "Conservation":
             # Annualized conservation potential = annualized avoided emissions
             # = total avoided emissions/ conservation project lenght
             conservation_project_length = self.project.conservation_project_length
             # Annual avoided emissions
-            annual_avoided_emissions = sum(self.calculate_annual_avoided_emissions().values())
-            abatement_potential = annual_avoided_emissions / conservation_project_length
-            return abatement_potential
+            total_avoided_emissions = sum(self.calculate_annual_avoided_emissions().values())
+            annual_avoided_emissions = total_avoided_emissions / conservation_project_length
+            return annual_avoided_emissions  # conservation potential
         else:
             raise ValueError("Activity not recognized")
 
