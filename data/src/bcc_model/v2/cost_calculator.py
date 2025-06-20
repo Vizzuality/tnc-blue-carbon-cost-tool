@@ -222,7 +222,9 @@ class CostCalculator:
             self.project.activity,
             self.project.ecosystem,
         )
+
         data_collection_cost_plan = create_simple_plan(total_base_cost, years=[-4, -3, -2])
+
         return data_collection_cost_plan
 
     def calculate_community_representation(self):
