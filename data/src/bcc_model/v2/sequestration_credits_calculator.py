@@ -1,5 +1,5 @@
 # src/sequestration_credits_calculator.py
-
+import math
 
 class SequestrationCreditsCalculator:
     def __init__(self, project):
@@ -54,7 +54,9 @@ class SequestrationCreditsCalculator:
         """Calculate emissions reductions for restoration projects."""
         area_restored_or_conserved_plan = self.calculate_area_restored_or_conserved()
         sequestration_rate = (
-            float(self.project.sequestration_rate) if self.project.sequestration_rate else 0
+            float(self.project.sequestration_rate)
+            if not math.isnan(self.project.sequestration_rate)
+            else 0
         )
         net_emission_reductions_plan[-1] = 0  # Initial year has no emissions reductions
 
