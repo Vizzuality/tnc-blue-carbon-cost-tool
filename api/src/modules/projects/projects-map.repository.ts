@@ -225,8 +225,7 @@ export class ProjectsMapRepository extends Repository<Project> {
               'AVG(p.cost_per_tco2e)',
               'avg_weighted_cost',
             );
-          }
-          if (costRangeSelector === 'npv') {
+          } else if (costRangeSelector === 'npv') {
             innerSubquery.addSelect(
               'AVG(p.cost_per_tco2e_npv)',
               'avg_weighted_cost',
