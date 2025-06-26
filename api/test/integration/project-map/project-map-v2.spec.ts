@@ -80,8 +80,8 @@ describe('Project Map V2', () => {
     expect(countryAResult.properties.abatementPotential).toBeCloseTo(3000);
     expect(countryBResult.properties.abatementPotential).toBeCloseTo(3500);
 
-    const expectedCostA = 1000 / countryA.areaHa!;
-    const expectedCostB = 1500 / countryB.areaHa!;
+    const expectedCostA = 100;
+    const expectedCostB = 100;
     expect(countryAResult.properties.cost).toBeCloseTo(expectedCostA);
     expect(countryBResult.properties.cost).toBeCloseTo(expectedCostB);
   });
@@ -126,7 +126,7 @@ describe('Project Map V2', () => {
 
     for (let i = 0; i < 2; i++) {
       const expectedAbatement = 3000 + i;
-      const expectedWeightedCost = (2000 + i) / countryAreas[i];
+      const expectedWeightedCost = 100;
       expect(
         response.body.features[i].properties.abatementPotential,
       ).toBeCloseTo(expectedAbatement);
@@ -146,18 +146,16 @@ describe('Project Map V2', () => {
 
       const p1 = await testManager.mocks().createProject({
         countryCode: country.code,
-        totalCost: 1000 + parseInt(index),
-        totalCostNPV: 2000 + parseInt(index),
         abatementPotential: 3000 + parseInt(index),
         countryAbatementPotential: 3000 + parseInt(index),
+        costPerTCO2e: 3000,
       });
 
       const p2 = await testManager.mocks().createProject({
         countryCode: country.code,
-        totalCost: 1000 + parseInt(index),
-        totalCostNPV: 2000 + parseInt(index),
         abatementPotential: 3000 + parseInt(index),
         countryAbatementPotential: 3000 + parseInt(index),
+        costPerTCO2e: 1000,
       });
 
       projects.push(p1, p2);
@@ -176,7 +174,7 @@ describe('Project Map V2', () => {
 
     for (let i = 0; i < 2; i++) {
       const expectedAbatement = 3000 + i;
-      const expectedWeightedCost = (1000 + i) / countryAreas[i];
+      const expectedWeightedCost = 2000;
       expect(
         response.body.features[i].properties.abatementPotential,
       ).toBeCloseTo(expectedAbatement);
@@ -191,18 +189,18 @@ describe('Project Map V2', () => {
 
     await testManager.mocks().createProject({
       countryCode: country.code,
-      totalCost: 1500,
-      totalCostNPV: 1500,
       abatementPotential: 2500,
       countryAbatementPotential: 2500,
+      totalCost: 1000,
+      costPerTCO2eNPV: 1000,
     });
 
     await testManager.mocks().createProject({
       countryCode: country.code,
-      totalCost: 5000,
-      totalCostNPV: 5000,
       abatementPotential: 8000,
       countryAbatementPotential: 8000,
+      totalCost: 2000,
+      costPerTCO2eNPV: 1000,
     });
 
     const response = await testManager
@@ -214,6 +212,7 @@ describe('Project Map V2', () => {
         costRangeSelector: 'total',
       });
 
+    console.log(JSON.stringify(response.body, null, 2));
     expect(response.status).toBe(HttpStatus.OK);
     expect(response.body.features).toHaveLength(1);
     expect(response.body.features[0].properties.abatementPotential).toBeCloseTo(
@@ -226,18 +225,16 @@ describe('Project Map V2', () => {
 
     await testManager.mocks().createProject({
       countryCode: country.code,
-      totalCost: 3000,
-      totalCostNPV: 3000,
       abatementPotential: 5000,
       countryAbatementPotential: 5000,
+      costPerTCO2eNPV: 1000,
     });
 
     await testManager.mocks().createProject({
       countryCode: country.code,
-      totalCost: 3000,
-      totalCostNPV: 3000,
       abatementPotential: 10000,
       countryAbatementPotential: 10000,
+      costPerTCO2eNPV: 1000,
     });
 
     const response = await testManager
