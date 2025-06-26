@@ -188,6 +188,7 @@ export class ProjectsMapRepository extends Repository<Project> {
     projectIds: Project['id'][],
     costRangeSelector: 'npv' | 'total' = 'total',
   ): Promise<ProjectMap> {
+    // "Abatement potential" is the wrong term here, the correct one is "country_abatement_potential"
     const geoQueryBuilder = this.manager.createQueryBuilder();
     geoQueryBuilder
       .select(
@@ -210,40 +211,63 @@ export class ProjectsMapRepository extends Repository<Project> {
       )
       .from('countries', 'country')
       .innerJoin(
-        (subQuery) => {
-          subQuery
+        (qb) => {
+          const innerSubquery = this.manager
+            .createQueryBuilder()
+            .subQuery()
             .select('p.country_code', 'country_code')
             .addSelect(
-              'SUM(p.country_abatement_potential)',
+              'MIN(p.country_abatement_potential)',
               'avg_abatement_potential',
             );
           if (costRangeSelector === 'total') {
-            subQuery.addSelect(
-              'AVG(p.total_cost / c.area_ha)',
+            innerSubquery.addSelect(
+              'AVG(p.cost_per_tco2e)',
               'avg_weighted_cost',
             );
           }
           if (costRangeSelector === 'npv') {
-            subQuery.addSelect(
-              'AVG(p.total_cost_npv / c.area_ha)',
+            innerSubquery.addSelect(
+              'AVG(p.cost_per_tco2e_npv)',
               'avg_weighted_cost',
             );
           }
-          subQuery
+          innerSubquery
             .from(Project, 'p')
             .innerJoin('countries', 'c', 'c.code = p.country_code')
             .where('p.id IN (:...projectIds)', { projectIds })
-            .groupBy('p.country_code');
-          return subQuery;
+            .groupBy('p.country_code')
+            .addGroupBy('p.activity')
+            .addGroupBy('p.ecosystem')
+            .addGroupBy('p.price_type');
+
+          const innerQuery = innerSubquery.getQuery();
+
+          const outerQuery = qb
+            .subQuery()
+            .select('x.country_code', 'country_code')
+            .addSelect(
+              'SUM(x.avg_abatement_potential)',
+              'avg_abatement_potential',
+            )
+            .addSelect(`AVG(x.avg_weighted_cost)`, 'avg_weighted_cost')
+            .from(`${innerQuery}`, 'x')
+            .groupBy('x.country_code');
+
+          return outerQuery;
         },
         'filtered_projects',
         'filtered_projects.country_code = country.code',
       )
-      .setParameter('costRangeSelector', costRangeSelector);
+      .setParameters({
+        projectIds: projectIds,
+        costRangeSelector,
+      });
 
     const { geojson } = await geoQueryBuilder.getRawOne<{
       geojson: ProjectMap;
     }>();
+
     return geojson;
   }
 }
