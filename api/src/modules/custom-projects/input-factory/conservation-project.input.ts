@@ -7,7 +7,10 @@ import {
   ModelAssumptionsForCalculations,
   NonOverridableModelAssumptions,
 } from '@api/modules/calculations/assumptions.repository';
-import { CARBON_REVENUES_TO_COVER } from '@shared/entities/custom-project.entity';
+import {
+  CARBON_REVENUES_TO_COVER,
+  PROJECT_SPECIFIC_EMISSION,
+} from '@shared/entities/custom-project.entity';
 import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
 import {
   ConservationCustomProjectDto,
@@ -68,11 +71,30 @@ export class ConservationProjectInput {
       this.emissionFactor = additionalBaseData.tier1EmissionFactor;
       this.emissionFactorAgb = null;
       this.emissionFactorSoc = null;
-    }
-    if (parameters.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_2) {
+    } else if (
+      parameters.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_2
+    ) {
       this.emissionFactorAgb = additionalBaseData.emissionFactorAgb;
       this.emissionFactorSoc = additionalBaseData.emissionFactorSoc;
       this.emissionFactor = null;
+    } else if (
+      parameters.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_3
+    ) {
+      if (
+        parameters.projectSpecificEmission ===
+        PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR
+      ) {
+        this.emissionFactor = parameters.projectSpecificEmissionFactor;
+        this.emissionFactorAgb = null;
+        this.emissionFactorSoc = null;
+      } else if (
+        parameters.projectSpecificEmission ===
+        PROJECT_SPECIFIC_EMISSION.TWO_EMISSION_FACTORS
+      ) {
+        this.emissionFactor = null;
+        this.emissionFactorAgb = parameters.emissionFactorAGB;
+        this.emissionFactorSoc = parameters.emissionFactorSOC;
+      }
     }
     return this;
   }
