@@ -9,7 +9,9 @@ import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.
 import { OverridableAssumptionsDto } from '@api/modules/custom-projects/dto/create-custom-project.dto';
 import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import { CalculationException } from '@api/modules/calculations/calculators/error';
-import { ProjectInput } from '@api/modules/calculations/types';
+import { EngineInput, ProjectInput } from '@api/modules/calculations/types';
+import { ConservationCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
+import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
 
 @Injectable()
 export class SequestrationRateCalculator {
@@ -28,7 +30,10 @@ export class SequestrationRateCalculator {
   projectedLoss: CostPlanMap;
   annualAvoidedLoss: CostPlanMap;
   restorationPlan: CostPlanMap;
-  constructor(projectInput: ProjectInput) {
+  constructor(
+    projectInput: ProjectInput,
+    private readonly rawUserInput: EngineInput['dto'],
+  ) {
     this.projectInput = projectInput;
     this.activity = projectInput.activity;
     this.defaultProjectLength = projectInput.assumptions.defaultProjectLength;
@@ -194,9 +199,14 @@ export class SequestrationRateCalculator {
     if (this.activity !== ACTIVITY.CONSERVATION) {
       console.error('Baseline emissions cannot be calculated for restoration.');
     }
-
     const { emissionFactorAgb, emissionFactorSoc, emissionFactor } =
       this.projectInput;
+
+    const { emissionFactorUsed } = this.rawUserInput
+      .parameters as ConservationCustomProjectDto;
+    if (emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_1) {
+    } else if (emissionFactorUsed) {
+    }
     const tier1SequestrationRate = this.tier1SequestrationRate;
 
     const baselineEmissionPlan: { [year: number]: number } = {};

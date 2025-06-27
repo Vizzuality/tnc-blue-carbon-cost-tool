@@ -26,6 +26,7 @@ export class CostCalculatorFactory {
   ): CalculatorDependencies {
     const sequestrationRateOutputs = this.computeSequestrationRateOutputs(
       input.projectInput,
+      input.dto,
     );
     const revenueProfitCalculator = this.getRevenueProfitCalculator(
       input.projectInput,
@@ -49,9 +50,11 @@ export class CostCalculatorFactory {
 
   computeSequestrationRateOutputs(
     projectInput: ProjectInput,
+    rawUserInput: EngineInput['dto'],
   ): SequestrationRateOutputs {
     const sequestrationRateCalculator = new SequestrationRateCalculator(
       projectInput,
+      rawUserInput,
     );
 
     const estimatedCreditIssuedPlan =
