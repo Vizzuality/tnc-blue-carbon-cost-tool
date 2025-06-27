@@ -725,6 +725,8 @@ export const PROJECT_SUMMARY: Record<keyof CustomProjectSummary, string> = {
     "The NPV of the OPEX associated with the hypothetical blue carbon project.",
   "Credits issued":
     "The carbon credits issued over the indicated project timeline. The buffer has already been subtracted from this total number",
+  "Total abatement potential (tCO2e, without buffer)":
+    "Total abatement potential (tCO2e, without buffer)",
   "Total revenue (NPV)": "The NPV of the carbon credit revenues.",
   "Total revenue (non-discounted)":
     "The non-discounted carbon credit revenues.",

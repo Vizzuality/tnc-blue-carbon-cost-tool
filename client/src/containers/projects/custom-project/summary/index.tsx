@@ -29,6 +29,7 @@ const customProjectSummaryUnitMap: Record<keyof CustomProjectSummary, string> =
     "Capital expenditure (NPV)": "$",
     "Operating expenditure (NPV)": "$",
     "Credits issued": "",
+    "Total abatement potential (tCO2e, without buffer)": "tCO2e",
     "Total revenue (NPV)": "$",
     "Total revenue (non-discounted)": "$",
     "Financing cost": "$",
