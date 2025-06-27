@@ -18,6 +18,7 @@ export type CustomProjectSummary = {
   "Landowner/community benefit share": number;
   "Net revenue after OPEX": number | undefined;
   "Net revenue after Total cost": number | undefined;
+  "Total abatement potential (tCO2e, without buffer)": number | undefined;
 };
 
 const SORTED_CUSTOM_PROJECT_SUMMARY_KEYS = [
@@ -115,13 +116,19 @@ export type CustomProjectOutput = {
     | null;
 };
 
-export type SensitivityAnalysis = Record<Exclude<keyof CustomProjectCostDetails, "capitalExpenditure" | "operationalExpenditure" | "totalCost">, {
-  baseValue: number;
-  changePctHigher: number;
-  changePctLower: number;
-  decreased25: number;
-  increased25: number;
-}>
+export type SensitivityAnalysis = Record<
+  Exclude<
+    keyof CustomProjectCostDetails,
+    "capitalExpenditure" | "operationalExpenditure" | "totalCost"
+  >,
+  {
+    baseValue: number;
+    changePctHigher: number;
+    changePctLower: number;
+    decreased25: number;
+    increased25: number;
+  }
+>;
 
 export class RestorationProjectOutput {
   // lossRate: number;

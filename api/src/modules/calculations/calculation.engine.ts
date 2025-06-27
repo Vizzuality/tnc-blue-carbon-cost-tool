@@ -69,6 +69,8 @@ export class CalculationEngine {
       costOutput.costPlans.abatementPotential = abatementPotential;
       costOutput.costPlans.countryAbatementPotential =
         countryAbatementPotential;
+
+      costOutput.summary = costCalculator.getSummary(costOutput.costPlans);
     }
 
     return costOutput;

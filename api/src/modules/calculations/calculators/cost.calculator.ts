@@ -184,6 +184,7 @@ export class CostCalculator {
       fundingGapNPV,
       fundingGapPerTCO2e,
       totalCommunityBenefitSharingFund,
+      abatementPotential,
     } = costPlanOutput;
     const summary: Partial<CustomProjectSummary> = {
       '$/tCO2e (total cost, NPV)': costPerTCO2e,
@@ -194,6 +195,7 @@ export class CostCalculator {
       'Capital expenditure (NPV)': totalCapexNPV,
       'Operating expenditure (NPV)': totalOpexNPV,
       'Credits issued': totalCreditsIssued,
+      'Total abatement potential (tCO2e, without buffer)': abatementPotential,
       'Total revenue (NPV)': totalRevenueNPV,
       'Total revenue (non-discounted)': totalRevenue,
       'Financing cost': financingCost,
