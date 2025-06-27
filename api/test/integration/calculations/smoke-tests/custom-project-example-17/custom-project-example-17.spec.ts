@@ -17,6 +17,8 @@ export const summaryToExpectedKeyMap = {
   'Capital expenditure (NPV)': 'Capital expenditure (NPV)',
   'Operating expenditure (NPV)': 'Operating expenditure (NPV)',
   'Credits issued': 'Credits issued',
+  'Total abatement potential (tCO2e, without buffer)':
+    'Total abatement potential (tCO2e, without buffer)',
   'Total revenue (NPV)': 'Total revenue (NPV)',
   'Total revenue (non-discounted)': 'Total revenue (non-discounted)',
   'Financing cost': 'Financing cost',
