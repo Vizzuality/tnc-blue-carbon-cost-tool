@@ -32,6 +32,7 @@ const SORTED_CUSTOM_PROJECT_SUMMARY_KEYS = [
   "Capital expenditure (NPV)",
   "Operating expenditure (NPV)",
   "Credits issued",
+  "Total abatement potential (tCO2e, without buffer)",
   "Total revenue (NPV)",
   "Total revenue (non-discounted)",
   "Financing cost",
