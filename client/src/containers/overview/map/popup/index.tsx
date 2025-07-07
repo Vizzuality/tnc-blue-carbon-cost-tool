@@ -24,8 +24,12 @@ export default function CostAbatementPopup() {
       <table className="mt-2">
         <thead>
           <tr>
-            <th className={cn(HEADER_CLASSES, "pr-2")}>AVG Cost (USD)</th>
-            <th className={cn(HEADER_CLASSES, "px-2")}>Abatement (tCO2e)</th>
+            <th className={cn(HEADER_CLASSES, "pr-2")}>
+              Ave Cost per credit (USD/tCO2e)
+            </th>
+            <th className={cn(HEADER_CLASSES, "px-2")}>
+              Abatement potential (tCO2e)
+            </th>
           </tr>
         </thead>
         <tbody>
