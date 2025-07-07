@@ -49,8 +49,12 @@ const ProjectSummary: FC<ProjectSummaryProps> = ({ id, data }) => {
   const showEditButton = FEATURE_FLAGS["edit-project"] && projectId;
 
   return (
-    <div className={"relative flex h-full flex-col gap-8 bg-big-stone-950"}>
-      <ScrollArea className="flex-1">
+    <div
+      className={
+        "relative flex h-full flex-col gap-8 overflow-hidden bg-big-stone-950"
+      }
+    >
+      <ScrollArea className="flex-1 pr-4">
         <ul className="space-y-1">
           {(Object.keys(data) as Array<keyof CustomProjectSummary>).map(
             (key) => (
