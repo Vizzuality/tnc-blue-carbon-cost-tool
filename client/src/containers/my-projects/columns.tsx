@@ -10,13 +10,14 @@ import {
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
 import { useQueryClient } from "@tanstack/react-query";
-import { Table as TableInstance, Row, ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row, Table as TableInstance } from "@tanstack/react-table";
 import { PencilLineIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { formatCurrency } from "@/lib/format";
 import { client } from "@/lib/query-client";
+import { queryKeys } from "@/lib/query-keys";
 import { cn, getAuthHeader } from "@/lib/utils";
 
 import { DEFAULT_CUSTOM_PROJECTS_QUERY_KEY } from "@/app/my-projects/url-store";
@@ -60,12 +61,19 @@ const ActionsDropdown = ({
             body: { ids },
           });
 
+        if (status === 200) {
+          const myProjectsQueryKey = queryKeys.customProjects.all().queryKey;
+          await queryClient.invalidateQueries({
+            predicate: (query) => query.queryKey[0] === myProjectsQueryKey[0],
+          });
+        }
+
         return status === 200;
       } catch (e) {
         return false;
       }
     },
-    [session?.accessToken],
+    [session?.accessToken, queryClient],
   );
 
   const handleDelete = async () => {
