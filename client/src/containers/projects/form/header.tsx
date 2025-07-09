@@ -2,6 +2,7 @@ import { useCallback } from "react";
 
 import { useFormContext } from "react-hook-form";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
@@ -156,7 +157,9 @@ export default function Header({ name, id }: HeaderProps) {
         </h2>
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="secondary">Cancel</Button>
+        <Button variant="secondary" asChild>
+          <Link href={isEdit ? "/my-projects" : "/"}>Cancel</Link>
+        </Button>
         <Button
           onClick={() => {
             // Making sure only the necessary fields are included:
