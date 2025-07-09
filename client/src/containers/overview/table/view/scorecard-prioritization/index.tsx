@@ -141,10 +141,12 @@ export function ScoredCardPrioritizationTable() {
                           header.getContext(),
                         )}
                         {{
-                          asc: <ChevronUpIcon className="h-4 w-4" />,
-                          desc: <ChevronDownIcon className="h-4 w-4" />,
+                          asc: <ChevronUpIcon className="h-4 w-4 shrink-0" />,
+                          desc: (
+                            <ChevronDownIcon className="h-4 w-4 shrink-0" />
+                          ),
                         }[header.column.getIsSorted() as string] ?? (
-                          <ChevronsUpDownIcon className="h-4 w-4" />
+                          <ChevronsUpDownIcon className="h-4 w-4 shrink-0" />
                         )}
                       </div>
                     )}
