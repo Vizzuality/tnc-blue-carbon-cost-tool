@@ -50,6 +50,6 @@ test.describe("Auth - Delete Account", () => {
     await page.locator('input[type="password"]').fill(user.password);
     await page.getByRole("button", { name: /log in/i }).click();
 
-    await expect(page.getByText("Invalid credentials")).toBeVisible();
+    await expect(page.getByText('Invalid credentials', { exact: true })).toBeVisible();
   });
 });
