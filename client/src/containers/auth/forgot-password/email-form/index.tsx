@@ -33,7 +33,7 @@ const ForgotPasswordEmailForm: FC = () => {
       email: "",
     },
   });
-  const { apiResponseToast, toast } = useApiResponseToast();
+  const { toast } = useApiResponseToast();
 
   const handleForgotPassword = useCallback(
     (evt: FormEvent<HTMLFormElement>) => {
@@ -41,16 +41,13 @@ const ForgotPasswordEmailForm: FC = () => {
 
       form.handleSubmit(async (formValues) => {
         try {
-          const { status, body } =
-            await client.auth.requestPasswordRecovery.mutation({
-              body: formValues,
-            });
-          apiResponseToast(
-            { status, body },
-            {
-              successMessage: "Check your inbox for a password reset link.",
-            },
-          );
+          await client.auth.requestPasswordRecovery.mutation({
+            body: formValues,
+          });
+          toast({
+            description:
+              "An email has been sent to your inbox with a link to reset your password.",
+          });
         } catch (err) {
           toast({
             variant: "destructive",
@@ -61,7 +58,7 @@ const ForgotPasswordEmailForm: FC = () => {
         }
       })(evt);
     },
-    [form, apiResponseToast, toast],
+    [form, toast],
   );
 
   return (
