@@ -263,7 +263,7 @@ export class ProjectsService extends AppBaseService<
       costOutput,
       createProjectDto.projectSizeHa,
     );
-    const test = project.build();
+
     return this.projectRepository.save(project.build());
   }
 
