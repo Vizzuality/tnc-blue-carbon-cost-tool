@@ -1,6 +1,9 @@
 import { CommunityBenefitSharingFund } from '@shared/entities/cost-inputs/community-benefit-sharing-fund.entity.js';
 import { ResourceWithOptions } from 'adminjs';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 
 export const CommunityBenefitResource: ResourceWithOptions = {
   resource: CommunityBenefitSharingFund,
@@ -18,6 +21,9 @@ export const CommunityBenefitResource: ResourceWithOptions = {
       communityBenefitSharingFund: {
         isVisible: { list: true, show: true, filter: false, edit: true },
       },
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

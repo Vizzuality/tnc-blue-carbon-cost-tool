@@ -1,5 +1,8 @@
 import { ResourceWithOptions } from 'adminjs';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 import { Country } from '@shared/entities/country.entity.js';
 
 export const CountryResource: ResourceWithOptions = {
@@ -18,6 +21,9 @@ export const CountryResource: ResourceWithOptions = {
     navigation: {
       name: 'Model Components',
       icon: 'Settings',
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

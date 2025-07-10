@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { CommunityRepresentation } from '@shared/entities/cost-inputs/community-representation.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 
 export const CommunityRepresentationResource: ResourceWithOptions = {
   resource: CommunityRepresentation,
@@ -18,6 +21,9 @@ export const CommunityRepresentationResource: ResourceWithOptions = {
       liaisonCost: {
         isVisible: { list: true, show: true, filter: false, edit: true },
       },
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

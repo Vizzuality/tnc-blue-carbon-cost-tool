@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { RestorableLand } from '@shared/entities/carbon-inputs/restorable-land.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 export const RestorableLandResource: ResourceWithOptions = {
   resource: RestorableLand,
   options: {
@@ -17,6 +20,9 @@ export const RestorableLandResource: ResourceWithOptions = {
       restorableLand: {
         isVisible: { list: true, show: true, filter: false, edit: true },
       },
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

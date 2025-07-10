@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { CarbonStandardFees } from '@shared/entities/cost-inputs/carbon-standard-fees.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 
 export const CarbonStandardFeesResource: ResourceWithOptions = {
   resource: CarbonStandardFees,
@@ -18,6 +21,9 @@ export const CarbonStandardFeesResource: ResourceWithOptions = {
       carbonStandardFee: {
         isVisible: { list: true, show: true, filter: false, edit: true },
       },
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

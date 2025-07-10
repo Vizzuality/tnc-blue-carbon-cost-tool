@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { BaseSize } from '@shared/entities/base-size.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 
 export const BaseSizeResource: ResourceWithOptions = {
   resource: BaseSize,
@@ -15,6 +18,9 @@ export const BaseSizeResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

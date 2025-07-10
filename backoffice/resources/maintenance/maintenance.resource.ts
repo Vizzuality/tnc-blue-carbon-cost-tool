@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { Maintenance } from '@shared/entities/cost-inputs/maintenance.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 import {
   fetchRelatedSourcesActionHandler,
   addSourceActionHandler,
@@ -42,6 +45,7 @@ export const MaintenanceResource: ResourceWithOptions = {
       },
     },
     actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
       fetchRelatedSourcesAction: {
         actionType: 'record',
         isVisible: false,

@@ -1,6 +1,9 @@
 import { BlueCarbonProjectPlanning } from '@shared/entities/cost-inputs/blue-carbon-project-planning.entity.js';
 import { ResourceWithOptions } from 'adminjs';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 
 // position: number is not working in the options so we have to define the order of the columns using listProperties, showProperties and editProperties.
 const COLUMN_ORDER = ['countryCode', 'planningCost', 'source'];
@@ -21,6 +24,9 @@ export const BlueCarbonProjectPlanningResource: ResourceWithOptions = {
     navigation: {
       name: 'Model Components',
       icon: 'Settings',
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

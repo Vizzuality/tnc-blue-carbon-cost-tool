@@ -1,6 +1,9 @@
 import { CommunityCashFlow } from '@shared/entities/cost-inputs/community-cash-flow.entity.js';
 import { ResourceWithOptions } from 'adminjs';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 
 export const CommunityCashFlowResource: ResourceWithOptions = {
   resource: CommunityCashFlow,
@@ -15,6 +18,9 @@ export const CommunityCashFlowResource: ResourceWithOptions = {
     },
     properties: {
       ...GLOBAL_COMMON_PROPERTIES,
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { FinancingCost } from '@shared/entities/cost-inputs/financing-cost.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 export const FinancingCostResource: ResourceWithOptions = {
   resource: FinancingCost,
   options: {
@@ -17,6 +20,9 @@ export const FinancingCostResource: ResourceWithOptions = {
       financingCostCapexPercent: {
         isVisible: { list: true, show: true, filter: false, edit: true },
       },
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { SequestrationRate } from '@shared/entities/carbon-inputs/sequestration-rate.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 import {
   fetchRelatedSourcesActionHandler,
   addSourceActionHandler,
@@ -52,6 +55,7 @@ export const SequestrationRateResource: ResourceWithOptions = {
       },
     },
     actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
       fetchRelatedSourcesAction: {
         actionType: 'record',
         isVisible: false,
