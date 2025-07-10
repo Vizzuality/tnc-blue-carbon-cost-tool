@@ -1,7 +1,6 @@
 import { ActionContext, ActionRequest, ResourceWithOptions } from 'adminjs';
 import { Project } from '@shared/entities/projects.entity.js';
 import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
-import { ProjectActions } from 'backoffice/resources/projects/project.actions.js';
 import { Components } from 'backoffice/components/index.js';
 
 const CREATE_EDIT_FORM_FIELDS = [
@@ -58,12 +57,15 @@ export const ProjectsResource: ResourceWithOptions = {
     },
     actions: {
       new: {
-        isAccessible: true,
+        isAccessible: false,
         component: Components.ProjectDynamicForm,
       },
       edit: {
-        isAccessible: true,
+        isAccessible: false,
         component: Components.ProjectDynamicForm,
+      },
+      delete: {
+        isAccessible: false,
       },
       bulkDelete: {
         isAccessible: false,

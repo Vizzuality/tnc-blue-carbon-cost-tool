@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { MRV } from '@shared/entities/cost-inputs/mrv.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 export const MRVResource: ResourceWithOptions = {
   resource: MRV,
   options: {
@@ -17,6 +20,9 @@ export const MRVResource: ResourceWithOptions = {
       mrvCost: {
         isVisible: { list: true, show: true, filter: false, edit: true },
       },
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

@@ -5,7 +5,10 @@ import {
   ResourceWithOptions,
 } from 'adminjs';
 import { EmissionFactors } from '@shared/entities/carbon-inputs/emission-factors.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 import { Components } from 'backoffice/components/index.js';
 import {
   addSourceActionHandler,
@@ -62,6 +65,7 @@ export const EmissionFactorsResource: ResourceWithOptions = {
       },
     },
     actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
       fetchRelatedSourcesAction: {
         actionType: 'record',
         isVisible: false,

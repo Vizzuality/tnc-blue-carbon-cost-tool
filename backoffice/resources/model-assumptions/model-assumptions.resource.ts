@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 
 export const ModelAssumptionResource: ResourceWithOptions = {
   resource: ModelAssumptions,
@@ -18,6 +21,9 @@ export const ModelAssumptionResource: ResourceWithOptions = {
       name: {
         isVisible: { list: true, show: true, filter: true, edit: false },
       },
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

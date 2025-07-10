@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { FeasibilityAnalysis } from '@shared/entities/cost-inputs/feasability-analysis.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 
 export const FeasibilityAnalysisResource: ResourceWithOptions = {
   resource: FeasibilityAnalysis,
@@ -18,6 +21,9 @@ export const FeasibilityAnalysisResource: ResourceWithOptions = {
       analysisCost: {
         isVisible: { list: true, show: true, edit: true, filter: false },
       },
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

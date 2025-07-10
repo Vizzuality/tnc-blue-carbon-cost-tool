@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { ImplementationLaborCost } from '@shared/entities/cost-inputs/implementation-labor-cost.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 import {
   fetchRelatedSourcesActionHandler,
   addSourceActionHandler,
@@ -53,6 +56,7 @@ export const ImplementationLaborCostResource: ResourceWithOptions = {
       },
     },
     actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
       fetchRelatedSourcesAction: {
         actionType: 'record',
         isVisible: false,

@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { BaselineReassessment } from '@shared/entities/cost-inputs/baseline-reassessment.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 
 export const BaselineReassessmentResource: ResourceWithOptions = {
   resource: BaselineReassessment,
@@ -18,6 +21,9 @@ export const BaselineReassessmentResource: ResourceWithOptions = {
       baselineReassessmentCost: {
         isVisible: { list: true, show: true, filter: false, edit: true },
       },
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

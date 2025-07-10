@@ -7,6 +7,7 @@ import {
   fetchRelatedSourcesActionHandler,
 } from 'backoffice/resources/common/many-2-many-sources.actions.js';
 import { EcosystemExtent } from '@shared/entities/carbon-inputs/ecosystem-extent.entity.js';
+import { DEFAULT_READONLY_PERMISSIONS } from 'backoffice/resources/common/common.resources.js';
 
 const FIELD_ORDER = [
   'countryCode',
@@ -58,6 +59,7 @@ export const EcosystemExtentResource: ResourceWithOptions = {
       },
     },
     actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
       fetchRelatedSourcesAction: {
         actionType: 'record',
         isVisible: false,

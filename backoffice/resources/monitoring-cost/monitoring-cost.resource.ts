@@ -1,6 +1,9 @@
 import { ResourceWithOptions } from 'adminjs';
 import { MonitoringCost } from '@shared/entities/cost-inputs/monitoring.entity.js';
-import { GLOBAL_COMMON_PROPERTIES } from '../common/common.resources.js';
+import {
+  DEFAULT_READONLY_PERMISSIONS,
+  GLOBAL_COMMON_PROPERTIES,
+} from '../common/common.resources.js';
 
 export const MonitoringCostResource: ResourceWithOptions = {
   resource: MonitoringCost,
@@ -18,6 +21,9 @@ export const MonitoringCostResource: ResourceWithOptions = {
       monitoringCost: {
         isVisible: { list: true, show: true, filter: false, edit: true },
       },
+    },
+    actions: {
+      ...DEFAULT_READONLY_PERMISSIONS,
     },
   },
 };

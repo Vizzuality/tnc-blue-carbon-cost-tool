@@ -21,3 +21,10 @@ export const COMMON_RESOURCE_LIST_PROPERTIES: ResourceOptions['properties'] = {
     isVisible: { list: true, show: true, edit: false, filter: true },
   },
 };
+
+export const DEFAULT_READONLY_PERMISSIONS: ResourceOptions['actions'] = {
+  new: { isVisible: false, isAccessible: false },
+  edit: { isVisible: false, isAccessible: false },
+  delete: { isVisible: false, isAccessible: false },
+  bulkDelete: { isVisible: false, isAccessible: false },
+};
