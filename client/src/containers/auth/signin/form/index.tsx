@@ -1,11 +1,11 @@
 "use client";
 
-import { FC, FormEvent, useCallback, useRef, useState } from "react";
+import { FC, FormEvent, useCallback, useRef } from "react";
 
 import { useForm } from "react-hook-form";
 
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LogInSchema } from "@shared/schemas/auth/login.schema";
@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/toast/use-toast";
 
 interface SignInFormProps {
   onSignIn?: () => void;
@@ -33,7 +34,6 @@ interface SignInFormProps {
 const SignInForm: FC<SignInFormProps> = ({ onSignIn }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const formRef = useRef<HTMLFormElement>(null);
   const form = useForm<z.infer<typeof LogInSchema>>({
     resolver: zodResolver(LogInSchema),
@@ -46,7 +46,6 @@ const SignInForm: FC<SignInFormProps> = ({ onSignIn }) => {
   const handleSignIn = useCallback(
     (evt: FormEvent<HTMLFormElement>) => {
       evt.preventDefault();
-      setErrorMessage(undefined);
 
       form.handleSubmit(async (formValues) => {
         try {
@@ -66,11 +65,17 @@ const SignInForm: FC<SignInFormProps> = ({ onSignIn }) => {
           }
 
           if (!response?.ok) {
-            setErrorMessage(response?.error ?? "unknown error");
+            toast({
+              description: response?.error ?? "unknown error",
+              variant: "destructive",
+            });
           }
         } catch (err) {
           if (err instanceof Error) {
-            setErrorMessage(err.message ?? "unknown error");
+            toast({
+              description: err.message ?? "unknown error",
+              variant: "destructive",
+            });
           }
         }
       })(evt);
@@ -115,9 +120,6 @@ const SignInForm: FC<SignInFormProps> = ({ onSignIn }) => {
             </FormItem>
           )}
         />
-        {errorMessage && (
-          <div className="text-center text-destructive">{errorMessage}</div>
-        )}
         <div className="flex justify-end">
           <Button variant="default" type="submit">
             Log in
