@@ -39,8 +39,8 @@ export default function ProjectsHeader() {
   const filtersEqual = isEqual(sideFilters, initialSideFilters);
 
   return (
-    <header className="flex w-full items-center justify-between py-3">
-      <div className="flex items-center space-x-6">
+    <header className="flex w-full items-center justify-between gap-2 py-3">
+      <div className="flex items-center space-x-3">
         <div className="flex items-center space-x-2">
           <SidebarTrigger />
           <h2 className="text-2xl font-medium">Projects Overview</h2>
