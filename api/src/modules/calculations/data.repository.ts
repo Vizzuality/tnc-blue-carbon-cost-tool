@@ -24,6 +24,7 @@ import { OverridableCostInputsDto } from '@shared/dtos/custom-projects/create-cu
  * Additional data that is required to perform calculations, which is not overridable by the user. Better naming and clustering of concepts would be great
  */
 export type AdditionalBaseData = {
+  ecosystemExtent: BaseDataView['ecosystemExtent'];
   ecosystemLossRate: BaseDataView['ecosystemLossRate'];
   tier1EmissionFactor: BaseDataView['tier1EmissionFactor'];
   emissionFactorAgb: BaseDataView['emissionFactorAgb'];
@@ -169,6 +170,7 @@ export class DataRepository extends Repository<BaseDataView> {
         'tier1SequestrationRate',
         'tier2SequestrationRate',
         'restorableLand',
+        'ecosystemExtent',
       ],
     });
 
@@ -205,11 +207,13 @@ export class DataRepository extends Repository<BaseDataView> {
         'tier1EmissionFactor',
         'emissionFactorAgb',
         'emissionFactorSoc',
+        'ecosystemExtent',
       ],
     });
     if (result === null) return null;
 
     return {
+      ecosystemExtent: result.ecosystemExtent,
       ecosystemLossRate: result.ecosystemLossRate,
       emissionFactor: {
         tier1: result.tier1EmissionFactor,

@@ -12,9 +12,10 @@ import { CalculationException } from '@api/modules/calculations/calculators/erro
 import { EngineInput, ProjectInput } from '@api/modules/calculations/types';
 import { ConservationCustomProjectDto } from '@shared/dtos/custom-projects/create-custom-project.dto';
 import { EMISSION_FACTORS_TIER_TYPES } from '@shared/entities/carbon-inputs/emission-factors.entity';
+import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
 
 @Injectable()
-export class SequestrationRateCalculator {
+export class SequestrationRateCalculatorAbatementPotential {
   projectInput: ProjectInput;
   activity: ACTIVITY;
   defaultProjectLength: number;
@@ -51,7 +52,8 @@ export class SequestrationRateCalculator {
       projectInput.assumptions.soilOrganicCarbonReleaseLength;
 
     if (this.activity === ACTIVITY.CONSERVATION) {
-      this.projectedLoss = this.calculateProjectedLoss(); // ProjectedExtend
+      this.projectedLoss =
+        this.calculateProjectedLossForCountryLevelAbatementPotential(); // ProjectedExtend
       this.annualAvoidedLoss = this.calculateAnnualAvoidedLoss();
       this.cumulativeLoss = this.calculateCumulativeLossRate();
     }
@@ -247,6 +249,54 @@ export class SequestrationRateCalculator {
     return baselineEmissionPlan;
   }
 
+  calculateBaselineEmissionsForCountryLevelAbatementPotential(): CostPlanMap {
+    // TODO: This is validated previously, but letting it here until we understand what value should we provide for Restoration,
+    //       as all costs are calculated for both types. Maybe this is an internal method and the value is set in another place.
+    if (this.activity !== ACTIVITY.CONSERVATION) {
+      console.error('Baseline emissions cannot be calculated for restoration.');
+    }
+    const {
+      emissionFactorAgb,
+      emissionFactorSoc,
+      emissionFactor,
+      sequestrationRate,
+    } = this.projectInput;
+
+    const baselineEmissionPlan: { [year: number]: number } = {};
+    for (let year = 1; year <= this.defaultProjectLength; year++) {
+      if (year !== 0) {
+        baselineEmissionPlan[year] = 0;
+      }
+    }
+
+    const cumulativeLoss = this.calculateCumulativeLossRate();
+    const cumulativeLossRateIncorporatingSOC =
+      this.calculateCumulativeLossRateIncorporatingSOCReleaseTime();
+    const annualAvoidedLoss = this.getAnnualAvoidedLoss();
+
+    for (const yearStr in baselineEmissionPlan) {
+      const year = Number(yearStr);
+      let value: number = 0;
+      if (year <= this.projectLength) {
+        if (emissionFactorSoc && emissionFactorAgb) {
+          value =
+            emissionFactorAgb * annualAvoidedLoss[year] +
+            cumulativeLossRateIncorporatingSOC[year] * emissionFactorSoc +
+            sequestrationRate * cumulativeLoss[year];
+        } else {
+          value =
+            cumulativeLoss[year] * emissionFactor +
+            sequestrationRate * cumulativeLoss[year];
+        }
+        baselineEmissionPlan[year] = value;
+      } else {
+        baselineEmissionPlan[year] = 0;
+      }
+    }
+
+    return baselineEmissionPlan;
+  }
+
   calculateAreaRestoredOrConserved(): CostPlanMap {
     const cumulativeHaRestoredInYear: CostPlanMap = {};
 
@@ -392,7 +442,9 @@ export class SequestrationRateCalculator {
     return annualAvoidedLoss;
   }
 
-  calculateProjectedLoss(): { [year: number]: number } {
+  calculateProjectedLossForCountryLevelAbatementPotential(): {
+    [year: number]: number;
+  } {
     if (this.activity !== ACTIVITY.CONSERVATION) {
       throw new Error(
         'Projected loss can only be calculated for conservation projects.',
@@ -400,7 +452,8 @@ export class SequestrationRateCalculator {
     }
 
     const lossRate = this.projectInput.lossRate;
-    const projectSizeHa = this.projectInput.projectSizeHa;
+    const ecosystemExtent = (this.projectInput as ConservationProjectInput)
+      .ecosystemExtent;
 
     const annualProjectedLoss: { [year: number]: number } = {};
 
@@ -410,15 +463,19 @@ export class SequestrationRateCalculator {
       }
     }
 
-    for (const yearStr in annualProjectedLoss) {
-      const year = Number(yearStr);
-
+    const sortedYears = Object.keys(annualProjectedLoss)
+      .map(Number)
+      .sort((a, b) => a - b);
+    for (const year of sortedYears) {
       if (year <= this.projectLength) {
         if (year === -1) {
-          annualProjectedLoss[year] = projectSizeHa;
+          annualProjectedLoss[year] = ecosystemExtent;
+        } else if (year === 1) {
+          const previousYearValue = annualProjectedLoss[year - 2] ?? 0;
+          annualProjectedLoss[year] = previousYearValue * (1 + lossRate);
         } else {
-          annualProjectedLoss[year] =
-            projectSizeHa * Math.pow(1 + lossRate, year);
+          const previousYearValue = annualProjectedLoss[year - 1] ?? 0;
+          annualProjectedLoss[year] = previousYearValue * (1 + lossRate);
         }
       } else {
         annualProjectedLoss[year] = 0;
@@ -435,53 +492,5 @@ export class SequestrationRateCalculator {
       );
     }
     return this.annualAvoidedLoss;
-  }
-
-  calculateBaselineEmissionsForCountryLevelAbatementPotential(): CostPlanMap {
-    // TODO: This is validated previously, but letting it here until we understand what value should we provide for Restoration,
-    //       as all costs are calculated for both types. Maybe this is an internal method and the value is set in another place.
-    if (this.activity !== ACTIVITY.CONSERVATION) {
-      console.error('Baseline emissions cannot be calculated for restoration.');
-    }
-    const {
-      emissionFactorAgb,
-      emissionFactorSoc,
-      emissionFactor,
-      sequestrationRate,
-    } = this.projectInput;
-
-    const baselineEmissionPlan: { [year: number]: number } = {};
-    for (let year = 1; year <= this.defaultProjectLength; year++) {
-      if (year !== 0) {
-        baselineEmissionPlan[year] = 0;
-      }
-    }
-
-    const cumulativeLoss = this.calculateCumulativeLossRate();
-    const cumulativeLossRateIncorporatingSOC =
-      this.calculateCumulativeLossRateIncorporatingSOCReleaseTime();
-    const annualAvoidedLoss = this.getAnnualAvoidedLoss();
-
-    for (const yearStr in baselineEmissionPlan) {
-      const year = Number(yearStr);
-      let value: number = 0;
-      if (year <= this.projectLength) {
-        if (emissionFactorSoc && emissionFactorAgb) {
-          value =
-            emissionFactorAgb * annualAvoidedLoss[year] +
-            cumulativeLossRateIncorporatingSOC[year] * emissionFactorSoc +
-            sequestrationRate * cumulativeLoss[year];
-        } else {
-          value =
-            cumulativeLoss[year] * emissionFactor +
-            sequestrationRate * cumulativeLoss[year];
-        }
-        baselineEmissionPlan[year] = value;
-      } else {
-        baselineEmissionPlan[year] = 0;
-      }
-    }
-
-    return baselineEmissionPlan;
   }
 }

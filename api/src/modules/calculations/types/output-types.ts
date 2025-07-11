@@ -15,6 +15,7 @@ export type SequestrationRateOutputs = {
   netEmissionsReduction: CostPlanMap;
   estimatedCreditIssuedPlan: CostPlanMap;
   areaRestoredOrConservedPlan: CostPlanMap;
+  baselineEmissionsCostPlan: CostPlanMap;
 };
 
 /**

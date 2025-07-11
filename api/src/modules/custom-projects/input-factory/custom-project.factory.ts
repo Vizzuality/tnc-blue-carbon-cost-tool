@@ -19,6 +19,7 @@ import { RestorationPlanService } from '@api/modules/custom-projects/restoration
 import { RestorationPlanDto } from '@shared/dtos/custom-projects/restoration-plan.dto';
 
 export type GeneralProjectInputs = {
+  ecosystemExtent?: number;
   projectName: CreateCustomProjectDto['projectName'];
   countryCode: CreateCustomProjectDto['countryCode'];
   activity: CreateCustomProjectDto['activity'];
@@ -151,6 +152,7 @@ export class CustomProjectFactory {
       carbonRevenuesToCover,
       ecosystem,
       countryCode,
+      ecosystemExtent: additionalBaseData.ecosystemExtent,
     });
     conservationProjectInput.setLossRate(projectParams, additionalBaseData);
     conservationProjectInput.setEmissionFactor(
