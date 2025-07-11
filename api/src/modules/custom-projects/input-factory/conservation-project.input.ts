@@ -27,6 +27,8 @@ export class ConservationProjectInput {
 
   ecosystem: ECOSYSTEM;
 
+  ecosystemExtent: number;
+
   projectSizeHa: number;
 
   initialCarbonPriceAssumption: number;
@@ -50,6 +52,8 @@ export class ConservationProjectInput {
 
   assumptions: ModelAssumptionsForCalculations;
 
+  sequestrationRate: number;
+
   setLossRate(
     parameters: ConservationCustomProjectDto,
     carbonInputs: AdditionalBaseData,
@@ -71,12 +75,14 @@ export class ConservationProjectInput {
       this.emissionFactor = additionalBaseData.tier1EmissionFactor;
       this.emissionFactorAgb = null;
       this.emissionFactorSoc = null;
+      this.sequestrationRate = additionalBaseData.tier1SequestrationRate;
     } else if (
       parameters.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_2
     ) {
       this.emissionFactorAgb = additionalBaseData.emissionFactorAgb;
       this.emissionFactorSoc = additionalBaseData.emissionFactorSoc;
       this.emissionFactor = null;
+      this.sequestrationRate = additionalBaseData.tier2SequestrationRate;
     } else if (
       parameters.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_3
     ) {
@@ -127,6 +133,7 @@ export class ConservationProjectInput {
     this.initialCarbonPriceAssumption =
       generalInputs.initialCarbonPriceAssumption;
     this.carbonRevenuesToCover = generalInputs.carbonRevenuesToCover;
+    this.ecosystemExtent = generalInputs.ecosystemExtent;
     return this;
   }
 }

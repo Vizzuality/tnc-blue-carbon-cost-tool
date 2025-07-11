@@ -63,6 +63,8 @@ export class CalculationEngine {
           projectInput: dependencies.engineInput.projectInput,
           annualAvoidedLoss:
             dependencies.sequestrationRateOutputs.annualAvoidedLoss,
+          baselineEmissionsCostPlan:
+            dependencies.sequestrationRateOutputs.baselineEmissionsCostPlan,
           netEmissionsReduction:
             dependencies.sequestrationRateOutputs.netEmissionsReduction,
         });
@@ -124,6 +126,8 @@ export class CalculationEngine {
             projectInput: projectInputClone,
             annualAvoidedLoss:
               dependencies.sequestrationRateOutputs.annualAvoidedLoss,
+            baselineEmissionsCostPlan:
+              dependencies.sequestrationRateOutputs.baselineEmissionsCostPlan,
             netEmissionsReduction:
               dependencies.sequestrationRateOutputs.netEmissionsReduction,
           });
@@ -159,15 +163,22 @@ export class CalculationEngine {
   computeAbatementPotential(
     input: AbatementPotentialInput,
   ): AbatementPotentialOutput {
-    const abatementPotentialCalculator = new AbatementPotentialCalculator(
-      input,
-    );
+    try {
+      const abatementPotentialCalculator = new AbatementPotentialCalculator(
+        input,
+      );
 
-    const countryAbatementPotential =
-      abatementPotentialCalculator.calculateCountryLevelAbatementPotential();
-    const abatementPotential =
-      abatementPotentialCalculator.calculateProjectLevelAbatementPotential();
+      const countryAbatementPotential =
+        abatementPotentialCalculator.calculateCountryLevelAbatementPotential();
+      const abatementPotential =
+        abatementPotentialCalculator.calculateProjectLevelAbatementPotential();
 
-    return { abatementPotential, countryAbatementPotential };
+      return { abatementPotential, countryAbatementPotential };
+    } catch (error) {
+      this.logger.error(
+        'Error while computing abatement potential: ' + error.message,
+      );
+      throw error;
+    }
   }
 }

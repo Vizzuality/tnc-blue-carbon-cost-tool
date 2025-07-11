@@ -9,6 +9,8 @@ import { SequestrationRateCalculator } from '@api/modules/calculations/calculato
 import { CostPlanMap } from '@shared/dtos/custom-projects/custom-project-output.dto';
 import { RevenueProfitCalculator } from '@api/modules/calculations/calculators/revenue-profit.calculator';
 import { CostCalculator } from '@api/modules/calculations/calculators/cost.calculator';
+import { ACTIVITY } from '@shared/entities/activity.enum';
+import { SequestrationRateCalculatorAbatementPotential } from '@api/modules/calculations/calculators/sequestration-rate-abatement-potential.calculator';
 
 /**
  * @description: Responsible for creating and assembling all the dependencies required for a cost calculation
@@ -66,11 +68,25 @@ export class CostCalculatorFactory {
     const netEmissionsReduction =
       sequestrationRateCalculator.calculateNetEmissionsReductions();
 
+    let baselineEmissionsCostPlan: CostPlanMap | undefined;
+
+    // Needed for conservation projects to compute abatement potential
+    if (projectInput.activity === ACTIVITY.CONSERVATION) {
+      // This is just a fork of the real calculator to compute the baseline emissions in a different way
+      const calculator = new SequestrationRateCalculatorAbatementPotential(
+        projectInput,
+        rawUserInput,
+      );
+      baselineEmissionsCostPlan =
+        calculator.calculateBaselineEmissionsForCountryLevelAbatementPotential();
+    }
+
     return {
       estimatedCreditIssuedPlan,
       areaRestoredOrConservedPlan,
       annualAvoidedLoss,
       netEmissionsReduction,
+      baselineEmissionsCostPlan,
     };
   }
 

@@ -38,5 +38,6 @@ export type SensitivityAnalysisInput = CalculatorDependencies & {
 export type AbatementPotentialInput = {
   projectInput: ProjectInput;
   annualAvoidedLoss: CostPlanMap;
+  baselineEmissionsCostPlan: CostPlanMap;
   netEmissionsReduction: CostPlanMap;
 };

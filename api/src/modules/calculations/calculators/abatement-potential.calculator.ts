@@ -10,6 +10,7 @@ export class AbatementPotentialCalculator {
   restorableLand: number;
   annualAvoidedLossSum: number;
   netEmissionsReductionSum: number;
+  baselineEmissionsCostPlanSum: number;
   constructor(input: AbatementPotentialInput) {
     this.activity = input.projectInput.activity;
     this.projectLength = input.projectInput.assumptions.projectLength;
@@ -19,6 +20,9 @@ export class AbatementPotentialCalculator {
     this.restorableLand = input.projectInput.costAndCarbonInputs.restorableLand;
     if (this.activity === ACTIVITY.CONSERVATION) {
       this.annualAvoidedLossSum = sum(Object.values(input.annualAvoidedLoss));
+      this.baselineEmissionsCostPlanSum = sum(
+        Object.values(input.baselineEmissionsCostPlan),
+      );
     }
     this.netEmissionsReductionSum = sum(
       Object.values(input.netEmissionsReduction),
@@ -40,7 +44,7 @@ export class AbatementPotentialCalculator {
       case ACTIVITY.CONSERVATION:
         return this.calculateConservationAbatementPotential({
           projectLength: this.projectLength,
-          annualAvoidedEmissionsSum: this.annualAvoidedLossSum,
+          baselineEmissionsCostPlanSum: this.baselineEmissionsCostPlanSum,
         });
     }
   }
@@ -58,10 +62,10 @@ export class AbatementPotentialCalculator {
 
   calculateConservationAbatementPotential(params: {
     projectLength: number;
-    annualAvoidedEmissionsSum: number;
+    baselineEmissionsCostPlanSum: number;
   }): number {
     const abatementPotential =
-      params.annualAvoidedEmissionsSum * params.projectLength;
+      params.baselineEmissionsCostPlanSum / params.projectLength;
     return abatementPotential;
   }
 

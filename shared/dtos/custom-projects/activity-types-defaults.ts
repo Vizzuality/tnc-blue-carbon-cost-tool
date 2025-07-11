@@ -1,6 +1,7 @@
 import { ACTIVITY } from "@shared/entities/activity.enum";
 
 export type ConvervationActivityDefaults = {
+  ecosystemExtent: number;
   ecosystemLossRate: number;
   emissionFactor: {
     tier1: number;
@@ -16,7 +17,7 @@ export type RestorationActivityDefaults = {
     tier1: number;
     tier2: number;
   };
-  plantingSuccessRate: number
+  plantingSuccessRate: number;
 };
 
 export type ActivityTypesDefaults = {

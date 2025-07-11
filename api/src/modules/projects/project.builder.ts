@@ -8,7 +8,6 @@ import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
 import { getProjectSizeFilter } from '@api/modules/projects/threshold/project-size-threshold';
 import { CreateProjectDto } from '@shared/dtos/projects/create-project.dto';
 import { CostOutput } from '@api/modules/calculations/types';
-import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
 import {
   ACTIVITY,
   RESTORATION_ACTIVITY_SUBTYPE,
@@ -190,7 +189,7 @@ export class ProjectBuilder {
     if (dto.activity === ACTIVITY.CONSERVATION) {
       return {
         lossRateUsed: LOSS_RATE_USED.NATIONAL_AVERAGE,
-        emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_1,
+        emissionFactorUsed: EMISSION_FACTORS_TIER_TYPES.TIER_2,
       };
     } else {
       return {
