@@ -14,16 +14,11 @@ const getDownloadUrl = (file: UploadDataTemplateDto) => {
   // This endpoint is not available in the ts-rest contract
   return `${process.env.NEXT_PUBLIC_API_URL}/users/upload-data/templates/${file.id}`;
 };
-const downloadFiles = (files?: UploadDataTemplateDto[]) => {
-  if (!files) return;
-
-  files.forEach((f) => {
-    const link = document.createElement("a");
-    link.href = getDownloadUrl(f);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
+const downloadFile = (f: UploadDataTemplateDto) => {
+  const link = document.createElement("a");
+  link.href = getDownloadUrl(f);
+  document.body.appendChild(link);
+  link.click();
 };
 const openFileUploadWindow = () =>
   document.getElementById("share-information-input")?.click();
@@ -59,7 +54,7 @@ const FileUploadDescription: FC = () => {
         <Button
           variant="link"
           className="h-auto p-0 text-primary"
-          onClick={() => downloadFiles(data)}
+          onClick={() => downloadFile({ id: "0", fileName: "templates.zip" })}
         >
           downloadable
         </Button>

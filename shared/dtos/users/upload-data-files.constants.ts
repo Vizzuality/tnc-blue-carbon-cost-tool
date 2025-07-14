@@ -9,6 +9,10 @@ export const ALLOWED_USER_UPLOAD_FILE_EXTENSIONS = {
 
 export const AVAILABLE_USER_UPLOAD_TEMPLATES = [
   {
+    id: "0",
+    fileName: "templates.zip",
+  },
+  {
     id: "1",
     fileName: "carbon-input-template.xlsx",
   },
