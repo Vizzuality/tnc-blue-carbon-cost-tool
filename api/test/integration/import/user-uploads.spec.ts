@@ -35,7 +35,7 @@ describe('User Uploads', () => {
 
     const templates = response.body.data;
     expect(response.status).toBe(200);
-    expect(templates).toHaveLength(2);
+    expect(templates).toHaveLength(3);
 
     const downloadResponse = await testManager
       .request()

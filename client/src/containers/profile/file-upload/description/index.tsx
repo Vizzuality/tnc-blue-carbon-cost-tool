@@ -1,5 +1,6 @@
 import { FC } from "react";
 
+import { AVAILABLE_USER_UPLOAD_TEMPLATES } from "@shared/dtos/users/upload-data-files.constants";
 import { UploadDataTemplateDto } from "@shared/dtos/users/upload-data-files.dto";
 import { FileDownIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -10,20 +11,18 @@ import { getAuthHeader } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 
+const EXCLUSION_FILE_NAMES = [AVAILABLE_USER_UPLOAD_TEMPLATES[0].fileName];
+
 const getDownloadUrl = (file: UploadDataTemplateDto) => {
   // This endpoint is not available in the ts-rest contract
   return `${process.env.NEXT_PUBLIC_API_URL}/users/upload-data/templates/${file.id}`;
 };
-const downloadFiles = (files?: UploadDataTemplateDto[]) => {
-  if (!files) return;
-
-  files.forEach((f) => {
-    const link = document.createElement("a");
-    link.href = getDownloadUrl(f);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
+const downloadFile = (f: UploadDataTemplateDto) => {
+  const link = document.createElement("a");
+  link.href = getDownloadUrl(f);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 const openFileUploadWindow = () =>
   document.getElementById("share-information-input")?.click();
@@ -40,7 +39,10 @@ const FileUploadDescription: FC = () => {
     },
     {
       queryKey,
-      select: (data) => data.body.data,
+      select: (data) =>
+        data.body.data.filter(
+          ({ fileName }) => !EXCLUSION_FILE_NAMES.includes(fileName),
+        ),
     },
   );
 
@@ -59,7 +61,7 @@ const FileUploadDescription: FC = () => {
         <Button
           variant="link"
           className="h-auto p-0 text-primary"
-          onClick={() => downloadFiles(data)}
+          onClick={() => downloadFile(AVAILABLE_USER_UPLOAD_TEMPLATES[0])}
         >
           downloadable
         </Button>
