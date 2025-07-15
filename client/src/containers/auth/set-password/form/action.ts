@@ -38,7 +38,9 @@ export async function signUpAction(
       return {
         ok: false,
         message:
-          response.body.errors?.map(({ title }) => title) ?? "unknown error",
+          response.body.errors?.map(({ title }) =>
+            title === "Unauthorized" ? "One time password incorrect" : title,
+          ) ?? "unknown error",
       };
     }
   } catch (error: Error | unknown) {
