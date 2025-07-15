@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { useMap } from "react-map-gl";
 
 import { motion } from "framer-motion";
@@ -35,6 +37,16 @@ export default function Overview() {
 
     map.resize();
   };
+
+  useEffect(() => {
+    const resizeTimedOut = setTimeout(() => {
+      if (map) {
+        map.resize();
+      }
+    }, LAYOUT_TRANSITIONS.duration * 1000);
+
+    return () => clearTimeout(resizeTimedOut);
+  }, [filtersOpen, map]);
 
   return (
     <motion.div
