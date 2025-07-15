@@ -45,6 +45,7 @@ export default function CustomProjectForm({ id }: CustomProjectFormProps) {
     setCurrentStep: setIntersecting,
     options: {
       threshold: 0.4,
+      rootMargin: "-30% 0% 0% 0%",
     },
     deps: [activity],
   });

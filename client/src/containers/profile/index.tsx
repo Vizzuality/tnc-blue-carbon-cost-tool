@@ -81,7 +81,6 @@ export default function Profile() {
     setCurrentStep: setProfileStep,
     options: {
       threshold: 0.1,
-      rootMargin: "-20% 0% -60% 0%",
     },
   });
 
