@@ -101,7 +101,7 @@ test.describe("Auth - Sign Up", () => {
     await page.goto(ROUTES.auth.signup + "/12345678");
 
     await expect(
-      page.getByText("The token is invalid or has expired."),
+      page.getByText('The token is invalid or has expired.', { exact: true }),
     ).toBeVisible();
     await expect(
       page.getByPlaceholder(

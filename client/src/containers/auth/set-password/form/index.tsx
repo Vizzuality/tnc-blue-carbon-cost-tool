@@ -20,13 +20,14 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/toast/use-toast";
 
 import { signUpAction } from "./action";
 import { signUpSchemaForm } from "./schema";
@@ -38,6 +39,8 @@ const SignUpForm: FC = () => {
     message: "",
   });
   const params = useParams<{ token: string }>();
+
+  const { toast } = useToast();
 
   const formRef = useRef<HTMLFormElement>(null);
   const form = useForm<z.infer<typeof signUpSchemaForm>>({
@@ -78,126 +81,136 @@ const SignUpForm: FC = () => {
 
   const isDisabledByTokenValidation = !isValidToken || isFetching || isError;
 
+  useEffect(() => {
+    if (!isValidToken && !isFetching) {
+      setTimeout(() => {
+        toast({
+          variant: "destructive",
+          description: "The token is invalid or has expired.",
+        });
+      }, 0);
+    }
+  }, [isValidToken, isFetching, toast]);
+
+  useEffect(() => {
+    if (!status.ok) {
+      toast({
+        variant: "destructive",
+        description: status.message,
+      });
+    }
+  }, [status, toast]);
+
   return (
-    <>
-      {!isValidToken && !isFetching && (
-        <p className="text-center text-sm text-destructive">
-          The token is invalid or has expired.
-        </p>
-      )}
-      {status.ok === false && (
-        <p className="text-center text-sm text-destructive">{status.message}</p>
-      )}
-      <Form {...form}>
-        <form
-          ref={formRef}
-          action={formAction}
-          className="w-full space-y-4"
-          onSubmit={(evt) => {
-            evt.preventDefault();
-            form.handleSubmit(() => {
-              formAction(new FormData(formRef.current!));
-            })(evt);
-          }}
-        >
-          <FormField
-            control={form.control}
-            name="oneTimePassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>One-Time Password</FormLabel>
-                <FormControl>
+    <Form {...form}>
+      <form
+        ref={formRef}
+        action={formAction}
+        className="w-full space-y-4"
+        onSubmit={(evt) => {
+          evt.preventDefault();
+          form.handleSubmit(() => {
+            formAction(new FormData(formRef.current!));
+          })(evt);
+        }}
+      >
+        <FormField
+          control={form.control}
+          name="oneTimePassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>One-Time Password</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter the One-Time Password received in your mail"
+                  required
+                  disabled={isDisabledByTokenValidation}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="newPassword"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <div className="relative flex items-center">
                   <Input
-                    placeholder="Enter the One-Time Password received in your mail"
-                    required
+                    placeholder="Create a password"
+                    type="password"
+                    autoComplete="new-password"
                     disabled={isDisabledByTokenValidation}
                     {...field}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="newPassword"
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <div className="relative flex items-center">
-                    <Input
-                      placeholder="Create a password"
-                      type="password"
-                      autoComplete="new-password"
-                      disabled={isDisabledByTokenValidation}
-                      {...field}
-                    />
-                  </div>
-                </FormControl>
-                {!fieldState.invalid && (
-                  <FormDescription>
-                    Password must contain at least 8 characters.
-                  </FormDescription>
-                )}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="repeatPassword"
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <FormLabel>Repeat password</FormLabel>
-                <FormControl>
-                  <div className="relative flex items-center">
-                    <Input
-                      placeholder="Repeat the password"
-                      type="password"
-                      autoComplete="new-password"
-                      disabled={isDisabledByTokenValidation}
-                      {...field}
-                    />
-                  </div>
-                </FormControl>
-                {!fieldState.invalid && (
-                  <FormDescription>
-                    Password must contain at least 8 characters.
-                  </FormDescription>
-                )}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                </div>
+              </FormControl>
+              {!fieldState.invalid && (
+                <FormDescription>
+                  Password must contain at least 8 characters.
+                </FormDescription>
+              )}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="repeatPassword"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Repeat password</FormLabel>
+              <FormControl>
+                <div className="relative flex items-center">
+                  <Input
+                    placeholder="Repeat the password"
+                    type="password"
+                    autoComplete="new-password"
+                    disabled={isDisabledByTokenValidation}
+                    {...field}
+                  />
+                </div>
+              </FormControl>
+              {!fieldState.invalid && (
+                <FormDescription>
+                  Password must contain at least 8 characters.
+                </FormDescription>
+              )}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="token"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input type="hidden" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="token"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input type="hidden" {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" asChild>
-              <Link href="/auth/signin">Cancel</Link>
-            </Button>
-            <Button
-              variant="secondary"
-              type="submit"
-              disabled={!form.formState.isValid || isDisabledByTokenValidation}
-            >
-              Save
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </>
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" asChild>
+            <Link href="/auth/signin">Cancel</Link>
+          </Button>
+          <Button
+            variant="secondary"
+            type="submit"
+            disabled={!form.formState.isValid || isDisabledByTokenValidation}
+          >
+            Save
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 
