@@ -465,10 +465,10 @@ export class EntityPreprocessor {
         code: row['Country code'],
       } as Country;
       sequestrationRate.ecosystem = row.Ecosystem as ECOSYSTEM;
-      sequestrationRate.tier1Factor = this.stringToNumeric(
+      sequestrationRate.tier1Factor = this.stringToNumberOrNull(
         row['Tier 1 - IPCC default value'],
       );
-      sequestrationRate.tier2Factor = this.stringToNumeric(
+      sequestrationRate.tier2Factor = this.stringToNumberOrNull(
         row['Tier 2 - country-specific rate'],
       );
       const sources: RecordSource[] = [];
@@ -1019,5 +1019,10 @@ export class EntityPreprocessor {
 
   private stringToNumeric(value: any): number {
     return value ? parseFloat(value) : 0;
+  }
+
+  private stringToNumberOrNull(value: any): number | null {
+    const parsedValue = Number.parseFloat(value);
+    return Number.isNaN(parsedValue) ? null : parsedValue;
   }
 }

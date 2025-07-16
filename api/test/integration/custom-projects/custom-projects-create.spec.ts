@@ -71,20 +71,13 @@ describe('Create Custom Projects - Setup', () => {
       expect(response.status).toBe(201);
       const responseData = response.body.data;
       // Values after the excel/model migration
-      // expect(responseData.totalCostNPV).toEqual(2735614.8569899863);
-      expect(responseData.totalCostNPV).toEqual(3074122.898244337);
-      // expect(responseData.totalCost).toEqual(3932640.485410141);
-      expect(responseData.totalCost).toEqual(4574963.028434675);
-      // expect(responseData.breakevenTotalCost).toEqual(3555542.034883479);
-      expect(responseData.breakevenTotalCost).toEqual(3589994.687666353);
-      // expect(responseData.breakevenTotalCostNPV).toEqual(2528399.502417404);
-      expect(responseData.breakevenTotalCostNPV).toEqual(2539432.7249490097);
+      expect(responseData.totalCostNPV).toEqual(2825080.764511913);
+      expect(responseData.totalCost).toEqual(4098623.2893840307);
+      expect(responseData.breakevenTotalCost).toEqual(3563062.1182613824);
+      expect(responseData.breakevenTotalCostNPV).toEqual(2531343.5935464753);
       const output = responseData.output;
-      // expect(output.breakevenPriceComputationOutput.initialCarbonPrice).toEqual(
-      //   15.031201985489698,
-      // );
       expect(output.breakevenPriceComputationOutput.initialCarbonPrice).toEqual(
-        10.836954353575122,
+        13.62867683380745,
       );
       const yearlyBreakdown =
         output.initialCarbonPriceComputationOutput.yearlyBreakdown;

@@ -44,10 +44,10 @@ export class SequestrationRate extends BaseEntity {
   // tierSelector: SEQUESTRATION_RATE_TIER_TYPES;
 
   @Column("decimal", { name: "tier_1_factor", nullable: true })
-  tier1Factor: number;
+  tier1Factor?: number;
 
   @Column("decimal", { name: "tier_2_factor", nullable: true })
-  tier2Factor: number;
+  tier2Factor?: number;
 
   // @Column("decimal", { name: "sequestration_rate", nullable: true })
   // sequestrationRate: number;
