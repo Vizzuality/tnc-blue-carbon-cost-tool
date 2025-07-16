@@ -193,7 +193,7 @@ export class ProjectBuilder {
       };
     } else {
       return {
-        tierSelector: SEQUESTRATION_RATE_TIER_TYPES.TIER_1,
+        tierSelector: SEQUESTRATION_RATE_TIER_TYPES.TIER_2,
         restorationActivity: dto.restorationActivity,
       };
     }
