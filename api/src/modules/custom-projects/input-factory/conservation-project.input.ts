@@ -82,7 +82,9 @@ export class ConservationProjectInput {
       this.emissionFactorAgb = additionalBaseData.emissionFactorAgb;
       this.emissionFactorSoc = additionalBaseData.emissionFactorSoc;
       this.emissionFactor = null;
-      this.sequestrationRate = additionalBaseData.tier2SequestrationRate;
+      this.sequestrationRate =
+        additionalBaseData.tier2SequestrationRate ??
+        additionalBaseData.tier1SequestrationRate;
     } else if (
       parameters.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_3
     ) {
@@ -101,6 +103,7 @@ export class ConservationProjectInput {
         this.emissionFactorAgb = parameters.emissionFactorAGB;
         this.emissionFactorSoc = parameters.emissionFactorSOC;
       }
+      this.sequestrationRate = additionalBaseData.tier1SequestrationRate;
     }
     return this;
   }

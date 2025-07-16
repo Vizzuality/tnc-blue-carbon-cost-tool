@@ -37,6 +37,7 @@ describe('Create Custom Projects - Setup', () => {
       expect(response.status).toBe(200);
       expect(response.body.data).toEqual({
         Conservation: {
+          ecosystemExtent: 399901.524306087,
           ecosystemLossRate: expect.any(Number),
           emissionFactor: {
             tier1: expect.any(Number),

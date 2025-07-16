@@ -114,6 +114,7 @@ engineInput.dto = {
 };
 
 const sequestrationRateOutputs = {
+  baselineEmissionsCostPlan: undefined,
   estimatedCreditIssuedPlan: {
     '1': 3465.720283126324,
     '2': 4084.7876958477495,

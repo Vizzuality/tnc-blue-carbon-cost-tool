@@ -24,9 +24,6 @@ import {
   CreateCustomProjectDto,
   OverridableCostInputsDto,
 } from '@shared/dtos/custom-projects/create-custom-project.dto';
-import { RestorationProjectInput } from '@api/modules/custom-projects/input-factory/restoration-project.input';
-import { ACTIVITY } from '@shared/entities/activity.enum';
-import { ConservationProjectInput } from '@api/modules/custom-projects/input-factory/conservation-project.input';
 
 export type CustomProjectFetchSpecificacion = z.infer<
   typeof customProjectsQuerySchema
