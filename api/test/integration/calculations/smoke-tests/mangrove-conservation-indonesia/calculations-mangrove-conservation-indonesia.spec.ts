@@ -5,6 +5,7 @@ import { customProjectContract } from '@shared/contracts/custom-projects.contrac
 import { CustomProject } from '@shared/entities/custom-project.entity';
 import { CustomProjectOutput } from '@shared/dtos/custom-projects/custom-project-output.dto';
 import '../../../../custom-matchers';
+import { promises as fs } from 'fs';
 
 // Maps the summary keys from the API to the expected keys from the prototype
 const summaryToExpectedKeyMap = {
@@ -45,6 +46,11 @@ describe('Calculations - Create Mangrove Conservation Project in Indonesia (1000
       .request()
       .post(customProjectContract.createCustomProject.path)
       .send(inputDto);
+
+    fs.writeFile(
+      `${__dirname}/output.json`,
+      JSON.stringify(response.body.data, null, 2),
+    );
     const { output } = response.body.data as CustomProject;
     initialCarbonPrice = output.initialCarbonPriceComputationOutput;
     breakEvenPrice = output.breakevenPriceComputationOutput;
