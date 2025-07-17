@@ -1,16 +1,16 @@
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import {
-  ConservationCustomProjectSchema,
-  RestorationCustomProjectSchema,
+  ConservationCustomProjectSchemaFE,
   CreateCustomProjectSchema,
   CustomProjectBaseLooseSchema,
+  RestorationCustomProjectSchema,
   ValidateConservationSchema,
   ValidateRestorationSchema,
 } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { z } from "zod";
 
 const ConservationCustomProjectFormSchema =
-  ConservationCustomProjectSchema.partial();
+  ConservationCustomProjectSchemaFE.partial();
 
 const RestorationCustomProjectFormSchema =
   RestorationCustomProjectSchema.partial();

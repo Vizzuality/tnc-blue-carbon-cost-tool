@@ -7,7 +7,7 @@ import {
   RESTORATION_ACTIVITY_SUBTYPE,
 } from "@shared/entities/activity.enum";
 import {
-  ConservationCustomProjectSchema,
+  ConservationCustomProjectSchemaFE,
   RestorationCustomProjectSchema,
 } from "@shared/schemas/custom-projects/create-custom-project.schema";
 import { DEFAULT_CONSERVATION_FORM_VALUES } from "@shared/schemas/custom-projects/custom-project-form.constants";
@@ -32,7 +32,7 @@ import {
 import { RadioGroup, RadioGroupItemBox } from "@/components/ui/radio-group";
 
 type RestorationParameters = z.infer<typeof RestorationCustomProjectSchema>;
-type ConservationParameters = z.infer<typeof ConservationCustomProjectSchema>;
+type ConservationParameters = z.infer<typeof ConservationCustomProjectSchemaFE>;
 
 export default function Activity() {
   const { id } = useParams();

@@ -1,16 +1,10 @@
-import {
-  ACTIVITY,
-  RESTORATION_ACTIVITY_SUBTYPE,
-} from "@shared/entities/activity.enum";
+import { ACTIVITY, RESTORATION_ACTIVITY_SUBTYPE } from "@shared/entities/activity.enum";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
-import {
-  CARBON_REVENUES_TO_COVER,
-  PROJECT_SPECIFIC_EMISSION,
-} from "@shared/entities/custom-project.entity";
+import { CARBON_REVENUES_TO_COVER, PROJECT_SPECIFIC_EMISSION } from "@shared/entities/custom-project.entity";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import {
-  ConservationCustomProjectSchema,
+  ConservationCustomProjectSchemaFE,
   CustomProjectForm,
   LOSS_RATE_USED,
   RestorationCustomProjectSchema,
@@ -41,7 +35,7 @@ export const DEFAULT_CONSERVATION_FORM_VALUES: Pick<
   CustomProjectForm,
   "activity" | "projectSizeHa"
 > & {
-  parameters: z.infer<typeof ConservationCustomProjectSchema>;
+  parameters: z.infer<typeof ConservationCustomProjectSchemaFE>;
 } = {
   activity: ACTIVITY.CONSERVATION,
   projectSizeHa: 10000,
