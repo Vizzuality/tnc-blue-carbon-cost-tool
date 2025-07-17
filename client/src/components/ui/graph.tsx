@@ -82,8 +82,8 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
     } = calculateSplitModeHeights(total, leftover);
 
     return (
-      <div className="relative h-full min-h-[150px] w-full max-w-[280px] overflow-hidden rounded-md">
-        <div className="absolute flex h-full w-full flex-row gap-1 rounded-md">
+      <div className="relative h-40 w-full max-w-[280px] overflow-hidden rounded-md">
+        <div className="absolute bottom-0 top-0 flex h-full w-full flex-row gap-1 rounded-md">
           <div className="flex h-full w-full min-w-0 flex-col gap-1">
             {leftover < 0 && (
               <LeftOverGraph
@@ -154,7 +154,7 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
   }
 
   return (
-    <div className="relative h-40 max-w-[200px] flex-1 overflow-hidden rounded-md border border-dashed border-white p-1">
+    <div className="relative h-40 max-w-[280px] flex-1 overflow-hidden rounded-md border border-dashed border-white p-1">
       <div className="flex h-full flex-col gap-1">
         {segments.map(({ value, colorClass }) => (
           <div
@@ -321,26 +321,25 @@ const GraphWithLegend: FC<GraphWithLegendProps> = ({
   }, [leftover, items]);
 
   return (
-    <div className="flex min-h-[160px] justify-between gap-4">
-      <div className="flex flex-1 flex-col justify-between">
-        <div>
-          <span className="text-xl font-normal">
-            <Currency
-              value={leftover || total}
-              className="max-w-[230px] overflow-hidden text-clip whitespace-normal break-all"
-            />
-          </span>
+    <div className="flex flex-col gap-2">
+      <span className="text-xl font-normal">
+        <Currency value={leftover || total} />
+      </span>
+      <div className="flex justify-between gap-4">
+        <div className="flex flex-col justify-end">
+          <GraphLegend items={graphLegendItems} />
         </div>
-        <GraphLegend items={graphLegendItems} />
+        <div className="flex flex-grow justify-end">
+          <Graph
+            total={total}
+            segments={items.map(({ value, circleClassName }) => ({
+              value,
+              colorClass: circleClassName,
+            }))}
+            leftover={leftover}
+          />
+        </div>
       </div>
-      <Graph
-        total={total}
-        segments={items.map(({ value, circleClassName }) => ({
-          value,
-          colorClass: circleClassName,
-        }))}
-        leftover={leftover}
-      />
     </div>
   );
 };
