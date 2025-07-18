@@ -36,6 +36,7 @@ import { BackOfficeSession } from "@shared/entities/users/backoffice-session";
 import { ModelComponentSource } from "@shared/entities/methodology/model-component-source.entity";
 import { ModelComponentSourceM2M } from "@shared/entities/methodology/model-source-m2m.entity";
 import { UserUpload } from "@shared/entities/users/user-upload";
+import { DataIngestionEntity } from "@shared/entities/model-versioning/data-ingestion.entity";
 
 export const COMMON_DATABASE_ENTITIES = [
   User,
@@ -76,4 +77,5 @@ export const COMMON_DATABASE_ENTITIES = [
   BackOfficeSession,
   ModelComponentSource,
   ModelComponentSourceM2M,
+  DataIngestionEntity,
 ];

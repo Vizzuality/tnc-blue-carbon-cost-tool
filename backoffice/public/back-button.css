@@ -29,3 +29,7 @@
 [data-css='sidebar-back-button']:hover {
   cursor: pointer;
 }
+
+.adminjs_MenuBarWrapper span:nth-child(1) {
+  display: none !important;
+}

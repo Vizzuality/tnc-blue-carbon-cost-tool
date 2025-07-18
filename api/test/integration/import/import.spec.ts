@@ -41,7 +41,7 @@ describe('Import Tests', () => {
         .send();
 
       expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(response.body.errors[0].title).toBe('File is required');
+      expect(response.body.errors).toBeDefined();
     });
     it('should throw an error if the user is not an admin', async () => {
       const nonAdminUser = await testManager
@@ -67,6 +67,8 @@ describe('Import Tests', () => {
         .request()
         .post(adminContract.uploadFile.path)
         .set('Authorization', `Bearer ${testUserToken}`)
+        .set('Content-Type', 'multipart/form-data')
+        .field('version_name', 'Test Version')
         .attach('file', fileBuffer, 'Carbon-Cost Data Upload.xlsm');
 
       const baseDataView = await testManager

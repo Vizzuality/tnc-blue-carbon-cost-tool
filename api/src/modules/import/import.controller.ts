@@ -47,8 +47,13 @@ export class ImportController {
     @UploadXlsm() file: Express.Multer.File,
     @GetUser() user: User,
   ): Promise<ControllerResponse> {
-    return tsRestHandler(adminContract.uploadFile, async () => {
-      await this.service.import(file.buffer, user.id);
+    return tsRestHandler(adminContract.uploadFile, async ({ body }) => {
+      await this.service.import(
+        file.buffer,
+        user.id,
+        body.version_notes,
+        body.version_name,
+      );
       return {
         status: 201,
         body: null,

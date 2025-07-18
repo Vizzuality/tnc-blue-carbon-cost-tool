@@ -44,6 +44,7 @@ import path from 'path';
 import { Config } from 'backoffice/components/config/Config.js';
 import { UserUploadResource } from 'backoffice/resources/users/user-upload.resource.js';
 import { User } from '@shared/entities/users/user.entity.js';
+import { DataIngestionEntityResource } from 'backoffice/resources/data-ingestion-entity.resource.js';
 
 AdminJS.registerAdapter({
   Database: AdminJSTypeorm.Database,
@@ -133,6 +134,7 @@ const start = async () => {
 
       // Methodology
       ModelComponentSourceResource,
+      DataIngestionEntityResource,
     ],
     pages: {
       'data-upload': {
