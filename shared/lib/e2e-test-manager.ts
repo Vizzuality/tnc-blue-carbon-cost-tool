@@ -62,8 +62,8 @@ export class E2eTestManager {
 
   async ingestCountries() {
     const geoCountriesFilePath = path.join(
-      path.resolve(process.cwd(), "../"),
-      "api/src/insert_countries.sql",
+      path.resolve(process.cwd()),
+      "data/insert_countries.sql",
     );
     const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, "utf8");
     await this.dataSource.query(geoCountriesSql);
@@ -133,12 +133,12 @@ export class E2eTestManager {
     });
     const token = await this.generateTokenByType(user, TOKEN_TYPE_ENUM.ACCESS);
     const excelFilePath = path.join(
-      path.resolve(process.cwd(), "../"),
-      "data/excel/Carbon-Cost Data Upload.xlsm",
+      path.resolve(process.cwd()),
+      "data/Carbon-Cost Data Upload.xlsm",
     );
     const scorecardExcelFilePath = path.join(
-      path.resolve(process.cwd(), "../"),
-      "data/excel/data_ingestion_project_scorecard.xlsm",
+      path.resolve(process.cwd()),
+      "data/data_ingestion_project_scorecard.xlsm",
     );
     const scorecardFileBuffer = fs.readFileSync(scorecardExcelFilePath);
     const scorecardFileBlob = new Blob([scorecardFileBuffer], {

@@ -120,7 +120,7 @@ export class TestManager {
   async ingestCountries() {
     const geoCountriesFilePath = path.join(
       __dirname,
-      '../../../api/src/insert_countries.sql',
+      '../data/insert_countries.sql',
     );
     const geoCountriesSql = fs.readFileSync(geoCountriesFilePath, 'utf8');
     await this.dataSource.query(geoCountriesSql);
@@ -140,7 +140,7 @@ export class TestManager {
     }
     const testFilePath = path.join(
       __dirname,
-      '../../../data/excel/data_ingestion_project_scorecard.xlsm',
+      '../data/data_ingestion_project_scorecard.xlsm',
     );
     const fileBuffer = fs.readFileSync(testFilePath);
     const upload = await this.request()
@@ -165,7 +165,7 @@ export class TestManager {
     }
     const testFilePath = path.join(
       __dirname,
-      '../../../data/excel/Carbon-Cost Data Upload.xlsm',
+      '../data/Carbon-Cost Data Upload.xlsm',
     );
     const fileBuffer = fs.readFileSync(testFilePath);
     const upload = await this.request()
