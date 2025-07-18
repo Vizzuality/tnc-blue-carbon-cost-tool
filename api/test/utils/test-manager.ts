@@ -171,6 +171,8 @@ export class TestManager {
     const upload = await this.request()
       .post(adminContract.uploadFile.path)
       .set('Authorization', `Bearer ${jwtToken}`)
+      .type('multipart/form-data')
+      .field('version_name', 'test')
       .attach('file', fileBuffer, 'Carbon-Cost Data Upload.xlsm');
     if (upload.status !== 201) {
       throw new Error('Failed to upload Excel file for tests');

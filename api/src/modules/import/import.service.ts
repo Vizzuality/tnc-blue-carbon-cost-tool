@@ -22,6 +22,7 @@ import { UploadDataFilesDto } from '@shared/dtos/users/upload-data-files.dto';
 import { S3Service } from '@api/modules/import/s3.service';
 import { UserUpload, UserUploadFile } from '@shared/entities/users/user-upload';
 import { User } from '@shared/entities/users/user.entity';
+import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity';
 import { Readable } from 'stream';
 
 @Injectable()
@@ -63,8 +64,20 @@ export class ImportService {
     }
   }
 
-  async import(fileBuffer: Buffer, userId: string): Promise<void> {
+  async import(
+    fileBuffer: Buffer,
+    userId: string,
+    versionNotes?: string,
+    versionName?: string,
+  ): Promise<void> {
     this.logger.warn('Excel file import started...');
+
+    // Log version information if provided
+    this.logger.warn(`Version name: ${versionName}`);
+    if (versionNotes) {
+      this.logger.warn(`Version notes: ${versionNotes}`);
+    }
+
     this.registerImportEvent(userId, this.eventMap.STARTED);
     try {
       const parsedSheets =
@@ -73,6 +86,16 @@ export class ImportService {
         await this.preprocessor.toDbEntities(parsedSheets);
       await this.importRepo.ingest(parsedDBEntities);
       await this.projectsService.createFromExcel(parsedSheets.Projects);
+
+      // Create DataIngestionEntity record after successful import
+      const dataIngestionRepo =
+        this.dataSource.getRepository(DataIngestionEntity);
+      const dataIngestion = new DataIngestionEntity();
+      dataIngestion.createdAt = new Date();
+      dataIngestion.versionNotes = versionNotes;
+      dataIngestion.versionName = versionName;
+      await dataIngestionRepo.save(dataIngestion);
+
       this.logger.warn('Excel file import completed successfully');
       this.registerImportEvent(userId, this.eventMap.SUCCESS);
     } catch (e) {
