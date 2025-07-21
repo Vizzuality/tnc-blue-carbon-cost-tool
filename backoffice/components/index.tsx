@@ -20,6 +20,10 @@ export const Components = {
     'DownloadUserFiles',
     './molecules/download-user-files',
   ),
+  DownloadDataIngestionFile: componentLoader.add(
+    'DownloadDataIngestionFile',
+    './molecules/download-data-ingestion-file',
+  ),
   ProjectDynamicForm: componentLoader.add(
     'ProjectDynamicForm',
     './organisms/project-dynamic-form',
