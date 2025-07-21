@@ -156,6 +156,7 @@ export class E2eTestManager {
     );
 
     const formData = new FormData();
+    formData.set("version_name", "Test Data Ingestion v1.0");
     formData.append("file", fileBlob, "Carbon-Cost Data Upload.xlsm");
 
     const scorecardUrl = API_URL + adminContract.uploadProjectScorecard.path;
