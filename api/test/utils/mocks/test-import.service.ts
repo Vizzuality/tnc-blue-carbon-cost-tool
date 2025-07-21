@@ -63,6 +63,7 @@ import { UserUpload, UserUploadFile } from '@shared/entities/users/user-upload';
 import { User } from '@shared/entities/users/user.entity';
 import { S3Service } from '@api/modules/import/s3.service';
 import { Readable } from 'stream';
+import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity';
 
 @Injectable()
 export class TestImportService {
@@ -102,7 +103,21 @@ export class TestImportService {
     }
   }
 
-  async import(fileBuffer: Buffer, userId: string): Promise<void> {
+  async import(
+    fileBuffer: Buffer,
+    userId: string,
+    versionNotes?: string,
+    versionName?: string,
+    fileName?: string,
+  ): Promise<void> {
+    this.logger.warn('Excel file import started...');
+
+    // Log version information if provided
+    this.logger.warn(`Version name: ${versionName}`);
+    if (versionNotes) {
+      this.logger.warn(`Version notes: ${versionNotes}`);
+    }
+
     try {
       const parsedSheets =
         await this.dataIngestionParser.parseBuffer(fileBuffer);
@@ -117,6 +132,36 @@ export class TestImportService {
         records: parsedProjects,
       };
       await this.ingestForTests(parsedEntitiesWithProjects);
+
+      // Upload file to S3 under data-ingestion folder if fileName is provided
+      let filePath: string | null = null;
+      if (fileName) {
+        const uploadDate = new Date();
+        const s3Key = this.s3Service.generateDataIngestionS3Key(
+          uploadDate,
+          fileName,
+        );
+        await this.s3Service.uploadFile(
+          s3Key,
+          fileBuffer,
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        );
+        filePath = s3Key;
+      }
+
+      // Create DataIngestionEntity record after successful import
+      const dataIngestionRepo =
+        this.dataSource.getRepository(DataIngestionEntity);
+      const dataIngestion = new DataIngestionEntity();
+      dataIngestion.createdAt = new Date();
+      dataIngestion.versionNotes = versionNotes;
+      dataIngestion.versionName = versionName;
+      dataIngestion.filePath = filePath;
+      await dataIngestionRepo.save(dataIngestion);
+
+      // Keep only the 3 most recent data ingestion records
+      await this.cleanupOldDataIngestions();
+
       this.logger.warn('Excel file import completed successfully');
     } catch (e) {
       this.logger.error('Excel file import failed', e);
@@ -464,5 +509,76 @@ export class TestImportService {
     await this.s3Service.deleteFilesByKeys(userUpload.files.map((f) => f.key));
     // User upload row is deleted by adminjs
     await this.importRepo.removeUserUpload(userUpload);
+  }
+
+  public async downloadDataIngestionFile(
+    dataIngestionCreatedAt: Date,
+  ): Promise<[string, Readable] | null> {
+    const dataIngestionRepo =
+      this.dataSource.getRepository(DataIngestionEntity);
+    const dataIngestion = await dataIngestionRepo.findOne({
+      where: { createdAt: dataIngestionCreatedAt },
+    });
+
+    if (!dataIngestion || !dataIngestion.filePath) {
+      throw new NotFoundException('Data ingestion file not found');
+    }
+
+    const fileStream = await this.s3Service.downloadDataIngestionFile(
+      dataIngestion.filePath,
+    );
+    if (!fileStream) {
+      throw new InternalServerErrorException('File not found in S3');
+    }
+
+    // Extract filename from the S3 path
+    const fileName =
+      dataIngestion.filePath.split('/').pop() || 'data-ingestion-file';
+
+    return [fileName, fileStream];
+  }
+
+  private async cleanupOldDataIngestions(): Promise<void> {
+    const dataIngestionRepo =
+      this.dataSource.getRepository(DataIngestionEntity);
+
+    // Get all data ingestion records, ordered by createdAt desc
+    const allDataIngestions = await dataIngestionRepo.find({
+      order: { createdAt: 'DESC' },
+    });
+
+    // If we have more than 3, cleanup the oldest ones (keep files for only 3 most recent)
+    if (allDataIngestions.length > 3) {
+      const recordsToCleanup = allDataIngestions.slice(3); // Records beyond the 3 most recent
+
+      // Delete S3 files for records that will be cleaned up
+      const s3KeysToDelete = recordsToCleanup
+        .filter((record) => record.filePath) // Only records with file paths
+        .map((record) => record.filePath!);
+
+      if (s3KeysToDelete.length > 0) {
+        try {
+          await this.s3Service.deleteFilesByKeys(s3KeysToDelete);
+          this.logger.warn(
+            `Deleted ${s3KeysToDelete.length} old data ingestion files from S3`,
+          );
+        } catch (error) {
+          this.logger.error('Failed to delete old S3 files', error);
+          // Continue with database cleanup even if S3 cleanup fails
+        }
+      }
+
+      // Clear filePath for records beyond the 3 most recent (but keep the records)
+      for (const record of recordsToCleanup) {
+        if (record.filePath) {
+          record.filePath = null;
+          await dataIngestionRepo.save(record);
+        }
+      }
+
+      this.logger.warn(
+        `Cleaned up ${recordsToCleanup.length} old data ingestion files, keeping only files for the 3 most recent records`,
+      );
+    }
   }
 }

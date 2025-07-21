@@ -1,6 +1,6 @@
 import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity.js';
 import { ResourceWithOptions } from 'adminjs';
-import { version } from 'os';
+import { Components } from 'backoffice/components/index.js';
 
 export const DataIngestionEntityResource: ResourceWithOptions = {
   resource: DataIngestionEntity,
@@ -13,9 +13,20 @@ export const DataIngestionEntityResource: ResourceWithOptions = {
       name: 'Methodology',
       icon: 'Layers',
     },
+    showProperties: ['createdAt', 'versionName', 'versionNotes', 'filePath'],
+    editProperties: ['versionName', 'versionNotes', 'filePath'],
+    listProperties: ['createdAt', 'versionName', 'versionNotes', 'filePath'],
+    filterProperties: ['createdAt', 'versionName'],
     actions: {
       new: { isVisible: false, isAccessible: false },
       // edit: { isVisible: false, isAccessible: false },
+    },
+    translations: {
+      en: {
+        properties: {
+          filePath: 'File',
+        },
+      },
     },
     properties: {
       createdAt: {
@@ -27,6 +38,14 @@ export const DataIngestionEntityResource: ResourceWithOptions = {
       },
       versionNotes: {
         type: 'richtext',
+      },
+      filePath: {
+        components: {
+          edit: Components.DownloadDataIngestionFile,
+          show: Components.DownloadDataIngestionFile,
+          list: Components.DownloadDataIngestionFile,
+        },
+        isDisabled: true,
       },
     },
   },

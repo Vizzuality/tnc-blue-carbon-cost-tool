@@ -53,6 +53,7 @@ export class ImportController {
         user.id,
         body.version_notes,
         body.version_name,
+        file.originalname,
       );
       return {
         status: 201,
@@ -78,6 +79,35 @@ export class ImportController {
         body: importedData,
       };
     });
+  }
+
+  @TsRestHandler(adminContract.downloadDataIngestionFile)
+  @RequiredRoles(ROLES.ADMIN)
+  async downloadDataIngestionFile(
+    @Res() res: Response,
+  ): Promise<ControllerResponse> {
+    return tsRestHandler(
+      adminContract.downloadDataIngestionFile,
+      async ({ params }) => {
+        const createdAt = new Date(params.createdAt);
+        const [fileName, fileStream] =
+          await this.service.downloadDataIngestionFile(createdAt);
+
+        res.set({
+          'Content-Type':
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'Content-Disposition': `attachment; filename="${fileName}"`,
+        });
+
+        fileStream.pipe(res);
+
+        // Return a dummy response since we're using res.pipe
+        return {
+          status: 200,
+          body: null as any,
+        };
+      },
+    );
   }
 
   @UseInterceptors(AnyFilesInterceptor({ limits: { files: 3, fields: 0 } }))

@@ -57,6 +57,12 @@ export class S3Service implements OnModuleInit {
     return S3Utils.generateS3Key(date, userId, fileName);
   }
 
+  public generateDataIngestionS3Key(date: Date, fileName: string): string {
+    const timestamp = date.toISOString().replace(/[:.]/g, '-');
+    const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
+    return `data-ingestion/${timestamp}/${sanitizedFileName}`;
+  }
+
   public async uploadUserFiles(files: UploadDataFilesDto): Promise<any> {
     const uploadPromises = files.map((file) => {
       return this.s3Client.send(
@@ -71,6 +77,21 @@ export class S3Service implements OnModuleInit {
     return Promise.all(uploadPromises);
   }
 
+  public async uploadFile(
+    key: string,
+    buffer: Buffer,
+    contentType?: string,
+  ): Promise<any> {
+    return this.s3Client.send(
+      new PutObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+        Body: buffer,
+        ContentType: contentType || 'application/octet-stream',
+      }),
+    );
+  }
+
   public async listFiles(): Promise<any> {
     const list = await this.s3Client.send(
       new ListObjectsV2Command({ Bucket: this.bucketName }),
@@ -78,6 +99,17 @@ export class S3Service implements OnModuleInit {
     list.Contents.forEach((obj) => this.logger.debug(`S3 file: ${obj.Key}`));
 
     return list.Contents;
+  }
+
+  public async listDataIngestionFiles(): Promise<any> {
+    const list = await this.s3Client.send(
+      new ListObjectsV2Command({
+        Bucket: this.bucketName,
+        Prefix: 'data-ingestion/',
+      }),
+    );
+
+    return list.Contents?.filter((obj) => obj.Key !== 'data-ingestion/') || [];
   }
 
   public async downloadFileByKey(s3Key: string): Promise<any> {
@@ -92,6 +124,10 @@ export class S3Service implements OnModuleInit {
       this.logger.error('Error downloading file:', s3Key, e);
       return undefined;
     }
+  }
+
+  public async downloadDataIngestionFile(filePath: string): Promise<any> {
+    return this.downloadFileByKey(filePath);
   }
 
   public async deleteFilesByKeys(s3Keys: string[]): Promise<void> {

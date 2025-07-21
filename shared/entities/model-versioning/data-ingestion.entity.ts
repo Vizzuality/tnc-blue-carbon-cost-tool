@@ -10,4 +10,7 @@ export class DataIngestionEntity extends BaseEntity {
 
   @Column({ name: "version_notes", type: "text", nullable: true })
   versionNotes: string | null;
+
+  @Column({ name: "file_path", type: "varchar", nullable: true })
+  filePath: string | null;
 }
