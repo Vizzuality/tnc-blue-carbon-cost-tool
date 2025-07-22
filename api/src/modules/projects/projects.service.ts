@@ -222,10 +222,12 @@ export class ProjectsService extends AppBaseService<
       `Computing ${fromExcel.length} projects from Excel file...`,
     );
     await Promise.all(
-      fromExcel.map(async (projectFromExcel) => {
-        const projectDto = ProjectBuilder.excelInputToDto(projectFromExcel);
-        await this.createProject(projectDto);
-      }),
+      fromExcel
+        .filter((r) => r.price_type === PROJECT_PRICE_TYPE.MARKET_PRICE)
+        .map(async (projectFromExcel) => {
+          const projectDto = ProjectBuilder.excelInputToDto(projectFromExcel);
+          await this.createProject(projectDto);
+        }),
     );
     this.logger.warn(`Computed and saved ${fromExcel.length} projects`);
   }
