@@ -23,6 +23,7 @@
     "express-session": "^1.18.0",
     "nodemon": "^3.1.7",
     "pg": "catalog:",
+    "react-simple-wysiwyg": "^3.4.0",
     "reflect-metadata": "catalog:",
     "styled-components": "^6.1.13",
     "tslib": "^2.7.0",
