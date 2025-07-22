@@ -81,7 +81,7 @@ export class ConservationProjectInput {
     ) {
       this.emissionFactorAgb = additionalBaseData.emissionFactorAgb;
       this.emissionFactorSoc = additionalBaseData.emissionFactorSoc;
-      this.emissionFactor = null;
+      this.emissionFactor = additionalBaseData.tier1EmissionFactor;
       this.sequestrationRate =
         additionalBaseData.tier2SequestrationRate ??
         additionalBaseData.tier1SequestrationRate;

@@ -64,7 +64,9 @@ export class RestorationProjectInput {
       this.sequestrationRate = additionalBaseData.tier1SequestrationRate;
     }
     if (parameters.tierSelector === SEQUESTRATION_RATE_TIER_TYPES.TIER_2) {
-      this.sequestrationRate = additionalBaseData.tier2SequestrationRate;
+      this.sequestrationRate =
+        additionalBaseData.tier2SequestrationRate ??
+        additionalBaseData.tier1SequestrationRate;
     }
     return this;
   }
