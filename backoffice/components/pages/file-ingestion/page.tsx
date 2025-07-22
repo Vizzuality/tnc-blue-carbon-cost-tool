@@ -8,10 +8,24 @@ import {
   Tab,
   DropZone,
   H4,
+  Input,
+  FormGroup,
+  Label,
 } from '@adminjs/design-system';
 import { ApiClient } from 'adminjs';
 import styled from 'styled-components';
 import { Loader } from '@adminjs/design-system';
+import Editor, {
+  BtnBold,
+  BtnItalic,
+  BtnUnderline,
+  BtnBulletList,
+  BtnNumberedList,
+  BtnUndo,
+  BtnRedo,
+  Toolbar,
+  BtnStyles,
+} from 'react-simple-wysiwyg';
 
 const CustomAlert = ({ title, message, onClose }: any) => {
   const Overlay = styled.div`
@@ -56,7 +70,19 @@ const CustomAlert = ({ title, message, onClose }: any) => {
 };
 
 const UploadTab = ({
-  props: { id, label, file, handleFileUpload, handleSubmit, isUploading },
+  props: {
+    id,
+    label,
+    file,
+    handleFileUpload,
+    handleSubmit,
+    isUploading,
+    versionName,
+    versionNotes,
+    handleVersionNameChange,
+    handleVersionNotesChange,
+    showVersionFields,
+  },
 }: any) => {
   return (
     <Tab id={id} label={label}>
@@ -67,6 +93,59 @@ const UploadTab = ({
         justifyContent="center"
         p="xl"
       >
+        {/* Version fields - only show for data tab - MOVED TO TOP */}
+        {showVersionFields && (
+          <Box width="100%" maxWidth="400px" mb="lg">
+            <FormGroup>
+              <Label required>Version Name</Label>
+              <Input
+                value={versionName}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleVersionNameChange(e.target.value)
+                }
+                placeholder="Enter version name (required)"
+                required
+              />
+            </FormGroup>
+            <FormGroup mt="md">
+              <Label>Version Notes</Label>
+              <style>{`
+                div[contenteditable="true"] ul { list-style-type: disc !important; list-style-position: outside !important; margin: 8px 0 !important; padding-left: 24px !important; }
+                div[contenteditable="true"] ol { list-style-type: decimal !important; list-style-position: outside !important; margin: 8px 0 !important; padding-left: 24px !important; }
+                div[contenteditable="true"] li { display: list-item !important; list-style: inherit !important; margin: 4px 0 !important; }
+                div[contenteditable="true"] b { font-weight: bold !important; }
+                div[contenteditable="true"] i { font-style: italic !important; }
+                div[contenteditable="true"] h1 { font-size: 1.5em !important; font-weight: bold !important; margin: 16px 0 !important; }
+                div[contenteditable="true"] h2 { font-size: 1.25em !important; font-weight: bold !important; margin: 12px 0 !important; }
+                .rsw-dd option[value="3"] { display: none !important; }
+              `}</style>
+              <Editor
+                tagName="div"
+                value={versionNotes}
+                onChange={(e: any) => handleVersionNotesChange(e.target.value)}
+                placeholder="Enter version notes (optional)"
+                style={{
+                  // minHeight: '400px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                }}
+              >
+                <Toolbar>
+                  <BtnUndo />
+                  <BtnRedo />
+                  <BtnBold />
+                  <BtnItalic />
+                  <BtnUnderline />
+                  <BtnBulletList />
+                  <BtnNumberedList />
+                  <BtnStyles />
+                </Toolbar>
+              </Editor>
+            </FormGroup>
+          </Box>
+        )}
+
+        {/* File upload section - MOVED TO BOTTOM */}
         <Box width="100%" maxWidth="400px">
           {isUploading == false ? (
             <DropZone
@@ -78,6 +157,7 @@ const UploadTab = ({
           )}
         </Box>
         {file && <Text mt="md">File selected: {file.name}</Text>}
+
         <Box display="flex" justifyContent="center" width="100%" mt="lg">
           <Button onClick={() => handleSubmit(id)}>Send</Button>
         </Box>
@@ -91,6 +171,8 @@ const FileIngestion = () => {
   const [activeTab, setActiveTab] = useState<'scorecard' | 'data'>('scorecard');
   const [scoreCardFile, setScoreCardFile] = useState<File | null>(null);
   const [dataFile, setDataFile] = useState<File | null>(null);
+  const [versionName, setVersionName] = useState<string>('');
+  const [versionNotes, setVersionNotes] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
   const [alertData, setAlertData] = useState<{
     title: string;
@@ -128,6 +210,12 @@ const FileIngestion = () => {
     } else if (tab === 'data') {
       endPoint += '/admin/upload/xlsx';
       file = dataFile;
+
+      // Validate version name for data uploads
+      if (!versionName.trim()) {
+        alert('Please enter a version name for data uploads!');
+        return;
+      }
     }
 
     if (!file) {
@@ -137,6 +225,16 @@ const FileIngestion = () => {
 
     const formData = new FormData();
     formData.append('file', file);
+
+    // Add version fields for data uploads
+    if (tab === 'data') {
+      formData.append('version_name', versionName.trim());
+      // Check if version notes has actual content (not just empty HTML tags)
+      const cleanVersionNotes = versionNotes.replace(/<[^>]*>/g, '').trim();
+      if (cleanVersionNotes) {
+        formData.append('version_notes', versionNotes.trim());
+      }
+    }
 
     try {
       // /admin is not exposed when the app runs behind a reverse proxy
@@ -151,6 +249,15 @@ const FileIngestion = () => {
           title: '✅ Done',
           message: 'The file was successfully uploaded.',
         });
+
+        // Clear form fields after successful upload
+        if (tab === 'data') {
+          setVersionName('');
+          setVersionNotes('');
+          setDataFile(null);
+        } else {
+          setScoreCardFile(null);
+        }
       } else if (response.status === 409) {
         const body = await response.json();
         const errorMsgs = body.errors.map((error: { title: string }) => {
@@ -183,7 +290,8 @@ const FileIngestion = () => {
           want to upload new data
         </Text>
         <Text>
-          2. Upload the data file - this will replace any existing data
+          2. Upload the data file - this will replace any existing data. You
+          must provide a version name and can optionally add version notes.
         </Text>
       </Box>
       <Box mt="xxl" display="flex" flexDirection="column" variant="white">
@@ -199,6 +307,7 @@ const FileIngestion = () => {
               handleFileUpload,
               handleSubmit,
               isUploading,
+              showVersionFields: false,
             }}
           />
           <UploadTab
@@ -209,6 +318,11 @@ const FileIngestion = () => {
               handleFileUpload,
               handleSubmit,
               isUploading,
+              versionName,
+              versionNotes,
+              handleVersionNameChange: setVersionName,
+              handleVersionNotesChange: setVersionNotes,
+              showVersionFields: true,
             }}
           />
         </Tabs>
