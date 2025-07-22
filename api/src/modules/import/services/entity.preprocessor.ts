@@ -426,13 +426,13 @@ export class EntityPreprocessor {
       emissionFactors.country = {
         code: row['Country code'],
       } as Country;
-      emissionFactors.global = this.stringToNumeric(
+      emissionFactors.global = this.stringToNumberOrNull(
         row['Tier 1 - Global emission factor'],
       );
-      emissionFactors.AGB = this.stringToNumeric(
+      emissionFactors.AGB = this.stringToNumberOrNull(
         row['Tier 2 - Country-specific emission factor - AGB'],
       );
-      emissionFactors.SOC = this.stringToNumeric(
+      emissionFactors.SOC = this.stringToNumberOrNull(
         row['Tier 2 - Country-specific emission factor - SOC'],
       );
       const sources: RecordSource[] = [];
