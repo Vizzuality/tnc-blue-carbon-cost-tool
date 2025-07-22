@@ -3,6 +3,7 @@ import { EmissionFactors } from '@shared/entities/carbon-inputs/emission-factors
 import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity';
 import { ModelComponentSourceM2M } from '@shared/entities/methodology/model-source-m2m.entity';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
+import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity';
 import { METHODOLOGY_SOURCES_RESPONSE_BODY } from 'api/test/integration/methodology/methodology-sources.response';
 import { MethodologySourcesUtils } from 'api/test/integration/methodology/methodology-sources.utils';
 import { TestManager } from 'api/test/utils/test-manager';
@@ -95,6 +96,88 @@ describe('Methodology', () => {
           METHODOLOGY_SOURCES_RESPONSE_BODY,
         ),
       );
+    });
+
+    it(`should return paginated changelogs when a GET request is made to the ${methodologyContract.getChangeLogs.path} endpoint`, async () => {
+      const dataSource = testManager.getDataSource();
+      const dataIngestionRepo = dataSource.getRepository(DataIngestionEntity);
+
+      // Clear existing data
+      await dataIngestionRepo.delete({});
+
+      // Create test data
+      const testChangelogs = [
+        {
+          createdAt: new Date('2024-01-01T00:00:00Z'),
+          versionName: 'v1.0.0',
+          versionNotes: 'Initial version',
+          filePath: '/path/to/file1.xlsx',
+        },
+        {
+          createdAt: new Date('2024-02-01T00:00:00Z'),
+          versionName: 'v1.1.0',
+          versionNotes: 'Bug fixes and improvements',
+          filePath: '/path/to/file2.xlsx',
+        },
+        {
+          createdAt: new Date('2024-03-01T00:00:00Z'),
+          versionName: 'v2.0.0',
+          versionNotes: 'Major update with new features',
+          filePath: null,
+        },
+      ];
+
+      await dataIngestionRepo.save(testChangelogs);
+
+      // Test basic pagination
+      const response = await testManager
+        .request()
+        .get(methodologyContract.getChangeLogs.path)
+        .query({ pageSize: 10, pageNumber: 1 })
+        .expect(200);
+
+      expect(response.body.data).toHaveLength(3);
+      expect(response.body.metadata).toEqual({
+        size: 10,
+        page: 1,
+        totalItems: 3,
+        totalPages: 1,
+      });
+
+      // Verify the response contains only Changelog fields (no filePath)
+      response.body.data.forEach((changelog: any) => {
+        expect(changelog).toHaveProperty('createdAt');
+        expect(changelog).toHaveProperty('versionName');
+        expect(changelog).toHaveProperty('versionNotes');
+        expect(changelog).not.toHaveProperty('filePath');
+      });
+
+      // Test sorting by createdAt descending (most recent first)
+      const sortedResponse = await testManager
+        .request()
+        .get(methodologyContract.getChangeLogs.path)
+        .query({ 'sort[0]': '-createdAt' })
+        .expect(200);
+
+      expect(sortedResponse.body.data[0].versionName).toBe('v2.0.0');
+      expect(sortedResponse.body.data[1].versionName).toBe('v1.1.0');
+      expect(sortedResponse.body.data[2].versionName).toBe('v1.0.0');
+    });
+
+    it(`should return limited results when pageSize is specified for ${methodologyContract.getChangeLogs.path} endpoint`, async () => {
+      const response = await testManager
+        .request()
+        .get(methodologyContract.getChangeLogs.path)
+        .query({ pageSize: 2, pageNumber: 1 })
+        .expect(200);
+
+      expect(response.body.data).toHaveLength(2);
+      expect(response.body.metadata).toEqual({
+        size: 2,
+        page: 1,
+        totalItems: 3,
+        totalPages: 2,
+      });
     });
   });
 

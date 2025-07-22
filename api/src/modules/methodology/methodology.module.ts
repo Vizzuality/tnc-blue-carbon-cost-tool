@@ -5,10 +5,17 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AssumptionsRepository } from '@api/modules/calculations/assumptions.repository';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
+import { ChangelogService } from '@api/modules/methodology/changelog.service';
+import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ModelAssumptions])],
+  imports: [TypeOrmModule.forFeature([ModelAssumptions, DataIngestionEntity])],
   controllers: [MethodologyController],
-  providers: [AssumptionsRepository, MethodologyRepository, MethodologyService],
+  providers: [
+    AssumptionsRepository,
+    MethodologyRepository,
+    MethodologyService,
+    ChangelogService,
+  ],
 })
 export class MethodologyModule {}
