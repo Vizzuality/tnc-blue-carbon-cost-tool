@@ -60,6 +60,25 @@ export const ConservationCustomProjectSchema = z.object({
     .optional(),
 });
 
+export const ConservationCustomProjectSchemaFE = ConservationCustomProjectSchema.extend({
+  projectSpecificLossRate: z.preprocess(
+    (value) =>
+      value === undefined || value === null
+        ? undefined
+        : parseNumber(value),
+    z
+      .number({
+        required_error: "Project Specific Loss Rate is required",
+        invalid_type_error: "Project Specific Loss Rate should be a number",
+      })
+      .refine((val) => val >= -100 && val <= 0, {
+        message: "Project Specific Loss Rate must be between -100 and 0",
+      })
+      .transform((val) => val / 100)
+      .optional(),
+  ),
+});
+
 export const RestorationPlanDTOSchema = z
   .array(
     z.object({
@@ -209,6 +228,29 @@ export const CreateCustomProjectSchema = z
     ValidateAssumptionsSchema(data, ctx);
   });
 
+export const CreateCustomProjectSchemaFE = z
+  .discriminatedUnion("activity", [
+    z.object({
+      ...CustomProjectBaseSchema.shape,
+      activity: z.literal(ACTIVITY.CONSERVATION),
+      parameters: ConservationCustomProjectSchemaFE,
+    }),
+    z.object({
+      ...CustomProjectBaseSchema.shape,
+      activity: z.literal(ACTIVITY.RESTORATION),
+      parameters: RestorationCustomProjectSchema,
+    }),
+  ])
+  .superRefine((data, ctx) => {
+    if (data.activity === ACTIVITY.CONSERVATION) {
+      ValidateConservationSchema(data, ctx);
+    } else if (data.activity === ACTIVITY.RESTORATION) {
+      ValidateRestorationSchema(data, ctx);
+    }
+
+    ValidateAssumptionsSchema(data, ctx);
+  });
+
 export const CustomProjectBaseLooseSchema = CustomProjectBaseSchema.extend({
   assumptions: AssumptionsSchema.partial().optional(),
   costInputs: InputCostsSchema.partial().optional(),
@@ -337,8 +379,12 @@ export type ValidatedCustomProjectForm = z.infer<
   typeof CreateCustomProjectSchema
 >;
 
+export type ValidatedCustomProjectFormFE = z.infer<
+  typeof CreateCustomProjectSchemaFE
+>;
+
 export type CustomProjectForm = Omit<
-  ValidatedCustomProjectForm,
+  ValidatedCustomProjectFormFE,
   "costInputs" | "assumptions"
 > & {
   costInputs?: {

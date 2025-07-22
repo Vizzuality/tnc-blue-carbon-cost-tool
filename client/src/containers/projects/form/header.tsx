@@ -11,7 +11,7 @@ import {
   getRestorationPlanDTO,
 } from "@shared/lib/transform-create-custom-project-payload";
 import {
-  CreateCustomProjectSchema,
+  CreateCustomProjectSchemaFE,
   CustomProjectForm,
   LOSS_RATE_USED,
   RestorationPlanDTOSchema,
@@ -74,7 +74,7 @@ export default function Header({ name, id }: HeaderProps) {
         );
 
         const customProjectValidation =
-          CreateCustomProjectSchema.safeParse(data);
+          CreateCustomProjectSchemaFE.safeParse(data);
 
         let restorationPlanValidation: ReturnType<
           typeof RestorationPlanDTOSchema.safeParse
