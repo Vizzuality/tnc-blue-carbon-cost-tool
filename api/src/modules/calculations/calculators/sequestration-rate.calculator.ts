@@ -228,7 +228,7 @@ export class SequestrationRateCalculator {
       const year = Number(yearStr);
       let value: number = 0;
       if (year <= this.projectLength) {
-        if (emissionFactorSoc && emissionFactorAgb) {
+        if (emissionFactorSoc != null && emissionFactorAgb != null) {
           value =
             emissionFactorAgb * annualAvoidedLoss[year] +
             cumulativeLossRateIncorporatingSOC[year] * emissionFactorSoc +
@@ -435,53 +435,5 @@ export class SequestrationRateCalculator {
       );
     }
     return this.annualAvoidedLoss;
-  }
-
-  calculateBaselineEmissionsForCountryLevelAbatementPotential(): CostPlanMap {
-    // TODO: This is validated previously, but letting it here until we understand what value should we provide for Restoration,
-    //       as all costs are calculated for both types. Maybe this is an internal method and the value is set in another place.
-    if (this.activity !== ACTIVITY.CONSERVATION) {
-      console.error('Baseline emissions cannot be calculated for restoration.');
-    }
-    const {
-      emissionFactorAgb,
-      emissionFactorSoc,
-      emissionFactor,
-      sequestrationRate,
-    } = this.projectInput;
-
-    const baselineEmissionPlan: { [year: number]: number } = {};
-    for (let year = 1; year <= this.defaultProjectLength; year++) {
-      if (year !== 0) {
-        baselineEmissionPlan[year] = 0;
-      }
-    }
-
-    const cumulativeLoss = this.calculateCumulativeLossRate();
-    const cumulativeLossRateIncorporatingSOC =
-      this.calculateCumulativeLossRateIncorporatingSOCReleaseTime();
-    const annualAvoidedLoss = this.getAnnualAvoidedLoss();
-
-    for (const yearStr in baselineEmissionPlan) {
-      const year = Number(yearStr);
-      let value: number = 0;
-      if (year <= this.projectLength) {
-        if (emissionFactorSoc && emissionFactorAgb) {
-          value =
-            emissionFactorAgb * annualAvoidedLoss[year] +
-            cumulativeLossRateIncorporatingSOC[year] * emissionFactorSoc +
-            sequestrationRate * cumulativeLoss[year];
-        } else {
-          value =
-            cumulativeLoss[year] * emissionFactor +
-            sequestrationRate * cumulativeLoss[year];
-        }
-        baselineEmissionPlan[year] = value;
-      } else {
-        baselineEmissionPlan[year] = 0;
-      }
-    }
-
-    return baselineEmissionPlan;
   }
 }
