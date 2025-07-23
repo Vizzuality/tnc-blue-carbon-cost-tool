@@ -25,6 +25,8 @@ import { useMyProjectsFilters } from "@/app/my-projects/url-store";
 
 import { useTablePaginationReset } from "@/hooks/use-table-pagination-reset";
 
+import VersionBanner from "@/containers/my-projects/version-banner";
+
 import Search from "@/components/ui/search";
 import { useSidebar } from "@/components/ui/sidebar";
 import {
@@ -161,6 +163,7 @@ export default function MyProjectsView() {
     >
       <div className="mx-4 flex h-full flex-1 flex-col">
         <Header />
+        <VersionBanner />
         <div className="flex items-center justify-between py-4">
           <div className="flex gap-2 rounded-full bg-slate-900">
             <Tabs
