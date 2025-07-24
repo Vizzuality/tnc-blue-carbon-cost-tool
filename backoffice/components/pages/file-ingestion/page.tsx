@@ -15,17 +15,7 @@ import {
 import { ApiClient } from 'adminjs';
 import styled from 'styled-components';
 import { Loader } from '@adminjs/design-system';
-import Editor, {
-  BtnBold,
-  BtnItalic,
-  BtnUnderline,
-  BtnBulletList,
-  BtnNumberedList,
-  BtnUndo,
-  BtnRedo,
-  Toolbar,
-  BtnStyles,
-} from 'react-simple-wysiwyg';
+import { SharedRichTextEditor } from '../../atoms/custom-rich-text-editor.js';
 
 const CustomAlert = ({ title, message, onClose }: any) => {
   const Overlay = styled.div`
@@ -109,38 +99,11 @@ const UploadTab = ({
             </FormGroup>
             <FormGroup mt="md">
               <Label>Version Notes</Label>
-              <style>{`
-                div[contenteditable="true"] ul { list-style-type: disc !important; list-style-position: outside !important; margin: 8px 0 !important; padding-left: 24px !important; }
-                div[contenteditable="true"] ol { list-style-type: decimal !important; list-style-position: outside !important; margin: 8px 0 !important; padding-left: 24px !important; }
-                div[contenteditable="true"] li { display: list-item !important; list-style: inherit !important; margin: 4px 0 !important; }
-                div[contenteditable="true"] b { font-weight: bold !important; }
-                div[contenteditable="true"] i { font-style: italic !important; }
-                div[contenteditable="true"] h1 { font-size: 1.5em !important; font-weight: bold !important; margin: 16px 0 !important; }
-                div[contenteditable="true"] h2 { font-size: 1.25em !important; font-weight: bold !important; margin: 12px 0 !important; }
-                .rsw-dd option[value="3"] { display: none !important; }
-              `}</style>
-              <Editor
-                tagName="div"
+              <SharedRichTextEditor
                 value={versionNotes}
-                onChange={(e: any) => handleVersionNotesChange(e.target.value)}
+                onChange={handleVersionNotesChange}
                 placeholder="Enter version notes (optional)"
-                style={{
-                  // minHeight: '400px',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                }}
-              >
-                <Toolbar>
-                  <BtnUndo />
-                  <BtnRedo />
-                  <BtnBold />
-                  <BtnItalic />
-                  <BtnUnderline />
-                  <BtnBulletList />
-                  <BtnNumberedList />
-                  <BtnStyles />
-                </Toolbar>
-              </Editor>
+              />
             </FormGroup>
           </Box>
         )}

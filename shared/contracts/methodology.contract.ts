@@ -5,7 +5,7 @@ import {
 import { MethodologySourcesDto } from "@shared/dtos/methodology/methodology-sources.dto";
 import { ModelAssumptions } from "@shared/entities/model-assumptions.entity";
 import { Changelog } from "@shared/entities/model-versioning/changelog.type";
-import { DataIngestionEntity } from "@shared/entities/model-versioning/data-ingestion.entity";
+import { ModelComponentsVersionEntity } from "@shared/entities/model-versioning/model-components-version.entity";
 import { generateEntityQuerySchema } from "@shared/schemas/query-param.schema";
 import { initContract } from "@ts-rest/core";
 
@@ -31,7 +31,7 @@ export const methodologyContract = contract.router({
   getChangeLogs: {
     method: "GET",
     path: "/methodology/changelogs",
-    query: generateEntityQuerySchema(DataIngestionEntity),
+    query: generateEntityQuerySchema(ModelComponentsVersionEntity),
     responses: {
       200: contract.type<ApiPaginationResponse<Changelog>>(),
     },

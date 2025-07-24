@@ -22,8 +22,8 @@ import { UploadDataFilesDto } from '@shared/dtos/users/upload-data-files.dto';
 import { S3Service } from '@api/modules/import/s3.service';
 import { UserUpload, UserUploadFile } from '@shared/entities/users/user-upload';
 import { User } from '@shared/entities/users/user.entity';
-import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity';
 import { Readable } from 'stream';
+import { ModelComponentsVersionEntity } from '@shared/entities/model-versioning/model-components-version.entity';
 
 @Injectable()
 export class ImportService {
@@ -105,9 +105,10 @@ export class ImportService {
       }
 
       // Create DataIngestionEntity record after successful import
-      const dataIngestionRepo =
-        this.dataSource.getRepository(DataIngestionEntity);
-      const dataIngestion = new DataIngestionEntity();
+      const dataIngestionRepo = this.dataSource.getRepository(
+        ModelComponentsVersionEntity,
+      );
+      const dataIngestion = new ModelComponentsVersionEntity();
       dataIngestion.createdAt = new Date();
       dataIngestion.versionNotes = versionNotes;
       dataIngestion.versionName = versionName;
@@ -216,8 +217,9 @@ export class ImportService {
   public async downloadDataIngestionFile(
     dataIngestionCreatedAt: Date,
   ): Promise<[string, Readable] | null> {
-    const dataIngestionRepo =
-      this.dataSource.getRepository(DataIngestionEntity);
+    const dataIngestionRepo = this.dataSource.getRepository(
+      ModelComponentsVersionEntity,
+    );
     const dataIngestion = await dataIngestionRepo.findOne({
       where: { createdAt: dataIngestionCreatedAt },
     });
@@ -241,8 +243,9 @@ export class ImportService {
   }
 
   private async cleanupOldDataIngestions(): Promise<void> {
-    const dataIngestionRepo =
-      this.dataSource.getRepository(DataIngestionEntity);
+    const dataIngestionRepo = this.dataSource.getRepository(
+      ModelComponentsVersionEntity,
+    );
 
     // Get all data ingestion records, ordered by createdAt desc
     const allDataIngestions = await dataIngestionRepo.find({

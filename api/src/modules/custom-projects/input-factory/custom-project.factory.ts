@@ -17,6 +17,7 @@ import {
 import { CostOutput, ProjectInput } from '@api/modules/calculations/types';
 import { RestorationPlanService } from '@api/modules/custom-projects/restoration-plan.service';
 import { RestorationPlanDto } from '@shared/dtos/custom-projects/restoration-plan.dto';
+import { ModelComponentsVersionEntity } from '@shared/entities/model-versioning/model-components-version.entity';
 
 export type GeneralProjectInputs = {
   ecosystemExtent?: number;
@@ -178,6 +179,7 @@ export class CustomProjectFactory {
     breakevenCarbonPrice: number | null,
     costOutput: CostOutput,
     breakevenPriceCostOutput: CostOutput | null,
+    version?: ModelComponentsVersionEntity,
   ): CustomProject {
     const customProject = new CustomProject();
     customProject.projectName = dto.projectName;
@@ -217,6 +219,7 @@ export class CustomProjectFactory {
       ),
     };
     customProject.input = dto;
+    customProject.version = version;
 
     return customProject;
   }

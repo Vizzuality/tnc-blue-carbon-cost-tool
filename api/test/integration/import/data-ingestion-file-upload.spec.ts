@@ -1,11 +1,11 @@
 import { TestManager } from '../../utils/test-manager';
 import { HttpStatus } from '@nestjs/common';
 import { ROLES } from '@shared/entities/users/roles.enum';
-import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity';
 import { S3Service } from '@api/modules/import/s3.service';
 import * as path from 'path';
 import * as fs from 'fs';
 import { randomUUID } from 'crypto';
+import { ModelComponentsVersionEntity } from '@shared/entities/model-versioning/model-components-version.entity';
 
 describe('Data Ingestion File Upload and Download', () => {
   let testManager: TestManager;
@@ -65,10 +65,10 @@ describe('Data Ingestion File Upload and Download', () => {
     versionName: string,
     versionNotes = 'Test version',
     fileName = testFileName,
-  ): Promise<DataIngestionEntity> {
+  ): Promise<ModelComponentsVersionEntity> {
     const dataIngestionRepo = testManager
       .getDataSource()
-      .getRepository(DataIngestionEntity);
+      .getRepository(ModelComponentsVersionEntity);
 
     // Generate S3 key similar to how the real service does it
     const timestamp = new Date().getTime();
@@ -78,7 +78,7 @@ describe('Data Ingestion File Upload and Download', () => {
     await s3Service.uploadFile(s3Key, fileBuffer);
 
     // Create DataIngestionEntity
-    const dataIngestion = new DataIngestionEntity();
+    const dataIngestion = new ModelComponentsVersionEntity();
     dataIngestion.versionName = versionName;
     dataIngestion.versionNotes = versionNotes;
     dataIngestion.filePath = s3Key;
@@ -108,7 +108,7 @@ describe('Data Ingestion File Upload and Download', () => {
       // Verify it's actually in the database
       const dataIngestionRepo = testManager
         .getDataSource()
-        .getRepository(DataIngestionEntity);
+        .getRepository(ModelComponentsVersionEntity);
 
       const found = await dataIngestionRepo.find();
       expect(found).toHaveLength(1);
@@ -257,7 +257,7 @@ describe('Data Ingestion File Upload and Download', () => {
       // Verify all records were created
       const dataIngestionRepo = testManager
         .getDataSource()
-        .getRepository(DataIngestionEntity);
+        .getRepository(ModelComponentsVersionEntity);
 
       const allDataIngestions = await dataIngestionRepo.find({
         order: { createdAt: 'ASC' },
@@ -312,7 +312,7 @@ describe('Data Ingestion File Upload and Download', () => {
 
       const dataIngestionRepo = testManager
         .getDataSource()
-        .getRepository(DataIngestionEntity);
+        .getRepository(ModelComponentsVersionEntity);
 
       let allDataIngestions = await dataIngestionRepo.find({
         order: { createdAt: 'DESC' },

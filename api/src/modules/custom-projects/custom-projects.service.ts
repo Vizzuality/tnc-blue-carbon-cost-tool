@@ -24,6 +24,7 @@ import {
   CreateCustomProjectDto,
   OverridableCostInputsDto,
 } from '@shared/dtos/custom-projects/create-custom-project.dto';
+import { ModelComponentsVersionEntity } from '@shared/entities/model-versioning/model-components-version.entity';
 
 export type CustomProjectFetchSpecificacion = z.infer<
   typeof customProjectsQuerySchema
@@ -44,6 +45,8 @@ export class CustomProjectsService extends AppBaseService<
     public readonly dataRepository: DataRepository,
     public readonly assumptionsRepository: AssumptionsRepository,
     public readonly customProjectFactory: CustomProjectFactory,
+    @InjectRepository(ModelComponentsVersionEntity)
+    private readonly versionRepository: Repository<ModelComponentsVersionEntity>,
     private readonly eventBus: EventBus,
   ) {
     super(repo, 'customProject', 'customProjects');
@@ -80,6 +83,12 @@ export class CustomProjectsService extends AppBaseService<
     });
     const { costOutput, breakEvenCostOutput } = calculationOutput;
 
+    const currentVersion = await this.versionRepository.findOne({
+      where: {},
+      order: { createdAt: 'DESC' },
+    });
+    console.log('Current Version:', currentVersion);
+
     const customProject = this.customProjectFactory.createProject(
       dto,
       country,
@@ -87,6 +96,7 @@ export class CustomProjectsService extends AppBaseService<
       breakEvenCostOutput?.breakEvenCarbonPrice || null,
       costOutput,
       breakEvenCostOutput?.breakEvenCost || null,
+      currentVersion, // Pass the current version to the custom project
     );
 
     return customProject;
@@ -127,6 +137,7 @@ export class CustomProjectsService extends AppBaseService<
   ): Promise<SelectQueryBuilder<CustomProject>> {
     const { user } = info;
 
+    query.leftJoinAndSelect('customProject.version', 'version');
     query.andWhere('customProject.user_id = :userId', { userId: user.id });
 
     return query;
@@ -140,6 +151,7 @@ export class CustomProjectsService extends AppBaseService<
     const { user } = info;
 
     query.andWhere('customProject.user_id = :userId', { userId: user.id });
+    query.leftJoinAndSelect('customProject.version', 'version');
 
     if (fetchSpecification.partialProjectName) {
       query = query.andWhere('project_name ILIKE :projectName', {

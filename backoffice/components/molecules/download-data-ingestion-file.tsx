@@ -37,7 +37,12 @@ const DownloadDataIngestionFile: React.FC<DownloadDataIngestionFileProps> = ({
         </Label>
       )}
       {config && filePath && createdAt ? (
-        <div style={{ marginBottom: '1rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <Badge>
             <Link
               href={`${config.apiUrl}/admin/data-ingestion/${encodeURIComponent(createdAt)}/download`}

@@ -12,12 +12,12 @@ import { ProjectScorecard } from '@shared/entities/project-scorecard.entity';
 import { S3Service } from '@api/modules/import/s3.service';
 import { ProjectsModule } from '@api/modules/projects/projects.module';
 import { ImportServiceProvider } from '@api/modules/import/import-service.provider';
-import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity';
+import { ModelComponentsVersionEntity } from '@shared/entities/model-versioning/model-components-version.entity';
 
 @Module({
   imports: [
     // TODO: After switching to compute projects, we might want to remove this from here and have it only in projects module?
-    TypeOrmModule.forFeature([ProjectScorecard, DataIngestionEntity]),
+    TypeOrmModule.forFeature([ProjectScorecard, ModelComponentsVersionEntity]),
     MulterModule.register({}),
     ProjectsModule,
   ],

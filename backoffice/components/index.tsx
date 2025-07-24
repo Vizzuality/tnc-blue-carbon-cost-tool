@@ -28,4 +28,9 @@ export const Components = {
     'ProjectDynamicForm',
     './organisms/project-dynamic-form',
   ),
+  CustomRichTextEditor: componentLoader.add(
+    'CustomRichTextEditor',
+    './atoms/custom-rich-text-editor',
+  ),
+  HtmlDisplay: componentLoader.add('HtmlDisplay', './atoms/html-display'),
 };

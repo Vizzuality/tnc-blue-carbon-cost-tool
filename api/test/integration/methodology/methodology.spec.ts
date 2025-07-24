@@ -3,7 +3,7 @@ import { EmissionFactors } from '@shared/entities/carbon-inputs/emission-factors
 import { ModelComponentSource } from '@shared/entities/methodology/model-component-source.entity';
 import { ModelComponentSourceM2M } from '@shared/entities/methodology/model-source-m2m.entity';
 import { ModelAssumptions } from '@shared/entities/model-assumptions.entity';
-import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity';
+import { ModelComponentsVersionEntity } from '@shared/entities/model-versioning/model-components-version.entity';
 import { METHODOLOGY_SOURCES_RESPONSE_BODY } from 'api/test/integration/methodology/methodology-sources.response';
 import { MethodologySourcesUtils } from 'api/test/integration/methodology/methodology-sources.utils';
 import { TestManager } from 'api/test/utils/test-manager';
@@ -100,7 +100,9 @@ describe('Methodology', () => {
 
     it(`should return paginated changelogs when a GET request is made to the ${methodologyContract.getChangeLogs.path} endpoint`, async () => {
       const dataSource = testManager.getDataSource();
-      const dataIngestionRepo = dataSource.getRepository(DataIngestionEntity);
+      const dataIngestionRepo = dataSource.getRepository(
+        ModelComponentsVersionEntity,
+      );
 
       // Clear existing data
       await dataIngestionRepo.delete({});

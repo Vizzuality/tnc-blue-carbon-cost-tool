@@ -4,14 +4,15 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { Country } from "@shared/entities/country.entity";
 import { User } from "@shared/entities/users/user.entity";
 import { type CustomProjectOutput } from "@shared/dtos/custom-projects/custom-project-output.dto";
-import {CreateCustomProjectDto} from "@shared/dtos/custom-projects/create-custom-project.dto";
-
+import { CreateCustomProjectDto } from "@shared/dtos/custom-projects/create-custom-project.dto";
+import { ModelComponentsVersionEntity } from "@shared/entities/model-versioning/model-components-version.entity";
 /**
  * @note: This entity does not extend BaseEntity as it won't be used in the backoffice. However, it has to be added to the BO datasource due to its relation
  *        to other entities that  (i.e User)
@@ -79,8 +80,17 @@ export class CustomProject {
 
   @Column({ name: "input_snapshot", type: "jsonb" })
   // TODO: this should be the infered type of the zod schema
-  input: CreateCustomProjectDto | any
+  input: CreateCustomProjectDto | any;
 
   @Column({ name: "output_snapshot", type: "jsonb" })
   output: CustomProjectOutput;
+
+  @ManyToOne("ModelComponentsVersionEntity", "customProjects", {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn({ name: "version_id" })
+  version: ModelComponentsVersionEntity;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt: Date;
 }

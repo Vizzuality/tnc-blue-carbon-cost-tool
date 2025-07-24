@@ -63,7 +63,7 @@ import { UserUpload, UserUploadFile } from '@shared/entities/users/user-upload';
 import { User } from '@shared/entities/users/user.entity';
 import { S3Service } from '@api/modules/import/s3.service';
 import { Readable } from 'stream';
-import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity';
+import { ModelComponentsVersionEntity } from '@shared/entities/model-versioning/model-components-version.entity';
 
 @Injectable()
 export class TestImportService {
@@ -150,9 +150,10 @@ export class TestImportService {
       }
 
       // Create DataIngestionEntity record after successful import
-      const dataIngestionRepo =
-        this.dataSource.getRepository(DataIngestionEntity);
-      const dataIngestion = new DataIngestionEntity();
+      const dataIngestionRepo = this.dataSource.getRepository(
+        ModelComponentsVersionEntity,
+      );
+      const dataIngestion = new ModelComponentsVersionEntity();
       dataIngestion.createdAt = new Date();
       dataIngestion.versionNotes = versionNotes;
       dataIngestion.versionName = versionName;
@@ -514,8 +515,9 @@ export class TestImportService {
   public async downloadDataIngestionFile(
     dataIngestionCreatedAt: Date,
   ): Promise<[string, Readable] | null> {
-    const dataIngestionRepo =
-      this.dataSource.getRepository(DataIngestionEntity);
+    const dataIngestionRepo = this.dataSource.getRepository(
+      ModelComponentsVersionEntity,
+    );
     const dataIngestion = await dataIngestionRepo.findOne({
       where: { createdAt: dataIngestionCreatedAt },
     });
@@ -539,8 +541,9 @@ export class TestImportService {
   }
 
   private async cleanupOldDataIngestions(): Promise<void> {
-    const dataIngestionRepo =
-      this.dataSource.getRepository(DataIngestionEntity);
+    const dataIngestionRepo = this.dataSource.getRepository(
+      ModelComponentsVersionEntity,
+    );
 
     // Get all data ingestion records, ordered by createdAt desc
     const allDataIngestions = await dataIngestionRepo.find({

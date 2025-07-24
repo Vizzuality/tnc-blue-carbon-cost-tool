@@ -8,10 +8,11 @@ import { CalculationsModule } from '@api/modules/calculations/calculations.modul
 import { CustomProjectFactory } from '@api/modules/custom-projects/input-factory/custom-project.factory';
 import { SaveCustomProjectEventHandler } from '@api/modules/custom-projects/events/handlers/save-custom-project.handler';
 import { RestorationPlanService } from '@api/modules/custom-projects/restoration-plan.service';
+import { ModelComponentsVersionEntity } from '@shared/entities/model-versioning/model-components-version.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([CustomProject]),
+    TypeOrmModule.forFeature([CustomProject, ModelComponentsVersionEntity]),
     CountriesModule,
     CalculationsModule,
   ],

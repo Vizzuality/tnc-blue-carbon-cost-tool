@@ -1,9 +1,9 @@
-import { DataIngestionEntity } from '@shared/entities/model-versioning/data-ingestion.entity.js';
+import { ModelComponentsVersionEntity } from '@shared/entities/model-versioning/model-components-version.entity.js';
 import { ResourceWithOptions } from 'adminjs';
 import { Components } from 'backoffice/components/index.js';
 
-export const DataIngestionEntityResource: ResourceWithOptions = {
-  resource: DataIngestionEntity,
+export const ModelComponentsVersionEntityResource: ResourceWithOptions = {
+  resource: ModelComponentsVersionEntity,
   options: {
     sort: {
       sortBy: 'createdAt',
@@ -23,6 +23,9 @@ export const DataIngestionEntityResource: ResourceWithOptions = {
     },
     translations: {
       en: {
+        labels: {
+          ModelComponentsVersionEntity: 'Model factors Versions',
+        },
         properties: {
           filePath: 'File',
         },
@@ -37,7 +40,11 @@ export const DataIngestionEntityResource: ResourceWithOptions = {
         isDisabled: true,
       },
       versionNotes: {
-        type: 'richtext',
+        components: {
+          edit: Components.CustomRichTextEditor,
+          show: Components.HtmlDisplay,
+          list: Components.HtmlDisplay,
+        },
       },
       filePath: {
         components: {

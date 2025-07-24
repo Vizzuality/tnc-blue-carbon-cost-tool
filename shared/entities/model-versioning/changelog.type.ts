@@ -1,6 +1,6 @@
-import { DataIngestionEntity } from "@shared/entities/model-versioning/data-ingestion.entity";
+import { ModelComponentsVersionEntity } from "@shared/entities/model-versioning/model-components-version.entity";
 
 export type Changelog = Pick<
-  DataIngestionEntity,
+  ModelComponentsVersionEntity,
   "createdAt" | "versionName" | "versionNotes"
 >;
