@@ -22,6 +22,11 @@ export default async function MethodologyPage() {
     queryFn: () => client.methodology.getAllModelAssumptions.query(),
   });
 
+  await queryClient.prefetchQuery({
+    queryKey: queryKeys.methodology.changelogs.queryKey,
+    queryFn: () => client.methodology.getChangeLogs.query(),
+  });
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Methodology />

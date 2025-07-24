@@ -6,6 +6,8 @@ import ProjectCostsAssumptionsAndMethodology from "@/containers/methodology/sect
 import ProjectSizeAssumptions from "@/containers/methodology/sections/project-size-assumptions";
 import QualitativeScorecardDetailsAndSources from "@/containers/methodology/sections/qualitative-scorecard-details-and-sources";
 import Sources from "@/containers/methodology/sections/sources";
+import Versions from "@/containers/methodology/sections/versions";
+
 export interface MethodologySection {
   id: string;
   title: string;
@@ -22,6 +24,7 @@ const METHODOLOGY_SECTIONS: MethodologySection[] = [
   QualitativeScorecardDetailsAndSources,
   LimitationsOfTheTool,
   Sources,
+  Versions,
 ];
 
 export default METHODOLOGY_SECTIONS;

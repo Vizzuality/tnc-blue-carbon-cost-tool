@@ -784,6 +784,12 @@ export const sourcesHeaders = {
   sources: "Sources",
 };
 
+export const versionsHeaders = {
+  versionName: "Version Name",
+  createdAt: "Date of update",
+  versionNotes: "Notes",
+};
+
 export const modelAssumptionsHeaders = {
   assumptions: "Assumptions",
   units: "Units",
