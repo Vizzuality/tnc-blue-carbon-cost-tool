@@ -1,4 +1,5 @@
-import { useCallback } from "react";
+import * as React from "react";
+import { useCallback, useState } from "react";
 
 import Link from "next/link";
 
@@ -9,9 +10,10 @@ import {
 } from "@radix-ui/react-icons";
 import { ACTIVITY } from "@shared/entities/activity.enum";
 import { CustomProject as CustomProjectEntity } from "@shared/entities/custom-project.entity";
+import { Changelog } from "@shared/entities/model-versioning/changelog.type";
 import { useQueryClient } from "@tanstack/react-query";
 import { ColumnDef, Row, Table as TableInstance } from "@tanstack/react-table";
-import { PencilLineIcon } from "lucide-react";
+import { AlertTriangleIcon, PencilLineIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
@@ -22,9 +24,20 @@ import { cn, getAuthHeader } from "@/lib/utils";
 
 import { DEFAULT_CUSTOM_PROJECTS_QUERY_KEY } from "@/app/my-projects/url-store";
 
+import useLatestChangelog from "@/hooks/use-latest-changelog";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogContentContainer,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,6 +50,54 @@ type CustomProject = Partial<CustomProjectEntity>;
 
 type CustomColumn = ColumnDef<CustomProject, keyof CustomProject> & {
   className?: string;
+};
+
+const VersionDisplay = ({ changelog }: { changelog: Changelog }) => {
+  const [open, setOpen] = useState(false);
+  const { data: latestVersion } = useLatestChangelog();
+
+  if (!changelog) {
+    return <Badge variant="outline">N/A</Badge>;
+  }
+
+  const isOutdated =
+    new Date(changelog.createdAt) < new Date(latestVersion?.createdAt ?? "");
+
+  return (
+    <div className="space-x-3 text-sm">
+      <span className="flex items-center gap-1 space-x-1">
+        <Badge variant="outline">{changelog.versionName}</Badge>
+        {isOutdated && (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger>
+              <AlertTriangleIcon className="h-5 w-5" />
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader className="space-y-4">
+                <DialogTitle>Information</DialogTitle>
+                <DialogContentContainer>
+                  <p className="text-sm">
+                    This project uses an outdated version. Please go to the{" "}
+                    <Button
+                      asChild
+                      variant="link"
+                      className="h-auto p-0 text-primary"
+                    >
+                      <Link href="/methodology">Methodology section</Link>
+                    </Button>{" "}
+                    to review the most accurate values.
+                  </p>
+                </DialogContentContainer>
+              </DialogHeader>
+              <DialogFooter>
+                <Button onClick={() => setOpen(false)}>OK</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+      </span>
+    </div>
+  );
 };
 
 const ActionsDropdown = ({
@@ -229,6 +290,15 @@ export const columns: CustomColumn[] = [
         </Badge>
       </div>
     ),
+  },
+  {
+    accessorKey: "version",
+    header: "Version",
+    cell: ({ getValue }) => (
+      <VersionDisplay changelog={getValue() as unknown as Changelog} />
+    ),
+    className: "!border-l-0",
+    enableSorting: false,
   },
   {
     accessorKey: "actions",
