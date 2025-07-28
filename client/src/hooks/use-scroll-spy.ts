@@ -1,4 +1,4 @@
-import { useEffect, RefObject, DependencyList } from "react";
+import { DependencyList, RefObject, useEffect } from "react";
 
 interface UseScrollSpyProps<T> {
   /**
@@ -38,12 +38,19 @@ export function useScrollSpy<T>({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const sectionSlug = entry.target.id as T;
-            setCurrentStep(sectionSlug);
+        const intersectedEntries = entries.filter(
+          (entry) => entry.isIntersecting,
+        );
+
+        if (intersectedEntries.length > 0) {
+          const firstIntersected = intersectedEntries[0];
+          const sectionId = firstIntersected.target.getAttribute("id");
+          if (sectionId) {
+            setCurrentStep(sectionId as T);
           }
-        });
+        } else {
+          setCurrentStep(null as unknown as T);
+        }
       },
       {
         root: containerRef.current,
