@@ -1,48 +1,49 @@
 import React from 'react';
-import { BasePropertyProps } from 'adminjs';
+import { BasePropertyProps, useTranslation } from 'adminjs';
 import { Box, Label } from '@adminjs/design-system';
 
 // Shared Rich Text Editor Styles
 export const richTextEditorStyles = `
-  ul { 
+  .html-display ul { 
     list-style-type: disc !important; 
     list-style-position: outside !important; 
     margin: 8px 0 !important; 
     padding-left: 24px !important; 
   }
-  ol { 
+  .html-display ol { 
     list-style-type: decimal !important; 
     list-style-position: outside !important; 
     margin: 8px 0 !important; 
     padding-left: 24px !important; 
   }
-  li { 
+  .html-display li { 
     display: list-item !important; 
     list-style: inherit !important; 
     margin: 4px 0 !important; 
   }
-  b { 
+  .html-display b { 
     font-weight: bold !important; 
   }
-  i { 
+  .html-display i { 
     font-style: italic !important; 
   }
-  h1 { 
+  .html-display h1 { 
     font-size: 1.5em !important; 
     font-weight: bold !important; 
     margin: 16px 0 !important; 
   }
-  h2 { 
+  .html-display h2 { 
     font-size: 1.25em !important; 
     font-weight: bold !important; 
     margin: 12px 0 !important; 
   }
-  .rsw-dd option[value="3"] { 
+  .html-display .rsw-dd option[value="3"] { 
     display: none !important; 
   }
 `;
 
 const HtmlDisplay: React.FC<BasePropertyProps> = (props) => {
+  const { translateProperty } = useTranslation();
   const { property, record, where } = props;
   const value = record?.params?.[property.path] || '';
 
@@ -55,7 +56,9 @@ const HtmlDisplay: React.FC<BasePropertyProps> = (props) => {
 
   return value && value !== '<br>' ? (
     <div style={{ width: '100%', marginBottom: '16px' }}>
-      <Label>{property.label}</Label>
+      <Label style={{ color: 'rgb(137, 138, 154)' }}>
+        {translateProperty(property.label, property.resourceId)}
+      </Label>
       {value && value != '<br>' && (
         <Box
           mt="sm"
@@ -67,7 +70,7 @@ const HtmlDisplay: React.FC<BasePropertyProps> = (props) => {
             minHeight: '50px',
           }}
         >
-          <div>
+          <div className="html-display" style={{ width: '100%' }}>
             <style>{richTextEditorStyles}</style>
             <div
               dangerouslySetInnerHTML={{ __html: value }}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BasePropertyProps } from 'adminjs';
+import { BasePropertyProps, useTranslation } from 'adminjs';
 import { Box, Label, Text, FormGroup } from '@adminjs/design-system';
 import Editor, {
   BtnBold,
@@ -105,6 +105,7 @@ export const SharedRichTextEditor: React.FC<SharedRichTextEditorProps> = ({
 
 // AdminJS Component Wrapper
 const CustomRichTextEditor: React.FC<BasePropertyProps> = (props) => {
+  const { translateProperty } = useTranslation();
   const { property, record, onChange } = props;
   const value = record?.params?.[property.path] || '';
   const error = record?.errors?.[property.path]?.message;
@@ -117,9 +118,8 @@ const CustomRichTextEditor: React.FC<BasePropertyProps> = (props) => {
 
   return (
     <Box mb="xl" width="100%">
-      <Label htmlFor={property.path}>
-        {property.label}
-        {property.isRequired && <span style={{ color: 'red' }}> *</span>}
+      <Label htmlFor={property.path} required={property.isRequired}>
+        {translateProperty(property.label, property.resourceId)}
       </Label>
 
       <SharedRichTextEditor

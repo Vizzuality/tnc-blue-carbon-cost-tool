@@ -25,9 +25,12 @@ export const ModelComponentsVersionEntityResource: ResourceWithOptions = {
       en: {
         labels: {
           ModelComponentsVersionEntity: 'Model factors Versions',
+          versionNotes: 'Version Notes',
         },
         properties: {
           filePath: 'File',
+          versionName: 'Version Name',
+          versionNotes: 'Version Notes',
         },
       },
     },
@@ -37,7 +40,7 @@ export const ModelComponentsVersionEntityResource: ResourceWithOptions = {
       },
       versionName: {
         isTitle: true,
-        isDisabled: true,
+        // isDisabled: true,
       },
       versionNotes: {
         components: {
