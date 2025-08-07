@@ -48,8 +48,6 @@ export function useScrollSpy<T>({
           if (sectionId) {
             setCurrentStep(sectionId as T);
           }
-        } else {
-          setCurrentStep(null as unknown as T);
         }
       },
       {
