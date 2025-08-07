@@ -122,7 +122,7 @@ describe('Create projects Validations', () => {
       );
     });
 
-    test('should fail if Tier 2 is used and ecosystem is not MANGROVE', async () => {
+    test('should fail if Tier 2 is used and ecosystem is neither MANGROVE nor SALT MARSH', async () => {
       const body: CreateProjectDto = {
         countryCode: 'USA',
         projectName: 'Wrong Tier 2 Ecosystem',
@@ -147,7 +147,7 @@ describe('Create projects Validations', () => {
 
       expect(res.status).toBe(400);
       expect(res.body.errors[0].title).toEqual(
-        'There is only Tier 2 emission factor for Mangrove ecosystems',
+        'There is only Tier 2 emission factor for Mangrove and Salt Marsh ecosystems',
       );
     });
 

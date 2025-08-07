@@ -284,10 +284,10 @@ export const ValidateConservationSchema = (
   }
 
   if (params.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_2) {
-    if (data.ecosystem !== ECOSYSTEM.MANGROVE) {
+    if (data.ecosystem === ECOSYSTEM.SEAGRASS) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "There is only Tier 2 emission factor for Mangrove ecosystems",
+        message: "There is only Tier 2 emission factor for Mangrove and Salt Marsh ecosystems",
         path: ["parameters.emissionFactorUsed"],
       });
     }
