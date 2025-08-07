@@ -77,7 +77,6 @@ export const projectSizeAssumptionsData = {
 export const projectCostsAssumptionsAndMethodologyData = {
   headers: {
     costComponent: "Cost component",
-    costAssumption: "Cost assumption",
     duration: "Duration",
     whatDrivesTheCost: "What drives the cost",
   },
@@ -85,13 +84,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-feasibility-analysis",
       costComponent: <p className="font-bold">Feasibility analysis</p>,
-      costAssumption: (
-        <List>
-          <li>US: ~$100k</li>
-          <li>AUS/ BHS: ~$70k</li>
-          <li>Others: ~$50k</li>
-        </List>
-      ),
       duration: "One off cost",
       whatDrivesTheCost: (
         <List>
@@ -106,7 +98,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Conservation activity planning & admin</p>
       ),
-      costAssumption: "~$167k/ year",
       duration: "4 years (start up time)",
       whatDrivesTheCost: (
         <List>
@@ -121,7 +112,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Data collection and field costs</p>
       ),
-      costAssumption: "~$27k/ year",
       duration: "3 years",
       whatDrivesTheCost: (
         <List>
@@ -137,7 +127,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Community representation/ liaison</p>
       ),
-      costAssumption: "Between ~$65-126k /year, depending on country",
       duration: "4 years (start up time)",
       whatDrivesTheCost: (
         <List>
@@ -150,7 +139,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-blue-carbon-project-planning",
       costComponent: <p className="font-bold">Blue carbon project planning</p>,
-      costAssumption: "Between ~$43-120k/ year, depending on country",
       duration: "3 years",
       whatDrivesTheCost: (
         <List>
@@ -163,7 +151,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-establishing-carbon-rights",
       costComponent: <p className="font-bold">Conservation activity</p>,
-      costAssumption: "~0",
       duration: "N/A",
       whatDrivesTheCost: "N/A",
       category: "capex",
@@ -175,7 +162,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
           Implementation labor and engineering activity
         </p>
       ),
-      costAssumption: "Highly dependent per ha cost by country and ecosystem",
       duration: "Dependent on restoration plan",
       whatDrivesTheCost: (
         <List>
@@ -191,7 +177,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Monitoring/ Guarding/ Surveilling</p>
       ),
-      costAssumption: "Highly dependent on salaries in country",
       duration: "Every year after project set up",
       whatDrivesTheCost: (
         <List>
@@ -205,8 +190,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-maintenance",
       costComponent: <p className="font-bold">Maintenance</p>,
-      costAssumption:
-        "8% of implementation cost, for 3 years after the implementation",
       duration: "Three years after implementation",
       whatDrivesTheCost: (
         <List>
@@ -220,8 +203,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Landowner/community benefit share</p>
       ),
-      costAssumption:
-        "5% of carbon credit revenues (developed countries), 50%-85% (developing country)",
       duration: "Each year with carbon credit revenues",
       whatDrivesTheCost: (
         <List>
@@ -237,7 +218,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-baseline-reassessment",
       costComponent: <p className="font-bold">Baseline Reassessment</p>,
-      costAssumption: "$40,000 / baseline reassessment",
       duration: "Every 10 years",
       whatDrivesTheCost: (
         <List>
@@ -256,7 +236,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
           Measurement, Reporting and Verification (MRV)
         </p>
       ),
-      costAssumption: "$100k (US, AUS, BA), $75k (others)",
       duration: "Every 5 years",
       whatDrivesTheCost: (
         <List>
@@ -271,7 +250,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Long term project operating admin</p>
       ),
-      costAssumption: "$17k-130k (depending on country)",
       duration: "Every year",
       whatDrivesTheCost: (
         <List>
@@ -284,7 +262,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-carbon-standard-fees",
       costComponent: <p className="font-bold">Carbon standard fees</p>,
-      costAssumption: "$0.2 per Verified Carbon Unit (VCU)",
       duration: "Each year when credits are issued",
       whatDrivesTheCost: (
         <List>
@@ -299,7 +276,6 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-financing-cost",
       costComponent: <p className="font-bold">Financing cost</p>,
-      costAssumption: "5% of CAPEX",
       duration: "One off cost",
       whatDrivesTheCost: (
         <List>
@@ -653,128 +629,6 @@ export const qualitativeScorecardDetailsAndSourcesData = {
           </li>
         </List>
       ),
-    },
-  ],
-};
-
-export const costComponentsData = {
-  headers: {
-    costInput: "Cost input",
-    baseCost: "Base cost",
-    units: "Units",
-  },
-  rows: [
-    {
-      id: "cost-components-feasibility-analysis",
-      costInput: "Feasibility analysis",
-      baseCost: "$50,000",
-      units: "$/project",
-      category: "CAPEX",
-    },
-    {
-      id: "cost-components-conservation-planning-and-admin",
-      costInput: "Conservation planning and admin",
-      baseCost: "$166,767",
-      units: "$/yr",
-      category: "CAPEX",
-    },
-    {
-      id: "cost-components-data-collection-and-field-costs",
-      costInput: "Data collection and field costs",
-      baseCost: "$26,667",
-      units: "$/yr",
-      category: "CAPEX",
-    },
-    {
-      id: "cost-components-community-representation-liaison",
-      costInput: "Community representation/ liaison",
-      baseCost: "$71,183",
-      units: "$/yr",
-      category: "CAPEX",
-    },
-    {
-      id: "cost-components-blue-carbon-project-planning",
-      costInput: "Blue carbon project planning",
-      baseCost: "$100,000",
-      units: "$/project",
-      category: "CAPEX",
-    },
-    {
-      id: "cost-components-establishing-carbon-rights",
-      costInput: "Establishing carbon rights",
-      baseCost: "$46,667",
-      units: "$/yr",
-      category: "CAPEX",
-    },
-    {
-      id: "cost-components-validation",
-      costInput: "Validation",
-      baseCost: "$50,000",
-      units: "$/project",
-      category: "CAPEX",
-    },
-    {
-      id: "cost-components-implementation-labor",
-      costInput: "Implementation labor",
-      baseCost: "$2,000",
-      units: "$/ha",
-      category: "CAPEX",
-    },
-    {
-      id: "cost-components-monitoring",
-      costInput: "Monitoring",
-      baseCost: "$15,000",
-      units: "$/yr",
-      category: "OPEX",
-    },
-    {
-      id: "cost-components-maintenance",
-      costInput: "Maintenance",
-      baseCost: "8%",
-      units: "% of implementation labor",
-      category: "OPEX",
-    },
-    {
-      id: "cost-components-landowner-community-benefit-share",
-      costInput: "Landowner/community benefit share",
-      baseCost: "60%",
-      units: "% of revenue",
-      category: "OPEX",
-    },
-    {
-      id: "cost-components-carbon-standard-fees",
-      costInput: "Carbon standard fees",
-      baseCost: "$0.20",
-      units: "$/credit",
-      category: "OPEX",
-    },
-    {
-      id: "cost-components-baseline-reassessment",
-      costInput: "Baseline reassessment",
-      baseCost: "$40,000",
-      units: "$/event",
-      category: "OPEX",
-    },
-    {
-      id: "cost-components-mrv",
-      costInput: "MRV",
-      baseCost: "$75,000",
-      units: "$/event",
-      category: "OPEX",
-    },
-    {
-      id: "cost-components-long-term-project-operating",
-      costInput: "Long-term project operating",
-      baseCost: "$26,400",
-      units: "$/yr",
-      category: "OPEX",
-    },
-    {
-      id: "cost-components-financing-cost",
-      costInput: "Financing cost",
-      baseCost: "5%",
-      units: "% of capex",
-      category: "Other",
     },
   ],
 };
