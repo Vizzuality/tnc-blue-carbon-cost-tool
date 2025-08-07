@@ -123,6 +123,11 @@ export default function Header({ name, id }: HeaderProps) {
               ...getAuthHeader(session?.accessToken as string),
             },
           });
+          const myProjectsQueryKey = queryKeys.customProjects.all().queryKey;
+          await queryClient.invalidateQueries({
+            predicate: (query) => query.queryKey[0] === myProjectsQueryKey[0],
+          });
+
           router.push(`/projects/${id}`);
         } else {
           const result = await createCustomProject({
