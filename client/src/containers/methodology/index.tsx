@@ -23,8 +23,7 @@ export default function Methodology() {
     containerRef: ref,
     setCurrentStep: setMethodologyStep,
     options: {
-      threshold: 0.05,
-      rootMargin: "0% 0% -35% 0%",
+      threshold: 0.2,
     },
   });
 
