@@ -160,7 +160,7 @@ describe('Create Custom Projects - Request Validations', () => {
         'Project Specific Loss Rate must be between -100% and 0%',
       );
     });
-    test('If Emission Factor Used is Tier 2, only Mangroves is accepted as ecosystem', async () => {
+    test('If Emission Factor Used is Tier 2, only Mangroves and Salt Marsh are accepted as ecosystem', async () => {
       const res = await testManager
         .request()
         .post(customProjectContract.createCustomProject.path)
@@ -207,7 +207,7 @@ describe('Create Custom Projects - Request Validations', () => {
         });
 
       expect(res.body.errors[0].title).toEqual(
-        'There is only Tier 2 emission factor for Mangrove ecosystems',
+        'There is only Tier 2 emission factor for Mangrove and Salt Marsh ecosystems',
       );
     });
     test('If Emission Factor Used is Tier 3 and Project Specific Emission is Two Emission Factors, AGB and SOC should be provided', async () => {

@@ -1,13 +1,7 @@
-import {
-  ACTIVITY,
-  RESTORATION_ACTIVITY_SUBTYPE,
-} from "@shared/entities/activity.enum";
+import { ACTIVITY, RESTORATION_ACTIVITY_SUBTYPE } from "@shared/entities/activity.enum";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
 import { z } from "zod";
-import {
-  CARBON_REVENUES_TO_COVER,
-  PROJECT_SPECIFIC_EMISSION,
-} from "@shared/entities/custom-project.entity";
+import { CARBON_REVENUES_TO_COVER, PROJECT_SPECIFIC_EMISSION } from "@shared/entities/custom-project.entity";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import { LOSS_RATE_USED } from "@shared/schemas/custom-projects/create-custom-project.schema";
@@ -139,10 +133,10 @@ export const ValidateConservationSchema = (
   }
 
   if (params.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_2) {
-    if (data.ecosystem !== ECOSYSTEM.MANGROVE) {
+    if (data.ecosystem === ECOSYSTEM.SEAGRASS) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "There is only Tier 2 emission factor for Mangrove ecosystems",
+        message: "There is only Tier 2 emission factor for Mangrove and Salt Marsh ecosystems",
         path: ["parameters.emissionFactorUsed"],
       });
     }

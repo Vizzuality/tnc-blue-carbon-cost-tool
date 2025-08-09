@@ -42,7 +42,7 @@ export default function ConservationProjectDetails() {
         value: factor,
         disabled:
           factor === PROJECT_EMISSION_FACTORS.TIER_2 &&
-          form.getValues("ecosystem") !== ECOSYSTEM.MANGROVE,
+          form.getValues("ecosystem") === ECOSYSTEM.SEAGRASS,
       };
     },
   );
@@ -150,12 +150,6 @@ export default function ConservationProjectDetails() {
                       v as EMISSION_FACTORS_TIER_TYPES,
                     );
                     await form.trigger("parameters.emissionFactorUsed");
-
-                    // ? selecting T2, the ecosystem must be set to mangrove
-                    if (v === EMISSION_FACTORS_TIER_TYPES.TIER_2) {
-                      form.setValue("ecosystem", ECOSYSTEM.MANGROVE);
-                      await form.trigger("ecosystem");
-                    }
                   }}
                 >
                   <SelectTrigger data-testid="parameters.emissionFactorUsed">
