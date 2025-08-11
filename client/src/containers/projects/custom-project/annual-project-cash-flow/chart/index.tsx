@@ -82,7 +82,7 @@ const CashflowChart: FC<CashflowChartProps> = ({
           icon: () => <div className="h-[3px] w-[24px] bg-destructive" />,
         },
       }}
-      className="cashflow-chart min-h-[200px] w-full"
+      className="cashflow-chart h-full w-full"
     >
       <ComposedChart data={data} stackOffset="sign" accessibilityLayer>
         <CartesianGrid

@@ -11,6 +11,7 @@ import CashFlowTable from "@/containers/projects/custom-project/annual-project-c
 import { YearlyBreakdownChartData } from "@/containers/projects/custom-project/annual-project-cash-flow/utils";
 
 import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface AnnualProjectCashFlowProps {
   chartData: YearlyBreakdownChartData;
@@ -26,16 +27,21 @@ const AnnualProjectCashFlow: FC<AnnualProjectCashFlowProps> = ({
 }) => {
   const [tab] = useProjectCashFlowTab();
   return (
-    <Card variant="secondary" className="flex flex-col overflow-hidden p-0">
+    <Card
+      variant="secondary"
+      className="flex flex-1 flex-col overflow-hidden p-0"
+    >
       <Header />
       {tab === "table" ? (
         <CashFlowTable data={tableData} />
       ) : (
-        <CashflowChart
-          data={chartData}
-          carbonRevenuesToCover={carbonRevenuesToCover}
-          breakevenPoint={breakevenPoint}
-        />
+        <ScrollArea className="flex-1">
+          <CashflowChart
+            data={chartData}
+            carbonRevenuesToCover={carbonRevenuesToCover}
+            breakevenPoint={breakevenPoint}
+          />
+        </ScrollArea>
       )}
     </Card>
   );
