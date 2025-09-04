@@ -97,7 +97,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
   ),
   columnHelper.accessor("abatementPotential", {
     enableSorting: true,
-    header: renderHeader("Abatement potential (tCO2e/yr)"),
+    header: renderHeader("Credit potential (tCO2e/yr)"),
     cell: (props) => {
       const value = props.getValue();
       if (value === null || value === undefined) {
