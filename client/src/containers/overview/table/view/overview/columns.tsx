@@ -103,6 +103,14 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
       if (value === null || value === undefined) {
         return "-";
       }
+      if ((value as unknown as string) === "0") {
+        return (
+          <CellText className="whitespace-nowrap">
+            Minimal or insignificant loss rates
+          </CellText>
+        );
+      }
+
       const state = props.table.getState() as TableStateWithMaximums;
 
       return (
