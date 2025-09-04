@@ -58,7 +58,7 @@ const DetailItem: FC<DetailItemProps> = ({
             compactUnit
           />
         ) : value !== undefined && value !== null ? (
-          <span className="text-xl">{formatValue(value)}</span>
+          <span className="2xl:text-xl">{formatValue(value)}</span>
         ) : null}
       </div>
       {subValues?.map((subValue, index) => (
