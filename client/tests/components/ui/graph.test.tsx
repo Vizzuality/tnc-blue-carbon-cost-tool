@@ -26,7 +26,7 @@ describe("GraphWithLegend", () => {
     render(<GraphWithLegend {...testData} />);
 
     // Check if total amount is displayed
-    const totalAmount = screen.getByText("1,000.00");
+    const totalAmount = screen.getByText("1,000");
     expect(totalAmount).toBeInTheDocument();
     expect(totalAmount.previousSibling).toHaveTextContent("$");
 

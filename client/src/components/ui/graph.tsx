@@ -274,6 +274,8 @@ const GraphLegend: FC<GraphLegendProps> = ({ items }) => {
 interface GraphWithLegendProps {
   /** The total value to be displayed */
   total: number;
+  totalCircleClassName?: string;
+  totalLabelClassName?: string;
   /** Optional value that, when provided, shows a split view with total on left and segments with leftover on right */
   leftover?: number;
   /** Array of segments with their corresponding legend items */
@@ -287,6 +289,8 @@ interface GraphWithLegendProps {
 
 const GraphWithLegend: FC<GraphWithLegendProps> = ({
   total,
+  totalCircleClassName,
+  totalLabelClassName,
   leftover,
   items,
 }) => {
@@ -308,8 +312,9 @@ const GraphWithLegend: FC<GraphWithLegendProps> = ({
         : [
             {
               label: "Total",
-              circleClassName: "border border-dashed border-white",
-              labelClassName: "text-white",
+              circleClassName:
+                totalCircleClassName ?? "border border-dashed border-white",
+              labelClassName: totalLabelClassName ?? "text-white",
             },
           ]),
       ...items.map(({ label, circleClassName, labelClassName }) => ({

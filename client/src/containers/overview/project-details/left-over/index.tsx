@@ -43,6 +43,8 @@ const ProjectDetailsLeftover: FC<ProjectDetailsLeftoverProps> = ({
       </div>
       <GraphWithLegend
         total={data?.[costRangeSelector].totalRevenue || 0}
+        totalCircleClassName="bg-yellow-500"
+        totalLabelClassName="text-yellow-500"
         leftover={leftoverAfterOpex || 0}
         items={[
           {
