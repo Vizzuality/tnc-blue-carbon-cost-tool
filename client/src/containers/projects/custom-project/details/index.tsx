@@ -119,7 +119,7 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
           {typeof lossRate === "number" && (
             <DetailItem
               label="Loss rate"
-              value={lossRate}
+              value={Math.abs(lossRate)}
               unit="%"
               numberFormatOptions={{
                 minimumFractionDigits: 2,
@@ -146,6 +146,7 @@ const ProjectDetails: FC<ProjectDetailsProps> = ({ data }) => {
                     ]
                   : undefined
               }
+              unit={emissionFactors.emissionFactor ? "tCO2e/ha/yr" : undefined}
             />
           )}
           {restorationActivity && (
