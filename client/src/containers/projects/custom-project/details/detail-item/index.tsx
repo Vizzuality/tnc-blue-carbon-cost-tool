@@ -5,6 +5,7 @@ import ReactCountryFlag from "react-country-flag";
 import getCountryISO2 from "country-iso-3-to-2";
 
 import Metric from "@/components/ui/metric";
+import { cn } from "@/lib/utils";
 
 interface SubValue {
   label: string;
@@ -58,7 +59,14 @@ const DetailItem: FC<DetailItemProps> = ({
             compactUnit
           />
         ) : value !== undefined && value !== null ? (
-          <span className="2xl:text-xl">{formatValue(value)}</span>
+          <span className="2xl:text-xl">
+            {formatValue(value)}{" "}
+            {unit && (
+              <span className={cn({ "text-xs text-muted-foreground": unit })}>
+                {unit}
+              </span>
+            )}
+          </span>
         ) : null}
       </div>
       {subValues?.map((subValue, index) => (
