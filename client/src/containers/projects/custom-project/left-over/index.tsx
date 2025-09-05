@@ -3,8 +3,10 @@ import { FC } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GraphWithLegend } from "@/components/ui/graph";
 import { Label } from "@/components/ui/label";
+import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 
 interface LeftoverProps {
+  carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
   title: string;
   tooltip: {
     title: string;
@@ -17,7 +19,12 @@ interface LeftoverProps {
   };
 }
 
-const LeftOver: FC<LeftoverProps> = ({ data, title, tooltip }) => {
+const LeftOver: FC<LeftoverProps> = ({
+  data,
+  title,
+  tooltip,
+  carbonRevenuesToCover,
+}) => {
   return (
     <Card variant="secondary" className="grid flex-1 gap-1 p-0">
       <CardHeader className="p-4 pb-0">
@@ -46,7 +53,10 @@ const LeftOver: FC<LeftoverProps> = ({ data, title, tooltip }) => {
             items={[
               {
                 value: data.opex,
-                label: "OpEx",
+                label:
+                  carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.OPEX
+                    ? "OpEx"
+                    : "Total",
                 circleClassName: "bg-sky-blue-200",
                 labelClassName: "text-sky-blue-200",
               },
