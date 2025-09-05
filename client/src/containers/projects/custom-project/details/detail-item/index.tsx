@@ -67,7 +67,6 @@ const DetailItem: FC<DetailItemProps> = ({
               </span>
             )}
           </span>
-        ) : null}
       </div>
       {subValues?.map((subValue, index) => (
         <p key={index} className="space-x-1 font-normal">
