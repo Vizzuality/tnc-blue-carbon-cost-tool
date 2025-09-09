@@ -128,3 +128,19 @@ variable "github_additional_environment_variables" {
   default     = {}
 }
 
+variable "basic_auth_enabled" {
+  type        = bool
+  description = "Enable basic auth for the application"
+  default     = true
+}
+
+variable "basic_auth_user" {
+  type        = string
+  description = "Basic auth username"
+}
+
+variable "basic_auth_password" {
+  type        = string
+  description = "Basic auth password"
+}
+

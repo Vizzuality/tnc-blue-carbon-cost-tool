@@ -73,12 +73,15 @@ module "dev" {
   cname_prefix                                  = "${var.project_name}-dev-environment"
 
   rds_instance_class          = "db.t3.micro"
-  rds_engine_version          = "15.8"
+  rds_engine_version          = "15.12"
   rds_backup_retention_period = 3
 
   repo_name    = "tnc-blue-carbon-cost-tool"
   github_owner = var.github_owner
   github_token = var.github_token
+  basic_auth_enabled = var.basic_auth_enabled
+  basic_auth_user    = var.basic_auth_user
+  basic_auth_password= var.basic_auth_password
 
   github_additional_environment_variables = {
     JWT_EXPIRES_IN = "1d"
@@ -106,12 +109,15 @@ module "staging" {
   cname_prefix                                  = "${var.project_name}-staging-environment"
 
   rds_instance_class          = "db.t3.micro"
-  rds_engine_version          = "15.8"
+  rds_engine_version          = "15.12"
   rds_backup_retention_period = 3
 
   repo_name    = "tnc-blue-carbon-cost-tool"
   github_owner = var.github_owner
   github_token = var.github_token
+  basic_auth_enabled = var.basic_auth_enabled
+  basic_auth_user    = var.basic_auth_user
+  basic_auth_password= var.basic_auth_password
 
   github_additional_environment_variables = {
     JWT_EXPIRES_IN = "1d"
@@ -139,12 +145,15 @@ module "production" {
   cname_prefix                                  = "${var.project_name}-production-environment"
 
   rds_instance_class          = "db.t3.micro"
-  rds_engine_version          = "15.8"
+  rds_engine_version          = "15.12"
   rds_backup_retention_period = 3
 
   repo_name    = "tnc-blue-carbon-cost-tool"
   github_owner = var.github_owner
   github_token = var.github_token
+  basic_auth_enabled = var.basic_auth_enabled
+  basic_auth_user    = var.basic_auth_user
+  basic_auth_password= var.basic_auth_password
 
   github_additional_environment_variables = {
     JWT_EXPIRES_IN = "1d"
