@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 
 import { ACTIVITY } from "@shared/entities/activity.enum";
-import { useAtomValue } from "jotai/index";
+import { useAtomValue } from "jotai";
 import { InfoIcon } from "lucide-react";
 
 import { PRIVACY_POLICY_URL } from "@/lib/constants";
@@ -16,6 +16,7 @@ import Sidebar from "@/containers/sidebar";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const PROJECT_SETUP_STEPS = [
   {
@@ -57,7 +58,7 @@ export default function ProjectSidebar() {
   );
 
   return (
-    <Sidebar className="justify-between">
+    <Sidebar className="justify-between gap-6">
       <ul className="flex flex-col gap-2">
         {formSteps.map((step) => (
           <li key={step.name}>
@@ -77,48 +78,50 @@ export default function ProjectSidebar() {
           </li>
         ))}
       </ul>
-      <Card className="flex flex-col gap-6 bg-transparent">
+      <Card className="flex flex-col gap-6 overflow-hidden bg-transparent">
         <InfoIcon className="h-5 w-5 text-primary" />
-        <p>
-          Creating a new project gives you access to a comprehensive analysis
-          tailored to your data. The more information you provide, the more
-          precise and insightful the analysis will be.
-        </p>
-        <p>
-          All data you enter is{" "}
-          <span className="font-semibold">
-            private and accessible only to you
-          </span>
-          . For more details on our commitment to data privacy, please review
-          our{" "}
-          <Button
-            variant="link"
-            className="h-auto p-0 text-base underline underline-offset-auto"
-            asChild
-          >
-            <Link href={PRIVACY_POLICY_URL} target="_blank">
-              privacy policy
-            </Link>
-          </Button>
-          .
-        </p>
-        <div>
-          <p className="pb-1 font-semibold">Want to help improve the tool?</p>
+        <ScrollArea className="flex-1 pr-3">
           <p>
-            You can share your data to be included - this helps expand access
-            and improve tool accuracy.{" "}
+            Creating a new project gives you access to a comprehensive analysis
+            tailored to your data. The more information you provide, the more
+            precise and insightful the analysis will be.
+          </p>
+          <p>
+            All data you enter is{" "}
+            <span className="font-semibold">
+              private and accessible only to you
+            </span>
+            . For more details on our commitment to data privacy, please review
+            our{" "}
             <Button
               variant="link"
               className="h-auto p-0 text-base underline underline-offset-auto"
               asChild
             >
-              <Link href="/profile#share-data" target="_blank">
-                Share your data
+              <Link href={PRIVACY_POLICY_URL} target="_blank">
+                privacy policy
               </Link>
             </Button>
             .
           </p>
-        </div>
+          <div>
+            <p className="pb-1 font-semibold">Want to help improve the tool?</p>
+            <p>
+              You can share your data to be included - this helps expand access
+              and improve tool accuracy.{" "}
+              <Button
+                variant="link"
+                className="h-auto p-0 text-base underline underline-offset-auto"
+                asChild
+              >
+                <Link href="/profile#share-data" target="_blank">
+                  Share your data
+                </Link>
+              </Button>
+              .
+            </p>
+          </div>
+        </ScrollArea>
       </Card>
     </Sidebar>
   );
