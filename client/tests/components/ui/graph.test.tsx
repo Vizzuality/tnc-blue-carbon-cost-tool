@@ -31,7 +31,7 @@ describe("GraphWithLegend", () => {
     expect(totalAmount.previousSibling).toHaveTextContent("$");
 
     // Check if legend items are rendered
-    expect(screen.getByText("Total")).toBeInTheDocument();
+    expect(screen.getByText("Total Revenue")).toBeInTheDocument();
     expect(screen.getByText("CapEx")).toBeInTheDocument();
     expect(screen.getByText("Opex")).toBeInTheDocument();
 
