@@ -136,6 +136,7 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
                 key={`graph-segment-${colorClass}-${value}`}
                 style={{
                   height: getSize(value, total),
+                  minHeight: "21%",
                   width: "100%",
                 }}
                 className={`relative h-full rounded-md transition-all duration-300 ease-in-out ${colorClass}`}
