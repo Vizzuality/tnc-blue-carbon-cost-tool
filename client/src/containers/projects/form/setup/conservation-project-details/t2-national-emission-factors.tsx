@@ -46,7 +46,8 @@ export default function T2NationalEmissionFactors() {
         <FormLabel
           tooltip={{
             title: "National AGB Emission Factor",
-            content: "TBD",
+            content:
+              "Country-level emission factor for the loss of above-ground biomass (AGB) in tons of CO2e per hectare per year.",
           }}
         >
           National AGB Emission Factor
@@ -59,7 +60,8 @@ export default function T2NationalEmissionFactors() {
         <FormLabel
           tooltip={{
             title: "National SOC Emission Factor",
-            content: "TBD",
+            content:
+              "Country-level emission factor for the loss of soil organic carbon (SOC) in tons of CO2e per hectare per year.",
           }}
         >
           National SOC Emission Factor

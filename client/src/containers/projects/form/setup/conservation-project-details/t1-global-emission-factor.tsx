@@ -46,7 +46,8 @@ export default function T1GlobalEmissionFactor() {
         <FormLabel
           tooltip={{
             title: "T1 Global Emission Factor",
-            content: "TBD",
+            content:
+              "Tier 1 Global Emission Factor: utilizes global default emission factors, offering a general yearly estimate per hectaure, suitable when local data is unavailable.",
           }}
         >
           T1 Global Emission Factor
