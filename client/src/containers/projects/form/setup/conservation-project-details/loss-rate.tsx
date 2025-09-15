@@ -60,7 +60,8 @@ export default function LossRate() {
             className="grow basis-1/2 flex-nowrap"
             tooltip={{
               title: "National loss rate",
-              content: "TBD",
+              content:
+                "Reflects the average rate of ecosystem loss specific to the country. May not be available for all systems.",
             }}
           >
             National loss rate
