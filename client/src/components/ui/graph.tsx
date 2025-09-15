@@ -22,7 +22,15 @@ interface GraphSegment {
 
 const getPercentage = (value: number, total: number) => (value / total) * 100;
 const getSize = (value: number, total: number) => {
-  const percentage = getPercentage(value, total);
+  let v = Math.abs(value);
+  let t = Math.abs(total);
+
+  if (v > t) {
+    v = t;
+    t = v;
+  }
+  const percentage = getPercentage(v, t);
+
   return `${Math.max(percentage, 0)}%`;
 };
 const currencyClassName =
@@ -311,7 +319,7 @@ const GraphWithLegend: FC<GraphWithLegendProps> = ({
           ]
         : [
             {
-              label: "Total",
+              label: "Total Revenue",
               circleClassName:
                 totalCircleClassName ?? "border border-dashed border-white",
               labelClassName: totalLabelClassName ?? "text-white",
@@ -323,7 +331,7 @@ const GraphWithLegend: FC<GraphWithLegendProps> = ({
         labelClassName,
       })),
     ];
-  }, [leftover, items]);
+  }, [leftover, items, totalCircleClassName, totalLabelClassName]);
 
   return (
     <div className="flex flex-col gap-2">

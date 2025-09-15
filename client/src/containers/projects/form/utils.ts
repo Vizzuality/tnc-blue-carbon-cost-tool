@@ -192,7 +192,6 @@ export const updateCustomProject = async (options: {
         Authorization: string;
       };
 }): Promise<void> => {
-  console.log("Updating custom project with options:", options);
   try {
     const { status, body } =
       await client.customProjects.updateCustomProject.mutation(options);
@@ -220,7 +219,6 @@ export const updateCustomProject = async (options: {
 export const createCustomProject = async (options: {
   body: ValidatedCustomProjectForm;
 }): Promise<ApiResponse<CustomProject>> => {
-  console.log("Creating custom project with options:", options);
   try {
     const { status, body } =
       await client.customProjects.createCustomProject.mutation(options);

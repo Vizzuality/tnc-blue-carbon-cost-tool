@@ -4,8 +4,9 @@ import ReactCountryFlag from "react-country-flag";
 
 import getCountryISO2 from "country-iso-3-to-2";
 
-import Metric from "@/components/ui/metric";
 import { cn } from "@/lib/utils";
+
+import Metric from "@/components/ui/metric";
 
 interface SubValue {
   label: string;
