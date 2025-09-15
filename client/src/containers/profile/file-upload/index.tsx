@@ -119,7 +119,7 @@ const FileUpload: FC = () => {
           "cursor-not-allowed opacity-50": files.length >= MAX_FILES,
         })}
       >
-        <input id="share-information-input" {...getInputProps()} />
+        <input id="share-data-input" {...getInputProps()} />
         <div className="flex flex-col items-center gap-2">
           <FileUpIcon className="h-5 w-5" strokeWidth={1} />
           {files.length < MAX_FILES ? (

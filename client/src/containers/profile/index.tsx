@@ -48,8 +48,8 @@ export const PROFILE_SECTIONS = [
     Component: CustomProjects,
   },
   {
-    id: "share-information",
-    title: "Share information",
+    id: "share-data",
+    title: "Share data",
     description: <FileUploadDescription />,
     Component: FileUpload,
   },
