@@ -17,7 +17,7 @@ interface FeatureFlags {
    *
    * @default false
    */
-  "share-information": boolean;
+  "share-data": boolean;
   /** Controls the project comparison functionality in:
    * - /overview/project-details (scorecard ratings and cost estimates comparison)
    *
@@ -45,7 +45,7 @@ interface FeatureFlags {
 const DEFAULT_FEATURE_FLAGS: FeatureFlags = {
   "intro-modal": true,
   "edit-project": true,
-  "share-information": true,
+  "share-data": true,
   "project-comparison": false,
   "update-selection": false,
   "methodology-page": true,

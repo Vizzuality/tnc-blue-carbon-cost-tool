@@ -25,7 +25,7 @@ const downloadFile = (f: UploadDataTemplateDto) => {
   document.body.removeChild(link);
 };
 const openFileUploadWindow = () =>
-  document.getElementById("share-information-input")?.click();
+  document.getElementById("share-data-input")?.click();
 const queryKey = queryKeys.user.listUploadDataTemplates.queryKey;
 
 const FileUploadDescription: FC = () => {

@@ -22,8 +22,8 @@ const LimitationsOfTheTool: MethodologySection = {
             estimations should be considered as initial high-level
             approximations. If you have additional data that can improve the
             accuracy of the model, please use the data intake form to submit
-            your data (see Share Information under the{" "}
-            <a className="underline" href="/profile#share-information">
+            your data (see Share data under the{" "}
+            <a className="underline" href="/profile#share-data">
               Profile section
             </a>
             ).
