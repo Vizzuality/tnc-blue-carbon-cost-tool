@@ -29,8 +29,8 @@ const CostDetails: FC<CostDetailsProps> = ({ data, hasOpenBreakEvenPrice }) => {
     <Sheet open={isVisible} onOpenChange={setIsVisible}>
       <SheetContent className="flex h-full !max-w-[720px] flex-col gap-4 overflow-hidden">
         <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
-            <h2 className="text-xl font-semibold">Cost details</h2>
+          <SheetTitle className="flex items-center gap-2 text-xl font-semibold">
+            Cost details
             <InfoButton title="Cost details">{COST_DETAILS}</InfoButton>
           </SheetTitle>
         </SheetHeader>
