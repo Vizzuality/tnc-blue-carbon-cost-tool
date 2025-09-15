@@ -102,6 +102,23 @@ export default function ProjectSidebar() {
           </Button>
           .
         </p>
+        <div>
+          <p className="pb-1 font-semibold">Want to help improve the tool?</p>
+          <p>
+            You can share your data to be included - this helps expand access
+            and improve tool accuracy.{" "}
+            <Button
+              variant="link"
+              className="h-auto p-0 text-base underline underline-offset-auto"
+              asChild
+            >
+              <Link href="/profile#share-data" target="_blank">
+                Share your data
+              </Link>
+            </Button>
+            .
+          </p>
+        </div>
       </Card>
     </Sidebar>
   );
