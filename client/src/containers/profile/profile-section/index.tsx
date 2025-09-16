@@ -4,16 +4,17 @@ import { getSidebarNavItemAriaId } from "@/containers/sidebar/sidebar-navigation
 
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
 } from "@/components/ui/card";
 
 interface ProfileSectionProps extends PropsWithChildren {
   id: string;
   title: string;
   description?: string | React.ReactNode;
+  className?: string | undefined;
 }
 
 const ProfileSection: FC<ProfileSectionProps> = ({
@@ -21,10 +22,15 @@ const ProfileSection: FC<ProfileSectionProps> = ({
   title,
   description,
   children,
+  className,
 }) => {
   return (
-    <section id={id} aria-labelledby={getSidebarNavItemAriaId(id)}>
-      <Card variant="secondary" className="p-6">
+    <section
+      id={id}
+      aria-labelledby={getSidebarNavItemAriaId(id)}
+      className={className}
+    >
+      <Card variant="secondary" className="h-full p-6">
         <CardHeader className="space-y-4">
           <CardTitle className="text-xl font-semibold">{title}</CardTitle>
           {description && (
@@ -33,7 +39,7 @@ const ProfileSection: FC<ProfileSectionProps> = ({
             </CardDescription>
           )}
         </CardHeader>
-        <CardContent className="spacey-y-6">{children}</CardContent>
+        <CardContent className="space-y-6">{children}</CardContent>
       </Card>
     </section>
   );

@@ -80,7 +80,7 @@ export default function Profile() {
     containerRef: ref,
     setCurrentStep: setProfileStep,
     options: {
-      threshold: 0.1,
+      threshold: 0.65,
     },
   });
 
@@ -100,13 +100,31 @@ export default function Profile() {
           }))}
         />
         <ScrollArea ref={ref} className="pr-6" showGradient>
-          <div id="profile-sections-container" className="space-y-2 pb-80">
+          <div
+            id="profile-sections-container"
+            className="snap-y space-y-2 overflow-hidden pb-20"
+          >
             {currentSections.map(({ Component, ...rest }) => (
-              <ProfileSection key={rest.id} {...rest}>
+              <ProfileSection
+                key={rest.id}
+                {...rest}
+                {...(rest.id === "my-custom-projects" && {
+                  className: "*:min-h-[415px] scroll-m-[125px]",
+                })}
+                {...(rest.id === "share-data" && {
+                  className:
+                    "*:min-h-[545px] *:flex *:flex-col *:justify-between scroll-m-[125px]",
+                })}
+                {...(rest.id === "delete-account" && {
+                  className:
+                    "*:min-h-[355px] *:flex *:flex-col *:justify-between",
+                })}
+              >
                 <Component />
               </ProfileSection>
             ))}
           </div>
+          <div className="min-h-screen" />
         </ScrollArea>
       </div>
     </div>
