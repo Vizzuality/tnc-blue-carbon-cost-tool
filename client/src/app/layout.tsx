@@ -2,6 +2,7 @@ import { PropsWithChildren } from "react";
 
 import { Spline_Sans } from "next/font/google";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import "@/app/globals.css";
 import { getServerSession } from "next-auth";
@@ -64,6 +65,7 @@ export default async function RootLayout({
             <Toaster />
           </body>
         </NuqsAdapter>
+        <GoogleAnalytics gaId="G-N6HX0XYEGG" />
       </html>
     </LayoutProviders>
   );
