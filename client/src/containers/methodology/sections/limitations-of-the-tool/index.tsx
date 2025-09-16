@@ -46,7 +46,7 @@ const LimitationsOfTheTool: MethodologySection = {
             <strong>Exclusion of Nitrous Oxide Emissions:</strong> Similarly,
             nitrous oxide emissions from denitrification, burning, or fossil
             fuel use are excluded in default calculations but can be
-            incorporated by users through specific adjustments.
+            incorporated by users through project-specific adjustments.
           </li>
           <li>
             <strong>

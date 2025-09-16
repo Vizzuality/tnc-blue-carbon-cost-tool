@@ -38,12 +38,13 @@ const ModelAssumptions: MethodologySection = {
           <li>
             <strong className="underline">Loss rate used:</strong> Users have
             the option to choose between the national average ecosystem loss
-            rate or input a project-specific ecosystem loss rate. Note: national
-            averages may not be available for all ecosystems, in which case the
-            default global average ecosystem loss rate can be used. The user may
-            also enter a project-specific loss rate in the cell provided below.
-            While default loss rates don’t include background recovery rates, it
-            is possible to include this in project-specific loss rates.
+            rate or input a project-specific ecosystem loss rate. Note that
+            national averages may not be available for all ecosystems, in which
+            case the default global average ecosystem loss rate is used. The
+            user may also enter a project-specific loss rate in the cell
+            provided. While default loss rates don’t include background recovery
+            rates, it is possible to include this in project-specific loss
+            rates.
           </li>
           <li>
             <strong className="underline">Emission factor used:</strong> Users
@@ -61,10 +62,10 @@ const ModelAssumptions: MethodologySection = {
               </li>
               <li>
                 The Tier 3 emission factor is a project-specific value that
-                needs to be provided by the user in the cells provided This
+                needs to be provided by the user in the cells provided. This
                 value can be entered either as a single input (following the
                 same approach as Tier 1) or as separate values for AGB and SOC
-                (following the same approach as Tier 2)
+                (following the same approach as Tier 2).
                 <List className="list-square">
                   <li>
                     <strong>
@@ -93,9 +94,9 @@ const ModelAssumptions: MethodologySection = {
         <List>
           <li>
             <strong className="underline">Sequestration rate used:</strong>{" "}
-            Users can again choose sequestration rates from one of the three
-            tiers: (1) a global sequestration rate provided by the IPCC, (2) opt
-            for country-specific sequestration rates, or (3) enter
+            Users can choose sequestration rates from one of the three tiers:
+            (1) a global sequestration rate provided by the IPCC, (2) opt for
+            country-specific sequestration rates (where available), or (3) enter
             project-specific sequestration rates in the designated cell below.
             <span className="underline">Note</span>: Tier 2 default values may
             not be available for all ecosystems.
@@ -113,7 +114,8 @@ const ModelAssumptions: MethodologySection = {
               cases, the emissions should be converted to their respective CO2e
               before being entered. For instance, if a project removes 0.71 CO2
               but introduces 0.14 tCO2e of CH4 and 0.12 tCO2e of N2O, the net
-              sequestration value would be 0.45 tCO2e.
+              sequestration value would be 0.45 tCO2e, as in input into the
+              project-specific rate.
             </li>
             <li>
               We assume that all soil organic carbon has been lost

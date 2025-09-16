@@ -63,11 +63,11 @@ const CarbonEmissionsReductionsAndCarbonCreditRevenues: MethodologySection = {
           </li>
         </List>
         <p>
-          The model assumes a default premium price of $30/ton for carbon offset
-          credits, reflecting the limited availability of blue carbon credits
-          and many other benefits provided by blue carbon projects. Users can
-          customize this price and calculate the operational (OPEX) breakeven
-          price using the tool.
+          The model assumes a default premium price for carbon offset credits,
+          reflecting the limited availability of blue carbon credits and many
+          other benefits provided by blue carbon projects. Users can customize
+          this price and calculate the operational (OPEX) breakeven price using
+          the tool.
         </p>
         <p>
           Additional details below for calculating credible emission benefits
@@ -157,7 +157,7 @@ const CarbonEmissionsReductionsAndCarbonCreditRevenues: MethodologySection = {
           <p>
             These formulas convert the reduction in carbon credits and revenues.
             The buffer accounts for uncertainties, leakage, and non-permanence
-            risks associated with the project, with a default value set at 20%.
+            risks associated with the project.
           </p>
         </div>
         <MathComponent name="6">
@@ -178,7 +178,7 @@ const CarbonEmissionsReductionsAndCarbonCreditRevenues: MethodologySection = {
           restored in year t. In cases involving planting, the equation
           incorporates the planting success rate to ensure accurate
           calculations. The buffer accounts for uncertainties, leakage, and
-          non-permanence risks associated with the project.
+          non-permanence risks associated with the project
         </p>
         <MathComponent name="8">
           <Math8 />

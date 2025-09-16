@@ -12,14 +12,16 @@ const Introduction: MethodologySection = {
     <ContentWrapper>
       <p>
         To better understand the financials of blue carbon projects, The Nature
-        Conservancy (TNC), in consultation with a panel of blue carbon experts,
-        has developed the <strong>Blue Carbon Cost Tool</strong>. This&nbsp;
+        Conservancy (TNC), in collaboration with Bain & Company and Vizzuality,
+        and in consultation with a panel of blue carbon experts, has developed
+        the <strong>Blue Carbon Cost Tool</strong>. This&nbsp;
         <strong>pre-feasibility tool</strong> provides high-level estimations of
         project costs and carbon benefits for blue carbon projects, allowing for
         project-specific scenario analysis and qualitative metrics for&nbsp;
-        <strong>project prioritization</strong>. Stakeholders can utilize this
-        tool to gain valuable insights into the financial aspects of blue carbon
-        projects. Designed as an early-stage planning resource, the tool offers
+        <strong>project prioritization</strong>. Users (e.g. project developers,
+        governments, investors, academics, etc.) can utilize this tool to gain
+        valuable insights into the financial aspects of blue carbon
+        projects.Designed as an early-stage planning resource, the tool offers
         both default values and customizable options for tailored assessments.
         While the tool allows for visualization of costs through time, it is not
         intended for tracking cost over time.
