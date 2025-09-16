@@ -5,6 +5,7 @@ import {
   qualitativeScorecardDetailsAndSourcesData,
 } from "@/containers/methodology/table/data";
 import ContentWrapper from "@/containers/methodology/wrapper";
+
 const QualitativeScorecardDetailsAndSources: MethodologySection = {
   id: "qualitative-scorecard-details-and-sources",
   title: "Qualitative scorecard details and sources",

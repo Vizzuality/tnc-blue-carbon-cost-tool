@@ -178,8 +178,7 @@ const CarbonEmissionsReductionsAndCarbonCreditRevenues: MethodologySection = {
           restored in year t. In cases involving planting, the equation
           incorporates the planting success rate to ensure accurate
           calculations. The buffer accounts for uncertainties, leakage, and
-          non-permanence risks associated with the project, with a default value
-          set at 20%.
+          non-permanence risks associated with the project.
         </p>
         <MathComponent name="8">
           <Math8 />
