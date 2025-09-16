@@ -57,7 +57,7 @@ export default function Methodology() {
                       <h2 className="text-2xl font-normal">{title}</h2>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="spacey-y-6">{Content}</CardContent>
+                  <CardContent className="space-y-6">{Content}</CardContent>
                 </Card>
               </section>
             ))}
