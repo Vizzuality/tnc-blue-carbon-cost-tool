@@ -1,6 +1,5 @@
 import { SubHeader } from "@/containers/methodology/header";
 import { MethodologySection } from "@/containers/methodology/sections";
-import ModelAssumptionsTable from "@/containers/methodology/sections/model-assumptions/table";
 import ContentWrapper from "@/containers/methodology/wrapper";
 
 import { List } from "@/components/ui/list";
@@ -134,11 +133,10 @@ const ModelAssumptions: MethodologySection = {
           </li>
         </List>
         <SubHeader
-          title="Model default values"
-          description="Table below showcases the model assumptions that are universally applied to all projects:"
+          title="Model default values can be seen in the Create Custom Project feature of the tool."
+          description=""
         />
       </ContentWrapper>
-      <ModelAssumptionsTable />
       <ContentWrapper>
         <p>
           While these assumptions have default settings, users can overwrite
@@ -146,9 +144,9 @@ const ModelAssumptions: MethodologySection = {
         </p>
         <p>
           <strong className="underline">Discount rate:</strong> The model
-          currently utilizes a fixed discount rate of 4%. However, this value
-          can be adjusted to incorporate country-specific premiums or other
-          relevant circumstances.
+          currently utilizes a fixed discount rate. However, this value can be
+          adjusted to incorporate country-specific premiums or other relevant
+          circumstances.
         </p>
         <p>
           <strong className="underline">Carbon price:</strong> The assumed
@@ -163,9 +161,9 @@ const ModelAssumptions: MethodologySection = {
         <p>
           <strong className="underline">Buffer:</strong> When considering carbon
           credits, it is crucial to account for non-permanence, leakage, and
-          uncertainty, which are significant factors. These factors are
+          uncertainty, which can be significant factors. These factors are
           encompassed within the &quot;buffer&quot; assumption in the Blue
-          Carbon Cost Tool, where the default value is set at 20%.
+          Carbon Cost Tool.
         </p>
       </ContentWrapper>
     </div>

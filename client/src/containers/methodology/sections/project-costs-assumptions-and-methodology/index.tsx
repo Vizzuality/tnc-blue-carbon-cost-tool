@@ -14,8 +14,8 @@ const ProjectCostsAssumptionsAndMethodology: MethodologySection = {
     <div className="space-y-4">
       <ContentWrapper>
         <SubHeader
-          title="Cost associated with project"
-          description="There are different costs associated with each step of the blue carbon lifecycle. Below are detailed descriptions of each cost component:"
+          title="Cost default values"
+          description="Cost were divided into separate project components, based on expert consultations. Default values are provided for each cost component. These default values serve as a baseline, but users have the flexibility to customize the output by overwriting specific cost components."
         />
         <p>
           <strong>

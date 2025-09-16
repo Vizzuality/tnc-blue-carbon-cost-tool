@@ -77,6 +77,7 @@ export const projectSizeAssumptionsData = {
 export const projectCostsAssumptionsAndMethodologyData = {
   headers: {
     costComponent: "Cost component",
+    costAssumption: "Cost assumption",
     duration: "Duration",
     whatDrivesTheCost: "What drives the cost",
   },
@@ -84,6 +85,13 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-feasibility-analysis",
       costComponent: <p className="font-bold">Feasibility analysis</p>,
+      costAssumption: (
+        <List>
+          <li>US: ~$100k</li>
+          <li>AUS/ BHS: ~$70k</li>
+          <li>Others: ~$50k</li>
+        </List>
+      ),
       duration: "One off cost",
       whatDrivesTheCost: (
         <List>
@@ -98,6 +106,7 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Conservation activity planning & admin</p>
       ),
+      costAssumption: <p>~$167k/ year</p>,
       duration: "4 years (start up time)",
       whatDrivesTheCost: (
         <List>
@@ -112,6 +121,7 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Data collection and field costs</p>
       ),
+      costAssumption: <p>~$27k/ year</p>,
       duration: "3 years",
       whatDrivesTheCost: (
         <List>
@@ -127,6 +137,7 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Community representation/ liaison</p>
       ),
+      costAssumption: <p>Between ~$65-126k /year, depending on country</p>,
       duration: "4 years (start up time)",
       whatDrivesTheCost: (
         <List>
@@ -139,6 +150,13 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-blue-carbon-project-planning",
       costComponent: <p className="font-bold">Blue carbon project planning</p>,
+      costAssumption: (
+        <List>
+          <li>AUS: ~$115k</li>
+          <li>BHS: ~$125k</li>
+          <li>Others: ~$100k</li>
+        </List>
+      ),
       duration: "3 years",
       whatDrivesTheCost: (
         <List>
@@ -149,8 +167,24 @@ export const projectCostsAssumptionsAndMethodologyData = {
       category: "capex",
     },
     {
+      id: "project-costs-assumptions-and-methodology-validations",
+      costComponent: <p className="font-bold">Validation</p>,
+      costAssumption: <p>~$50k</p>,
+      duration: "One off cost",
+      whatDrivesTheCost: (
+        <List>
+          <li>Providers have minimums for costs of</li>
+          <li>doing validation</li>
+          <li>Location accessibility</li>
+        </List>
+      ),
+
+      category: "capex",
+    },
+    {
       id: "project-costs-assumptions-and-methodology-establishing-carbon-rights",
       costComponent: <p className="font-bold">Conservation activity</p>,
+      costAssumption: <p>~0</p>,
       duration: "N/A",
       whatDrivesTheCost: "N/A",
       category: "capex",
@@ -161,6 +195,9 @@ export const projectCostsAssumptionsAndMethodologyData = {
         <p className="font-bold">
           Implementation labor and engineering activity
         </p>
+      ),
+      costAssumption: (
+        <p>Highly dependent per ha cost by country and ecosystem</p>
       ),
       duration: "Dependent on restoration plan",
       whatDrivesTheCost: (
@@ -177,6 +214,7 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Monitoring/ Guarding/ Surveilling</p>
       ),
+      costAssumption: <p>Highly dependent on salaries in country</p>,
       duration: "Every year after project set up",
       whatDrivesTheCost: (
         <List>
@@ -190,6 +228,9 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-maintenance",
       costComponent: <p className="font-bold">Maintenance</p>,
+      costAssumption: (
+        <p>8% of implementation cost, for 3 years after the implementation</p>
+      ),
       duration: "Three years after implementation",
       whatDrivesTheCost: (
         <List>
@@ -203,6 +244,7 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Landowner/community benefit share</p>
       ),
+      costAssumption: <p>Percentage of carbon credit revenues</p>,
       duration: "Each year with carbon credit revenues",
       whatDrivesTheCost: (
         <List>
@@ -218,6 +260,7 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-baseline-reassessment",
       costComponent: <p className="font-bold">Baseline Reassessment</p>,
+      costAssumption: <p>$40,000 / baseline reassessment</p>,
       duration: "Every 10 years",
       whatDrivesTheCost: (
         <List>
@@ -236,6 +279,7 @@ export const projectCostsAssumptionsAndMethodologyData = {
           Measurement, Reporting and Verification (MRV)
         </p>
       ),
+      costAssumption: <p>$100k (US, AUS, BA) $75k (others)</p>,
       duration: "Every 5 years",
       whatDrivesTheCost: (
         <List>
@@ -250,6 +294,7 @@ export const projectCostsAssumptionsAndMethodologyData = {
       costComponent: (
         <p className="font-bold">Long term project operating admin</p>
       ),
+      costAssumption: <p>$17k-130k (depending on country)</p>,
       duration: "Every year",
       whatDrivesTheCost: (
         <List>
@@ -262,6 +307,7 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-carbon-standard-fees",
       costComponent: <p className="font-bold">Carbon standard fees</p>,
+      costAssumption: <p>$0.2 per Verified Carbon Unit (VCU)</p>,
       duration: "Each year when credits are issued",
       whatDrivesTheCost: (
         <List>
@@ -276,6 +322,7 @@ export const projectCostsAssumptionsAndMethodologyData = {
     {
       id: "project-costs-assumptions-and-methodology-financing-cost",
       costComponent: <p className="font-bold">Financing cost</p>,
+      costAssumption: <p>5% of CAPEX</p>,
       duration: "One off cost",
       whatDrivesTheCost: (
         <List>
@@ -642,10 +689,4 @@ export const versionsHeaders = {
   versionName: "Version Name",
   createdAt: "Date of update",
   versionNotes: "Notes",
-};
-
-export const modelAssumptionsHeaders = {
-  assumptions: "Assumptions",
-  units: "Units",
-  value: "Value",
 };
