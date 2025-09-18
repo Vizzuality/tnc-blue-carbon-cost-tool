@@ -26,7 +26,7 @@ export async function signUpAction(
   }
 
   try {
-    const headersList = headers();
+    const headersList = await headers();
     const response = await client.auth.register.mutation({
       extraHeaders: {
         Authorization: `Bearer ${data.get("token")}`,
