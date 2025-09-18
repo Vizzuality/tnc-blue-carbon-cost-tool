@@ -32,6 +32,8 @@ test.describe("Auth - Update Password", () => {
 
     await page.waitForURL(ROUTES.home);
     await page.goto(ROUTES.profile);
+    
+    await testManager.acceptIntroModal();
     await testManager.acceptAnalytics();
     
     await page

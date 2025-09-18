@@ -99,6 +99,10 @@ export class E2eTestManager {
     await this.page.getByRole("button", { name: "Sign out" }).click();
   }
 
+  async acceptIntroModal() {
+    await this.page.getByRole("button", { name: /Discover/i }).click();
+  }
+
   async acceptAnalytics() {
     await this.page.getByRole("button", { name: /Accept all cookies/i }).click();
   }

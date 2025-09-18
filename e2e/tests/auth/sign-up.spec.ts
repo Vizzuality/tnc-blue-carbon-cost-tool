@@ -31,6 +31,7 @@ test.describe("Auth - Sign Up", () => {
     const user = TEST_USER;
 
     await page.goto(ROUTES.auth.signup);
+    await testManager.acceptIntroModal();
     await testManager.acceptAnalytics();
 
     await page.getByPlaceholder("Enter your name").fill(user.name);
