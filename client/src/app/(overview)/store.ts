@@ -2,6 +2,7 @@ import { MapMouseEvent } from "react-map-gl";
 
 import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { z } from "zod";
 
 import { filtersSchema } from "@/app/(overview)/constants";
@@ -37,3 +38,12 @@ const INITIAL_FILTERS_STATE: ProjectDetailsFilters = {
 };
 
 export const projectDetailsFiltersAtom = atom(INITIAL_FILTERS_STATE);
+
+/**
+ * Store whether the user has given consent to the use of analytics. If `undefined`, the user has
+ * not given consent nor rejected the use yet. If `true`, the user consents to the use of analytics.
+ */
+export const analyticsConsentAtom = atomWithStorage<boolean | undefined>(
+  "analytics-consent",
+  undefined,
+);
