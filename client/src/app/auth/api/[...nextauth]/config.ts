@@ -9,7 +9,6 @@ import type {
 } from "next";
 import { getServerSession, NextAuthOptions } from "next-auth";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import setCookieParser from "set-cookie-parser";
 
@@ -53,7 +52,7 @@ export const config = {
             map: false,
           });
 
-          const cookieStore = cookies();
+          const cookieStore = await cookies();
           for (const parsed of parsedCookies) {
             cookieStore.set(parsed.name, parsed.value, {
               httpOnly: parsed.httpOnly,

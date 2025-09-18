@@ -15,19 +15,20 @@ import CustomProjectForm from "@/containers/projects/form";
 export default async function EditCustomProjectPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const p = await params;
   if (!FEATURE_FLAGS["edit-project"]) {
-    redirect(`/projects/${params.id}`);
+    redirect(`/projects/${p.id}`);
   }
 
   const queryClient = new QueryClient();
 
-  await prefetchProjectData(queryClient, params.id);
+  await prefetchProjectData(queryClient, p.id);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <CustomProjectForm id={params.id} />
+      <CustomProjectForm id={p.id} />
     </HydrationBoundary>
   );
 }

@@ -9,8 +9,10 @@ import { z } from "zod";
 import { client } from "@/lib/query-client";
 import { queryKeys } from "@/lib/query-keys";
 
-import { filtersSchema } from "@/app/(overview)/constants";
-import { INITIAL_FILTERS_STATE } from "@/app/(overview)/constants";
+import {
+  filtersSchema,
+  INITIAL_FILTERS_STATE,
+} from "@/app/(overview)/constants";
 
 import Overview from "@/containers/overview";
 import { TABLE_VIEWS } from "@/containers/overview/table/toolbar/table-selector";
@@ -19,14 +21,15 @@ import { filtersToQueryParams } from "@/containers/overview/utils";
 export default async function OverviewPage({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams?: Promise<{
     filters: string;
     table: (typeof TABLE_VIEWS)[number];
-  };
+  }>;
 }) {
   const queryClient = new QueryClient();
+  const sp = await searchParams;
   const parsedFilters = filtersSchema.safeParse(
-    JSON.parse(searchParams?.filters || "{}"),
+    JSON.parse(sp?.filters || "{}"),
   );
 
   const queryParams: z.infer<typeof getProjectsQuerySchema> = {
