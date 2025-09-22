@@ -2,7 +2,6 @@ import { PropsWithChildren } from "react";
 
 import { Spline_Sans } from "next/font/google";
 
-import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import "@/app/globals.css";
 import { getServerSession } from "next-auth";
@@ -13,8 +12,10 @@ import { config } from "@/app/auth/api/[...nextauth]/config";
 import IntroModal from "@/containers/intro-modal";
 import MainNav from "@/containers/nav";
 
+import PrivacyBanner from "@/components/privacy-banner";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Toaster from "@/components/ui/toast/toaster";
+import GoogleAnalytics from "@/scripts/google-analytics";
 
 import LayoutProviders from "./providers";
 
@@ -63,9 +64,10 @@ export default async function RootLayout({
               <main className="flex h-dvh flex-1">{children}</main>
             </SidebarProvider>
             <Toaster />
+            <PrivacyBanner />
           </body>
         </NuqsAdapter>
-        <GoogleAnalytics gaId="G-N6HX0XYEGG" />
+        <GoogleAnalytics />
       </html>
     </LayoutProviders>
   );

@@ -19,10 +19,6 @@ test.describe("Auth - Update Password", () => {
     await testManager.clearDatabase();
   });
 
-  test.afterEach(async () => {
-    // await testManager.clearDatabase();
-  });
-
   test.afterAll(async () => {
     await testManager.close();
   });
@@ -36,6 +32,9 @@ test.describe("Auth - Update Password", () => {
 
     await page.waitForURL(ROUTES.home);
     await page.goto(ROUTES.profile);
+
+    await testManager.acceptAnalytics();
+    
     await page
       .getByPlaceholder("Type your current password")
       .fill(user.password);

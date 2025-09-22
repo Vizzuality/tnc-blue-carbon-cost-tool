@@ -27,10 +27,11 @@ test.describe("Auth - Sign Up", () => {
     await testManager.close();
   });
 
-  test("an user signs up successfully", async ({ page }) => {
+  test("an user signs up successfully", async () => {
     const user = TEST_USER;
 
     await page.goto(ROUTES.auth.signup);
+    await testManager.acceptAnalytics();
 
     await page.getByPlaceholder("Enter your name").fill(user.name);
     await page
@@ -62,9 +63,7 @@ test.describe("Auth - Sign Up", () => {
     expect(registeredUser?.isActive).toBe(false);
   });
 
-  test("an user successfully finish signup process with OTP", async ({
-    page,
-  }) => {
+  test("an user successfully finish signup process with OTP", async () => {
     const user = {
       ...TEST_USER,
       isActive: false,

@@ -1,10 +1,7 @@
 import { DataSource } from "typeorm";
 import { User } from "@shared/entities/users/user.entity";
 import { createProject, createUser } from "@shared/lib/entity-mocks";
-import {
-  clearTablesByEntities,
-  clearTestDataFromDatabase,
-} from "@shared/lib/db-helpers";
+import { clearTablesByEntities, clearTestDataFromDatabase } from "@shared/lib/db-helpers";
 import { JwtPayload, sign } from "jsonwebtoken";
 import { TOKEN_TYPE_ENUM } from "@shared/schemas/auth/token-type.schema";
 import { COMMON_DATABASE_ENTITIES } from "@shared/lib/db-entities";
@@ -100,6 +97,10 @@ export class E2eTestManager {
   async logout() {
     await this.page.goto("/auth/api/signout");
     await this.page.getByRole("button", { name: "Sign out" }).click();
+  }
+  
+  async acceptAnalytics() {
+    await this.page.getByRole("button", { name: /Accept all cookies/i }).click();
   }
 
   async generateTokenByType(user: User, tokenType: TOKEN_TYPE_ENUM) {
