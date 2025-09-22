@@ -4,6 +4,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { useCustomProjectOutput } from "@/hooks/use-custom-project-output";
 
 import SensitivityAnalysisColumn from "@/containers/projects/custom-project/cost-details/table/sensitivity-analysis";
+
 import InfoButton from "@/components/ui/info-button";
 
 export type ColumnsTypes = ReturnType<
