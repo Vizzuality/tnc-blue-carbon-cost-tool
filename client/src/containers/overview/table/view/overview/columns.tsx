@@ -91,6 +91,10 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
           return "-";
         }
 
+        if (String(value) === "0") {
+          return <CellText className="whitespace-nowrap">NA</CellText>;
+        }
+
         return <CellText>{formatCurrency(value)}</CellText>;
       },
     },
@@ -106,7 +110,7 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
       if ((value as unknown as string) === "0") {
         return (
           <CellText className="whitespace-nowrap">
-            Minimal or insignificant loss rates
+            insignificant or minimal
           </CellText>
         );
       }
