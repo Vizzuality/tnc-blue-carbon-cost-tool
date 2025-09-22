@@ -1,9 +1,10 @@
 import { FC } from "react";
 
+import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GraphWithLegend } from "@/components/ui/graph";
 import { Label } from "@/components/ui/label";
-import { CARBON_REVENUES_TO_COVER } from "@shared/entities/custom-project.entity";
 
 interface LeftoverProps {
   carbonRevenuesToCover: CARBON_REVENUES_TO_COVER;
