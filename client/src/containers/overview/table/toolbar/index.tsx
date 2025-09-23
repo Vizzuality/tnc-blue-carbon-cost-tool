@@ -176,6 +176,7 @@ export default function ToolbarProjectsTable() {
                     Total cost (CAPEX + OPEX) is in USD for each modelled
                     project scenario.
                   </p>
+                  <p>All modeled scenarios are across 20 years.</p>
                 </TabsContent>
 
                 <TabsContent
