@@ -112,7 +112,7 @@ locals {
     {
       namespace = "aws:autoscaling:asg"
       name      = "MaxSize"
-      value     = 1
+      value     = 3
     },
     {
       namespace = "aws:elasticbeanstalk:healthreporting:system"
