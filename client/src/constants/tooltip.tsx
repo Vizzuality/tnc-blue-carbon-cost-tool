@@ -245,7 +245,8 @@ export const PROJECT_DETAILS = {
     "The total cost associated with a hypothetical blue carbon project, including both capital expenditures (CAPEX) and operating expenditures (OPEX) but excluding financing costs.",
   NET_REVENUE_AFTER_OPEX_TOTAL_COST:
     "Net revenue is equal to income from carbon credit sales minus OPEX.",
-  CREDIT_POTENTIAL: "The estimated annual credit potential (tCO2e/year).",
+  CREDIT_POTENTIAL:
+    "The estimated abatement potential (tCO2e) over 20 years of the project.",
   OVERALL_SCORE:
     "The non-economic scores, in addition to the economic feasibility and credit potential, are weighted to an overall score per project.",
   SCORE_CARD_RATINGS: (
