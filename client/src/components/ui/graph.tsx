@@ -299,7 +299,7 @@ const GraphWithLegend: FC<GraphWithLegendProps> = ({
       ...(leftover
         ? [
             {
-              label: "Leftover",
+              label: "Net revenue",
               circleClassName: "border border-dashed border-white",
               labelClassName: "text-white",
             },
