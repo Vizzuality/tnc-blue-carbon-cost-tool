@@ -86,5 +86,6 @@ export class ProjectScorecardDto {
     };
   };
   leftoverAfterOpex: number;
+  leftoverAfterOpexNPV: number;
   creditsIssued: number;
 }

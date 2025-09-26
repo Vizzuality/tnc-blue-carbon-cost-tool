@@ -164,6 +164,7 @@ export class ProjectsScorecardService extends AppBaseService<
         },
       },
       leftoverAfterOpex: dbView.leftoverAfterOpex,
+      leftoverAfterOpexNPV: dbView.leftoverAfterOpexNPV,
       creditsIssued: dbView.creditsIssued,
     };
   }
