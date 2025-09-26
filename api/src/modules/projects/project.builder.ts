@@ -1,7 +1,7 @@
 /**
  * @description: Simple builder wrapper to handle the assignment of properties to a project entity and return the instance
  */
-import { Project } from '@shared/entities/projects.entity';
+import { Project, PROJECT_PRICE_TYPE } from '@shared/entities/projects.entity';
 import { PROJECT_SCORE } from '@shared/entities/project-score.enum';
 import { ExcelProject } from '@api/modules/import/dtos/excel-projects.dto';
 import { ProjectSize } from '@shared/entities/cost-inputs/project-size.entity';
@@ -164,6 +164,11 @@ export class ProjectBuilder {
     computedProject.totalRevenueNPV = costOutputs.costPlans.totalRevenueNPV;
     computedProject.totalRevenue = costOutputs.costPlans.totalRevenue;
     computedProject.creditsIssued = costOutputs.costPlans.totalCreditsIssued;
+    if (computedProject.priceType === PROJECT_PRICE_TYPE.MARKET_PRICE) {
+      const { totalRevenue, totalRevenueNPV, opex, opexNPV } = computedProject;
+      computedProject.leftoverAfterOpex = totalRevenue - opex;
+      computedProject.leftoverAfterOpexNPV = totalRevenueNPV - opexNPV;
+    }
     return computedProject;
   }
 
