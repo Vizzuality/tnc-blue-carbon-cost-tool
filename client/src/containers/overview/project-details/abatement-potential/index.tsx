@@ -29,7 +29,7 @@ const AbatementPotential: FC<AbatementPotentialProps> = ({ value }) => {
           <span
             className={"inline-block align-top text-xs text-muted-foreground"}
           >
-            tCO2e/yr&nbsp;
+            tCO2e&nbsp;
           </span>
           <span>{formatNumber(value || 0)}</span>
         </span>
