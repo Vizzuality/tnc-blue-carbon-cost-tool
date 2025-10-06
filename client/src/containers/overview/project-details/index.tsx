@@ -63,6 +63,12 @@ export default function ProjectDetails() {
     () => getProjectSizeLabel(projectData),
     [projectData],
   );
+  const leftoverAfterOpex = useMemo(() => {
+    if (costRangeSelector === "total") {
+      return projectData?.leftoverAfterOpex;
+    }
+    return projectData?.leftoverAfterOpexNPV;
+  }, [costRangeSelector, projectData]);
 
   const handleOpenDetails = (open: boolean) =>
     setProjectDetails({ ...projectDetails, isOpen: open });
@@ -90,7 +96,7 @@ export default function ProjectDetails() {
               <Card variant="secondary" className="flex flex-col gap-4 p-4">
                 <ProjectDetailsLeftover
                   data={projectData?.projectCost}
-                  leftoverAfterOpex={projectData?.leftoverAfterOpex}
+                  leftoverAfterOpex={leftoverAfterOpex}
                 />
               </Card>
             </div>
