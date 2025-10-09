@@ -26,7 +26,7 @@ const getSize = (value: number, total: number) => {
   return `${Math.max(percentage, 0)}%`;
 };
 const currencyClassName =
-  "max-w-[100px] overflow-hidden text-clip whitespace-normal break-all";
+  "overflow-hidden text-clip whitespace-normal break-all";
 
 interface LeftOverGraphProps {
   leftover: number;
@@ -46,9 +46,9 @@ const LeftOverGraph: FC<LeftOverGraphProps> = ({
         width: "100%",
         minHeight: minHeight,
       }}
-      className={`relative flex h-full flex-col items-center justify-end rounded-md border border-dashed border-white p-1`}
+      className="relative flex h-full flex-col items-center justify-end rounded-md border border-dashed border-white p-1"
     >
-      <span className="rounded-sm bg-white/30 px-5 py-1 text-xs font-semibold text-card-foreground">
+      <span className="rounded-sm bg-white/30 px-1.5 py-1 text-xs font-semibold text-card-foreground">
         {
           <Currency
             value={leftover}
