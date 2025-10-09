@@ -35,10 +35,6 @@ const ProjectDetailsLeftover: FC<ProjectDetailsLeftoverProps> = ({
               <h3 className="text-md">Net revenue after OPEX</h3>
             </Label>
           </div>
-          <div className="text-sm text-big-stone-200">
-            Refers to the difference between Total Revenue and Operating
-            Expenditure.
-          </div>
         </div>
       </div>
       <GraphWithLegend

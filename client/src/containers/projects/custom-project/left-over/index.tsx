@@ -39,10 +39,6 @@ const LeftOver: FC<LeftoverProps> = ({
               <h3 className="text-md">{title}</h3>
             </Label>
           </div>
-          <div className="text-sm text-muted-foreground">
-            Refers to the difference between Total Revenue and Operating
-            Expenditure.
-          </div>
         </div>
       </CardHeader>
 
