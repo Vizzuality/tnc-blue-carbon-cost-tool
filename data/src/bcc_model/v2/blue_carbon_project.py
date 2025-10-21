@@ -157,24 +157,28 @@ class BlueCarbonProject:
 
     def _get_sequestration_rate(self):
         # todo: this is not well define, we will need to first confirm if the tier 2 has value and then fall back to tier 1 if there is not
-        if self.activity != "Restoration":
-            raise ValueError("Sequestration rate can only be calculated for restoration projects.")
+        # if self.activity != "Restoration":
+        #     raise ValueError("Sequestration rate can only be calculated for restoration projects.")
 
         if self.sequestration_rate_used == "Tier 1 - IPCC default value":
             self.sequestration_rate = get_value_from_master_table(
                 self.master_table, self.country_code, self.ecosystem, "tier_1_ipcc_default_value"
             )
         elif self.sequestration_rate_used == "Tier 2 - Country-specific rate":
-            val = self.sequestration_rate = get_value_from_master_table(
+            val = get_value_from_master_table(
                 self.master_table,
                 self.country_code,
                 self.ecosystem,
                 "tier_2_country_specific_rate",
             )
             if val is math.isnan(val) or val is None:
+                print("yayaaa")
                 # If the value is NaN or None, we raise an error
-                raise ValueError(
-                    "Country-specific sequestration rate is not available for this ecosystem. Please use 'Tier 1 - IPCC default value' or 'Tier 3 - Project-specific rate'."  # noqa: E501
+                val = get_value_from_master_table(
+                    self.master_table,
+                    self.country_code,
+                    self.ecosystem,
+                    "tier_1_ipcc_default_value",
                 )
 
             self.sequestration_rate = val
