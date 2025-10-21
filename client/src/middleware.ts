@@ -8,7 +8,9 @@ export default function middleware(req: NextRequestWithAuth) {
   // HTTP Basic Auth logic
   function isAuthenticated(req: NextRequest) {
     // Skip auth if disabled via environment config
-    if (!process.env.BASIC_AUTH_ENABLED) return true;
+    const isBasicAuthEnabled =
+      (process.env.BASIC_AUTH_ENABLED ?? "").toLowerCase() === "true";
+    if (!isBasicAuthEnabled) return true;
 
     const authHeader =
       req.headers.get("authorization") || req.headers.get("Authorization");
@@ -25,7 +27,14 @@ export default function middleware(req: NextRequestWithAuth) {
   }
 
   const PUBLIC_FILE = /\.(.*)$/;
-  if (PUBLIC_FILE.test(req.nextUrl.pathname)) {
+  const BASIC_AUTH_EXCLUDED_PATHS = [/^\/health\/?$/];
+
+  if (
+    PUBLIC_FILE.test(req.nextUrl.pathname) ||
+    BASIC_AUTH_EXCLUDED_PATHS.some((pattern) =>
+      pattern.test(req.nextUrl.pathname),
+    )
+  ) {
     return NextResponse.next();
   }
 
