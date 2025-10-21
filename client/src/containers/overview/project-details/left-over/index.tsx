@@ -20,6 +20,9 @@ const ProjectDetailsLeftover: FC<ProjectDetailsLeftoverProps> = ({
   leftoverAfterOpex,
 }) => {
   const { costRangeSelector } = useAtomValue(projectDetailsFiltersAtom);
+  const netRevenue =
+    (data?.[costRangeSelector].totalRevenue || 0) -
+    (data?.[costRangeSelector].opex || 0);
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -48,6 +51,12 @@ const ProjectDetailsLeftover: FC<ProjectDetailsLeftoverProps> = ({
             label: "OpEx",
             circleClassName: "bg-sky-blue-200",
             labelClassName: "text-sky-blue-200",
+          },
+          {
+            value: netRevenue,
+            label: "Net revenue",
+            circleClassName: "bg-sky-blue-500",
+            labelClassName: "text-sky-blue-500",
           },
         ]}
       />

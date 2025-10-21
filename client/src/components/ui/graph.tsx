@@ -22,7 +22,15 @@ interface GraphSegment {
 
 const getPercentage = (value: number, total: number) => (value / total) * 100;
 const getSize = (value: number, total: number) => {
-  const percentage = getPercentage(value, total);
+  let v = Math.abs(value);
+  let t = Math.abs(total);
+
+  if (v > t) {
+    v = t;
+    t = v;
+  }
+  const percentage = getPercentage(v, t);
+
   return `${Math.max(percentage, 0)}%`;
 };
 const currencyClassName =
@@ -128,6 +136,7 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
                 key={`graph-segment-${colorClass}-${value}`}
                 style={{
                   height: getSize(value, total),
+                  minHeight: "21%",
                   width: "100%",
                 }}
                 className={`relative h-full rounded-md transition-all duration-300 ease-in-out ${colorClass}`}
@@ -311,7 +320,7 @@ const GraphWithLegend: FC<GraphWithLegendProps> = ({
           ]
         : [
             {
-              label: "Total",
+              label: "Total Revenue",
               circleClassName:
                 totalCircleClassName ?? "border border-dashed border-white",
               labelClassName: totalLabelClassName ?? "text-white",
