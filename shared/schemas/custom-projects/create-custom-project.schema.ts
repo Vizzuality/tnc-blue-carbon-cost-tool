@@ -1,8 +1,14 @@
 import { z } from "zod";
 import { ECOSYSTEM } from "@shared/entities/ecosystem.enum";
-import { ACTIVITY, RESTORATION_ACTIVITY_SUBTYPE } from "@shared/entities/activity.enum";
+import {
+  ACTIVITY,
+  RESTORATION_ACTIVITY_SUBTYPE,
+} from "@shared/entities/activity.enum";
 import { EMISSION_FACTORS_TIER_TYPES } from "@shared/entities/carbon-inputs/emission-factors.entity";
-import { CARBON_REVENUES_TO_COVER, PROJECT_SPECIFIC_EMISSION } from "@shared/entities/custom-project.entity";
+import {
+  CARBON_REVENUES_TO_COVER,
+  PROJECT_SPECIFIC_EMISSION,
+} from "@shared/entities/custom-project.entity";
 import { SEQUESTRATION_RATE_TIER_TYPES } from "@shared/entities/carbon-inputs/sequestration-rate.entity";
 import { isNumber } from "lodash";
 
@@ -23,19 +29,17 @@ export const ConservationCustomProjectSchema = z.object({
   emissionFactorUsed: z.nativeEnum(EMISSION_FACTORS_TIER_TYPES),
   projectSpecificEmission: z.nativeEnum(PROJECT_SPECIFIC_EMISSION),
   projectSpecificLossRate: z.preprocess(
-      (value) =>
-          value === undefined || value === null ? undefined : parseNumber(value),
-      z
-          .number({
-            required_error: "Project Specific Loss Rate is required",
-            invalid_type_error: "Project Specific Loss Rate should be a number",
-          })
-          .refine(
-              (val) => val >= -1 && val <= 0,
-              {
-                message: "Project Specific Loss Rate must be between -100% and 0%",
-              }
-          ).optional(),
+    (value) =>
+      value === undefined || value === null ? undefined : parseNumber(value),
+    z
+      .number({
+        required_error: "Project Specific Loss Rate is required",
+        invalid_type_error: "Project Specific Loss Rate should be a number",
+      })
+      .refine((val) => val >= -1 && val <= 0, {
+        message: "Project Specific Loss Rate must be between -100% and 0%",
+      })
+      .optional(),
   ),
   projectSpecificEmissionFactor: z
     .number({
@@ -60,24 +64,22 @@ export const ConservationCustomProjectSchema = z.object({
     .optional(),
 });
 
-export const ConservationCustomProjectSchemaFE = ConservationCustomProjectSchema.extend({
-  projectSpecificLossRate: z.preprocess(
-    (value) =>
-      value === undefined || value === null
-        ? undefined
-        : parseNumber(value),
-    z
-      .number({
-        required_error: "Project Specific Loss Rate is required",
-        invalid_type_error: "Project Specific Loss Rate should be a number",
-      })
-      .refine((val) => val >= -100 && val <= 0, {
-        message: "Project Specific Loss Rate must be between -100 and 0",
-      })
-      .transform((val) => val / 100)
-      .optional(),
-  ),
-});
+export const ConservationCustomProjectSchemaFE =
+  ConservationCustomProjectSchema.extend({
+    projectSpecificLossRate: z.preprocess(
+      (value) =>
+        value === undefined || value === null ? undefined : parseNumber(value),
+      z
+        .number({
+          required_error: "Project Specific Loss Rate is required",
+          invalid_type_error: "Project Specific Loss Rate should be a number",
+        })
+        .refine((val) => val >= -100 && val <= 0, {
+          message: "Project Specific Loss Rate must be between -100 and 0",
+        })
+        .optional(),
+    ),
+  });
 
 export const RestorationPlanDTOSchema = z
   .array(
@@ -85,10 +87,11 @@ export const RestorationPlanDTOSchema = z
       year: z
         .preprocess(
           parseNumber,
-          z.number({
-            required_error: "Year should be a number",
-            invalid_type_error: "Year must be a number",
-          })
+          z
+            .number({
+              required_error: "Year should be a number",
+              invalid_type_error: "Year must be a number",
+            })
             .int("Year must be an integer"),
         )
         .optional(),
@@ -96,10 +99,12 @@ export const RestorationPlanDTOSchema = z
       annualHectaresRestored: z
         .preprocess(
           parseNumber,
-          z.number({
-            required_error: "Annual hectares restored should be a number",
-            invalid_type_error: "Annual hectares restored must be a number",
-          }).nonnegative("Annual hectares restored cannot be negative"),
+          z
+            .number({
+              required_error: "Annual hectares restored should be a number",
+              invalid_type_error: "Annual hectares restored must be a number",
+            })
+            .nonnegative("Annual hectares restored cannot be negative"),
         )
         .optional(),
     }),
@@ -265,7 +270,10 @@ export const ValidateConservationSchema = (
     typeof ConservationCustomProjectSchema
   >;
   if (params.lossRateUsed === LOSS_RATE_USED.PROJECT_SPECIFIC) {
-    if (params.projectSpecificLossRate === undefined || params.projectSpecificLossRate === null) {
+    if (
+      params.projectSpecificLossRate === undefined ||
+      params.projectSpecificLossRate === null
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Project Specific Loss Rate must be between -100% and 0%",
@@ -294,7 +302,7 @@ export const ValidateConservationSchema = (
   } else if (params.emissionFactorUsed === EMISSION_FACTORS_TIER_TYPES.TIER_3) {
     if (
       params.projectSpecificEmission ===
-      PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR &&
+        PROJECT_SPECIFIC_EMISSION.ONE_EMISSION_FACTOR &&
       !params.projectSpecificEmissionFactor
     ) {
       ctx.addIssue({
