@@ -24,10 +24,17 @@ import {
 import { parseCostDetailsForTable } from "@/containers/projects/custom-project/cost-details/table/utils";
 import { useCustomProjectFilters } from "@/containers/projects/url-store";
 
-const initialCarbonPriceLabelMap = {
-  [CUSTOM_PROJECT_PRICE_TYPE.INITIAL_CARBON_PRICE_ASSUMPTION]:
-    "Initial carbon price",
-  [CUSTOM_PROJECT_PRICE_TYPE.BREAKEVEN_PRICE]: "OpEx breakeven price",
+const getInitialCarbonPriceLabel = (
+  priceType: CUSTOM_PROJECT_PRICE_TYPE,
+  carbonRevenuesToCover?: CARBON_REVENUES_TO_COVER,
+): string => {
+  if (priceType === CUSTOM_PROJECT_PRICE_TYPE.INITIAL_CARBON_PRICE_ASSUMPTION)
+    return "Initial carbon price";
+
+  if (carbonRevenuesToCover === CARBON_REVENUES_TO_COVER.CAPEX_AND_OPEX)
+    return "OpEx + CapEx breakeven price";
+
+  return "OpEx breakeven price";
 };
 const isConservationProjectOutput = (
   output: ConservationProjectOutput | RestorationProjectOutput | null,
@@ -45,6 +52,7 @@ export const useCustomProjectOutput = (
       ? "initialCarbonPriceComputationOutput"
       : "breakevenPriceComputationOutput";
   const output = data.output[key];
+  const carbonRevenuesToCover = output?.carbonRevenuesToCover;
 
   const projectDetailsProps = useMemo(() => {
     return {
@@ -54,9 +62,9 @@ export const useCustomProjectOutput = (
         projectLength: data.projectLength,
         ecosystem: data.ecosystem,
         activity: data.activity,
-        carbonRevenuesToCover: output?.carbonRevenuesToCover,
+        carbonRevenuesToCover,
         initialCarbonPrice: {
-          label: initialCarbonPriceLabelMap[priceType],
+          label: getInitialCarbonPriceLabel(priceType, carbonRevenuesToCover),
           value: output?.initialCarbonPrice,
         },
         lossRate: isConservationProjectOutput(output, data.activity)
@@ -71,7 +79,7 @@ export const useCustomProjectOutput = (
         restorationActivity: data.input?.parameters?.restorationActivity,
       },
     };
-  }, [data, output, priceType]);
+  }, [data, output, priceType, carbonRevenuesToCover]);
 
   const costDetailsProps = useMemo(() => {
     const costDetails = {
