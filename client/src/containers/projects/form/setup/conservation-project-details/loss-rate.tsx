@@ -92,6 +92,7 @@ export default function LossRate() {
               onValueChange={async (v) =>
                 handleFormChange("parameters.projectSpecificLossRate", v)
               }
+              isPercentage
             />
           )}
         />
