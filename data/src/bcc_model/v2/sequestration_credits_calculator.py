@@ -288,6 +288,7 @@ class SequestrationCreditsCalculator:
         annual_loss_plan = self.calculate_annual_loss()
         cumulative_loss_plan = self.calculate_cumulative_loss()
         cumulative_loss_soc_plan = self.calculate_loss_incorporating_soc()
+        self.project._get_sequestration_rate()
 
         for year in annual_avoided_emissions_plan:
             if year <= 0 or year > self.project_length:
@@ -296,13 +297,13 @@ class SequestrationCreditsCalculator:
             if self.project.emission_factor_used == "Tier 1 - Global emission factor":
                 annual_avoided_loss = (
                     cumulative_loss_plan[year] * self.project.emission_factor
-                    + cumulative_loss_plan[year] * self.project.tier_1_sequestration_rate
+                    + cumulative_loss_plan[year] * self.project.sequestration_rate
                 )
             else:
                 annual_avoided_loss = (
                     annual_loss_plan[year] * self.project.emission_factor_AGB
                     + cumulative_loss_soc_plan[year] * self.project.emission_factor_SOC
-                    + cumulative_loss_plan[year] * self.project.tier_1_sequestration_rate
+                    + cumulative_loss_plan[year] * self.project.sequestration_rate
                 )
 
             annual_avoided_emissions_plan[year] = float(annual_avoided_loss)
@@ -313,24 +314,24 @@ class SequestrationCreditsCalculator:
         """
         Calculate the extent over time for the project.
         """
+        # Get base cost:
+        ecosystem_extent = float(self.project.ecosystem_extent)
+        # Get loss rate:
+        loss_rate = float(self.project.loss_rate)
         extent_over_time = {
             year: 0 for year in range(-1, self.project.default_project_length + 1) if year != 0
         }
-        # Get base cost:
-        base_cost = float(self.project.ecosystem_extent)
-        # Get loss rate:
-        loss_rate = float(self.project.loss_rate)
+
         for year, _ in extent_over_time.items():
-            if year <= self.project_length:
-                if year <= 0:
-                    extent_over_time[year] = base_cost
-                else:
-                    if year == 1:
-                        extent_over_time[year] = extent_over_time[-1] * (1 + loss_rate)
-                    else:
-                        extent_over_time[year] = extent_over_time[year - 1] * (1 + loss_rate)
+            if year <= 0:
+                extent_over_time[year] = ecosystem_extent
+            elif year == 1:
+                extent_over_time[year] = extent_over_time[-1] * (1 + loss_rate)
+            elif year <= self.project_length:
+                extent_over_time[year] = extent_over_time[year - 1] * (1 + loss_rate)
             else:
                 extent_over_time[year] = 0
+
         return extent_over_time
 
     def get_ecosystem_extent_historic(self):
@@ -382,16 +383,12 @@ class SequestrationCreditsCalculator:
         for year, _ in annual_loss_plan.items():
             if year <= 0:
                 continue
+            elif year == 1:
+                annual_loss_plan[year] = extent_over_time[-1] - extent_over_time[year]
             elif year <= self.project_length:
-                if year == 1:
-                    # extent over time[-1] - extent over time[year]
-                    annual_loss_plan[year] = round(extent_over_time[-1] - extent_over_time[year])
-                else:
-                    annual_loss_plan[year] = round(
-                        extent_over_time[year - 1] - extent_over_time[year]
-                    )
+                annual_loss_plan[year] = extent_over_time[year - 1] - extent_over_time[year]
             else:
-                annual_loss_plan[year] = 0
+                continue
         return annual_loss_plan
 
     def calculate_cumulative_loss(self):
@@ -406,15 +403,12 @@ class SequestrationCreditsCalculator:
         for year, _ in cumulative_loss_plan.items():
             if year <= 0:
                 continue
+            elif year == 1:
+                cumulative_loss_plan[year] = annual_loss_plan[year]
             elif year <= self.project_length:
-                if year == 1:
-                    cumulative_loss_plan[year] = annual_loss_plan[year]
-                else:
-                    cumulative_loss_plan[year] = (
-                        annual_loss_plan[year] + cumulative_loss_plan[year - 1]
-                    )
+                cumulative_loss_plan[year] = annual_loss_plan[year] + cumulative_loss_plan[year - 1]
             else:
-                cumulative_loss_plan[year] = 0
+                continue
         return cumulative_loss_plan
 
     def calculate_loss_incorporating_soc(self):
@@ -430,7 +424,7 @@ class SequestrationCreditsCalculator:
                 continue
             elif year <= self.project_length:
                 if year > self.project.soil_organic_carbon_release_length:
-                    offset_value = cumulative_loss_incorporating_soc_plan[
+                    offset_value = cumulative_loss[
                         year - self.project.soil_organic_carbon_release_length
                     ]
                     cumulative_loss_incorporating_soc_plan[year] = (
@@ -439,5 +433,6 @@ class SequestrationCreditsCalculator:
                 else:
                     cumulative_loss_incorporating_soc_plan[year] = cumulative_loss[year]
             else:
-                cumulative_loss_incorporating_soc_plan[year] = 0
+                continue
+
         return cumulative_loss_incorporating_soc_plan
