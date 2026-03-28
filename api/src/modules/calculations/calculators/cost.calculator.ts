@@ -2,7 +2,7 @@ import { BaseSize } from '@shared/entities/base-size.entity';
 import { BaseIncrease } from '@shared/entities/base-increase.entity';
 import { RevenueProfitCalculator } from '@api/modules/calculations/calculators/revenue-profit.calculator';
 import { parseInt, sum } from 'lodash';
-import { irr } from 'node-irr';
+import { irr } from 'financial';
 import {
   CustomProjectCostDetails,
   CustomProjectSummary,
