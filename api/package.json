@@ -39,7 +39,7 @@
     "lodash": "^4.17.21",
     "nestjs-base-service": "catalog:",
     "node-irr": "^2.0.5",
-    "nodemailer": "^6.9.15",
+    "nodemailer": "^10.0.9",
     "passport": "^0.7.0",
     "passport-custom": "^1.1.1",
     "passport-jwt": "^4.0.1",
