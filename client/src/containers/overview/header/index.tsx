@@ -43,7 +43,7 @@ export default function ProjectsHeader() {
       <div className="flex items-center space-x-3">
         <div className="flex items-center space-x-2">
           <SidebarTrigger />
-          <h2 className="text-2xl font-medium">Projects Overview2</h2>
+          <h2 className="text-2xl font-medium">Projects Overview</h2>
         </div>
         <Button
           type="button"

@@ -116,7 +116,7 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
             </div>
           </div>
           <div className="flex h-full w-full flex-col gap-1 rounded-md">
-            {leftover > 0 && (
+            {leftover >= 0 && (
               <LeftOverGraph
                 leftover={leftover}
                 leftoverHeight={leftoverHeight}
@@ -219,7 +219,7 @@ function calculateSplitModeHeights(total: number, leftover: number) {
 
   // Set minimum heights to ensure visibility of small segments
   const leftoverMinHeight =
-    fixedHeights && leftoverPercentage < minPercentageThreshold
+    fixedHeights && leftoverPercentage < minPercentageThreshold && leftover !== 0
       ? minHeightPercentage
       : undefined;
   const totalRevenueMinHeight =

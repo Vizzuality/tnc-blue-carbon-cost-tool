@@ -83,16 +83,26 @@ export function OverviewTable() {
     pagination,
   }).queryKey;
 
-  const columnsBasedOnFilters = columns(filters);
+  const columnsBasedOnFilters = useMemo(() => columns(filters), [filters]);
 
   const { data, isSuccess } = client.projects.getProjects.useQuery(
     queryKey,
     {
       query: {
         ...filtersToQueryParams(filters),
-        fields: ["id", "capex", "capexNPV", "opex", "opexNPV"].concat(
-          columnsBasedOnFilters.map((column) => column.accessorKey),
-        ) as filterFields,
+        fields: [
+          "id",
+          "capex",
+          "capexNPV",
+          "opex",
+          "opexNPV",
+          "totalCost",
+          "totalCostNPV",
+          "creditsIssued",
+          "projectName",
+          "scoreCardRating",
+          "abatementPotential",
+        ] as filterFields,
         ...(sorting.length > 0 && {
           sort: sorting.map(
             (sort) => `${sort.desc ? "-" : ""}${sort.id}`,
@@ -109,7 +119,10 @@ export function OverviewTable() {
     },
     {
       queryKey,
-      select: (data) => data.body,
+      select: (data) => {
+        console.log("Projects data:", data); // See in browser console
+        return data.body;
+      },
       placeholderData: keepPreviousData,
     },
   );
