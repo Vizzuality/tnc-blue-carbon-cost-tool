@@ -33,6 +33,15 @@ const columnHelper = createColumnHelper<
   }
 >();
 
+type OverviewProject = Partial<ProjectType> & {
+  capex?: number;
+  opex?: number;
+  capexNPV?: number;
+  opexNPV?: number;
+  totalCostNPV?: number;
+  creditsIssued?: number;
+};
+
 const createSegments = (
   type: COST_TYPE_SELECTOR,
   projectName: string,
@@ -74,7 +83,7 @@ const createSegments = (
  * TOTAL_COST_BREAKEVEN: totalCost / creditsIssued
  */
 const calculateBreakevenCostPerTon = (
-  rowData: Parameters<typeof columnHelper.accessor>[0],
+  rowData: OverviewProject,
   filters: z.infer<typeof filtersSchema>,
 ): number | null => {
   const isNPV = filters.costRangeSelector === COST_TYPE_SELECTOR.NPV;

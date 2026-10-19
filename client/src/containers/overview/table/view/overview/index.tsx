@@ -99,7 +99,10 @@ export function OverviewTable() {
           "totalCost",
           "totalCostNPV",
           "creditsIssued",
-        ].concat(columnsBasedOnFilters.map((column) => column.accessorKey)) as filterFields,
+          "projectName",
+          "scoreCardRating",
+          "abatementPotential",
+        ] as filterFields,
         ...(sorting.length > 0 && {
           sort: sorting.map(
             (sort) => `${sort.desc ? "-" : ""}${sort.id}`,
