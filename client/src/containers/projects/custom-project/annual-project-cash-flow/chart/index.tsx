@@ -80,7 +80,12 @@ const CashflowChart: FC<CashflowChartProps> = ({
         cumulativeCreditsPlan: {
           label: "Credit generation",
           color: "hsl(200, 100%, 55%)",
-          icon: () => <div className="h-[3px] w-[24px]" style={{ backgroundColor: "hsl(200, 100%, 55%)" }} />,
+          icon: () => (
+            <div
+              className="h-[3px] w-[24px]"
+              style={{ backgroundColor: "hsl(200, 100%, 55%)" }}
+            />
+          ),
         },
         breakevenPoint: {
           label: "Breakeven point",
