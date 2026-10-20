@@ -188,14 +188,6 @@ export class ProjectsMapRepository extends Repository<Project> {
     projectIds: Project['id'][],
     costRangeSelector: 'npv' | 'total' = 'total',
   ): Promise<ProjectMap> {
-    // Return empty FeatureCollection if no projects match the filter
-    if (!projectIds || projectIds.length === 0) {
-      return {
-        type: 'FeatureCollection',
-        features: [],
-      };
-    }
-
     // "Abatement potential" is the wrong term here, the correct one is "country_abatement_potential"
     const geoQueryBuilder = this.manager.createQueryBuilder();
     geoQueryBuilder
@@ -243,7 +235,10 @@ export class ProjectsMapRepository extends Repository<Project> {
             .from(Project, 'p')
             .innerJoin('countries', 'c', 'c.code = p.country_code')
             .where('p.id IN (:...projectIds)', { projectIds })
-            .groupBy('p.country_code');
+            .groupBy('p.country_code')
+            .addGroupBy('p.activity')
+            .addGroupBy('p.ecosystem')
+            .addGroupBy('p.price_type');
 
           const innerQuery = innerSubquery.getQuery();
 

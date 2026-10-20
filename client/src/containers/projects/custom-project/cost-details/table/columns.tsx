@@ -25,7 +25,7 @@ export const columns = [
   }),
   columnHelper.accessor("value", {
     enableSorting: true,
-    header: () => <span>Cost (USD)</span>,
+    header: () => <span>Cost $/tCo2</span>,
   }),
   columnHelper.accessor("sensitivityAnalysis", {
     header: () => (

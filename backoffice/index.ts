@@ -64,7 +64,7 @@ const start = async () => {
       user: process.env.DB_USERNAME || 'blue-carbon-cost',
       password: process.env.DB_PASSWORD || 'blue-carbon-cost',
       database: process.env.DB_NAME || 'blc-dev',
-      port: Number(process.env.DB_PORT) || 5433,
+      port: 5432,
       ssl:
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }
@@ -141,13 +141,10 @@ const start = async () => {
         icon: 'File',
         component: Components.FileIngestion,
         handler: async (request: Request, response: Response) => {
-          // Convert only Docker hostnames for browser requests; keep prod URLs untouched.
-          const browserApiUrl = API_URL.includes('host.docker.internal')
-            ? API_URL.replace('host.docker.internal', 'localhost')
-            : API_URL;
+          // Pass config
           response.json({
             config: {
-              apiUrl: browserApiUrl,
+              apiUrl: API_URL,
             },
           });
         },
@@ -180,7 +177,10 @@ const start = async () => {
   });
 
   const customRouter = express.Router();
-  // AdminJS handles its own login page, no redirect needed
+  // Redirect to the app's login page
+  customRouter.get('/login', (_, res) => {
+    res.redirect(`/auth/signin?callbackUrl=${encodeURIComponent('/admin')}`);
+  });
 
   const sessionCookieName = process.env
     .BACKOFFICE_SESSION_COOKIE_NAME as string;

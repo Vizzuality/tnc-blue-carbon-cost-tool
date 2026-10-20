@@ -77,7 +77,6 @@ export const useCustomProjectOutput = (
           ? null
           : output?.sequestrationRate,
         restorationActivity: data.input?.parameters?.restorationActivity,
-        totalCreditsIssued: output?.summary?.["Credits issued"],
       },
     };
   }, [data, output, priceType, carbonRevenuesToCover]);
