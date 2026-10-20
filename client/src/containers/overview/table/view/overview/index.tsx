@@ -90,7 +90,7 @@ export function OverviewTable() {
     {
       query: {
         ...filtersToQueryParams(filters),
-  fields: ["id", "capex", "capexNPV", "opex", "opexNPV"].concat(
+        fields: ["id", "capex", "capexNPV", "opex", "opexNPV"].concat(
           columnsBasedOnFilters.map((column) => column.accessorKey),
         ) as filterFields,
         ...(sorting.length > 0 && {
