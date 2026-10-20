@@ -64,7 +64,7 @@ const start = async () => {
       user: process.env.DB_USERNAME || 'blue-carbon-cost',
       password: process.env.DB_PASSWORD || 'blue-carbon-cost',
       database: process.env.DB_NAME || 'blc-dev',
-      port: Number(process.env.DB_PORT) || 5433,
+      port: 5432,
       ssl:
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }
@@ -177,7 +177,10 @@ const start = async () => {
   });
 
   const customRouter = express.Router();
-  // AdminJS handles its own login page, no redirect needed
+  // Redirect to the app's login page
+  customRouter.get('/login', (_, res) => {
+    res.redirect(`/auth/signin?callbackUrl=${encodeURIComponent('/admin')}`);
+  });
 
   const sessionCookieName = process.env
     .BACKOFFICE_SESSION_COOKIE_NAME as string;

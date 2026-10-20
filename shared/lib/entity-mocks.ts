@@ -60,7 +60,7 @@ export const createProject = async (
     capex: 50,
     opexNPV: 100,
     opex: 50,
-    priceType: PROJECT_PRICE_TYPE.OPEX_BREAKEVEN,
+    priceType: PROJECT_PRICE_TYPE.MARKET_PRICE,
   };
 
   return dataSource

@@ -269,7 +269,7 @@ export const columns: CustomColumn[] = [
   },
   {
     accessorKey: "abatementPotential",
-    header: "Credit potential",
+    header: "Abatement potential",
     cell: ({ getValue }: { getValue: () => string }) => getValue(),
   },
   {

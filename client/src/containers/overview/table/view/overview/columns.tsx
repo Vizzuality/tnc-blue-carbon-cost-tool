@@ -1,9 +1,6 @@
 import { ProjectType } from "@shared/contracts/projects.contract";
 import { PROJECT_SCORE } from "@shared/entities/project-score.enum";
-import {
-  COST_TYPE_SELECTOR,
-  PROJECT_PRICE_TYPE,
-} from "@shared/entities/projects.entity";
+import { COST_TYPE_SELECTOR } from "@shared/entities/projects.entity";
 import { createColumnHelper } from "@tanstack/react-table";
 import { z } from "zod";
 
@@ -29,18 +26,8 @@ const columnHelper = createColumnHelper<
     capexNPV?: number;
     opexNPV?: number;
     totalCostNPV?: number;
-    creditsIssued?: number;
   }
 >();
-
-type OverviewProject = Partial<ProjectType> & {
-  capex?: number;
-  opex?: number;
-  capexNPV?: number;
-  opexNPV?: number;
-  totalCostNPV?: number;
-  creditsIssued?: number;
-};
 
 const createSegments = (
   type: COST_TYPE_SELECTOR,
@@ -77,36 +64,6 @@ const createSegments = (
   ];
 };
 
-/**
- * Calculate break-even cost per ton of CO2e based on selected price type
- * OPEX_BREAKEVEN: opex / creditsIssued
- * TOTAL_COST_BREAKEVEN: totalCost / creditsIssued
- */
-const calculateBreakevenCostPerTon = (
-  rowData: OverviewProject,
-  filters: z.infer<typeof filtersSchema>,
-): number | null => {
-  const isNPV = filters.costRangeSelector === COST_TYPE_SELECTOR.NPV;
-  const costToUse = isNPV ? rowData.totalCostNPV : rowData.totalCost;
-  const opexToUse = isNPV ? rowData.opexNPV : rowData.opex;
-  const creditsIssuedNum =
-    typeof rowData.creditsIssued === "string"
-      ? parseFloat(rowData.creditsIssued)
-      : rowData.creditsIssued;
-
-  if (!creditsIssuedNum || creditsIssuedNum <= 0) {
-    return null;
-  }
-
-  if (filters.priceType === PROJECT_PRICE_TYPE.OPEX_BREAKEVEN) {
-    return opexToUse && opexToUse > 0 ? opexToUse / creditsIssued : null;
-  } else if (filters.priceType === PROJECT_PRICE_TYPE.TOTAL_COST_BREAKEVEN) {
-    return costToUse && costToUse > 0 ? costToUse / creditsIssued : null;
-  }
-
-  return null;
-};
-
 export const columns = (filters: z.infer<typeof filtersSchema>) => [
   columnHelper.accessor("projectName", {
     enableSorting: true,
@@ -123,23 +80,24 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
       return <ScoreIndicator value={value as PROJECT_SCORE} />;
     },
   }),
-  columnHelper.accessor((row) => calculateBreakevenCostPerTon(row, filters), {
-    id: "breakEvenCostPerTCO2e",
-    enableSorting: true,
-    header: renderHeader("Break-even cost $(USD)/tCO2e"),
-    cell: (props) => {
-      const value = props.getValue();
-      if (value === null || value === undefined) {
-        return "-";
-      }
+  columnHelper.accessor(
+    getAccessor("costPerTCO2e", filters.costRangeSelector === "npv"),
+    {
+      enableSorting: true,
+      header: renderHeader("Cost $(USD)/tCO2e"),
+      cell: (props) => {
+        const value = props.getValue();
+        if (value === null || value === undefined) {
+          return "-";
+        }
+        if (String(value) === "0") {
+          return <CellText className="whitespace-nowrap">NA</CellText>;
+        }
 
-      if (String(value) === "0") {
-        return <CellText className="whitespace-nowrap">NA</CellText>;
-      }
-
-      return <CellText>{formatCurrency(value)}</CellText>;
+        return <CellText>{formatCurrency(value)}</CellText>;
+      },
     },
-  }),
+  ),
   columnHelper.accessor("abatementPotential", {
     enableSorting: true,
     header: renderHeader("Credit potential (tCO2e)"),

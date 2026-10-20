@@ -35,7 +35,7 @@ const SCORECARD_METRICS: ScorecardMetric[] = [
     weight: 20,
   },
   {
-    name: "Credit potential",
+    name: "Abatement potential",
     description: "ABATEMENT_POTENTIAL",
     weight: 18,
   },
