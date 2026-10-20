@@ -87,7 +87,6 @@ export type OutputCostNames =
   | "totalCostPlan"
   | "estimatedRevenuePlan"
   | "creditsIssuedPlan"
-  | "cumulativeCreditsPlan"
   | "cumulativeNetIncomePlan"
   | "cumulativeNetIncomeCapexOpex"
   | "annualNetCashFlow"
