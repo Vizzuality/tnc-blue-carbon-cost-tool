@@ -119,10 +119,7 @@ export function OverviewTable() {
     },
     {
       queryKey,
-      select: (data) => {
-        console.log("Projects data:", data); // See in browser console
-        return data.body;
-      },
+      select: (data) => data.body,
       placeholderData: keepPreviousData,
     },
   );

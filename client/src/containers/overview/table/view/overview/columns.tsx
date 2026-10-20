@@ -89,18 +89,10 @@ const calculateBreakevenCostPerTon = (
   const isNPV = filters.costRangeSelector === COST_TYPE_SELECTOR.NPV;
   const costToUse = isNPV ? rowData.totalCostNPV : rowData.totalCost;
   const opexToUse = isNPV ? rowData.opexNPV : rowData.opex;
-  const creditsIssuedNum = typeof rowData.creditsIssued === "string" 
-    ? parseFloat(rowData.creditsIssued) 
-    : rowData.creditsIssued;
-
-  console.log("Breakeven calculation:", {
-    projectName: rowData.projectName,
-    isNPV,
-    costToUse: typeof costToUse === "string" ? parseFloat(costToUse) : costToUse,
-    opexToUse: typeof opexToUse === "string" ? parseFloat(opexToUse) : opexToUse,
-    creditsIssued: creditsIssuedNum,
-    priceType: filters.priceType,
-  });
+  const creditsIssuedNum =
+    typeof rowData.creditsIssued === "string"
+      ? parseFloat(rowData.creditsIssued)
+      : rowData.creditsIssued;
 
   // Return null if credits issued is zero or not a valid number
   if (!creditsIssuedNum || creditsIssuedNum <= 0) {
@@ -132,26 +124,23 @@ export const columns = (filters: z.infer<typeof filtersSchema>) => [
       return <ScoreIndicator value={value as PROJECT_SCORE} />;
     },
   }),
-  columnHelper.accessor(
-    (row) => calculateBreakevenCostPerTon(row, filters),
-    {
-      id: "breakEvenCostPerTCO2e",
-      enableSorting: true,
-      header: renderHeader("Break-even cost $(USD)/tCO2e"),
-      cell: (props) => {
-        const value = props.getValue();
-        if (value === null || value === undefined) {
-          return "-";
-        }
+  columnHelper.accessor((row) => calculateBreakevenCostPerTon(row, filters), {
+    id: "breakEvenCostPerTCO2e",
+    enableSorting: true,
+    header: renderHeader("Break-even cost $(USD)/tCO2e"),
+    cell: (props) => {
+      const value = props.getValue();
+      if (value === null || value === undefined) {
+        return "-";
+      }
 
-        if (String(value) === "0") {
-          return <CellText className="whitespace-nowrap">NA</CellText>;
-        }
+      if (String(value) === "0") {
+        return <CellText className="whitespace-nowrap">NA</CellText>;
+      }
 
-        return <CellText>{formatCurrency(value)}</CellText>;
-      },
+      return <CellText>{formatCurrency(value)}</CellText>;
     },
-  ),
+  }),
   columnHelper.accessor("abatementPotential", {
     enableSorting: true,
     header: renderHeader("Credit potential (tCO2e)"),

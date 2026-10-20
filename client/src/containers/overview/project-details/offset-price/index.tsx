@@ -32,24 +32,27 @@ const ProjectDetailsOffsetPrice: FC<ProjectDetailsOffsetPriceProps> = ({
   const [selectedPriceType, setSelectedPriceType] = useState(priceType);
 
   const costData = data?.[costRangeSelector];
-  
+
   // Calculate offset price based on selected price type
-  const creditsIssuedNum = typeof creditsIssued === "string" 
-    ? parseFloat(creditsIssued) 
-    : creditsIssued;
+  const creditsIssuedNum =
+    typeof creditsIssued === "string"
+      ? parseFloat(creditsIssued)
+      : creditsIssued;
 
   let offsetPrice = 0;
-  
+
   if (creditsIssuedNum && creditsIssuedNum > 0) {
     if (selectedPriceType === PROJECT_PRICE_TYPE.OPEX_BREAKEVEN) {
-      const opexNum = typeof costData?.opex === "string" 
-        ? parseFloat(costData.opex) 
-        : costData?.opex || 0;
+      const opexNum =
+        typeof costData?.opex === "string"
+          ? parseFloat(costData.opex)
+          : costData?.opex || 0;
       offsetPrice = opexNum / creditsIssuedNum;
     } else if (selectedPriceType === PROJECT_PRICE_TYPE.TOTAL_COST_BREAKEVEN) {
-      const totalCostNum = typeof costData?.totalCost === "string" 
-        ? parseFloat(costData.totalCost) 
-        : costData?.totalCost || 0;
+      const totalCostNum =
+        typeof costData?.totalCost === "string"
+          ? parseFloat(costData.totalCost)
+          : costData?.totalCost || 0;
       offsetPrice = totalCostNum / creditsIssuedNum;
     }
   }
@@ -83,7 +86,8 @@ const ProjectDetailsOffsetPrice: FC<ProjectDetailsOffsetPriceProps> = ({
         <div className="flex flex-col gap-3">
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-bold">
-              ${offsetPrice.toLocaleString("en-US", {
+              $
+              {offsetPrice.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
@@ -95,9 +99,11 @@ const ProjectDetailsOffsetPrice: FC<ProjectDetailsOffsetPriceProps> = ({
             <Label htmlFor="price-type" className="mb-2 block text-sm">
               Price type
             </Label>
-            <Select 
-              value={selectedPriceType} 
-              onValueChange={(value) => setSelectedPriceType(value as PROJECT_PRICE_TYPE)}
+            <Select
+              value={selectedPriceType}
+              onValueChange={(value) =>
+                setSelectedPriceType(value as PROJECT_PRICE_TYPE)
+              }
             >
               <SelectTrigger id="price-type" className="w-full">
                 <SelectValue />
