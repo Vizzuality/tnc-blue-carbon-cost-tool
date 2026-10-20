@@ -94,15 +94,14 @@ const calculateBreakevenCostPerTon = (
       ? parseFloat(rowData.creditsIssued)
       : rowData.creditsIssued;
 
-  // Return null if credits issued is zero or not a valid number
   if (!creditsIssuedNum || creditsIssuedNum <= 0) {
     return null;
   }
 
   if (filters.priceType === PROJECT_PRICE_TYPE.OPEX_BREAKEVEN) {
-    return opexToUse && opexToUse > 0 ? opexToUse / creditsIssuedNum : null;
+    return opexToUse && opexToUse > 0 ? opexToUse / creditsIssued : null;
   } else if (filters.priceType === PROJECT_PRICE_TYPE.TOTAL_COST_BREAKEVEN) {
-    return costToUse && costToUse > 0 ? costToUse / creditsIssuedNum : null;
+    return costToUse && costToUse > 0 ? costToUse / creditsIssued : null;
   }
 
   return null;

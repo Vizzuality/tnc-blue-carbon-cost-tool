@@ -15,7 +15,7 @@ import AbatementPotential from "@/containers/overview/project-details/abatement-
 import ProjectDetailsCost from "@/containers/overview/project-details/cost";
 import CostEstimates from "@/containers/overview/project-details/cost-estimates";
 import Footer from "@/containers/overview/project-details/footer";
-import ProjectDetailsOffsetPrice from "@/containers/overview/project-details/offset-price";
+import ProjectDetailsLeftover from "@/containers/overview/project-details/left-over";
 import Navigation from "@/containers/overview/project-details/navigation";
 import ParametersProjects from "@/containers/overview/project-details/parameters";
 import ScoreCardRating from "@/containers/overview/project-details/score-card-rating";
@@ -63,6 +63,12 @@ export default function ProjectDetails() {
     () => getProjectSizeLabel(projectData),
     [projectData],
   );
+  const leftoverAfterOpex = useMemo(() => {
+    if (costRangeSelector === "total") {
+      return projectData?.leftoverAfterOpex;
+    }
+    return projectData?.leftoverAfterOpexNPV;
+  }, [costRangeSelector, projectData]);
 
   const handleOpenDetails = (open: boolean) =>
     setProjectDetails({ ...projectDetails, isOpen: open });
@@ -88,10 +94,9 @@ export default function ProjectDetails() {
               </Card>
 
               <Card variant="secondary" className="flex flex-col gap-4 p-4">
-                <ProjectDetailsOffsetPrice
+                <ProjectDetailsLeftover
                   data={projectData?.projectCost}
-                  creditsIssued={projectData?.creditsIssued}
-                  priceType={projectData?.priceType}
+                  leftoverAfterOpex={leftoverAfterOpex}
                 />
               </Card>
             </div>

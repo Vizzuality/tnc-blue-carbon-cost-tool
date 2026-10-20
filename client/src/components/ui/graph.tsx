@@ -116,7 +116,7 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
             </div>
           </div>
           <div className="flex h-full w-full flex-col gap-1 rounded-md">
-            {leftover >= 0 && (
+            {leftover > 0 && (
               <LeftOverGraph
                 leftover={leftover}
                 leftoverHeight={leftoverHeight}

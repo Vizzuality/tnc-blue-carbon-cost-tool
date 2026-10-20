@@ -141,13 +141,10 @@ const start = async () => {
         icon: 'File',
         component: Components.FileIngestion,
         handler: async (request: Request, response: Response) => {
-          // Convert only Docker hostnames for browser requests; keep prod URLs untouched.
-          const browserApiUrl = API_URL.includes('host.docker.internal')
-            ? API_URL.replace('host.docker.internal', 'localhost')
-            : API_URL;
+          // Pass config
           response.json({
             config: {
-              apiUrl: browserApiUrl,
+              apiUrl: API_URL,
             },
           });
         },
