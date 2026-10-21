@@ -188,6 +188,10 @@ export class ProjectsMapRepository extends Repository<Project> {
     projectIds: Project['id'][],
     costRangeSelector: 'npv' | 'total' = 'total',
   ): Promise<ProjectMap> {
+    if (projectIds.length === 0) {
+      return { type: 'FeatureCollection', features: [] };
+    }
+
     // "Abatement potential" is the wrong term here, the correct one is "country_abatement_potential"
     const geoQueryBuilder = this.manager.createQueryBuilder();
     geoQueryBuilder

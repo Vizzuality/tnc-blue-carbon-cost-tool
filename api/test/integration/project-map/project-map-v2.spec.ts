@@ -86,6 +86,16 @@ describe('Project Map V2', () => {
     expect(countryBResult.properties.cost).toBeCloseTo(expectedCostB);
   });
 
+  test('should return an empty FeatureCollection when no projects match the filters', async () => {
+    const response = await testManager
+      .request()
+      .get(projectsContract.getProjectsMapV2.path)
+      .query({ filter: { priceType: ['Total cost breakeven'] } });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body).toEqual({ type: 'FeatureCollection', features: [] });
+  });
+
   test('should return geometries with averages for npv', async () => {
     const projects: Project[] = [];
     const countryAreas: number[] = [];
