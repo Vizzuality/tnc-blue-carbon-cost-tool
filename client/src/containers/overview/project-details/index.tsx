@@ -17,6 +17,7 @@ import CostEstimates from "@/containers/overview/project-details/cost-estimates"
 import Footer from "@/containers/overview/project-details/footer";
 import ProjectDetailsLeftover from "@/containers/overview/project-details/left-over";
 import Navigation from "@/containers/overview/project-details/navigation";
+import ProjectDetailsOffsetPrice from "@/containers/overview/project-details/offset-price";
 import ParametersProjects from "@/containers/overview/project-details/parameters";
 import ScoreCardRating from "@/containers/overview/project-details/score-card-rating";
 import ScoreCardRatings from "@/containers/overview/project-details/score-card-ratings";
@@ -100,6 +101,14 @@ export default function ProjectDetails() {
                 />
               </Card>
             </div>
+
+            <Card variant="secondary" className="p-4">
+              <ProjectDetailsOffsetPrice
+                data={projectData?.projectCost}
+                creditsIssued={projectData?.creditsIssued}
+                priceType={projectData?.priceType}
+              />
+            </Card>
 
             <div className="flex gap-4">
               <Card variant="secondary" className="w-3/4 p-4">

@@ -20,10 +20,22 @@ interface GraphSegment {
   colorClass: string;
 }
 
-const getPercentage = (value: number, total: number) => (value / total) * 100;
+const NEAR_ZERO = 1e-9;
+const getPercentage = (value: number, total: number) => {
+  if (
+    !Number.isFinite(value) ||
+    !Number.isFinite(total) ||
+    Math.abs(total) < NEAR_ZERO
+  ) {
+    return 0;
+  }
+
+  const percentage = (value / total) * 100;
+  return Number.isFinite(percentage) ? percentage : 0;
+};
 const getSize = (value: number, total: number) => {
   const percentage = getPercentage(value, total);
-  return `${Math.max(percentage, 0)}%`;
+  return `${Math.min(Math.max(percentage, 0), 100)}%`;
 };
 const currencyClassName =
   "overflow-hidden text-clip whitespace-normal break-all";
@@ -116,7 +128,7 @@ const Graph: FC<GraphProps> = ({ total, leftover, segments }) => {
             </div>
           </div>
           <div className="flex h-full w-full flex-col gap-1 rounded-md">
-            {leftover > 0 && (
+            {leftover >= 0 && (
               <LeftOverGraph
                 leftover={leftover}
                 leftoverHeight={leftoverHeight}
@@ -195,7 +207,7 @@ function calculateSplitModeHeights(total: number, leftover: number) {
 
   // Calculate absolute values for consistent calculations
   const absLeftover = Math.abs(leftover);
-  const absTotal = total + absLeftover;
+  const absTotal = Math.abs(total) + absLeftover;
 
   // Initial leftover height calculation (used when leftover is positive)
   let leftoverHeight = getSize(leftover, total);
@@ -219,7 +231,9 @@ function calculateSplitModeHeights(total: number, leftover: number) {
 
   // Set minimum heights to ensure visibility of small segments
   const leftoverMinHeight =
-    fixedHeights && leftoverPercentage < minPercentageThreshold
+    fixedHeights &&
+    leftoverPercentage < minPercentageThreshold &&
+    leftover !== 0
       ? minHeightPercentage
       : undefined;
   const totalRevenueMinHeight =
@@ -229,7 +243,7 @@ function calculateSplitModeHeights(total: number, leftover: number) {
 
   // For negative leftover, recalculate heights based on absolute values
   if (leftover < 0) {
-    totalRevenueHeight = getSize(total, absTotal);
+    totalRevenueHeight = getSize(Math.abs(total), absTotal);
     leftoverHeight = getSize(absLeftover, absTotal);
   }
 

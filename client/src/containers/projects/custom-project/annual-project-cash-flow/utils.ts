@@ -18,7 +18,8 @@ type ChartDataKeys =
   | "opexTotalCostPlan"
   | "capexTotalCostPlan"
   | "annualNetCashFlow"
-  | "cumulativeNetIncomePlan";
+  | "cumulativeNetIncomePlan"
+  | "creditsIssuedPlan";
 
 type ChartData = Record<ChartDataKeys, CostPlanMap>;
 type YearlyBreakdownData = {
@@ -27,6 +28,8 @@ type YearlyBreakdownData = {
   capexTotalCostPlan: number;
   annualNetCashFlow: number;
   cumulativeNetIncomePlan: number;
+  creditsIssuedPlan: number;
+  cumulativeCreditsPlan: number;
   year: number;
 };
 type YearlyBreakdownChartData = YearlyBreakdownData[];
@@ -43,6 +46,7 @@ function parseYearlyBreakdownForChart(
     capexTotalCostPlan: {},
     annualNetCashFlow: {},
     cumulativeNetIncomePlan: {},
+    creditsIssuedPlan: {},
   };
 
   // Populate chart data based on yearly breakdown
@@ -52,24 +56,35 @@ function parseYearlyBreakdownForChart(
     }
   });
 
-  // Transform data for each year
-  return years.map((year) => ({
-    year,
-    ...Object.keys(chartData).reduce(
+  let cumulativeCredits = 0;
+  return years.map((year) => {
+    const yearData = Object.keys(chartData).reduce(
       (acc, key) => ({
         ...acc,
         [key]: chartData[key as ChartDataKeys][year],
       }),
       {} as Record<ChartDataKeys, number>,
-    ),
-  }));
+    );
+    const creditsIssued = yearData.creditsIssuedPlan ?? 0;
+    cumulativeCredits += Number.isFinite(creditsIssued) ? creditsIssued : 0;
+
+    return {
+      year,
+      ...yearData,
+      creditsIssuedPlan: creditsIssued,
+      cumulativeCreditsPlan: cumulativeCredits,
+    };
+  });
 }
 type CostNameConfig = {
   order: number;
   label: string;
 };
 
-const cashflowConfig: Record<YearlyBreakdownCostName, CostNameConfig> = {
+const cashflowConfig: Record<
+  YearlyBreakdownCostName | "cumulativeCreditsPlan",
+  CostNameConfig
+> = {
   feasibilityAnalysis: {
     order: 0,
     label: "Feasibility analysis",
@@ -146,8 +161,12 @@ const cashflowConfig: Record<YearlyBreakdownCostName, CostNameConfig> = {
     order: 19,
     label: "Est. credits issued",
   },
-  estimatedRevenuePlan: {
+  cumulativeCreditsPlan: {
     order: 20,
+    label: "Credit generation",
+  },
+  estimatedRevenuePlan: {
+    order: 21,
     label: "Est. revenue",
   },
   financingCost: {

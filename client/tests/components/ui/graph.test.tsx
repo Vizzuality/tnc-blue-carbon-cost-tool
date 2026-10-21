@@ -44,4 +44,39 @@ describe("GraphWithLegend", () => {
     expect(opExAmount).toBeInTheDocument();
     expect(opExAmount.previousSibling).toHaveTextContent("$");
   });
+
+  it.each([
+    { total: 0, leftover: 0, segmentValue: 0 },
+    { total: 0.00000000001, leftover: -0.00000000001, segmentValue: -1 },
+    { total: -100, leftover: -25, segmentValue: -10 },
+  ])(
+    "keeps split graph heights valid for total $total and leftover $leftover",
+    ({ total, leftover, segmentValue }) => {
+      const { container } = render(
+        <GraphWithLegend
+          total={total}
+          leftover={leftover}
+          items={[
+            {
+              value: segmentValue,
+              label: "Segment",
+              circleClassName: "bg-sky-blue-500",
+              labelClassName: "text-sky-blue-500",
+            },
+          ]}
+        />,
+      );
+
+      const heights = Array.from(
+        container.querySelectorAll<HTMLElement>("[style]"),
+      )
+        .map((element) => element.style.height)
+        .filter(Boolean);
+
+      expect(heights.length).toBeGreaterThan(0);
+      expect(heights.every((height) => /^\d+(\.\d+)?%$/.test(height))).toBe(
+        true,
+      );
+    },
+  );
 });

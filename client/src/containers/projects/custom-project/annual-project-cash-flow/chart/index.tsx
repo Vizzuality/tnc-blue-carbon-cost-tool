@@ -13,7 +13,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatNumber } from "@/lib/format";
 
 import {
   cashflowConfig,
@@ -33,8 +33,9 @@ const CHART_COLORS = {
   estimatedRevenuePlan: "hsl(var(--chart-1))",
   opexTotalCostPlan: "hsl(var(--chart-2))",
   capexTotalCostPlan: "hsl(var(--chart-3))",
-  annualNetCashFlow: "hsl(var(--chart-4)",
+  annualNetCashFlow: "hsl(var(--chart-4))",
   cumulativeNetIncomePlan: "hsl(var(--chart-5))",
+  cumulativeCreditsPlan: "hsl(190, 85%, 55%)",
 } as const;
 
 interface CashflowChartProps {
@@ -75,6 +76,16 @@ const CashflowChart: FC<CashflowChartProps> = ({
             ],
           color: "hsl(var(--chart-5))",
           icon: () => <div className="h-[3px] w-[24px] bg-chart-5" />,
+        },
+        cumulativeCreditsPlan: {
+          label: "Credit generation",
+          color: CHART_COLORS.cumulativeCreditsPlan,
+          icon: () => (
+            <div
+              className="h-[3px] w-[24px]"
+              style={{ backgroundColor: CHART_COLORS.cumulativeCreditsPlan }}
+            />
+          ),
         },
         breakevenPoint: {
           label: "Breakeven point",
@@ -138,6 +149,13 @@ const CashflowChart: FC<CashflowChartProps> = ({
           dot={false}
           strokeWidth={2}
         />
+        <Line
+          type="linear"
+          dataKey="cumulativeCreditsPlan"
+          stroke={CHART_COLORS.cumulativeCreditsPlan}
+          dot={false}
+          strokeWidth={2}
+        />
         {/* Ensure breakeven point is part of the chart and visible in the legend */}
         <Line
           type="linear"
@@ -189,6 +207,19 @@ const CashflowChart: FC<CashflowChartProps> = ({
                     cumulativeNetIncomePlanTooltipLabel[
                       carbonRevenuesToCover as keyof typeof cumulativeNetIncomePlanTooltipLabel
                     ];
+                }
+                if (n === "cumulativeCreditsPlan") {
+                  return (
+                    <p className="inline-flex w-full justify-between gap-2">
+                      <span className="text-muted-foreground">{label}</span>
+                      <span className="font-normal">
+                        {formatNumber(v as number, {
+                          maximumFractionDigits: 0,
+                        })}{" "}
+                        tCO2e
+                      </span>
+                    </p>
+                  );
                 }
                 return (
                   <p className="inline-flex w-full justify-between gap-2">
